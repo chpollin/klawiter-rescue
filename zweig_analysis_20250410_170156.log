@@ -1,0 +1,288 @@
+2025-04-10 17:01:56,978 - INFO - === BEGINNING STEFAN ZWEIG BIBLIOGRAPHY EXTRACTION AND ANALYSIS ===
+2025-04-10 17:01:56,978 - INFO - Starting data extraction...
+2025-04-10 17:01:56,978 - INFO - == Extracting ALL Data from BLOBs ==
+2025-04-10 17:01:57,018 - INFO - package: mysql.connector.plugins
+2025-04-10 17:01:57,018 - INFO - plugin_name: caching_sha2_password
+2025-04-10 17:01:57,019 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-04-10 17:01:57,019 - INFO - Database connection established
+2025-04-10 17:01:57,113 - INFO - Got 6296 pages to extract
+2025-04-10 17:01:57,113 - INFO - Processing 8 BLOBs
+2025-04-10 17:01:57,113 - INFO - Processing batch 1/13 (500 pages)
+2025-04-10 17:01:57,113 - INFO - Progress: 0/6296 pages, 0 entries found (0.00 pages/sec)
+2025-04-10 17:02:54,186 - INFO - Progress: 50/6296 pages, 40 entries found (0.88 pages/sec)
+2025-04-10 17:03:34,807 - INFO - Progress: 100/6296 pages, 84 entries found (1.02 pages/sec)
+2025-04-10 17:03:46,055 - INFO - Extracted 100 entries so far
+2025-04-10 17:04:18,024 - INFO - Progress: 150/6296 pages, 125 entries found (1.06 pages/sec)
+2025-04-10 17:05:05,167 - INFO - Progress: 200/6296 pages, 171 entries found (1.06 pages/sec)
+2025-04-10 17:05:27,012 - INFO - Extracted 200 entries so far
+2025-04-10 17:05:49,497 - INFO - Progress: 250/6296 pages, 219 entries found (1.08 pages/sec)
+2025-04-10 17:06:42,438 - INFO - Progress: 300/6296 pages, 264 entries found (1.05 pages/sec)
+2025-04-10 17:07:18,663 - INFO - Extracted 300 entries so far
+2025-04-10 17:07:28,514 - INFO - Progress: 350/6296 pages, 311 entries found (1.06 pages/sec)
+2025-04-10 17:08:02,277 - INFO - Progress: 400/6296 pages, 358 entries found (1.10 pages/sec)
+2025-04-10 17:08:59,157 - INFO - Extracted 400 entries so far
+2025-04-10 17:09:04,577 - INFO - Progress: 450/6296 pages, 405 entries found (1.05 pages/sec)
+2025-04-10 17:09:56,648 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1709.csv
+2025-04-10 17:09:56,648 - INFO - Processing batch 2/13 (500 pages)
+2025-04-10 17:09:56,648 - INFO - Progress: 500/6296 pages, 452 entries found (1.04 pages/sec)
+2025-04-10 17:10:48,286 - INFO - Progress: 550/6296 pages, 498 entries found (1.04 pages/sec)
+2025-04-10 17:10:48,733 - INFO - Extracted 500 entries so far
+2025-04-10 17:11:34,219 - INFO - Progress: 600/6296 pages, 543 entries found (1.04 pages/sec)
+2025-04-10 17:12:19,542 - INFO - Progress: 650/6296 pages, 586 entries found (1.04 pages/sec)
+2025-04-10 17:12:32,849 - INFO - Extracted 600 entries so far
+2025-04-10 17:12:55,910 - INFO - Progress: 700/6296 pages, 632 entries found (1.06 pages/sec)
+2025-04-10 17:13:47,610 - INFO - Progress: 750/6296 pages, 675 entries found (1.06 pages/sec)
+2025-04-10 17:14:07,307 - INFO - Extracted 700 entries so far
+2025-04-10 17:14:33,421 - INFO - Progress: 800/6296 pages, 720 entries found (1.06 pages/sec)
+2025-04-10 17:15:19,592 - INFO - Progress: 850/6296 pages, 764 entries found (1.06 pages/sec)
+2025-04-10 17:16:00,749 - INFO - Extracted 800 entries so far
+2025-04-10 17:16:12,533 - INFO - Progress: 900/6296 pages, 809 entries found (1.05 pages/sec)
+2025-04-10 17:16:55,762 - INFO - Progress: 950/6296 pages, 857 entries found (1.06 pages/sec)
+2025-04-10 17:17:44,455 - INFO - Extracted 900 entries so far
+2025-04-10 17:17:44,463 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1717.csv
+2025-04-10 17:17:44,463 - INFO - Processing batch 3/13 (500 pages)
+2025-04-10 17:17:44,464 - INFO - Progress: 1000/6296 pages, 900 entries found (1.06 pages/sec)
+2025-04-10 17:18:41,319 - INFO - Progress: 1050/6296 pages, 945 entries found (1.05 pages/sec)
+2025-04-10 17:19:34,443 - INFO - Progress: 1100/6296 pages, 988 entries found (1.04 pages/sec)
+2025-04-10 17:19:49,541 - INFO - Extracted 1000 entries so far
+2025-04-10 17:20:26,461 - INFO - Progress: 1150/6296 pages, 1032 entries found (1.04 pages/sec)
+2025-04-10 17:21:14,694 - INFO - Progress: 1200/6296 pages, 1079 entries found (1.04 pages/sec)
+2025-04-10 17:21:33,555 - INFO - Extracted 1100 entries so far
+2025-04-10 17:31:29,437 - INFO - Progress: 1250/6296 pages, 1117 entries found (0.71 pages/sec)
+2025-04-10 17:32:27,700 - INFO - Progress: 1300/6296 pages, 1164 entries found (0.71 pages/sec)
+2025-04-10 17:33:15,668 - INFO - Extracted 1200 entries so far
+2025-04-10 17:33:29,631 - INFO - Progress: 1350/6296 pages, 1207 entries found (0.71 pages/sec)
+2025-04-10 17:34:36,724 - INFO - Progress: 1400/6296 pages, 1252 entries found (0.71 pages/sec)
+2025-04-10 17:35:41,295 - INFO - Progress: 1450/6296 pages, 1298 entries found (0.72 pages/sec)
+2025-04-10 17:35:43,984 - INFO - Extracted 1300 entries so far
+2025-04-10 17:36:53,171 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1736.csv
+2025-04-10 17:36:53,171 - INFO - Processing batch 4/13 (500 pages)
+2025-04-10 17:36:53,171 - INFO - Progress: 1500/6296 pages, 1337 entries found (0.72 pages/sec)
+2025-04-10 17:38:03,186 - INFO - Progress: 1550/6296 pages, 1379 entries found (0.72 pages/sec)
+2025-04-10 17:38:54,046 - INFO - Extracted 1400 entries so far
+2025-04-10 17:39:19,026 - INFO - Progress: 1600/6296 pages, 1413 entries found (0.71 pages/sec)
+2025-04-10 17:40:24,040 - INFO - Progress: 1650/6296 pages, 1454 entries found (0.72 pages/sec)
+2025-04-10 17:41:29,161 - INFO - Progress: 1700/6296 pages, 1499 entries found (0.72 pages/sec)
+2025-04-10 17:41:29,714 - INFO - Extracted 1500 entries so far
+2025-04-10 17:42:27,477 - INFO - Progress: 1750/6296 pages, 1542 entries found (0.72 pages/sec)
+2025-04-10 17:43:28,275 - INFO - Progress: 1800/6296 pages, 1590 entries found (0.72 pages/sec)
+2025-04-10 17:43:44,521 - INFO - Extracted 1600 entries so far
+2025-04-10 17:44:32,822 - INFO - Progress: 1850/6296 pages, 1640 entries found (0.72 pages/sec)
+2025-04-10 17:45:40,607 - INFO - Progress: 1900/6296 pages, 1686 entries found (0.72 pages/sec)
+2025-04-10 17:46:01,659 - INFO - Extracted 1700 entries so far
+2025-04-10 17:46:36,787 - INFO - Progress: 1950/6296 pages, 1732 entries found (0.73 pages/sec)
+2025-04-10 17:47:46,046 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1747.csv
+2025-04-10 17:47:46,047 - INFO - Processing batch 5/13 (500 pages)
+2025-04-10 17:47:46,047 - INFO - Progress: 2000/6296 pages, 1773 entries found (0.73 pages/sec)
+2025-04-10 17:48:14,471 - INFO - Extracted 1800 entries so far
+2025-04-10 17:48:38,769 - INFO - Progress: 2050/6296 pages, 1822 entries found (0.73 pages/sec)
+2025-04-10 17:49:37,713 - INFO - Progress: 2100/6296 pages, 1869 entries found (0.73 pages/sec)
+2025-04-10 17:50:18,402 - INFO - Extracted 1900 entries so far
+2025-04-10 17:50:39,731 - INFO - Progress: 2150/6296 pages, 1915 entries found (0.74 pages/sec)
+2025-04-10 17:51:37,755 - INFO - Progress: 2200/6296 pages, 1964 entries found (0.74 pages/sec)
+2025-04-10 17:52:30,068 - INFO - Extracted 2000 entries so far
+2025-04-10 17:52:37,280 - INFO - Progress: 2250/6296 pages, 2006 entries found (0.74 pages/sec)
+2025-04-10 17:53:49,737 - INFO - Progress: 2300/6296 pages, 2052 entries found (0.74 pages/sec)
+2025-04-10 17:54:45,299 - INFO - Extracted 2100 entries so far
+2025-04-10 17:54:45,299 - INFO - Progress: 2350/6296 pages, 2100 entries found (0.74 pages/sec)
+2025-04-10 17:55:45,195 - INFO - Progress: 2400/6296 pages, 2147 entries found (0.74 pages/sec)
+2025-04-10 17:56:46,359 - INFO - Progress: 2450/6296 pages, 2191 entries found (0.74 pages/sec)
+2025-04-10 17:56:57,588 - INFO - Extracted 2200 entries so far
+2025-04-10 17:57:38,742 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1757.csv
+2025-04-10 17:57:38,742 - INFO - Processing batch 6/13 (500 pages)
+2025-04-10 17:57:38,742 - INFO - Progress: 2500/6296 pages, 2236 entries found (0.75 pages/sec)
+2025-04-10 17:58:39,047 - INFO - Progress: 2550/6296 pages, 2282 entries found (0.75 pages/sec)
+2025-04-10 17:58:59,617 - INFO - Extracted 2300 entries so far
+2025-04-10 17:59:38,968 - INFO - Progress: 2600/6296 pages, 2327 entries found (0.75 pages/sec)
+2025-04-10 18:00:37,758 - INFO - Progress: 2650/6296 pages, 2370 entries found (0.75 pages/sec)
+2025-04-10 18:01:14,521 - INFO - Extracted 2400 entries so far
+2025-04-10 18:01:29,336 - INFO - Progress: 2700/6296 pages, 2416 entries found (0.76 pages/sec)
+2025-04-10 18:02:24,672 - INFO - Progress: 2750/6296 pages, 2461 entries found (0.76 pages/sec)
+2025-04-10 18:03:09,717 - INFO - Extracted 2500 entries so far
+2025-04-10 18:03:18,915 - INFO - Progress: 2800/6296 pages, 2509 entries found (0.76 pages/sec)
+2025-04-10 18:04:21,436 - INFO - Progress: 2850/6296 pages, 2553 entries found (0.76 pages/sec)
+2025-04-10 18:05:22,158 - INFO - Extracted 2600 entries so far
+2025-04-10 18:05:22,159 - INFO - Progress: 2900/6296 pages, 2600 entries found (0.76 pages/sec)
+2025-04-10 18:06:19,175 - INFO - Progress: 2950/6296 pages, 2648 entries found (0.76 pages/sec)
+2025-04-10 18:07:20,708 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1807.csv
+2025-04-10 18:07:20,708 - INFO - Processing batch 7/13 (500 pages)
+2025-04-10 18:07:20,708 - INFO - Progress: 3000/6296 pages, 2694 entries found (0.76 pages/sec)
+2025-04-10 18:07:30,141 - INFO - Extracted 2700 entries so far
+2025-04-10 18:08:19,443 - INFO - Progress: 3050/6296 pages, 2744 entries found (0.77 pages/sec)
+2025-04-10 18:09:33,488 - INFO - Progress: 3100/6296 pages, 2793 entries found (0.76 pages/sec)
+2025-04-10 18:09:44,108 - INFO - Extracted 2800 entries so far
+2025-04-10 18:10:47,128 - INFO - Progress: 3150/6296 pages, 2838 entries found (0.76 pages/sec)
+2025-04-10 18:11:56,039 - INFO - Progress: 3200/6296 pages, 2883 entries found (0.76 pages/sec)
+2025-04-10 18:12:19,499 - INFO - Extracted 2900 entries so far
+2025-04-10 18:13:00,455 - INFO - Progress: 3250/6296 pages, 2929 entries found (0.76 pages/sec)
+2025-04-10 18:13:55,388 - INFO - Progress: 3300/6296 pages, 2978 entries found (0.76 pages/sec)
+2025-04-10 18:14:19,425 - INFO - Extracted 3000 entries so far
+2025-04-10 18:14:50,359 - INFO - Progress: 3350/6296 pages, 3026 entries found (0.77 pages/sec)
+2025-04-10 18:15:40,592 - INFO - Progress: 3400/6296 pages, 3072 entries found (0.77 pages/sec)
+2025-04-10 18:15:58,993 - INFO - Extracted 3100 entries so far
+2025-04-10 18:16:18,273 - INFO - Progress: 3450/6296 pages, 3120 entries found (0.77 pages/sec)
+2025-04-10 18:17:19,403 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1817.csv
+2025-04-10 18:17:19,403 - INFO - Processing batch 8/13 (500 pages)
+2025-04-10 18:17:19,403 - INFO - Progress: 3500/6296 pages, 3166 entries found (0.77 pages/sec)
+2025-04-10 18:17:55,284 - INFO - Extracted 3200 entries so far
+2025-04-10 18:18:12,734 - INFO - Progress: 3550/6296 pages, 3211 entries found (0.78 pages/sec)
+2025-04-10 18:19:05,955 - INFO - Progress: 3600/6296 pages, 3257 entries found (0.78 pages/sec)
+2025-04-10 18:20:00,106 - INFO - Progress: 3650/6296 pages, 3299 entries found (0.78 pages/sec)
+2025-04-10 18:20:01,654 - INFO - Extracted 3300 entries so far
+2025-04-10 18:20:52,922 - INFO - Progress: 3700/6296 pages, 3344 entries found (0.78 pages/sec)
+2025-04-10 18:21:59,334 - INFO - Progress: 3750/6296 pages, 3388 entries found (0.78 pages/sec)
+2025-04-10 18:22:10,029 - INFO - Extracted 3400 entries so far
+2025-04-10 18:22:48,076 - INFO - Progress: 3800/6296 pages, 3437 entries found (0.78 pages/sec)
+2025-04-10 18:23:49,213 - INFO - Progress: 3850/6296 pages, 3480 entries found (0.78 pages/sec)
+2025-04-10 18:24:17,175 - INFO - Extracted 3500 entries so far
+2025-04-10 18:24:44,579 - INFO - Progress: 3900/6296 pages, 3528 entries found (0.79 pages/sec)
+2025-04-10 18:25:49,622 - INFO - Progress: 3950/6296 pages, 3574 entries found (0.78 pages/sec)
+2025-04-10 18:26:25,705 - INFO - Extracted 3600 entries so far
+2025-04-10 18:26:48,532 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1826.csv
+2025-04-10 18:26:48,532 - INFO - Processing batch 9/13 (500 pages)
+2025-04-10 18:26:48,532 - INFO - Progress: 4000/6296 pages, 3620 entries found (0.79 pages/sec)
+2025-04-10 18:27:43,057 - INFO - Progress: 4050/6296 pages, 3662 entries found (0.79 pages/sec)
+2025-04-10 18:28:37,420 - INFO - Extracted 3700 entries so far
+2025-04-10 18:28:45,702 - INFO - Progress: 4100/6296 pages, 3707 entries found (0.79 pages/sec)
+2025-04-10 18:29:56,469 - INFO - Progress: 4150/6296 pages, 3752 entries found (0.79 pages/sec)
+2025-04-10 18:30:57,197 - INFO - Progress: 4200/6296 pages, 3796 entries found (0.79 pages/sec)
+2025-04-10 18:31:01,688 - INFO - Extracted 3800 entries so far
+2025-04-10 18:32:01,081 - INFO - Progress: 4250/6296 pages, 3843 entries found (0.79 pages/sec)
+2025-04-10 18:32:52,308 - INFO - Progress: 4300/6296 pages, 3890 entries found (0.79 pages/sec)
+2025-04-10 18:33:03,627 - INFO - Extracted 3900 entries so far
+2025-04-10 18:33:51,284 - INFO - Progress: 4350/6296 pages, 3937 entries found (0.79 pages/sec)
+2025-04-10 18:34:52,325 - INFO - Progress: 4400/6296 pages, 3981 entries found (0.79 pages/sec)
+2025-04-10 18:35:21,322 - INFO - Extracted 4000 entries so far
+2025-04-10 18:35:56,884 - INFO - Progress: 4450/6296 pages, 4024 entries found (0.79 pages/sec)
+2025-04-10 18:36:56,052 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1836.csv
+2025-04-10 18:36:56,052 - INFO - Processing batch 10/13 (500 pages)
+2025-04-10 18:36:56,053 - INFO - Progress: 4500/6296 pages, 4066 entries found (0.79 pages/sec)
+2025-04-10 18:37:46,589 - INFO - Extracted 4100 entries so far
+2025-04-10 18:37:55,479 - INFO - Progress: 4550/6296 pages, 4108 entries found (0.79 pages/sec)
+2025-04-10 18:38:54,073 - INFO - Progress: 4600/6296 pages, 4158 entries found (0.79 pages/sec)
+2025-04-10 18:39:54,519 - INFO - Extracted 4200 entries so far
+2025-04-10 18:39:59,357 - INFO - Progress: 4650/6296 pages, 4203 entries found (0.79 pages/sec)
+2025-04-10 18:41:03,752 - INFO - Progress: 4700/6296 pages, 4247 entries found (0.79 pages/sec)
+2025-04-10 18:42:07,189 - INFO - Progress: 4750/6296 pages, 4294 entries found (0.79 pages/sec)
+2025-04-10 18:42:14,655 - INFO - Extracted 4300 entries so far
+2025-04-10 18:42:50,942 - INFO - Progress: 4800/6296 pages, 4344 entries found (0.79 pages/sec)
+2025-04-10 18:43:53,231 - INFO - Progress: 4850/6296 pages, 4387 entries found (0.79 pages/sec)
+2025-04-10 18:44:15,387 - INFO - Extracted 4400 entries so far
+2025-04-10 18:44:44,779 - INFO - Progress: 4900/6296 pages, 4423 entries found (0.79 pages/sec)
+2025-04-10 18:45:48,654 - INFO - Progress: 4950/6296 pages, 4460 entries found (0.79 pages/sec)
+2025-04-10 18:46:50,711 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1846.csv
+2025-04-10 18:46:50,711 - INFO - Processing batch 11/13 (500 pages)
+2025-04-10 18:46:50,711 - INFO - Progress: 5000/6296 pages, 4495 entries found (0.79 pages/sec)
+2025-04-10 18:47:03,197 - INFO - Extracted 4500 entries so far
+2025-04-10 18:47:47,620 - INFO - Progress: 5050/6296 pages, 4532 entries found (0.80 pages/sec)
+2025-04-10 18:48:54,923 - INFO - Progress: 5100/6296 pages, 4567 entries found (0.79 pages/sec)
+2025-04-10 18:49:36,570 - INFO - Extracted 4600 entries so far
+2025-04-10 18:49:50,542 - INFO - Progress: 5150/6296 pages, 4614 entries found (0.80 pages/sec)
+2025-04-10 18:50:47,950 - INFO - Progress: 5200/6296 pages, 4661 entries found (0.80 pages/sec)
+2025-04-10 18:51:33,856 - INFO - Extracted 4700 entries so far
+2025-04-10 18:51:45,978 - INFO - Progress: 5250/6296 pages, 4705 entries found (0.80 pages/sec)
+2025-04-10 18:52:45,835 - INFO - Progress: 5300/6296 pages, 4751 entries found (0.80 pages/sec)
+2025-04-10 18:53:35,847 - INFO - Progress: 5350/6296 pages, 4797 entries found (0.80 pages/sec)
+2025-04-10 18:53:39,559 - INFO - Extracted 4800 entries so far
+2025-04-10 18:54:39,137 - INFO - Progress: 5400/6296 pages, 4844 entries found (0.80 pages/sec)
+2025-04-10 18:55:39,691 - INFO - Progress: 5450/6296 pages, 4889 entries found (0.80 pages/sec)
+2025-04-10 18:55:54,722 - INFO - Extracted 4900 entries so far
+2025-04-10 18:56:39,871 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1856.csv
+2025-04-10 18:56:39,872 - INFO - Processing batch 12/13 (500 pages)
+2025-04-10 18:56:39,872 - INFO - Progress: 5500/6296 pages, 4935 entries found (0.80 pages/sec)
+2025-04-10 18:57:45,399 - INFO - Progress: 5550/6296 pages, 4981 entries found (0.80 pages/sec)
+2025-04-10 18:58:20,219 - INFO - Extracted 5000 entries so far
+2025-04-10 18:58:45,148 - INFO - Progress: 5600/6296 pages, 5019 entries found (0.80 pages/sec)
+2025-04-10 18:59:49,192 - INFO - Progress: 5650/6296 pages, 5064 entries found (0.80 pages/sec)
+2025-04-10 19:00:31,978 - INFO - Extracted 5100 entries so far
+2025-04-10 19:00:44,101 - INFO - Progress: 5700/6296 pages, 5110 entries found (0.80 pages/sec)
+2025-04-10 19:01:38,748 - INFO - Progress: 5750/6296 pages, 5154 entries found (0.80 pages/sec)
+2025-04-10 19:02:41,471 - INFO - Extracted 5200 entries so far
+2025-04-10 19:02:41,471 - INFO - Progress: 5800/6296 pages, 5200 entries found (0.80 pages/sec)
+2025-04-10 19:03:31,066 - INFO - Progress: 5850/6296 pages, 5249 entries found (0.80 pages/sec)
+2025-04-10 19:04:25,461 - INFO - Progress: 5900/6296 pages, 5296 entries found (0.80 pages/sec)
+2025-04-10 19:04:26,981 - INFO - Extracted 5300 entries so far
+2025-04-10 19:05:13,188 - INFO - Progress: 5950/6296 pages, 5344 entries found (0.80 pages/sec)
+2025-04-10 19:06:10,367 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1906.csv
+2025-04-10 19:06:10,367 - INFO - Processing batch 13/13 (296 pages)
+2025-04-10 19:06:10,368 - INFO - Progress: 6000/6296 pages, 5386 entries found (0.81 pages/sec)
+2025-04-10 19:06:25,507 - INFO - Extracted 5400 entries so far
+2025-04-10 19:07:04,661 - INFO - Progress: 6050/6296 pages, 5430 entries found (0.81 pages/sec)
+2025-04-10 19:08:01,578 - INFO - Progress: 6100/6296 pages, 5478 entries found (0.81 pages/sec)
+2025-04-10 19:08:30,825 - INFO - Extracted 5500 entries so far
+2025-04-10 19:09:01,971 - INFO - Progress: 6150/6296 pages, 5516 entries found (0.81 pages/sec)
+2025-04-10 19:10:02,528 - INFO - Progress: 6200/6296 pages, 5563 entries found (0.81 pages/sec)
+2025-04-10 19:10:47,095 - INFO - Extracted 5600 entries so far
+2025-04-10 19:10:58,127 - INFO - Progress: 6250/6296 pages, 5608 entries found (0.81 pages/sec)
+2025-04-10 19:11:48,217 - INFO - Saved batch progress to analysis_output/zweig_extraction_progress_20250410_1911.csv
+2025-04-10 19:11:48,217 - INFO - Extraction complete: 5652 entries extracted in 7791.10 seconds (0.73 entries/sec)
+2025-04-10 19:11:48,217 - INFO - Entries found per BLOB:
+2025-04-10 19:11:48,217 - INFO -   BLOB 1: 520 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 2: 306 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 3: 241 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 4: 1302 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 5: 1569 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 6: 510 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 7: 947 entries
+2025-04-10 19:11:48,218 - INFO -   BLOB 8: 257 entries
+2025-04-10 19:11:48,218 - INFO - Content not found for 644 pages
+2025-04-10 19:11:48,258 - INFO - Saved complete extraction to analysis_output/zweig_extraction_complete_20250410_1911.csv
+2025-04-10 19:11:48,258 - INFO - Database connection closed after extraction
+2025-04-10 19:11:48,260 - INFO - Analyzing data from analysis_output/zweig_extraction_complete_20250410_1911.csv...
+2025-04-10 19:11:48,260 - INFO - Analyzing extracted data from: analysis_output/zweig_extraction_complete_20250410_1911.csv
+2025-04-10 19:11:48,294 - INFO - Loaded 5652 entries from CSV
+2025-04-10 19:11:48,294 - INFO - == Basic Metrics Analysis ==
+2025-04-10 19:11:48,296 - INFO - Total entries: 5652
+2025-04-10 19:11:48,296 - INFO - Unique page IDs: 5652
+2025-04-10 19:11:48,297 - INFO - Unique text IDs: 5652
+2025-04-10 19:11:48,298 - INFO - Content length: min=16, max=1951, avg=415.14
+2025-04-10 19:11:48,299 - INFO - Flag distribution: {'utf-8': 5652}
+2025-04-10 19:11:48,299 - INFO - == Content Pattern Analysis ==
+2025-04-10 19:11:48,444 - INFO - has_title_markup: 0 entries (0.00%)
+2025-04-10 19:11:48,444 - INFO - has_volumes: 1094 entries (19.36%)
+2025-04-10 19:11:48,445 - INFO - has_year: 3853 entries (68.17%)
+2025-04-10 19:11:48,445 - INFO - has_publisher: 673 entries (11.91%)
+2025-04-10 19:11:48,445 - INFO - has_location: 1089 entries (19.27%)
+2025-04-10 19:11:48,445 - INFO - has_list: 1706 entries (30.18%)
+2025-04-10 19:11:48,446 - INFO - has_html: 1724 entries (30.50%)
+2025-04-10 19:11:48,446 - INFO - has_category: 4100 entries (72.54%)
+2025-04-10 19:11:48,446 - INFO - has_translation: 1643 entries (29.07%)
+2025-04-10 19:11:48,446 - INFO - has_review: 271 entries (4.79%)
+2025-04-10 19:11:48,446 - INFO - == Title Analysis ==
+2025-04-10 19:11:48,467 - INFO - Title match percentage: 0.00%
+2025-04-10 19:11:48,467 - INFO - == Content Type Classification ==
+2025-04-10 19:11:48,480 - INFO - Content type distribution: {'Category': 4100, 'Other': 1496, 'Essay': 19, 'Correspondence': 16, 'Film/Media': 10, 'Bibliography Entry': 8, 'Review': 1, 'Translation': 1, 'Biography': 1}
+2025-04-10 19:11:48,481 - INFO - == Bibliographic Information ==
+2025-04-10 19:11:48,721 - INFO - Entries with year: 3853 (68.17%)
+2025-04-10 19:11:48,721 - INFO - Entries with publisher: 431 (7.63%)
+2025-04-10 19:11:48,722 - INFO - Entries with location: 1445 (25.57%)
+2025-04-10 19:11:48,722 - INFO - Top years:
+2025-04-10 19:11:48,723 - INFO -   2000: 192 entries
+2025-04-10 19:11:48,723 - INFO -   2017: 138 entries
+2025-04-10 19:11:48,723 - INFO -   1998: 114 entries
+2025-04-10 19:11:48,723 - INFO -   2013: 110 entries
+2025-04-10 19:11:48,723 - INFO -   2018: 84 entries
+2025-04-10 19:11:48,723 - INFO -   2014: 81 entries
+2025-04-10 19:11:48,723 - INFO -   2012: 78 entries
+2025-04-10 19:11:48,723 - INFO -   2008: 78 entries
+2025-04-10 19:11:48,723 - INFO -   2002: 75 entries
+2025-04-10 19:11:48,723 - INFO -   1952: 67 entries
+2025-04-10 19:11:48,724 - INFO - Top publishers:
+2025-04-10 19:11:48,724 - INFO -   pp: 23 entries
+2025-04-10 19:11:48,724 - INFO -   Stefan Zweig: 12 entries
+2025-04-10 19:11:48,724 - INFO -   1998: 10 entries
+2025-04-10 19:11:48,724 - INFO -   p: 6 entries
+2025-04-10 19:11:48,724 - INFO -   1929: 5 entries
+2025-04-10 19:11:48,724 - INFO -   Gesellschaft: 5 entries
+2025-04-10 19:11:48,725 - INFO -   nden: 5 entries
+2025-04-10 19:11:48,725 - INFO -   1904: 4 entries
+2025-04-10 19:11:48,725 - INFO -   GmbH: 4 entries
+2025-04-10 19:11:48,725 - INFO -   1902: 4 entries
+2025-04-10 19:11:48,725 - INFO - == Generating Visualizations ==
+2025-04-10 19:11:48,869 - INFO - Created content length distribution visualization
+2025-04-10 19:11:49,009 - INFO - Created content type distribution visualization
+2025-04-10 19:11:49,249 - INFO - Created year distribution visualization
+2025-04-10 19:11:49,381 - INFO - Created pattern distribution visualization
+2025-04-10 19:11:49,488 - INFO - Created BLOB distribution visualization
+2025-04-10 19:11:49,576 - INFO - Saved enhanced dataset to analysis_output/zweig_bibliography_enhanced_20250410_1911.csv
+2025-04-10 19:11:49,576 - INFO - === EXTRACTION AND ANALYSIS COMPLETE ===

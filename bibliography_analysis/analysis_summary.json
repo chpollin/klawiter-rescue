@@ -1,0 +1,92 @@
+{
+  "basic_stats": {
+    "total_entries": 3166,
+    "unique_pages": 3166,
+    "content_stats": {
+      "min_length": 17,
+      "max_length": 1951,
+      "avg_length": 409.90366392924824,
+      "median_length": 282.0
+    },
+    "blob_distribution": {
+      "5": 844,
+      "4": 711,
+      "7": 528,
+      "6": 304,
+      "1": 282,
+      "2": 180,
+      "8": 162,
+      "3": 155
+    },
+    "flags_distribution": {
+      "utf-8": 3166
+    },
+    "redirects": 881
+  },
+  "content_types": {
+    "Category": 2282,
+    "Redirect": 881,
+    "Translation": 1,
+    "Unknown": 1,
+    "Bibliography Entry": 1
+  },
+  "language_distribution": {
+    "Unknown": 1487,
+    "German": 669,
+    "French": 242,
+    "Chinese": 221,
+    "Spanish": 166,
+    "English": 136,
+    "translation": 101,
+    "Arabic": 60,
+    "Russian": 27,
+    "version": 21,
+    "Italian": 20,
+    "in English": 12,
+    "edition": 2,
+    "In English": 2
+  },
+  "top_works": {
+    "Schachnovelle": 154,
+    "Angst": 140,
+    "Brief einer Unbekannten": 116,
+    "Brennendes Geheimnis": 75,
+    "Magellan": 75,
+    "Amok": 74,
+    "Die Welt von Gestern": 71,
+    "Sternstunden der Menschheit": 48,
+    "Erasmus von Rotterdam": 47,
+    "Ungeduld des Herzens": 45
+  },
+  "publication_timeline": {
+    "top_years": {
+      "2013": 194,
+      "1998": 187,
+      "2017": 181,
+      "2000": 155,
+      "1942": 146,
+      "2018": 122,
+      "2019": 119,
+      "2016": 116,
+      "1952": 114,
+      "2014": 97
+    }
+  },
+  "top_categories": {
+    "Secondary Literature / Authors (German)": 272,
+    "Essays / Individual Essays (German)": 156,
+    "Essays / Individual Essays (Spanish)": 103,
+    "Secondary Literature / Authors (French)": 97,
+    "Secondary Literature / Authors (English)": 94,
+    "Secondary Literature / Authors (Arabic)": 73,
+    "Essays / Individual Essays (Chinese)": 71,
+    "Essays / Individual Essays (French)": 62,
+    "Poetry / Individual Poems (German)": 56,
+    "Poetry / Individual Poems (Chinese)": 49,
+    "Films / Plays / Operas": 47,
+    "Fiction / Individual Stories (French)": 45,
+    "Fiction / Individual Stories (Chinese)": 36,
+    "Secondary Literature / Titles (German)": 35,
+    "Fiction / Volumes (German)": 33
+  }
+}

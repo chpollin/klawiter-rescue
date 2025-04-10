@@ -1,0 +1,128 @@
+2025-04-10 18:59:29,262 - INFO - === STARTING STEFAN ZWEIG BIBLIOGRAPHY ANALYSIS ===
+2025-04-10 18:59:29,262 - INFO - Results will be saved to log file: zweig_analysis_20250410_1859.log
+2025-04-10 18:59:29,262 - INFO - Found latest CSV file: zweig_extraction_progress_20250410_1817.csv
+2025-04-10 18:59:29,273 - INFO - Successfully loaded 3166 entries with UTF-8 encoding
+2025-04-10 18:59:29,278 - INFO - === BASIC STATISTICS ===
+2025-04-10 18:59:29,278 - INFO - Total entries: 3166
+2025-04-10 18:59:29,278 - INFO - Unique pages: 3166
+2025-04-10 18:59:29,278 - INFO - Redirects: 881
+2025-04-10 18:59:29,278 - INFO - Content length - Min: 17, Max: 1951, Avg: 409.90
+2025-04-10 18:59:29,278 - INFO - BLOB distribution: {5: 844, 4: 711, 7: 528, 6: 304, 1: 282, 2: 180, 8: 162, 3: 155}
+2025-04-10 18:59:29,278 - INFO - Flags distribution: {'utf-8': 3166}
+2025-04-10 18:59:29,401 - INFO - === CONTENT TYPE ANALYSIS ===
+2025-04-10 18:59:29,401 - INFO - Category: 2282 entries (72.08%)
+2025-04-10 18:59:29,401 - INFO - Redirect: 881 entries (27.83%)
+2025-04-10 18:59:29,401 - INFO - Translation: 1 entries (0.03%)
+2025-04-10 18:59:29,401 - INFO - Unknown: 1 entries (0.03%)
+2025-04-10 18:59:29,402 - INFO - Bibliography Entry: 1 entries (0.03%)
+2025-04-10 18:59:29,912 - INFO - === BIBLIOGRAPHIC DATA EXTRACTION ===
+2025-04-10 18:59:29,912 - INFO - Titles extracted: 12
+2025-04-10 18:59:29,913 - INFO - Years extracted: 2145
+2025-04-10 18:59:29,913 - INFO - Publishers extracted: 397
+2025-04-10 18:59:29,914 - INFO - Locations extracted: 1119
+2025-04-10 18:59:29,914 - INFO - Translators extracted: 794
+2025-04-10 18:59:29,914 - INFO - Page counts extracted: 543
+2025-04-10 18:59:29,915 - INFO - Languages explicitly mentioned: 116
+2025-04-10 18:59:29,915 - INFO - === SAMPLE ENTRIES ===
+2025-04-10 18:59:29,916 - INFO - - Title: \'\'\'See:\'\'\' [[Im Schnee (VIST)]]\n\n[[Category:Fiction / Individual Stories (German)]]
+2025-04-10 18:59:29,916 - INFO - 
+2025-04-10 18:59:29,916 - INFO - - Title: \'\'\'See:\'\'\' [[Maizhelun]]\n\n\n[[Category:Historical Studies / Volumes (Chinese)]]
+2025-04-10 18:59:29,916 - INFO - 
+2025-04-10 18:59:29,916 - INFO - - Title: \'\'\'See:\'\'\' [[Rilke, Rainer Maria / Essays]]\n\n\n\n\n\n[[Category:Essays / Volumes (German)]]
+2025-04-10 18:59:29,917 - INFO - 
+2025-04-10 18:59:29,917 - INFO - - Title: \"Buchmendel\". See: [[Book-Mendel]]\n\n[[Category:Fiction / Individual Stories (English)]]
+2025-04-10 18:59:29,917 - INFO - 
+2025-04-10 18:59:29,917 - INFO - - Title: \n[[Category:Films / Plays / Operas]]
+2025-04-10 18:59:29,917 - INFO - 
+2025-04-10 18:59:30,280 - INFO - === LANGUAGE DISTRIBUTION ===
+2025-04-10 18:59:30,280 - INFO - Unknown: 1487 entries (46.97%)
+2025-04-10 18:59:30,280 - INFO - German: 669 entries (21.13%)
+2025-04-10 18:59:30,280 - INFO - French: 242 entries (7.64%)
+2025-04-10 18:59:30,280 - INFO - Chinese: 221 entries (6.98%)
+2025-04-10 18:59:30,280 - INFO - Spanish: 166 entries (5.24%)
+2025-04-10 18:59:30,280 - INFO - English: 136 entries (4.30%)
+2025-04-10 18:59:30,281 - INFO - translation: 101 entries (3.19%)
+2025-04-10 18:59:30,281 - INFO - Arabic: 60 entries (1.90%)
+2025-04-10 18:59:30,281 - INFO - Russian: 27 entries (0.85%)
+2025-04-10 18:59:30,281 - INFO - version: 21 entries (0.66%)
+2025-04-10 18:59:30,281 - INFO - Italian: 20 entries (0.63%)
+2025-04-10 18:59:30,281 - INFO - in English: 12 entries (0.38%)
+2025-04-10 18:59:30,281 - INFO - edition: 2 entries (0.06%)
+2025-04-10 18:59:30,281 - INFO - In English: 2 entries (0.06%)
+2025-04-10 18:59:31,161 - INFO - === REFERENCES TO MAJOR WORKS ===
+2025-04-10 18:59:31,162 - INFO - Schachnovelle: 154 references
+2025-04-10 18:59:31,162 - INFO - Angst: 140 references
+2025-04-10 18:59:31,162 - INFO - Brief einer Unbekannten: 116 references
+2025-04-10 18:59:31,162 - INFO - Brennendes Geheimnis: 75 references
+2025-04-10 18:59:31,162 - INFO - Magellan: 75 references
+2025-04-10 18:59:31,162 - INFO - Amok: 74 references
+2025-04-10 18:59:31,162 - INFO - Die Welt von Gestern: 71 references
+2025-04-10 18:59:31,162 - INFO - Sternstunden der Menschheit: 48 references
+2025-04-10 18:59:31,162 - INFO - Erasmus von Rotterdam: 47 references
+2025-04-10 18:59:31,163 - INFO - Ungeduld des Herzens: 45 references
+2025-04-10 18:59:31,163 - INFO - Drei Meister: 22 references
+2025-04-10 18:59:31,163 - INFO - Clarissa: 22 references
+2025-04-10 18:59:31,163 - INFO - Rausch der Verwandlung: 20 references
+2025-04-10 18:59:31,163 - INFO - Marie Antoinette: 18 references
+2025-04-10 18:59:31,163 - INFO - Verwirrung der Gefühle: 14 references
+2025-04-10 18:59:31,163 - INFO - Maria Stuart: 11 references
+2025-04-10 18:59:31,163 - INFO - Joseph Fouché: 3 references
+2025-04-10 18:59:31,184 - INFO - === PUBLICATION TIMELINE ===
+2025-04-10 18:59:31,184 - INFO - Years mentioned: 148 distinct years
+2025-04-10 18:59:31,184 - INFO - Most frequently mentioned years:
+2025-04-10 18:59:31,184 - INFO - 2013: 194 mentions
+2025-04-10 18:59:31,184 - INFO - 1998: 187 mentions
+2025-04-10 18:59:31,185 - INFO - 2017: 181 mentions
+2025-04-10 18:59:31,185 - INFO - 2000: 155 mentions
+2025-04-10 18:59:31,185 - INFO - 1942: 146 mentions
+2025-04-10 18:59:31,185 - INFO - 2018: 122 mentions
+2025-04-10 18:59:31,185 - INFO - 2019: 119 mentions
+2025-04-10 18:59:31,185 - INFO - 2016: 116 mentions
+2025-04-10 18:59:31,185 - INFO - 1952: 114 mentions
+2025-04-10 18:59:31,185 - INFO - 2014: 97 mentions
+2025-04-10 18:59:31,186 - INFO - Mentions during Zweig's lifetime (1881-1942): 1843 (28.51%)
+2025-04-10 18:59:31,186 - INFO - Mentions after Zweig's death: 4622 (71.49%)
+2025-04-10 18:59:31,191 - INFO - === CATEGORY STRUCTURE ===
+2025-04-10 18:59:31,191 - INFO - Unique categories: 341
+2025-04-10 18:59:31,191 - INFO - Most common categories:
+2025-04-10 18:59:31,191 - INFO - Secondary Literature / Authors (German): 272 entries
+2025-04-10 18:59:31,191 - INFO - Essays / Individual Essays (German): 156 entries
+2025-04-10 18:59:31,191 - INFO - Essays / Individual Essays (Spanish): 103 entries
+2025-04-10 18:59:31,191 - INFO - Secondary Literature / Authors (French): 97 entries
+2025-04-10 18:59:31,191 - INFO - Secondary Literature / Authors (English): 94 entries
+2025-04-10 18:59:31,191 - INFO - Secondary Literature / Authors (Arabic): 73 entries
+2025-04-10 18:59:31,191 - INFO - Essays / Individual Essays (Chinese): 71 entries
+2025-04-10 18:59:31,192 - INFO - Essays / Individual Essays (French): 62 entries
+2025-04-10 18:59:31,192 - INFO - Poetry / Individual Poems (German): 56 entries
+2025-04-10 18:59:31,192 - INFO - Poetry / Individual Poems (Chinese): 49 entries
+2025-04-10 18:59:31,192 - INFO - Films / Plays / Operas: 47 entries
+2025-04-10 18:59:31,192 - INFO - Fiction / Individual Stories (French): 45 entries
+2025-04-10 18:59:31,192 - INFO - Fiction / Individual Stories (Chinese): 36 entries
+2025-04-10 18:59:31,192 - INFO - Secondary Literature / Titles (German): 35 entries
+2025-04-10 18:59:31,192 - INFO - Fiction / Volumes (German): 33 entries
+2025-04-10 18:59:31,193 - INFO - Main category branches:
+2025-04-10 18:59:31,193 - INFO - Poetry: 10 subcategories
+2025-04-10 18:59:31,193 - INFO - Essays: 32 subcategories
+2025-04-10 18:59:31,193 - INFO - Secondary Literature: 67 subcategories
+2025-04-10 18:59:31,193 - INFO - Historical Studies: 61 subcategories
+2025-04-10 18:59:31,193 - INFO - Symposia and Exhibitions: 0 subcategories
+2025-04-10 18:59:31,193 - INFO - Symposia and: 0 subcategories
+2025-04-10 18:59:31,193 - INFO - Films: 1 subcategories
+2025-04-10 18:59:31,193 - INFO - Fiction: 103 subcategories
+2025-04-10 18:59:31,193 - INFO - Dramas: 15 subcategories
+2025-04-10 18:59:31,194 - INFO - Forewords and Afterwords: 0 subcategories
+2025-04-10 18:59:31,194 - INFO - Correspondence: 12 subcategories
+2025-04-10 18:59:31,194 - INFO - Translations by Zweig: 0 subcategories
+2025-04-10 18:59:31,194 - INFO - Dramatic Readings: 0 subcategories
+2025-04-10 18:59:31,194 - INFO - Collected and Selected Works: 0 subcategories
+2025-04-10 18:59:31,194 - INFO - Collected and Selected Works in Translation (Chinese): 0 subcategories
+2025-04-10 18:59:31,194 - INFO - Historical Studies (Chinese): 0 subcategories
+2025-04-10 18:59:31,194 - INFO - Collected and Selected Works in Translation (Hindi): 0 subcategories
+2025-04-10 18:59:31,194 - INFO - === GENERATING VISUALIZATIONS ===
+2025-04-10 18:59:31,533 - INFO - Created visualization: content_type_distribution.png
+2025-04-10 18:59:31,896 - INFO - Created visualization: content_length_distribution.png
+2025-04-10 18:59:31,939 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-04-10 18:59:31,939 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-04-10 18:59:32,194 - INFO - Created visualization: blob_distribution.png
+2025-04-10 18:59:32,979 - INFO - Created visualization: language_distribution.png
+2025-04-10 18:59:33,589 - INFO - Created visualization: publication_timeline.png
