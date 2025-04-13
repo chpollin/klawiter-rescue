@@ -1,0 +1,600 @@
+/* 
+ * Stefan Zweig Bibliography
+ * Main Stylesheet
+ */
+
+/* Base Styles & Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  a {
+    color: #1d72b8;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  /* Typography */
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.5em;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+  }
+  
+  /* Header */
+  header {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  header h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .search-container {
+    display: flex;
+    max-width: 600px;
+  }
+  
+  #search-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+  }
+  
+  #search-button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  #search-button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Navigation */
+  nav {
+    background-color: #34495e;
+    padding: 0.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .filter-options li {
+    margin-right: 10px;
+  }
+  
+  .filter-options a {
+    display: block;
+    padding: 8px 15px;
+    color: #ecf0f1;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+  }
+  
+  .filter-options a:hover {
+    background-color: #4a6583;
+    text-decoration: none;
+  }
+  
+  .filter-options a.active {
+    background-color: #3498db;
+    font-weight: 500;
+  }
+  
+  /* Main Content */
+  main {
+    padding: 2rem 0;
+    min-height: calc(100vh - 240px);
+  }
+  
+  #loading-indicator {
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+    color: #7f8c8d;
+  }
+  
+  #filter-controls {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+  }
+  
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #2c3e50;
+  }
+  
+  .filter-options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .filter-option {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .filter-option:hover {
+    border-color: #3498db;
+  }
+  
+  .filter-option.selected {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+  }
+  
+  #results-count {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+  }
+  
+  /* Dashboard Styles */
+  #dashboard-view {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .intro-section {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .intro-section p {
+    margin-bottom: 1rem;
+  }
+  
+  .intro-section p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .stats-section {
+    margin-top: 2rem;
+  }
+  
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-text {
+    font-size: 1.2rem;
+    color: #3498db;
+  }
+  
+  .stat-label {
+    color: #7f8c8d;
+    font-size: 1rem;
+  }
+  
+  .categories-section {
+    margin-top: 2rem;
+  }
+  
+  .category-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .category-tile {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .category-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  .category-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+  }
+  
+  .category-count {
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .browse-category {
+    margin-top: auto;
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+  
+  .browse-category:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .quick-filters-section {
+    margin-top: 2rem;
+  }
+  
+  .quick-filters-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .filter-group h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #2c3e50;
+  }
+  
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .filter-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ecf0f1;
+    padding: 5px 10px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  
+  .filter-tag:hover {
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .tag-name {
+    margin-right: 5px;
+  }
+  
+  .tag-count {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2px 6px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+  }
+  
+  /* Bibliography List */
+  #bibliography-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .bibliography-item {
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .bibliography-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  .item-title {
+    margin-bottom: 0.8rem;
+    color: #2c3e50;
+  }
+  
+  .item-meta {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+  }
+  
+  .item-meta span:not(:last-child)::after {
+    content: "•";
+    margin: 0 5px;
+    color: #bdc3c7;
+  }
+  
+  .view-details {
+    margin-top: auto;
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+  
+  .view-details:hover {
+    background-color: #2980b9;
+    color: white;
+    text-decoration: none;
+  }
+  
+  /* Entry Detail */
+  #entry-detail {
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .back-to-list {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .detail-title {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #ecf0f1;
+  }
+  
+  .detail-metadata {
+    margin-bottom: 2rem;
+  }
+  
+  .metadata-row {
+    display: flex;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  
+  .metadata-label {
+    flex: 0 0 150px;
+    font-weight: 500;
+    color: #34495e;
+  }
+  
+  .metadata-value {
+    flex: 1;
+  }
+  
+  .bibliographic-entry {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid #3498db;
+  }
+  
+  .bibliographic-entry h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.2rem;
+  }
+  
+  .entry-content {
+    white-space: pre-line;
+    line-height: 1.8;
+  }
+  
+  /* Error message */
+  #error-message {
+    padding: 1rem;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 1.5rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  
+  footer p:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+    
+    .filter-options {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .filter-options li {
+      margin-right: 0;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+    
+    .filter-options a {
+      width: 100%;
+    }
+    
+    .search-container {
+      flex-direction: column;
+    }
+    
+    #search-input {
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    
+    #search-button {
+      border-radius: 4px;
+      width: 100%;
+    }
+    
+    #bibliography-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .category-tiles {
+      grid-template-columns: 1fr;
+    }
+    
+    .quick-filters-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .metadata-row {
+      flex-direction: column;
+    }
+    
+    .metadata-label {
+      flex: none;
+      margin-bottom: 0.3rem;
+    }
+  }
+  
+  /* For very small screens */
+  @media (max-width: 480px) {
+    .container {
+      padding: 0 15px;
+    }
+    
+    header {
+      padding: 1rem 0;
+    }
+    
+    #entry-detail {
+      padding: 1.5rem;
+    }
+    
+    .bibliographic-entry {
+      padding: 1rem;
+    }
+    
+    .stat-number {
+      font-size: 1.5rem;
+    }
+    
+    .stat-text {
+      font-size: 1rem;
+    }
+  }
+  
+  /* Print styles */
+  @media print {
+    header, nav, footer, .back-to-list, .view-details {
+      display: none;
+    }
+    
+    body {
+      background-color: white;
+      color: black;
+    }
+    
+    .container {
+      max-width: 100%;
+      padding: 0;
+    }
+    
+    .bibliography-item, #entry-detail {
+      box-shadow: none;
+      break-inside: avoid;
+    }
+    
+    .detail-title {
+      font-size: 1.5rem;
+    }
+  }

@@ -18,7 +18,7 @@ The bibliography is stored in a multi-layered MediaWiki database structure:
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'dimp!74916',
+    'password': '',
     'database': 'klawiter'
 }
 ```
@@ -258,17 +258,3 @@ python extract-klawiter-data-from-db.py --csv path/to/extraction.csv
 --limit N          # Limit number of pages to process
 --output DIR       # Specify output directory
 ```
-
-## Future Improvements
-
-1. **Optimized Regex Patterns**: Further refine patterns for more accurate extraction
-2. **Content Cleaning**: Enhance MediaWiki formatting removal for cleaner text
-3. **Metadata Normalization**: Standardize publisher names and location information
-4. **Performance Optimization**: Improve extraction speed with parallel processing
-5. **Structured Database**: Create a clean, normalized database of the bibliography
-
-## Conclusion
-
-The extraction system successfully addresses the challenges of the complex MediaWiki structure. Through careful analysis and incremental improvements, we've developed a robust solution that can extract the complete Stefan Zweig bibliography with high reliability.
-
-The current scripts provide a comprehensive toolkit for extraction, analysis, and visualization that transforms the nested MediaWiki database into a structured, accessible format for research and reference purposes.

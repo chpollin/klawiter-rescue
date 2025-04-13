@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stefan Zweig Bibliography</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <meta name="description" content="A comprehensive bibliography of Stefan Zweig's works">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Stefan Zweig Bibliography</h1>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search bibliography...">
+                <button id="search-button">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="filter-options">
+                <li><a href="#dashboard" data-view="dashboard" class="active">Dashboard</a></li>
+                <li><a href="#" data-view="list" data-filter="all">All Entries</a></li>
+                <li><a href="#" data-view="list" data-filter="category">By Category</a></li>
+                <li><a href="#" data-view="list" data-filter="year">By Year</a></li>
+                <li><a href="#" data-view="list" data-filter="language">By Language</a></li>
+                <li><a href="#" data-view="list" data-filter="period">By Time Period</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div id="loading-indicator">Loading bibliography data...</div>
+            
+            <!-- New Dashboard Section -->
+            <div id="dashboard-view" style="display: none;">
+                <section class="intro-section">
+                    <h2>Welcome to the Stefan Zweig Bibliography</h2>
+                    <p>This comprehensive bibliography contains detailed information about the works of Stefan Zweig (1881-1942), one of the most translated and widely read German-language authors of the early 20th century.</p>
+                    <p>Explore Zweig's literary output through categories, time periods, languages, and more.</p>
+                </section>
+                
+                <section class="stats-section">
+                    <h2>Bibliography Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card" id="total-entries">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Total Works</div>
+                        </div>
+                        <div class="stat-card" id="total-categories">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                        <div class="stat-card" id="total-languages">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Languages</div>
+                        </div>
+                        <div class="stat-card" id="year-range">
+                            <div class="stat-text">1881-1942</div>
+                            <div class="stat-label">Publication Years</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="categories-section">
+                    <h2>Browse by Category</h2>
+                    <div class="category-tiles" id="category-tiles">
+                        <!-- Category tiles will be dynamically inserted here -->
+                    </div>
+                </section>
+                
+                <section class="quick-filters-section">
+                    <h2>Quick Filters</h2>
+                    <div class="quick-filters-container">
+                        <div class="filter-group">
+                            <h3>Popular Languages</h3>
+                            <div id="popular-languages" class="tag-list">
+                                <!-- Top languages will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Time Periods</h3>
+                            <div id="time-periods" class="tag-list">
+                                <!-- Time periods will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="filter-controls" style="display: none;">
+                <!-- Filter controls will be dynamically inserted here -->
+            </div>
+            
+            <div id="results-count" style="display: none;"></div>
+            
+            <div id="bibliography-list" style="display: none;">
+                <!-- Bibliography entries will be dynamically inserted here -->
+            </div>
+            
+            <div id="entry-detail" style="display: none;">
+                <!-- Detailed entry view will be shown here -->
+            </div>
+            
+            <div id="error-message" style="display: none;">
+                <!-- Error messages will be displayed here -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Stefan Zweig Bibliography &copy; <span id="current-year"></span></p>
+            <p>Based on data from the Zweig Digital project</p>
+        </div>
+    </footer>
+
+    <!-- Templates -->
+    <template id="bibliography-item-template">
+        <div class="bibliography-item">
+            <h3 class="item-title"></h3>
+            <div class="item-meta">
+                <span class="item-year"></span>
+                <span class="item-category"></span>
+                <span class="item-language"></span>
+            </div>
+            <a href="#" class="view-details">View Details</a>
+        </div>
+    </template>
+
+    <template id="entry-detail-template">
+        <div class="entry-detail-container">
+            <a href="#" class="back-to-list">&larr; Back to list</a>
+            <h2 class="detail-title"></h2>
+            
+            <div class="detail-metadata">
+                <div class="metadata-row">
+                    <span class="metadata-label">Original Title:</span>
+                    <span class="metadata-value original-title"></span>
+                </div>
+                <div class="metadata-row">
+                    <span class="metadata-label">Year:</span>
+                    <span class="metadata-value year"></span>
+                </div>
+                <div class="metadata-row">
+                    <span class="metadata-label">Publisher:</span>
+                    <span class="metadata-value publisher"></span>
+                </div>
+                <div class="metadata-row">
+                    <span class="metadata-label">Location:</span>
+                    <span class="metadata-value location"></span>
+                </div>
+                <div class="metadata-row">
+                    <span class="metadata-label">Language:</span>
+                    <span class="metadata-value language"></span>
+                </div>
+                <div class="metadata-row">
+                    <span class="metadata-label">Categories:</span>
+                    <span class="metadata-value categories"></span>
+                </div>
+                <div class="metadata-row">
+                    <span class="metadata-label">Time Period:</span>
+                    <span class="metadata-value time-period"></span>
+                </div>
+            </div>
+            
+            <div class="bibliographic-entry">
+                <h3>Full Bibliographic Entry</h3>
+                <div class="entry-content"></div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- New Template for Category Tile -->
+    <template id="category-tile-template">
+        <div class="category-tile">
+            <h3 class="category-name"></h3>
+            <div class="category-count"></div>
+            <a href="#" class="browse-category">Browse</a>
+        </div>
+    </template>
+    
+    <!-- New Template for Filter Tag -->
+    <template id="filter-tag-template">
+        <a href="#" class="filter-tag">
+            <span class="tag-name"></span>
+            <span class="tag-count"></span>
+        </a>
+    </template>
+
+    <script src="js/data.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Set current year in the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+2025-04-13 11:45:31,150 - INFO - Starting enhanced cleaning process for file: zweig_bibliography_cleaned_20250411_1024.csv
+2025-04-13 11:45:31,150 - INFO - Step 1: Loading data and initial assessment
+2025-04-13 11:45:31,217 - INFO - 
+Initial dataset:
+2025-04-13 11:45:31,217 - INFO - Shape: (5652, 14)
+2025-04-13 11:45:31,217 - INFO - Columns: ['page_id', 'page_title', 'text_id', 'content', 'content_cleaned', 'content_type', 'redirect_target', 'content_title', 'year', 'publisher', 'location', 'language', 'page_count', 'blob_id']
+2025-04-13 11:45:31,217 - INFO - Data types:
+page_id              int64
+page_title         float64
+text_id              int64
+content             object
+content_cleaned     object
+content_type        object
+redirect_target     object
+content_title       object
+year               float64
+publisher           object
+location            object
+language            object
+page_count         float64
+blob_id              int64
+dtype: object
+2025-04-13 11:45:31,230 - INFO - Missing values:
+page_id               0
+page_title         5652
+text_id               0
+content               0
+content_cleaned       0
+content_type          0
+redirect_target    4107
+content_title         0
+year               1799
+publisher          5222
+location           4207
+language           5584
+page_count         4655
+blob_id               0
+dtype: int64
+2025-04-13 11:45:31,232 - INFO - First 5 rows:
+   page_id  page_title  text_id                                                                                                                                                                                                                                                                                                                                               content                                                                                                                                                                                                                                                                                                                                       content_cleaned content_type                                                       redirect_target                                                                                                                                                                                                                                                                                                                                         content_title    year publisher location language  page_count  blob_id
+0     6054         NaN    41618                                                                                                                                                                                                                                                                                  #REDIRECT [[\"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien]]                                                                                                                                                                                                                                                                                                \"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien     Redirect                \"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien                                                                                                                                                                                                                                                                                  #REDIRECT [[\"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien]]     NaN       NaN      NaN      NaN         NaN        5
+1     6792         NaN    50284                                                                                                                                                                                                                                                                    #REDIRECT [[An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!]]                                                                                                                                                                                                                                                                                  An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!     Redirect  An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!                                                                                                                                                                                                                                                                    #REDIRECT [[An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!]]     NaN       NaN      NaN      NaN         NaN        6
+2     3176         NaN    20507                                                                                                                                                                                                                                                                                                           #REDIRECT [[Das Buch als Eingang zur Welt]]                                                                                                                                                                                                                                                                                                                         Das Buch als Eingang zur Welt     Redirect                                         Das Buch als Eingang zur Welt                                                                                                                                                                                                                                                                                                           #REDIRECT [[Das Buch als Eingang zur Welt]]     NaN       NaN      NaN      NaN         NaN        3
+3     7316         NaN    57910        \"Ein dunkler Weg  ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [March 1902], p. 263\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau,  2019], No. 32, p. 43\n</lst>\n\n\n[[Category:Poetry / Individual Poems (German)]]\n{{DEFAULTSORTKEY: Dunkler Weg}}        \"Ein dunkler Weg  ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [March 1902], p. 263\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau,  2019], No. 32, p. 43\n</lst>\n\n\n[[Category:Poetry / Individual Poems (German)]]\n{{DEFAULTSORTKEY: Dunkler Weg}}     Category                                                                   NaN        \"Ein dunkler Weg  ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [March 1902], p. 263\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau,  2019], No. 32, p. 43\n</lst>\n\n\n[[Category:Poetry / Individual Poems (German)]]\n{{DEFAULTSORTKEY: Dunkler Weg}}  1902.0       NaN   Berlin      NaN         NaN        7
+4     7310         NaN    57900  \"Eine blaue Flamme ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [January 1902], p. (181)\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau, 2019], No. 26, p. 37\n</lst>\n\n\n[[Category:Poetry  / Individual Poems (German)]]\n{{DEFAULTSORTKEY:Blaume Flamme}}  \"Eine blaue Flamme ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [January 1902], p. (181)\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau, 2019], No. 26, p. 37\n</lst>\n\n\n[[Category:Poetry  / Individual Poems (German)]]\n{{DEFAULTSORTKEY:Blaume Flamme}}     Category                                                                   NaN  \"Eine blaue Flamme ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [January 1902], p. (181)\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau, 2019], No. 26, p. 37\n</lst>\n\n\n[[Category:Poetry  / Individual Poems (German)]]\n{{DEFAULTSORTKEY:Blaume Flamme}}  1902.0       NaN   Berlin      NaN         NaN        7
+2025-04-13 11:45:31,235 - INFO - Step 2: Structural cleaning
+2025-04-13 11:45:31,236 - INFO - Removing 'page_title' column as it's 100% NULL
+2025-04-13 11:45:31,236 - INFO - Converting 'year' column to float type
+2025-04-13 11:45:31,236 - INFO - 
+After structural cleaning:
+2025-04-13 11:45:31,238 - INFO - Shape: (5652, 13)
+2025-04-13 11:45:31,238 - INFO - Columns: ['page_id', 'text_id', 'content', 'content_cleaned', 'content_type', 'redirect_target', 'content_title', 'year', 'publisher', 'location', 'language', 'page_count', 'blob_id']
+2025-04-13 11:45:31,238 - INFO - Data types:
+page_id              int64
+text_id              int64
+content             object
+content_cleaned     object
+content_type        object
+redirect_target     object
+content_title       object
+year               float64
+publisher           object
+location            object
+language            object
+page_count         float64
+blob_id              int64
+dtype: object
+2025-04-13 11:45:31,240 - INFO - Missing values:
+page_id               0
+text_id               0
+content               0
+content_cleaned       0
+content_type          0
+redirect_target    4107
+content_title         0
+year               1799
+publisher          5222
+location           4207
+language           5584
+page_count         4655
+blob_id               0
+dtype: int64
+2025-04-13 11:45:31,243 - INFO - First 5 rows:
+   page_id  text_id                                                                                                                                                                                                                                                                                                                                               content                                                                                                                                                                                                                                                                                                                                       content_cleaned content_type                                                       redirect_target                                                                                                                                                                                                                                                                                                                                         content_title    year publisher location language  page_count  blob_id
+0     6054    41618                                                                                                                                                                                                                                                                                  #REDIRECT [[\"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien]]                                                                                                                                                                                                                                                                                                \"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien     Redirect                \"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien                                                                                                                                                                                                                                                                                  #REDIRECT [[\"Am liebsten w‰re mir Rom!\" Stefan Zweig und Italien]]     NaN       NaN      NaN      NaN         NaN        5
+1     6792    50284                                                                                                                                                                                                                                                                    #REDIRECT [[An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!]]                                                                                                                                                                                                                                                                                  An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!     Redirect  An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!                                                                                                                                                                                                                                                                    #REDIRECT [[An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!]]     NaN       NaN      NaN      NaN         NaN        6
+2     3176    20507                                                                                                                                                                                                                                                                                                           #REDIRECT [[Das Buch als Eingang zur Welt]]                                                                                                                                                                                                                                                                                                                         Das Buch als Eingang zur Welt     Redirect                                         Das Buch als Eingang zur Welt                                                                                                                                                                                                                                                                                                           #REDIRECT [[Das Buch als Eingang zur Welt]]     NaN       NaN      NaN      NaN         NaN        3
+3     7316    57910        \"Ein dunkler Weg  ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [March 1902], p. 263\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau,  2019], No. 32, p. 43\n</lst>\n\n\n[[Category:Poetry / Individual Poems (German)]]\n{{DEFAULTSORTKEY: Dunkler Weg}}        \"Ein dunkler Weg  ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [March 1902], p. 263\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau,  2019], No. 32, p. 43\n</lst>\n\n\n[[Category:Poetry / Individual Poems (German)]]\n{{DEFAULTSORTKEY: Dunkler Weg}}     Category                                                                   NaN        \"Ein dunkler Weg  ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [March 1902], p. 263\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau,  2019], No. 32, p. 43\n</lst>\n\n\n[[Category:Poetry / Individual Poems (German)]]\n{{DEFAULTSORTKEY: Dunkler Weg}}  1902.0       NaN   Berlin      NaN         NaN        7
+4     7310    57900  \"Eine blaue Flamme ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [January 1902], p. (181)\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau, 2019], No. 26, p. 37\n</lst>\n\n\n[[Category:Poetry  / Individual Poems (German)]]\n{{DEFAULTSORTKEY:Blaume Flamme}}  \"Eine blaue Flamme ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [January 1902], p. (181)\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau, 2019], No. 26, p. 37\n</lst>\n\n\n[[Category:Poetry  / Individual Poems (German)]]\n{{DEFAULTSORTKEY:Blaume Flamme}}     Category                                                                   NaN  \"Eine blaue Flamme ...\" in \'\'Deutsche Dichtung\'\' [Berlin], 31 [January 1902], p. (181)\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n[[\"Was wir wollen!\" Gedichte und Nachdichtungen]] [Krems an der Donau, 2019], No. 26, p. 37\n</lst>\n\n\n[[Category:Poetry  / Individual Poems (German)]]\n{{DEFAULTSORTKEY:Blaume Flamme}}  1902.0       NaN   Berlin      NaN         NaN        7
+2025-04-13 11:45:31,243 - INFO - Step 3: Content normalization
+2025-04-13 11:45:31,243 - INFO - Fixing character encoding in 'content' column
+2025-04-13 11:45:33,935 - INFO - Fixing character encoding in 'content_cleaned' column
+2025-04-13 11:45:36,604 - INFO - Fixing character encoding in 'redirect_target' column
+2025-04-13 11:45:36,734 - INFO - Fixing character encoding in 'content_title' column
+2025-04-13 11:45:39,430 - INFO - Creating clean redirect column
+2025-04-13 11:45:39,430 - INFO - Step 4: Metadata enhancement
+2025-04-13 11:45:39,430 - INFO - Extracting categories from content
+2025-04-13 11:45:39,435 - INFO - Formatting categories as readable text
+2025-04-13 11:45:39,446 - INFO - Adding main category classification
+2025-04-13 11:45:39,447 - INFO - Adding time period classification
+2025-04-13 11:45:39,449 - INFO - Step 5: Enhanced metadata extraction
+2025-04-13 11:45:39,449 - INFO - Extracting catalog numbers
+2025-04-13 11:45:39,645 - INFO - Skipping catalog number extraction as they match text_id
+2025-04-13 11:45:39,645 - INFO - Extracting transliterated and original titles
+2025-04-13 11:45:40,017 - INFO - Extracting full bibliographic entry
+2025-04-13 11:45:40,155 - INFO - Extracting publisher and location information
+2025-04-13 11:45:40,695 - INFO - Extracting language information
+2025-04-13 11:45:40,732 - INFO - Extracting page count
+2025-04-13 11:45:40,955 - INFO - Step 6: Extracting content items
+2025-04-13 11:45:41,368 - INFO - Extracting transliterated and original titles
+2025-04-13 11:45:41,755 - INFO - Step 7: Creating fully cleaned content
+2025-04-13 11:45:41,755 - INFO - Creating clean title field
+2025-04-13 11:45:41,783 - INFO - Completely removing wiki markup from content
+2025-04-13 11:45:43,956 - INFO - Step 8: Preparing final dataset for manual editing
+2025-04-13 11:45:43,965 - INFO - 
+Final dataset for manual editing:
+2025-04-13 11:45:43,965 - INFO - Shape: (5652, 14)
+2025-04-13 11:45:43,965 - INFO - Columns: ['page_id', 'text_id', 'title', 'original_title', 'full_bibliographic_entry', 'year', 'publisher', 'location', 'language', 'page_count', 'clean_content', 'categories', 'main_category', 'time_period']
+2025-04-13 11:45:43,966 - INFO - Data types:
+page_id                      int64
+text_id                      int64
+title                       object
+original_title              object
+full_bibliographic_entry    object
+year                        object
+publisher                   object
+location                    object
+language                    object
+page_count                  object
+clean_content               object
+categories                  object
+main_category               object
+time_period                 object
+dtype: object
+2025-04-13 11:45:43,968 - INFO - Missing values:
+page_id                     0
+text_id                     0
+title                       0
+original_title              0
+full_bibliographic_entry    0
+year                        0
+publisher                   0
+location                    0
+language                    0
+page_count                  0
+clean_content               0
+categories                  0
+main_category               0
+time_period                 0
+dtype: int64
+2025-04-13 11:45:43,969 - INFO - First 5 rows:
+   page_id  text_id                                                                 title original_title                                                                                                                                                                                            full_bibliographic_entry    year                                                  publisher location language page_count                                                                                                                                                                                                       clean_content                          categories main_category                  time_period
+0     6054    41618                  "Am liebsten w‰re mir Rom!" Stefan Zweig und Italien                                                                                                                                                                               "Am liebsten w‰re mir Rom!" Stefan Zweig und Italien                                                                                                                                                                                                                                                                "Am liebsten w‰re mir Rom!" Stefan Zweig und Italien                                                                               
+1     6792    50284  An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!                                                                                                                                                               An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!                                                                                                                                                                                                                                                An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!                                                                               
+2     3176    20507                                         Das Buch als Eingang zur Welt                                                                                                                                                                                                      Das Buch als Eingang zur Welt                                                                                                                                                                                                                                                                                       Das Buch als Eingang zur Welt                                                                               
+3     7316    57910                        "Ein dunkler Weg ..." in ''Deutsche Dichtung''         Berlin        "Ein dunkler Weg ..." in ''Deutsche Dichtung'' [Berlin], 31 [March 1902], p. 263\n\n'''Reprinted in:'''\n\n"Was wir wollen!" Gedichte und Nachdichtungen [Krems an der Donau, 2019], No. 32, p. 43\n\n\n\n\n  1902.0    "Ein dunkler Weg ..." in ''Deutsche Dichtung'' [Berlin]   Berlin   German                   "Ein dunkler Weg ..." in ''Deutsche Dichtung'' [Berlin], 31 [March 1902], p. 263\n\n'''Reprinted in:'''\n\n"Was wir wollen!" Gedichte und Nachdichtungen [Krems an der Donau, 2019], No. 32, p. 43\n\n\n\n\n  Poetry / Individual Poems (German)        Poetry  During Lifetime (1881-1942)
+4     7310    57900                      "Eine blaue Flamme ..." in ''Deutsche Dichtung''         Berlin  "Eine blaue Flamme ..." in ''Deutsche Dichtung'' [Berlin], 31 [January 1902], p. (181)\n\n'''Reprinted in:'''\n\n"Was wir wollen!" Gedichte und Nachdichtungen [Krems an der Donau, 2019], No. 26, p. 37\n\n\n\n\n  1902.0  "Eine blaue Flamme ..." in ''Deutsche Dichtung'' [Berlin]   Berlin   German             "Eine blaue Flamme ..." in ''Deutsche Dichtung'' [Berlin], 31 [January 1902], p. (181)\n\n'''Reprinted in:'''\n\n"Was wir wollen!" Gedichte und Nachdichtungen [Krems an der Donau, 2019], No. 26, p. 37\n\n\n\n\n  Poetry / Individual Poems (German)        Poetry  During Lifetime (1881-1942)
+2025-04-13 11:45:43,970 - INFO - Step 9: Verifying encoding quality
+2025-04-13 11:45:43,974 - WARNING - Encoding issues found in title, examples:
+2025-04-13 11:45:43,977 - WARNING -   3. "Ne thoshim shkoll√´; Naivitet; 60 vjeÁari falenderon :
+2025-04-13 11:45:43,980 - WARNING - Encoding issues found in original_title, examples:
+2025-04-13 11:45:43,980 - WARNING -   1. 1914 und heute. Anl‰ﬂlich des Romans von Roger Martin du Gard ''√âtÈ''
+2025-04-13 11:45:43,980 - WARNING -   2. 1914 und heute. Anl‰ﬂlich des Romans von Roger Martin du Gard '√âtÈ 1914'
+2025-04-13 11:45:43,981 - WARNING -   3. Aufruf f≈±r die ≈ësterreichischen Juden
+2025-04-13 11:45:43,989 - WARNING - Encoding issues found in clean_content, examples:
+2025-04-13 11:45:43,996 - WARNING -   3. "1914 et maintenant" [1914 und heute. Anl‰ﬂlich des Romans von Roger Martin du Gard ''√âtÈ''] in Derniers messages [Paris/Neuch‚tel, 1949], No. 12, pp. (207)-216\n\n'''Reprinted in:'''\n\nDerniers messages [Paris, 2013], No. 13, pp. (233)-242\n\n\n'''See:''' 1914 und heute\n\n\n\n
+2025-04-13 11:45:43,996 - WARNING - Potential encoding issues remain in 3 columns: {'title': 385, 'original_title': 23, 'clean_content': 1118}
+2025-04-13 11:45:45,906 - INFO - After deep cleaning, remaining issues: 355
+2025-04-13 11:45:45,906 - INFO - Step 10: Exporting enhanced cleaned data to zweig_bibliography_enhanced.csv
+2025-04-13 11:45:45,967 - INFO - Enhanced cleaning process completed successfully
+2025-04-13 11:45:45,995 - INFO - 
+Enhanced Cleaning Summary Report:
+2025-04-13 11:45:45,995 - INFO - Input file: zweig_bibliography_cleaned_20250411_1024.csv
+2025-04-13 11:45:45,995 - INFO - Output file: zweig_bibliography_enhanced.csv
+2025-04-13 11:45:45,995 - INFO - Total records processed: 5652
+2025-04-13 11:45:45,995 - INFO - Character encoding issues fixed in text columns
+2025-04-13 11:45:45,995 - INFO - Wiki markup completely removed from content
+2025-04-13 11:45:45,995 - INFO - Enhanced bibliographic data extracted from content
+2025-04-13 11:45:45,995 - INFO - Content items with original titles and translators extracted
+2025-04-13 11:45:45,995 - INFO - Comprehensive encoding fixes applied to handle multilingual content
+2025-04-13 11:45:45,995 - INFO - Clean, comprehensive structure created for manual editing
+2025-04-13 11:45:45,995 - INFO - 
+Validation Results:
+2025-04-13 11:45:45,995 - INFO - Total columns in final dataset: 14
+2025-04-13 11:45:45,995 - WARNING - Potential remaining encoding issues in 6 columns:
+2025-04-13 11:45:45,995 - WARNING -   - title: 355 records
+2025-04-13 11:45:45,995 - WARNING -   - original_title: 18 records
+2025-04-13 11:45:45,995 - WARNING -   - full_bibliographic_entry: 917 records
+2025-04-13 11:45:45,995 - WARNING -   - publisher: 416 records
+2025-04-13 11:45:45,995 - WARNING -   - language: 18 records
+2025-04-13 11:45:45,995 - WARNING -   - clean_content: 1118 records
+2025-04-13 11:45:45,995 - INFO - 
+Sample rows from enhanced cleaned dataset for manual editing:
+2025-04-13 11:45:45,995 - INFO - 
+Row 0:
+2025-04-13 11:45:45,995 - INFO - page_id: 6054
+2025-04-13 11:45:45,995 - INFO - text_id: 41618
+2025-04-13 11:45:45,995 - INFO - title: "Am liebsten w‰re mir Rom!" Stefan Zweig und Italien
+2025-04-13 11:45:45,995 - INFO - original_title: 
+2025-04-13 11:45:45,995 - INFO - full_bibliographic_entry: "Am liebsten w‰re mir Rom!" Stefan Zweig und Italien
+2025-04-13 11:45:45,995 - INFO - year: 
+2025-04-13 11:45:45,995 - INFO - publisher: 
+2025-04-13 11:45:45,995 - INFO - location: 
+2025-04-13 11:45:45,995 - INFO - language: 
+2025-04-13 11:45:46,000 - INFO - page_count: 
+2025-04-13 11:45:46,000 - INFO - clean_content: "Am liebsten w‰re mir Rom!" Stefan Zweig und Italien
+2025-04-13 11:45:46,000 - INFO - categories: 
+2025-04-13 11:45:46,000 - INFO - main_category: 
+2025-04-13 11:45:46,000 - INFO - time_period: 
+2025-04-13 11:45:46,000 - INFO - 
+Row 1:
+2025-04-13 11:45:46,000 - INFO - page_id: 6792
+2025-04-13 11:45:46,000 - INFO - text_id: 50284
+2025-04-13 11:45:46,000 - INFO - title: An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!
+2025-04-13 11:45:46,000 - INFO - original_title: 
+2025-04-13 11:45:46,000 - INFO - full_bibliographic_entry: An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!
+2025-04-13 11:45:46,000 - INFO - year: 
+2025-04-13 11:45:46,000 - INFO - publisher: 
+2025-04-13 11:45:46,000 - INFO - location: 
+2025-04-13 11:45:46,000 - INFO - language: 
+2025-04-13 11:45:46,000 - INFO - page_count: 
+2025-04-13 11:45:46,000 - INFO - clean_content: An die Veranstalter des internationalen Antikriegskongreﬂes in Genf!
+2025-04-13 11:45:46,000 - INFO - categories: 
+2025-04-13 11:45:46,000 - INFO - main_category: 
+2025-04-13 11:45:46,000 - INFO - time_period: 
+2025-04-13 11:45:46,000 - INFO - 
+Row 2:
+2025-04-13 11:45:46,000 - INFO - page_id: 3176
+2025-04-13 11:45:46,000 - INFO - text_id: 20507
+2025-04-13 11:45:46,000 - INFO - title: Das Buch als Eingang zur Welt
+2025-04-13 11:45:46,000 - INFO - original_title: 
+2025-04-13 11:45:46,000 - INFO - full_bibliographic_entry: Das Buch als Eingang zur Welt
+2025-04-13 11:45:46,000 - INFO - year: 
+2025-04-13 11:45:46,002 - INFO - publisher: 
+2025-04-13 11:45:46,002 - INFO - location: 
+2025-04-13 11:45:46,002 - INFO - language: 
+2025-04-13 11:45:46,002 - INFO - page_count: 
+2025-04-13 11:45:46,002 - INFO - clean_content: Das Buch als Eingang zur Welt
+2025-04-13 11:45:46,002 - INFO - categories: 
+2025-04-13 11:45:46,002 - INFO - main_category: 
+2025-04-13 11:45:46,002 - INFO - time_period: 

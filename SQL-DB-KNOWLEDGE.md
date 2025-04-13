@@ -15,7 +15,7 @@ This documentation describes a MediaWiki database containing an extensive Stefan
   DB_CONFIG = {
       'host': 'localhost',
       'user': 'root',
-      'password': 'dimp!74916',
+      'password': '',
       'database': 'klawiter'
   }
   ```

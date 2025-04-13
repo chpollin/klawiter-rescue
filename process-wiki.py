@@ -6,7 +6,7 @@ try:
         host="localhost",
         user="root",
         password="",
-        database=""
+        database="klawiter"
     )
     print("Verbindung zur Datenbank hergestellt")
     

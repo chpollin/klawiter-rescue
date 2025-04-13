@@ -1,0 +1,509 @@
+2025-04-11 10:28:31,172 - INFO - === STARTING ZWEIG BIBLIOGRAPHY DATA ANALYSIS ===
+2025-04-11 10:28:31,173 - INFO - Loading CSV file: analysis_output/zweig_bibliography_enhanced_20250410_1911.csv
+2025-04-11 10:28:31,212 - INFO - Successfully loaded 5652 entries with UTF-8 encoding
+2025-04-11 10:28:31,212 - INFO - DataFrame shape: (5652, 15)
+2025-04-11 10:28:31,212 - INFO - Columns: ['page_id', 'page_title', 'text_id', 'content', 'flags', 'blob_id', 'content_length', 'content_title', 'title_match', 'content_type', 'year', 'publisher', 'location', 'language', 'page_count']
+2025-04-11 10:28:31,223 - INFO - Missing values per column:
+2025-04-11 10:28:31,223 - INFO -   page_title: 5652 missing values (100.00%)
+2025-04-11 10:28:31,223 - INFO -   year: 1799 missing values (31.83%)
+2025-04-11 10:28:31,223 - INFO -   publisher: 5222 missing values (92.39%)
+2025-04-11 10:28:31,223 - INFO -   location: 4207 missing values (74.43%)
+2025-04-11 10:28:31,223 - INFO -   language: 5584 missing values (98.80%)
+2025-04-11 10:28:31,223 - INFO -   page_count: 4655 missing values (82.36%)
+2025-04-11 10:28:31,223 - INFO - === CONTENT TYPE ANALYSIS ===
+2025-04-11 10:28:31,224 - INFO - Content type distribution:
+2025-04-11 10:28:31,224 - INFO -   Category: 4100 entries (72.54%)
+2025-04-11 10:28:31,224 - INFO -   Other: 1496 entries (26.47%)
+2025-04-11 10:28:31,224 - INFO -   Essay: 19 entries (0.34%)
+2025-04-11 10:28:31,224 - INFO -   Correspondence: 16 entries (0.28%)
+2025-04-11 10:28:31,224 - INFO -   Film/Media: 10 entries (0.18%)
+2025-04-11 10:28:31,224 - INFO -   Bibliography Entry: 8 entries (0.14%)
+2025-04-11 10:28:31,224 - INFO -   Review: 1 entries (0.02%)
+2025-04-11 10:28:31,225 - INFO -   Translation: 1 entries (0.02%)
+2025-04-11 10:28:31,225 - INFO -   Biography: 1 entries (0.02%)
+2025-04-11 10:28:31,225 - INFO - Content length statistics by type:
+2025-04-11 10:28:31,226 - INFO -   Category:
+2025-04-11 10:28:31,226 - INFO -     Count: 4100.0
+2025-04-11 10:28:31,226 - INFO -     Mean: 552.65
+2025-04-11 10:28:31,226 - INFO -     Min: 34.0
+2025-04-11 10:28:31,227 - INFO -     Max: 1951.0
+2025-04-11 10:28:31,228 - INFO -   Other:
+2025-04-11 10:28:31,228 - INFO -     Count: 1496.0
+2025-04-11 10:28:31,228 - INFO -     Mean: 50.57
+2025-04-11 10:28:31,228 - INFO -     Min: 16.0
+2025-04-11 10:28:31,228 - INFO -     Max: 1843.0
+2025-04-11 10:28:31,229 - INFO -   Essay:
+2025-04-11 10:28:31,229 - INFO -     Count: 19.0
+2025-04-11 10:28:31,229 - INFO -     Mean: 49.26
+2025-04-11 10:28:31,229 - INFO -     Min: 35.0
+2025-04-11 10:28:31,229 - INFO -     Max: 112.0
+2025-04-11 10:28:31,230 - INFO -   Correspondence:
+2025-04-11 10:28:31,230 - INFO -     Count: 16.0
+2025-04-11 10:28:31,231 - INFO -     Mean: 112.69
+2025-04-11 10:28:31,231 - INFO -     Min: 42.0
+2025-04-11 10:28:31,231 - INFO -     Max: 633.0
+2025-04-11 10:28:31,232 - INFO -   Film/Media:
+2025-04-11 10:28:31,232 - INFO -     Count: 10.0
+2025-04-11 10:28:31,232 - INFO -     Mean: 46.20
+2025-04-11 10:28:31,232 - INFO -     Min: 32.0
+2025-04-11 10:28:31,232 - INFO -     Max: 58.0
+2025-04-11 10:28:31,233 - INFO -   Bibliography Entry:
+2025-04-11 10:28:31,233 - INFO -     Count: 8.0
+2025-04-11 10:28:31,233 - INFO -     Mean: 49.12
+2025-04-11 10:28:31,233 - INFO -     Min: 43.0
+2025-04-11 10:28:31,233 - INFO -     Max: 65.0
+2025-04-11 10:28:31,234 - INFO -   Review:
+2025-04-11 10:28:31,234 - INFO -     Count: 1.0
+2025-04-11 10:28:31,234 - INFO -     Mean: 384.00
+2025-04-11 10:28:31,234 - INFO -     Min: 384.0
+2025-04-11 10:28:31,234 - INFO -     Max: 384.0
+2025-04-11 10:28:31,235 - INFO -   Translation:
+2025-04-11 10:28:31,235 - INFO -     Count: 1.0
+2025-04-11 10:28:31,236 - INFO -     Mean: 812.00
+2025-04-11 10:28:31,236 - INFO -     Min: 812.0
+2025-04-11 10:28:31,236 - INFO -     Max: 812.0
+2025-04-11 10:28:31,237 - INFO -   Biography:
+2025-04-11 10:28:31,237 - INFO -     Count: 1.0
+2025-04-11 10:28:31,237 - INFO -     Mean: 81.00
+2025-04-11 10:28:31,237 - INFO -     Min: 81.0
+2025-04-11 10:28:31,237 - INFO -     Max: 81.0
+2025-04-11 10:28:31,237 - INFO - === REDIRECT ENTRIES ANALYSIS ===
+2025-04-11 10:28:31,238 - INFO - Found 1545 redirect entries
+2025-04-11 10:28:31,240 - INFO - Redirects with unparsed targets: 0
+2025-04-11 10:28:31,240 - INFO - Content types of redirect entries:
+2025-04-11 10:28:31,240 - INFO -   Other: 1492 entries (96.57%)
+2025-04-11 10:28:31,240 - INFO -   Essay: 19 entries (1.23%)
+2025-04-11 10:28:31,240 - INFO -   Correspondence: 15 entries (0.97%)
+2025-04-11 10:28:31,241 - INFO -   Film/Media: 10 entries (0.65%)
+2025-04-11 10:28:31,241 - INFO -   Bibliography Entry: 8 entries (0.52%)
+2025-04-11 10:28:31,241 - INFO -   Biography: 1 entries (0.06%)
+2025-04-11 10:28:31,241 - INFO - Sample redirect entries:
+2025-04-11 10:28:31,243 - INFO -   Content Type: Other
+2025-04-11 10:28:31,243 - INFO - 
+2025-04-11 10:28:31,244 - INFO -   Content: #REDIRECT [[The Future of Writing in a World at War]]
+2025-04-11 10:28:31,244 - INFO -   Target: The Future of Writing in a World at War
+2025-04-11 10:28:31,244 - INFO -   Content Type: Other
+2025-04-11 10:28:31,244 - INFO - 
+2025-04-11 10:28:31,244 - INFO -   Content: #REDIRECT [[Zweigheft / zweigheft]]
+2025-04-11 10:28:31,244 - INFO -   Target: Zweigheft / zweigheft
+2025-04-11 10:28:31,244 - INFO -   Content Type: Other
+2025-04-11 10:28:31,244 - INFO - 
+2025-04-11 10:28:31,244 - INFO -   Content: #REDIRECT [[Baumeister der Welt]]
+2025-04-11 10:28:31,245 - INFO -   Target: Baumeister der Welt
+2025-04-11 10:28:31,245 - INFO -   Content Type: Other
+2025-04-11 10:28:31,245 - INFO - 
+2025-04-11 10:28:31,245 - INFO -   Content: #REDIRECT [[El pensamiento vivo de Tolstoi]]
+2025-04-11 10:28:31,245 - INFO -   Target: El pensamiento vivo de Tolstoi
+2025-04-11 10:28:31,245 - INFO -   Content Type: Other
+2025-04-11 10:28:31,245 - INFO - 
+2025-04-11 10:28:31,245 - INFO - === BIBLIOGRAPHY ENTRIES ANALYSIS ===
+2025-04-11 10:28:31,246 - INFO - Found 8 bibliography entries
+2025-04-11 10:28:31,246 - INFO - Bibliography entry patterns:
+2025-04-11 10:28:31,247 - INFO -   has_volumes_header: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   has_triple_quotes: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   has_lst_tag: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   has_publisher: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   has_year: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   has_location: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   has_page_count: 0 entries (0.00%)
+2025-04-11 10:28:31,247 - INFO -   is_redirect: 8 entries (100.00%)
+2025-04-11 10:28:31,247 - INFO - Sample bibliography entries:
+2025-04-11 10:28:31,247 - INFO -   Title: #REDIRECT [[Le Joueur d\'échecs / Volumes]]
+2025-04-11 10:28:31,247 - INFO -   Content: #REDIRECT [[Le Joueur d\'échecs / Volumes]]...
+2025-04-11 10:28:31,248 - INFO -   Year: nan
+2025-04-11 10:28:31,248 - INFO -   Publisher: nan
+2025-04-11 10:28:31,248 - INFO -   Location: nan
+2025-04-11 10:28:31,248 - INFO - 
+2025-04-11 10:28:31,248 - INFO -   Title: #REDIRECT [[Le Joueur d\'échecs / Volumes]]
+2025-04-11 10:28:31,248 - INFO -   Content: #REDIRECT [[Le Joueur d\'échecs / Volumes]]...
+2025-04-11 10:28:31,248 - INFO -   Year: nan
+2025-04-11 10:28:31,248 - INFO -   Publisher: nan
+2025-04-11 10:28:31,248 - INFO -   Location: nan
+2025-04-11 10:28:31,248 - INFO - 
+2025-04-11 10:28:31,248 - INFO -   Title: #REDIRECT [[Le Joueur d\'échecs / Volumes]]
+2025-04-11 10:28:31,249 - INFO -   Content: #REDIRECT [[Le Joueur d\'échecs / Volumes]]...
+2025-04-11 10:28:31,249 - INFO -   Year: nan
+2025-04-11 10:28:31,249 - INFO -   Publisher: nan
+2025-04-11 10:28:31,249 - INFO -   Location: nan
+2025-04-11 10:28:31,249 - INFO - 
+2025-04-11 10:28:31,249 - INFO - === TEXT ENCODING ANALYSIS ===
+2025-04-11 10:28:31,260 - INFO - Potential encoding issues:
+2025-04-11 10:28:31,260 - INFO -   contains_ä: 1142 entries (20.21%)
+2025-04-11 10:28:31,260 - INFO -   contains_ö: 561 entries (9.93%)
+2025-04-11 10:28:31,260 - INFO -   contains_ü: 1285 entries (22.74%)
+2025-04-11 10:28:31,260 - INFO -   contains_Ü: 92 entries (1.63%)
+2025-04-11 10:28:31,261 - INFO -   contains_ß: 211 entries (3.73%)
+2025-04-11 10:28:31,261 - INFO -   contains_é: 762 entries (13.48%)
+2025-04-11 10:28:31,261 - INFO -   contains_è: 155 entries (2.74%)
+2025-04-11 10:28:31,261 - INFO -   contains_ò: 32 entries (0.57%)
+2025-04-11 10:28:31,261 - INFO -   contains_ù: 15 entries (0.27%)
+2025-04-11 10:28:31,262 - INFO - Total entries with encoding issues: 3138 (55.52%)
+2025-04-11 10:28:31,262 - INFO - Encoding issues by content type:
+2025-04-11 10:28:31,263 - INFO -   Other: 514 entries (34.36%)
+2025-04-11 10:28:31,264 - INFO -   Category: 2600 entries (63.41%)
+2025-04-11 10:28:31,264 - INFO -   Correspondence: 7 entries (43.75%)
+2025-04-11 10:28:31,264 - INFO -   Essay: 7 entries (36.84%)
+2025-04-11 10:28:31,265 - INFO -   Film/Media: 3 entries (30.00%)
+2025-04-11 10:28:31,265 - INFO -   Review: 0 entries (0.00%)
+2025-04-11 10:28:31,266 - INFO -   Bibliography Entry: 5 entries (62.50%)
+2025-04-11 10:28:31,266 - INFO -   Translation: 1 entries (100.00%)
+2025-04-11 10:28:31,267 - INFO -   Biography: 1 entries (100.00%)
+2025-04-11 10:28:31,267 - INFO - Sample entries with encoding issues:
+2025-04-11 10:28:31,268 - INFO -   Page ID: 6528
+2025-04-11 10:28:31,268 - INFO -   Content Type: Other
+2025-04-11 10:28:31,268 - INFO -   Title: \'\'\'[41]:\'\'\' \'\'\'\"In der Frühe\"\'\'\' in \'\'Berliner Tageblatt\'\' [Berlin], 7 March 1910, Der Zeitgeist, p. (1). See \"Die Bäume\", No. 7 above\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=1>\n\'\'Lyrik der Welt. Ausland\'\'. Selected and edited by Reinhard Jaspert. 783p. Berlin: Safari-Verlag, 1948, p. 446 [This is a reprint of stanzas 2, 6, 7, and 8. Here it is entitled  \"Lebenswanderung\". \"Lebenswanderung\" was reprinted in \'\'Lyrik der Welt. Dichtungen des Auslandes\'\'. Edited by Reinhard Jaspert. Berlin: Safari-Verlag, 1960, pp. 499-500\n\'\'Religiöse Lyrik des Abendlandes\'\'. Edited by Johannes von Guenther. 263p. Frankfurt am Main: Ullstein Verlag, 1958, pp. 77-78 [Ullstein Buch, 210. This volume also contains the poem \"Gebet\", p. 77]\n[[Rhythmen]] [Frankfurt am Main, 1983], No. 50, pp. 120-121\n[[Silberne Saiten. Gedichte und Nachdichtungen]] [Frankfurt am Main, 1966], No. 193, pp. 242-243\n[[Verhaeren, Emile / Ausgewählte Gedichte]] [Leipzig, 1910], No. 43, pp. 100-101; [Leipzig, 1913 and 1923], No. 50, pp. 119-120\n[[Verhaeren, Emile / Hymnen an das Leben]] [Leipzig, 1912], No. 18, pp. 55-56\n[[Verhaeren, Emile / Das Leben, das leise]] [Leipzig, 1982], No. 17, pp. 74-75\n</lst>\n\'\'\'French original:\'\'\' \"Un Matin\" in Émile Verhaeren. \'\'Les Forces tumultueuses\'\'. Paris: Société du Mercure de France, 1902, pp. 151-153; [Paris, 1908], pp. 151-153; [Paris, 1947], pp. (148)-150\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bracket start=8>\nÉmile Verhaeren. \'\'Choix de Poèmes\'\'. Preface by Albert Heumann. Paris: Mercure de France, 1917 / Les Forces tumultueuses, pp. 119-120\nÉmile Verhaeren. \'\'Oeuvres de Émile Verhaeren. V: La multiple Splendeur / Les Forces tumultueuses\'\'. Paris: Mercure de France, 1928, Vol.  V: Les Forces tumultueuses, pp. 239-241\n</lst>
+2025-04-11 10:28:31,268 - INFO -   Content sample: \'\'\'[41]:\'\'\' \'\'\'\"In der Frühe\"\'\'\' in \'\'Berliner Tageblatt\'\' [Berlin], 7 March 1910, Der Zeitgeist, p. (1). See \"Die Bäume\", No. 7 above\n\n\'\'\'Reprinted in:\'\'\'\n<lst type=bra...
+2025-04-11 10:28:31,268 - INFO - 
+2025-04-11 10:28:31,269 - INFO -   Page ID: 1004
+2025-04-11 10:28:31,269 - INFO -   Content Type: Category
+2025-04-11 10:28:31,269 - INFO -   Title: \'\'\'[2003]: Huacheng Chubanshe, Guangzhou\'\'\'\n\n\'\'Wei ai fengkuang. Sugelan nüwang Maliya Situyate zhuan\'\' [Maria Stuart]. Translated by Beibei Wang et al. 353p. \n\n[[Category:Historical Studies / Volumes (Chinese)]]
+2025-04-11 10:28:31,269 - INFO -   Content sample: \'\'\'[2003]: Huacheng Chubanshe, Guangzhou\'\'\'\n\n\'\'Wei ai fengkuang. Sugelan nüwang Maliya Situyate zhuan\'\' [Maria Stuart]. Translated by Beibei Wang et al. 353p. \n\n[[Category:Historical St...
+2025-04-11 10:28:31,269 - INFO - 
+2025-04-11 10:28:31,269 - INFO -   Page ID: 4627
+2025-04-11 10:28:31,269 - INFO -   Content Type: Film/Media
+2025-04-11 10:28:31,270 - INFO -   Title: #REDIRECT [[Georg Friedrich Händels Auferstehung / Film]]
+2025-04-11 10:28:31,270 - INFO -   Content sample: #REDIRECT [[Georg Friedrich Händels Auferstehung / Film]]...
+2025-04-11 10:28:31,270 - INFO - 
+2025-04-11 10:28:31,270 - INFO - === CATEGORY STRUCTURE ANALYSIS ===
+2025-04-11 10:28:31,270 - INFO - Analyzing 4100 category entries
+2025-04-11 10:28:31,279 - INFO - Found 447 unique categories
+2025-04-11 10:28:31,279 - INFO - Top 10 categories:
+2025-04-11 10:28:31,280 - INFO -   Secondary Literature / Authors (German): 434 entries
+2025-04-11 10:28:31,280 - INFO -   Essays / Individual Essays (German): 232 entries
+2025-04-11 10:28:31,280 - INFO -   Essays / Individual Essays (Spanish): 161 entries
+2025-04-11 10:28:31,280 - INFO -   Secondary Literature / Authors (English): 148 entries
+2025-04-11 10:28:31,280 - INFO -   Essays / Individual Essays (Chinese): 133 entries
+2025-04-11 10:28:31,281 - INFO -   Poetry / Individual Poems (Chinese): 133 entries
+2025-04-11 10:28:31,281 - INFO -   Secondary Literature / Authors (French): 129 entries
+2025-04-11 10:28:31,281 - INFO -   Secondary Literature / Authors (Arabic): 122 entries
+2025-04-11 10:28:31,281 - INFO -   Fiction / Individual Stories (Chinese): 95 entries
+2025-04-11 10:28:31,281 - INFO -   Essays / Individual Essays (French): 94 entries
+2025-04-11 10:28:31,281 - INFO - Found 429 hierarchical categories
+2025-04-11 10:28:31,281 - INFO - Top-level categories:
+2025-04-11 10:28:31,281 - INFO -   Secondary Literature : 1258 entries
+2025-04-11 10:28:31,281 - INFO -   Fiction : 1241 entries
+2025-04-11 10:28:31,281 - INFO -   Essays : 825 entries
+2025-04-11 10:28:31,281 - INFO -   Historical Studies : 613 entries
+2025-04-11 10:28:31,281 - INFO -   Poetry : 245 entries
+2025-04-11 10:28:31,282 - INFO -   Films : 82 entries
+2025-04-11 10:28:31,282 - INFO -   Correspondence : 70 entries
+2025-04-11 10:28:31,282 - INFO -   Dramas : 39 entries
+2025-04-11 10:28:31,282 - INFO -   Translations by Zweig: 36 entries
+2025-04-11 10:28:31,282 - INFO -   Collected and Selected Works: 32 entries
+2025-04-11 10:28:31,282 - INFO - Sample category entries:
+2025-04-11 10:28:31,282 - INFO -   Page ID: 5633
+2025-04-11 10:28:31,282 - INFO -   Content Title: \"El secreto de la creación artística. (Conferencia en Estados Unidos, 1938)\" [Das Geheimnis des künstlerischen Schaffens] in:\n<lst type=bracket start=1>\n[[Los creadores]] [Buenos Aires, 1942], No. 2, pp. (21)-73 [Translated by Alfredo Cahn]. Here entitled:       \"El arcano de la creación artística\"\n[[Obras completas de Stefan Zweig]] [Barcelona, 1952-1978], Vol. 4 [Tiempo y mundo] [1952], No. 77, pp. (1001)-1016 [Translated by Tristán La Rosa]. Here entitled: \"El secreto de la creación artística\"\n[[Obras de Stefan Zweig]] [Barcelona, 1958], Vol. 2 [Tiempo y mundo], No. 43, pp. 985-1001 [Translated by Tristán La Rosa]. Here entitled: \"El secreto de la creación artística\"\n[[Tiempo y mundo]] [Barcelona, 1953], No. 1, pp. 7-(55) [Translated by Tristán La Rosa]. Here entitled \"El misterio de la creación artística\"\n[[Tiempo y mundo]] [Barcelona, 1959], No. 17, pp. (171)-188 [Translated by the Editorial Juventud]. Here entitled: \"El misterio de la creación artística\"\n[[Tiempo y mundo]] [Barcelona, 1998], No. 17, pp. 199-219 [Translated by José Fernández]. Here entitled: \"El misterio de la creación artística\"\n</lst>\n\n\'\'\'See:\'\'\' [[Zeit und Welt. Gesammelte Aufsätze und Vorträge 1904-1940]] [Stockholm, 1943], No. 17, pp. (269)-296\n\n\n[[Category:Essays / Individual Essays (Spanish)]]\n{{DEFAULTSORTKEY:Secreto de la creación artística}}
+2025-04-11 10:28:31,283 - INFO -   Content: \"El secreto de la creación artística. (Conferencia en Estados Unidos, 1938)\" [Das Geheimnis des künstlerischen Schaffens] in:\n<lst type=bracket start=1>\n[[Los creadores]] [Buenos Aires, 1942], ...
+2025-04-11 10:28:31,283 - INFO - 
+2025-04-11 10:28:31,283 - INFO -   Page ID: 999
+2025-04-11 10:28:31,283 - INFO -   Content Title: \'\'\'[1987]: Shijie Zhishi Chubanshe, Beijing\'\'\'\n\nMingsang duantoutai de faguo wanghou [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Weiliang Liu, Shujing Xuan, and Jinhai Shi. 440p.\n\n\n[[Category:Historical Studies / Volumes (Chinese)]]
+2025-04-11 10:28:31,283 - INFO -   Content: \'\'\'[1987]: Shijie Zhishi Chubanshe, Beijing\'\'\'\n\nMingsang duantoutai de faguo wanghou [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Weiliang Liu, Shujing Xuan, and Jinha...
+2025-04-11 10:28:31,283 - INFO - 
+2025-04-11 10:28:31,283 - INFO -   Page ID: 2004
+2025-04-11 10:28:31,285 - INFO - 
+2025-04-11 10:28:31,285 - INFO - === YEAR DISTRIBUTION ANALYSIS ===
+2025-04-11 10:28:31,285 - INFO - Entries with year information: 3853 (68.17%)
+2025-04-11 10:28:31,286 - INFO - Year statistics:
+2025-04-11 10:28:31,286 - INFO -   Minimum: 1815.0
+2025-04-11 10:28:31,286 - INFO -   Maximum: 2020.0
+2025-04-11 10:28:31,286 - INFO -   Mean: 1972.97
+2025-04-11 10:28:31,287 - INFO - Distribution by decade:
+2025-04-11 10:28:31,287 - INFO -   1810s: 12 entries
+2025-04-11 10:28:31,287 - INFO -   1820s: 12 entries
+2025-04-11 10:28:31,287 - INFO -   1830s: 2 entries
+2025-04-11 10:28:31,287 - INFO -   1840s: 20 entries
+2025-04-11 10:28:31,287 - INFO -   1850s: 8 entries
+2025-04-11 10:28:31,288 - INFO -   1860s: 1 entries
+2025-04-11 10:28:31,288 - INFO -   1870s: 1 entries
+2025-04-11 10:28:31,288 - INFO -   1880s: 25 entries
+2025-04-11 10:28:31,288 - INFO -   1890s: 11 entries
+2025-04-11 10:28:31,288 - INFO -   1900s: 134 entries
+2025-04-11 10:28:31,288 - INFO -   1910s: 175 entries
+2025-04-11 10:28:31,288 - INFO -   1920s: 184 entries
+2025-04-11 10:28:31,288 - INFO -   1930s: 323 entries
+2025-04-11 10:28:31,288 - INFO -   1940s: 235 entries
+2025-04-11 10:28:31,288 - INFO -   1950s: 230 entries
+2025-04-11 10:28:31,288 - INFO -   1960s: 234 entries
+2025-04-11 10:28:31,288 - INFO -   1970s: 116 entries
+2025-04-11 10:28:31,288 - INFO -   1980s: 263 entries
+2025-04-11 10:28:31,289 - INFO -   1990s: 497 entries
+2025-04-11 10:28:31,289 - INFO -   2000s: 619 entries
+2025-04-11 10:28:31,289 - INFO -   2010s: 718 entries
+2025-04-11 10:28:31,289 - INFO -   2020s: 33 entries
+2025-04-11 10:28:31,289 - INFO - Publications during Zweig's lifetime vs. posthumous:
+2025-04-11 10:28:31,289 - INFO -   During lifetime (1881-1942): 937 entries (24.68%)
+2025-04-11 10:28:31,289 - INFO -   Posthumous (after 1942): 2860 entries (75.32%)
+2025-04-11 10:28:31,289 - INFO - === LANGUAGE FIELD ANALYSIS ===
+2025-04-11 10:28:31,289 - INFO - Entries with language information: 68 (1.20%)
+2025-04-11 10:28:31,290 - INFO - Language distribution:
+2025-04-11 10:28:31,290 - INFO -   Portuguese\nDirector and Film editor: Rita Azevedo Gomes\nScript writer: Not indicated\nCast: João Bénard da Costa, Anna Leppänen, Rita Durão et al: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   English\nDirectors: W: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   Spanish\nDirector: Gonzalo Suárez\nScript writer: Gonzalo Suárez \nCast: Carmelo Gómez, Aitana Sánchez-Gijón, Bárbara Goenaga, Maribel Verdú, Alberto Jiménez et al: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   English\nDirector: John M: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   Russian\nDirector: Viktor Merezhko\nProducers: Yury Matsyuk and Irina Plisko\nScript Writer: Vadim Avloshenko\nCast: Vera Alentova, Valeriy Barinov, Svetlana Hodchenkova, Elena Melnikova, Stanislav Bondarenko et al: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   French\nStage adaptation by: Jacques Weber\nProducers: Serge Marzolff and Jacques Weber\nCast: Jacques Weber, Dominique Regnier, Luc Alexander et al: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   German\nDirectors: Alfred Abel and Ernst Garden\nScript writer: Béla Balázs\nCast: Renée Héribel, Jack Trevor, Alfred Abel, Fritz Alberti et al\nArt directors: Willy Brummer and Julius von Borsody: 1 entries (1.47%)
+2025-04-11 10:28:31,290 - INFO -   Turkish\nDirector: Bilge Olgaç\nProducers: Necdet Erdur and Nevzat Pesen\nScript writer: Bilge Olgaç\nCast: Türkan Soray, Demir Karahan, Zeynep Tedü, Avni Dilligil et al: 1 entries (1.47%)
+2025-04-11 10:28:31,291 - INFO -   German\nRead by: Jan Koester\nRuntime: 10 hours and 59 minutes\nRelease date: 27 September 2013\n</lst>\n\n\'\'Marie Antoinette (Teil 2): Der Leichenwagen der Monarchie und das Lebensende\n<lst type=bracket start=5>\nLanguage: German\nRead by: Jan Koester\nRuntime: 12 hours and 58 minutes\nRelease date: 27 September 2013\n</lst>\n\n\'\'\'See\'\'\': [[Maria Stuart * Marie Antoinette: 1 entries (1.47%)
+2025-04-11 10:28:31,291 - INFO -   German\nRead by: Jan Koester\nRuntime: 16 hours and 35 minutes\nRelease date: 23 February 2016\n</lst>\n\n\'\'\'See\'\'\': [[Maria Stuart * Marie Antoinette: 1 entries (1.47%)
+2025-04-11 10:28:31,291 - INFO -   Bulgarian [Also available in Czech, English and Italian]\nDirector: Ivan Nitchev\nScript writer: Ivan Nitchev\nCast: Ivailo Tsvetkov, Tanya Dimitrova, Walter Toschi, Tanya Lolova et al: 1 entries (1.47%)
+2025-04-11 10:28:31,292 - INFO -   French\nDirector: Jacques Deray\nScript writer: Jean-Claude Carrière\nCast: Irène Jacob, Christopher Thompson, Joachim Bißmeier, Karlheinz Hacki et al: 1 entries (1.47%)
+2025-04-11 10:28:31,292 - INFO -   German\nDirector: Dagmar Damek\nProducer: Manfred Korytowski\nFilm editor: Elke Schmid\nScript writer: Dagmar Damek\nCast: Jessica Kosmalla, Gila von Weiterhausen, Max Tidof, Kurt Weinzierl et al: 1 entries (1.47%)
+2025-04-11 10:28:31,292 - INFO -   German\nDirector: Frank Lothar\nScript writer: Frank Lothar\nCast: Hermine Körner, Kurt Lauermann, Frank Lothar, Hans-Albert Martens, Gerd Martienzen, Ruth Scheerbarth, and Hilde Weissner\nRuntime: 2 hours and 8 minutes\nReleased in West Germany on 15 December 1954\n</lst>\n\n\n[[Category:Films / Plays / Operas]]: 1 entries (1.47%)
+2025-04-11 10:28:31,292 - INFO -   German\nWriter/Film by: Reinhart Hoffmeister\n1 video kassette / VHS video recording\nRuntime: 44 minutes\n</lst> \n\n[[Category:Films / Plays / Operas]]: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   Chechen\nDirector: Ladislav Rychman\nWriter: Pavel Grym\nCast: Therese Herz, Gustav Bubnik, Stanislav Fiser, Miro Grisa and Otto Simánek\nCinematography: Petr Cepický\nRuntime: 32 minutes\n</lst>\n\n\n\n[[Category:Films / Plays / Operas]]\n{{DEFAULTSORTKEY:Sach-mat}}: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   German\nRead by: Curd Jürgens\nRuntime: 56 minutes\nCover photograph: Curd Jürgens by Johann Klinger\nDesigned by: Mark & Nevosad\nReleased in Austria in 1960\nThis disc has three numbers: AVRS 6199, AVRS 1015, and AVRS 13 909</lst>\n\n\n\'\'\'[2014]: Audible Studios, Newark, New Jersey\'\'\'\n\n\'\'Schachnovelle\'\': 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   French\nTitles: \"Lettre d\'une inconnue\" [Brief einer Unbekannten]; \"L\'Ivresse de la métamorphose\" [Rausch der Verwandlung]; \"Clarissa\" [Clarissa: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   German\nRead by: Stefan Kaminsky\nRuntime: 10 hours\nRelease date: 14 Juni 2013\n</lst>\n\n\'\'\'See:\'\'\' [[Sternstunden der Menschheit: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   German\nRead by: Reiner Unglaub\nRuntime: 2 hours and 35 minutes\nRelease date: 3 August 2017\n</lst>\n\n\'\'\'See:\'\'\' [[Sternstunden der Menschheit: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   English\nDirector: Not indicated\nProducer: Chloe Gibson\nScript writer: Jon Manchip White [Adapted from the story by Stefan Zweig]\nCast: Nelly Arno, Carl Jaffe, Hugo Schuster, Margot Van der Burgh et al: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   English\nScript writer: Ernest Waengler\nCast: John Grima, Barry Morse, Mary Savidge, Hilary Vernan et al: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   English\nDirector: Mervym Rosenzveig\nProducer: Ed Moser\nScreenplay by David Swift\nCinematography by George Clements and David Doron\nMusic by Andrew Duesbury\nCast: Barry Morse, Larry D: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   English\nFilmed in Hamburg, Germany\nDirector: Matt Zemlin\nScript writer: Matt Zemlin\nProducers: Matt Zemlin, George Goldenbaum, and Tyron Watzinger\nCast: Matt Zemlin and Jana Fomenko\nCinematographer: Thomas Bader\nRuntime: Not indicated\nUpdated 19 June 2017\n</lst>\n\n\n[[Category:Films / Plays / Operas]]\n{{DEFAULTSORTKEY:Week Before}}: 1 entries (1.47%)
+2025-04-11 10:28:31,293 - INFO -   German\nRead by: Hans Joachim Schmidt\nRuntime:17 hours and 34 minnutes\nRelease date: 12 October 2012\n</lst>\n\n\'\'\'See:\'\'\' [[Ungeduld des Herzens: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   German\nDirector: Édouard Molinaro\nScript writer: Édouard Molinaro and Corinne Gorse\nCast: Mathieu Carrière, Marie-Hélène Breillat, Jean Desailly, Silvia Reize et al: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   Finnish\nDirector and Editor: Hannu Leminen\nProducer: TJ Särkkä\nScript writers: Hannu Leminen and Ilmari Unho\nCast: Helena Kara, Tauno Palo, Aku Korhonen, Aino Lohikoski et al: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   German\nRead by: Reiner Unglaub\nRuntime: 4 hours and 35 minutes - 4 audio cassettes\nReleased in 1991\n</lst>\n\n\n[[Category:Dramatic Readings]]: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   French\nRead by: Christiane Deïs and Ali Djilali Bouzina\nRuntime: 2 hours and 45 minutes - 2 audio cassettes (VSL 095)\nRecorded and released in January 1989\n</lst>\n\n\n[[Category:Dramatic Readings]]: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   German\nRead by: Jan Koester\nRuntime: 1 hour and 44 minutes\nRelease date: 18 November 2016\n</lst>\n\n\'\'\'See:\'\'\' [[Die Augen des ewigen Bruders / Dramatic Reading]], [[Die Augen des ewigen Bruders]], and  [[Die Augen des ewigen Bruders: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   Literarische Streifzüge  - Verteidigung der deutschen Sprache\'\': 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   French\nDirector: Pierre Granier-Deferre\nScript writers: Madeleine Chapsal and Pierre Granier-Deferre\nCast: Charlotte Rampling, Stéphane Freiss, Bernard Dhéran, Manfred Andrae et al: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   French\nDirector: Édouard Molinaro\nScript writers: Christine Miller and Édouard Molinaro\nCast: Michel Piccoli, Niels Arestrup, Marthe Keller, Renée Faure et al: 1 entries (1.47%)
+2025-04-11 10:28:31,294 - INFO -   French\nDirector: Édouard Molinaro\nScript writers: Corinne Gorse and Édouard Molinaro\nCast: Mathieu Carrière, Marie-Hélène Breillat, Jean Desailly, Silvia Reize et al: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   Dutch\nDirector: Willy  Vandermeulen\nScript writer: Cornelis Staes\nCast: Cary Fontyn, Louise van den Durpel, Martin Van Zundert, Gaston Vandermeulen et al: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   Georgian\nDirector: Kote Marjanishvili\nProducer: Valerian Sidamon-Eristavi\nScript writer: Kote Marjanishvili\nCast: Nato Vachnadze, Aleksandre Imedashvili, Valerian Gunia, Siko Palavandishvili et al: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   German\nRead by: Frederic Böhle\nRuntime: 2 hours and 41 minutes\nRelease date: 13 July 2017\n</lst>\n\n\'\'\'See\'\'\': [[Angst: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   German\nRead by: Gert Westphal\nSound technician: Helge Halvé\nRuntime: 2 hours and 34 minutes\nCover design: Claude Monet: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   German\nDirector: Robert Siodmak\nProducer: Alfred Sternau\nFilm editor: Max Brenner\nScript writers: Frederick Kohner [screenplay], Alfred Polger [dialogue], and Robert Siodmak [dialogue]\nCast: Alfred Abel, Hilde Wagener, Hans Joachim Schaufuß, Lucie Höflich, and Willi Forst\nMusic by: Allan Gray\nCinematographers: Richard Angst and Robert Baberske\nRuntime: 1 hour and 32 minutes\nReleased in Germany on 21 March 1933\n</lst>\n\n\'\'\'[1977]: Satel Film GmbH, Wien; Bayerischer Rundfunk (BR), München; Österreichischer Rundfunk (ORF), Wien\'\'\'\n\n\'\'Brennendes Geheimnis\'\' [A color TV film drama based on Stefan Zweig\'s novella \"Brennendes Geheimnis\"]\n<lst type=bracket start=1>\nLanguage: German\nDirector: Wilm ten Haaf\nScript writer: Wilm ten Haaf [Teleplay]\nCast: Christiane Hörbiger, Walther Reyer, Thomas Ohrner et al: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   French\nDirector: Maurice Pialat\nProducer: Samy Halfton\nScript writer [Translator of Stefan Zweig\'s essay]: André Reybaz\nCast [Reader]: André Reybaz\nCinematographer: Willy Kurant\nRuntime: 11 minutes\nReleased in France on 27 November 1964\n</lst>\n\n\n[[Category:Films / Plays / Operas]]: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   Portuguese\nDirector: Geraldo Vietri\nProducer: Geraldo Vietri\nCast: Fábio Cardoso and Berta Zemel\nRuntime: Not indicated\nReleased in Brazil on 8 September 1958\n</lst>\n\n\n[[Category:Films / Plays / Operas]]: 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   German\nRead by: Dieter Mann, Wolfram Berger, and Peter Matic\nRuntime: 9 hours and 20 minutes\nRelease date: 22 September 2015\n</lst>\n\n\'\'\'See\'\'\': \'\'\'[1]\'\'\': 1 entries (1.47%)
+2025-04-11 10:28:31,295 - INFO -   French\nDirector: Jacques Deray\nProducer: Christyine Gouze-Rénal\nScript writer: Jean-Claude Carrière\nCast: Maruschka Detmers, Claude Rich, Stéphane Freiss, Elena Sofia Ricci et al: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   Portuguese\nDirector: Not indicated\nScript writer: Péricles Leal\nCast: Percy Aires, Dionísio Azevedo, Lia de Aguiar, and Célia Rodrigues\nRuntime: Not indicated\nReleased in Brazil on 24 April 1957\n</lst>\n\n[[Category:Films / Plays / Operas]]: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   Portuguese\nDirectors: Luiz Gallon and Wanda Kosmo\nProducer: Luigi Calvano\nScript writer: Wanda Kosmo\nCast: Rita Cléos, Elísio de Albuquerque, Geórgia Gomide, Rildo Gonçalves, and João Monteiro\nRuntime: Not indicated\nReleased in Brazil on 7 October 1963\n</lst>\n\n[[Category:Films / Plays / Operas]]: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nDirector: Fritz Kaufmann\nProducer: Heinrich Nebenzahl\n\nScript writers: Fritz Kaufmann and Bobby E: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nDirector: Oswald Döpke\nScript writer: Oswald Döpke\nCast: Rolf Becker, Angelika Bender, Horst Frank, Elisabeth Goebel et al: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nDirector: Rochus Gliese\nScript writer: Hans Janowitz [as Hanns Janowitz]\nArt directors: Rochus Gliese and Kurt Kahle\nCast: Ernst Deutsch, Otto Gebühr, Wilhelm Diegelmann, Olga Belajeff et al: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nDirector: Wilfried Fraß\nProducer: Karl F: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nRead by: Reiner Unglaub\nRuntime: 2 hours and 17 minutes\nRelease date: 22 June 2017\n</lst>\n\n\'\'\'See:\'\'\' [[Der Amokläufer]] / Fiction / Volumes (German)\n\n[[Category:Dramatic Readings]]\n{{DEFAULTSORTKEY:Amokläufer / Dramatic Reading}}: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   French\nAdapted from the novella by: Élodie Ménant\nDirector: Christophe Legars\nCast: Aliocha Itovitch, Hélène Degy and Ophélie Marsaud\nRuntime: 1 hour and 20 minutes\nReleased in Paris on 20 June 2014: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nRead by: Astrid Höschel and Barbara Hütten\nRuntime: Not indicated\nOccasion: 50th anniversary of Stefan Zweig\'s death, 23 February 1992\n</lst>\n\n\'\'\'[2008]: Auwaldstation Schlossweg, Leipzig-Lützschena\'\'\'\n<lst type=bracket start=1>\nLanguage: German\nRead by: Astrid Höschel and Barbara Hütten\nMusic by: Simone Weißenfels \nRuntime: Not indicated\nRead on 22 February 2008\n</lst>\n\n\'\'\'See:\'\'\' [[Virata: Die Augen des ewigen Bruders]]\n\n\n[[Category:Dramatic Readings]]\n{{DEFAULTSORTKEY:Augen des ewigen Bruders / Dramatic Reading}}: 1 entries (1.47%)
+2025-04-11 10:28:31,296 - INFO -   German\nRead by: Peter Vilnai\nRuntime: 17 hours and 34 minutes\nRelease date: 4 October 2013\n</lst>\n\n\'\'\'See:\'\'\' [[Die Welt von Gestern: 1 entries (1.47%)
+2025-04-11 10:28:31,297 - INFO -   German\nDirector: Guy Kubli\nCast: Christiane Hörbiger and Klausjürgen Wussow\nRuntime: Not indicated\nReleased in West Germany in 1990\n</lst>\n\n[[Category:Films / Plays / Operas]]\n{{DEFAULTSORTKEY:Spät bezahlte Schuld}}: 1 entries (1.47%)
+2025-04-11 10:28:31,297 - INFO -   German\nDirector: Hanns Farenburg\nScript writer: Hanns Farenburg\nCast: Käthe Haack, Hermann Lenschau, Inge Schmidt, Ernst Stahl-Nachbaur et al: 1 entries (1.47%)
+2025-04-11 10:28:31,297 - INFO -   German\nDirectors: Wilma Kiener and Dieter Matzka\nFilm editor: Constance Bennecke\nScript writer: Wilma Kiener\nCast: Christopher Kuerzeder, Esther Gajek, Nathalie Mas, Harry Zohn, Klemens Renoldner et al: 1 entries (1.47%)
+2025-04-11 10:28:31,297 - INFO -   German\nRead by: Georg Peetz\nRuntime: 6 hours and 45 minutes\nRelease date: 1 August 2015\n</lst>\n\n\'\'\'See\'\'\': [[Triumph und Tragik des Erasmus von Rotterdam]]\n\n\n\n[[Category:Dramatic Readings]]: 1 entries (1.47%)
+2025-04-11 10:28:31,297 - INFO -   Greek\nDirector: Christos Spentzos\nScript writer: Christos Spentzos [Screenplay]\nCast: Aleka Katselli, Thanos Kotsopoulos, Nitsa Tsaganea, Hristos Tsaganeas et al: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   German\nDirector: Klaus Lindemann\nProducer: Werner Hauer\nFilm editors: Käthi Lohmann and Herta Ossadnik\nScript writers: Gert Jonke and Klaus Lindemann\nCast: Heinrich Schweiger, Hildegard Heichele, Matthias Dittmer, Dieter Brammer, Hannes Granzer et al: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   Spanish\nDirector: Tito Davison\nScript writers: Edmundo Báez and Tito Davison\nCast: Martha Mijares, Christiane Martel, Armando Silvestre, Andrés Soler, Miguel Manzano et al: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   German\nRead by: Hans Lietzau\nRuntime: 9 hours and 49 minutes\nRelease date: 22 September 2015\n</lst>\n\n\'\'\'See\'\'\': [[Joseph Fouché: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   French\nDirector: Etienne Périer\nProducer: Christine Gouze-Rénal\nScript writers: Dominique Piccoli and Etienne Périer\nCast: Michel Piccoli, Pierre Malet, Gila von Weitershausen, Heinz Weiss et al: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   French\nRead by: Fanny Ardant\nTechnical producer: Michelle Muller\nRuntime: 1 hour and 55 minutes\n2 CDs [La Bibliothèque des voix, présenté par Antoinette Fouque]\nReleased in France in 1992: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   French\nDirector: Viktor Tourjansky\nScript writers: Jean-Pierre Feydeau, Joseph Kessel, and Irma von Cube\nCast: Gaby Morlay, Charles Vanel, Jane Lamy, Ginette Leclerc et al: 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO -   Mandarin\nDirector: Xu Jinglei\nProducers: Dong Ping, Xu Jinglei, Zhao Yijun, and Ma Paobing\nFilm editor: Zhang Yifan\nScript writer: Xu Jinglei \nCast: Xu Jinglei, Jiang Wen, Lin Yuan, Sun Feihu, and Su Xiaoming\nMusic by: Osamu Kubota and Lin Hai\nCinematographer: Pin Bing Lee\nRuntime: 1 hour and 30 minutes\nReleased in China on 4 March 2005\nReleased in Spain at the San Sebastián International Film Festival on 20 September 2004 under the title \"Carta de una mujer desconocida\": 1 entries (1.47%)
+2025-04-11 10:28:31,298 - INFO - Language indicators in content:
+2025-04-11 10:28:31,346 - INFO -   Potential German content: 542 entries (9.59%)
+2025-04-11 10:28:31,390 - INFO -   Potential English content: 440 entries (7.78%)
+2025-04-11 10:28:31,446 - INFO -   Potential French content: 0 entries (0.00%)
+2025-04-11 10:28:31,493 - INFO -   Potential Spanish content: 0 entries (0.00%)
+2025-04-11 10:28:31,541 - INFO -   Potential Italian content: 2 entries (0.04%)
+2025-04-11 10:28:31,542 - INFO - === WIKI MARKUP PATTERN ANALYSIS ===
+2025-04-11 10:28:31,572 - INFO - Wiki markup patterns found:
+2025-04-11 10:28:31,572 - INFO -   Wiki links: 5652 entries (100.00%)
+2025-04-11 10:28:31,572 - INFO -   Category tags: 4100 entries (72.54%)
+2025-04-11 10:28:31,572 - INFO -   HTML-like tags: 1726 entries (30.54%)
+2025-04-11 10:28:31,572 - INFO -   List tags: 1706 entries (30.18%)
+2025-04-11 10:28:31,572 - INFO -   URL links: 380 entries (6.72%)
+2025-04-11 10:28:31,572 - INFO -   Section headers: 14 entries (0.25%)
+2025-04-11 10:28:31,572 - INFO -   Triple quotes (bold): 0 entries (0.00%)
+2025-04-11 10:28:31,573 - INFO -   Double quotes (italic): 0 entries (0.00%)
+2025-04-11 10:28:31,573 - INFO - Markup patterns by content type:
+2025-04-11 10:28:31,573 - INFO -   Other (1496 entries):
+2025-04-11 10:28:31,575 - INFO -     Wiki links: 1496 entries (100.00%)
+2025-04-11 10:28:31,576 - INFO -     List tags: 2 entries (0.13%)
+2025-04-11 10:28:31,576 - INFO -     HTML-like tags: 2 entries (0.13%)
+2025-04-11 10:28:31,577 - INFO -   Category (4100 entries):
+2025-04-11 10:28:31,583 - INFO -     Category tags: 4100 entries (100.00%)
+2025-04-11 10:28:31,586 - INFO -     Wiki links: 4100 entries (100.00%)
+2025-04-11 10:28:31,600 - INFO -     Section headers: 13 entries (0.32%)
+2025-04-11 10:28:31,602 - INFO -     List tags: 1703 entries (41.54%)
+2025-04-11 10:28:31,603 - INFO -     HTML-like tags: 1722 entries (42.00%)
+2025-04-11 10:28:31,605 - INFO -     URL links: 380 entries (9.27%)
+2025-04-11 10:28:31,605 - INFO -   Correspondence (16 entries):
+2025-04-11 10:28:31,606 - INFO -     Wiki links: 16 entries (100.00%)
+2025-04-11 10:28:31,606 - INFO -     Section headers: 1 entries (6.25%)
+2025-04-11 10:28:31,606 - INFO -     HTML-like tags: 1 entries (6.25%)
+2025-04-11 10:28:31,606 - INFO -   Essay (19 entries):
+2025-04-11 10:28:31,607 - INFO -     Wiki links: 19 entries (100.00%)
+2025-04-11 10:28:31,608 - INFO -   Film/Media (10 entries):
+2025-04-11 10:28:31,608 - INFO -     Wiki links: 10 entries (100.00%)
+2025-04-11 10:28:31,609 - INFO -   Review (1 entries):
+2025-04-11 10:28:31,609 - INFO -     Wiki links: 1 entries (100.00%)
+2025-04-11 10:28:31,610 - INFO -   Bibliography Entry (8 entries):
+2025-04-11 10:28:31,610 - INFO -     Wiki links: 8 entries (100.00%)
+2025-04-11 10:28:31,611 - INFO -   Translation (1 entries):
+2025-04-11 10:28:31,611 - INFO -     Wiki links: 1 entries (100.00%)
+2025-04-11 10:28:31,611 - INFO -     List tags: 1 entries (100.00%)
+2025-04-11 10:28:31,611 - INFO -     HTML-like tags: 1 entries (100.00%)
+2025-04-11 10:28:31,612 - INFO -   Biography (1 entries):
+2025-04-11 10:28:31,612 - INFO -     Wiki links: 1 entries (100.00%)
+2025-04-11 10:28:31,613 - INFO - === BLOB DISTRIBUTION ANALYSIS ===
+2025-04-11 10:28:31,613 - INFO - Distribution across 8 BLOBs:
+2025-04-11 10:28:31,613 - INFO -   BLOB 1: 520 entries (9.20%)
+2025-04-11 10:28:31,613 - INFO -   BLOB 2: 306 entries (5.41%)
+2025-04-11 10:28:31,613 - INFO -   BLOB 3: 241 entries (4.26%)
+2025-04-11 10:28:31,614 - INFO -   BLOB 4: 1302 entries (23.04%)
+2025-04-11 10:28:31,614 - INFO -   BLOB 5: 1569 entries (27.76%)
+2025-04-11 10:28:31,614 - INFO -   BLOB 6: 510 entries (9.02%)
+2025-04-11 10:28:31,614 - INFO -   BLOB 7: 947 entries (16.76%)
+2025-04-11 10:28:31,614 - INFO -   BLOB 8: 257 entries (4.55%)
+2025-04-11 10:28:31,614 - INFO - Content types by BLOB:
+2025-04-11 10:28:31,614 - INFO -   BLOB 1:
+2025-04-11 10:28:31,614 - INFO -     Category: 465 entries (89.42%)
+2025-04-11 10:28:31,615 - INFO -     Other: 55 entries (10.58%)
+2025-04-11 10:28:31,615 - INFO -   BLOB 2:
+2025-04-11 10:28:31,615 - INFO -     Category: 168 entries (54.90%)
+2025-04-11 10:28:31,615 - INFO -     Other: 132 entries (43.14%)
+2025-04-11 10:28:31,615 - INFO -     Correspondence: 4 entries (1.31%)
+2025-04-11 10:28:31,615 - INFO -     Review: 1 entries (0.33%)
+2025-04-11 10:28:31,615 - INFO -     Essay: 1 entries (0.33%)
+2025-04-11 10:28:31,616 - INFO -   BLOB 3:
+2025-04-11 10:28:31,616 - INFO -     Category: 141 entries (58.51%)
+2025-04-11 10:28:31,616 - INFO -     Other: 99 entries (41.08%)
+2025-04-11 10:28:31,616 - INFO -     Essay: 1 entries (0.41%)
+2025-04-11 10:28:31,616 - INFO -   BLOB 4:
+2025-04-11 10:28:31,616 - INFO -     Category: 783 entries (60.14%)
+2025-04-11 10:28:31,617 - INFO -     Other: 507 entries (38.94%)
+2025-04-11 10:28:31,617 - INFO -     Film/Media: 9 entries (0.69%)
+2025-04-11 10:28:31,617 - INFO -     Correspondence: 2 entries (0.15%)
+2025-04-11 10:28:31,617 - INFO -     Biography: 1 entries (0.08%)
+2025-04-11 10:28:31,617 - INFO -   BLOB 5:
+2025-04-11 10:28:31,617 - INFO -     Category: 1249 entries (79.60%)
+2025-04-11 10:28:31,618 - INFO -     Other: 299 entries (19.06%)
+2025-04-11 10:28:31,618 - INFO -     Essay: 17 entries (1.08%)
+2025-04-11 10:28:31,618 - INFO -     Correspondence: 4 entries (0.25%)
+2025-04-11 10:28:31,618 - INFO -   BLOB 6:
+2025-04-11 10:28:31,618 - INFO -     Category: 336 entries (65.88%)
+2025-04-11 10:28:31,618 - INFO -     Other: 173 entries (33.92%)
+2025-04-11 10:28:31,618 - INFO -     Bibliography Entry: 1 entries (0.20%)
+2025-04-11 10:28:31,619 - INFO -   BLOB 7:
+2025-04-11 10:28:31,619 - INFO -     Category: 790 entries (83.42%)
+2025-04-11 10:28:31,619 - INFO -     Other: 146 entries (15.42%)
+2025-04-11 10:28:31,619 - INFO -     Bibliography Entry: 7 entries (0.74%)
+2025-04-11 10:28:31,619 - INFO -     Correspondence: 2 entries (0.21%)
+2025-04-11 10:28:31,619 - INFO -     Translation: 1 entries (0.11%)
+2025-04-11 10:28:31,619 - INFO -     Film/Media: 1 entries (0.11%)
+2025-04-11 10:28:31,620 - INFO -   BLOB 8:
+2025-04-11 10:28:31,620 - INFO -     Category: 168 entries (65.37%)
+2025-04-11 10:28:31,620 - INFO -     Other: 85 entries (33.07%)
+2025-04-11 10:28:31,620 - INFO -     Correspondence: 4 entries (1.56%)
+2025-04-11 10:28:31,620 - INFO - === SAMPLE ANALYSIS: OTHER (1496 entries) ===
+2025-04-11 10:28:31,621 - INFO - Entry ID: 5119
+2025-04-11 10:28:31,621 - INFO - Content Title: #REDIRECT [[Sakknovella . Elbeszélések]]
+2025-04-11 10:28:31,621 - INFO - Content Length: 42
+2025-04-11 10:28:31,621 - INFO - Content:
+#REDIRECT [[Sakknovella . Elbeszélések]]
+2025-04-11 10:28:31,621 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,621 - INFO - Entry ID: 5545
+2025-04-11 10:28:31,621 - INFO - Content Title: #REDIRECT [[La colección invisible]]
+2025-04-11 10:28:31,621 - INFO - Content Length: 37
+2025-04-11 10:28:31,622 - INFO - Content:
+#REDIRECT [[La colección invisible]]
+2025-04-11 10:28:31,622 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,622 - INFO - === SAMPLE ANALYSIS: CATEGORY (4100 entries) ===
+2025-04-11 10:28:31,622 - INFO - Entry ID: 3852
+2025-04-11 10:28:31,623 - INFO - Content Title: \'\'\'[1994]: Antoon Flo, Rekkem (Belgium)\'\'\'\n\n\"De Schaaknovelle van Stefan Zweig\" in Antoon Flo. \'\'Van het bord weg. Schaackgedichten\'\', pp. 25-28. \n\n\'\'\'Contains:\'\'\'\n<lst type=bracket start=1>\nDe Schaaknovelle van Stefan Zweig. Samenvatting\nDe analyse van Alexander Cockburn \nNawoord\nBronnen: [a]. Alexander Cockburn. \'\'Idle Passion\'\'. New York: Simon and Schuster, 1975. [b]. Alexander Cockburn. \'\'Loze Passie\'\'. Amsterdam: Wetenschappelijke Uitgeverij, 1975. [c]. Stefan Zweig. \'\'Schachnovelle\'\'. Frankfurt am Main: Fischer Taschenbuch Verlag, 1980 and \'\'Schaaknovelle\'\'. Antwerpen: De Vries-Brouwers, 1980\n</lst>\n\n[[Category:Secondary Literature / Authors (Dutch)]]
+2025-04-11 10:28:31,623 - INFO - Content Length: 712
+2025-04-11 10:28:31,623 - INFO - Year: 1994.0
+2025-04-11 10:28:31,623 - INFO - Location: New York
+2025-04-11 10:28:31,623 - INFO - Content:
+\'\'\'[1994]: Antoon Flo, Rekkem (Belgium)\'\'\'\n\n\"De Schaaknovelle van Stefan Zweig\" in Antoon Flo. \'\'Van het bord weg. Schaackgedichten\'\', pp. 25-28. \n\n\'\'\'Contains:\'\'\'\n<lst type=bracket start=1>\nDe Schaaknovelle van Stefan Zweig. Samenvatting\nDe analyse van Alexander Cockburn \nNawoord\nBronnen: [a]. Alexander Cockburn. \'\'Idle Passion\'\'. New York: Simon and Schuster, 1975. [b]. Alexander Cockburn. \'\'Loze Passie\'\'. Amsterdam: Wetenschappelijke Uitgeverij, 1975. [c]. Stefan Zweig. \'\'Schachnovelle\'\'. Frankfurt am Main: Fischer Taschenbuch Verlag, 1980 and \'\'Schaaknovelle\'\'. Antwerpen: De Vries-Brouwers, 1980\n</lst>\n\n[[Category:Secondary Literature / Authors (Dutch)]]
+2025-04-11 10:28:31,623 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,623 - INFO - Entry ID: 2210
+2025-04-11 10:28:31,623 - INFO - Content Title: \"Éthique et esthétique\" in [[Europe. Revue littéraire mensuelle]], No. 8, pp. (55)-60\n\n[[Category:Secondary Literature / Authors (French)]]
+2025-04-11 10:28:31,623 - INFO - Content Length: 146
+2025-04-11 10:28:31,623 - INFO - Content:
+\"Éthique et esthétique\" in [[Europe. Revue littéraire mensuelle]], No. 8, pp. (55)-60\n\n[[Category:Secondary Literature / Authors (French)]]
+2025-04-11 10:28:31,623 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,624 - INFO - === SAMPLE ANALYSIS: CORRESPONDENCE (16 entries) ===
+2025-04-11 10:28:31,624 - INFO - Entry ID: 7464
+2025-04-11 10:28:31,624 - INFO - Content Title: #REDIRECT [[Brief einer Unbekannten (VIST)]]
+2025-04-11 10:28:31,624 - INFO - Content Length: 44
+2025-04-11 10:28:31,624 - INFO - Content:
+#REDIRECT [[Brief einer Unbekannten (VIST)]]
+2025-04-11 10:28:31,624 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,625 - INFO - Entry ID: 7486
+2025-04-11 10:28:31,625 - INFO - Content Title: #REDIRECT [[Brief einer Unbekannten (IS)]]
+2025-04-11 10:28:31,625 - INFO - Content Length: 42
+2025-04-11 10:28:31,625 - INFO - Content:
+#REDIRECT [[Brief einer Unbekannten (IS)]]
+2025-04-11 10:28:31,625 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,625 - INFO - === SAMPLE ANALYSIS: ESSAY (19 entries) ===
+2025-04-11 10:28:31,625 - INFO - Entry ID: 6278
+2025-04-11 10:28:31,626 - INFO - Content Title: #REDIRECT [[Balzac, Honoré de / Essays]]
+2025-04-11 10:28:31,626 - INFO - Content Length: 41
+2025-04-11 10:28:31,626 - INFO - Content:
+#REDIRECT [[Balzac, Honoré de / Essays]]
+2025-04-11 10:28:31,626 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,626 - INFO - Entry ID: 2640
+2025-04-11 10:28:31,626 - INFO - Content Title: #REDIRECT [[Freud, Sigmund / Essays]]
+2025-04-11 10:28:31,626 - INFO - Content Length: 37
+2025-04-11 10:28:31,626 - INFO - Content:
+#REDIRECT [[Freud, Sigmund / Essays]]
+2025-04-11 10:28:31,626 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,626 - INFO - === SAMPLE ANALYSIS: FILM/MEDIA (10 entries) ===
+2025-04-11 10:28:31,627 - INFO - Entry ID: 4661
+2025-04-11 10:28:31,627 - INFO - Content Title: #REDIRECT [[Beware of Pity / Film and Stage Play]]
+2025-04-11 10:28:31,627 - INFO - Content Length: 50
+2025-04-11 10:28:31,627 - INFO - Content:
+#REDIRECT [[Beware of Pity / Film and Stage Play]]
+2025-04-11 10:28:31,627 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,627 - INFO - Entry ID: 4846
+2025-04-11 10:28:31,627 - INFO - Content Title: #REDIRECT [[Lettre d\'une inconnue / Film / Play]]
+2025-04-11 10:28:31,627 - INFO - Content Length: 50
+2025-04-11 10:28:31,628 - INFO - Content:
+#REDIRECT [[Lettre d\'une inconnue / Film / Play]]
+2025-04-11 10:28:31,628 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,628 - INFO - === SAMPLE ANALYSIS: REVIEW (1 entries) ===
+2025-04-11 10:28:31,629 - INFO - Entry ID: 2835
+2025-04-11 10:28:31,629 - INFO - Content Title: \"Fuse Book Review: The \'Three Lives\' of Stefan Zweig\"  in \'\'The Arts Fuse\'\' [Boston\'s online arts magazine], 19 May 2012. A review of: Oliver Matuschek. \'\'Three Lives. A Biography of Stefan Zweig\'\'. Translated from the German by Alan Blunden. London: Pushlin Press, 2011. See: artsfuse.org/60085/fuse-book-review-the three-lives-of-stefan-zweig/ and [[Matuschek, Oliver]]
+2025-04-11 10:28:31,629 - INFO - Content Length: 384
+2025-04-11 10:28:31,629 - INFO - Year: 2012.0
+2025-04-11 10:28:31,629 - INFO - Location: London
+2025-04-11 10:28:31,629 - INFO - Content:
+\"Fuse Book Review: The \'Three Lives\' of Stefan Zweig\"  in \'\'The Arts Fuse\'\' [Boston\'s online arts magazine], 19 May 2012. A review of: Oliver Matuschek. \'\'Three Lives. A Biography of Stefan Zweig\'\'. Translated from the German by Alan Blunden. London: Pushlin Press, 2011. See: artsfuse.org/60085/fuse-book-review-the three-lives-of-stefan-zweig/ and [[Matuschek, Oliver]]
+2025-04-11 10:28:31,629 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,629 - INFO - === SAMPLE ANALYSIS: BIBLIOGRAPHY ENTRY (8 entries) ===
+2025-04-11 10:28:31,630 - INFO - Entry ID: 1465
+2025-04-11 10:28:31,630 - INFO - Content Title: #REDIRECT [[Le Joueur d\'échecs / Volumes]]
+2025-04-11 10:28:31,630 - INFO - Content Length: 44
+2025-04-11 10:28:31,630 - INFO - Content:
+#REDIRECT [[Le Joueur d\'échecs / Volumes]]
+2025-04-11 10:28:31,630 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,630 - INFO - Entry ID: 6440
+2025-04-11 10:28:31,630 - INFO - Content Title: #REDIRECT [[Fiction / Volumes (Norwegian)]]
+2025-04-11 10:28:31,630 - INFO - Content Length: 43
+2025-04-11 10:28:31,630 - INFO - Content:
+#REDIRECT [[Fiction / Volumes (Norwegian)]]
+2025-04-11 10:28:31,630 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,631 - INFO - === SAMPLE ANALYSIS: TRANSLATION (1 entries) ===
+2025-04-11 10:28:31,631 - INFO - Entry ID: 7090
+2025-04-11 10:28:31,631 - INFO - Content Title: \"La Confusion des sentiments. Notes personelles du conseiller privé  R. von D.\" [Verwirrung der Gefühle. Private Aufzeichnungen des Geheimrates R. v. D.] in:\n<lst type=bracket start=1>\n[[Oeuvres romanesques]] [Paris, 2001], Vol. II, No. 9, pp. (90)-(196). Translation by Alzir Hella and Olivier Bournac\n[[Romans et nouvelles]] [Paris, 1991], No. 14, pp. (471)-552. Annotations, pp. 1178-1179. Revised translation by Brigitte Vergne-Cain and Gérard Rudent\n[[Romans, nouvelles et récits]] [Paris, 2013], Vol. 1, No. 37, pp. (973)-1051. Commentary, pp. 1414-1417. Annotations, pp. 1417-1418. Translation by Claire de  Oliveira\n</lst>\n\n\'\'\'See:\'\'\' [[La Confusion des sentiments]]:  13 printed volumes between 1929 and 2013, a 2010 stage play, plus sound recordings, video discs and a video cassette
+2025-04-11 10:28:31,631 - INFO - Content Length: 812
+2025-04-11 10:28:31,631 - INFO - Year: 2001.0
+2025-04-11 10:28:31,631 - INFO - Location: Paris
+2025-04-11 10:28:31,632 - INFO - Content:
+\"La Confusion des sentiments. Notes personelles du conseiller privé  R. von D.\" [Verwirrung der Gefühle. Private Aufzeichnungen des Geheimrates R. v. D.] in:\n<lst type=bracket start=1>\n[[Oeuvres romanesques]] [Paris, 2001], Vol. II, No. 9, pp. (90)-(196). Translation by Alzir Hella and Olivier Bournac\n[[Romans et nouvelles]] [Paris, 1991], No. 14, pp. (471)-552. Annotations, pp. 1178-1179. Revised translation by Brigitte Vergne-Cain and Gérard Rudent\n[[Romans, nouvelles et récits]] [Paris, 2013], Vol. 1, No. 37, pp. (973)-1051. Commentary, pp. 1414-1417. Annotations, pp. 1417-1418. Translation by Claire de  Oliveira\n</lst>\n\n\'\'\'See:\'\'\' [[La Confusion des sentiments]]:  13 printed volumes between 1929 and 2013, a 2010 stage play, plus sound recordings, video discs and a video cassette
+2025-04-11 10:28:31,632 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,632 - INFO - === SAMPLE ANALYSIS: BIOGRAPHY (1 entries) ===
+2025-04-11 10:28:31,632 - INFO - Entry ID: 3920
+2025-04-11 10:28:31,632 - INFO - Content Title: #REDIRECT [[Stefan Zweig - Jüdische Relationen. Studien zu Werk und Biographie]]
+2025-04-11 10:28:31,633 - INFO - Content Length: 81
+2025-04-11 10:28:31,633 - INFO - Content:
+#REDIRECT [[Stefan Zweig - Jüdische Relationen. Studien zu Werk und Biographie]]
+2025-04-11 10:28:31,633 - INFO - --------------------------------------------------
+2025-04-11 10:28:31,633 - INFO - === WRITING SUMMARY REPORT ===
+2025-04-11 10:28:31,639 - INFO - Summary report written to: bibliography_analysis\analysis_summary_20250411_1028.txt
+2025-04-11 10:28:31,639 - INFO - === DATA ANALYSIS COMPLETE ===
+2025-04-11 10:28:31,639 - INFO - Log file: zweig_analysis_20250411_1028.log
+2025-04-11 10:28:31,639 - INFO - Summary report: bibliography_analysis\analysis_summary_20250411_1028.txt

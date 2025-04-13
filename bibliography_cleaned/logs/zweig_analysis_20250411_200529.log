@@ -1,0 +1,676 @@
+2025-04-11 20:05:29,215 [INFO] === STEFAN ZWEIG BIBLIOGRAPHY ANALYSIS ===
+2025-04-11 20:05:29,215 [INFO] Found 3 bibliography files to analyze
+2025-04-11 20:05:29,215 [INFO] Starting analysis of file: zweig_bibliography_cleaned_20250411_1002.csv
+2025-04-11 20:05:29,284 [INFO] Successfully loaded 5652 entries
+2025-04-11 20:05:29,284 [INFO] DataFrame shape: (5652, 14)
+2025-04-11 20:05:29,286 [INFO] 
+--- MISSING VALUES ANALYSIS ---
+2025-04-11 20:05:29,287 [INFO] page_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,287 [INFO] page_title: 5652 missing values (100.00%)
+2025-04-11 20:05:29,287 [INFO] text_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,287 [INFO] content: 0 missing values (0.00%)
+2025-04-11 20:05:29,287 [INFO] content_cleaned: 0 missing values (0.00%)
+2025-04-11 20:05:29,288 [INFO] content_type: 0 missing values (0.00%)
+2025-04-11 20:05:29,288 [INFO] redirect_target: 4107 missing values (72.66%)
+2025-04-11 20:05:29,288 [INFO] content_title: 0 missing values (0.00%)
+2025-04-11 20:05:29,288 [INFO] year: 1799 missing values (31.83%)
+2025-04-11 20:05:29,288 [INFO] publisher: 5222 missing values (92.39%)
+2025-04-11 20:05:29,288 [INFO] location: 4207 missing values (74.43%)
+2025-04-11 20:05:29,288 [INFO] language: 5584 missing values (98.80%)
+2025-04-11 20:05:29,288 [INFO] page_count: 4655 missing values (82.36%)
+2025-04-11 20:05:29,288 [INFO] blob_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,288 [INFO] 
+--- CONTENT TYPE DISTRIBUTION ---
+2025-04-11 20:05:29,289 [INFO] Category: 4100 entries (72.54%)
+2025-04-11 20:05:29,289 [INFO] Redirect: 1545 entries (27.34%)
+2025-04-11 20:05:29,289 [INFO] Other: 4 entries (0.07%)
+2025-04-11 20:05:29,289 [INFO] Review: 1 entries (0.02%)
+2025-04-11 20:05:29,289 [INFO] Translation: 1 entries (0.02%)
+2025-04-11 20:05:29,289 [INFO] Correspondence: 1 entries (0.02%)
+2025-04-11 20:05:29,290 [INFO] 
+--- TEMPORAL ANALYSIS ---
+2025-04-11 20:05:29,290 [INFO] Entries with year information: 3853 (68.17%)
+2025-04-11 20:05:29,290 [INFO] Year range: 1815 to 2020 (206 years)
+2025-04-11 20:05:29,290 [INFO] 
+--- PUBLICATIONS BY DECADE ---
+2025-04-11 20:05:29,291 [INFO] 1810s: 12 publications
+2025-04-11 20:05:29,291 [INFO] 1820s: 12 publications
+2025-04-11 20:05:29,291 [INFO] 1830s: 2 publications
+2025-04-11 20:05:29,291 [INFO] 1840s: 20 publications
+2025-04-11 20:05:29,291 [INFO] 1850s: 8 publications
+2025-04-11 20:05:29,292 [INFO] 1860s: 1 publications
+2025-04-11 20:05:29,292 [INFO] 1870s: 1 publications
+2025-04-11 20:05:29,292 [INFO] 1880s: 25 publications
+2025-04-11 20:05:29,292 [INFO] 1890s: 11 publications
+2025-04-11 20:05:29,292 [INFO] 1900s: 134 publications
+2025-04-11 20:05:29,292 [INFO] 1910s: 175 publications
+2025-04-11 20:05:29,292 [INFO] 1920s: 184 publications
+2025-04-11 20:05:29,292 [INFO] 1930s: 323 publications
+2025-04-11 20:05:29,292 [INFO] 1940s: 235 publications
+2025-04-11 20:05:29,292 [INFO] 1950s: 230 publications
+2025-04-11 20:05:29,292 [INFO] 1960s: 234 publications
+2025-04-11 20:05:29,292 [INFO] 1970s: 116 publications
+2025-04-11 20:05:29,293 [INFO] 1980s: 263 publications
+2025-04-11 20:05:29,293 [INFO] 1990s: 497 publications
+2025-04-11 20:05:29,293 [INFO] 2000s: 619 publications
+2025-04-11 20:05:29,293 [INFO] 2010s: 718 publications
+2025-04-11 20:05:29,293 [INFO] 2020s: 33 publications
+2025-04-11 20:05:29,293 [INFO] 
+--- TIME PERIODS ---
+2025-04-11 20:05:29,293 [INFO] Pre-Zweig (before 1881): 56 publications
+2025-04-11 20:05:29,294 [INFO] During Lifetime (1881-1942): 937 publications
+2025-04-11 20:05:29,294 [INFO] Post-WWII (1943-1980): 747 publications
+2025-04-11 20:05:29,294 [INFO] Late 20th Century (1981-2000): 935 publications
+2025-04-11 20:05:29,294 [INFO] Contemporary (after 2000): 1178 publications
+2025-04-11 20:05:29,294 [INFO] 
+--- GEOGRAPHIC ANALYSIS ---
+2025-04-11 20:05:29,294 [INFO] Entries with location information: 1445 (25.57%)
+2025-04-11 20:05:29,295 [INFO] 
+--- TOP 20 PUBLICATION LOCATIONS ---
+2025-04-11 20:05:29,295 [INFO] Paris: 316 publications
+2025-04-11 20:05:29,295 [INFO] Wien: 267 publications
+2025-04-11 20:05:29,295 [INFO] Berlin: 253 publications
+2025-04-11 20:05:29,295 [INFO] Frankfurt: 161 publications
+2025-04-11 20:05:29,295 [INFO] London: 142 publications
+2025-04-11 20:05:29,295 [INFO] New York: 112 publications
+2025-04-11 20:05:29,295 [INFO] Leipzig: 88 publications
+2025-04-11 20:05:29,295 [INFO] Salzburg: 76 publications
+2025-04-11 20:05:29,296 [INFO] Hamburg: 30 publications
+2025-04-11 20:05:29,296 [INFO] 
+--- CATEGORY ANALYSIS ---
+2025-04-11 20:05:29,303 [INFO] Entries with categories: 4100 (72.54%)
+2025-04-11 20:05:29,304 [INFO] 
+--- TOP 20 CATEGORIES ---
+2025-04-11 20:05:29,305 [INFO] Secondary Literature / Authors (German): 433 occurrences
+2025-04-11 20:05:29,305 [INFO] Essays / Individual Essays (German): 232 occurrences
+2025-04-11 20:05:29,305 [INFO] Essays / Individual Essays (Spanish): 161 occurrences
+2025-04-11 20:05:29,305 [INFO] Secondary Literature / Authors (English): 148 occurrences
+2025-04-11 20:05:29,305 [INFO] Essays / Individual Essays (Chinese): 133 occurrences
+2025-04-11 20:05:29,306 [INFO] Poetry / Individual Poems (Chinese): 133 occurrences
+2025-04-11 20:05:29,306 [INFO] Secondary Literature / Authors (French): 129 occurrences
+2025-04-11 20:05:29,306 [INFO] Secondary Literature / Authors (Arabic): 122 occurrences
+2025-04-11 20:05:29,306 [INFO] Fiction / Individual Stories (Chinese): 95 occurrences
+2025-04-11 20:05:29,306 [INFO] Essays / Individual Essays (French): 94 occurrences
+2025-04-11 20:05:29,306 [INFO] Poetry / Individual Poems (German): 86 occurrences
+2025-04-11 20:05:29,306 [INFO] Films / Plays / Operas: 82 occurrences
+2025-04-11 20:05:29,306 [INFO] Historical Studies / Volumes (Chinese): 66 occurrences
+2025-04-11 20:05:29,306 [INFO] Secondary Literature / Titles (German): 65 occurrences
+2025-04-11 20:05:29,306 [INFO] Fiction / Individual Stories (French): 64 occurrences
+2025-04-11 20:05:29,307 [INFO] Fiction / Volumes (German): 62 occurrences
+2025-04-11 20:05:29,307 [INFO] Fiction / Individual Stories (Bulgarian): 50 occurrences
+2025-04-11 20:05:29,307 [INFO] Secondary Literature / Authors (Chinese): 46 occurrences
+2025-04-11 20:05:29,307 [INFO] Fiction / Individual Stories (German): 43 occurrences
+2025-04-11 20:05:29,307 [INFO] Fiction / Individual Stories (Spanish): 42 occurrences
+2025-04-11 20:05:29,309 [INFO] 
+--- MAIN CATEGORY TYPES ---
+2025-04-11 20:05:29,310 [INFO] Secondary Literature: 1236 entries
+2025-04-11 20:05:29,310 [INFO] Fiction: 1024 entries
+2025-04-11 20:05:29,310 [INFO] Essays: 776 entries
+2025-04-11 20:05:29,310 [INFO] Historical Studies: 465 entries
+2025-04-11 20:05:29,310 [INFO] Poetry: 262 entries
+2025-04-11 20:05:29,310 [INFO] Films: 81 entries
+2025-04-11 20:05:29,310 [INFO] Correspondence: 72 entries
+2025-04-11 20:05:29,310 [INFO] Dramas: 35 entries
+2025-04-11 20:05:29,310 [INFO] Translations by Zweig: 34 entries
+2025-04-11 20:05:29,310 [INFO] Collected and Selected Works: 30 entries
+2025-04-11 20:05:29,311 [INFO] 
+--- LINK ANALYSIS ---
+2025-04-11 20:05:29,322 [INFO] Total internal links found: 6376
+2025-04-11 20:05:29,322 [INFO] Entries with at least one internal link: 3874
+2025-04-11 20:05:29,322 [INFO] Average links per entry: 1.13
+2025-04-11 20:05:29,322 [INFO] Maximum links in a single entry: 17
+2025-04-11 20:05:29,324 [INFO] 
+--- TOP 20 MOST REFERENCED WORKS ---
+2025-04-11 20:05:29,324 [INFO] Yin xian ji. Zaonian de huahuan. Xin de lücheng: 139 references
+2025-04-11 20:05:29,324 [INFO] Ciweige wenji: 113 references
+2025-04-11 20:05:29,324 [INFO] Stefan-Zweig-Handbuch: 97 references
+2025-04-11 20:05:29,324 [INFO] \"Was wir wollen!\" Gedichte und Nachdichtungen: 88 references
+2025-04-11 20:05:29,324 [INFO] Obras completas de Stefan Zweig: 85 references
+2025-04-11 20:05:29,324 [INFO] Stefan Zweig. L\'Esprit européen en exil: 61 references
+2025-04-11 20:05:29,325 [INFO] Romans, nouvelles et récits: 59 references
+2025-04-11 20:05:29,325 [INFO] Novela: 57 references
+2025-04-11 20:05:29,325 [INFO] Obras de Stefan Zweig: 56 references
+2025-04-11 20:05:29,325 [INFO] Begegnungen mit Menschen, Büchern, Städten: 55 references
+2025-04-11 20:05:29,325 [INFO] Yige mosheng nüren de laixin: 54 references
+2025-04-11 20:05:29,325 [INFO] Tiempo y mundo: 53 references
+2025-04-11 20:05:29,325 [INFO] Odabrana djela Stefana Zweiga: 47 references
+2025-04-11 20:05:29,325 [INFO] Voyages: 45 references
+2025-04-11 20:05:29,326 [INFO] Ciweige xiaoshuo quanji: 44 references
+2025-04-11 20:05:29,326 [INFO] Hombres, libros y ciudades: 43 references
+2025-04-11 20:05:29,326 [INFO] Noveli / Bulgarian: 39 references
+2025-04-11 20:05:29,326 [INFO] Ciweige xiaoshuo ji: 37 references
+2025-04-11 20:05:29,326 [INFO] Worte haben keine Macht mehr: 37 references
+2025-04-11 20:05:29,326 [INFO] Nur die Lebendigen schaffen die Welt: 35 references
+2025-04-11 20:05:29,326 [INFO] 
+--- LANGUAGE ANALYSIS ---
+2025-04-11 20:05:29,327 [INFO] Entries with language information: 68 (1.20%)
+2025-04-11 20:05:29,328 [INFO] 
+--- PRIMARY LANGUAGES ---
+2025-04-11 20:05:29,328 [INFO] German: 30 entries
+2025-04-11 20:05:29,328 [INFO] French: 13 entries
+2025-04-11 20:05:29,328 [INFO] English: 6 entries
+2025-04-11 20:05:29,329 [INFO] Portuguese: 4 entries
+2025-04-11 20:05:29,329 [INFO] Spanish: 3 entries
+2025-04-11 20:05:29,329 [INFO] Russian: 2 entries
+2025-04-11 20:05:29,329 [INFO] Georgian: 1 entries
+2025-04-11 20:05:29,329 [INFO] Dutch: 1 entries
+2025-04-11 20:05:29,329 [INFO] Greek: 1 entries
+2025-04-11 20:05:29,329 [INFO] Bulgarian: 1 entries
+2025-04-11 20:05:29,329 [INFO] Turkish: 1 entries
+2025-04-11 20:05:29,329 [INFO] Arabic: 1 entries
+2025-04-11 20:05:29,329 [INFO] Chechen: 1 entries
+2025-04-11 20:05:29,329 [INFO] Finnish: 1 entries
+2025-04-11 20:05:29,330 [INFO] Literarische: 1 entries
+2025-04-11 20:05:29,330 [INFO] 
+--- PAGE COUNT ANALYSIS ---
+2025-04-11 20:05:29,330 [INFO] Entries with page count information: 997 (17.64%)
+2025-04-11 20:05:29,331 [INFO] Minimum page count: 4.0
+2025-04-11 20:05:29,331 [INFO] Maximum page count: 1175.0
+2025-04-11 20:05:29,331 [INFO] Average page count: 228.34
+2025-04-11 20:05:29,331 [INFO] Median page count: 199.0
+2025-04-11 20:05:29,332 [INFO] 
+--- PAGE COUNT DISTRIBUTION ---
+2025-04-11 20:05:29,332 [INFO] 1-10: 9 entries (0.90%)
+2025-04-11 20:05:29,332 [INFO] 11-50: 62 entries (6.22%)
+2025-04-11 20:05:29,333 [INFO] 51-100: 157 entries (15.75%)
+2025-04-11 20:05:29,333 [INFO] 101-200: 274 entries (27.48%)
+2025-04-11 20:05:29,333 [INFO] 201-500: 441 entries (44.23%)
+2025-04-11 20:05:29,333 [INFO] 501-1000: 52 entries (5.22%)
+2025-04-11 20:05:29,333 [INFO] 1000+: 2 entries (0.20%)
+2025-04-11 20:05:29,333 [INFO] 
+--- CONTENT TYPES BY DECADE ---
+2025-04-11 20:05:29,336 [INFO] 1810s: Category: 11, Redirect: 1
+2025-04-11 20:05:29,336 [INFO] 1820s: Category: 11, Other: 1
+2025-04-11 20:05:29,336 [INFO] 1830s: Category: 2
+2025-04-11 20:05:29,336 [INFO] 1840s: Category: 20
+2025-04-11 20:05:29,337 [INFO] 1850s: Category: 8
+2025-04-11 20:05:29,337 [INFO] 1860s: Category: 1
+2025-04-11 20:05:29,337 [INFO] 1870s: Category: 1
+2025-04-11 20:05:29,337 [INFO] 1880s: Category: 17, Redirect: 8
+2025-04-11 20:05:29,337 [INFO] 1890s: Category: 11
+2025-04-11 20:05:29,337 [INFO] 1900s: Category: 133, Redirect: 1
+2025-04-11 20:05:29,337 [INFO] 1910s: Category: 166, Other: 1, Redirect: 8
+2025-04-11 20:05:29,337 [INFO] 1920s: Category: 179, Redirect: 5
+2025-04-11 20:05:29,338 [INFO] 1930s: Category: 316, Correspondence: 1, Redirect: 6
+2025-04-11 20:05:29,338 [INFO] 1940s: Category: 232, Redirect: 3
+2025-04-11 20:05:29,338 [INFO] 1950s: Category: 230
+2025-04-11 20:05:29,338 [INFO] 1960s: Category: 232, Redirect: 2
+2025-04-11 20:05:29,338 [INFO] 1970s: Category: 116
+2025-04-11 20:05:29,338 [INFO] 1980s: Category: 257, Other: 1, Redirect: 5
+2025-04-11 20:05:29,338 [INFO] 1990s: Category: 485, Redirect: 12
+2025-04-11 20:05:29,339 [INFO] 2000s: Category: 611, Redirect: 7, Translation: 1
+2025-04-11 20:05:29,339 [INFO] 2010s: Category: 711, Redirect: 6, Review: 1
+2025-04-11 20:05:29,339 [INFO] 2020s: Category: 32, Other: 1
+2025-04-11 20:05:29,339 [INFO] 
+--- CATEGORY DISTRIBUTION BY TIME PERIOD ---
+2025-04-11 20:05:29,344 [INFO] Contemporary - Top 5 categories: Secondary Literature: 567, Fiction: 259, Essays: 163, Historical Studies: 112, Correspondence: 15
+2025-04-11 20:05:29,345 [INFO] During Lifetime - Top 5 categories: Essays: 303, Secondary Literature: 152, Fiction: 133, Poetry: 100, Historical Studies: 96
+2025-04-11 20:05:29,345 [INFO] Late 20th Century - Top 5 categories: Fiction: 251, Secondary Literature: 251, Poetry: 136, Essays: 99, Historical Studies: 94
+2025-04-11 20:05:29,345 [INFO] Post-WWII - Top 5 categories: Fiction: 281, Secondary Literature: 175, Historical Studies: 130, Essays: 98, Films: 28
+2025-04-11 20:05:29,345 [INFO] Pre-Zweig - Top 5 categories: Essays: 28, Historical Studies: 17, Poetry: 5, Secondary Literature: 4
+2025-04-11 20:05:29,346 [INFO] 
+--- DUPLICATE ANALYSIS ---
+2025-04-11 20:05:29,347 [INFO] Entries with duplicate content: 833 (14.74%)
+2025-04-11 20:05:29,347 [INFO] Entries with duplicate cleaned content: 833 (14.74%)
+2025-04-11 20:05:29,348 [INFO] 
+--- GENERATING SUMMARY STATISTICS ---
+2025-04-11 20:05:29,348 [INFO] Statistics saved to zweig_stats_20250411_200529.json
+2025-04-11 20:05:29,349 [INFO] Starting analysis of file: zweig_bibliography_cleaned_20250411_1011.csv
+2025-04-11 20:05:29,412 [INFO] Successfully loaded 5652 entries
+2025-04-11 20:05:29,412 [INFO] DataFrame shape: (5652, 14)
+2025-04-11 20:05:29,414 [INFO] 
+--- MISSING VALUES ANALYSIS ---
+2025-04-11 20:05:29,414 [INFO] page_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,414 [INFO] page_title: 5652 missing values (100.00%)
+2025-04-11 20:05:29,414 [INFO] text_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,414 [INFO] content: 0 missing values (0.00%)
+2025-04-11 20:05:29,414 [INFO] content_cleaned: 0 missing values (0.00%)
+2025-04-11 20:05:29,414 [INFO] content_type: 0 missing values (0.00%)
+2025-04-11 20:05:29,415 [INFO] redirect_target: 4107 missing values (72.66%)
+2025-04-11 20:05:29,415 [INFO] content_title: 0 missing values (0.00%)
+2025-04-11 20:05:29,415 [INFO] year: 1799 missing values (31.83%)
+2025-04-11 20:05:29,415 [INFO] publisher: 5222 missing values (92.39%)
+2025-04-11 20:05:29,415 [INFO] location: 4207 missing values (74.43%)
+2025-04-11 20:05:29,415 [INFO] language: 5584 missing values (98.80%)
+2025-04-11 20:05:29,415 [INFO] page_count: 4655 missing values (82.36%)
+2025-04-11 20:05:29,415 [INFO] blob_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,415 [INFO] 
+--- CONTENT TYPE DISTRIBUTION ---
+2025-04-11 20:05:29,416 [INFO] Category: 4100 entries (72.54%)
+2025-04-11 20:05:29,416 [INFO] Redirect: 1545 entries (27.34%)
+2025-04-11 20:05:29,416 [INFO] Other: 4 entries (0.07%)
+2025-04-11 20:05:29,416 [INFO] Review: 1 entries (0.02%)
+2025-04-11 20:05:29,416 [INFO] Translation: 1 entries (0.02%)
+2025-04-11 20:05:29,416 [INFO] Correspondence: 1 entries (0.02%)
+2025-04-11 20:05:29,416 [INFO] 
+--- TEMPORAL ANALYSIS ---
+2025-04-11 20:05:29,416 [INFO] Entries with year information: 3853 (68.17%)
+2025-04-11 20:05:29,417 [INFO] Year range: 1815 to 2020 (206 years)
+2025-04-11 20:05:29,417 [INFO] 
+--- PUBLICATIONS BY DECADE ---
+2025-04-11 20:05:29,417 [INFO] 1810s: 12 publications
+2025-04-11 20:05:29,417 [INFO] 1820s: 12 publications
+2025-04-11 20:05:29,418 [INFO] 1830s: 2 publications
+2025-04-11 20:05:29,418 [INFO] 1840s: 20 publications
+2025-04-11 20:05:29,418 [INFO] 1850s: 8 publications
+2025-04-11 20:05:29,418 [INFO] 1860s: 1 publications
+2025-04-11 20:05:29,418 [INFO] 1870s: 1 publications
+2025-04-11 20:05:29,418 [INFO] 1880s: 25 publications
+2025-04-11 20:05:29,418 [INFO] 1890s: 11 publications
+2025-04-11 20:05:29,418 [INFO] 1900s: 134 publications
+2025-04-11 20:05:29,418 [INFO] 1910s: 175 publications
+2025-04-11 20:05:29,418 [INFO] 1920s: 184 publications
+2025-04-11 20:05:29,419 [INFO] 1930s: 323 publications
+2025-04-11 20:05:29,419 [INFO] 1940s: 235 publications
+2025-04-11 20:05:29,419 [INFO] 1950s: 230 publications
+2025-04-11 20:05:29,419 [INFO] 1960s: 234 publications
+2025-04-11 20:05:29,419 [INFO] 1970s: 116 publications
+2025-04-11 20:05:29,419 [INFO] 1980s: 263 publications
+2025-04-11 20:05:29,419 [INFO] 1990s: 497 publications
+2025-04-11 20:05:29,419 [INFO] 2000s: 619 publications
+2025-04-11 20:05:29,419 [INFO] 2010s: 718 publications
+2025-04-11 20:05:29,419 [INFO] 2020s: 33 publications
+2025-04-11 20:05:29,419 [INFO] 
+--- TIME PERIODS ---
+2025-04-11 20:05:29,420 [INFO] Pre-Zweig (before 1881): 56 publications
+2025-04-11 20:05:29,420 [INFO] During Lifetime (1881-1942): 937 publications
+2025-04-11 20:05:29,420 [INFO] Post-WWII (1943-1980): 747 publications
+2025-04-11 20:05:29,420 [INFO] Late 20th Century (1981-2000): 935 publications
+2025-04-11 20:05:29,420 [INFO] Contemporary (after 2000): 1178 publications
+2025-04-11 20:05:29,420 [INFO] 
+--- GEOGRAPHIC ANALYSIS ---
+2025-04-11 20:05:29,421 [INFO] Entries with location information: 1445 (25.57%)
+2025-04-11 20:05:29,421 [INFO] 
+--- TOP 20 PUBLICATION LOCATIONS ---
+2025-04-11 20:05:29,421 [INFO] Paris: 316 publications
+2025-04-11 20:05:29,421 [INFO] Wien: 267 publications
+2025-04-11 20:05:29,421 [INFO] Berlin: 253 publications
+2025-04-11 20:05:29,422 [INFO] Frankfurt: 161 publications
+2025-04-11 20:05:29,422 [INFO] London: 142 publications
+2025-04-11 20:05:29,422 [INFO] New York: 112 publications
+2025-04-11 20:05:29,422 [INFO] Leipzig: 88 publications
+2025-04-11 20:05:29,422 [INFO] Salzburg: 76 publications
+2025-04-11 20:05:29,422 [INFO] Hamburg: 30 publications
+2025-04-11 20:05:29,422 [INFO] 
+--- CATEGORY ANALYSIS ---
+2025-04-11 20:05:29,429 [INFO] Entries with categories: 4100 (72.54%)
+2025-04-11 20:05:29,429 [INFO] 
+--- TOP 20 CATEGORIES ---
+2025-04-11 20:05:29,429 [INFO] Secondary Literature / Authors (German): 433 occurrences
+2025-04-11 20:05:29,429 [INFO] Essays / Individual Essays (German): 232 occurrences
+2025-04-11 20:05:29,431 [INFO] Essays / Individual Essays (Spanish): 161 occurrences
+2025-04-11 20:05:29,431 [INFO] Secondary Literature / Authors (English): 148 occurrences
+2025-04-11 20:05:29,431 [INFO] Essays / Individual Essays (Chinese): 133 occurrences
+2025-04-11 20:05:29,431 [INFO] Poetry / Individual Poems (Chinese): 133 occurrences
+2025-04-11 20:05:29,431 [INFO] Secondary Literature / Authors (French): 129 occurrences
+2025-04-11 20:05:29,431 [INFO] Secondary Literature / Authors (Arabic): 122 occurrences
+2025-04-11 20:05:29,431 [INFO] Fiction / Individual Stories (Chinese): 95 occurrences
+2025-04-11 20:05:29,431 [INFO] Essays / Individual Essays (French): 94 occurrences
+2025-04-11 20:05:29,431 [INFO] Poetry / Individual Poems (German): 86 occurrences
+2025-04-11 20:05:29,431 [INFO] Films / Plays / Operas: 82 occurrences
+2025-04-11 20:05:29,431 [INFO] Historical Studies / Volumes (Chinese): 66 occurrences
+2025-04-11 20:05:29,431 [INFO] Secondary Literature / Titles (German): 65 occurrences
+2025-04-11 20:05:29,432 [INFO] Fiction / Individual Stories (French): 64 occurrences
+2025-04-11 20:05:29,432 [INFO] Fiction / Volumes (German): 62 occurrences
+2025-04-11 20:05:29,432 [INFO] Fiction / Individual Stories (Bulgarian): 50 occurrences
+2025-04-11 20:05:29,432 [INFO] Secondary Literature / Authors (Chinese): 46 occurrences
+2025-04-11 20:05:29,432 [INFO] Fiction / Individual Stories (German): 43 occurrences
+2025-04-11 20:05:29,432 [INFO] Fiction / Individual Stories (Spanish): 42 occurrences
+2025-04-11 20:05:29,435 [INFO] 
+--- MAIN CATEGORY TYPES ---
+2025-04-11 20:05:29,435 [INFO] Secondary Literature: 1236 entries
+2025-04-11 20:05:29,435 [INFO] Fiction: 1024 entries
+2025-04-11 20:05:29,435 [INFO] Essays: 776 entries
+2025-04-11 20:05:29,435 [INFO] Historical Studies: 465 entries
+2025-04-11 20:05:29,436 [INFO] Poetry: 262 entries
+2025-04-11 20:05:29,436 [INFO] Films: 81 entries
+2025-04-11 20:05:29,436 [INFO] Correspondence: 72 entries
+2025-04-11 20:05:29,436 [INFO] Dramas: 35 entries
+2025-04-11 20:05:29,436 [INFO] Translations by Zweig: 34 entries
+2025-04-11 20:05:29,436 [INFO] Collected and Selected Works: 30 entries
+2025-04-11 20:05:29,436 [INFO] 
+--- LINK ANALYSIS ---
+2025-04-11 20:05:29,444 [INFO] Total internal links found: 6376
+2025-04-11 20:05:29,444 [INFO] Entries with at least one internal link: 3874
+2025-04-11 20:05:29,444 [INFO] Average links per entry: 1.13
+2025-04-11 20:05:29,444 [INFO] Maximum links in a single entry: 17
+2025-04-11 20:05:29,445 [INFO] 
+--- TOP 20 MOST REFERENCED WORKS ---
+2025-04-11 20:05:29,446 [INFO] Yin xian ji. Zaonian de huahuan. Xin de lücheng: 139 references
+2025-04-11 20:05:29,446 [INFO] Ciweige wenji: 113 references
+2025-04-11 20:05:29,446 [INFO] Stefan-Zweig-Handbuch: 97 references
+2025-04-11 20:05:29,446 [INFO] \"Was wir wollen!\" Gedichte und Nachdichtungen: 88 references
+2025-04-11 20:05:29,446 [INFO] Obras completas de Stefan Zweig: 85 references
+2025-04-11 20:05:29,446 [INFO] Stefan Zweig. L\'Esprit européen en exil: 61 references
+2025-04-11 20:05:29,446 [INFO] Romans, nouvelles et récits: 59 references
+2025-04-11 20:05:29,446 [INFO] Novela: 57 references
+2025-04-11 20:05:29,446 [INFO] Obras de Stefan Zweig: 56 references
+2025-04-11 20:05:29,446 [INFO] Begegnungen mit Menschen, Büchern, Städten: 55 references
+2025-04-11 20:05:29,446 [INFO] Yige mosheng nüren de laixin: 54 references
+2025-04-11 20:05:29,446 [INFO] Tiempo y mundo: 53 references
+2025-04-11 20:05:29,446 [INFO] Odabrana djela Stefana Zweiga: 47 references
+2025-04-11 20:05:29,447 [INFO] Voyages: 45 references
+2025-04-11 20:05:29,447 [INFO] Ciweige xiaoshuo quanji: 44 references
+2025-04-11 20:05:29,447 [INFO] Hombres, libros y ciudades: 43 references
+2025-04-11 20:05:29,447 [INFO] Noveli / Bulgarian: 39 references
+2025-04-11 20:05:29,447 [INFO] Ciweige xiaoshuo ji: 37 references
+2025-04-11 20:05:29,447 [INFO] Worte haben keine Macht mehr: 37 references
+2025-04-11 20:05:29,447 [INFO] Nur die Lebendigen schaffen die Welt: 35 references
+2025-04-11 20:05:29,447 [INFO] 
+--- LANGUAGE ANALYSIS ---
+2025-04-11 20:05:29,447 [INFO] Entries with language information: 68 (1.20%)
+2025-04-11 20:05:29,449 [INFO] 
+--- PRIMARY LANGUAGES ---
+2025-04-11 20:05:29,449 [INFO] German: 30 entries
+2025-04-11 20:05:29,449 [INFO] French: 13 entries
+2025-04-11 20:05:29,450 [INFO] English: 6 entries
+2025-04-11 20:05:29,450 [INFO] Portuguese: 4 entries
+2025-04-11 20:05:29,450 [INFO] Spanish: 3 entries
+2025-04-11 20:05:29,450 [INFO] Russian: 2 entries
+2025-04-11 20:05:29,450 [INFO] Georgian: 1 entries
+2025-04-11 20:05:29,450 [INFO] Dutch: 1 entries
+2025-04-11 20:05:29,450 [INFO] Greek: 1 entries
+2025-04-11 20:05:29,450 [INFO] Bulgarian: 1 entries
+2025-04-11 20:05:29,450 [INFO] Turkish: 1 entries
+2025-04-11 20:05:29,451 [INFO] Arabic: 1 entries
+2025-04-11 20:05:29,451 [INFO] Chechen: 1 entries
+2025-04-11 20:05:29,451 [INFO] Finnish: 1 entries
+2025-04-11 20:05:29,451 [INFO] Literarische: 1 entries
+2025-04-11 20:05:29,451 [INFO] 
+--- PAGE COUNT ANALYSIS ---
+2025-04-11 20:05:29,451 [INFO] Entries with page count information: 997 (17.64%)
+2025-04-11 20:05:29,452 [INFO] Minimum page count: 4.0
+2025-04-11 20:05:29,452 [INFO] Maximum page count: 1175.0
+2025-04-11 20:05:29,452 [INFO] Average page count: 228.34
+2025-04-11 20:05:29,452 [INFO] Median page count: 199.0
+2025-04-11 20:05:29,453 [INFO] 
+--- PAGE COUNT DISTRIBUTION ---
+2025-04-11 20:05:29,453 [INFO] 1-10: 9 entries (0.90%)
+2025-04-11 20:05:29,453 [INFO] 11-50: 62 entries (6.22%)
+2025-04-11 20:05:29,453 [INFO] 51-100: 157 entries (15.75%)
+2025-04-11 20:05:29,453 [INFO] 101-200: 274 entries (27.48%)
+2025-04-11 20:05:29,453 [INFO] 201-500: 441 entries (44.23%)
+2025-04-11 20:05:29,453 [INFO] 501-1000: 52 entries (5.22%)
+2025-04-11 20:05:29,453 [INFO] 1000+: 2 entries (0.20%)
+2025-04-11 20:05:29,453 [INFO] 
+--- CONTENT TYPES BY DECADE ---
+2025-04-11 20:05:29,454 [INFO] 1810s: Category: 11, Redirect: 1
+2025-04-11 20:05:29,455 [INFO] 1820s: Category: 11, Other: 1
+2025-04-11 20:05:29,455 [INFO] 1830s: Category: 2
+2025-04-11 20:05:29,455 [INFO] 1840s: Category: 20
+2025-04-11 20:05:29,455 [INFO] 1850s: Category: 8
+2025-04-11 20:05:29,455 [INFO] 1860s: Category: 1
+2025-04-11 20:05:29,455 [INFO] 1870s: Category: 1
+2025-04-11 20:05:29,455 [INFO] 1880s: Category: 17, Redirect: 8
+2025-04-11 20:05:29,455 [INFO] 1890s: Category: 11
+2025-04-11 20:05:29,456 [INFO] 1900s: Category: 133, Redirect: 1
+2025-04-11 20:05:29,456 [INFO] 1910s: Category: 166, Other: 1, Redirect: 8
+2025-04-11 20:05:29,456 [INFO] 1920s: Category: 179, Redirect: 5
+2025-04-11 20:05:29,456 [INFO] 1930s: Category: 316, Correspondence: 1, Redirect: 6
+2025-04-11 20:05:29,456 [INFO] 1940s: Category: 232, Redirect: 3
+2025-04-11 20:05:29,456 [INFO] 1950s: Category: 230
+2025-04-11 20:05:29,456 [INFO] 1960s: Category: 232, Redirect: 2
+2025-04-11 20:05:29,456 [INFO] 1970s: Category: 116
+2025-04-11 20:05:29,456 [INFO] 1980s: Category: 257, Other: 1, Redirect: 5
+2025-04-11 20:05:29,456 [INFO] 1990s: Category: 485, Redirect: 12
+2025-04-11 20:05:29,457 [INFO] 2000s: Category: 611, Redirect: 7, Translation: 1
+2025-04-11 20:05:29,457 [INFO] 2010s: Category: 711, Redirect: 6, Review: 1
+2025-04-11 20:05:29,457 [INFO] 2020s: Category: 32, Other: 1
+2025-04-11 20:05:29,457 [INFO] 
+--- CATEGORY DISTRIBUTION BY TIME PERIOD ---
+2025-04-11 20:05:29,462 [INFO] Contemporary - Top 5 categories: Secondary Literature: 567, Fiction: 259, Essays: 163, Historical Studies: 112, Correspondence: 15
+2025-04-11 20:05:29,463 [INFO] During Lifetime - Top 5 categories: Essays: 303, Secondary Literature: 152, Fiction: 133, Poetry: 100, Historical Studies: 96
+2025-04-11 20:05:29,463 [INFO] Late 20th Century - Top 5 categories: Fiction: 251, Secondary Literature: 251, Poetry: 136, Essays: 99, Historical Studies: 94
+2025-04-11 20:05:29,463 [INFO] Post-WWII - Top 5 categories: Fiction: 281, Secondary Literature: 175, Historical Studies: 130, Essays: 98, Films: 28
+2025-04-11 20:05:29,463 [INFO] Pre-Zweig - Top 5 categories: Essays: 28, Historical Studies: 17, Poetry: 5, Secondary Literature: 4
+2025-04-11 20:05:29,463 [INFO] 
+--- DUPLICATE ANALYSIS ---
+2025-04-11 20:05:29,464 [INFO] Entries with duplicate content: 833 (14.74%)
+2025-04-11 20:05:29,465 [INFO] Entries with duplicate cleaned content: 833 (14.74%)
+2025-04-11 20:05:29,465 [INFO] 
+--- GENERATING SUMMARY STATISTICS ---
+2025-04-11 20:05:29,466 [INFO] Statistics saved to zweig_stats_20250411_200529.json
+2025-04-11 20:05:29,466 [INFO] Starting analysis of file: zweig_bibliography_cleaned_20250411_1024.csv
+2025-04-11 20:05:29,529 [INFO] Successfully loaded 5652 entries
+2025-04-11 20:05:29,529 [INFO] DataFrame shape: (5652, 14)
+2025-04-11 20:05:29,532 [INFO] 
+--- MISSING VALUES ANALYSIS ---
+2025-04-11 20:05:29,532 [INFO] page_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,532 [INFO] page_title: 5652 missing values (100.00%)
+2025-04-11 20:05:29,532 [INFO] text_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,532 [INFO] content: 0 missing values (0.00%)
+2025-04-11 20:05:29,532 [INFO] content_cleaned: 0 missing values (0.00%)
+2025-04-11 20:05:29,532 [INFO] content_type: 0 missing values (0.00%)
+2025-04-11 20:05:29,533 [INFO] redirect_target: 4107 missing values (72.66%)
+2025-04-11 20:05:29,533 [INFO] content_title: 0 missing values (0.00%)
+2025-04-11 20:05:29,533 [INFO] year: 1799 missing values (31.83%)
+2025-04-11 20:05:29,533 [INFO] publisher: 5222 missing values (92.39%)
+2025-04-11 20:05:29,533 [INFO] location: 4207 missing values (74.43%)
+2025-04-11 20:05:29,533 [INFO] language: 5584 missing values (98.80%)
+2025-04-11 20:05:29,533 [INFO] page_count: 4655 missing values (82.36%)
+2025-04-11 20:05:29,533 [INFO] blob_id: 0 missing values (0.00%)
+2025-04-11 20:05:29,533 [INFO] 
+--- CONTENT TYPE DISTRIBUTION ---
+2025-04-11 20:05:29,534 [INFO] Category: 4100 entries (72.54%)
+2025-04-11 20:05:29,534 [INFO] Redirect: 1545 entries (27.34%)
+2025-04-11 20:05:29,534 [INFO] Other: 4 entries (0.07%)
+2025-04-11 20:05:29,534 [INFO] Review: 1 entries (0.02%)
+2025-04-11 20:05:29,534 [INFO] Translation: 1 entries (0.02%)
+2025-04-11 20:05:29,534 [INFO] Correspondence: 1 entries (0.02%)
+2025-04-11 20:05:29,534 [INFO] 
+--- TEMPORAL ANALYSIS ---
+2025-04-11 20:05:29,535 [INFO] Entries with year information: 3853 (68.17%)
+2025-04-11 20:05:29,535 [INFO] Year range: 1815 to 2020 (206 years)
+2025-04-11 20:05:29,535 [INFO] 
+--- PUBLICATIONS BY DECADE ---
+2025-04-11 20:05:29,535 [INFO] 1810s: 12 publications
+2025-04-11 20:05:29,535 [INFO] 1820s: 12 publications
+2025-04-11 20:05:29,536 [INFO] 1830s: 2 publications
+2025-04-11 20:05:29,536 [INFO] 1840s: 20 publications
+2025-04-11 20:05:29,536 [INFO] 1850s: 8 publications
+2025-04-11 20:05:29,536 [INFO] 1860s: 1 publications
+2025-04-11 20:05:29,536 [INFO] 1870s: 1 publications
+2025-04-11 20:05:29,536 [INFO] 1880s: 25 publications
+2025-04-11 20:05:29,536 [INFO] 1890s: 11 publications
+2025-04-11 20:05:29,536 [INFO] 1900s: 134 publications
+2025-04-11 20:05:29,536 [INFO] 1910s: 175 publications
+2025-04-11 20:05:29,536 [INFO] 1920s: 184 publications
+2025-04-11 20:05:29,536 [INFO] 1930s: 323 publications
+2025-04-11 20:05:29,536 [INFO] 1940s: 235 publications
+2025-04-11 20:05:29,536 [INFO] 1950s: 230 publications
+2025-04-11 20:05:29,536 [INFO] 1960s: 234 publications
+2025-04-11 20:05:29,536 [INFO] 1970s: 116 publications
+2025-04-11 20:05:29,536 [INFO] 1980s: 263 publications
+2025-04-11 20:05:29,536 [INFO] 1990s: 497 publications
+2025-04-11 20:05:29,536 [INFO] 2000s: 619 publications
+2025-04-11 20:05:29,538 [INFO] 2010s: 718 publications
+2025-04-11 20:05:29,538 [INFO] 2020s: 33 publications
+2025-04-11 20:05:29,538 [INFO] 
+--- TIME PERIODS ---
+2025-04-11 20:05:29,538 [INFO] Pre-Zweig (before 1881): 56 publications
+2025-04-11 20:05:29,538 [INFO] During Lifetime (1881-1942): 937 publications
+2025-04-11 20:05:29,538 [INFO] Post-WWII (1943-1980): 747 publications
+2025-04-11 20:05:29,539 [INFO] Late 20th Century (1981-2000): 935 publications
+2025-04-11 20:05:29,539 [INFO] Contemporary (after 2000): 1178 publications
+2025-04-11 20:05:29,539 [INFO] 
+--- GEOGRAPHIC ANALYSIS ---
+2025-04-11 20:05:29,539 [INFO] Entries with location information: 1445 (25.57%)
+2025-04-11 20:05:29,539 [INFO] 
+--- TOP 20 PUBLICATION LOCATIONS ---
+2025-04-11 20:05:29,540 [INFO] Paris: 316 publications
+2025-04-11 20:05:29,540 [INFO] Wien: 267 publications
+2025-04-11 20:05:29,540 [INFO] Berlin: 253 publications
+2025-04-11 20:05:29,540 [INFO] Frankfurt: 161 publications
+2025-04-11 20:05:29,540 [INFO] London: 142 publications
+2025-04-11 20:05:29,540 [INFO] New York: 112 publications
+2025-04-11 20:05:29,540 [INFO] Leipzig: 88 publications
+2025-04-11 20:05:29,540 [INFO] Salzburg: 76 publications
+2025-04-11 20:05:29,540 [INFO] Hamburg: 30 publications
+2025-04-11 20:05:29,540 [INFO] 
+--- CATEGORY ANALYSIS ---
+2025-04-11 20:05:29,547 [INFO] Entries with categories: 4100 (72.54%)
+2025-04-11 20:05:29,548 [INFO] 
+--- TOP 20 CATEGORIES ---
+2025-04-11 20:05:29,548 [INFO] Secondary Literature / Authors (German): 433 occurrences
+2025-04-11 20:05:29,548 [INFO] Essays / Individual Essays (German): 232 occurrences
+2025-04-11 20:05:29,549 [INFO] Essays / Individual Essays (Spanish): 161 occurrences
+2025-04-11 20:05:29,549 [INFO] Secondary Literature / Authors (English): 148 occurrences
+2025-04-11 20:05:29,549 [INFO] Essays / Individual Essays (Chinese): 133 occurrences
+2025-04-11 20:05:29,549 [INFO] Poetry / Individual Poems (Chinese): 133 occurrences
+2025-04-11 20:05:29,549 [INFO] Secondary Literature / Authors (French): 129 occurrences
+2025-04-11 20:05:29,549 [INFO] Secondary Literature / Authors (Arabic): 122 occurrences
+2025-04-11 20:05:29,549 [INFO] Fiction / Individual Stories (Chinese): 95 occurrences
+2025-04-11 20:05:29,549 [INFO] Essays / Individual Essays (French): 94 occurrences
+2025-04-11 20:05:29,549 [INFO] Poetry / Individual Poems (German): 86 occurrences
+2025-04-11 20:05:29,549 [INFO] Films / Plays / Operas: 82 occurrences
+2025-04-11 20:05:29,549 [INFO] Historical Studies / Volumes (Chinese): 66 occurrences
+2025-04-11 20:05:29,549 [INFO] Secondary Literature / Titles (German): 65 occurrences
+2025-04-11 20:05:29,550 [INFO] Fiction / Individual Stories (French): 64 occurrences
+2025-04-11 20:05:29,550 [INFO] Fiction / Volumes (German): 62 occurrences
+2025-04-11 20:05:29,550 [INFO] Fiction / Individual Stories (Bulgarian): 50 occurrences
+2025-04-11 20:05:29,550 [INFO] Secondary Literature / Authors (Chinese): 46 occurrences
+2025-04-11 20:05:29,550 [INFO] Fiction / Individual Stories (German): 43 occurrences
+2025-04-11 20:05:29,550 [INFO] Fiction / Individual Stories (Spanish): 42 occurrences
+2025-04-11 20:05:29,553 [INFO] 
+--- MAIN CATEGORY TYPES ---
+2025-04-11 20:05:29,553 [INFO] Secondary Literature: 1236 entries
+2025-04-11 20:05:29,553 [INFO] Fiction: 1024 entries
+2025-04-11 20:05:29,553 [INFO] Essays: 776 entries
+2025-04-11 20:05:29,553 [INFO] Historical Studies: 465 entries
+2025-04-11 20:05:29,553 [INFO] Poetry: 262 entries
+2025-04-11 20:05:29,554 [INFO] Films: 81 entries
+2025-04-11 20:05:29,554 [INFO] Correspondence: 72 entries
+2025-04-11 20:05:29,554 [INFO] Dramas: 35 entries
+2025-04-11 20:05:29,554 [INFO] Translations by Zweig: 34 entries
+2025-04-11 20:05:29,554 [INFO] Collected and Selected Works: 30 entries
+2025-04-11 20:05:29,554 [INFO] 
+--- LINK ANALYSIS ---
+2025-04-11 20:05:29,563 [INFO] Total internal links found: 6376
+2025-04-11 20:05:29,563 [INFO] Entries with at least one internal link: 3874
+2025-04-11 20:05:29,563 [INFO] Average links per entry: 1.13
+2025-04-11 20:05:29,563 [INFO] Maximum links in a single entry: 17
+2025-04-11 20:05:29,564 [INFO] 
+--- TOP 20 MOST REFERENCED WORKS ---
+2025-04-11 20:05:29,565 [INFO] Yin xian ji. Zaonian de huahuan. Xin de lücheng: 139 references
+2025-04-11 20:05:29,565 [INFO] Ciweige wenji: 113 references
+2025-04-11 20:05:29,565 [INFO] Stefan-Zweig-Handbuch: 97 references
+2025-04-11 20:05:29,565 [INFO] \"Was wir wollen!\" Gedichte und Nachdichtungen: 88 references
+2025-04-11 20:05:29,565 [INFO] Obras completas de Stefan Zweig: 85 references
+2025-04-11 20:05:29,565 [INFO] Stefan Zweig. L\'Esprit européen en exil: 61 references
+2025-04-11 20:05:29,565 [INFO] Romans, nouvelles et récits: 59 references
+2025-04-11 20:05:29,565 [INFO] Novela: 57 references
+2025-04-11 20:05:29,565 [INFO] Obras de Stefan Zweig: 56 references
+2025-04-11 20:05:29,565 [INFO] Begegnungen mit Menschen, Büchern, Städten: 55 references
+2025-04-11 20:05:29,565 [INFO] Yige mosheng nüren de laixin: 54 references
+2025-04-11 20:05:29,566 [INFO] Tiempo y mundo: 53 references
+2025-04-11 20:05:29,566 [INFO] Odabrana djela Stefana Zweiga: 47 references
+2025-04-11 20:05:29,566 [INFO] Voyages: 45 references
+2025-04-11 20:05:29,566 [INFO] Ciweige xiaoshuo quanji: 44 references
+2025-04-11 20:05:29,566 [INFO] Hombres, libros y ciudades: 43 references
+2025-04-11 20:05:29,566 [INFO] Noveli / Bulgarian: 39 references
+2025-04-11 20:05:29,566 [INFO] Ciweige xiaoshuo ji: 37 references
+2025-04-11 20:05:29,566 [INFO] Worte haben keine Macht mehr: 37 references
+2025-04-11 20:05:29,566 [INFO] Nur die Lebendigen schaffen die Welt: 35 references
+2025-04-11 20:05:29,566 [INFO] 
+--- LANGUAGE ANALYSIS ---
+2025-04-11 20:05:29,567 [INFO] Entries with language information: 68 (1.20%)
+2025-04-11 20:05:29,568 [INFO] 
+--- PRIMARY LANGUAGES ---
+2025-04-11 20:05:29,568 [INFO] German: 30 entries
+2025-04-11 20:05:29,568 [INFO] French: 13 entries
+2025-04-11 20:05:29,568 [INFO] English: 6 entries
+2025-04-11 20:05:29,568 [INFO] Portuguese: 4 entries
+2025-04-11 20:05:29,568 [INFO] Spanish: 3 entries
+2025-04-11 20:05:29,568 [INFO] Russian: 2 entries
+2025-04-11 20:05:29,568 [INFO] Georgian: 1 entries
+2025-04-11 20:05:29,568 [INFO] Dutch: 1 entries
+2025-04-11 20:05:29,568 [INFO] Greek: 1 entries
+2025-04-11 20:05:29,569 [INFO] Bulgarian: 1 entries
+2025-04-11 20:05:29,569 [INFO] Turkish: 1 entries
+2025-04-11 20:05:29,569 [INFO] Arabic: 1 entries
+2025-04-11 20:05:29,569 [INFO] Chechen: 1 entries
+2025-04-11 20:05:29,569 [INFO] Finnish: 1 entries
+2025-04-11 20:05:29,569 [INFO] Literarische: 1 entries
+2025-04-11 20:05:29,569 [INFO] 
+--- PAGE COUNT ANALYSIS ---
+2025-04-11 20:05:29,570 [INFO] Entries with page count information: 997 (17.64%)
+2025-04-11 20:05:29,570 [INFO] Minimum page count: 4.0
+2025-04-11 20:05:29,570 [INFO] Maximum page count: 1175.0
+2025-04-11 20:05:29,570 [INFO] Average page count: 228.34
+2025-04-11 20:05:29,570 [INFO] Median page count: 199.0
+2025-04-11 20:05:29,571 [INFO] 
+--- PAGE COUNT DISTRIBUTION ---
+2025-04-11 20:05:29,571 [INFO] 1-10: 9 entries (0.90%)
+2025-04-11 20:05:29,571 [INFO] 11-50: 62 entries (6.22%)
+2025-04-11 20:05:29,571 [INFO] 51-100: 157 entries (15.75%)
+2025-04-11 20:05:29,571 [INFO] 101-200: 274 entries (27.48%)
+2025-04-11 20:05:29,572 [INFO] 201-500: 441 entries (44.23%)
+2025-04-11 20:05:29,572 [INFO] 501-1000: 52 entries (5.22%)
+2025-04-11 20:05:29,572 [INFO] 1000+: 2 entries (0.20%)
+2025-04-11 20:05:29,572 [INFO] 
+--- CONTENT TYPES BY DECADE ---
+2025-04-11 20:05:29,573 [INFO] 1810s: Category: 11, Redirect: 1
+2025-04-11 20:05:29,573 [INFO] 1820s: Category: 11, Other: 1
+2025-04-11 20:05:29,574 [INFO] 1830s: Category: 2
+2025-04-11 20:05:29,574 [INFO] 1840s: Category: 20
+2025-04-11 20:05:29,574 [INFO] 1850s: Category: 8
+2025-04-11 20:05:29,574 [INFO] 1860s: Category: 1
+2025-04-11 20:05:29,574 [INFO] 1870s: Category: 1
+2025-04-11 20:05:29,575 [INFO] 1880s: Category: 17, Redirect: 8
+2025-04-11 20:05:29,575 [INFO] 1890s: Category: 11
+2025-04-11 20:05:29,575 [INFO] 1900s: Category: 133, Redirect: 1
+2025-04-11 20:05:29,575 [INFO] 1910s: Category: 166, Other: 1, Redirect: 8
+2025-04-11 20:05:29,575 [INFO] 1920s: Category: 179, Redirect: 5
+2025-04-11 20:05:29,575 [INFO] 1930s: Category: 316, Correspondence: 1, Redirect: 6
+2025-04-11 20:05:29,575 [INFO] 1940s: Category: 232, Redirect: 3
+2025-04-11 20:05:29,575 [INFO] 1950s: Category: 230
+2025-04-11 20:05:29,575 [INFO] 1960s: Category: 232, Redirect: 2
+2025-04-11 20:05:29,575 [INFO] 1970s: Category: 116
+2025-04-11 20:05:29,575 [INFO] 1980s: Category: 257, Other: 1, Redirect: 5
+2025-04-11 20:05:29,575 [INFO] 1990s: Category: 485, Redirect: 12
+2025-04-11 20:05:29,576 [INFO] 2000s: Category: 611, Redirect: 7, Translation: 1
+2025-04-11 20:05:29,576 [INFO] 2010s: Category: 711, Redirect: 6, Review: 1
+2025-04-11 20:05:29,576 [INFO] 2020s: Category: 32, Other: 1
+2025-04-11 20:05:29,576 [INFO] 
+--- CATEGORY DISTRIBUTION BY TIME PERIOD ---
+2025-04-11 20:05:29,581 [INFO] Contemporary - Top 5 categories: Secondary Literature: 567, Fiction: 259, Essays: 163, Historical Studies: 112, Correspondence: 15
+2025-04-11 20:05:29,581 [INFO] During Lifetime - Top 5 categories: Essays: 303, Secondary Literature: 152, Fiction: 133, Poetry: 100, Historical Studies: 96
+2025-04-11 20:05:29,582 [INFO] Late 20th Century - Top 5 categories: Fiction: 251, Secondary Literature: 251, Poetry: 136, Essays: 99, Historical Studies: 94
+2025-04-11 20:05:29,582 [INFO] Post-WWII - Top 5 categories: Fiction: 281, Secondary Literature: 175, Historical Studies: 130, Essays: 98, Films: 28
+2025-04-11 20:05:29,582 [INFO] Pre-Zweig - Top 5 categories: Essays: 28, Historical Studies: 17, Poetry: 5, Secondary Literature: 4
+2025-04-11 20:05:29,582 [INFO] 
+--- DUPLICATE ANALYSIS ---
+2025-04-11 20:05:29,583 [INFO] Entries with duplicate content: 833 (14.74%)
+2025-04-11 20:05:29,584 [INFO] Entries with duplicate cleaned content: 833 (14.74%)
+2025-04-11 20:05:29,584 [INFO] 
+--- GENERATING SUMMARY STATISTICS ---
+2025-04-11 20:05:29,584 [INFO] Statistics saved to zweig_stats_20250411_200529.json
+2025-04-11 20:05:29,585 [INFO] 
+--- COMPARING BIBLIOGRAPHY FILES ---
+2025-04-11 20:05:29,585 [INFO] File sizes: [('zweig_bibliography_cleaned_20250411_1002.csv', 7504810), ('zweig_bibliography_cleaned_20250411_1011.csv', 7505170), ('zweig_bibliography_cleaned_20250411_1024.csv', 7505170)]
+2025-04-11 20:05:29,585 [INFO] Files have different sizes
+2025-04-11 20:05:29,585 [INFO] All files have the same number of entries: 5652
+2025-04-11 20:05:29,585 [INFO] 
+--- CONTENT TYPE COMPARISON ---
+2025-04-11 20:05:29,585 [INFO] File 1: zweig_bibliography_cleaned_20250411_1002.csv
+2025-04-11 20:05:29,585 [INFO]   Category: 4100
+2025-04-11 20:05:29,585 [INFO]   Redirect: 1545
+2025-04-11 20:05:29,586 [INFO]   Other: 4
+2025-04-11 20:05:29,586 [INFO]   Review: 1
+2025-04-11 20:05:29,586 [INFO]   Translation: 1
+2025-04-11 20:05:29,586 [INFO]   Correspondence: 1
+2025-04-11 20:05:29,586 [INFO] File 2: zweig_bibliography_cleaned_20250411_1011.csv
+2025-04-11 20:05:29,586 [INFO]   Category: 4100
+2025-04-11 20:05:29,586 [INFO]   Redirect: 1545
+2025-04-11 20:05:29,586 [INFO]   Other: 4
+2025-04-11 20:05:29,586 [INFO]   Review: 1
+2025-04-11 20:05:29,586 [INFO]   Translation: 1
+2025-04-11 20:05:29,586 [INFO]   Correspondence: 1
+2025-04-11 20:05:29,587 [INFO] File 3: zweig_bibliography_cleaned_20250411_1024.csv
+2025-04-11 20:05:29,587 [INFO]   Category: 4100
+2025-04-11 20:05:29,587 [INFO]   Redirect: 1545
+2025-04-11 20:05:29,587 [INFO]   Other: 4
+2025-04-11 20:05:29,587 [INFO]   Review: 1
+2025-04-11 20:05:29,587 [INFO]   Translation: 1
+2025-04-11 20:05:29,587 [INFO]   Correspondence: 1
+2025-04-11 20:05:29,587 [INFO] Analysis complete

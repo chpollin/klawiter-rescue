@@ -30,7 +30,7 @@ DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': ''
+    'database': 'klawiter'
 }
 
 def parse_args():

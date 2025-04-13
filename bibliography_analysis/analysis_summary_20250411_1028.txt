@@ -1,0 +1,70 @@
+# STEFAN ZWEIG BIBLIOGRAPHY DATA ANALYSIS
+Analysis performed: 2025-04-11 10:28
+
+## DATASET OVERVIEW
+Total entries: 5652
+Columns: page_id, page_title, text_id, content, flags, blob_id, content_length, content_title, title_match, content_type, year, publisher, location, language, page_count
+
+## MISSING VALUES
+page_title: 5652 missing values (100.00%)
+year: 1799 missing values (31.83%)
+publisher: 5222 missing values (92.39%)
+location: 4207 missing values (74.43%)
+language: 5584 missing values (98.80%)
+page_count: 4655 missing values (82.36%)
+
+## CONTENT TYPE DISTRIBUTION
+Category: 4100 entries (72.54%)
+Other: 1496 entries (26.47%)
+Essay: 19 entries (0.34%)
+Correspondence: 16 entries (0.28%)
+Film/Media: 10 entries (0.18%)
+Bibliography Entry: 8 entries (0.14%)
+Review: 1 entries (0.02%)
+Translation: 1 entries (0.02%)
+Biography: 1 entries (0.02%)
+
+## REDIRECT ENTRIES
+Total redirects: 1545 (27.34%)
+Redirects by content type:
+- Other: 1492 entries
+- Essay: 19 entries
+- Correspondence: 15 entries
+- Film/Media: 10 entries
+- Bibliography Entry: 8 entries
+- Biography: 1 entries
+
+## ENCODING ISSUES
+Total entries with encoding issues: 3138 (55.52%)
+
+## BLOB DISTRIBUTION
+BLOB 1: 520 entries (9.20%)
+BLOB 2: 306 entries (5.41%)
+BLOB 3: 241 entries (4.26%)
+BLOB 4: 1302 entries (23.04%)
+BLOB 5: 1569 entries (27.76%)
+BLOB 6: 510 entries (9.02%)
+BLOB 7: 947 entries (16.76%)
+BLOB 8: 257 entries (4.55%)
+
+## YEAR DISTRIBUTION
+Entries with year information: 3853 (68.17%)
+Year range: 1815 - 2020
+During Zweig's lifetime (1881-1942): 937 entries (24.68%)
+Posthumous (after 1942): 2860 entries (75.32%)
+
+## RECOMMENDATIONS FOR DATA CLEANING
+1. Redirects:
+   - 1545 entries should be properly categorized as 'Redirect'
+   - 1545 redirect entries are currently miscategorized
+2. Encoding Issues:
+   - 3138 entries have encoding issues that need to be fixed
+   - Common characters to fix: ä, ö, ü, ß, é
+3. Bibliography Entries:
+   - 8/8 'Bibliography Entry' entries are actually redirects
+4. Missing Data:
+   - High missing values in: page_title, publisher, location, language, page_count
+   - Consider extracting this data from content text where possible
+
+## CONCLUSION
+This dataset requires significant cleaning, particularly addressing encoding issues, correctly categorizing redirects, and extracting structured data from the content text.
