@@ -1,48 +1,48 @@
 # Design Specification
 
-Visual design for the Klawiter Bibliography frontend, derived from Stefan Zweig Digital.
-Not a 1:1 copy, but the same visual language so both sites feel like parts of one project.
+Visual design for the Klawiter Bibliography frontend, part of the **Zweig Forschungsverbund** design family. All three sites (SZD GAMS, Klawiter Bibliography, SZD GitHub/Ontologie) share the same color palette from the GAMS reference. Differentiation comes through content, layout density, and accent emphasis — not through color shifts.
 
 ---
 
 ## Color Palette
 
-Extracted from Stefan Zweig Digital screenshots:
+Aligned to Stefan Zweig Digital on GAMS (the reference design):
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `--sz-burgundy` | `#7A1B2D` | Header background, primary links, field labels in detail view |
-| `--sz-burgundy-dark` | `#5C1422` | Header hover states, active navigation |
-| `--sz-gold` | `#B8963E` | Section headings, accent elements, search icon, active states |
-| `--sz-gold-light` | `#D4B463` | Hover on gold elements, highlight |
-| `--sz-cream` | `#FAF8F3` | Page background (warm off-white) |
-| `--sz-white` | `#FFFFFF` | Card backgrounds, content areas |
-| `--sz-text` | `#2D2D2D` | Body text |
-| `--sz-text-light` | `#6B6B6B` | Secondary text, metadata |
-| `--sz-border` | `#E0D8CC` | Card borders, dividers (warm gray) |
-| `--sz-border-light` | `#EDE8DF` | Subtle separators |
+| Token | Hex | GAMS Reference | Usage |
+|-------|-----|----------------|-------|
+| `--sz-burgundy` | `#631a34` | `#631a34` (exact match) | Header background, primary links, field labels |
+| `--sz-burgundy-dark` | `#4A1228` | — | Header hover states, active navigation |
+| `--sz-burgundy-light` | `#7A2D45` | — | Lighter burgundy for secondary states |
+| `--sz-gold` | `#C2A360` | `#C2A360` (exact match) | Section headings, accent elements, search icon |
+| `--sz-gold-light` | `#D4B87A` | — | Hover on gold elements, highlight |
+| `--sz-cream` | `#FAF8F3` | `#FBFCF6` (near match) | Page background (warm off-white) |
+| `--sz-white` | `#FFFFFF` | `#FFFFFF` | Card backgrounds, content areas |
+| `--sz-text` | `#2D2D2D` | `#131313` | Body text |
+| `--sz-text-light` | `#6B6B6B` | — | Secondary text, metadata |
+| `--sz-border` | `#E0D8CC` | — | Card borders, dividers (warm gray) |
+| `--sz-border-light` | `#EDE8DF` | — | Subtle separators |
 
-No blue anywhere. The current Tailwind blue (`#3b82f6`) is replaced entirely by burgundy for interactive elements and gold for accents.
+No blue anywhere. Burgundy for interactive elements, gold for accents. The Klawiter site is "gold-forward" (gold section headings, gold facet labels, gold chart titles), while SZD GitHub is "burgundy-forward" (burgundy section headings, gold used sparingly for metadata).
 
 ---
 
 ## Typography
 
-Stefan Zweig Digital uses serif fonts throughout, giving it an academic/archival feel.
+Typography aligned to the SZD font family via Google Fonts. GAMS uses Source Sans Pro (Light) + Bauer Bodoni (Bold Condensed); both GitHub Pages sites use Source Serif 4 + Source Sans 3 as the modern open-source equivalents.
 
 | Element | Font | Weight | Size | Style |
 |---------|------|--------|------|-------|
-| Site title | Georgia, serif | 400 | 1.125rem | uppercase, letter-spacing 0.15em |
-| Navigation | system sans-serif | 500 | 0.8125rem | uppercase, letter-spacing 0.08em |
-| Section headings (h2) | Georgia, serif | 400 | 1.5rem | uppercase, gold color, letter-spacing 0.1em |
-| Card title (h3) | Georgia, serif | 600 | 1rem | normal case |
-| Body text | Georgia, serif | 400 | 0.9375rem | line-height 1.6 |
-| Field labels | Georgia, serif | 400 | 0.875rem | burgundy color |
-| Field values | system sans-serif | 400 | 0.9375rem | dark text |
-| Badges | system sans-serif | 600 | 0.6875rem | uppercase |
-| Small/meta | system sans-serif | 400 | 0.75rem | light text |
+| Site title | Source Serif 4, serif | 400 | 1rem | uppercase, letter-spacing 0.12em |
+| Navigation | Source Sans 3, sans-serif | 500 | 0.8125rem | uppercase, letter-spacing 0.08em |
+| Section headings (h2) | Source Serif 4, serif | 400 | 1.25rem | uppercase, gold color, letter-spacing 0.1em |
+| Card title (h3) | Source Serif 4, serif | 600 | 1rem | normal case |
+| Body text | Source Serif 4, serif | 400 | 0.9375rem | line-height 1.6 |
+| Field labels | Source Serif 4, serif | 400 | 0.875rem | burgundy color |
+| Field values | Source Sans 3, sans-serif | 400 | 0.9375rem | dark text |
+| Badges | Source Sans 3, sans-serif | 600 | 0.6875rem | uppercase |
+| Small/meta | Source Sans 3, sans-serif | 400 | 0.75rem | light text |
 
-The contrast between serif labels and sans-serif values mirrors Stefan Zweig Digital's detail view.
+The contrast between serif labels and sans-serif values mirrors Stefan Zweig Digital's detail view. Google Fonts load: `Source+Serif+4` (400, 600, 400i) and `Source+Sans+3` (300, 400, 500, 600, 400i).
 
 ---
 
