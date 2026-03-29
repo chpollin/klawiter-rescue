@@ -38,8 +38,8 @@ Fix README.md and CLAUDE.md quality issues, finalize .gitignore.
 
 ### Tasks
 
-- [ ] Fix README.md — replace all broken umlauts (Eintrage→Einträge, etc.), add Credits section (Dr. Klawiter, Notre Dame), add License section, add link to live site (once deployed)
-- [ ] Reduce CLAUDE.md — remove project structure and pipeline sections (redundant with README), keep only: data flow, technical decisions summary, known limitations, path conventions
+- [x] Fix README.md — replace all broken umlauts (Eintrage→Einträge, etc.), add Credits section (Dr. Klawiter, Notre Dame), add License section, add link to live site (once deployed)
+- [x] Reduce CLAUDE.md — remove project structure and pipeline sections (redundant with README), keep only: data flow, technical decisions summary, known limitations, path conventions
 - [ ] Remove empty v2/ directory (once IDE releases lock)
 - [ ] Commit all M1+M2 changes
 
