@@ -2,31 +2,24 @@
 """
 Step 4: Classify entry types and resolve relationships.
 Maps categories to entry types, assigns time periods, resolves redirects.
+Handles all namespaces: ns 0 = bibliography, ns 14 = category pages, etc.
 
 Input:  data/intermediate/03_parsed.csv
 Output: data/intermediate/04_classified.csv
 """
 
-import csv
 import json
 import os
 import sys
-import logging
-
-csv.field_size_limit(10 * 1024 * 1024)  # 10MB field limit
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.vocabulary import category_to_entry_type, classify_time_period, CATEGORY_TYPE_MAP
+from lib.config import setup_logging, load_csv, write_csv, STEP_03_OUTPUT, STEP_04_OUTPUT
+from lib.vocabulary import category_to_entry_type, classify_time_period
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-log = logging.getLogger(__name__)
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_PATH = os.path.join(BASE_DIR, 'data', 'intermediate', '03_parsed.csv')
-OUTPUT_PATH = os.path.join(BASE_DIR, 'data', 'intermediate', '04_classified.csv')
+log = setup_logging(__name__)
 
 OUTPUT_FIELDS = [
-    'page_id', 'page_title', 'text_id', 'blob_id',
+    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
     'entry_type', 'is_redirect', 'redirect_target',
     'title', 'original_title', 'sortkey',
     'year', 'all_years', 'time_period',
@@ -38,9 +31,20 @@ OUTPUT_FIELDS = [
     'clean_content', 'raw_content',
 ]
 
+# MediaWiki namespace names
+NAMESPACE_NAMES = {
+    0: 'main', 6: 'file', 8: 'mediawiki', 10: 'template', 12: 'help', 14: 'category',
+}
+
 
 def classify_entry(row):
-    """Determine entry type based on categories and content analysis."""
+    """Determine entry type based on namespace, categories, and content."""
+    namespace = int(row.get('page_namespace', 0))
+
+    # Non-main namespaces get their own type
+    if namespace != 0:
+        return NAMESPACE_NAMES.get(namespace, f'namespace-{namespace}')
+
     # Redirects
     if row.get('is_redirect') in ('True', 'true', '1'):
         return 'redirect'
@@ -53,22 +57,21 @@ def classify_entry(row):
             return entry_type
 
     # Content-based fallback
-    content = row.get('raw_content', '') or ''
-    content_lower = content.lower()
+    content = (row.get('raw_content', '') or '').lower()
 
-    if 'novel' in content_lower or 'novella' in content_lower or 'novelle' in content_lower:
+    if 'novel' in content or 'novella' in content or 'novelle' in content:
         return 'fiction'
-    if 'essay' in content_lower:
+    if 'essay' in content:
         return 'essay'
-    if 'poem' in content_lower or 'gedicht' in content_lower:
+    if 'poem' in content or 'gedicht' in content:
         return 'poetry'
-    if 'drama' in content_lower or 'play' in content_lower or 'libretto' in content_lower:
+    if 'drama' in content or 'play' in content or 'libretto' in content:
         return 'drama'
-    if 'letter' in content_lower or 'brief' in content_lower or 'correspondence' in content_lower:
+    if 'letter' in content or 'brief' in content or 'correspondence' in content:
         return 'correspondence'
-    if 'film' in content_lower or 'movie' in content_lower or 'opera' in content_lower:
+    if 'film' in content or 'movie' in content or 'opera' in content:
         return 'film'
-    if 'translation' in content_lower or 'translated' in content_lower:
+    if 'translation' in content or 'translated' in content:
         return 'translation'
 
     return 'other'
@@ -76,7 +79,6 @@ def classify_entry(row):
 
 def build_redirect_map(rows):
     """Build a map of redirect targets to page_ids for relationship resolution."""
-    # Title -> page_id lookup
     title_to_page = {}
     for row in rows:
         title = row.get('title', '') or row.get('page_title', '')
@@ -86,29 +88,19 @@ def build_redirect_map(rows):
 
 
 def main():
-    log.info(f"Reading {INPUT_PATH}")
-
-    rows = []
-    with open(INPUT_PATH, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            rows.append(row)
-
+    rows = load_csv(STEP_03_OUTPUT)
     log.info(f"Loaded {len(rows)} entries, classifying...")
 
-    # Build title lookup for redirect resolution
     title_to_page = build_redirect_map(rows)
 
     type_counts = {}
     period_counts = {}
 
     for row in rows:
-        # Classify entry type
         entry_type = classify_entry(row)
         row['entry_type'] = entry_type
         type_counts[entry_type] = type_counts.get(entry_type, 0) + 1
 
-        # Assign time period
         year = row.get('year', '')
         if year:
             try:
@@ -122,14 +114,12 @@ def main():
         else:
             row['time_period'] = ''
 
-        # Resolve redirect targets to page_ids where possible
         if row.get('redirect_target'):
             target = row['redirect_target']
             target_page_id = title_to_page.get(target)
             if target_page_id:
                 row['redirect_target'] = f"{target} (→ {target_page_id})"
 
-    # Log statistics
     log.info("Entry type distribution:")
     for t, count in sorted(type_counts.items(), key=lambda x: -x[1]):
         log.info(f"  {t}: {count} ({100*count/len(rows):.1f}%)")
@@ -138,14 +128,8 @@ def main():
     for p, count in sorted(period_counts.items(), key=lambda x: -x[1]):
         log.info(f"  {p}: {count}")
 
-    # Write output
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=OUTPUT_FIELDS, extrasaction='ignore')
-        writer.writeheader()
-        writer.writerows(rows)
-
-    log.info(f"Output written to {OUTPUT_PATH}")
+    write_csv(STEP_04_OUTPUT, rows, OUTPUT_FIELDS)
+    log.info(f"Output written to {STEP_04_OUTPUT}")
 
 
 if __name__ == '__main__':

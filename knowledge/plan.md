@@ -41,7 +41,7 @@ Fix README.md and CLAUDE.md quality issues, finalize .gitignore.
 - [x] Fix README.md — replace all broken umlauts (Eintrage→Einträge, etc.), add Credits section (Dr. Klawiter, Notre Dame), add License section, add link to live site (once deployed)
 - [x] Reduce CLAUDE.md — remove project structure and pipeline sections (redundant with README), keep only: data flow, technical decisions summary, known limitations, path conventions
 - [ ] Remove empty v2/ directory (once IDE releases lock)
-- [ ] Commit all M1+M2 changes
+- [x] Commit all M1+M2 changes
 
 ---
 
@@ -56,10 +56,12 @@ Harden the extraction pipeline: eliminate code duplication, add comprehensive te
 
 ### M3.2: Config consolidation
 
-- [ ] Make all 6 scripts import paths from `pipeline/lib/config.py` — remove local `PROJECT_ROOT`, `INPUT_PATH`, `OUTPUT_PATH` definitions
-- [ ] Remove redundant `csv.field_size_limit()` calls from scripts 02–05 (already set globally in config.py)
-- [ ] Make all scripts use `config.setup_logging()` instead of local `logging.basicConfig()`
-- [ ] Verify pipeline output matches baseline checksums
+- [x] Make all 6 scripts import paths from `pipeline/lib/config.py` — remove local `PROJECT_ROOT`, `INPUT_PATH`, `OUTPUT_PATH` definitions
+- [x] Remove redundant `csv.field_size_limit()` calls from scripts 02–05 (already set globally in config.py)
+- [x] Make all scripts use `config.setup_logging()` instead of local `logging.basicConfig()`
+- [x] Expand extraction to ALL namespaces (6,725 pages including 420 Category pages)
+- [x] Add `page_namespace` field through entire pipeline
+- [x] Verify pipeline runs successfully (35.9s, 6,721/6,725 found)
 
 ### M3.3: Test infrastructure
 

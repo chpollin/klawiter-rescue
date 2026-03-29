@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 """
-Step 1: Extract all bibliography entries from SQL dump + binary BLOB files.
+Step 1: Extract all pages from SQL dump + binary BLOB files.
 No MySQL required — parses the raw files directly.
+Extracts ALL namespaces (main, category, template, etc.).
 
-Input:  working/zweig_part_01.sql, working/zt_00..zt_07
+Input:  data/raw/zweig_part_01.sql, data/raw/zt_00..zt_07
 Output: data/intermediate/01_extracted.csv
 """
 
-import csv
 import os
 import re
 import sys
-import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-log = logging.getLogger(__name__)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.config import setup_logging, write_csv, RAW_DIR, STEP_01_OUTPUT, SQL_DUMP_PATH, BLOB_FILES
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WORKING_DIR = os.path.join(os.path.dirname(BASE_DIR), 'working')
-OUTPUT_PATH = os.path.join(BASE_DIR, 'data', 'intermediate', '01_extracted.csv')
+log = setup_logging(__name__)
+
+OUTPUT_FIELDS = ['page_id', 'page_namespace', 'page_title', 'text_id', 'content', 'flags', 'blob_id']
 
 
 def parse_sql_inserts(sql_text, table_name):
@@ -44,7 +43,6 @@ def parse_value_tuples(values_str):
     i = 0
     while i < len(values_str):
         if values_str[i] == '(':
-            # Find matching closing paren
             depth = 1
             j = i + 1
             in_string = False
@@ -89,7 +87,6 @@ def parse_tuple_values(tuple_str):
             escape_next = True
             current += c
         elif c == "'" and in_string:
-            # Check for '' (escaped quote in SQL)
             if i + 1 < len(tuple_str) and tuple_str[i+1] == "'":
                 current += "'"
                 i += 1
@@ -116,7 +113,6 @@ def clean_binary_value(val):
         val = val[8:]
     if val.startswith("'") and val.endswith("'"):
         val = val[1:-1]
-    # Unescape SQL escapes
     val = val.replace("\\'", "'").replace("\\\\", "\\")
     return val
 
@@ -133,7 +129,6 @@ def load_page_table(sql_text):
                 namespace = int(vals[1])
                 title_raw = clean_binary_value(vals[2])
                 page_latest = int(vals[8])
-                # Decode title: stored as binary, may need hex decoding
                 try:
                     title = title_raw.replace('_', ' ')
                 except Exception:
@@ -144,22 +139,14 @@ def load_page_table(sql_text):
                     'page_latest': page_latest,
                 }
     log.info(f"  Parsed {len(pages)} pages")
+    # Log namespace distribution
+    ns_counts = {}
+    for p in pages.values():
+        ns = p['namespace']
+        ns_counts[ns] = ns_counts.get(ns, 0) + 1
+    for ns, count in sorted(ns_counts.items()):
+        log.info(f"    Namespace {ns}: {count} pages")
     return pages
-
-
-def load_revision_table(sql_text):
-    """Parse zweig_revision. Returns dict: rev_id -> page_id."""
-    log.info("Parsing zweig_revision...")
-    revisions = {}
-    for values_str in parse_sql_inserts(sql_text, 'zweig_revision'):
-        for t in parse_value_tuples(values_str):
-            vals = parse_tuple_values(t)
-            if len(vals) >= 2:
-                rev_id = int(vals[0])
-                page_id = int(vals[1])
-                revisions[rev_id] = page_id
-    log.info(f"  Parsed {len(revisions)} revisions")
-    return revisions
 
 
 def load_slots_table(sql_text):
@@ -171,7 +158,7 @@ def load_slots_table(sql_text):
             vals = parse_tuple_values(t)
             if len(vals) >= 4:
                 rev_id = int(vals[0])
-                content_id = int(vals[2])  # slot_content_id is 3rd field
+                content_id = int(vals[2])
                 slots[rev_id] = content_id
     log.info(f"  Parsed {len(slots)} slots")
     return slots
@@ -187,7 +174,6 @@ def load_content_table(sql_text):
             if len(vals) >= 5:
                 content_id = int(vals[0])
                 addr_raw = clean_binary_value(vals[4])
-                # Extract text_id from "tt:XXXXX"
                 if 'tt:' in addr_raw:
                     try:
                         text_id = int(addr_raw.split('tt:')[1])
@@ -199,14 +185,14 @@ def load_content_table(sql_text):
 
 
 def build_page_to_textid(pages, slots, contents):
-    """Build the full mapping: page_id -> text_id via page_latest -> slots -> content."""
-    log.info("Building page→text_id mapping...")
+    """Build the full mapping: page_id -> text_id via page_latest -> slots -> content.
+    Extracts ALL namespaces.
+    """
+    log.info("Building page→text_id mapping (all namespaces)...")
     mapping = {}
     no_slot = 0
     no_content = 0
     for page_id, page_info in pages.items():
-        if page_info['namespace'] != 0:
-            continue  # Only main namespace
         rev_id = page_info['page_latest']
         content_id = slots.get(rev_id)
         if content_id is None:
@@ -219,28 +205,26 @@ def build_page_to_textid(pages, slots, contents):
         mapping[page_id] = {
             'text_id': text_id,
             'title': page_info['title'],
+            'namespace': page_info['namespace'],
         }
     log.info(f"  Mapped {len(mapping)} pages to text IDs")
-    log.info(f"  No slot found: {no_slot}, No content address: {no_content}")
+    if no_slot:
+        log.info(f"  No slot found: {no_slot}")
+    if no_content:
+        log.info(f"  No content address: {no_content}")
     return mapping
 
 
 def load_blob_index(blob_path):
-    """Parse a binary BLOB file and build text_id -> content lookup.
-    The BLOB contains SQL INSERT statements with format:
-    (text_id,_binary 'content',_binary 'flags')
-    """
+    """Parse a binary BLOB file and build text_id -> content lookup."""
     log.info(f"Indexing BLOB: {os.path.basename(blob_path)}...")
 
     with open(blob_path, 'rb') as f:
         raw = f.read()
 
-    # Use latin-1 to preserve all byte values
     text = raw.decode('latin-1')
 
     index = {}
-    # Find all (text_id, _binary 'content', _binary 'flags') tuples
-    # Pattern matches: (NUMBER,_binary 'CONTENT',_binary 'FLAGS')
     pattern = re.compile(
         r"\((\d+),_binary '((?:[^'\\]|\\.|'')*?)',_binary '((?:[^'\\]|\\.|'')*?)'\)"
     )
@@ -249,7 +233,6 @@ def load_blob_index(blob_path):
         text_id = int(m.group(1))
         content = m.group(2)
         flags = m.group(3)
-        # Unescape SQL
         content = content.replace("''", "'").replace("\\'", "'")
         content = content.replace("\\\\", "\\").replace("\\n", "\n")
         index[text_id] = {'content': content, 'flags': flags}
@@ -259,10 +242,8 @@ def load_blob_index(blob_path):
 
 
 def main():
-    # Load SQL dump
-    sql_path = os.path.join(WORKING_DIR, 'zweig_part_01.sql')
-    log.info(f"Loading SQL dump: {sql_path}")
-    with open(sql_path, 'rb') as f:
+    log.info(f"Loading SQL dump: {SQL_DUMP_PATH}")
+    with open(SQL_DUMP_PATH, 'rb') as f:
         sql_text = f.read().decode('latin-1')
 
     # Parse MediaWiki tables
@@ -271,17 +252,17 @@ def main():
     slots = load_slots_table(sql_text)
     contents = load_content_table(sql_text)
 
-    # Build page → text_id mapping
+    # Build page → text_id mapping (all namespaces)
     mapping = build_page_to_textid(pages, slots, contents)
 
     # Load all BLOB files and build unified text index
     text_index = {}
-    for i in range(8):
-        blob_path = os.path.join(WORKING_DIR, f'zt_0{i}')
+    for blob_path in BLOB_FILES:
         if os.path.exists(blob_path):
             blob_index = load_blob_index(blob_path)
+            blob_id = int(os.path.basename(blob_path).replace('zt_0', ''))
             for text_id, data in blob_index.items():
-                data['blob_id'] = i
+                data['blob_id'] = blob_id
                 text_index[text_id] = data
         else:
             log.warning(f"  BLOB file not found: {blob_path}")
@@ -292,13 +273,16 @@ def main():
     results = []
     found = 0
     not_found = 0
+    not_found_pages = []
     for page_id, info in sorted(mapping.items()):
         text_id = info['text_id']
         title = info['title']
+        namespace = info['namespace']
         text_data = text_index.get(text_id)
         if text_data:
             results.append({
                 'page_id': page_id,
+                'page_namespace': namespace,
                 'page_title': title,
                 'text_id': text_id,
                 'content': text_data['content'],
@@ -309,6 +293,7 @@ def main():
         else:
             results.append({
                 'page_id': page_id,
+                'page_namespace': namespace,
                 'page_title': title,
                 'text_id': text_id,
                 'content': '',
@@ -316,17 +301,15 @@ def main():
                 'blob_id': -1,
             })
             not_found += 1
+            not_found_pages.append((page_id, title, text_id))
 
     log.info(f"Extraction complete: {found} found, {not_found} not found, {found+not_found} total")
+    for pid, title, tid in not_found_pages:
+        log.warning(f"  Missing: page_id={pid}, text_id={tid}, title=\"{title}\"")
 
     # Write output
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['page_id', 'page_title', 'text_id', 'content', 'flags', 'blob_id'])
-        writer.writeheader()
-        writer.writerows(results)
-
-    log.info(f"Output written to {OUTPUT_PATH}")
+    write_csv(STEP_01_OUTPUT, results, OUTPUT_FIELDS)
+    log.info(f"Output written to {STEP_01_OUTPUT}")
     log.info(f"Success rate: {found}/{found+not_found} ({100*found/(found+not_found):.1f}%)")
 
 

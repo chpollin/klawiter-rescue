@@ -8,16 +8,13 @@ Input:  data/intermediate/02_encoding_fixed.csv
 Output: data/intermediate/03_parsed.csv
 """
 
-import csv
 import os
 import re
 import sys
 import json
-import logging
-
-csv.field_size_limit(10 * 1024 * 1024)  # 10MB field limit
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.config import setup_logging, load_csv, write_csv, STEP_02_OUTPUT, STEP_03_OUTPUT
 from lib.wiki_parser import extract_structured_data, is_redirect, remove_wiki_markup
 from lib.patterns import (
     extract_year, extract_all_years, extract_publisher,
@@ -26,15 +23,10 @@ from lib.patterns import (
 )
 from lib.vocabulary import language_to_iso
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-log = logging.getLogger(__name__)
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_PATH = os.path.join(BASE_DIR, 'data', 'intermediate', '02_encoding_fixed.csv')
-OUTPUT_PATH = os.path.join(BASE_DIR, 'data', 'intermediate', '03_parsed.csv')
+log = setup_logging(__name__)
 
 OUTPUT_FIELDS = [
-    'page_id', 'page_title', 'text_id', 'blob_id',
+    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
     'is_redirect', 'redirect_target',
     'title', 'original_title', 'sortkey',
     'year', 'all_years',
@@ -51,7 +43,6 @@ def derive_main_category(categories):
     """Derive the main (top-level) category from category list."""
     if not categories:
         return ''
-    # Categories look like "Fiction / Novels (German)" — take the first part
     for cat in categories:
         parts = cat.split('/')
         main = parts[0].strip()
@@ -65,6 +56,7 @@ def process_entry(row):
     content = row.get('content', '')
     result = {
         'page_id': row['page_id'],
+        'page_namespace': row.get('page_namespace', '0'),
         'page_title': row.get('page_title', ''),
         'text_id': row.get('text_id', ''),
         'blob_id': row.get('blob_id', ''),
@@ -82,16 +74,13 @@ def process_entry(row):
     result['redirect_target'] = parsed.get('redirect_target', '')
 
     if result['is_redirect']:
-        # For redirects, use the target as title and skip other parsing
         result['title'] = parsed.get('redirect_target', '')
         result.update({k: '' for k in OUTPUT_FIELDS if k not in result})
         return result
 
-    # Title: prefer parsed title, but fall back to page_title.
-    # page_title is always a clean work title from the MediaWiki page name.
+    # Title: prefer parsed title, but fall back to page_title
     extracted_title = parsed.get('title', '')
     page_title = row.get('page_title', '')
-    # If extracted title looks like publication info ("[year]: Publisher"), use page_title
     if page_title and (not extracted_title or re.match(r'\[\d{4}', extracted_title)):
         result['title'] = page_title
     else:
@@ -149,67 +138,45 @@ def process_entry(row):
 
 
 def main():
-    log.info(f"Reading {INPUT_PATH}")
-
-    rows = []
-    with open(INPUT_PATH, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            rows.append(row)
-
+    rows = load_csv(STEP_02_OUTPUT)
     log.info(f"Loaded {len(rows)} entries, parsing...")
 
     results = []
-    redirects = 0
-    with_year = 0
-    with_publisher = 0
-    with_location = 0
-    with_language = 0
-    with_title = 0
-    empty = 0
+    stats = {'redirects': 0, 'year': 0, 'publisher': 0, 'location': 0, 'language': 0, 'title': 0, 'empty': 0}
 
     for i, row in enumerate(rows):
         parsed = process_entry(row)
         results.append(parsed)
 
         if parsed['is_redirect']:
-            redirects += 1
+            stats['redirects'] += 1
         if parsed['year']:
-            with_year += 1
+            stats['year'] += 1
         if parsed['publisher']:
-            with_publisher += 1
+            stats['publisher'] += 1
         if parsed['location']:
-            with_location += 1
+            stats['location'] += 1
         if parsed['language']:
-            with_language += 1
+            stats['language'] += 1
         if parsed['title']:
-            with_title += 1
+            stats['title'] += 1
         if not parsed.get('raw_content'):
-            empty += 1
+            stats['empty'] += 1
 
         if (i + 1) % 1000 == 0:
             log.info(f"  Processed {i+1}/{len(rows)}...")
 
     total = len(results)
-    non_redirect = total - redirects
-    log.info(f"Parsing complete:")
-    log.info(f"  Total: {total}")
-    log.info(f"  Redirects: {redirects} ({100*redirects/total:.1f}%)")
-    log.info(f"  Empty content: {empty}")
-    log.info(f"  With title: {with_title} ({100*with_title/total:.1f}%)")
-    log.info(f"  With year: {with_year} ({100*with_year/total:.1f}%)")
-    log.info(f"  With publisher: {with_publisher} ({100*with_publisher/total:.1f}%)")
-    log.info(f"  With location: {with_location} ({100*with_location/total:.1f}%)")
-    log.info(f"  With language: {with_language} ({100*with_language/total:.1f}%)")
+    log.info(f"Parsing complete: {total} entries")
+    log.info(f"  Redirects: {stats['redirects']} ({100*stats['redirects']/total:.1f}%)")
+    log.info(f"  With title: {stats['title']} ({100*stats['title']/total:.1f}%)")
+    log.info(f"  With year: {stats['year']} ({100*stats['year']/total:.1f}%)")
+    log.info(f"  With publisher: {stats['publisher']} ({100*stats['publisher']/total:.1f}%)")
+    log.info(f"  With location: {stats['location']} ({100*stats['location']/total:.1f}%)")
+    log.info(f"  With language: {stats['language']} ({100*stats['language']/total:.1f}%)")
 
-    # Write output
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=OUTPUT_FIELDS)
-        writer.writeheader()
-        writer.writerows(results)
-
-    log.info(f"Output written to {OUTPUT_PATH}")
+    write_csv(STEP_03_OUTPUT, results, OUTPUT_FIELDS)
+    log.info(f"Output written to {STEP_03_OUTPUT}")
 
 
 if __name__ == '__main__':

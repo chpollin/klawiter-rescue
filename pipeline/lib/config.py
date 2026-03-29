@@ -20,38 +20,38 @@ if sys.platform == 'win32':
 # Base directories
 PIPELINE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(PIPELINE_DIR)
-WORKING_DIR = os.path.join(PROJECT_ROOT, 'working')
+
+# Source files (raw MediaWiki dumps)
+RAW_DIR = os.path.join(PROJECT_ROOT, 'data', 'raw')
+SQL_DUMP_PATH = os.path.join(RAW_DIR, 'zweig_part_01.sql')
+BLOB_FILES = [os.path.join(RAW_DIR, f'zt_0{i}') for i in range(8)]
 
 # Intermediate data
-INTERMEDIATE_DIR = os.path.join(PIPELINE_DIR, 'data', 'intermediate')
+INTERMEDIATE_DIR = os.path.join(PROJECT_ROOT, 'data', 'intermediate')
 STEP_01_OUTPUT = os.path.join(INTERMEDIATE_DIR, '01_extracted.csv')
 STEP_02_OUTPUT = os.path.join(INTERMEDIATE_DIR, '02_encoding_fixed.csv')
 STEP_03_OUTPUT = os.path.join(INTERMEDIATE_DIR, '03_parsed.csv')
 STEP_04_OUTPUT = os.path.join(INTERMEDIATE_DIR, '04_classified.csv')
 
 # Final output
-OUTPUT_DIR = os.path.join(PIPELINE_DIR, 'data', 'output')
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'data', 'output')
 OUTPUT_JSONLD = os.path.join(OUTPUT_DIR, 'klawiter.jsonld')
 OUTPUT_ENTRIES_DIR = os.path.join(OUTPUT_DIR, 'entries')
 OUTPUT_QUALITY_REPORT = os.path.join(OUTPUT_DIR, 'quality-report.json')
-OUTPUT_FRONTEND_JSON = os.path.join(PIPELINE_DIR, 'frontend', 'data', 'klawiter.json')
-
-# Source files
-SQL_DUMP_PATH = os.path.join(WORKING_DIR, 'zweig_part_01.sql')
-BLOB_FILES = [os.path.join(WORKING_DIR, f'zt_0{i}') for i in range(8)]
+OUTPUT_FRONTEND_JSON = os.path.join(PROJECT_ROOT, 'docs', 'data', 'klawiter.json')
 
 # Year validation range
 import datetime
 MAX_VALID_YEAR = datetime.datetime.now().year + 5
 
 
-def setup_logging():
+def setup_logging(name=None):
     """Standard logging setup for all pipeline scripts."""
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s %(levelname)s %(message)s'
     )
-    return logging.getLogger(__name__)
+    return logging.getLogger(name or __name__)
 
 
 def load_csv(path):

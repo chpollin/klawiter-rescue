@@ -1,14 +1,23 @@
 {
   "summary": {
-    "total_entries": 6296,
-    "redirects": 1545,
-    "non_redirects": 4751,
-    "entries_with_issues": 32,
-    "total_issues": 33,
+    "total_entries": 6725,
+    "redirects": 1546,
+    "non_redirects_main": 4751,
+    "non_redirects_all": 5179,
+    "entries_with_issues": 442,
+    "total_issues": 446,
     "severity_counts": {
-      "info": 32,
-      "warning": 1
+      "info": 442,
+      "warning": 4
     }
+  },
+  "namespace_distribution": {
+    "0": 6296,
+    "6": 1,
+    "8": 5,
+    "10": 2,
+    "12": 1,
+    "14": 420
   },
   "field_coverage": {
     "klawiter:title": {
@@ -78,6 +87,7 @@
     "fiction": 1118,
     "essay": 905,
     "historical-study": 535,
+    "category": 420,
     "poetry": 275,
     "collected-works": 114,
     "correspondence": 109,
@@ -87,251 +97,357 @@
     "symposium": 39,
     "foreword": 36,
     "dramatic-reading": 18,
+    "mediawiki": 5,
     "other": 4,
-    "newspaper": 1
+    "template": 2,
+    "newspaper": 1,
+    "help": 1,
+    "file": 1
   },
   "language_distribution": {
-    "German": 1336,
-    "Chinese": 543,
-    "French": 393,
-    "English": 315,
-    "Spanish": 281,
-    "Arabic": 236,
-    "Bulgarian": 105,
-    "Albanian": 104,
-    "Russian": 97,
-    "Croatian": 75,
-    "Greek": 70,
-    "Portuguese": 57,
-    "Dutch": 53,
-    "Italian": 49,
-    "Slovenian": 47,
-    "Czech": 41,
-    "Turkish": 41,
-    "Danish": 37,
-    "Catalan": 37,
-    "Norwegian": 34,
-    "Hindi": 30,
-    "Swedish": 28,
-    "Hungarian": 22,
+    "German": 1339,
+    "Chinese": 545,
+    "French": 396,
+    "English": 317,
+    "Spanish": 283,
+    "Arabic": 238,
+    "Bulgarian": 106,
+    "Albanian": 105,
+    "Russian": 99,
+    "Croatian": 77,
+    "Greek": 71,
+    "Portuguese": 59,
+    "Dutch": 55,
+    "Italian": 50,
+    "Slovenian": 49,
+    "Czech": 42,
+    "Turkish": 42,
+    "Danish": 38,
+    "Catalan": 38,
+    "Norwegian": 35,
+    "Hindi": 31,
+    "Swedish": 29,
+    "Hungarian": 23,
+    "Armenian": 22,
     "Bengali": 22,
-    "Armenian": 21,
-    "Slovak": 18,
-    "Yiddish": 17,
-    "Japanese": 16,
-    "Vietnamese": 16,
-    "Georgian": 15
+    "Yiddish": 19,
+    "Slovak": 19,
+    "Vietnamese": 18,
+    "Japanese": 17,
+    "Persian": 17
   },
   "time_period_distribution": {
-    "contemporary": 1327,
+    "contemporary": 1332,
     "lifetime": 1124,
-    "late-20c": 1050,
-    "post-wwii": 867,
+    "late-20c": 1051,
+    "post-wwii": 872,
     "pre-zweig": 61
   },
   "year_range": {
     "min": 1815,
     "max": 2020,
-    "count": 4429
+    "count": 4440
   },
   "sample_issues": [
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/1142"
+      "entry_id": "klawiter:entry/88"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/1161"
+      "entry_id": "klawiter:entry/93"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/1655"
+      "entry_id": "klawiter:entry/95"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/2096"
+      "entry_id": "klawiter:entry/97"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/2105"
+      "entry_id": "klawiter:entry/102"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/2430"
+      "entry_id": "klawiter:entry/104"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/2608"
-    },
-    {
-      "field": "title",
-      "issue": "missing",
-      "severity": "warning",
-      "entry_id": "klawiter:entry/2979"
+      "entry_id": "klawiter:entry/106"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/2979"
+      "entry_id": "klawiter:entry/114"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/2999"
+      "entry_id": "klawiter:entry/117"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/3175"
+      "entry_id": "klawiter:entry/142"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/3215"
+      "entry_id": "klawiter:entry/233"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/4475"
+      "entry_id": "klawiter:entry/234"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/4632"
+      "entry_id": "klawiter:entry/235"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/4914"
+      "entry_id": "klawiter:entry/236"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/4923"
+      "entry_id": "klawiter:entry/237"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/4996"
+      "entry_id": "klawiter:entry/238"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/5124"
+      "entry_id": "klawiter:entry/239"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/5294"
+      "entry_id": "klawiter:entry/240"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/5429"
+      "entry_id": "klawiter:entry/296"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/5711"
+      "entry_id": "klawiter:entry/300"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/6034"
+      "entry_id": "klawiter:entry/335"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/6384"
+      "entry_id": "klawiter:entry/339"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/6501"
+      "entry_id": "klawiter:entry/342"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/6684"
+      "entry_id": "klawiter:entry/348"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/6772"
+      "entry_id": "klawiter:entry/352"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7246"
+      "entry_id": "klawiter:entry/359"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7430"
+      "entry_id": "klawiter:entry/372"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7448"
+      "entry_id": "klawiter:entry/377"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7523"
+      "entry_id": "klawiter:entry/379"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7537"
+      "entry_id": "klawiter:entry/380"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7545"
+      "entry_id": "klawiter:entry/383"
     },
     {
       "field": "fullBibliographicEntry",
       "issue": "missing",
       "severity": "info",
-      "entry_id": "klawiter:entry/7575"
+      "entry_id": "klawiter:entry/385"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/387"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/389"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/391"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/421"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/425"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/445"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/452"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/466"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/470"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/484"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/487"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/507"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/526"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/532"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/542"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/545"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/549"
+    },
+    {
+      "field": "fullBibliographicEntry",
+      "issue": "missing",
+      "severity": "info",
+      "entry_id": "klawiter:entry/550"
     }
   ]
 }

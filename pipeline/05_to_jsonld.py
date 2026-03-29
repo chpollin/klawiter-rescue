@@ -1,32 +1,26 @@
 #!/usr/bin/env python3
 """
 Step 5: Convert classified entries to JSON-LD.
-Produces both individual entry files and a complete dataset file.
+Produces individual entry files, a complete dataset file, and frontend JSON.
 
 Input:  data/intermediate/04_classified.csv
 Output: data/output/klawiter.jsonld (complete dataset)
         data/output/entries/*.jsonld (individual entries)
+        docs/data/klawiter.json (frontend-optimized)
 """
 
-import csv
 import json
 import os
 import sys
-import logging
-
-csv.field_size_limit(10 * 1024 * 1024)  # 10MB field limit
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.config import (
+    setup_logging, load_csv, STEP_04_OUTPUT,
+    OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON,
+)
 from lib.vocabulary import CONTEXT, ENTRY_TYPES
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
-log = logging.getLogger(__name__)
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_PATH = os.path.join(BASE_DIR, 'data', 'intermediate', '04_classified.csv')
-OUTPUT_DATASET = os.path.join(BASE_DIR, 'data', 'output', 'klawiter.jsonld')
-OUTPUT_ENTRIES_DIR = os.path.join(BASE_DIR, 'data', 'output', 'entries')
-OUTPUT_FRONTEND = os.path.join(BASE_DIR, 'frontend', 'data', 'klawiter.json')
+log = setup_logging(__name__)
 
 
 def safe_json_parse(value):
@@ -44,11 +38,14 @@ def row_to_jsonld(row):
     """Convert a CSV row to a JSON-LD entry."""
     page_id = row['page_id']
     entry_type = row.get('entry_type', 'other')
+    namespace = int(row.get('page_namespace', 0))
 
     entry = {
         "@type": f"klawiter:{entry_type.title().replace('-', '')}Entry",
         "@id": f"klawiter:entry/{page_id}",
         "klawiter:entryType": entry_type,
+        "klawiter:sourcePageId": int(page_id),
+        "klawiter:pageNamespace": namespace,
     }
 
     # Title
@@ -60,8 +57,7 @@ def row_to_jsonld(row):
     if original_title:
         entry["klawiter:originalTitle"] = original_title
 
-    # Source provenance (set for ALL entries including redirects)
-    entry["klawiter:sourcePageId"] = int(page_id)
+    # Text ID provenance
     text_id = row.get('text_id', '')
     if text_id:
         try:
@@ -160,7 +156,7 @@ def row_to_jsonld(row):
     if clean_content:
         entry["klawiter:fullBibliographicEntry"] = clean_content
 
-    # Blob ID (provenance — page_id and text_id already set above)
+    # Blob ID provenance
     blob_id = row.get('blob_id', '')
     if blob_id and blob_id != '-1':
         try:
@@ -184,24 +180,16 @@ def make_frontend_entry(jsonld_entry):
 
 
 def main():
-    log.info(f"Reading {INPUT_PATH}")
-
-    rows = []
-    with open(INPUT_PATH, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            rows.append(row)
-
+    rows = load_csv(STEP_04_OUTPUT)
     log.info(f"Loaded {len(rows)} entries, converting to JSON-LD...")
 
-    # Convert all entries
     entries = []
     for row in rows:
         entry = row_to_jsonld(row)
         entries.append(entry)
 
     # Write complete dataset
-    os.makedirs(os.path.dirname(OUTPUT_DATASET), exist_ok=True)
+    os.makedirs(os.path.dirname(OUTPUT_JSONLD), exist_ok=True)
     dataset = {
         **CONTEXT,
         "@type": "klawiter:Bibliography",
@@ -213,9 +201,9 @@ def main():
         "klawiter:entries": entries,
     }
 
-    with open(OUTPUT_DATASET, 'w', encoding='utf-8') as f:
+    with open(OUTPUT_JSONLD, 'w', encoding='utf-8') as f:
         json.dump(dataset, f, ensure_ascii=False, indent=2)
-    log.info(f"Complete dataset written to {OUTPUT_DATASET}")
+    log.info(f"Complete dataset written to {OUTPUT_JSONLD}")
 
     # Write individual entry files
     os.makedirs(OUTPUT_ENTRIES_DIR, exist_ok=True)
@@ -230,15 +218,13 @@ def main():
     log.info(f"Individual entries written to {OUTPUT_ENTRIES_DIR}/ ({len(entries)} files)")
 
     # Write frontend-optimized JSON
-    # - Non-redirects: full entries with short keys
-    # - Redirects: separate map (title -> target page_id) for URL resolution
-    os.makedirs(os.path.dirname(OUTPUT_FRONTEND), exist_ok=True)
+    # Non-redirects and non-system pages go into entries, redirects into map
+    os.makedirs(os.path.dirname(OUTPUT_FRONTEND_JSON), exist_ok=True)
 
     non_redirect_entries = []
-    redirect_map = {}  # page_title -> target_page_id
-    title_to_pid = {}  # build lookup: title -> sourcePageId
+    redirect_map = {}
+    title_to_pid = {}
 
-    # First pass: index non-redirect titles
     for e in entries:
         if not e.get('klawiter:isRedirect'):
             fe = make_frontend_entry(e)
@@ -248,14 +234,12 @@ def main():
             if title and pid:
                 title_to_pid[title] = pid
 
-    # Second pass: resolve redirects to target page_ids
     for e in entries:
         if e.get('klawiter:isRedirect'):
             target_title = e.get('klawiter:title', '')
             source_title = e.get('klawiter:redirectTarget', '') or target_title
             target_pid = title_to_pid.get(target_title)
             if target_pid:
-                # Map both the source page_title and the redirect target
                 redirect_map[target_title] = target_pid
                 if source_title != target_title:
                     redirect_map[source_title] = target_pid
@@ -269,11 +253,11 @@ def main():
         "redirects": redirect_map,
     }
 
-    with open(OUTPUT_FRONTEND, 'w', encoding='utf-8') as f:
+    with open(OUTPUT_FRONTEND_JSON, 'w', encoding='utf-8') as f:
         json.dump(frontend_data, f, ensure_ascii=False, separators=(',', ':'))
 
-    size_mb = os.path.getsize(OUTPUT_FRONTEND) / 1024 / 1024
-    log.info(f"Frontend JSON written to {OUTPUT_FRONTEND} ({size_mb:.1f} MB)")
+    size_mb = os.path.getsize(OUTPUT_FRONTEND_JSON) / 1024 / 1024
+    log.info(f"Frontend JSON written to {OUTPUT_FRONTEND_JSON} ({size_mb:.1f} MB)")
     log.info(f"  Non-redirect entries: {len(non_redirect_entries)}")
     log.info(f"  Redirect map entries: {len(redirect_map)}")
 
@@ -286,10 +270,7 @@ def main():
         if e.get('klawiter:isRedirect'):
             redirects += 1
 
-    log.info(f"JSON-LD conversion complete:")
-    log.info(f"  Total entries: {len(entries)}")
-    log.info(f"  Redirects: {redirects}")
-    log.info(f"  Types: {json.dumps(types, indent=4)}")
+    log.info(f"JSON-LD conversion complete: {len(entries)} entries, {redirects} redirects")
 
 
 if __name__ == '__main__':
