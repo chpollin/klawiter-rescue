@@ -377,10 +377,19 @@ h1, h2, h3, h4 {
   font-size: 0.9375rem;
   color: var(--sz-text);
   cursor: pointer;
-  transition: color 0.15s;
+  transition: color 0.15s, border-color 0.15s;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
 }
 .category-row-name:hover {
   color: var(--sz-burgundy);
+  border-bottom-color: var(--sz-burgundy);
+}
+.category-row-name:focus-visible {
+  color: var(--sz-burgundy);
+  outline: 2px solid var(--sz-gold);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .category-row-count {

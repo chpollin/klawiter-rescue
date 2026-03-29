@@ -40,6 +40,7 @@ const App = {
   },
 
   logDataSummary() {
+    if (!this.state.isLocal) return;
     const e = this.entries;
     const all = this.data.entries;
 
@@ -278,6 +279,32 @@ const App = {
     // Update search placeholder
     const input = document.getElementById('search-input');
     input.placeholder = `Search ${this.entries.length.toLocaleString('en')} entries…`;
+
+    // Dynamic page title
+    this._updateTitle(view);
+  },
+
+  _updateTitle(view) {
+    const base = 'Klawiter Bibliography';
+    const titles = {
+      home: base,
+      stats: `Explore \u2014 ${base}`,
+    };
+    if (titles[view]) { document.title = titles[view]; return; }
+    if (view === 'page') {
+      const page = location.hash.slice(1);
+      const labels = { about: 'About', methodology: 'Methodology', help: 'Help', data: 'Data Access', imprint: 'Imprint' };
+      document.title = labels[page] ? `${labels[page]} \u2014 ${base}` : base;
+      return;
+    }
+    if (view === 'results') {
+      const f = this.state.filters;
+      if (f.type) { document.title = `${ENTRY_TYPE_LABELS[f.type] || f.type} \u2014 ${base}`; return; }
+      if (this.state.query) { document.title = `\u201c${this.state.query}\u201d \u2014 ${base}`; return; }
+      document.title = `Browse \u2014 ${base}`;
+      return;
+    }
+    document.title = base;
   },
 
   showDetail(pageId) {
@@ -296,7 +323,7 @@ const App = {
     const visible = this.filtered.slice(0, end);
 
     const countEl = document.getElementById('results-count');
-    countEl.textContent = `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
+    countEl.textContent = this._resultsLabel(total);
 
     // Show/hide batch export button
     const exportBtn = document.getElementById('batch-export-btn');
@@ -390,6 +417,18 @@ const App = {
         <button onclick="App.clearSearch()">&times;</button></span>`);
     }
     container.innerHTML = chips.join('');
+  },
+
+  _resultsLabel(total) {
+    const f = this.state.filters;
+    const parts = [];
+    if (f.type) parts.push(ENTRY_TYPE_LABELS[f.type] || f.type);
+    if (f.language) parts.push(f.language);
+    if (f.period) parts.push(f.period);
+    if (f.location) parts.push(f.location);
+    if (this.state.query) parts.push(`\u201c${this.state.query}\u201d`);
+    const count = `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
+    return parts.length ? `${parts.join(' \u00b7 ')} \u2014 ${count}` : count;
   },
 
   setFilter(key, value) {
