@@ -145,7 +145,7 @@ const App = {
       this.state.filters = {};
       document.getElementById('search-input').value = '';
       this.showView('stats');
-      Charts.render(this.entries);
+      Explore.render(this.entries);
       return;
     }
 

@@ -27,7 +27,8 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
 - **Vocabulary blend**: Schema.org + Dublin Core + `klawiter:` namespace (implemented in `pipeline/lib/vocabulary.py`, documented at `docs/vocab/index.html`)
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
-- **Static frontend**: Vanilla JS (10 modules) + custom CSS (SZD design) + FlexSearch + Chart.js, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
+- **Static frontend**: Vanilla JS (13 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
+- **Exploration interface**: 3-mode interactive visualization (Timeline stacked area, Overview linked views, Network force graph) replacing the former Chart.js dashboard
 - **Test suite**: 270 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge)
 - **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`
 - **License**: MIT (code) + CC BY 4.0 (data)

@@ -74,7 +74,7 @@ const Home = {
         </div>
         <div class="home-actions">
           <button class="browse-btn" onclick="location.hash='browse'">Browse Catalogue</button>
-          <a href="#stats" class="explore-link">Statistics &amp; Charts &rarr;</a>
+          <a href="#stats" class="explore-link">Explore the Bibliography &rarr;</a>
         </div>
       </div>
 
