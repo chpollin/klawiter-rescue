@@ -1,89 +1,94 @@
 # Klawiter Bibliography
 
-Extraktion und Strukturierung der Stefan-Zweig-Bibliographie (Dr. Randolph J. Klawiter, University of Notre Dame) aus einer stillgelegten MediaWiki-Datenbank als JSON-LD mit statischer Web-Oberfläche.
+Extraction and structuring of the Stefan Zweig Bibliography (Dr. Randolph J. Klawiter, University of Notre Dame) from a decommissioned MediaWiki database as JSON-LD with a static web frontend.
 
 ## Status
 
-| Metrik | Wert |
-|--------|------|
-| Extrahierte Einträge | 6.295 / 6.296 (99,99%) |
-| Mojibake behoben | 61,1% → 0% |
-| Entitätstypen | 16 klassifiziert, 0,1% "other" |
-| Feldabdeckung Titel | 100% |
-| JSON-LD | Strukturell valide, `klawiter:` Namespace |
-| Frontend | Statische Webseite (GitHub Pages) |
+| Metric | Value |
+|--------|-------|
+| Extracted entries | 6,295 / 6,296 (99.99%) |
+| Mojibake fixed | 61.1% → 0% |
+| Entity types | 15 classified, 0.1% "other" |
+| Field coverage (title) | 100% |
+| JSON-LD | Structurally valid, `klawiter:` namespace |
+| Frontend | Static site (GitHub Pages), SZD-inspired design |
 
-## Projektstruktur
+## Project Structure
 
 ```
-pipeline/               Python-Pipeline (6 Stufen, keine externen Abhängigkeiten)
-docs/                   Frontend (GitHub Pages) — statisches HTML/JS/CSS
+pipeline/               Python pipeline (7 steps, no external dependencies)
+docs/                   Frontend (GitHub Pages) — static HTML/JS/CSS
+  js/                   8 JS modules: constants, utils, export, app, home, facets, detail, charts
+  css/styles.css        Custom CSS (Stefan Zweig Digital design language)
 data/
-  raw/                  MediaWiki SQL-Dump + 8 BLOB-Dateien (363 MB)
-  intermediate/         Pipeline-Zwischenschritte (CSV, gitignored)
-  output/               JSON-LD Gesamtdatensatz + Einzeldateien
-knowledge/              Projektdokumentation (Obsidian Vault)
+  raw/                  MediaWiki SQL dump + 8 BLOB files (363 MB)
+  intermediate/         Pipeline intermediate steps (CSV, gitignored)
+  output/               JSON-LD full dataset + individual files
+knowledge/              Project documentation (Obsidian vault)
 ```
 
 ## Pipeline
 
 ```
 data/raw/zt_00–07 + zweig_part_01.sql
-  ↓ 01_extract.py      SQL-Dump + BLOB-Parsing ohne MySQL
-  ↓ 02_fix_encoding.py  Mojibake-Reparatur (Latin-1 → UTF-8)
-  ↓ 03_parse_entries.py  Wiki-Markup → strukturierte Felder
-  ↓ 04_classify.py      Entitätstyp + Zeitperiode
-  ↓ 05_to_jsonld.py     JSON-LD Konversion
-  ↓ 06_validate.py      Qualitätsreport
+  ↓ 01_extract.py        SQL dump + BLOB parsing without MySQL
+  ↓ 02_fix_encoding.py   Mojibake repair (Latin-1 → UTF-8)
+  ↓ 03_parse_entries.py   Wiki markup → structured fields
+  ↓ 03b_llm_enrich.py    LLM metadata gap-filling (Gemini 3.1 Flash Lite, optional)
+  ↓ 04_classify.py       Entity type + time period classification
+  ↓ 05_to_jsonld.py      JSON-LD conversion
+  ↓ 06_validate.py       Quality report
 ```
 
-### Ausführen
+### Running
 
 ```bash
-# Vollständige Pipeline
+# Full pipeline
 python pipeline/run_pipeline.py
 
-# Ab Schritt 3
+# From step 3
 python pipeline/run_pipeline.py 3
 
-# Schritte 2 bis 4
+# Steps 2 to 4
 python pipeline/run_pipeline.py 2 4
 ```
 
-### Voraussetzungen
+### Requirements
 
 - Python 3.10+
-- Keine externen Abhängigkeiten (nur Standardbibliothek)
-- Quelldateien in `data/raw/` (zt_00–07, zweig_part_01.sql)
+- No external dependencies (standard library only)
+- Source files in `data/raw/` (zt_00–07, zweig_part_01.sql)
+- Optional: `GEMINI_API_KEY` in `.env` for step 03b
 
 ## Output
 
-| Datei | Beschreibung |
-|-------|-------------|
-| `data/output/klawiter.jsonld` | Gesamtdatensatz (6.296 Einträge, ~8 MB) |
-| `data/output/entries/*.jsonld` | Einzeldateien pro Eintrag |
-| `data/output/quality-report.json` | Validierungsergebnis |
-| `docs/data/klawiter.json` | Frontend-optimiertes JSON (4.751 Non-Redirects) |
+| File | Description |
+|------|-------------|
+| `data/output/klawiter.jsonld` | Full dataset (6,296 entries, ~8 MB) |
+| `data/output/entries/*.jsonld` | Individual files per entry |
+| `data/output/quality-report.json` | Validation results |
+| `docs/data/klawiter.json` | Frontend JSON (4,751 bibliography entries) |
 
 ## Frontend
 
-Statische Webseite unter `docs/` (GitHub Pages):
-- Volltextsuche (FlexSearch)
-- Facettierung: Typ, Sprache, Zeitraum, Ort
-- Dashboard mit Statistiken und Charts
-- Deep-Linking pro Eintrag
-- JSON-LD Export
-- Kein Framework, kein Build-Step
+Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Digital:
 
-## Dokumentation
+- **Overview**: Category portal with tiles grouped by Works / Reception / Editions
+- **Browse**: Full-text search (FlexSearch) + faceted filtering (type, language, period, location)
+- **Detail**: Expandable cards with SZD-style metadata table, conditional sections
+- **Statistics**: Interactive charts (timeline, languages, locations, types) with click-to-filter
+- **Export**: BibTeX, RIS, JSON-LD per entry + full dataset download
+- No framework, no build step
 
-Der `knowledge/`-Ordner bildet einen Obsidian Vault mit der gesamten Projektdokumentation:
-Datenmodell, Pipeline, Encoding-Problem, Architekturentscheidungen, Ontologie, Reconciliation-Strategie u.a.
+## Documentation
+
+The `knowledge/` folder is an Obsidian vault with full project documentation:
+data model, pipeline, architecture decisions, ontology, reconciliation strategy, UI design, user stories.
 
 ## Credits
 
-Die Bibliographie wurde von **Dr. Randolph J. Klawiter** (University of Notre Dame) über Jahrzehnte kompiliert. Sie umfasst 6.296 Einträge zu Stefan Zweigs Werk — Erstausgaben, Übersetzungen, Sekundärliteratur, Verfilmungen, Korrespondenz — in über 40 Sprachen.
+The bibliography was compiled by **Dr. Randolph J. Klawiter** (University of Notre Dame) over decades. It covers 6,296 entries on Stefan Zweig's work — first editions, translations, secondary literature, film adaptations, correspondence — in over 40 languages.
 
-## Lizenz
+## License
 
-*Noch zu klären — Rechte an den bibliographischen Daten müssen mit der University of Notre Dame abgestimmt werden.*
+*To be clarified — rights to the bibliographic data need to be coordinated with the University of Notre Dame.*

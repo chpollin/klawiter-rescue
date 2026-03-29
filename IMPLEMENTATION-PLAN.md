@@ -75,101 +75,54 @@ Built comprehensive test suite, then reviewed critically, refactored pipeline co
 
 Redesign the frontend to match Stefan Zweig Digital's visual language. See `knowledge/design.md` for full specification, `knowledge/user-stories.md` for user stories (S1–S20).
 
-### Phase 4a: Foundation — CSS & HTML structure
+### Phase 4a: Foundation — CSS & HTML structure ✅
 
-Remove Tailwind, build custom CSS, restructure HTML for 4 views.
+- [x] Custom CSS with SZD palette (burgundy/gold/cream), serif/sans-serif typography
+- [x] HTML with 4 views, burgundy header, footer with credits, meta tags
 
-**Deliverable**: Styled but static page — correct colors, typography, layout. No JS changes yet.
+### Phase 4b: Startseite — Category Portal (S1–S3) ✅
 
-- [ ] Write `docs/css/styles.css`: CSS custom properties (SZD palette), base typography (serif/sans-serif system), layout grid (header, sidebar, content, footer), all component styles (cards, badges, facets, chips, metadata table, action bar)
-- [ ] Rewrite `docs/index.html`: Remove Tailwind CDN. 4 view containers (home, results, detail, stats). Burgundy header with nav (ÜBERSICHT · SUCHE · STATISTIKEN). Footer with credits. Mobile filter toggle preserved
-- [ ] Verify: Page loads without Tailwind, correct colors and fonts visible
+- [x] Category tiles grouped by Works / Reception & Impact / Editions
+- [x] Intro text, prominent search field, summary stats line
 
-### Phase 4b: Startseite — Category Portal (S1, S2, S3)
+### Phase 4c: Search & Results (S4–S8) ✅
 
-**Deliverable**: Landing page with intro text, search field, category tiles grouped by Werke/Rezeption/Editionen.
+- [x] Expandable result cards (badge, title, publisher, snippet)
+- [x] SZD-style facets (serif, burgundy active state, gold headings)
 
-- [ ] Create `docs/js/home.js`: Render category tiles from data (counts per entryType, namespace 0 only). Group tiles into 3 sections (Werke, Rezeption & Wirkung, Editionen). Render intro text. Render Kurzstatistik line. Prominent search field
-- [ ] Update `docs/js/app.js`: Add `home` view to routing (`#` → home). Filter `pageNamespace !== 0` entries on load. Route category tile clicks to `#type=...`
-- [ ] Verify: Landing page shows 15 category tiles with correct counts, search field works, tile click navigates to results
+### Phase 4d: Detail View (S9–S13) ✅
 
-### Phase 4c: Stöbern — Search & Results (S4–S8)
+- [x] Two-column metadata table, conditional sections (reprints, translations, contents, see-also)
+- [x] Inline expansion in result cards (no separate detail page for browsing)
 
-**Deliverable**: Faceted search with redesigned result cards showing publisher/pages.
+### Phase 4e: Statistics (S18–S20) ✅
 
-- [ ] Update `docs/js/app.js`: Result card template with 4 lines (badge+meta, title, publisher+pages, snippet). Sort options unchanged
-- [ ] Update `docs/js/facets.js`: SZD-style facet items (serif, burgundy active state, gold headings). Keep same 4 facets (type, language, period, location)
-- [ ] Verify: Search returns correct results, facets filter correctly, cards show all metadata, combined filters work
+- [x] 4 charts (timeline, languages, locations, types) with click-to-filter
+- [x] Timeline from 1800, gold highlight for Zweig's lifetime decades
 
-### Phase 4d: Detailansicht — SZD-style metadata (S9–S13)
+### Phase 4f: Export & Actions (S14–S17) ✅
 
-**Deliverable**: Detail view with two-column metadata table, conditional sections, full bibliographic entry.
+- [x] BibTeX + RIS export (correct author logic for secondary literature)
+- [x] JSON-LD per entry + full dataset download on stats page
+- [x] Permalink copy to clipboard
 
-- [ ] Rewrite `docs/js/detail.js`: Two-column metadata table (burgundy labels, sans-serif values, horizontal rules). Conditional sections: Vollständiger Eintrag (monospace, cream bg), Nachdrucke, Übersetzungen, Inhalt, Siehe auch (as clickable links). Hide empty fields entirely. Entry type as gold uppercase heading above title
-- [ ] Verify: Detail view shows all available fields. Empty fields are hidden. seeAlso links navigate to other entries. contentItems display as numbered list. Reprints/translations as bullet lists
+### Phase 4g: QA, Iteration & Refactoring ✅
 
-### Phase 4e: Statistiken — Interactive Charts (S18–S20)
+- [x] Home search: Enter only, no premature redirect
+- [x] Filter chips hidden outside results view
+- [x] Stats page: clears filters, always shows full dataset
+- [x] Expandable cards with slide animation
+- [x] Console data logging (counts, coverage, quality issues)
+- [x] JS modules: `constants.js`, `utils.js`, `export.js` extracted
+- [x] CSS variables audit (no hardcoded colors)
+- [x] Meta tags (og:title, og:description)
+- [x] Semantic HTML (`<nav>` for facets)
 
-**Deliverable**: Statistics page with 4 charts, click-to-filter.
+### Phase 4h: Remaining Data Quality (Pipeline)
 
-- [ ] Rewrite `docs/js/charts.js`: SZD color scheme (burgundy bars, gold for Zweig lifetime, earth tones for doughnut). Add location chart (top 15 cities, horizontal bars). All chart clicks → navigate to `#type=...`, `#language=...`, etc.
-- [ ] Update `docs/js/app.js`: Add `stats` view to routing (`#stats`). Stat cards (burgundy numbers, gold labels)
-- [ ] Verify: All 4 charts render correctly, clicking a bar/segment navigates to filtered results
-
-### Phase 4f: Export & Actions (S14–S17)
-
-**Deliverable**: Citation export, JSON-LD download, permalink copy in detail view action bar.
-
-- [ ] Add BibTeX export: Generate `.bib` file from entry fields (author=Zweig, title, year, publisher, address=location, translator as note)
-- [ ] Add RIS export: Generate `.ris` file (TY, TI, AU, PY, PB, CY, LA)
-- [ ] JSON-LD download: Keep existing, style as action bar button
-- [ ] Permalink: Copy `#entry={pageId}` URL to clipboard, show brief confirmation
-- [ ] Full dataset export: Button on stats page to download complete JSON-LD
-- [ ] Verify: All 3 export formats download correctly, permalink copies to clipboard
-
-### Phase 4g: Frontend QA & Iteration
-
-Fix issues discovered during first review.
-
-- [x] Fix home search: navigate only on Enter, not on every keystroke
-- [x] Hide filter chips in detail/stats/home views (only show in results)
-- [x] Stats page: clear filters when navigating to stats, always show full dataset
-- [x] Timeline: extend range to 1800 (was 1880, missed 61 pre-Zweig entries)
-- [x] Expandable cards: detail content opens inline below card, no separate detail view needed for browsing
-- [x] Improve `detail-bibentry`: sans-serif font, white background, better line-height for readability
-- [x] Console logging: data summary printed on load (counts, coverage, quality issues)
-- [ ] Full dataset export button on stats page
-
-### Phase 4h: Frontend Refactoring
-
-Clean up code quality after rapid prototyping. Goal: maintainable, well-structured code.
-
-**CSS (`docs/css/styles.css`)**
-- [ ] Group CSS by component (currently roughly grouped, could be cleaner)
-- [ ] Remove unused styles (e.g., standalone `.detail-back` if expandable cards replace most detail navigation)
-- [ ] Audit CSS custom properties: ensure all colors come from variables, no hardcoded hex
-- [ ] Check all font-size values use a consistent scale (currently ad-hoc rem values)
-- [ ] Test: verify no visual regressions after cleanup
-
-**HTML (`docs/index.html`)**
-- [ ] Remove `view-detail` container if fully replaced by expandable cards (keep `#entry=` route → auto-expand card in results)
-- [ ] Add proper `<meta>` tags: description, og:title, og:description for link previews
-- [ ] Add `.nojekyll` verification (already exists but confirm)
-- [ ] Semantic HTML audit: use `<article>` for cards, `<nav>` for facets, `<section>` for views
-
-**JavaScript Architecture**
-- [ ] Extract shared constants (ENTRY_TYPE_LABELS, PERIOD_LABELS) into `js/constants.js`
-- [ ] Extract helpers (esc, hl) into `js/utils.js`
-- [ ] Move BibTeX/RIS/JSON-LD export logic from `detail.js` into `js/export.js`
-- [ ] Review `app.js` — it handles routing, state, rendering, events, and logging. Split into: routing + state management in `app.js`, card rendering in a separate concern
-- [ ] Add JSDoc comments to all public methods
-- [ ] Test: verify all 4 views, search, filters, exports, expandable cards still work
-
-**Data Quality (Pipeline)**
-- [ ] Fix 14 entries with wiki markup in titles (''', [[, ]]) — pipeline step 03
+- [x] Fix wiki markup in titles (''', [[, ]]) — `remove_wiki_markup()` in step 03
 - [ ] Investigate "München" encoding issue in location data — pipeline step 02
 - [ ] Re-run pipeline after fixes, regenerate `klawiter.json`
-- [ ] Update console logging assertions with corrected data
 
 ### Phase 4i: Manual Validation (deferred from M3.8)
 

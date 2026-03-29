@@ -210,52 +210,49 @@ Link entities to authority data: Wikidata, GND, VIAF, GeoNames.
 
 ---
 
-## M6: Frontend Redesign
+## M6: Frontend Redesign ✅
 
-Align with Stefan Zweig Digital design. Improve UX. Ensure performance.
+Redesigned to match Stefan Zweig Digital visual language. See [[design]] and [[user-stories]].
 
-### M6.1: Design analysis
+### M6.1: Design & User Stories ✅
 
-- [ ] Analyze Stefan Zweig Digital: colors, typography, layout patterns, navigation
-- [ ] Create design specification: color palette, font stack, component styles
-- [ ] Document in `ui-design.md`
+- [x] Analyze Stefan Zweig Digital: colors (burgundy/gold/cream), typography, layout
+- [x] Create design specification → `knowledge/design.md`
+- [x] Create user stories (S1–S20, 3 personas) → `knowledge/user-stories.md`
 
-### M6.2: HTML/CSS redesign
+### M6.2: HTML/CSS/JS Redesign ✅
 
-- [ ] Replace Tailwind CDN with custom CSS matching Stefan Zweig Digital
-- [ ] Redesign header/navigation to match Stefan Zweig Digital branding
-- [ ] Redesign entry cards and detail view
-- [ ] Redesign dashboard/statistics view
-- [ ] Ensure responsive design (mobile/tablet/desktop)
-- [ ] Add proper footer with credits, license, links
+- [x] Replace Tailwind CDN with custom CSS (SZD palette, serif/sans-serif system)
+- [x] 4-view architecture: Overview (category portal), Browse (faceted search), Detail (expandable cards), Statistics
+- [x] All UI text in English
+- [x] Footer with credits (Klawiter, Notre Dame, SZD)
+- [x] 8 JS modules: constants, utils, export, app, home, facets, detail, charts
 
-### M6.3: UX improvements
+### M6.3: UX & Features ✅
 
-- [ ] Add citation export (BibTeX, RIS) for individual entries
-- [ ] Add linked authority data display (Wikidata/GND links in detail view)
-- [ ] Improve search: show result count, better empty states
-- [ ] Add breadcrumb navigation
-- [ ] Add "About" page with project context and credits
+- [x] Citation export: BibTeX + RIS (correct author logic for primary vs secondary literature)
+- [x] JSON-LD export per entry + full dataset download
+- [x] Permalink copy to clipboard
+- [x] Expandable result cards (inline detail, no separate page)
+- [x] Interactive charts with click-to-filter
+- [x] Console data logging for verification
+- [ ] Linked authority data display (depends on M5)
 
-### M6.4: Stable URIs
+### M6.4: Stable URIs ✅
 
-- [ ] Define URI scheme: `#entry/{page_id}` or path-based with 404.html fallback
-- [ ] Ensure every entry has a stable, shareable URL
-- [ ] Support old wiki title resolution via redirect map
-- [ ] Add `<link rel="canonical">` per entry view
+- [x] Hash-based scheme: `#entry={page_id}`
+- [x] Redirect resolution via redirects map
+- [x] Permalink copy button
 
-### M6.5: Performance
+### M6.5: Performance (deferred)
 
-- [ ] Measure initial load time (4.2 MB JSON)
-- [ ] Evaluate: lazy loading, chunked data, or gzip-only approach
-- [ ] If needed: split data into index (lightweight) + detail (on-demand)
-- [ ] Test on slow connection (3G throttle in DevTools)
+- [ ] Measure initial load time (~8 MB JSON)
+- [ ] Evaluate lazy loading if needed
 
-### M6.6: Accessibility
+### M6.6: Accessibility (deferred)
 
-- [ ] WCAG 2.1 AA audit: color contrast, keyboard navigation, screen reader labels
-- [ ] Add ARIA landmarks and labels
-- [ ] Test with screen reader
+- [ ] WCAG 2.1 AA audit
+- [ ] ARIA landmarks and labels
 
 ---
 

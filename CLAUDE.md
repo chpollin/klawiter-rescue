@@ -24,7 +24,7 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
 - **Custom namespace**: `klawiter:` for domain-specific fields (dramatic-reading, symposium etc.) — Schema.org mapping planned
-- **Static frontend**: Vanilla JS + Tailwind CDN + FlexSearch + Chart.js, no build step
+- **Static frontend**: Vanilla JS + custom CSS (SZD design) + FlexSearch + Chart.js, no build step
 - **GitHub Pages**: Deploy from `docs/` folder
 
 ## Source Data Coverage
@@ -40,10 +40,10 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining ~44% mostly entries without publisher info
 - Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator
 - Location: 87.5% coverage (regex 67.8% + LLM +19.7pp)
-- 33 bracket-titles remain where no page_title fallback exists
+- ~15 bracket-titles remain where no page_title fallback exists (wiki markup cleaned in step 03)
 - JSON-LD namespace URL (`klawiter-rescue.github.io/vocab/`) not yet resolvable
 
 ## Documentation
 
 `knowledge/` contains the full project documentation as an Obsidian vault:
-`data.md`, `pipeline.md`, `architecture.md`, `ontology.md`, `reconciliation.md`, `ui-design.md`, `plan.md`, `journal.md`
+`data.md`, `pipeline.md`, `architecture.md`, `ontology.md`, `reconciliation.md`, `ui-design.md`, `design.md`, `user-stories.md`, `plan.md`, `journal.md`
