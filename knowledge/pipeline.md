@@ -118,7 +118,7 @@ Fixes the Mojibake problem (see below). Detects `Ã[\x80-\xbf]` sequences via re
 
 **Output**: `02_encoding_fixed.csv` — same columns, `content` and `page_title` cleaned
 
-**Result**: From 61.1% affected entries to 0%
+**Result**: 0% known Mojibake (verified via `Ã[\x80-\xbf]` regex). Other encoding corruption types not checked — see [[data#encoding]].
 
 ### 03_parse_entries.py — Parsing
 
@@ -187,6 +187,10 @@ for line in text.split('\n'):
 ### Lesson Learned
 
 The verification must be broader than the repair. Detection and repair now use the same regex.
+
+### What "0% Mojibake" Actually Means
+
+0 entries match the `Ã[\x80-\xbf]|Â[\xa0-\xff]` detection regex after the fix. This confirms the specific UTF-8-as-Latin-1 pattern is resolved. It does **not** rule out: other encoding corruption types, double encoding, truncated multibyte characters at BLOB segment boundaries, or the fix accidentally destroying intentional characters.
 
 ---
 

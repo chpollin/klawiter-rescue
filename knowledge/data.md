@@ -162,9 +162,9 @@ All numbers refer to non-redirect entries (n=4,751) unless stated otherwise.
 
 **Before**: 61.1% of entries had Mojibake — UTF-8 bytes misinterpreted as Latin-1. See [[pipeline#encoding-fix]] for details.
 
-**After**: 0% residual Mojibake (verified via `Ã[\x80-\xbf]` regex scan across all entries).
+**After**: 0% known Mojibake — no entries match the `Ã[\x80-\xbf]|Â[\xa0-\xff]` detection regex. This verifies that the specific UTF-8-as-Latin-1 pattern is fully resolved. It does **not** guarantee all encoding is correct: other corruption types (double encoding, truncated multibyte chars, non-Mojibake misinterpretation, fix destroying intentional characters) are not checked.
 
-**Honesty check**: The first encoding fix claimed "0%" but only tested 7 common patterns. Actually 9.1% (574 entries, 21 patterns) were still affected. The revised fix uses line-wise `encode('latin-1').decode('utf-8')` and is complete.
+**Honesty check**: The first encoding fix claimed "0%" but only tested 7 common patterns. Actually 9.1% (574 entries, 21 patterns) were still affected. The revised fix uses line-wise `encode('latin-1').decode('utf-8')` and is complete for the known Mojibake pattern.
 
 ### Known Problems
 
