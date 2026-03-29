@@ -1,0 +1,9 @@
+# Regenerable intermediate data (re-run pipeline to recreate)
+data/intermediate/
+
+# Individual entry files (6.296 files, regenerable)
+data/output/entries/
+
+# Python cache
+__pycache__/
+*.pyc

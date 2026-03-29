@@ -1,0 +1,134 @@
+/* Klawiter Bibliography — Custom styles */
+
+/* Facet items */
+.facet-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.125rem 0;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: color 0.15s;
+}
+.facet-item:hover { color: #1d4ed8; }
+.facet-item.active { color: #1d4ed8; font-weight: 600; }
+.facet-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* Filter chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.chip button {
+  font-size: 0.875rem;
+  line-height: 1;
+  opacity: 0.6;
+  cursor: pointer;
+}
+.chip button:hover { opacity: 1; }
+
+/* Entry cards */
+.entry-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.entry-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Entry type badges */
+.badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+.badge-fiction { background: #dbeafe; color: #1e40af; }
+.badge-essay { background: #fef3c7; color: #92400e; }
+.badge-poetry { background: #ede9fe; color: #5b21b6; }
+.badge-drama { background: #fce7f3; color: #9d174d; }
+.badge-correspondence { background: #d1fae5; color: #065f46; }
+.badge-film { background: #fee2e2; color: #991b1b; }
+.badge-historical-study { background: #e0e7ff; color: #3730a3; }
+.badge-secondary-literature { background: #f3f4f6; color: #374151; }
+.badge-collected-works { background: #fef9c3; color: #854d0e; }
+.badge-foreword { background: #ecfdf5; color: #047857; }
+.badge-translation { background: #f0fdf4; color: #166534; }
+.badge-symposium { background: #fff7ed; color: #9a3412; }
+.badge-dramatic-reading { background: #fdf4ff; color: #86198f; }
+.badge-newspaper { background: #f5f5f4; color: #44403c; }
+.badge-other { background: #f3f4f6; color: #6b7280; }
+
+/* Stats cards */
+.stat-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+}
+.stat-card .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e40af;
+}
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* Detail view */
+.detail-field {
+  margin-bottom: 0.75rem;
+}
+.detail-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.detail-value {
+  margin-top: 0.125rem;
+  color: #1f2937;
+}
+
+/* Highlight search matches */
+mark {
+  background: #fef08a;
+  padding: 0 0.125rem;
+  border-radius: 0.125rem;
+}
+
+/* Loading state */
+.loading-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
