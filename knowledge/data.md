@@ -73,6 +73,16 @@ Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://kla
 | `sourceTextId` | integer | Text ID in BLOB |
 | `sourceBlobId` | integer | BLOB file (0–7) |
 
+### Provenance Metadata (`_provenance`)
+
+Per-field extraction source tracking, injected by `inject_provenance.py`:
+- `publisher`: "regex" | "llm" | "missing"
+- `location`: "regex" | "llm" | "missing"
+- `translator`: "regex" | "llm" | "missing"
+- `pageCount`: "regex" | "llm" | "missing"
+
+Coverage: 49.6% regex, 11.7% LLM, 38.8% missing (across 4 fields x 5,179 entries)
+
 ### Redirects
 
 Redirects are stored as a map in the frontend: `{ "Old Page Name": target_page_id }`. In the full JSON-LD dataset, redirects have `klawiter:isRedirect: true` and `klawiter:redirectTarget`.

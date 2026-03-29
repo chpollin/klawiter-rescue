@@ -4,6 +4,33 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 7: Design Alignment, Verbund Navigation & EIL Curation Interface
+
+### What we did
+
+**Design alignment**: Adopted GAMS institutional color palette across all Verbund sites. Switched typography to Source Serif 4 (headings) + Source Sans 3 (body) for consistency with the broader Stefan Zweig Digital ecosystem.
+
+**Verbund navigation bar**: Implemented a shared top navigation bar connecting three sites (SZD, Klawiter Bibliography, planned Nachlass portal). Provides unified cross-site navigation for the Zweig Forschungsverbund.
+
+**SZD site updates**: Translated the SZD frontend to English. Refactored the visualization module. Redesigned the dashboard with an ontology-focused layout emphasizing CIDOC-CRM relationships.
+
+**Klawiter landing page redesign**: Replaced the flat category list with expandable category groups. Added "Browse Catalogue" and "Explore" navigation paths for different user workflows.
+
+**EIL curation interface**:
+- `pipeline/inject_provenance.py`: Diffs regex output (03_parsed.csv) against LLM cache (03b_llm_cache.json) to generate per-field provenance metadata (`_provenance` object with values regex/llm/missing for publisher, location, translator, pageCount). Injects into `docs/data/klawiter.json`.
+- `docs/js/edit.js`: Localhost-only edit mode for inline field editing with provenance awareness. Edits are collected as JSON patches, not written directly to the dataset.
+- Provenance badges: Visual indicators showing extraction source (regex/llm/missing) on metadata fields.
+- JSON patch export: Curators review and export edits as structured patches.
+- `.github/workflows/validate.yml`: GitHub Actions workflow running pipeline validation on PRs to ensure data integrity.
+
+### Learnings
+
+- **Provenance tracking enables trust**: Showing users whether a field was extracted by regex (high confidence) or LLM (needs review) makes the curation workflow transparent. The "missing" label directs attention to entries that need manual enrichment.
+- **Localhost-only editing is a pragmatic security model**: No authentication needed for a static site — the edit interface simply doesn't load on the public deployment.
+- **Shared navigation requires coordination**: The Verbund nav bar links to three separate GitHub Pages deployments. URL structure must be stable across all sites.
+
+---
+
 ## 2026-03-29 — Session 6: Knowledge Base Audit & Documentation Refactoring
 
 ### What we did

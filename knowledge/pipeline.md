@@ -164,6 +164,10 @@ Converts classified entries to the [[data#data-model|data model]]:
 
 Checks JSON-LD structure, field coverage, residual Mojibake. Generates `quality-report.json`.
 
+### inject_provenance.py (optional post-processing)
+
+Generates per-field provenance metadata (`_provenance` object) by diffing regex output (03_parsed.csv) against LLM cache (03b_llm_cache.json). Injects into `docs/data/klawiter.json`. Fields tracked: publisher, location, translator, pageCount. Values: `regex` (extracted by patterns.py), `llm` (filled by Gemini), `missing` (not extracted). Run manually: `python pipeline/inject_provenance.py`
+
 ---
 
 ## Encoding Fix
