@@ -262,6 +262,9 @@ const App = {
     // Sidebar only on results view
     document.getElementById('facets').classList.toggle('hidden', view !== 'results');
 
+    // Hide header search on home (home has its own prominent search)
+    document.querySelector('.header-search').classList.toggle('hidden', view === 'home');
+
     // Filter chips only on results view
     const chips = document.getElementById('filter-chips');
     if (view !== 'results') chips.innerHTML = '';

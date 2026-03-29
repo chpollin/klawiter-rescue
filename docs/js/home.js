@@ -58,7 +58,7 @@ const Home = {
     container.innerHTML = `
       <div class="home-intro">
         <h1 class="home-title">Stefan Zweig Bibliography</h1>
-        <h2 class="home-subtitle">(Klawiter)</h2>
+        <h2 class="home-subtitle">Digital Edition</h2>
         <p class="home-text">
           The Klawiter Bibliography catalogues over ${entries.length.toLocaleString('en')}
           publications by and about Stefan Zweig in ${languages.size} languages.
@@ -74,7 +74,7 @@ const Home = {
         </div>
         <div class="home-actions">
           <button class="browse-btn" onclick="location.hash='browse'">Browse Catalogue</button>
-          <a href="#stats" class="explore-link">Explore the Collection &rarr;</a>
+          <a href="#stats" class="explore-link">Statistics &amp; Charts &rarr;</a>
         </div>
       </div>
 

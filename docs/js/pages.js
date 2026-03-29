@@ -341,12 +341,12 @@ const Pages = {
 
       <h2>Exporting</h2>
       <p>
-        Several export options are available:
+        Several export options are available from the expanded entry view:
       </p>
       <ul>
         <li>
           <strong>BibTeX</strong> &mdash; Export a single entry or all filtered results
-          as a BibTeX file for use in reference managers (Zotero, Citavi, JabRef, etc.).
+          as a <code>.bib</code> file for use in reference managers.
         </li>
         <li>
           <strong>RIS</strong> &mdash; Export a single entry in RIS format, compatible
@@ -365,6 +365,37 @@ const Pages = {
       <p>
         For the full dataset download, see the <a href="#data">Data Access</a> page
         or the <a href="#stats">Statistics</a> page.
+      </p>
+
+      <h2>Using with Zotero</h2>
+      <p>
+        The BibTeX and RIS export formats are directly compatible with
+        <a href="https://www.zotero.org/" target="_blank" rel="noopener">Zotero</a>
+        and other reference managers. To import entries into your Zotero library:
+      </p>
+      <ol>
+        <li>
+          <strong>Single entry:</strong> Expand an entry card, click
+          <em>Export BibTeX</em> or <em>Export RIS</em>. A file will be downloaded.
+        </li>
+        <li>
+          <strong>Multiple entries:</strong> Filter the results to the set you need
+          (e.g. all Fiction in French), then click <em>Export BibTeX</em> in the
+          results header to download all filtered entries as one file.
+        </li>
+        <li>
+          In Zotero, go to <strong>File &rarr; Import&hellip;</strong> and select the
+          downloaded <code>.bib</code> or <code>.ris</code> file.
+        </li>
+        <li>
+          Zotero will create entries with title, author, year, publisher, location,
+          language, and page count pre-filled.
+        </li>
+      </ol>
+      <p>
+        <strong>Tip:</strong> The batch BibTeX export is particularly useful for
+        building a Zweig research bibliography. Use the type and language filters
+        to select a coherent subset, then export everything at once.
       </p>
 
       <h2>Frequently Asked Questions</h2>
@@ -392,7 +423,7 @@ const Pages = {
       <h3>I found an error. How can I report it?</h3>
       <p>
         Please open an issue on the
-        <a href="https://github.com/chrstncrrnd/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub repository</a>.
+        <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub repository</a>.
         Include the entry title or page ID and a description of the problem.
       </p>
     </div>`;
@@ -485,7 +516,7 @@ const Pages = {
       <p>
         The bibliographic data is provided for scholarly and non-commercial use.
         The source code of the extraction pipeline and this website is available
-        on <a href="https://github.com/chrstncrrnd/klawiter-rescue" target="_blank" rel="noopener">GitHub</a>.
+        on <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub</a>.
         A formal license designation is forthcoming.
       </p>
 
@@ -559,11 +590,11 @@ const Pages = {
       </p>
       <ul>
         <li>
-          <a href="https://github.com/chrstncrrnd/klawiter-rescue" target="_blank" rel="noopener">GitHub Repository</a>
+          <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub Repository</a>
           &mdash; Source code, pipeline scripts, documentation
         </li>
         <li>
-          <a href="https://github.com/chrstncrrnd/klawiter-rescue/issues" target="_blank" rel="noopener">Issue Tracker</a>
+          <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">Issue Tracker</a>
           &mdash; Report errors or suggest improvements
         </li>
       </ul>
@@ -571,7 +602,7 @@ const Pages = {
       <h2>Contact</h2>
       <p>
         For questions, corrections, or collaboration inquiries, please use the
-        <a href="https://github.com/chrstncrrnd/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub issue tracker</a>.
+        <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub issue tracker</a>.
       </p>
 
       <h2>Technical Information</h2>
@@ -580,7 +611,7 @@ const Pages = {
         no server-side processing; all data is loaded and rendered in the browser.
         The extraction pipeline is written in Python. The full technical
         documentation is available in the
-        <a href="https://github.com/chrstncrrnd/klawiter-rescue" target="_blank" rel="noopener">project repository</a>.
+        <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">project repository</a>.
       </p>
     </div>`;
   },
