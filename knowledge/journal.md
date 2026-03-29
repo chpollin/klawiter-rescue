@@ -55,6 +55,8 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 **Vocab doc corrections**: `sameAs` marked as "planned", `schema:Message` annotated, SZD → University of Salzburg, range types corrected.
 
+**Automated validation**: Systematic validation of all 4,751 ns0 entries + stratified sample of 84 entries across 20 types. Found and fixed translator regex leaking across newlines (34 entries with markup in translator field → 0). München encoding verified correct (terminal display artifact).
+
 **Pipeline re-run**: Steps 3–6, 10.5s, all data regenerated. 260 tests pass, 0 fail.
 
 ### Learnings
@@ -62,6 +64,7 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 - **Vocab docs must be verified against code**: The vocab page claimed `sameAs` was "used" but no entry had it. The only way to catch this is automated checks against the actual output.
 - **Schema.org is more complete than expected**: Both `schema:Play` and `schema:Collection` exist — initial assumptions that they were missing were wrong. Always verify before changing type mappings.
 - **Wiki markup in titles has a long tail**: The `remove_wiki_markup()` function handled paired `'''bold'''` but not section headers (`==text==`) or unpaired markers. Edge cases accumulate.
+- **`\s` in regex character classes matches newlines**: The translator patterns used `\s` which includes `\n`, causing matches to span across line breaks into subsequent sections. Using `[ \t]` instead restricts to horizontal whitespace.
 
 ### Files created/modified
 - `docs/js/pages.js` — NEW: 5 content page renderers
