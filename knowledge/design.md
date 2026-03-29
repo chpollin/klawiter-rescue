@@ -93,70 +93,49 @@ Light gray/cream background. Three columns:
 
 Five views plus 5 content pages, routed by hash. See [[user-stories]] for S1–S20.
 
-### 1. Startseite — Category Portal (`#`)
+### 1. Landing Page — Expandable Category Portal (`#`)
 
-The landing page orients users who are accustomed to the old wiki. It shows what categories exist and invites browsing — like a wiki main page, not a SaaS dashboard.
+The landing page orients users and shows what categories exist. Expandable rows reveal subcategories grouped by format and language.
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│  STEFAN ZWEIG BIBLIOGRAPHIE                         │
-│  (KLAWITER)                                         │
-│                                                     │
-│  Introductory paragraph (3-4 sentences):            │
-│  Die Klawiter-Bibliographie verzeichnet über 4.700  │
-│  Publikationen von und über Stefan Zweig. Sie       │
-│  wurde von Dr. Randolph J. Klawiter (University     │
-│  of Notre Dame) kompiliert und hier als             │
-│  durchsuchbare digitale Ausgabe bereitgestellt.     │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐    │
-│  │  [Suchfeld: In 4.751 Einträgen suchen...] 🔍│    │
-│  └─────────────────────────────────────────────┘    │
-│                                                     │
-│  WERKE                           (gold, uppercase)  │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐            │
-│  │Belletrist.│ │  Essays  │ │  Lyrik   │            │
-│  │  1.118    │ │   905    │ │   275    │            │
-│  └──────────┘ └──────────┘ └──────────┘            │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐            │
-│  │ Dramatik │ │  Briefe  │ │Hist. Stud│            │
-│  │    43    │ │   109    │ │   535    │            │
-│  └──────────┘ └──────────┘ └──────────┘            │
-│  ┌──────────┐                                       │
-│  │Vor-/Nach-│                                       │
-│  │worte  36 │                                       │
-│  └──────────┘                                       │
-│                                                     │
-│  REZEPTION & WIRKUNG             (gold, uppercase)  │
-│  ┌──────────────────┐ ┌──────────┐ ┌──────────┐    │
-│  │Sekundärliteratur │ │Film/Oper │ │Symposien │    │
-│  │     1.406        │ │    92    │ │    39    │    │
-│  └──────────────────┘ └──────────┘ └──────────┘    │
-│  ┌──────────────────┐ ┌──────────┐                  │
-│  │Dramat. Lesungen  │ │ Zeitung  │                  │
-│  │       18         │ │    1     │                  │
-│  └──────────────────┘ └──────────┘                  │
-│                                                     │
-│  EDITIONEN                       (gold, uppercase)  │
-│  ┌──────────┐ ┌──────────────────┐                  │
-│  │Ges. Werke│ │  Übersetzungen   │                  │
-│  │   114    │ │  (von SZ)  56    │                  │
-│  └──────────┘ └──────────────────┘                  │
-│                                                     │
-│  ┌──────────┐                                       │
-│  │ Sonstige │                                       │
-│  │    4     │                                       │
-│  └──────────┘                                       │
-│                                                     │
-│  ── Kurzstatistik ──────────────────────────────    │
-│  4.751 Einträge · 41 Sprachen · 402 Orte ·         │
-│  Zeitraum 1815–2020                                 │
-│  → Ausführliche Statistiken                         │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│                                                    │
+│  STEFAN ZWEIG BIBLIOGRAPHY                         │
+│  (KLAWITER)                                        │
+│                                                    │
+│  Introductory paragraph (English)                  │
+│                                                    │
+│  [Search 4,751 entries... (press Enter)]           │
+│                                                    │
+│  [Browse Catalogue]   Explore the Collection →     │
+│                                                    │
+│  WORKS                          (gold, uppercase)  │
+│  Fiction                              1,118    [v] │
+│    INDIVIDUAL STORIES                              │
+│    Chinese 105 · French 66 · Bulgarian 50 · ...    │
+│    VOLUMES                                         │
+│    German 94 · Chinese 48 · English 36 · ...       │
+│  Essays                                 905    [v] │
+│  Poetry                                 275    [v] │
+│  Drama                                   43    [v] │
+│  ...                                               │
+│                                                    │
+│  RECEPTION & IMPACT             (gold, uppercase)  │
+│  Secondary Literature                 1,406    [v] │
+│  Film / Opera                            92    [v] │
+│  ...                                               │
+│                                                    │
+│  EDITIONS                       (gold, uppercase)  │
+│  Collected Works                        114    [v] │
+│  Translations (by Zweig)                 56    [v] │
+│                                                    │
+│  4,751 entries · 41 languages · 402 locations      │
+└──────────────────────────────────────────────────┘
 ```
 
-**Category tiles**: White cards with warm border. Entry type name in serif (card title), count in burgundy (large number). Hover: subtle gold left-border. Click → navigates to `#type=fiction` etc.
+**Category rows**: Each row shows type label + count. Chevron expands to show subcategories parsed from `entry.categories` arrays. Pattern: `"MainCategory / Format (Language)"`. Click type name → `#type=fiction`. Click subcategory → `#category=Fiction / Individual Stories (Chinese)`.
+
+**Browse Catalogue** button → `#browse` (shows all entries unfiltered). **Explore** link → `#stats` (interactive charts, renamed from "Statistics").
 
 **Grouping**: Categories are grouped semantically into "Werke" (primary works by Zweig), "Rezeption & Wirkung" (secondary/reception), and "Editionen" (collected works, translations by Zweig). This mirrors how scholars think about the material.
 

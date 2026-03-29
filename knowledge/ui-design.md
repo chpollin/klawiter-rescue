@@ -41,13 +41,13 @@ docs/
 
 ### Views
 
-**Overview** (`#`): Category portal — intro text, search field, 16 entry type tiles grouped by Works / Reception & Impact / Editions. Summary stats line.
+**Overview** (`#`): Expandable category portal — intro text, search field, Browse Catalogue button, Explore link. 16 entry types as expandable rows grouped by Works / Reception & Impact / Editions. Each row expands to show subcategories parsed from `entry.categories` (format + language). Summary stats line.
 
-**Browse** (`#q=search` or `#type=fiction`): Expandable entry cards with type badge, year, language, location, publisher, snippet. Cards expand inline to show full metadata. Faceted sidebar (type, language, period, location).
+**Browse** (`#browse`): All entries unfiltered with faceted sidebar. Also reached via `#q=search` or `#type=fiction` or `#category=...` filters. Expandable entry cards with type badge, year, language, location, publisher, snippet. Cards expand inline to show full metadata. Faceted sidebar (type, language, period, location).
 
 **Detail** (`#entry=1234`): Standalone view for direct links (falls back if card not in results). Two-column metadata table, conditional sections (reprints, translations, contents, see-also), action bar (BibTeX, RIS, JSON-LD, permalink).
 
-**Statistics** (`#stats`): 4 stat cards + 4 interactive charts (timeline by decade, languages top 10, locations top 15, entry types). All clickable → filtered results. Full dataset export button.
+**Explore** (`#stats`): 4 stat cards + 4 interactive charts (timeline by decade, languages top 10, locations top 15, entry types). All clickable → filtered results. Full dataset export button. Renamed from "Statistics" to emphasize explorative character.
 
 **Content Pages** (`#about`, `#methodology`, `#help`, `#data`, `#imprint`): Static prose pages rendered by `pages.js`. Navigation via header dropdown ("More") and footer links. Professional, scholarly tone. Content covers: project background, data pipeline methodology, site usage guide, dataset download/citation, and legal/contact information.
 
@@ -57,7 +57,9 @@ docs/
 |-----|---------|
 | `#` | Dashboard |
 | `#q=zweig` | Search |
+| `#browse` | All entries unfiltered |
 | `#type=fiction` | Type filter |
+| `#category=Fiction / Volumes (German)` | Subcategory filter |
 | `#language=German` | Language filter |
 | `#q=amok&type=fiction` | Combined |
 | `#entry=1234` | Detail view (page_id) |
@@ -71,22 +73,19 @@ Left sidebar: Type (16 types), Language (top 15), Time period (5 periods), Locat
 
 ## Stefan Zweig Digital Integration
 
-### Design Goals
+### Zweig Forschungsverbund Design System
 
-The bibliography should feel like a natural extension of Stefan Zweig Digital, even though it's hosted separately on GitHub Pages. Users should not perceive a "break" when navigating between the two.
+Three sites form a visual family, all using the GAMS reference palette:
 
-**To analyze**:
-- Color palette and typography of Stefan Zweig Digital
-- Navigation patterns and header/footer structure
-- How bibliographic data is presented there currently
-- Responsive design approach
+| Site | Role | Primary Accent | URL |
+|------|------|---------------|-----|
+| SZD GAMS | Edition (reference) | Burgundy `#631a34` + Gold `#C2A360` | stefanzweig.digital |
+| Klawiter | Bibliography (gold-forward) | Gold for section headings | chpollin.github.io/klawiter-rescue |
+| SZD GitHub | Ontology (burgundy-forward) | Burgundy for section headings | chpollin.github.io/SZD |
 
-### Integration Strategy
+**Shared elements**: Verbund navigation bar at top connecting all three sites. Source Serif 4 + Source Sans 3 fonts (Google Fonts). Identical color tokens (`--sz-burgundy`, `--sz-gold`, etc.).
 
-- Match header, footer, and color scheme to Stefan Zweig Digital
-- Add navigation link back to Stefan Zweig Digital
-- Use consistent typography and spacing
-- Coordinate with project team for cross-linking
+**SZD GitHub landing page**: Ontology-focused dashboard with stats row (72 Classes, 130 Properties, 7 Layers), three primary cards (Reference, Visualization, Downloads), and secondary links. All pages in English.
 
 ### Constraints
 
