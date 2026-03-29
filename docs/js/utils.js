@@ -27,6 +27,16 @@ function escapeBibtex(s) {
     .replace(/([{}&%#_^~])/g, '\\$1');
 }
 
+/** Count entries by a field value. Returns { value: count } sorted descending. */
+function countByField(entries, field) {
+  const counts = {};
+  for (const e of entries) {
+    const val = e[field];
+    if (val) counts[val] = (counts[val] || 0) + 1;
+  }
+  return counts;
+}
+
 /** Trigger a file download from in-memory content */
 function downloadBlob(content, filename, type) {
   const blob = new Blob([content], { type });

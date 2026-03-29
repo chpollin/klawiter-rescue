@@ -145,54 +145,33 @@ def extract_see_references(content):
     return refs
 
 
-def extract_reprints(content):
-    """Extract '''Reprinted in:''' references."""
-    reprints = []
-    block = re.search(r"'''Reprinted in:?'''\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL)
+def _extract_wiki_section(content, pattern, min_length=5):
+    """Generic extractor for bold-header wiki sections (Reprinted in, Translations, Contents)."""
+    items = []
+    block = re.search(pattern + r"\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL)
     if block:
-        text = block.group(1)
-        # Each reprint is typically on its own line or in a <lst> block
-        for line in text.split('\n'):
+        for line in block.group(1).split('\n'):
             line = line.strip()
             if not line or line.startswith('<') or line.startswith('</'):
                 continue
-            # Extract wiki links
-            link_match = re.search(r'\[\[([^\]]+)\]\]', line)
-            if link_match:
-                reprints.append(remove_wiki_markup(line))
-            elif len(line) > 10:
-                reprints.append(remove_wiki_markup(line))
-    return reprints
+            if len(line) > min_length:
+                items.append(remove_wiki_markup(line))
+    return items
+
+
+def extract_reprints(content):
+    """Extract '''Reprinted in:''' references."""
+    return _extract_wiki_section(content, r"'''Reprinted in:?'''", min_length=10)
 
 
 def extract_translations_block(content):
     """Extract '''Translations:''' or '''Translation:''' block."""
-    translations = []
-    block = re.search(r"'''Translations?:?'''\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL)
-    if block:
-        text = block.group(1)
-        for line in text.split('\n'):
-            line = line.strip()
-            if not line or line.startswith('<') or line.startswith('</'):
-                continue
-            if len(line) > 5:
-                translations.append(remove_wiki_markup(line))
-    return translations
+    return _extract_wiki_section(content, r"'''Translations?:?'''", min_length=5)
 
 
 def extract_contents_block(content):
     """Extract '''Contents''' section (for collected works)."""
-    items = []
-    block = re.search(r"'''Contents:?'''\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL)
-    if block:
-        text = block.group(1)
-        for line in text.split('\n'):
-            line = line.strip()
-            if not line or line.startswith('<') or line.startswith('</'):
-                continue
-            if len(line) > 3:
-                items.append(remove_wiki_markup(line))
-    return items
+    return _extract_wiki_section(content, r"'''Contents:?'''", min_length=3)
 
 
 def extract_structured_data(content):

@@ -206,14 +206,8 @@ const Detail = {
   },
 
   makeLink(title) {
-    const entry = App.entries.find(e => e.title === title);
-    if (entry) {
-      return `<a href="#entry=${entry.sourcePageId}">${esc(title)}</a>`;
-    }
-    const pid = App.data.redirects[title];
-    if (pid) {
-      return `<a href="#entry=${pid}">${esc(title)}</a>`;
-    }
+    const pid = App.titleMap.get(title) || (App.data.redirects && App.data.redirects[title]);
+    if (pid) return `<a href="#entry=${pid}">${esc(title)}</a>`;
     return esc(title);
   },
 };

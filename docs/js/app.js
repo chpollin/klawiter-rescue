@@ -28,6 +28,7 @@ const App = {
       // Filter to namespace 0 only
       this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
       this.entryMap = new Map(this.entries.map(e => [e.sourcePageId, e]));
+      this.titleMap = new Map(this.entries.filter(e => e.title).map(e => [e.title, e.sourcePageId]));
       this.logDataSummary();
       this.buildIndex();
       this.bindEvents();

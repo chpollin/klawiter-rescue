@@ -42,39 +42,7 @@ def load_raw_content_map():
 
 
 import re
-
-# Common mojibake substitution pairs for encoding-aware comparison (verify-only, too specific for lib)
-_ENCODING_PAIRS = [
-    ('ä', 'Ã¤'), ('ö', 'Ã¶'), ('ü', 'Ã¼'), ('ß', 'Ã\x9f'),
-    ('é', 'Ã©'), ('è', 'Ã¨'), ('ê', 'Ãª'), ('ë', 'Ã«'),
-    ('á', 'Ã¡'), ('à', 'Ã '), ('â', 'Ã¢'), ('ã', 'Ã£'),
-    ('ó', 'Ã³'), ('ò', 'Ã²'), ('ô', 'Ã´'), ('õ', 'Ãµ'),
-    ('ú', 'Ãº'), ('ù', 'Ã¹'), ('û', 'Ã»'),
-    ('ñ', 'Ã±'), ('ø', 'Ã¸'), ('å', 'Ã¥'), ('æ', 'Ã¦'),
-    ('ş', 'Å\x9f'), ('ţ', 'Å£'), ('ă', 'Ä'), ('ē', 'Ä'),
-    ('š', 'Å¡'), ('č', 'Ä\x8d'), ('ž', 'Å¾'), ('ř', 'Å\x99'),
-    ('ī', 'Ä«'), ('ū', 'Å«'),
-    ("'", 'â'), ("'", 'â'),  # smart quotes → garbled
-]
-
-def normalize(text):
-    """Normalize text for comparison: lowercase, collapse whitespace."""
-    if not text:
-        return ''
-    return ' '.join(str(text).lower().split())
-
-
-def strip_encoding(text):
-    """Strip common mojibake artifacts for looser comparison."""
-    if not text:
-        return ''
-    # Remove common garbled byte sequences
-    result = text
-    for clean, garbled in _ENCODING_PAIRS:
-        result = result.replace(garbled, clean)
-    # Collapse combining characters and diacritics differences
-    result = re.sub(r'[\u0300-\u036f]', '', result)  # combining diacriticals
-    return result
+from lib.encoding import normalize_text as normalize, strip_encoding_artifacts as strip_encoding
 
 
 def value_in_content(value, content):
