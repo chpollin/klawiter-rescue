@@ -247,7 +247,7 @@ const ExploreOverview = {
   _renderLocations() {
     const el = document.getElementById('ov-locations');
     if (!el) return;
-    el.innerHTML = '<div class="ov-title">Locations (Top 20)</div>';
+    el.innerHTML = '<div class="ov-title">Locations (Top 10)</div>';
 
     const data = this.filtered;
     const counts = {};
@@ -257,7 +257,7 @@ const ExploreOverview = {
 
     const sorted = Object.entries(counts)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 20)
+      .slice(0, 10)
       .map(([loc, count]) => ({ loc, count }));
 
     if (!sorted.length) { el.innerHTML += '<div class="ov-empty">No data</div>'; return; }

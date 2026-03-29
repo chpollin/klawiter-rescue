@@ -121,16 +121,25 @@ const ExploreNetwork = {
       location.hash = `entry=${d.id}`;
     });
 
-    // Simulation
+    // Simulation with boundary forces
+    const pad = 20;
     this.simulation = d3.forceSimulation(this.nodes)
-      .force('link', d3.forceLink(this.links).id(d => d.id).distance(60))
-      .force('charge', d3.forceManyBody().strength(-40))
+      .force('link', d3.forceLink(this.links).id(d => d.id).distance(50))
+      .force('charge', d3.forceManyBody().strength(-30))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collide', d3.forceCollide().radius(d => rScale(d.degree) + 2));
+      .force('collide', d3.forceCollide().radius(d => rScale(d.degree) + 2))
+      .force('x', d3.forceX(width / 2).strength(0.05))
+      .force('y', d3.forceY(height / 2).strength(0.05));
 
     // Run simulation synchronously for instant layout
-    this.simulation.tick(150);
+    this.simulation.tick(200);
     this.simulation.stop();
+
+    // Clamp positions within bounds
+    this.nodes.forEach(d => {
+      d.x = Math.max(pad, Math.min(width - pad, d.x));
+      d.y = Math.max(pad, Math.min(height - pad, d.y));
+    });
 
     // Position elements
     link

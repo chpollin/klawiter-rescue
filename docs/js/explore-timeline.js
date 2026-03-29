@@ -10,7 +10,7 @@ const ExploreTimeline = {
   x: null,
   y: null,
   color: null,
-  margin: { top: 30, right: 20, bottom: 50, left: 45 },
+  margin: { top: 20, right: 20, bottom: 80, left: 45 },
   annotations: [
     { year: 1881, label: 'Born', align: 'left' },
     { year: 1933, label: 'Exile', align: 'left' },
@@ -166,8 +166,20 @@ const ExploreTimeline = {
       .attr('class', 'brush')
       .call(this.brush);
 
-    // Legend
-    this._drawLegend(g, w);
+    // Legend (below x-axis)
+    this._drawLegend(g, w, h);
+
+    // Brush hint
+    g.append('text')
+      .attr('class', 'brush-hint')
+      .attr('x', w / 2)
+      .attr('y', h + 25)
+      .attr('text-anchor', 'middle')
+      .attr('fill', Explore.colors.textLight)
+      .style('font-size', '0.65rem')
+      .style('font-style', 'italic')
+      .style('font-family', 'var(--font-sans)')
+      .text('Drag to select a time range');
   },
 
   _buildData(entries) {
@@ -218,16 +230,23 @@ const ExploreTimeline = {
     }
   },
 
-  _drawLegend(g, w) {
+  _drawLegend(g, w, h) {
+    // Place legend below x-axis, wrapping into rows
+    const itemW = 80;
+    const cols = Math.floor(w / itemW);
     const legend = g.append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${w - this.keys.length * 70}, -18)`);
+      .attr('transform', `translate(0, ${h + 35})`);
 
     const items = legend.selectAll('.legend-item')
       .data(this.keys)
       .join('g')
       .attr('class', 'legend-item')
-      .attr('transform', (d, i) => `translate(${i * 70}, 0)`);
+      .attr('transform', (d, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        return `translate(${col * itemW}, ${row * 16})`;
+      });
 
     items.append('rect')
       .attr('width', 10)
@@ -239,9 +258,9 @@ const ExploreTimeline = {
       .attr('x', 14)
       .attr('y', 9)
       .attr('fill', Explore.colors.textLight)
-      .style('font-size', '0.6rem')
+      .style('font-size', '0.65rem')
       .style('font-family', 'var(--font-sans)')
-      .text(d => d.length > 7 ? d.slice(0, 6) + '.' : d);
+      .text(d => d);
   },
 
   _onBrush(event, entries) {

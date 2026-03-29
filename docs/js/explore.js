@@ -69,8 +69,9 @@ const Explore = {
       this.byLanguage.get(lang).push(entry);
     }
 
-    // Top 10 languages
+    // Top 10 languages (exclude Unknown — those go into "Other")
     const langCounts = [...this.byLanguage.entries()]
+      .filter(([lang]) => lang !== 'Unknown')
       .map(([lang, arr]) => ({ lang, count: arr.length }))
       .sort((a, b) => b.count - a.count);
     this.topLanguages = langCounts.slice(0, 10).map(x => x.lang);
@@ -179,6 +180,11 @@ const Explore = {
     document.querySelectorAll('.explore-panel').forEach(p => p.classList.add('hidden'));
     const panel = document.getElementById(`viz-${mode}`);
     if (panel) panel.classList.remove('hidden');
+
+    // Reset selection and filters on mode switch
+    this.selection = [];
+    this.filters = { languages: [], types: [], yearRange: [null, null] };
+    this.updateSelection([]);
 
     // Render the active mode
     if (mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
