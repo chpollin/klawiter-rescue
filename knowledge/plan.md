@@ -222,7 +222,7 @@ Redesigned to match Stefan Zweig Digital visual language. See [[design]] and [[u
 - [x] 4-view architecture: Overview (category portal), Browse (faceted search), Detail (expandable cards), Statistics
 - [x] All UI text in English
 - [x] Footer with credits (Klawiter, Notre Dame, SZD)
-- [x] 9 JS modules: constants, utils, export, pages, app, home, facets, detail, charts
+- [x] 13 JS modules: constants, utils, export, pages, app, home, facets, detail, edit, explore, explore-timeline, explore-overview, explore-network
 
 ### M6.3: UX & Features ✅
 
@@ -273,12 +273,25 @@ Ship it. Make it citable. Make it findable.
 
 ---
 
+## M8: Interactive Exploration Interface ✅
+
+Replaced generic Chart.js dashboard with D3.js v7 exploration tool. See [[exploration]] for the design concept.
+
+- [x] Design concept and research questions (`knowledge/exploration.md`)
+- [x] 3-mode D3 visualization: Timeline (stacked area), Overview (linked small multiples), Connections (force graph)
+- [x] Shared controller with mode switching, detail panel, cross-filtering
+- [x] Migration from Chart.js to D3.js v7
+- [x] UX polish: overflow fix, state reset, Unknown filter, legend layout, brush hint
+- [x] Frontend refactoring: BibTeX dedup, titleMap, countByField, wiki section extractor
+
+---
+
 ## Dependencies
 
 ```
-M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M7 ✅ (partial) → M3.8 (Validation) → M5 (Enrichment)
+M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M7 ✅ (partial) → M8 ✅ → M3.8 (Validation) → M5 (Enrichment)
 ```
 
-**Status** (2026-03-29): M1–M6 complete. M7 partially done (LICENSE, CITATION.cff, namespace fix, README).
-- M3.8 (Manual Validation): deferred to after deployment — browse entries in the live frontend
+**Status** (2026-03-29): M1–M8 complete. Remaining: M3.8 (manual validation), M5 (semantic enrichment).
+- M3.8 (Manual Validation): browse entries in the live frontend
 - M5 (Semantic Enrichment): main remaining research task (Wikidata/GND/VIAF reconciliation)

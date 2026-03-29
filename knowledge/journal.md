@@ -4,6 +4,40 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 9: Interactive Exploration Interface & Refactoring
+
+### What we did
+
+- **D3.js exploration interface**: Replaced the generic Chart.js dashboard with a 3-mode interactive visualization built on D3.js v7:
+  - **Timeline**: Stacked area chart (year × language) with brushing, biographical annotations (born/exile/death), lifetime gold band
+  - **Overview**: 4 linked small multiples (decade histogram, type treemap, language bars, location lollipop) with cross-filtering
+  - **Connections**: Force-directed graph of seeAlso cross-references (~469 nodes, ~496 edges) with drag, zoom, neighbor highlighting
+  - Shared detail panel showing selected entries across all modes
+- **UX improvements**: Replaced "(Klawiter)" subtitle with "Digital Edition", hid duplicate header search on home, renamed explore link, added Zotero guide to Help page
+- **Exploration fixes**: Fixed network overflow, detail panel state persistence, "Unknown" language in timeline, legend/annotation overlap, force bounds
+- **Refactoring** (5 changes):
+  - Deduplicated BibTeX field-building in export.js
+  - Replaced O(n) title search with O(1) titleMap in detail.js
+  - Added countByField() utility to utils.js
+  - Unified 3 wiki section extractors into one generic function in wiki_parser.py
+  - Moved encoding comparison utilities from verify.py to lib/encoding.py
+- **Documentation**: Created `knowledge/exploration.md` with full design concept, research questions, visualization rationale, and DH references
+
+### What we learned
+
+- Generic dashboard visualizations don't serve academic research — researchers need purpose-built exploration tools with specific research questions in mind
+- D3.js via CDN works well for static sites; the stacked area chart immediately tells the Zweig reception story (German dominance → global spread → Chinese boom)
+- Network graphs from seeAlso data are sparser than expected (~496 resolved edges from 1,213 references) due to unresolved title references
+- "Unknown" language entries (~500) dominated the timeline visualization and needed to be folded into "Other"
+
+### What's next
+
+- **M3.8**: Manual validation (browse 50+ entries in live frontend)
+- **M5**: Semantic enrichment (Wikidata/GND/VIAF reconciliation)
+- **Explore refinement**: Consider adding a true streamgraph offset, improving mobile experience
+
+---
+
 ## 2026-03-29 — Session 8: Deployment Preparation & Namespace Fix
 
 ### What we did

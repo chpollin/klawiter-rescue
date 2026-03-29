@@ -20,7 +20,7 @@ Extraction and structuring of the Stefan Zweig Bibliography (Dr. Randolph J. Kla
 ```
 pipeline/               Python pipeline (7 steps, no external dependencies)
 docs/                   Frontend (GitHub Pages) — static HTML/JS/CSS
-  js/                   9 JS modules: constants, utils, export, pages, app, home, facets, detail, charts
+  js/                   13 JS modules (app, home, facets, detail, explore-*, export, pages, edit, …)
   css/styles.css        Custom CSS (Stefan Zweig Digital design language)
 data/
   raw/                  MediaWiki SQL dump + 8 BLOB files (363 MB)
@@ -78,7 +78,7 @@ Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Dig
 - **Overview**: Category portal with tiles grouped by Works / Reception / Editions
 - **Browse**: Full-text search (FlexSearch) + faceted filtering (type, language, period, location)
 - **Detail**: Expandable cards with SZD-style metadata table, conditional sections
-- **Statistics**: Interactive charts (timeline, languages, locations, types) with click-to-filter
+- **Explore**: Interactive D3.js visualization with 3 modes — Timeline (stacked area by language), Overview (linked small multiples with cross-filtering), Connections (force-directed graph of cross-references)
 - **Export**: BibTeX, RIS, JSON-LD per entry + full dataset download
 - **Content Pages**: About, Methodology, Help, Data Access, Imprint
 - No framework, no build step

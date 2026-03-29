@@ -205,3 +205,22 @@ Redesigned to match Stefan Zweig Digital visual language. See `knowledge/design.
 - [ ] Consider Zenodo deposit for DOI
 - [ ] Coordinate link from Stefan Zweig Digital
 - [ ] Announce / publish
+
+## Phase 9: Interactive Exploration Interface ✅
+
+Replaced the generic Chart.js dashboard with D3.js v7 exploration tool.
+
+### Completed
+- [x] Design concept and research questions (`knowledge/exploration.md`)
+- [x] Shared controller (`explore.js`) with mode switching, state management, detail panel
+- [x] Timeline mode (`explore-timeline.js`): stacked area chart (year × language) with brushing
+- [x] Overview mode (`explore-overview.js`): 4 linked small multiples with cross-filtering
+- [x] Connections mode (`explore-network.js`): force-directed graph of seeAlso links
+- [x] Migration from Chart.js to D3.js v7 (CDN swap, charts.js deleted)
+- [x] UX fixes: overflow, state reset, Unknown filter, legend layout, brush hint
+- [x] Frontend refactoring: BibTeX dedup, titleMap, countByField, wiki section extractor
+
+### Remaining
+- [ ] True streamgraph offset (`stackOffsetWiggle`) as option
+- [ ] Mobile-optimized network view (degrade to list)
+- [ ] Linked authority data in network graph (depends on M5)
