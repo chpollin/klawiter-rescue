@@ -1,93 +1,69 @@
 # Ontology
 
-Semantic modeling strategy for the Klawiter bibliography. Current state: custom `klawiter:` namespace. Target: Schema.org where possible, domain-specific extensions where needed.
+Semantic modeling for the Klawiter bibliography. Uses a blend of Schema.org (standard bibliographic), Dublin Core (citation/provenance), and klawiter: (domain-specific extensions).
 
-## Current State
+## Vocabulary Blend
 
-### Namespace
+### Schema.org (`schema:`)
+Standard bibliographic properties with universal web interoperability:
 
-`klawiter:` → `https://klawiter-rescue.github.io/vocab/`
+| Short Key | Maps To | Usage |
+|-----------|---------|-------|
+| `name` | `schema:name` | Entry title |
+| `author` | `schema:author` | Author (Stefan Zweig with Wikidata `sameAs`) |
+| `datePublished` | `schema:datePublished` | Publication year |
+| `publisher` | `schema:publisher` | Publisher name |
+| `locationCreated` | `schema:locationCreated` | Place of publication |
+| `inLanguage` | `schema:inLanguage` | Language of the work |
+| `numberOfPages` | `schema:numberOfPages` | Page count (xsd:integer) |
+| `translator` | `schema:translator` | Translator name |
+| `isRelatedTo` | `schema:isRelatedTo` | Cross-references ("see also") |
+| `workTranslation` | `schema:workTranslation` | Translation references |
+| `hasPart` | `schema:hasPart` | Table of contents / constituent works |
+| `sameAs` | `schema:sameAs` | Authority URIs (Wikidata, GND, VIAF) |
 
-This URL does not currently resolve. The namespace is used in all JSON-LD output but has no published vocabulary document. See [[plan#m4-ontology--data-model]] for the resolution plan.
+### Dublin Core (`dcterms:`)
+Citation and provenance:
 
-### @context
+| Short Key | Maps To | Usage |
+|-----------|---------|-------|
+| `bibliographicCitation` | `dcterms:bibliographicCitation` | Full original bibliographic entry text |
 
-```json
-{
-  "@context": {
-    "klawiter": "https://klawiter-rescue.github.io/vocab/",
-    "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "klawiter:year": { "@type": "xsd:integer" },
-    "klawiter:pageCount": { "@type": "xsd:integer" },
-    "klawiter:sourcePageId": { "@type": "xsd:integer" },
-    "klawiter:sourceTextId": { "@type": "xsd:integer" },
-    "klawiter:sourceBlobId": { "@type": "xsd:integer" },
-    "klawiter:translationOf": { "@type": "@id" },
-    "klawiter:reprintOf": { "@type": "@id" },
-    "klawiter:seeAlso": { "@type": "@id", "@container": "@set" },
-    "klawiter:categories": { "@container": "@set" },
-    "klawiter:contentItems": { "@container": "@list" }
-  }
-}
-```
+### Domain-Specific (`klawiter:`)
+Properties with no Schema.org or DC equivalent:
 
-### Why Custom Namespace
-
-See [[architecture#1-domain-specific-vocabulary-instead-of-schemaorg]]. Key reasons:
-- Entity types like "Dramatic Reading" and "Symposium" have no Schema.org equivalent
-- BibFrame is overengineering for this dataset
-- Dublin Core is too flat
-
----
-
-## Schema.org Mapping
-
-Planned mapping from `klawiter:` to `schema:` properties:
-
-### Entry Types
-
-| klawiter type | Schema.org type | Notes |
-|---------------|----------------|-------|
-| `fiction` | `schema:Book` | |
-| `essay` | `schema:Article` | |
-| `poetry` | `schema:Book` | Or `schema:CreativeWork` |
-| `drama` | `schema:Play` | |
-| `film` | `schema:Movie` | |
-| `correspondence` | `schema:Message` | |
-| `collected-works` | `schema:Collection` | |
-| `secondary-literature` | `schema:ScholarlyArticle` | |
-| `historical-study` | `schema:ScholarlyArticle` | |
-| `translation` | `schema:Book` | With `schema:translationOfWork` |
-| `foreword` | `schema:CreativeWork` | No specific type |
-| `symposium` | `schema:Event` | Not a publication |
-| `dramatic-reading` | `schema:CreativeWork` | **No Schema.org equivalent** |
-| `newspaper` | `schema:NewsArticle` | |
-
-### Fields
-
-| klawiter field | Schema.org property | Notes |
-|---------------|-------------------|-------|
-| `title` | `schema:name` | |
-| `year` | `schema:datePublished` | |
-| `publisher` | `schema:publisher` | |
-| `location` | `schema:locationCreated` | Or `schema:publisher.location` |
-| `language` | `schema:inLanguage` | |
-| `pageCount` | `schema:numberOfPages` | |
-| `translator` | `schema:translator` | |
-| `originalTitle` | `schema:translationOfWork.name` | |
-| `seeAlso` | `schema:isRelatedTo` | |
-| `entryType` | — | **Domain-specific, keep as `klawiter:`** |
-| `timePeriod` | — | **Domain-specific, keep as `klawiter:`** |
-| `contentItems` | `schema:hasPart` | Ordered list |
-| `categories` | — | **MediaWiki-specific, keep as `klawiter:`** |
-| `fullBibliographicEntry` | `schema:description` | Or `dcterms:bibliographicCitation` |
-| `sourcePageId` | `dcterms:identifier` | Provenance |
+| Short Key | Full IRI | Usage |
+|-----------|----------|-------|
+| `entryType` | `klawiter:entryType` | Classification key (fiction, essay, drama, etc.) |
+| `timePeriod` | `klawiter:timePeriod` | Historical period (pre-zweig, lifetime, etc.) |
+| `categories` | `klawiter:categories` | MediaWiki categories (@set) |
+| `mainCategory` | `klawiter:mainCategory` | Primary category for classification |
+| `originalTitle` | `klawiter:originalTitle` | Original-language title |
+| `languageCode` | `klawiter:languageCode` | ISO 639-1 language code |
+| `allYears` | `klawiter:allYears` | All years in multi-edition entries |
+| `allLocations` | `klawiter:allLocations` | All publication locations |
+| `reprints` | `klawiter:reprints` | Reprint references (@set) |
+| `contentItems` | `klawiter:contentItems` | ToC for collected works (@list) |
+| `sourcePageId` | `klawiter:sourcePageId` | MediaWiki page ID (xsd:integer) |
+| `sourceTextId` | `klawiter:sourceTextId` | MediaWiki text revision ID |
+| `sourceBlobId` | `klawiter:sourceBlobId` | BLOB file number (0-7) |
+| `pageNamespace` | `klawiter:pageNamespace` | MediaWiki namespace |
+| `isRedirect` | `klawiter:isRedirect` | Redirect flag |
+| `redirectTarget` | `klawiter:redirectTarget` | Redirect target title |
 
 ---
 
-## Target @context Design
+## Namespace
 
-The redesigned context will use multiple vocabularies:
+`klawiter:` resolves to `https://klawiter-rescue.github.io/vocab/`
+
+This URL serves a human-readable vocabulary document at `docs/vocab/index.html` listing all domain-specific terms with definitions, types, and Schema.org equivalents.
+
+---
+
+## @context
+
+Defined in `pipeline/lib/vocabulary.py`:
 
 ```json
 {
@@ -97,35 +73,113 @@ The redesigned context will use multiple vocabularies:
     "klawiter": "https://klawiter-rescue.github.io/vocab/",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "name": "schema:name",
-    "datePublished": { "@id": "schema:datePublished", "@type": "xsd:gYear" },
+    "datePublished": "schema:datePublished",
     "publisher": "schema:publisher",
     "inLanguage": "schema:inLanguage",
     "numberOfPages": { "@id": "schema:numberOfPages", "@type": "xsd:integer" },
     "translator": "schema:translator",
-    "sameAs": { "@id": "schema:sameAs", "@type": "@id" }
+    "locationCreated": "schema:locationCreated",
+    "sameAs": { "@id": "schema:sameAs", "@type": "@id" },
+    "isRelatedTo": { "@id": "schema:isRelatedTo", "@container": "@set" },
+    "workTranslation": { "@id": "schema:workTranslation", "@container": "@set" },
+    "hasPart": { "@id": "schema:hasPart", "@container": "@list" },
+    "author": { "@id": "schema:author", "@type": "@id" },
+    "bibliographicCitation": "dcterms:bibliographicCitation",
+    "entryType": "klawiter:entryType",
+    "timePeriod": "klawiter:timePeriod",
+    "categories": { "@id": "klawiter:categories", "@container": "@set" },
+    "contentItems": { "@id": "klawiter:contentItems", "@container": "@list" },
+    "mainCategory": "klawiter:mainCategory",
+    "originalTitle": "klawiter:originalTitle",
+    "languageCode": "klawiter:languageCode",
+    "allYears": "klawiter:allYears",
+    "allLocations": "klawiter:allLocations",
+    "reprints": { "@id": "klawiter:reprints", "@container": "@set" },
+    "sourcePageId": { "@id": "klawiter:sourcePageId", "@type": "xsd:integer" },
+    "sourceTextId": { "@id": "klawiter:sourceTextId", "@type": "xsd:integer" },
+    "sourceBlobId": { "@id": "klawiter:sourceBlobId", "@type": "xsd:integer" },
+    "pageNamespace": "klawiter:pageNamespace",
+    "isRedirect": "klawiter:isRedirect",
+    "redirectTarget": "klawiter:redirectTarget"
   }
 }
 ```
 
-This allows entries to be both `klawiter:FictionEntry` and `schema:Book` simultaneously via `@type` arrays.
+---
+
+## Entry Types & @type Mapping
+
+Each entry gets a `@type` array combining Schema.org and klawiter: types:
+
+| Entry Type Key | @type Array | Description |
+|----------------|-------------|-------------|
+| `fiction` | `[schema:Book, klawiter:FictionEntry]` | Novels, novellas, stories |
+| `essay` | `[schema:Article, klawiter:EssayEntry]` | Essays, articles, reviews |
+| `poetry` | `[schema:CreativeWork, klawiter:PoetryEntry]` | Poems, collections |
+| `drama` | `[schema:Play, klawiter:DramaEntry]` | Plays, libretti |
+| `film` | `[schema:Movie, klawiter:FilmEntry]` | Film adaptations |
+| `correspondence` | `[schema:Message, klawiter:CorrespondenceEntry]` | Letters |
+| `collected-works` | `[schema:Collection, klawiter:CollectedWorksEntry]` | Anthologies |
+| `secondary-literature` | `[schema:ScholarlyArticle, klawiter:SecondaryLiteratureEntry]` | Scholarship about Zweig |
+| `historical-study` | `[schema:ScholarlyArticle, klawiter:HistoricalStudyEntry]` | Academic studies |
+| `translation` | `[schema:Book, klawiter:TranslationEntry]` | Zweig translating others |
+| `foreword` | `[schema:CreativeWork, klawiter:ForewordEntry]` | Forewords, afterwords |
+| `symposium` | `[schema:Event, klawiter:SymposiumEntry]` | Conferences, exhibitions |
+| `dramatic-reading` | `[schema:CreativeWork, klawiter:DramaticReadingEntry]` | Performance readings |
+| `newspaper` | `[schema:NewsArticle, klawiter:NewspaperEntry]` | News articles |
+| `redirect` | `[klawiter:RedirectEntry]` | MediaWiki redirect |
+| `other` | `[schema:CreativeWork, klawiter:OtherEntry]` | Unclassified |
 
 ---
 
-## Namespace Resolution
+## Author Modeling
 
-The `klawiter:` namespace URL must resolve to a human-readable vocabulary document:
+Primary works include Stefan Zweig as structured author with Wikidata link:
 
-- **Location**: `docs/vocab/index.html`
-- **Content**: List of all terms with definitions, types, and Schema.org equivalents
-- **Format**: HTML (human-readable) — JSON-LD context document could be served separately
+```json
+{
+  "author": {
+    "@type": "schema:Person",
+    "name": "Stefan Zweig",
+    "sameAs": "https://www.wikidata.org/entity/Q78491"
+  }
+}
+```
 
-This makes the bibliography proper Linked Data: any consumer can follow the namespace URL to understand the vocabulary.
+Secondary literature, historical studies, and symposia omit the author field (Zweig is the subject, not the author).
 
 ---
 
-## Open Questions
+## Design Rationale
 
-- Should `@id` URIs use page_id or a slug? E.g. `klawiter:entry/3` vs `klawiter:entry/amok-novellen`
-- Should redirects have their own `@id` or only exist as aliases?
-- How to handle entries that are both `schema:Book` and `klawiter:FictionEntry`? Multiple `@type` values?
-- Should authority data URIs (Wikidata, GND) go into the `@context` or only as `schema:sameAs` values?
+### Why Schema.org + klawiter: (not BIBFRAME or CIDOC-CRM)?
+
+- **BIBFRAME**: No official JSON-LD context from Library of Congress (showstopper for JSON-LD-first project). Work/Instance/Item hierarchy adds complexity without benefit for a publication bibliography.
+- **CIDOC-CRM / LRMoo**: LRMoo v1.0 (April 2024) has no production-ready JSON-LD tooling. Event-centric modeling is conceptual overkill for bibliographic records.
+- **Schema.org**: Official JSON-LD context, search engine visibility, covers ~80% of fields natively (`workTranslation`, `hasPart`, `translator`, `numberOfPages`).
+- **klawiter:**: Clean extension point for domain-specific types (dramatic-reading, symposium) and MediaWiki provenance.
+
+### Future Alignment
+
+- **Stefan Zweig Digital** (Uni Graz): Uses CIDOC-CRM. A separate research project is planned to develop a Nachlass ontology that bridges both projects. The current `@type` arrays and `sameAs` links provide extension points for CIDOC-CRM alignment without restructuring.
+- **Wikidata**: Reconciliation of works (P50=Q78491), persons (translators), places, and publishers is planned (see [[reconciliation]]). Authority URIs will be added as `schema:sameAs` values.
+
+---
+
+## Frontend JSON Mapping
+
+The frontend (`docs/data/klawiter.json`) uses short keys for efficiency. `make_frontend_entry()` in step 05 maps semantic keys back to frontend keys:
+
+| JSON-LD Key | Frontend Key |
+|-------------|-------------|
+| `name` | `title` |
+| `datePublished` | `year` (as integer) |
+| `locationCreated` | `location` |
+| `inLanguage` | `language` |
+| `numberOfPages` | `pageCount` |
+| `bibliographicCitation` | `fullBibliographicEntry` |
+| `isRelatedTo` | `seeAlso` |
+| `workTranslation` | `translations` |
+| `hasPart` | `contentItems` |
+
+All other keys pass through unchanged.

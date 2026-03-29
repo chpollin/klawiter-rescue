@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klawiter Bibliography Vocabulary</title>
+  <style>
+    :root {
+      --burgundy: #722f37;
+      --gold: #c5a55a;
+      --cream: #faf6f0;
+      --text: #2d2926;
+      --border: #d4c5a9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    h1 { color: var(--burgundy); font-size: 1.8rem; margin-bottom: 0.5rem; }
+    h2 { color: var(--burgundy); font-size: 1.3rem; margin: 2rem 0 0.8rem; border-bottom: 2px solid var(--gold); padding-bottom: 0.3rem; }
+    h3 { color: var(--burgundy); font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+    p { margin-bottom: 0.8rem; }
+    a { color: var(--burgundy); }
+    code { background: #f0ebe3; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.9em; }
+    .subtitle { color: #666; font-size: 1rem; margin-bottom: 1.5rem; }
+    .namespace { background: #f0ebe3; padding: 1rem; border-left: 4px solid var(--gold); margin: 1rem 0; font-family: monospace; }
+    table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.5rem; }
+    th { background: var(--burgundy); color: white; text-align: left; padding: 0.5rem 0.8rem; font-weight: normal; }
+    td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:hover td { background: #f5f0e8; }
+    td code { font-size: 0.85em; }
+    .schema-equiv { color: #555; font-style: italic; }
+    .tag { display: inline-block; background: var(--burgundy); color: white; font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 3px; margin-right: 0.3rem; }
+    .tag.schema { background: #1a73e8; }
+    .tag.dc { background: #e67e22; }
+    .tag.domain { background: var(--burgundy); }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: #888; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<h1>Klawiter Bibliography Vocabulary</h1>
+<p class="subtitle">Namespace for the Stefan Zweig Bibliography (Klawiter) Linked Data project</p>
+
+<div class="namespace">
+  <strong>Namespace URI:</strong> https://klawiter-rescue.github.io/vocab/<br>
+  <strong>Preferred prefix:</strong> klawiter:<br>
+  <strong>Version:</strong> 2.0 (Schema.org blend)<br>
+  <strong>Last updated:</strong> 2026-03-29
+</div>
+
+<p>
+  This vocabulary extends <a href="https://schema.org/">Schema.org</a> and
+  <a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">Dublin Core</a>
+  with domain-specific terms for the Klawiter Stefan Zweig bibliography.
+  Standard bibliographic properties use Schema.org; provenance and citation use Dublin Core;
+  terms without equivalents in existing vocabularies are defined here.
+</p>
+
+<h2>Vocabulary Design</h2>
+<p>Each bibliographic entry uses multiple vocabularies via JSON-LD <code>@context</code>:</p>
+<ul style="margin: 0.5rem 0 1rem 1.5rem;">
+  <li><span class="tag schema">schema:</span> Standard fields (name, datePublished, publisher, translator, inLanguage, numberOfPages, etc.)</li>
+  <li><span class="tag dc">dcterms:</span> Bibliographic citation and provenance</li>
+  <li><span class="tag domain">klawiter:</span> Domain-specific types, classifications, and source metadata (defined below)</li>
+</ul>
+
+<h2>Entry Types</h2>
+<p>Each entry carries a <code>@type</code> array combining a Schema.org type with a domain-specific <code>klawiter:</code> type:</p>
+
+<table>
+  <thead>
+    <tr><th>klawiter: Type</th><th>Schema.org Type</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>klawiter:FictionEntry</code></td><td><code>schema:Book</code></td><td>Novels, novellas, short stories by Stefan Zweig</td></tr>
+    <tr><td><code>klawiter:EssayEntry</code></td><td><code>schema:Article</code></td><td>Essays, articles, reviews</td></tr>
+    <tr><td><code>klawiter:PoetryEntry</code></td><td><code>schema:CreativeWork</code></td><td>Individual poems and poetry collections</td></tr>
+    <tr><td><code>klawiter:DramaEntry</code></td><td><code>schema:Play</code></td><td>Plays, libretti, dramatic works</td></tr>
+    <tr><td><code>klawiter:FilmEntry</code></td><td><code>schema:Movie</code></td><td>Film adaptations, operas, multimedia</td></tr>
+    <tr><td><code>klawiter:CorrespondenceEntry</code></td><td><code>schema:Message</code></td><td>Letters and correspondence</td></tr>
+    <tr><td><code>klawiter:CollectedWorksEntry</code></td><td><code>schema:Collection</code></td><td>Anthologies, selected and collected works</td></tr>
+    <tr><td><code>klawiter:SecondaryLiteratureEntry</code></td><td><code>schema:ScholarlyArticle</code></td><td>Scholarship about Stefan Zweig</td></tr>
+    <tr><td><code>klawiter:HistoricalStudyEntry</code></td><td><code>schema:ScholarlyArticle</code></td><td>Monographs, dissertations, academic studies</td></tr>
+    <tr><td><code>klawiter:TranslationEntry</code></td><td><code>schema:Book</code></td><td>Translations by Zweig of other authors' works</td></tr>
+    <tr><td><code>klawiter:ForewordEntry</code></td><td><code>schema:CreativeWork</code></td><td>Forewords, afterwords, editorial contributions</td></tr>
+    <tr><td><code>klawiter:SymposiumEntry</code></td><td><code>schema:Event</code></td><td>Symposia, exhibitions, conferences about Zweig</td></tr>
+    <tr><td><code>klawiter:DramaticReadingEntry</code></td><td><code>schema:CreativeWork</code></td><td>Dramatic readings and staged performances</td></tr>
+    <tr><td><code>klawiter:NewspaperEntry</code></td><td><code>schema:NewsArticle</code></td><td>Newspaper articles</td></tr>
+    <tr><td><code>klawiter:RedirectEntry</code></td><td>&mdash;</td><td>Alias pointing to another entry (from MediaWiki)</td></tr>
+    <tr><td><code>klawiter:OtherEntry</code></td><td><code>schema:CreativeWork</code></td><td>Unclassifiable entries</td></tr>
+  </tbody>
+</table>
+
+<h2>Domain-Specific Properties</h2>
+<p>Properties defined in the <code>klawiter:</code> namespace (no Schema.org or Dublin Core equivalent):</p>
+
+<table>
+  <thead>
+    <tr><th>Property</th><th>Range</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>klawiter:entryType</code></td>
+      <td><code>xsd:string</code></td>
+      <td>Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:timePeriod</code></td>
+      <td><code>xsd:string</code></td>
+      <td>Historical period: pre-zweig (&lt;1881), lifetime (1881&ndash;1942), post-wwii (1943&ndash;1980), late-20c (1981&ndash;2000), contemporary (2001+)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:categories</code></td>
+      <td><code>@set</code> of <code>xsd:string</code></td>
+      <td>MediaWiki categories from the original bibliography wiki</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:mainCategory</code></td>
+      <td><code>xsd:string</code></td>
+      <td>Primary category used for entry type classification</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:originalTitle</code></td>
+      <td><code>xsd:string</code></td>
+      <td>Original-language title (when entry title differs, e.g. for translations)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:languageCode</code></td>
+      <td><code>xsd:string</code></td>
+      <td>ISO 639-1 language code (de, en, fr, zh, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:allYears</code></td>
+      <td><code>xsd:integer[]</code></td>
+      <td>All years mentioned in the entry (when multiple editions/reprints are listed)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:allLocations</code></td>
+      <td><code>xsd:string[]</code></td>
+      <td>All publication locations when multiple are mentioned</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:reprints</code></td>
+      <td><code>@set</code> of <code>xsd:string</code></td>
+      <td>References to reprint editions</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:contentItems</code></td>
+      <td><code>@list</code> of <code>xsd:string</code></td>
+      <td>Table of contents for collected works (ordered)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:sourcePageId</code></td>
+      <td><code>xsd:integer</code></td>
+      <td>Original MediaWiki page ID (provenance)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:sourceTextId</code></td>
+      <td><code>xsd:integer</code></td>
+      <td>MediaWiki text revision ID (provenance)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:sourceBlobId</code></td>
+      <td><code>xsd:integer</code></td>
+      <td>BLOB file number (0&ndash;7) containing the source text</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:pageNamespace</code></td>
+      <td><code>xsd:integer</code></td>
+      <td>MediaWiki namespace (0=main, 14=category, etc.)</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:isRedirect</code></td>
+      <td><code>xsd:boolean</code></td>
+      <td>True if entry is a redirect alias</td>
+    </tr>
+    <tr>
+      <td><code>klawiter:redirectTarget</code></td>
+      <td><code>xsd:string</code></td>
+      <td>Title of the target entry for redirects</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Schema.org Properties Used</h2>
+<p>Standard properties mapped via <code>@context</code>:</p>
+
+<table>
+  <thead>
+    <tr><th>Short Key</th><th>Maps To</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>name</code></td><td><code>schema:name</code></td><td>Entry title</td></tr>
+    <tr><td><code>author</code></td><td><code>schema:author</code></td><td>Author (Stefan Zweig for primary works, with Wikidata sameAs)</td></tr>
+    <tr><td><code>datePublished</code></td><td><code>schema:datePublished</code></td><td>Publication year</td></tr>
+    <tr><td><code>publisher</code></td><td><code>schema:publisher</code></td><td>Publisher name</td></tr>
+    <tr><td><code>locationCreated</code></td><td><code>schema:locationCreated</code></td><td>Place of publication</td></tr>
+    <tr><td><code>inLanguage</code></td><td><code>schema:inLanguage</code></td><td>Language of the work</td></tr>
+    <tr><td><code>numberOfPages</code></td><td><code>schema:numberOfPages</code></td><td>Page count</td></tr>
+    <tr><td><code>translator</code></td><td><code>schema:translator</code></td><td>Translator name</td></tr>
+    <tr><td><code>isRelatedTo</code></td><td><code>schema:isRelatedTo</code></td><td>Cross-references ("see also")</td></tr>
+    <tr><td><code>workTranslation</code></td><td><code>schema:workTranslation</code></td><td>Translation references</td></tr>
+    <tr><td><code>hasPart</code></td><td><code>schema:hasPart</code></td><td>Table of contents / constituent works</td></tr>
+    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td><td>Authority URIs (Wikidata, GND, VIAF)</td></tr>
+  </tbody>
+</table>
+
+<h2>Dublin Core Properties Used</h2>
+<table>
+  <thead>
+    <tr><th>Short Key</th><th>Maps To</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>bibliographicCitation</code></td><td><code>dcterms:bibliographicCitation</code></td><td>Full original bibliographic entry text (cleaned wiki markup)</td></tr>
+  </tbody>
+</table>
+
+<h2>Alignment Notes</h2>
+
+<h3>Stefan Zweig Digital</h3>
+<p>
+  The <a href="https://www.stefanzweig.digital/">Stefan Zweig Digital</a> project at the University of Graz
+  uses CIDOC-CRM for cultural heritage modeling. A future alignment between this vocabulary and
+  CIDOC-CRM / LRMoo is planned as a separate research project to enable cross-project linked data queries.
+</p>
+
+<h3>Wikidata</h3>
+<p>
+  Stefan Zweig is identified as <a href="https://www.wikidata.org/entity/Q78491">Q78491</a> in Wikidata.
+  Reconciliation of works, persons (translators), places, and publishers against Wikidata is planned.
+  Authority URIs will be added as <code>schema:sameAs</code> values.
+</p>
+
+<footer>
+  <p>
+    Part of the <a href="https://klawiter-rescue.github.io/">Klawiter Bibliography Rescue Project</a>.
+    Based on the bibliography compiled by Dr. Randolph J. Klawiter at the University of Notre Dame.
+  </p>
+</footer>
+
+</body>
+</html>

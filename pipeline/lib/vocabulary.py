@@ -1,23 +1,73 @@
 """
 Klawiter Bibliography JSON-LD vocabulary definition.
-Domain-specific vocabulary — can be mapped to Schema.org/DC/BibFrame later.
+Blends Schema.org (standard bibliographic fields), Dublin Core (citation/provenance),
+and klawiter: (domain-specific extensions for Stefan Zweig bibliography types).
 """
 
 CONTEXT = {
     "@context": {
+        # --- Namespace prefixes ---
+        "schema": "https://schema.org/",
+        "dcterms": "http://purl.org/dc/terms/",
         "klawiter": "https://klawiter-rescue.github.io/vocab/",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "klawiter:year": {"@type": "xsd:integer"},
-        "klawiter:pageCount": {"@type": "xsd:integer"},
-        "klawiter:sourcePageId": {"@type": "xsd:integer"},
-        "klawiter:sourceTextId": {"@type": "xsd:integer"},
-        "klawiter:sourceBlobId": {"@type": "xsd:integer"},
-        "klawiter:translationOf": {"@type": "@id"},
-        "klawiter:reprintOf": {"@type": "@id"},
-        "klawiter:seeAlso": {"@type": "@id", "@container": "@set"},
-        "klawiter:categories": {"@container": "@set"},
-        "klawiter:contentItems": {"@container": "@list"},
+
+        # --- Schema.org mappings ---
+        "name": "schema:name",
+        "datePublished": "schema:datePublished",
+        "publisher": "schema:publisher",
+        "inLanguage": "schema:inLanguage",
+        "numberOfPages": {"@id": "schema:numberOfPages", "@type": "xsd:integer"},
+        "translator": "schema:translator",
+        "locationCreated": "schema:locationCreated",
+        "sameAs": {"@id": "schema:sameAs", "@type": "@id"},
+        "isRelatedTo": {"@id": "schema:isRelatedTo", "@container": "@set"},
+        "workTranslation": {"@id": "schema:workTranslation", "@container": "@set"},
+        "hasPart": {"@id": "schema:hasPart", "@container": "@list"},
+        "author": {"@id": "schema:author", "@type": "@id"},
+
+        # --- Dublin Core mappings ---
+        "bibliographicCitation": "dcterms:bibliographicCitation",
+
+        # --- Domain-specific (klawiter:) ---
+        "entryType": "klawiter:entryType",
+        "timePeriod": "klawiter:timePeriod",
+        "categories": {"@id": "klawiter:categories", "@container": "@set"},
+        "contentItems": {"@id": "klawiter:contentItems", "@container": "@list"},
+        "mainCategory": "klawiter:mainCategory",
+        "originalTitle": "klawiter:originalTitle",
+        "languageCode": "klawiter:languageCode",
+        "allYears": "klawiter:allYears",
+        "allLocations": "klawiter:allLocations",
+        "reprints": {"@id": "klawiter:reprints", "@container": "@set"},
+        "sourcePageId": {"@id": "klawiter:sourcePageId", "@type": "xsd:integer"},
+        "sourceTextId": {"@id": "klawiter:sourceTextId", "@type": "xsd:integer"},
+        "sourceBlobId": {"@id": "klawiter:sourceBlobId", "@type": "xsd:integer"},
+        "pageNamespace": "klawiter:pageNamespace",
+        "isRedirect": "klawiter:isRedirect",
+        "redirectTarget": "klawiter:redirectTarget",
     }
+}
+
+# Schema.org @type mapping for entry types
+# Each entry gets an array: [Schema.org type, klawiter: domain type]
+SCHEMA_TYPE_MAP = {
+    "fiction": ["schema:Book", "klawiter:FictionEntry"],
+    "essay": ["schema:Article", "klawiter:EssayEntry"],
+    "poetry": ["schema:CreativeWork", "klawiter:PoetryEntry"],
+    "drama": ["schema:Play", "klawiter:DramaEntry"],
+    "film": ["schema:Movie", "klawiter:FilmEntry"],
+    "correspondence": ["schema:Message", "klawiter:CorrespondenceEntry"],
+    "collected-works": ["schema:Collection", "klawiter:CollectedWorksEntry"],
+    "secondary-literature": ["schema:ScholarlyArticle", "klawiter:SecondaryLiteratureEntry"],
+    "historical-study": ["schema:ScholarlyArticle", "klawiter:HistoricalStudyEntry"],
+    "translation": ["schema:Book", "klawiter:TranslationEntry"],
+    "foreword": ["schema:CreativeWork", "klawiter:ForewordEntry"],
+    "symposium": ["schema:Event", "klawiter:SymposiumEntry"],
+    "dramatic-reading": ["schema:CreativeWork", "klawiter:DramaticReadingEntry"],
+    "newspaper": ["schema:NewsArticle", "klawiter:NewspaperEntry"],
+    "redirect": ["klawiter:RedirectEntry"],
+    "other": ["schema:CreativeWork", "klawiter:OtherEntry"],
 }
 
 # Entry types derived from actual data

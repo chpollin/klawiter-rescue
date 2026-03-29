@@ -3,6 +3,10 @@
 Step 5: Convert classified entries to JSON-LD.
 Produces individual entry files, a complete dataset file, and frontend JSON.
 
+Uses Schema.org + Dublin Core + klawiter: vocabulary blend.
+Schema.org for standard bibliographic fields, DC for citation/provenance,
+klawiter: for domain-specific extensions (entry types, time periods, categories).
+
 Input:  data/intermediate/04_classified.csv
 Output: data/output/klawiter.jsonld (complete dataset)
         data/output/entries/*.jsonld (individual entries)
@@ -18,9 +22,16 @@ from lib.config import (
     setup_logging, load_csv, csv_bool, STEP_04_OUTPUT,
     OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON,
 )
-from lib.vocabulary import CONTEXT, ENTRY_TYPES
+from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP
 
 log = setup_logging(__name__)
+
+# Stefan Zweig as linked data author reference
+STEFAN_ZWEIG = {
+    "@type": "schema:Person",
+    "name": "Stefan Zweig",
+    "sameAs": "https://www.wikidata.org/entity/Q78491",
+}
 
 
 def safe_json_parse(value):
@@ -35,147 +46,183 @@ def safe_json_parse(value):
 
 
 def row_to_jsonld(row):
-    """Convert a CSV row to a JSON-LD entry."""
+    """Convert a CSV row to a JSON-LD entry using Schema.org + DC + klawiter: blend."""
     page_id = row['page_id']
     entry_type = row.get('entry_type', 'other')
     namespace = int(row.get('page_namespace', 0))
 
+    # @type: array of Schema.org + klawiter: types
+    type_array = SCHEMA_TYPE_MAP.get(entry_type, ["schema:CreativeWork"])
+
     entry = {
-        "@type": f"klawiter:{entry_type.title().replace('-', '')}Entry",
+        "@type": type_array,
         "@id": f"klawiter:entry/{page_id}",
-        "klawiter:entryType": entry_type,
-        "klawiter:sourcePageId": int(page_id),
-        "klawiter:pageNamespace": namespace,
+        "entryType": entry_type,
+        "sourcePageId": int(page_id),
+        "pageNamespace": namespace,
     }
 
-    # Title
+    # Title → schema:name
     title = row.get('title', '')
     if title:
-        entry["klawiter:title"] = title
+        entry["name"] = title
 
     original_title = row.get('original_title', '')
     if original_title:
-        entry["klawiter:originalTitle"] = original_title
+        entry["originalTitle"] = original_title
 
     # Text ID provenance
     text_id = row.get('text_id', '')
     if text_id:
         try:
-            entry["klawiter:sourceTextId"] = int(text_id)
+            entry["sourceTextId"] = int(text_id)
         except (ValueError, TypeError):
             pass
 
     # Redirect
     if csv_bool(row.get('is_redirect')):
-        entry["klawiter:isRedirect"] = True
+        entry["isRedirect"] = True
         redirect_target = row.get('redirect_target', '')
         if redirect_target:
-            entry["klawiter:redirectTarget"] = redirect_target
+            entry["redirectTarget"] = redirect_target
         return entry
 
-    # Year
+    # Author (Stefan Zweig for primary works, omit for secondary literature)
+    if entry_type not in ('secondary-literature', 'historical-study', 'symposium',
+                          'redirect', 'other'):
+        entry["author"] = STEFAN_ZWEIG
+
+    # Year → schema:datePublished
     year = row.get('year', '')
     if year:
         try:
-            entry["klawiter:year"] = int(year)
+            entry["datePublished"] = str(int(year))
         except (ValueError, TypeError):
             pass
 
     all_years = safe_json_parse(row.get('all_years', ''))
     if all_years and len(all_years) > 1:
-        entry["klawiter:allYears"] = all_years
+        entry["allYears"] = all_years
 
-    # Time period
+    # Time period (domain-specific)
     time_period = row.get('time_period', '')
     if time_period:
-        entry["klawiter:timePeriod"] = time_period
+        entry["timePeriod"] = time_period
 
-    # Publisher
+    # Publisher → schema:publisher
     publisher = row.get('publisher', '')
     if publisher:
-        entry["klawiter:publisher"] = publisher
+        entry["publisher"] = publisher
 
-    # Location
+    # Location → schema:locationCreated
     location = row.get('location', '')
     if location:
-        entry["klawiter:location"] = location
+        entry["locationCreated"] = location
 
     all_locations = safe_json_parse(row.get('all_locations', ''))
     if all_locations and len(all_locations) > 1:
-        entry["klawiter:allLocations"] = all_locations
+        entry["allLocations"] = all_locations
 
-    # Language
+    # Language → schema:inLanguage + klawiter:languageCode
     language = row.get('language', '')
     language_iso = row.get('language_iso', '')
     if language:
-        entry["klawiter:language"] = language
+        entry["inLanguage"] = language
     if language_iso:
-        entry["klawiter:languageCode"] = language_iso
+        entry["languageCode"] = language_iso
 
-    # Page count
+    # Page count → schema:numberOfPages
     page_count = row.get('page_count', '')
     if page_count:
         try:
-            entry["klawiter:pageCount"] = int(page_count)
+            entry["numberOfPages"] = int(page_count)
         except (ValueError, TypeError):
             pass
 
-    # Translator
+    # Translator → schema:translator
     translator = row.get('translator', '')
     if translator:
-        entry["klawiter:translator"] = translator
+        entry["translator"] = translator
 
-    # Categories
+    # Categories (domain-specific)
     categories = safe_json_parse(row.get('categories', ''))
     if categories:
-        entry["klawiter:categories"] = categories
+        entry["categories"] = categories
 
     main_category = row.get('main_category', '')
     if main_category:
-        entry["klawiter:mainCategory"] = main_category
+        entry["mainCategory"] = main_category
 
     # Cross-references
     see_also = safe_json_parse(row.get('see_also', ''))
     if see_also:
-        entry["klawiter:seeAlso"] = see_also
+        entry["isRelatedTo"] = see_also
 
     reprints = safe_json_parse(row.get('reprints', ''))
     if reprints:
-        entry["klawiter:reprints"] = reprints
+        entry["reprints"] = reprints
 
     translations = safe_json_parse(row.get('translations', ''))
     if translations:
-        entry["klawiter:translations"] = translations
+        entry["workTranslation"] = translations
 
     content_items = safe_json_parse(row.get('content_items', ''))
     if content_items:
-        entry["klawiter:contentItems"] = content_items
+        entry["hasPart"] = content_items
 
-    # Full bibliographic entry (cleaned)
+    # Full bibliographic entry → dcterms:bibliographicCitation
     clean_content = row.get('clean_content', '')
     if clean_content:
-        entry["klawiter:fullBibliographicEntry"] = clean_content
+        entry["bibliographicCitation"] = clean_content
 
     # Blob ID provenance
     blob_id = row.get('blob_id', '')
     if blob_id and blob_id != '-1':
         try:
-            entry["klawiter:sourceBlobId"] = int(blob_id)
+            entry["sourceBlobId"] = int(blob_id)
         except (ValueError, TypeError):
             pass
 
     return entry
 
 
+# Mapping from JSON-LD keys to frontend short keys (where they differ)
+_FRONTEND_KEY_MAP = {
+    "name": "title",
+    "datePublished": "year",
+    "locationCreated": "location",
+    "inLanguage": "language",
+    "numberOfPages": "pageCount",
+    "bibliographicCitation": "fullBibliographicEntry",
+    "isRelatedTo": "seeAlso",
+    "workTranslation": "translations",
+    "hasPart": "contentItems",
+}
+
+
 def make_frontend_entry(jsonld_entry):
-    """Create a simplified entry for the frontend JSON (no @context, shorter keys)."""
+    """Create a simplified entry for the frontend JSON.
+
+    Maps semantic property names back to short keys the frontend expects.
+    Converts datePublished (string) back to integer year for the frontend.
+    """
     e = {}
     for key, val in jsonld_entry.items():
         if key.startswith('@'):
             e[key] = val
-        elif key.startswith('klawiter:'):
-            short_key = key.split(':')[1]
-            e[short_key] = val
+            continue
+        # Map to frontend key name, or keep as-is
+        frontend_key = _FRONTEND_KEY_MAP.get(key, key)
+        # Convert year string back to int for frontend
+        if key == "datePublished":
+            try:
+                val = int(val)
+            except (ValueError, TypeError):
+                pass
+        # Skip author object (frontend doesn't use it)
+        if key == "author":
+            continue
+        e[frontend_key] = val
     return e
 
 
@@ -192,11 +239,12 @@ def main():
     os.makedirs(os.path.dirname(OUTPUT_JSONLD), exist_ok=True)
     dataset = {
         **CONTEXT,
-        "@type": "klawiter:Bibliography",
+        "@type": "schema:Dataset",
         "@id": "klawiter:klawiter-bibliography",
-        "klawiter:name": "Stefan Zweig Bibliography (Klawiter)",
-        "klawiter:compiler": "Dr. Randolph J. Klawiter",
-        "klawiter:institution": "University of Notre Dame",
+        "name": "Stefan Zweig Bibliography (Klawiter)",
+        "schema:description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
+        "schema:creator": "Dr. Randolph J. Klawiter",
+        "schema:sourceOrganization": "University of Notre Dame",
         "klawiter:totalEntries": len(entries),
         "klawiter:entries": entries,
     }
@@ -218,7 +266,6 @@ def main():
     log.info(f"Individual entries written to {OUTPUT_ENTRIES_DIR}/ ({len(entries)} files)")
 
     # Write frontend-optimized JSON
-    # Non-redirects and non-system pages go into entries, redirects into map
     os.makedirs(os.path.dirname(OUTPUT_FRONTEND_JSON), exist_ok=True)
 
     non_redirect_entries = []
@@ -226,18 +273,18 @@ def main():
     title_to_pid = {}
 
     for e in entries:
-        if not e.get('klawiter:isRedirect'):
+        if not e.get('isRedirect'):
             fe = make_frontend_entry(e)
             non_redirect_entries.append(fe)
-            title = e.get('klawiter:title', '')
-            pid = e.get('klawiter:sourcePageId')
+            title = e.get('name', '')
+            pid = e.get('sourcePageId')
             if title and pid:
                 title_to_pid[title] = pid
 
     for e in entries:
-        if e.get('klawiter:isRedirect'):
-            target_title = e.get('klawiter:title', '')
-            source_title = e.get('klawiter:redirectTarget', '') or target_title
+        if e.get('isRedirect'):
+            target_title = e.get('name', '')
+            source_title = e.get('redirectTarget', '') or target_title
             target_pid = title_to_pid.get(target_title)
             if target_pid:
                 redirect_map[target_title] = target_pid
@@ -265,9 +312,9 @@ def main():
     types = {}
     redirects = 0
     for e in entries:
-        t = e.get('klawiter:entryType', 'unknown')
+        t = e.get('entryType', 'unknown')
         types[t] = types.get(t, 0) + 1
-        if e.get('klawiter:isRedirect'):
+        if e.get('isRedirect'):
             redirects += 1
 
     log.info(f"JSON-LD conversion complete: {len(entries)} entries, {redirects} redirects")

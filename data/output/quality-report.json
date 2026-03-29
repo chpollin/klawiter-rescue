@@ -20,63 +20,63 @@
     "14": 420
   },
   "field_coverage": {
-    "klawiter:title": {
+    "name": {
       "count": 4750,
       "percentage": 100.0
     },
-    "klawiter:year": {
+    "datePublished": {
       "count": 4429,
       "percentage": 93.2
     },
-    "klawiter:publisher": {
+    "publisher": {
       "count": 2642,
       "percentage": 55.6
     },
-    "klawiter:location": {
+    "locationCreated": {
       "count": 4158,
       "percentage": 87.5
     },
-    "klawiter:language": {
+    "inLanguage": {
       "count": 4248,
       "percentage": 89.4
     },
-    "klawiter:languageCode": {
+    "languageCode": {
       "count": 4248,
       "percentage": 89.4
     },
-    "klawiter:pageCount": {
+    "numberOfPages": {
       "count": 3877,
       "percentage": 81.6
     },
-    "klawiter:translator": {
+    "translator": {
       "count": 1990,
       "percentage": 41.9
     },
-    "klawiter:categories": {
+    "categories": {
       "count": 4740,
       "percentage": 99.8
     },
-    "klawiter:mainCategory": {
+    "mainCategory": {
       "count": 4740,
       "percentage": 99.8
     },
-    "klawiter:fullBibliographicEntry": {
+    "bibliographicCitation": {
       "count": 4719,
       "percentage": 99.3
     },
-    "klawiter:seeAlso": {
+    "isRelatedTo": {
       "count": 683,
       "percentage": 14.4
     },
-    "klawiter:reprints": {
+    "reprints": {
       "count": 418,
       "percentage": 8.8
     },
-    "klawiter:translations": {
+    "workTranslation": {
       "count": 177,
       "percentage": 3.7
     },
-    "klawiter:contentItems": {
+    "hasPart": {
       "count": 934,
       "percentage": 19.7
     }
@@ -150,301 +150,301 @@
   },
   "sample_issues": [
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/88"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/93"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/95"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/97"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/102"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/104"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/106"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/114"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/117"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/142"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/233"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/234"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/235"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/236"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/237"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/238"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/239"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/240"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/296"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/300"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/335"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/339"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/342"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/348"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/352"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/359"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/372"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/377"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/379"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/380"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/383"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/385"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/387"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/389"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/391"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/421"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/425"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/445"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/452"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/466"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/470"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/484"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/487"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/507"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/526"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/532"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/542"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/545"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/549"
     },
     {
-      "field": "fullBibliographicEntry",
+      "field": "bibliographicCitation",
       "issue": "missing",
       "severity": "info",
       "entry_id": "klawiter:entry/550"

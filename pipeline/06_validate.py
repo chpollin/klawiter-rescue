@@ -22,25 +22,29 @@ def validate_entry(entry):
     """Validate a single entry and return list of issues."""
     issues = []
 
-    if not entry.get('klawiter:title') and not entry.get('klawiter:isRedirect'):
-        issues.append({'field': 'title', 'issue': 'missing', 'severity': 'warning'})
+    if not entry.get('name') and not entry.get('isRedirect'):
+        issues.append({'field': 'name', 'issue': 'missing', 'severity': 'warning'})
 
-    if not entry.get('klawiter:entryType'):
+    if not entry.get('entryType'):
         issues.append({'field': 'entryType', 'issue': 'missing', 'severity': 'error'})
 
-    if entry.get('klawiter:isRedirect'):
+    if entry.get('isRedirect'):
         return issues
 
     # Year validation
-    year = entry.get('klawiter:year')
+    year = entry.get('datePublished')
     if year:
-        if not isinstance(year, int) or year < 1800 or year > 2035:
-            issues.append({'field': 'year', 'issue': f'invalid value: {year}', 'severity': 'warning'})
+        try:
+            y = int(year)
+            if y < 1800 or y > 2035:
+                issues.append({'field': 'datePublished', 'issue': f'invalid value: {year}', 'severity': 'warning'})
+        except (ValueError, TypeError):
+            issues.append({'field': 'datePublished', 'issue': f'non-integer: {year}', 'severity': 'warning'})
 
-    if not entry.get('klawiter:fullBibliographicEntry'):
-        issues.append({'field': 'fullBibliographicEntry', 'issue': 'missing', 'severity': 'info'})
+    if not entry.get('bibliographicCitation'):
+        issues.append({'field': 'bibliographicCitation', 'issue': 'missing', 'severity': 'info'})
 
-    for field in ('klawiter:title', 'klawiter:fullBibliographicEntry'):
+    for field in ('name', 'bibliographicCitation'):
         val = entry.get(field, '')
         if isinstance(val, str) and has_mojibake(val):
             issues.append({'field': field, 'issue': 'residual Mojibake detected', 'severity': 'warning'})
@@ -72,43 +76,60 @@ def main():
 
     # Field coverage (non-redirects in main namespace only)
     non_redirects = [e for e in entries
-                     if not e.get('klawiter:isRedirect')
-                     and e.get('klawiter:pageNamespace', 0) == 0]
+                     if not e.get('isRedirect')
+                     and e.get('pageNamespace', 0) == 0]
     non_redirect_count = len(non_redirects)
 
     # Also count all non-redirects (including category pages etc.)
-    all_non_redirects = [e for e in entries if not e.get('klawiter:isRedirect')]
+    all_non_redirects = [e for e in entries if not e.get('isRedirect')]
 
+    # Coverage fields: map display name to JSON-LD key
     coverage_fields = [
-        'klawiter:title', 'klawiter:year', 'klawiter:publisher',
-        'klawiter:location', 'klawiter:language', 'klawiter:languageCode',
-        'klawiter:pageCount', 'klawiter:translator', 'klawiter:categories',
-        'klawiter:mainCategory', 'klawiter:fullBibliographicEntry',
-        'klawiter:seeAlso', 'klawiter:reprints', 'klawiter:translations',
-        'klawiter:contentItems',
+        ('name', 'name'),
+        ('datePublished', 'datePublished'),
+        ('publisher', 'publisher'),
+        ('locationCreated', 'locationCreated'),
+        ('inLanguage', 'inLanguage'),
+        ('languageCode', 'languageCode'),
+        ('numberOfPages', 'numberOfPages'),
+        ('translator', 'translator'),
+        ('categories', 'categories'),
+        ('mainCategory', 'mainCategory'),
+        ('bibliographicCitation', 'bibliographicCitation'),
+        ('isRelatedTo', 'isRelatedTo'),
+        ('reprints', 'reprints'),
+        ('workTranslation', 'workTranslation'),
+        ('hasPart', 'hasPart'),
     ]
 
     field_coverage = {}
-    for field in coverage_fields:
-        present = sum(1 for e in non_redirects if e.get(field))
-        field_coverage[field] = {
+    for display_name, json_key in coverage_fields:
+        present = sum(1 for e in non_redirects if e.get(json_key))
+        field_coverage[display_name] = {
             'count': present,
             'percentage': round(100 * present / non_redirect_count, 1) if non_redirect_count else 0,
         }
 
     # Distributions
-    type_dist = Counter(e.get('klawiter:entryType', 'unknown') for e in entries)
-    lang_dist = Counter(e.get('klawiter:language', '') for e in all_non_redirects if e.get('klawiter:language'))
-    period_dist = Counter(e.get('klawiter:timePeriod', '') for e in all_non_redirects if e.get('klawiter:timePeriod'))
-    ns_dist = Counter(e.get('klawiter:pageNamespace', 0) for e in entries)
+    type_dist = Counter(e.get('entryType', 'unknown') for e in entries)
+    lang_dist = Counter(e.get('inLanguage', '') for e in all_non_redirects if e.get('inLanguage'))
+    period_dist = Counter(e.get('timePeriod', '') for e in all_non_redirects if e.get('timePeriod'))
+    ns_dist = Counter(e.get('pageNamespace', 0) for e in entries)
 
-    years = [e.get('klawiter:year') for e in all_non_redirects if e.get('klawiter:year')]
+    years = []
+    for e in all_non_redirects:
+        dp = e.get('datePublished')
+        if dp:
+            try:
+                years.append(int(dp))
+            except (ValueError, TypeError):
+                pass
     year_range = {'min': min(years), 'max': max(years), 'count': len(years)} if years else {}
 
     report = {
         'summary': {
             'total_entries': len(entries),
-            'redirects': sum(1 for e in entries if e.get('klawiter:isRedirect')),
+            'redirects': sum(1 for e in entries if e.get('isRedirect')),
             'non_redirects_main': non_redirect_count,
             'non_redirects_all': len(all_non_redirects),
             'entries_with_issues': entries_with_issues,
@@ -138,9 +159,9 @@ def main():
     log.info(f"  Entries with issues: {entries_with_issues}")
     log.info(f"  Issues by severity: {dict(severity_counts)}")
     log.info(f"Field coverage (non-redirects, main namespace):")
-    for field, info in field_coverage.items():
-        short = field.split(':')[1]
-        log.info(f"  {short}: {info['percentage']}% ({info['count']}/{non_redirect_count})")
+    for display_name, _ in coverage_fields:
+        info = field_coverage[display_name]
+        log.info(f"  {display_name}: {info['percentage']}% ({info['count']}/{non_redirect_count})")
 
 
 if __name__ == '__main__':

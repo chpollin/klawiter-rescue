@@ -162,8 +162,8 @@ def verify_entry(entry, raw_content):
     Returns dict with per-field verification results.
     """
     result = {
-        'page_id': entry.get('klawiter:sourcePageId'),
-        'title': entry.get('klawiter:title', ''),
+        'page_id': entry.get('sourcePageId'),
+        'title': entry.get('name', ''),
         'fields': {},
     }
 
@@ -175,7 +175,7 @@ def verify_entry(entry, raw_content):
     raw_clean = remove_wiki_markup(raw_content)
 
     # --- Title verification ---
-    title = entry.get('klawiter:title', '')
+    title = entry.get('name', '')
     if title:
         # Compare against both raw and cleaned versions
         found = value_in_content(title, raw_content) or value_in_content(title, raw_clean)
@@ -186,7 +186,8 @@ def verify_entry(entry, raw_content):
         }
 
     # --- Year verification ---
-    year = entry.get('klawiter:year')
+    date_published = entry.get('datePublished')
+    year = int(date_published) if date_published else None
     if year is not None:
         year_str = str(year)
         found = year_str in raw_content
@@ -198,7 +199,7 @@ def verify_entry(entry, raw_content):
 
     # Check for years in raw content not captured
     raw_years = extract_all_years(raw_content)
-    extracted_years = entry.get('klawiter:allYears', [])
+    extracted_years = entry.get('allYears', [])
     if not extracted_years and year is not None:
         extracted_years = [year]
     missed_years = [y for y in raw_years if y not in extracted_years]
@@ -206,7 +207,7 @@ def verify_entry(entry, raw_content):
         result['fields']['year_false_negatives'] = missed_years
 
     # --- Publisher verification ---
-    publisher = entry.get('klawiter:publisher', '')
+    publisher = entry.get('publisher', '')
     if publisher:
         found = value_in_content(publisher, raw_content)
         result['fields']['publisher'] = {
@@ -217,7 +218,6 @@ def verify_entry(entry, raw_content):
 
     # Check for publisher patterns in raw content not captured
     if not publisher:
-        # Try existing patterns first, then broader indicators
         raw_publisher = extract_publisher(raw_content) or has_publisher_indicator(raw_clean)
         if raw_publisher:
             result['fields']['publisher_false_negative'] = {
@@ -226,7 +226,7 @@ def verify_entry(entry, raw_content):
             }
 
     # --- Location verification ---
-    location = entry.get('klawiter:location', '')
+    location = entry.get('locationCreated', '')
     if location:
         found = value_in_content(location, raw_content)
         result['fields']['location'] = {
@@ -245,7 +245,7 @@ def verify_entry(entry, raw_content):
             }
 
     # --- Translator verification ---
-    translator = entry.get('klawiter:translator', '')
+    translator = entry.get('translator', '')
     if translator:
         found = value_in_content(translator, raw_content)
         result['fields']['translator'] = {
@@ -264,7 +264,7 @@ def verify_entry(entry, raw_content):
             }
 
     # --- Page count verification ---
-    page_count = entry.get('klawiter:pageCount')
+    page_count = entry.get('numberOfPages')
     if page_count is not None:
         found = page_count_in_content(page_count, raw_content)
         result['fields']['page_count'] = {
@@ -333,8 +333,8 @@ def main():
     # Filter to namespace 0 non-redirect entries for verification
     bib_entries = [
         e for e in entries
-        if e.get('klawiter:pageNamespace', 0) == 0
-        and not e.get('klawiter:isRedirect')
+        if e.get('pageNamespace', 0) == 0
+        and not e.get('isRedirect')
     ]
     log.info(f"  Bibliography entries (ns0, non-redirect): {len(bib_entries)}")
 
@@ -342,7 +342,7 @@ def main():
     results = []
     no_raw = 0
     for entry in bib_entries:
-        text_id = entry.get('klawiter:sourceTextId')
+        text_id = entry.get('sourceTextId')
         raw_content = content_map.get(text_id, '') if text_id else ''
         if not raw_content:
             no_raw += 1
