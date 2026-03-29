@@ -2,21 +2,7 @@
  * Startseite — Category portal with tiles grouped by Werke / Rezeption / Editionen.
  */
 const Home = {
-  // Semantic grouping of entry types
-  groups: [
-    {
-      heading: 'Works',
-      types: ['fiction', 'essay', 'poetry', 'drama', 'correspondence', 'historical-study', 'foreword'],
-    },
-    {
-      heading: 'Reception & Impact',
-      types: ['secondary-literature', 'film', 'symposium', 'dramatic-reading', 'newspaper'],
-    },
-    {
-      heading: 'Editions',
-      types: ['collected-works', 'translation'],
-    },
-  ],
+  // Uses CATEGORY_GROUPS from constants.js
 
   render(entries) {
     const container = document.getElementById('view-home');
@@ -35,7 +21,7 @@ const Home = {
     const maxYear = years.length ? Math.max(...years) : '?';
 
     // Build groups HTML
-    const groupsHtml = this.groups.map(group => {
+    const groupsHtml = CATEGORY_GROUPS.map(group => {
       const tiles = group.types
         .filter(t => counts[t])
         .map(t => `
@@ -55,7 +41,7 @@ const Home = {
     }).join('');
 
     // "Other" types not in any group
-    const groupedTypes = new Set(this.groups.flatMap(g => g.types));
+    const groupedTypes = new Set(CATEGORY_GROUPS.flatMap(g => g.types));
     const otherTypes = Object.keys(counts).filter(t => !groupedTypes.has(t) && counts[t] > 0);
     let otherHtml = '';
     if (otherTypes.length) {
@@ -85,7 +71,7 @@ const Home = {
         </p>
         <div class="home-search">
           <input type="search" id="home-search-input"
-                 placeholder="Search ${entries.length.toLocaleString('en')} entries…">
+                 placeholder="Search ${entries.length.toLocaleString('en')} entries… (press Enter)">
           <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>

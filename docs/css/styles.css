@@ -105,7 +105,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-serif);
   font-size: 1rem;
   font-weight: 400;
-  color: #FAF8F3;
+  color: var(--sz-cream);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   white-space: nowrap;
@@ -131,7 +131,7 @@ h1, h2, h3, h4 {
 }
 .site-nav a:hover,
 .site-nav a.active {
-  color: #FAF8F3;
+  color: var(--sz-cream);
   border-bottom-color: var(--sz-gold);
   text-decoration: none;
 }
@@ -151,7 +151,7 @@ h1, h2, h3, h4 {
   border: 1px solid rgba(250, 248, 243, 0.3);
   border-radius: 4px;
   background: rgba(250, 248, 243, 0.1);
-  color: #FAF8F3;
+  color: var(--sz-cream);
   outline: none;
   transition: border-color 0.15s, background 0.15s;
 }
@@ -459,7 +459,12 @@ h1, h2, h3, h4 {
 .card-detail {
   padding: 0 1.25rem 1.25rem;
   border-top: 1px solid var(--sz-border-light);
-  margin-top: 0;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .card-meta {
@@ -495,7 +500,7 @@ h1, h2, h3, h4 {
 .card-snippet {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
-  color: #999;
+  color: var(--sz-text-light);
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -807,6 +812,12 @@ h1, h2, h3, h4 {
 }
 .footer-text a {
   color: var(--sz-burgundy);
+}
+
+/* Stats export */
+.stats-export {
+  margin-top: 1.5rem;
+  text-align: center;
 }
 
 /* --- Utility --- */

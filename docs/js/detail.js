@@ -132,37 +132,23 @@ const Detail = {
     }
 
     // --- Action bar ---
+    const pid = entry.sourcePageId;
     html += `
       <div class="action-bar">
-        <button class="action-btn" onclick="Detail.exportBibtex(${entry.sourcePageId})" title="Export BibTeX">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-          </svg>
+        <button class="action-btn" onclick="Export.bibtex(${pid})" title="Export BibTeX">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Cite (BibTeX)
         </button>
-        <button class="action-btn" onclick="Detail.exportRis(${entry.sourcePageId})" title="Export RIS">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
+        <button class="action-btn" onclick="Export.ris(${pid})" title="Export RIS">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Cite (RIS)
         </button>
-        <button class="action-btn" onclick="Detail.exportJsonLd(${entry.sourcePageId})" title="Download JSON-LD">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
+        <button class="action-btn" onclick="Export.jsonld(${pid})" title="Download JSON-LD">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           JSON-LD
         </button>
-        <button class="action-btn" onclick="Detail.copyPermalink(${entry.sourcePageId})" title="Copy permalink">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-          </svg>
+        <button class="action-btn" onclick="Export.permalink(${pid})" data-permalink="${pid}" title="Copy permalink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           Permalink
         </button>
       </div>
@@ -195,93 +181,5 @@ const Detail = {
       return `<a href="#entry=${pid}">${esc(title)}</a>`;
     }
     return esc(title);
-  },
-
-  // --- Exports ---
-  _getEntry(pageId) {
-    return App.entries.find(e => e.sourcePageId === pageId);
-  },
-
-  exportBibtex(pageId) {
-    const e = this._getEntry(pageId);
-    if (!e) return;
-
-    const key = `klawiter${pageId}`;
-    const fields = [];
-    fields.push(`  author = {Zweig, Stefan}`);
-    if (e.title) fields.push(`  title = {${e.title}}`);
-    if (e.year) fields.push(`  year = {${e.year}}`);
-    if (e.publisher) fields.push(`  publisher = {${e.publisher}}`);
-    if (e.location) fields.push(`  address = {${e.location}}`);
-    if (e.pageCount) fields.push(`  pages = {${e.pageCount}}`);
-    if (e.language) fields.push(`  language = {${e.language}}`);
-    if (e.translator) fields.push(`  note = {Translated by ${e.translator}}`);
-
-    const type = (e.entryType === 'essay' || e.entryType === 'newspaper') ? 'article' : 'book';
-    const bib = `@${type}{${key},\n${fields.join(',\n')}\n}`;
-
-    this._download(bib, `klawiter-${pageId}.bib`, 'application/x-bibtex');
-  },
-
-  exportRis(pageId) {
-    const e = this._getEntry(pageId);
-    if (!e) return;
-
-    const lines = [];
-    const type = (e.entryType === 'essay' || e.entryType === 'newspaper') ? 'JOUR' : 'BOOK';
-    lines.push(`TY  - ${type}`);
-    if (e.title) lines.push(`TI  - ${e.title}`);
-    lines.push(`AU  - Zweig, Stefan`);
-    if (e.year) lines.push(`PY  - ${e.year}`);
-    if (e.publisher) lines.push(`PB  - ${e.publisher}`);
-    if (e.location) lines.push(`CY  - ${e.location}`);
-    if (e.language) lines.push(`LA  - ${e.language}`);
-    if (e.translator) lines.push(`A2  - ${e.translator}`);
-    if (e.pageCount) lines.push(`SP  - ${e.pageCount}`);
-    lines.push(`ER  -`);
-
-    this._download(lines.join('\n'), `klawiter-${pageId}.ris`, 'application/x-research-info-systems');
-  },
-
-  exportJsonLd(pageId) {
-    const e = this._getEntry(pageId);
-    if (!e) return;
-    const jsonld = {
-      '@context': { 'klawiter': 'https://klawiter-rescue.github.io/vocab/' },
-      '@type': e['@type'] || `klawiter:${e.entryType}Entry`,
-      '@id': e['@id'] || `klawiter:entry/${pageId}`,
-    };
-    for (const [k, v] of Object.entries(e)) {
-      if (!k.startsWith('@') && v != null) {
-        jsonld[`klawiter:${k}`] = v;
-      }
-    }
-    this._download(
-      JSON.stringify(jsonld, null, 2),
-      `klawiter-${pageId}.jsonld`,
-      'application/ld+json'
-    );
-  },
-
-  copyPermalink(pageId) {
-    const url = `${location.origin}${location.pathname}#entry=${pageId}`;
-    navigator.clipboard.writeText(url).then(() => {
-      const btn = document.querySelector('.action-btn[title="Permalink kopieren"]');
-      if (btn) {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '✓ Copied';
-        setTimeout(() => { btn.innerHTML = orig; }, 2000);
-      }
-    });
-  },
-
-  _download(content, filename, type) {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
   },
 };

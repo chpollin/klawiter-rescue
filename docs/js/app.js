@@ -120,10 +120,24 @@ const App = {
       return;
     }
 
-    // Detail view
+    // Entry view — show in results with card expanded
     if (params.has('entry')) {
       const pid = parseInt(params.get('entry'));
-      this.showDetail(pid);
+      const entry = this.entries.find(e => e.sourcePageId === pid);
+      if (entry) {
+        // Show all entries of the same type as context, with this entry visible
+        this.state.query = '';
+        this.state.filters = {};
+        this.filtered = [entry];
+        this.state.page = 0;
+        this.showView('results');
+        document.getElementById('results-count').textContent = 'Permalink';
+        this.renderResults();
+        // Auto-expand after render
+        setTimeout(() => this.toggleCard(pid), 50);
+      } else {
+        this.showDetail(pid);
+      }
       return;
     }
 
@@ -405,48 +419,5 @@ const App = {
   },
 };
 
-// --- Shared constants ---
-const ENTRY_TYPE_LABELS = {
-  'fiction': 'Fiction',
-  'essay': 'Essays',
-  'poetry': 'Poetry',
-  'drama': 'Drama',
-  'correspondence': 'Correspondence',
-  'film': 'Film / Opera',
-  'historical-study': 'Historical Studies',
-  'secondary-literature': 'Secondary Literature',
-  'collected-works': 'Collected Works',
-  'foreword': 'Forewords / Afterwords',
-  'translation': 'Translations (by Zweig)',
-  'symposium': 'Symposia / Exhibitions',
-  'dramatic-reading': 'Dramatic Readings',
-  'newspaper': 'Newspaper Articles',
-  'other': 'Other',
-};
-
-const PERIOD_LABELS = {
-  'pre-zweig': 'Pre-Zweig (–1880)',
-  'lifetime': 'Lifetime (1881–1942)',
-  'post-wwii': 'Post-WWII (1943–1980)',
-  'late-20c': 'Late 20th C. (1981–2000)',
-  'contemporary': 'Contemporary (2001–)',
-};
-
-// --- Helpers ---
-function esc(s) {
-  if (!s) return '';
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-function hl(text, query) {
-  if (!query || !text) return text;
-  const words = query.split(/\s+/).filter(w => w.length > 1);
-  if (!words.length) return text;
-  const re = new RegExp(`(${words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
-  return text.replace(re, '<mark>$1</mark>');
-}
-
-// Boot
+// Boot (constants, utils, export loaded via separate script tags)
 document.addEventListener('DOMContentLoaded', () => App.init());

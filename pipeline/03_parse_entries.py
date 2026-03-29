@@ -72,6 +72,9 @@ def process_entry(row):
         result['title'] = page_title
     else:
         result['title'] = extracted_title or page_title
+    # Clean any remaining wiki markup from title (e.g. page_title fallbacks)
+    if result['title']:
+        result['title'] = remove_wiki_markup(result['title'])
     result['original_title'] = parsed.get('original_title', '')
     result['sortkey'] = parsed.get('sortkey', '')
 

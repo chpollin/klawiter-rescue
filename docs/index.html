@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Klawiter — Stefan Zweig Bibliography</title>
+  <meta name="description" content="Digital edition of the Klawiter Bibliography: over 4,700 publications by and about Stefan Zweig, searchable and structured.">
+  <meta property="og:title" content="Klawiter — Stefan Zweig Bibliography">
+  <meta property="og:description" content="Over 4,700 publications by and about Stefan Zweig. Compiled by Dr. Randolph J. Klawiter (University of Notre Dame).">
+  <meta property="og:type" content="website">
   <script src="https://cdn.jsdelivr.net/npm/flexsearch@0.7.43/dist/flexsearch.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <link rel="stylesheet" href="css/styles.css">
@@ -40,7 +44,7 @@
   <div class="main-layout">
 
     <!-- Sidebar (hidden on home + stats, visible on results) -->
-    <aside id="facets" class="sidebar hidden">
+    <nav id="facets" class="sidebar hidden" aria-label="Filters">
       <div class="facet-group">
         <div class="facet-heading">Type</div>
         <div id="facet-type-list"></div>
@@ -57,7 +61,7 @@
         <div class="facet-heading">Location</div>
         <div id="facet-location-list"></div>
       </div>
-    </aside>
+    </nav>
 
     <!-- Content area -->
     <main class="main-content">
@@ -140,6 +144,9 @@
     </div>
   </footer>
 
+  <script src="js/constants.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/export.js"></script>
   <script src="js/app.js"></script>
   <script src="js/home.js"></script>
   <script src="js/facets.js"></script>
