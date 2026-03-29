@@ -121,16 +121,33 @@ Redesign the frontend to match Stefan Zweig Digital's visual language. See `know
 ### Phase 4h: Remaining Data Quality (Pipeline)
 
 - [x] Fix wiki markup in titles (''', [[, ]]) — `remove_wiki_markup()` in step 03
-- [ ] Investigate "München" encoding issue in location data — pipeline step 02
-- [ ] Re-run pipeline after fixes, regenerate `klawiter.json`
+- [x] Investigate "München" encoding issue — verified correct UTF-8 throughout pipeline, terminal display artifact only
+- [x] Re-run pipeline after fixes, regenerate `klawiter.json`
 
-### Phase 4i: Manual Validation (deferred from M3.8)
+### Phase 4i: Automated Validation ✅
 
-Validate pipeline correctness by browsing entries in the redesigned frontend.
+Systematic validation of all 4,751 ns0 non-redirect entries + stratified sample of 84 entries across all 20 types.
 
-- [ ] Browse 50+ entries stratified by type, language, time period
+**Issues found and fixed:**
+- Translator fields leaking across newlines into subsequent sections (34 entries → 0). Root cause: `\s` in regex character class matched `\n`. Fixed by restricting to `[ \t]`.
+- Trailing `'''` wiki markup in translator names (5 entries → 0). Fixed by stripping `'''...` suffixes in `extract_translator()`.
+- München encoding: verified correct UTF-8 throughout pipeline (terminal display artifact, not a data issue).
+
+**Final validation results:**
+| Metric | Value |
+|--------|-------|
+| Missing title | 1 (page_id 2979, text not in BLOBs) |
+| Wiki markup in title | 1 (edge case: `"See:'''` is part of the title) |
+| Year as originalTitle | 0 (was 272, fixed) |
+| Translator with markup | 0 (was 34, fixed) |
+
+**Remaining**: Manual browse-through of 50+ entries in the frontend for visual spot-checking (deferred to user).
+
+### Phase 4j: Manual Validation (deferred)
+
+- [ ] Browse 50+ entries in frontend, stratified by type, language, time period
 - [ ] Compare displayed fields against raw wiki content
-- [ ] Document accuracy, fix systematic errors
+- [ ] Document accuracy observations
 
 ## Phase 5: Ontology & Schema.org Mapping (M4) ✅
 

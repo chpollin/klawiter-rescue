@@ -55,14 +55,14 @@ PAGE_COUNT_PATTERNS = [
 # Translator patterns — only match explicit "Translated by Name" patterns.
 # The last pattern (Tr./Trans.) was too greedy and matched word fragments.
 TRANSLATOR_PATTERNS = [
-    re.compile(r'[Tt]ranslated\s+by\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Tt]ranslation\s+by\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Üü]bersetzt\s+von\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Üü]bertragen\s+von\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Tt]raduit\s+par\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Tt]raducción\s+(?:de|por)\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Tt]raduzione\s+di\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
-    re.compile(r'[Tt]rans\.\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Tt]ranslated\s+by\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Tt]ranslation\s+by\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Üü]bersetzt\s+von\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Üü]bertragen\s+von\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Tt]raduit\s+par\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Tt]raducción\s+(?:de|por)\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Tt]raduzione\s+di\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
+    re.compile(r'[Tt]rans\.\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})', re.UNICODE),
 ]
 
 # Page range patterns (shared by verify.py and 03b_llm_enrich.py)
@@ -148,6 +148,9 @@ def extract_translator(text):
         m = pattern.search(text)
         if m:
             name = m.group(1).strip().rstrip('.,;:')
+            # Remove trailing wiki markup that leaked into the name
+            name = re.sub(r"\s*'''.*$", '', name)
+            name = name.strip().rstrip('.,;:')
             if len(name) >= 3:
                 return name
     return None
