@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zweig Bibliography · Wiki Dashboard</title>
+
+  <!-- ——— Tailwind (just‑in‑time CDN) ——— -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+  <!-- ——— Third‑party, fully client‑side libraries ——— -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flexsearch@0.7.31/dist/flexsearch.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+
+  <!-- ——— Custom styling ——— -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="min-h-screen bg-gray-50 text-gray-900">
+  <!-- ╭──────────────────────── Header ────────────────────────╮ -->
+  <header class="sticky top-0 z-50 bg-white shadow">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 p-4 sm:flex-row sm:items-center">
+      <h1 class="flex-1 font-serif text-3xl">Zweig Bibliography Wiki Dashboard</h1>
+
+      <!-- search box + typeahead -->
+      <div class="relative w-full sm:w-96">
+        <label for="search" class="sr-only">Search the bibliography</label>
+        <input id="search" type="search"
+               placeholder="Search… (title, publisher, full text…)"
+               class="peer w-full rounded-lg border-gray-300 py-2 pl-3 pr-10 shadow focus:ring focus:ring-indigo-300" />
+        <ul id="suggestions"
+            class="absolute left-0 right-0 mt-1 hidden max-h-60 overflow-auto rounded-md border border-gray-200 bg-white shadow-lg"
+            role="listbox"></ul>
+      </div>
+    </div>
+  </header>
+  <!-- ╰────────────────────────────────────────────────────────╯ -->
+
+  <!-- ╭──────────────────────── Main layout ───────────────────╮ -->
+  <main class="mx-auto grid max-w-7xl gap-4 p-4 lg:grid-cols-[18rem_1fr]">
+    <!-- —— Sidebar —— -->
+    <aside class="space-y-6" aria-label="Filters & categories">
+      <!-- categories -->
+      <section>
+        <h2 class="mb-2 text-xl font-semibold">Categories</h2>
+        <nav id="category-tree" class="max-h-[60vh] overflow-y-auto pr-2 text-sm"></nav>
+      </section>
+
+      <!-- facets -->
+      <section>
+        <h2 class="mb-2 text-xl font-semibold">Facets</h2>
+        <div id="facets" class="space-y-4 text-sm"></div>
+      </section>
+
+      <!-- active filter chips -->
+      <div id="active-filters" class="flex flex-wrap gap-2"></div>
+    </aside>
+
+    <!-- —— Result column —— -->
+    <section class="space-y-8">
+      <div id="stats" class="text-sm text-gray-600"></div>
+      <ol id="results-list" class="space-y-6"></ol>
+
+      <!-- charts -->
+      <div>
+        <h2 class="mb-4 text-xl font-semibold">Visualisations</h2>
+
+        <div role="tablist" class="flex gap-4 border-b">
+          <button data-tab="timeline"     class="tab px-3 pb-2 border-b-2 border-transparent">Timeline</button>
+          <button data-tab="distribution" class="tab px-3 pb-2 border-b-2 border-transparent">Distributions</button>
+          <button data-tab="network"      class="tab px-3 pb-2 border-b-2 border-transparent">Network</button>
+        </div>
+
+        <canvas id="timeline-chart"      class="hidden" role="img" aria-label="Publication timeline"></canvas>
+        <canvas id="distribution-chart"  class="hidden" role="img" aria-label="Language distribution"></canvas>
+        <svg    id="network-graph"       class="hidden h-96 w-full rounded border"
+                role="img" aria-label="Related‑works network"></svg>
+      </div>
+    </section>
+  </main>
+  <!-- ╰────────────────────────────────────────────────────────╯ -->
+
+  <!-- ╭──────────────────────── Entry modal ───────────────────╮ -->
+  <div id="entry-modal"
+       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm"
+       role="dialog" aria-modal="true">
+    <div class="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
+      <button id="close-modal" class="absolute right-2 top-2 text-xl text-gray-600 hover:text-gray-900"
+              aria-label="Close">&times;</button>
+      <article id="entry-content" class="prose max-w-none"></article>
+    </div>
+  </div>
+  <!-- ╰────────────────────────────────────────────────────────╯ -->
+
+  <!-- —— Your application bundle —— -->
+  <script type="module" src="test.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+/* ====================================================================
+   Zweig Bibliography Wiki Dashboard · custom stylesheet
+   --------------------------------------------------------------------
+   Minimal extensions to Tailwind — keeps bundle tiny for GitHub Pages.
+   ==================================================================== */
+
+/* ---------- Theme tokens ------------------------------------------------ */
+:root {
+    --tw-highlight: #fef08a;  /* yellow‑100  */
+    --tw-chip-bg:  #e0e7ff;   /* indigo‑100  */
+    --tw-chip-fg:  #3730a3;   /* indigo‑800  */
+  }
+  
+  /* ---------- Academic serif headings ------------------------------------ */
+  h1, h2, h3, h4, .font-serif-heading {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+  
+  /* ---------- Focus outline (keyboard a11y) ------------------------------- */
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  
+  /* ---------- Search‑term highlight -------------------------------------- */
+  mark, .highlight {
+    background: var(--tw-highlight);
+    padding: 0 0.15em;
+    border-radius: 0.15em;
+  }
+  
+  /* ---------- Active‑filter chips ---------------------------------------- */
+  .filter-chip {
+    @apply inline-flex items-center gap-1 text-sm rounded-full;
+    background: var(--tw-chip-bg);
+    color: var(--tw-chip-fg);
+    padding: 0.25rem 0.75rem;     /* py‑1 px‑3 */
+  }
+  .filter-chip button {
+    line-height: 1;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* ---------- Tabs -------------------------------------------------------- */
+  .tab {
+    position: relative;
+    transition: color 0.15s ease;
+  }
+  .tab[aria-selected="true"] {
+    color: theme(colors.indigo.700);
+    font-weight: 600;
+  }
+  .tab[aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -2px;
+    height: 2px;
+    background: theme(colors.indigo.600);
+  }
+  
+  /* ---------- Category tree tweaks --------------------------------------- */
+  #category-tree details[open] > summary { list-style: disclosure-open; }
+  #category-tree summary { cursor: pointer; }
+  
+  /* ---------- Multi‑line clamp utility (in case Tailwind plugin absent) --- */
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  /* ---------- Modal content smooth‑scroll -------------------------------- */
+  #entry-modal article { scroll-behavior: smooth; }
+  
