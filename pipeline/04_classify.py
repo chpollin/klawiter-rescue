@@ -13,7 +13,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, load_csv, write_csv, STEP_03_OUTPUT, STEP_04_OUTPUT
+from lib.config import setup_logging, load_csv, write_csv, STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_04_OUTPUT
 from lib.vocabulary import category_to_entry_type, classify_time_period
 
 log = setup_logging(__name__)
@@ -88,7 +88,8 @@ def build_redirect_map(rows):
 
 
 def main():
-    rows = load_csv(STEP_03_OUTPUT)
+    input_path = STEP_03B_OUTPUT if os.path.exists(STEP_03B_OUTPUT) else STEP_03_OUTPUT
+    rows = load_csv(input_path)
     log.info(f"Loaded {len(rows)} entries, classifying...")
 
     title_to_page = build_redirect_map(rows)

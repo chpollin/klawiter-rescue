@@ -97,6 +97,7 @@ data/raw/zt_00-07 + zweig_part_01.sql
   | 01_extract.py
   | 02_fix_encoding.py
   | 03_parse_entries.py
+  | 03b_llm_enrich.py  (optional, requires GEMINI_API_KEY)
   | 04_classify.py
   | 05_to_jsonld.py
   | 06_validate.py
@@ -129,6 +130,22 @@ Extracts structured fields from wiki markup:
 - Language (from category names, e.g. "Poetry / Individual Poems (German)")
 
 **Output**: `03_parsed.csv` — 24 columns including JSON-serialized lists
+
+### 03b_llm_enrich.py — LLM Metadata Enrichment
+
+Uses Gemini 3.1 Flash Lite (`gemini-3.1-flash-lite-preview`) to extract metadata that regex patterns missed. Only processes namespace-0 non-redirect entries where at least one field (publisher, location, translator, page_count) is empty.
+
+**How it works**: Sends batches of 10 entries with their raw wiki content (truncated to 500 chars) to the Gemini API using structured JSON output (Pydantic schema). The LLM returns only explicitly stated values — never guesses or infers. Results are validated (length checks, no wiki markup) before merging.
+
+**Merge rule**: LLM results only fill empty fields — regex extractions (100% precision) are never overwritten.
+
+**Output**: `03b_llm_enriched.csv` — same schema as `03_parsed.csv`, with additional fields filled. Step 04 reads from `03b` if available, falls back to `03`.
+
+**Cache**: `03b_llm_cache.json` stores results for resume support. Re-running skips already-processed entries.
+
+**Cost**: ~$0.33 per full run (~300 batches, ~420K input tokens).
+
+**Dependencies**: `google-genai` Python package. API key in `.env` at project root (`GEMINI_API_KEY`).
 
 ### 04_classify.py — Classification
 
@@ -235,16 +252,17 @@ python pipeline/run_pipeline.py       # all steps
 python pipeline/run_pipeline.py 3 6   # steps 3-6
 ```
 
-**Dependencies**: None — Python 3.10+ standard library only.
+**Dependencies**: Python 3.10+ standard library for steps 01–06. Step 03b additionally requires `google-genai` and a `GEMINI_API_KEY` in `.env`.
 
-**Runtime**: ~35 seconds (27s BLOB parsing, 8s rest).
+**Runtime**: ~35 seconds without LLM step (27s BLOB parsing, 8s rest). Step 03b adds ~10 minutes (API calls).
 
 ### Data Flow
 
 ```
 page_id, page_title, text_id, content, flags, blob_id    (01 → 02)
   + encoding fixes on content, page_title                  (02 → 03)
-  + 18 parsed fields (title, year, publisher, etc.)        (03 → 04)
+  + 18 parsed fields (title, year, publisher, etc.)        (03 → 03b)
+  + LLM fills gaps in publisher/location/translator/pages  (03b → 04)
   + entry_type, time_period                                (04 → 05)
   → JSON-LD objects with @context + klawiter:* properties  (05 → 06)
   → quality-report.json                                    (06)

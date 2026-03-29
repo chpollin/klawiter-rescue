@@ -4,6 +4,56 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 2: Pipeline Quality Assurance & LLM Enrichment
+
+### What we did
+
+**Phase 1: Verification script** (`pipeline/verify.py`)
+- Built round-trip verification: loads final JSON-LD, compares each extracted field against raw wiki content from step 02
+- Detects false positives (extracted but not in raw) and false negatives (in raw but not extracted)
+- Added broader pattern detection beyond existing regex for publisher (`City: Publisher` pattern) and translator (abbreviations like `Übers.`, `trad.`)
+
+**Verification results** (4,751 bibliography entries):
+| Field | Coverage | Precision | FP | FN |
+|---|---|---|---|---|
+| title | 100% | 81.4%* | 885 | 0 |
+| year | 93.2% | 100% | 0 | 0 |
+| publisher | 34.5% | 100% | 0 | 86 |
+| location | 67.8% | 100% | 0 | 0 |
+| translator | 35.1% | 100% | 0 | 2 |
+| page_count | 78.4% | 100% | 0 | 0 |
+
+*Title 81.4%: not real FPs — titles come from `page_title` fallback, not from content.
+
+**Phase 2: LLM enrichment step** (`pipeline/03b_llm_enrich.py`)
+- Designed and built Step 03b using Gemini 3.1 Flash Lite for gap-filling
+- Pydantic schema for structured JSON output (publisher, location, translator, page_count)
+- Merge rule: LLM only fills empty fields, never overwrites regex results
+- Cache-based resume support, rate limiting, validation layer
+
+**Testing**:
+- 5-entry quick test: all correct
+- 20-entry stratified sample covering: isolated missing fields, 7 languages (EN/FR/RU/ZH/JA/AR/ES), standard/non-standard formats, short texts, German negative tests
+- Result: 13/13 correct extractions, 0 hallucinations, all negative tests passed
+
+### Learnings
+
+- **Verification circularity**: Using the same regex patterns to detect false negatives finds nothing — the patterns already extracted what they can. Broader heuristics or LLM needed for true FN detection.
+- **LLM conservative by design**: The prompt "Extract ONLY what is explicitly stated / Do NOT guess" produces zero hallucinations across all tests. The model correctly returns null for See-references, film entries, and German originals.
+- **Encoding artifacts pass through**: LLM faithfully extracts text with Mojibake (e.g. "KavkazskiÄ­ Krai") — it doesn't fix encoding, which is correct since that's step 02's job.
+
+### Files created/modified
+- `pipeline/verify.py` — verification script
+- `pipeline/03b_llm_enrich.py` — LLM enrichment step
+- `pipeline/lib/llm_extract.py` — Gemini client, schema, prompt, batch logic
+- `pipeline/lib/config.py` — added `STEP_03B_OUTPUT`
+- `pipeline/04_classify.py` — reads from 03b with fallback to 03
+- `pipeline/run_pipeline.py` — added step 03b
+- `.env` — Gemini API key (gitignored)
+- `.gitignore` — added `.env`
+
+---
+
 ## 2026-03-29 — Session 1b: Raw Data Verification
 
 ### What we did

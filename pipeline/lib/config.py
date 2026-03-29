@@ -31,6 +31,7 @@ INTERMEDIATE_DIR = os.path.join(PROJECT_ROOT, 'data', 'intermediate')
 STEP_01_OUTPUT = os.path.join(INTERMEDIATE_DIR, '01_extracted.csv')
 STEP_02_OUTPUT = os.path.join(INTERMEDIATE_DIR, '02_encoding_fixed.csv')
 STEP_03_OUTPUT = os.path.join(INTERMEDIATE_DIR, '03_parsed.csv')
+STEP_03B_OUTPUT = os.path.join(INTERMEDIATE_DIR, '03b_llm_enriched.csv')
 STEP_04_OUTPUT = os.path.join(INTERMEDIATE_DIR, '04_classified.csv')
 
 # Final output
