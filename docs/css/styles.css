@@ -1345,6 +1345,106 @@ mark {
   cursor: pointer;
 }
 
+/* --- Provenance Badges --- */
+.prov-badge {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  font-family: var(--font-sans);
+  font-size: 0.55rem;
+  font-weight: 700;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+}
+.prov-regex { background: #d4edda; color: #155724; }
+.prov-llm { background: #fff3cd; color: #856404; }
+.prov-missing { background: #f0f0f0; color: #999; }
+.prov-expert { background: #cce5ff; color: #004085; }
+
+/* --- Edit Mode --- */
+.edit-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(250, 248, 243, 0.7);
+  background: none;
+  border: 1px solid rgba(250, 248, 243, 0.3);
+  border-radius: 3px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.15s;
+}
+.edit-toggle-btn:hover { border-color: rgba(250, 248, 243, 0.6); color: var(--sz-cream); }
+.edit-toggle-btn.active {
+  background: var(--sz-gold);
+  border-color: var(--sz-gold);
+  color: var(--sz-burgundy);
+}
+
+.edit-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sz-burgundy);
+  background: var(--sz-gold);
+  border: none;
+  border-radius: 3px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: background 0.15s;
+}
+.edit-save-btn:hover { background: var(--sz-gold-light); }
+
+.edit-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--sz-burgundy);
+  color: var(--sz-cream);
+  border-radius: 8px;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+/* Editable fields in edit mode */
+.editable-field {
+  outline: none;
+  border-bottom: 1px dashed var(--sz-gold);
+  padding: 0.1rem 0.2rem;
+  min-width: 60px;
+  display: inline-block;
+  transition: border-color 0.15s, background 0.15s;
+}
+.editable-field:focus {
+  border-bottom-color: var(--sz-burgundy);
+  background: rgba(194, 163, 96, 0.08);
+}
+
+.missing-value {
+  color: var(--sz-text-light);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+/* Edit mode body class — highlight editable areas */
+body.edit-mode .meta-table {
+  border-color: var(--sz-gold);
+}
+
 /* --- Verbund Bar --- */
 .verbund-bar {
   background: #f2f2f2;

@@ -1,0 +1,75 @@
+name: Validate Curation Patch
+
+on:
+  pull_request:
+    paths:
+      - 'patches/**'
+      - 'docs/data/klawiter.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install jsonschema
+
+      - name: Validate patch format
+        run: |
+          python -c "
+          import json, glob, sys
+          errors = []
+          for f in glob.glob('patches/*.json'):
+              try:
+                  with open(f) as fh:
+                      patch = json.load(fh)
+                  assert 'patchVersion' in patch, 'Missing patchVersion'
+                  assert 'patches' in patch, 'Missing patches array'
+                  for p in patch['patches']:
+                      assert 'pageId' in p, 'Missing pageId in patch entry'
+                      assert 'field' in p, 'Missing field in patch entry'
+                      assert 'newValue' in p, 'Missing newValue in patch entry'
+                  print(f'{f}: OK ({len(patch[\"patches\"])} changes)')
+              except Exception as e:
+                  errors.append(f'{f}: {e}')
+                  print(f'{f}: FAIL - {e}')
+          if errors:
+              sys.exit(1)
+          "
+
+      - name: Validate frontend JSON integrity
+        run: |
+          python -c "
+          import json
+          with open('docs/data/klawiter.json') as f:
+              data = json.load(f)
+          entries = data.get('entries', [])
+          print(f'Entries: {len(entries)}')
+          # Check all entries have required fields
+          for e in entries:
+              assert 'sourcePageId' in e, f'Missing sourcePageId'
+              assert 'entryType' in e, f'Missing entryType in {e.get(\"sourcePageId\")}'
+          print('All entries valid')
+          "
+
+      - name: Report coverage changes
+        run: |
+          python -c "
+          import json
+          with open('docs/data/klawiter.json') as f:
+              data = json.load(f)
+          entries = [e for e in data['entries'] if e.get('pageNamespace') == 0]
+          total = len(entries)
+          for field in ['publisher', 'location', 'translator', 'pageCount']:
+              count = sum(1 for e in entries if e.get(field))
+              prov = {}
+              for e in entries:
+                  p = (e.get('_provenance') or {}).get(field, 'unknown')
+                  prov[p] = prov.get(p, 0) + 1
+              print(f'{field}: {count}/{total} ({100*count/total:.1f}%) — {prov}')
+          "

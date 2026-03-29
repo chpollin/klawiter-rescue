@@ -1,6 +1,7 @@
 /**
  * Detail view — SZD-style two-column metadata table with conditional sections.
  * Used both for standalone #entry= view and inline expandable cards.
+ * Supports provenance badges and edit mode (localhost only).
  */
 const Detail = {
   // Standalone detail view (for direct #entry= links)
@@ -24,11 +25,34 @@ const Detail = {
     return this._buildContent(entry);
   },
 
+  // Provenance badge HTML
+  _provBadge(fieldName, entry) {
+    const prov = entry._provenance;
+    if (!prov || !prov[fieldName]) return '';
+    const source = prov[fieldName];
+    const labels = { regex: 'R', llm: 'L', missing: '\u2014', expert: 'E' };
+    const titles = { regex: 'Regex extracted', llm: 'LLM enriched', missing: 'Missing', expert: 'Expert curated' };
+    return `<span class="prov-badge prov-${source}" title="${titles[source] || source}">${labels[source] || source[0].toUpperCase()}</span>`;
+  },
+
+  // Editable field wrapper
+  _editableValue(fieldName, value, entry) {
+    if (!App.state.editMode) return value;
+    const pid = entry.sourcePageId;
+    const currentVal = value.replace(/<[^>]*>/g, ''); // strip HTML tags for raw text
+    return `<span class="editable-field" contenteditable="true"
+      data-field="${fieldName}" data-pid="${pid}"
+      data-original="${esc(currentVal)}"
+      onblur="Edit.trackChange(this)">${value}</span>`;
+  },
+
   // Shared content builder
   _buildContent(entry) {
     let html = '';
     const rows = [];
+    const prov = entry._provenance || {};
 
+    // Title (always present, not provenance-tracked)
     rows.push(this.row('Title', esc(entry.title)));
 
     if (entry.originalTitle && entry.originalTitle !== entry.title) {
@@ -36,20 +60,27 @@ const Detail = {
     }
 
     if (entry.year) {
-      const period = entry.timePeriod ? ` — ${PERIOD_LABELS[entry.timePeriod] || entry.timePeriod}` : '';
+      const period = entry.timePeriod ? ` \u2014 ${PERIOD_LABELS[entry.timePeriod] || entry.timePeriod}` : '';
       rows.push(this.row('Year', `${entry.year}${period}`));
     }
 
-    if (entry.publisher) {
-      rows.push(this.row('Publisher', esc(entry.publisher)));
+    // Provenance-tracked fields
+    if (entry.publisher || App.state.editMode) {
+      const val = entry.publisher ? esc(entry.publisher) : '<span class="missing-value">not extracted</span>';
+      rows.push(this.row('Publisher', this._editableValue('publisher', val, entry), 'publisher', entry));
     }
 
-    if (entry.location) {
-      let locText = esc(entry.location);
-      if (entry.allLocations && entry.allLocations.length > 1) {
-        locText = entry.allLocations.map(l => esc(l)).join(', ');
+    if (entry.location || App.state.editMode) {
+      let locText = '';
+      if (entry.location) {
+        locText = esc(entry.location);
+        if (entry.allLocations && entry.allLocations.length > 1) {
+          locText = entry.allLocations.map(l => esc(l)).join(', ');
+        }
+      } else {
+        locText = '<span class="missing-value">not extracted</span>';
       }
-      rows.push(this.row('Location', locText));
+      rows.push(this.row('Location', this._editableValue('location', locText, entry), 'location', entry));
     }
 
     if (entry.language) {
@@ -57,12 +88,14 @@ const Detail = {
       rows.push(this.row('Language', esc(entry.language) + code));
     }
 
-    if (entry.pageCount) {
-      rows.push(this.row('Pages', entry.pageCount));
+    if (entry.pageCount || App.state.editMode) {
+      const val = entry.pageCount ? String(entry.pageCount) : '<span class="missing-value">not extracted</span>';
+      rows.push(this.row('Pages', this._editableValue('pageCount', val, entry), 'pageCount', entry));
     }
 
-    if (entry.translator) {
-      rows.push(this.row('Translator', esc(entry.translator)));
+    if (entry.translator || App.state.editMode) {
+      const val = entry.translator ? esc(entry.translator) : '<span class="missing-value">not extracted</span>';
+      rows.push(this.row('Translator', this._editableValue('translator', val, entry), 'translator', entry));
     }
 
     if (entry.categories && entry.categories.length) {
@@ -74,7 +107,7 @@ const Detail = {
 
     html += `<div class="meta-table">${rows.join('')}</div>`;
 
-    // --- Full bibliographic entry ---
+    // --- Full bibliographic entry (always visible as verification source) ---
     if (entry.fullBibliographicEntry) {
       html += `
         <div class="detail-section">
@@ -157,22 +190,23 @@ const Detail = {
     // --- Provenance ---
     html += `<div class="detail-provenance">
       Page ID: ${entry.sourcePageId}
-      ${entry.sourceTextId ? ' · Text ID: ' + entry.sourceTextId : ''}
-      ${entry.sourceBlobId ? ' · Blob: ' + entry.sourceBlobId : ''}
+      ${entry.sourceTextId ? ' \u00b7 Text ID: ' + entry.sourceTextId : ''}
+      ${entry.sourceBlobId ? ' \u00b7 Blob: ' + entry.sourceBlobId : ''}
     </div>`;
 
     return html;
   },
 
-  row(label, value) {
+  row(label, value, fieldName, entry) {
+    const badge = fieldName && entry ? this._provBadge(fieldName, entry) : '';
     return `<div class="meta-row">
-      <div class="meta-label">${label}</div>
+      <div class="meta-label">${label}${badge}</div>
       <div class="meta-value">${value}</div>
     </div>`;
   },
 
   makeLink(title) {
-    const entry = App.entries.find(e => e.title === title);  // title lookup stays O(n) — only used for seeAlso
+    const entry = App.entries.find(e => e.title === title);
     if (entry) {
       return `<a href="#entry=${entry.sourcePageId}">${esc(title)}</a>`;
     }

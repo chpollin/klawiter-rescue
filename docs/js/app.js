@@ -16,6 +16,9 @@ const App = {
     entryId: null,
     page: 0,
     pageSize: 50,
+    editMode: false,
+    isLocal: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
+    pendingEdits: {},  // pageId -> { field: { value, oldValue, provenance } }
   },
 
   async init() {
@@ -480,6 +483,39 @@ const App = {
     document.getElementById('mobile-filter-close').addEventListener('click', () => {
       document.getElementById('mobile-facets').classList.add('hidden');
     });
+
+    // Edit mode toggle (localhost only)
+    if (this.state.isLocal) {
+      const header = document.querySelector('.header-inner');
+      const toggle = document.createElement('button');
+      toggle.id = 'edit-toggle';
+      toggle.className = 'edit-toggle-btn';
+      toggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
+      toggle.onclick = () => this.toggleEditMode();
+      header.appendChild(toggle);
+    }
+  },
+
+  toggleEditMode() {
+    this.state.editMode = !this.state.editMode;
+    document.body.classList.toggle('edit-mode', this.state.editMode);
+    const btn = document.getElementById('edit-toggle');
+    if (btn) {
+      btn.classList.toggle('active', this.state.editMode);
+      btn.innerHTML = this.state.editMode
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Editing'
+        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
+    }
+    // Re-render current detail if open
+    const expandedCard = document.querySelector('.entry-card.card-expanded');
+    if (expandedCard) {
+      const pid = parseInt(expandedCard.id.replace('card-', ''));
+      const detail = expandedCard.querySelector('.card-detail');
+      const entry = this.entryMap.get(pid);
+      if (detail && entry) {
+        detail.innerHTML = Detail.renderInline(entry);
+      }
+    }
   },
 };
 
