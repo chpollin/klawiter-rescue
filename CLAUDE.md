@@ -23,14 +23,16 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 ## Key Technical Decisions
 
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
-- **Vocabulary blend**: Schema.org + Dublin Core + `klawiter:` namespace (domain-specific types/fields). See `pipeline/lib/vocabulary.py`
-- **Static frontend**: Vanilla JS + custom CSS (SZD design) + FlexSearch + Chart.js, no build step
+- **Vocabulary blend**: Schema.org + Dublin Core + `klawiter:` namespace (implemented in `pipeline/lib/vocabulary.py`, documented at `docs/vocab/index.html`)
+- **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
+- **Static frontend**: Vanilla JS (9 modules) + custom CSS (SZD design) + FlexSearch + Chart.js, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
+- **Test suite**: 260 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge)
 - **GitHub Pages**: Deploy from `docs/` folder
 
 ## Source Data Coverage
 
-- Database has 6,725 pages total; pipeline extracts **namespace 0 only** (6,296 bibliography entries)
-- 420 Category-namespace pages (ns 14) are not extracted — contain category descriptions
+- Database has 6,725 pages total; pipeline extracts **all namespaces** (6,296 bibliography entries in ns 0, plus 420 category pages and 9 system pages)
+- Frontend displays ns 0 entries only; category/system pages are included in JSON-LD but filtered in the UI
 - Only `zweig_part_01.sql` is used; `_02` (empty schema) and `_03` (system metadata) are correctly ignored
 - BLOBs contain 53,016 text entries (all revisions); pipeline uses only the latest revision per page
 - 1 missing entry: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB
@@ -46,4 +48,4 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 ## Documentation
 
 `knowledge/` contains the full project documentation as an Obsidian vault:
-`data.md`, `pipeline.md`, `architecture.md`, `ontology.md`, `reconciliation.md`, `ui-design.md`, `design.md`, `user-stories.md`, `plan.md`, `journal.md`
+`data.md`, `pipeline.md`, `architecture.md`, `ontology.md`, `reconciliation.md`, `ui-design.md`, `design.md`, `user-stories.md`, `plan.md`, `dataflow.md`, `journal.md`

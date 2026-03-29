@@ -1,6 +1,6 @@
 # Ontology
 
-Semantic modeling for the Klawiter bibliography. Uses a blend of Schema.org (standard bibliographic), Dublin Core (citation/provenance), and klawiter: (domain-specific extensions).
+Semantic modeling for the Klawiter bibliography. Implemented as a blend of Schema.org (standard bibliographic), Dublin Core (citation/provenance), and klawiter: (domain-specific extensions). The vocabulary is defined in `pipeline/lib/vocabulary.py` and documented at `docs/vocab/index.html`.
 
 ## Vocabulary Blend
 
@@ -161,7 +161,7 @@ Secondary literature, historical studies, and symposia omit the author field (Zw
 
 ### Future Alignment
 
-- **Stefan Zweig Digital** (Uni Graz): Uses CIDOC-CRM. A separate research project is planned to develop a Nachlass ontology that bridges both projects. The current `@type` arrays and `sameAs` links provide extension points for CIDOC-CRM alignment without restructuring.
+- **Stefan Zweig Digital** (Stefan Zweig Centre Salzburg, University of Salzburg): Uses CIDOC-CRM. A separate research project is planned to develop a Nachlass ontology that bridges both projects. The current `@type` arrays and `sameAs` links provide extension points for CIDOC-CRM alignment without restructuring.
 - **Wikidata**: Reconciliation of works (P50=Q78491), persons (translators), places, and publishers is planned (see [[reconciliation]]). Authority URIs will be added as `schema:sameAs` values.
 
 ---

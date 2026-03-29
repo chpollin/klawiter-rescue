@@ -1,6 +1,6 @@
 # Pipeline
 
-The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 6 stages, requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
+The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 7 stages (01–06 plus verify), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
 
 ## Source Data
 

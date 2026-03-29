@@ -2,17 +2,18 @@
 
 Key decisions in the Klawiter project with rationale and trade-offs.
 
-## 1. Domain-Specific Vocabulary Instead of Schema.org
+## 1. Vocabulary Blend: Schema.org + Dublin Core + klawiter:
 
-**Decision**: Custom `klawiter:` namespace instead of Schema.org, Dublin Core, or BibFrame.
+**Decision**: A blend of Schema.org (standard bibliographic fields), Dublin Core (citation/provenance), and a custom `klawiter:` namespace (domain-specific types and fields).
 
 **Rationale**:
-- The bibliography contains entity types without Schema.org equivalent (e.g. "Dramatic Reading", "Symposium")
+- Schema.org covers most standard bibliographic fields (name, datePublished, publisher, etc.)
+- Dublin Core provides `bibliographicCitation` for the original entry text
+- The bibliography contains entity types without Schema.org equivalent (e.g. "Dramatic Reading", "Symposium") — these use `klawiter:` types
 - BibFrame (FRBR-based: Work/Instance/Item) would be correct but overengineering for this dataset
-- Dublin Core is too flat (no type distinction)
-- A domain-specific model can represent the data 1:1
+- Each entry gets a `@type` array combining a Schema.org type with a `klawiter:` type (e.g. `["schema:Book", "klawiter:FictionEntry"]`)
 
-**Trade-off**: Not directly machine-readable for library systems. Mapping to Schema.org is planned as a later step — see [[ontology]].
+**Trade-off**: Not directly machine-readable for library systems. A vocabulary blend with Schema.org and Dublin Core has since been implemented — see [[ontology]].
 
 ## 2. Direct File Extraction Instead of MySQL
 

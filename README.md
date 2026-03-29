@@ -8,17 +8,17 @@ Extraction and structuring of the Stefan Zweig Bibliography (Dr. Randolph J. Kla
 |--------|-------|
 | Extracted entries | 6,295 / 6,296 (99.99%) |
 | Mojibake fixed | 61.1% → 0% |
-| Entity types | 15 classified, 0.1% "other" |
+| Entity types | 16 classified (incl. redirect), 0.1% "other" |
 | Field coverage (title) | 100% |
-| JSON-LD | Structurally valid, `klawiter:` namespace |
-| Frontend | Static site (GitHub Pages), SZD-inspired design |
+| JSON-LD | Schema.org + Dublin Core + `klawiter:` vocabulary blend |
+| Frontend | Static site (GitHub Pages), Stefan Zweig Digital design language |
 
 ## Project Structure
 
 ```
 pipeline/               Python pipeline (7 steps, no external dependencies)
 docs/                   Frontend (GitHub Pages) — static HTML/JS/CSS
-  js/                   8 JS modules: constants, utils, export, app, home, facets, detail, charts
+  js/                   9 JS modules: constants, utils, export, pages, app, home, facets, detail, charts
   css/styles.css        Custom CSS (Stefan Zweig Digital design language)
 data/
   raw/                  MediaWiki SQL dump + 8 BLOB files (363 MB)
@@ -67,7 +67,7 @@ python pipeline/run_pipeline.py 2 4
 | `data/output/klawiter.jsonld` | Full dataset (6,296 entries, ~8 MB) |
 | `data/output/entries/*.jsonld` | Individual files per entry |
 | `data/output/quality-report.json` | Validation results |
-| `docs/data/klawiter.json` | Frontend JSON (4,751 bibliography entries) |
+| `docs/data/klawiter.json` | Frontend JSON (5,179 entries, ~9 MB) |
 
 ## Frontend
 
@@ -78,16 +78,19 @@ Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Dig
 - **Detail**: Expandable cards with SZD-style metadata table, conditional sections
 - **Statistics**: Interactive charts (timeline, languages, locations, types) with click-to-filter
 - **Export**: BibTeX, RIS, JSON-LD per entry + full dataset download
+- **Content Pages**: About, Methodology, Help, Data Access, Imprint
 - No framework, no build step
 
 ## Documentation
 
 The `knowledge/` folder is an Obsidian vault with full project documentation:
-data model, pipeline, architecture decisions, ontology, reconciliation strategy, UI design, user stories.
+data model, pipeline, architecture decisions, ontology, reconciliation strategy, UI design, user stories, project journal.
 
 ## Credits
 
 The bibliography was compiled by **Dr. Randolph J. Klawiter** (University of Notre Dame) over decades. It covers 6,296 entries on Stefan Zweig's work — first editions, translations, secondary literature, film adaptations, correspondence — in over 40 languages.
+
+This project is connected to [Stefan Zweig Digital](https://stefanzweig.digital/) at the Stefan Zweig Centre Salzburg (University of Salzburg).
 
 ## License
 

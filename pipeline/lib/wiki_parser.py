@@ -61,6 +61,12 @@ def remove_wiki_markup(text):
     result = re.sub(r'<br\s*/?>', '\n', result)
     result = re.sub(r'</?[a-zA-Z][^>]*>', '', result)
 
+    # Section headers: ==text== → text, ===text=== → text
+    result = re.sub(r'^={2,6}\s*(.+?)\s*={2,6}$', r'\1', result, flags=re.MULTILINE)
+
+    # Unpaired bold markers at start of line
+    result = re.sub(r"^'''\s*", '', result, flags=re.MULTILINE)
+
     # Escaped quotes from CSV
     result = result.replace('\\"', '"')
 
@@ -109,12 +115,17 @@ def extract_title(content):
 def extract_original_title(content):
     """Extract original title if present (often in parentheses or brackets after main title)."""
     # Pattern: (Original Title) or [Original Title] after main title
+    # Reject bare years (e.g. [1931]) which are publication dates, not titles
     m = re.search(r"'''[^']+'''\s*\(([^)]+)\)", content)
     if m:
-        return m.group(1).strip()
+        candidate = m.group(1).strip()
+        if not re.match(r'^\d{4}$', candidate):
+            return candidate
     m = re.search(r"'''[^']+'''\s*\[([^\]]+)\]", content)
     if m:
-        return m.group(1).strip()
+        candidate = m.group(1).strip()
+        if not re.match(r'^\d{4}$', candidate):
+            return candidate
     return None
 
 

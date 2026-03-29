@@ -72,7 +72,7 @@ const Pages = {
       <p>
         The pipeline extracts structured metadata (title, year, publisher, location,
         language, translator, page count) from the wiki markup of each entry, repairs
-        character encoding errors, classifies entries into 15 types and 5 time periods,
+        character encoding errors, classifies entries into 16 types and 5 time periods,
         and produces a JSON-LD dataset with a vocabulary based on Schema.org, Dublin Core,
         and a domain-specific extension namespace.
       </p>
@@ -152,13 +152,13 @@ const Pages = {
         <li>
           <strong>LLM Enrichment</strong> (optional) &mdash;
           Fill gaps in publisher, location, translator, and page count fields using
-          a large language model (Gemini 2.0 Flash Lite). The model reads the
+          a large language model (Gemini 3.1 Flash Lite). The model reads the
           bibliographic text and extracts metadata that the regex patterns missed.
           All LLM-generated values pass a Mojibake validation filter.
         </li>
         <li>
           <strong>Classify</strong> &mdash;
-          Assign each entry one of 15 types (fiction, essay, poetry, drama, etc.)
+          Assign each entry one of 16 types (fiction, essay, poetry, drama, etc.)
           based on its MediaWiki categories, and one of 5 time periods based on
           the publication year.
         </li>
@@ -253,7 +253,7 @@ const Pages = {
       <h2>Data Model</h2>
       <p>
         Each bibliography entry is represented as a JSON-LD node with a type drawn
-        from a controlled vocabulary of 15 entry types (fiction, essay, poetry, drama,
+        from a controlled vocabulary of 16 entry types (fiction, essay, poetry, drama,
         correspondence, historical study, secondary literature, collected works,
         foreword, translation, film/opera, symposium, dramatic reading, newspaper
         article, other). The vocabulary is documented at
@@ -445,7 +445,7 @@ const Pages = {
           <tr><td><code>languageCode</code></td><td>String</td><td>ISO 639-1 code</td></tr>
           <tr><td><code>translator</code></td><td>String</td><td>Translator name</td></tr>
           <tr><td><code>pageCount</code></td><td>Integer</td><td>Number of pages</td></tr>
-          <tr><td><code>entryType</code></td><td>String</td><td>One of 15 entry types</td></tr>
+          <tr><td><code>entryType</code></td><td>String</td><td>One of 16 entry types</td></tr>
           <tr><td><code>timePeriod</code></td><td>String</td><td>Historical period classification</td></tr>
           <tr><td><code>categories</code></td><td>Array</td><td>MediaWiki categories</td></tr>
           <tr><td><code>fullBibliographicEntry</code></td><td>String</td><td>Original text from the wiki</td></tr>

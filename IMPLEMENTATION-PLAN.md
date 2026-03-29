@@ -132,17 +132,17 @@ Validate pipeline correctness by browsing entries in the redesigned frontend.
 - [ ] Compare displayed fields against raw wiki content
 - [ ] Document accuracy, fix systematic errors
 
-## Phase 5: Ontology & Schema.org Mapping (M4)
+## Phase 5: Ontology & Schema.org Mapping (M4) ✅
 
-Map `klawiter:` fields to established vocabularies.
+Implemented Schema.org + Dublin Core + klawiter: vocabulary blend.
 
-### Tasks
-- [ ] Map each of the 16 entry types to closest Schema.org type
-- [ ] Map each field to Schema.org property (name, datePublished, publisher, inLanguage, etc.)
-- [ ] Rewrite `@context` in `pipeline/lib/vocabulary.py`
-- [ ] Update `05_to_jsonld.py` to produce new @context
-- [ ] Validate output with JSON-LD Playground
-- [ ] Create `docs/vocab/index.html` for namespace resolution
+### Completed
+- [x] Map all 16 entry types to Schema.org types (Book, Article, Play, Movie, Event, etc.)
+- [x] Map all fields to Schema.org/DC properties (name, datePublished, publisher, inLanguage, etc.)
+- [x] Rewrite `@context` in `pipeline/lib/vocabulary.py` with Schema.org + DC + klawiter: blend
+- [x] Update `05_to_jsonld.py` to produce new @context with dual `@type` arrays
+- [x] Create `docs/vocab/index.html` for namespace resolution
+- [ ] Validate output with JSON-LD Playground (deferred)
 
 ## Phase 6: Semantic Enrichment (M5)
 
@@ -155,15 +155,19 @@ Link entities to authority data: Wikidata, GND, VIAF.
 - [ ] Add `schema:sameAs` URIs to JSON-LD output
 - [ ] Create pipeline step for enrichment
 
-## Phase 7: Frontend Redesign (M6)
+## Phase 7: Frontend Redesign (M6) ✅
 
-Align with Stefan Zweig Digital design. Improve UX.
+Redesigned to match Stefan Zweig Digital visual language. See `knowledge/design.md`.
 
-### Tasks
-- [ ] Analyze Stefan Zweig Digital: colors, typography, layout
-- [ ] Replace Tailwind CDN with custom CSS
-- [ ] Add citation export (BibTeX, RIS)
-- [ ] Add linked authority data display
-- [ ] Stable URIs for every entry
-- [ ] Performance optimization (4.2 MB → lazy loading?)
+### Completed
+- [x] Custom CSS with SZD palette (burgundy/gold/cream), serif/sans-serif typography
+- [x] Replace Tailwind CDN with custom CSS (1,200+ lines)
+- [x] Citation export: BibTeX, RIS, JSON-LD, permalink
+- [x] Stable URIs (`#entry={page_id}`) with redirect resolution
+- [x] 5 content pages: About, Methodology, Help, Data Access, Imprint
+- [x] Navigation with dropdown menu and footer links
+
+### Remaining
+- [ ] Linked authority data display (depends on M5)
+- [ ] Performance optimization (~9 MB JSON → lazy loading?)
 - [ ] WCAG 2.1 AA accessibility audit

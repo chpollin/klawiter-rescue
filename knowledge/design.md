@@ -91,7 +91,7 @@ Light gray/cream background. Three columns:
 
 ## Views
 
-Four views, routed by hash. See `knowledge/user-stories.md` for the user stories behind each view.
+Five views plus 5 content pages, routed by hash. See [[user-stories]] for S1–S20.
 
 ### 1. Startseite — Category Portal (`#`)
 
@@ -408,14 +408,32 @@ Never show a field row with "—" or empty value. If `translator` is null, omit 
 
 ---
 
-## Files to Create/Modify
+## Content Pages
 
-| File | Action | Purpose |
-|------|--------|---------|
-| `docs/css/styles.css` | Rewrite | Complete CSS with custom properties, no Tailwind |
-| `docs/index.html` | Rewrite | New HTML structure with 4 views, remove Tailwind CDN |
-| `docs/js/app.js` | Rewrite | 4-view routing, namespace filter, state management |
-| `docs/js/home.js` | New | Startseite: category tiles, intro, search |
-| `docs/js/detail.js` | Rewrite | SZD-style metadata table, conditional sections, action bar |
-| `docs/js/facets.js` | Update | New styling, gold/burgundy scheme |
-| `docs/js/charts.js` | Rewrite | New color scheme, location chart, click-to-filter |
+5 static content pages rendered by `pages.js`, routed via `#about`, `#methodology`, `#help`, `#data`, `#imprint`. All use `.page-content` CSS with the SZD typography system (serif body text, sans-serif headings).
+
+| Page | Route | Purpose |
+|------|-------|---------|
+| **About** | `#about` | Klawiter's work, original wiki history, rescue project, SZD connection |
+| **Methodology** | `#methodology` | Pipeline steps, encoding repair, LLM enrichment, quality assurance, known limitations |
+| **Help** | `#help` | Search, filtering, sorting, exports, permalinks, FAQ |
+| **Data Access** | `#data` | Full dataset download, field documentation, vocabulary, license, citation |
+| **Imprint** | `#imprint` | Credits, citation recommendation, license, contact, technical info |
+
+Navigation: "About" as direct header link, "More" dropdown for remaining pages. All 5 linked from footer "Information" column. Accessible on mobile via footer (header nav hidden below 640px).
+
+## Files
+
+| File | Purpose |
+|------|---------|
+| `docs/css/styles.css` | Complete CSS with custom properties (1,200+ lines) |
+| `docs/index.html` | HTML structure with 5 views + content page container |
+| `docs/js/app.js` | 5-view routing, state management, dropdown logic |
+| `docs/js/home.js` | Category portal landing page |
+| `docs/js/detail.js` | Metadata table, conditional sections, action bar |
+| `docs/js/facets.js` | Faceted navigation sidebar |
+| `docs/js/charts.js` | Statistics charts (timeline, languages, locations, types) |
+| `docs/js/pages.js` | 5 content page renderers |
+| `docs/js/export.js` | BibTeX, RIS, JSON-LD, permalink, batch export |
+| `docs/js/utils.js` | esc(), hl(), downloadBlob() |
+| `docs/js/constants.js` | Shared labels, period labels, category groups |

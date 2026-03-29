@@ -4,6 +4,124 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 6: Knowledge Base Audit & Documentation Refactoring
+
+### What we did
+
+**Knowledge base audit**: Systematically reviewed all 11 Obsidian vault files, README.md, CLAUDE.md, and IMPLEMENTATION-PLAN.md against the actual code and data output.
+
+**Found 18 factual inaccuracies** across all docs:
+- M4 (Ontology) marked as "pending" — was fully implemented
+- "15 entry types" in multiple files — correct count is 16 (incl. redirect)
+- "6 pipeline stages" in pipeline.md — correct is 7
+- "~4 MB JSON" in ui-design.md — actual is ~9 MB
+- "Vocabulary blend planned" in CLAUDE.md, architecture.md — is implemented
+- "8 JS modules" — now 9 (pages.js added)
+- 5 content pages (About, Methodology, Help, Data, Imprint) undocumented
+- Journal missing Sessions 4–5
+- SZD attributed to "University of Graz" in vocab doc — correct is University of Salzburg
+
+**Fixed all files**: README.md, CLAUDE.md, IMPLEMENTATION-PLAN.md, pipeline.md, architecture.md, ui-design.md, data.md, ontology.md, plan.md, design.md, dataflow.md, journal.md.
+
+**Plan consolidation**: M4 marked as ✅ in both plan.md and IMPLEMENTATION-PLAN.md. Dependency diagram updated to show actual completion order.
+
+### Learnings
+
+- **Documentation debt accumulates fast**: All docs were written on the same day, but 3 major features (ontology implementation, frontend redesign, content pages) shipped without updating them. The docs were internally consistent but collectively outdated.
+- **Cross-referencing matters**: Isolated vault files (journal.md, dataflow.md) had no wikilinks and were effectively invisible within the knowledge graph. Adding `[[links]]` integrates them.
+- **Two plan files create confusion**: `IMPLEMENTATION-PLAN.md` (task-oriented, phased) and `knowledge/plan.md` (milestone-oriented, M1–M7) described the same work differently. Keeping them aligned requires discipline.
+
+---
+
+## 2026-03-29 — Session 5: Frontend Content Pages & Data Quality Fixes
+
+### What we did
+
+**5 content pages** built for the frontend (`docs/js/pages.js`):
+- **About** (`#about`): Klawiter's biography, the original wiki, the rescue project, connection to SZD
+- **Methodology** (`#methodology`): Pipeline steps, encoding repair, LLM enrichment with coverage table, quality assurance, known limitations
+- **Help** (`#help`): Search, filtering, sorting, entry details, export formats, FAQ
+- **Data Access** (`#data`): Dataset download button, field table, vocabulary docs, license, citation
+- **Imprint** (`#imprint`): Credits, citation recommendation, license, contact, technical info
+
+**Navigation**: Added "About" link + "More" dropdown (Methodology, Help, Data, Imprint) to header. Footer gets new "Information" column with all 5 page links. Mobile: accessible via footer.
+
+**Vocabulary/data quality review**: Compared `docs/vocab/index.html` against actual `@context` in `pipeline/lib/vocabulary.py` and JSON-LD output.
+
+**Pipeline fixes**:
+- `extract_original_title()`: Rejected bare years as original titles (272 false positives → 0)
+- `remove_wiki_markup()`: Added section header stripping (`==text==` → `text`) and unpaired bold marker removal (28 titles with markup → 1)
+- `vocabulary.py`: Added `@container: @set` for `allYears` and `allLocations`
+
+**Vocab doc corrections**: `sameAs` marked as "planned", `schema:Message` annotated, SZD → University of Salzburg, range types corrected.
+
+**Pipeline re-run**: Steps 3–6, 10.5s, all data regenerated. 260 tests pass, 0 fail.
+
+### Learnings
+
+- **Vocab docs must be verified against code**: The vocab page claimed `sameAs` was "used" but no entry had it. The only way to catch this is automated checks against the actual output.
+- **Schema.org is more complete than expected**: Both `schema:Play` and `schema:Collection` exist — initial assumptions that they were missing were wrong. Always verify before changing type mappings.
+- **Wiki markup in titles has a long tail**: The `remove_wiki_markup()` function handled paired `'''bold'''` but not section headers (`==text==`) or unpaired markers. Edge cases accumulate.
+
+### Files created/modified
+- `docs/js/pages.js` — NEW: 5 content page renderers
+- `docs/index.html` — view container, navigation, footer, script tag
+- `docs/js/app.js` — page routing, view toggling, dropdown logic
+- `docs/css/styles.css` — page content typography, nav dropdown, table styles
+- `pipeline/lib/wiki_parser.py` — `extract_original_title()` + `remove_wiki_markup()` fixes
+- `pipeline/lib/vocabulary.py` — `@container` for allYears/allLocations
+- `docs/vocab/index.html` — 4 documentation corrections
+
+---
+
+## 2026-03-29 — Session 4: Frontend Redesign & Schema.org Vocabulary
+
+### What we did
+
+**Frontend redesign** to match Stefan Zweig Digital visual language:
+- Custom CSS (1,000+ lines) with SZD palette: burgundy #7A1B2D, gold #B8963E, cream #FAF8F3
+- Serif/sans-serif typography system (Georgia + system sans-serif)
+- 4-view architecture: Overview (category portal), Browse (faceted search), Detail (expandable cards), Statistics
+- 8 JS modules extracted from monolithic app.js: constants, utils, export, app, home, facets, detail, charts
+- Category tiles grouped by Works / Reception & Impact / Editions
+- Expandable result cards with inline detail rendering
+- Interactive Chart.js charts with click-to-filter
+- BibTeX + RIS export with correct author logic (Stefan Zweig for primary, omitted for secondary)
+- Responsive design: mobile filter panel, sticky header, skip-link
+
+**Schema.org + Dublin Core vocabulary blend** implemented in `pipeline/lib/vocabulary.py`:
+- 16 entry types mapped to Schema.org types (`schema:Book`, `schema:Article`, `schema:Play`, etc.)
+- Standard fields via Schema.org (name, datePublished, publisher, inLanguage, numberOfPages, translator, locationCreated)
+- `dcterms:bibliographicCitation` for full original text
+- `klawiter:` namespace for domain-specific fields (entryType, timePeriod, categories, contentItems, etc.)
+- Stefan Zweig as `schema:Person` with Wikidata `sameAs` link (Q78491)
+- `05_to_jsonld.py` rewritten to use the new vocabulary
+
+**Namespace documentation**: Created `docs/vocab/index.html` with complete vocabulary reference.
+
+### Learnings
+
+- **The category portal approach works**: Users familiar with the original MediaWiki navigate by category tiles exactly as expected. The landing page is an orientation tool, not a dashboard.
+- **Expandable cards are better than separate detail pages**: Inline expansion keeps context (the user sees where they are in the results list). This matches how users actually browse bibliographies.
+- **Dual-type arrays are elegant**: `@type: ["schema:Book", "klawiter:FictionEntry"]` gives standard interoperability while preserving domain specificity. No information is lost.
+
+### Files created/modified
+- `docs/index.html` — complete restructure (4 views, semantic HTML)
+- `docs/css/styles.css` — NEW: 1,000+ lines custom CSS
+- `docs/js/app.js` — state management, routing, search, expandable cards
+- `docs/js/home.js` — category portal
+- `docs/js/charts.js` — statistics charts
+- `docs/js/detail.js` — metadata table, conditional sections
+- `docs/js/facets.js` — faceted navigation
+- `docs/js/export.js` — BibTeX, RIS, JSON-LD, permalink
+- `docs/js/utils.js` — esc(), hl(), downloadBlob()
+- `docs/js/constants.js` — shared labels, groupings
+- `pipeline/lib/vocabulary.py` — rewritten with Schema.org blend
+- `pipeline/05_to_jsonld.py` — rewritten for new vocabulary
+- `docs/vocab/index.html` — NEW: vocabulary namespace page
+
+---
+
 ## 2026-03-29 — Session 3: Test Suite & LLM-as-a-Judge
 
 ### What we did

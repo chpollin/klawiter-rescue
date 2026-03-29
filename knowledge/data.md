@@ -176,7 +176,9 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 
 **Translator extraction (41.9%)**: Regex covers 35.1% with 0% false positives. LLM adds +6.8pp. Remaining ~58% are mostly German originals (no translator) or entries that don't name the translator.
 
-**33 bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. For 33 of these, no usable page_title exists as fallback.
+**Bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. Originally 33 without page_title fallback, reduced to ~15 after `remove_wiki_markup()` improvements (section header stripping and unpaired bold marker removal).
+
+**originalTitle false positives (fixed)**: The `extract_original_title()` regex previously matched bare years in brackets (e.g. `[1931]`) as original titles, producing 272 false positives. Fixed by rejecting candidates that match `^\d{4}$`.
 
 **1 missing entry**: 1 of 6,296 pages could not be found in any of the 8 BLOBs.
 

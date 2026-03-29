@@ -122,40 +122,36 @@ Moved to after M6 — validate by browsing entries in the UI.
 
 ---
 
-## M4: Ontology & Data Model
+## M4: Ontology & Data Model ✅
 
-Design a proper semantic model: Schema.org where possible, `klawiter:` extensions where needed.
+Implemented Schema.org + Dublin Core + klawiter: vocabulary blend. See [[ontology]] for full mapping.
 
-### M4.1: Vocabulary analysis
+### M4.1: Vocabulary analysis ✅
 
-- [ ] Map each of the 16 entry types to closest Schema.org type (Book, Article, Movie, etc.)
-- [ ] Identify types without Schema.org equivalent (dramatic-reading, symposium, foreword)
-- [ ] Map each field to Schema.org property (name, datePublished, publisher, inLanguage, etc.)
-- [ ] Identify fields without Schema.org equivalent
-- [ ] Document mapping in `ontology.md`
+- [x] Map each of the 16 entry types to closest Schema.org type (Book, Article, Play, Movie, etc.)
+- [x] Identify types without Schema.org equivalent → use `schema:CreativeWork` as fallback
+- [x] Map each field to Schema.org property (name, datePublished, publisher, inLanguage, etc.)
+- [x] Identify fields without Schema.org equivalent → `klawiter:` namespace (entryType, timePeriod, categories, etc.)
+- [x] Document mapping in `ontology.md`
 
-### M4.2: JSON-LD @context redesign
+### M4.2: JSON-LD @context redesign ✅
 
-- [ ] Rewrite `@context` in `pipeline/lib/vocabulary.py`:
-  - Use `schema:` for standard properties (name, datePublished, publisher, inLanguage, etc.)
-  - Use `klawiter:` only for domain-specific extensions (entryType, timePeriod, contentItems, etc.)
-  - Add `dcterms:` for provenance fields (source, identifier)
-- [ ] Define `@type` mapping: `klawiter:FictionEntry` → also `schema:Book`, etc.
-- [ ] Update `05_to_jsonld.py` to produce new @context
-- [ ] Validate output with JSON-LD Playground (https://json-ld.org/playground/)
-- [ ] Update tests for new JSON-LD structure
+- [x] Rewrite `@context` in `pipeline/lib/vocabulary.py`
+- [x] Define `@type` mapping: each entry gets array `["schema:Book", "klawiter:FictionEntry"]` etc.
+- [x] Update `05_to_jsonld.py` to produce new @context
+- [x] Add `dcterms:bibliographicCitation` for full original text
+- [x] Add `@container` annotations for set/list fields
 
-### M4.3: Namespace resolution
+### M4.3: Namespace resolution ✅
 
-- [ ] Create `docs/vocab/index.html` — human-readable vocabulary definition
-- [ ] Configure content negotiation or redirect so `klawiter-rescue.github.io/vocab/` resolves
-- [ ] Update namespace URL in @context if needed
+- [x] Create `docs/vocab/index.html` — human-readable vocabulary definition
+- [x] Namespace URL (`klawiter-rescue.github.io/vocab/`) resolves after GitHub Pages deploy
 
-### M4.4: Update frontend data format
+### M4.4: Update frontend data format ✅
 
-- [ ] Ensure `docs/data/klawiter.json` reflects new field names (if changed)
-- [ ] Update frontend JS to use new field names
-- [ ] Verify frontend still works
+- [x] Frontend JSON uses short keys mapped from JSON-LD keys (`_FRONTEND_KEY_MAP` in `05_to_jsonld.py`)
+- [x] Frontend JS works with both semantic and short field names
+- [ ] Validate output with JSON-LD Playground (https://json-ld.org/playground/) — deferred to M7
 
 ---
 
@@ -226,7 +222,7 @@ Redesigned to match Stefan Zweig Digital visual language. See [[design]] and [[u
 - [x] 4-view architecture: Overview (category portal), Browse (faceted search), Detail (expandable cards), Statistics
 - [x] All UI text in English
 - [x] Footer with credits (Klawiter, Notre Dame, SZD)
-- [x] 8 JS modules: constants, utils, export, app, home, facets, detail, charts
+- [x] 9 JS modules: constants, utils, export, pages, app, home, facets, detail, charts
 
 ### M6.3: UX & Features ✅
 
@@ -236,6 +232,9 @@ Redesigned to match Stefan Zweig Digital visual language. See [[design]] and [[u
 - [x] Expandable result cards (inline detail, no separate page)
 - [x] Interactive charts with click-to-filter
 - [x] Console data logging for verification
+- [x] 5 content pages: About, Methodology, Help, Data Access, Imprint (pages.js)
+- [x] Header navigation with "More" dropdown for content pages
+- [x] Footer "Information" column with all page links
 - [ ] Linked authority data display (depends on M5)
 
 ### M6.4: Stable URIs ✅
@@ -276,13 +275,10 @@ Ship it. Make it citable. Make it findable.
 ## Dependencies
 
 ```
-M1 (Knowledge) ──→ M2 (Cleanup) ──→ M3 (Pipeline) ──→ M6 (Frontend) ──→ M3.8 (Validation) ──→ M4 (Ontology) ──→ M5 (Enrichment) ──→ M7 (Deploy)
+M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M3.8 (Validation) → M5 (Enrichment) → M7 (Deploy)
 ```
 
-**Revised order** (2026-03-29): M6 (Frontend Redesign) moves before M4/M5. Rationale:
-- The pipeline data is stable (264 tests, LLM enrichment done)
-- Manual validation (M3.8) is easier in the browser than in JSON files
-- Ontology changes (M4) only affect JSON-LD keys, not the display
-- Frontend progress is motivating and makes the project tangible
-
-M4/M5 can still happen before M7 — the frontend JS adapts to new field names easily.
+**Actual order** (2026-03-29): M6 (Frontend) and M4 (Ontology) were completed before M5.
+- M3.8 (Manual Validation) is deferred to after M6 — browsing entries in the frontend
+- M5 (Semantic Enrichment) is the main remaining research task
+- M7 (Deployment) can happen before M5 if desired — the site is functional
