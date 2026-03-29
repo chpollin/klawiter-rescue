@@ -19,6 +19,14 @@ function hl(text, query) {
   return text.replace(re, '<mark>$1</mark>');
 }
 
+/** Escape BibTeX special characters */
+function escapeBibtex(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\\/g, '\\textbackslash{}')
+    .replace(/([{}&%#_^~])/g, '\\$1');
+}
+
 /** Trigger a file download from in-memory content */
 function downloadBlob(content, filename, type) {
   const blob = new Blob([content], { type });

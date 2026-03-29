@@ -14,6 +14,8 @@
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- Header -->
   <header class="site-header">
     <div class="header-inner">
@@ -29,7 +31,7 @@
         <a href="#stats" id="nav-stats">Statistics</a>
       </nav>
       <div class="header-search">
-        <input type="search" id="search-input" placeholder="Search...">
+        <input type="search" id="search-input" placeholder="Search..." aria-label="Search bibliography">
         <svg class="header-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
@@ -64,21 +66,32 @@
     </nav>
 
     <!-- Content area -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">
 
       <!-- View: Home / Startseite -->
-      <div id="view-home"></div>
+      <div id="view-home">
+        <div id="loading-indicator" class="loading-indicator">
+          <div class="loading-spinner"></div>
+          <p>Loading bibliography&hellip;</p>
+        </div>
+      </div>
 
       <!-- View: Results / Stöbern -->
       <div id="view-results" class="hidden">
         <div class="results-header">
-          <span id="results-count" class="results-count"></span>
-          <select id="sort-select" class="sort-select">
+          <span id="results-count" class="results-count" role="status"></span>
+          <div class="results-actions">
+            <button id="batch-export-btn" class="action-btn hidden" onclick="Export.batchBibtex(App.filtered)" title="Export filtered results as BibTeX">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export BibTeX
+            </button>
+            <select id="sort-select" class="sort-select" aria-label="Sort results by">
             <option value="relevance">Relevance</option>
             <option value="year-asc">Year ascending</option>
             <option value="year-desc">Year descending</option>
             <option value="title">Title A–Z</option>
           </select>
+          </div>
         </div>
         <div id="results-list" class="results-list"></div>
         <div id="load-more" class="load-more hidden">
@@ -99,7 +112,7 @@
   </div>
 
   <!-- Mobile filter toggle -->
-  <button id="mobile-filter-btn" class="mobile-filter-btn">
+  <button id="mobile-filter-btn" class="mobile-filter-btn" aria-label="Open filters">
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
     </svg>
@@ -110,7 +123,7 @@
     <div class="mobile-panel">
       <div class="mobile-panel-header">
         <h2>Filters</h2>
-        <button id="mobile-filter-close" class="mobile-close-btn">&times;</button>
+        <button id="mobile-filter-close" class="mobile-close-btn" aria-label="Close filters">&times;</button>
       </div>
       <div id="mobile-facet-content"></div>
     </div>

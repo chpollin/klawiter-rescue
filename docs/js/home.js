@@ -25,7 +25,9 @@ const Home = {
       const tiles = group.types
         .filter(t => counts[t])
         .map(t => `
-          <div class="category-tile" onclick="App.setFilter('type', '${t}')">
+          <div class="category-tile" tabindex="0" role="button"
+               onclick="App.setFilter('type', '${t}')"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('type','${t}')}">
             <div class="tile-name">${esc(ENTRY_TYPE_LABELS[t] || t)}</div>
             <div class="tile-count">${(counts[t] || 0).toLocaleString('de-DE')}</div>
           </div>
@@ -46,7 +48,9 @@ const Home = {
     let otherHtml = '';
     if (otherTypes.length) {
       const otherTiles = otherTypes.map(t => `
-        <div class="category-tile" onclick="App.setFilter('type', '${t}')">
+        <div class="category-tile" tabindex="0" role="button"
+             onclick="App.setFilter('type', '${t}')"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('type','${t}')}">
           <div class="tile-name">${esc(ENTRY_TYPE_LABELS[t] || t)}</div>
           <div class="tile-count">${counts[t]}</div>
         </div>

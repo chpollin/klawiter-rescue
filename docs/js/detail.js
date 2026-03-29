@@ -172,7 +172,7 @@ const Detail = {
   },
 
   makeLink(title) {
-    const entry = App.entries.find(e => e.title === title);
+    const entry = App.entries.find(e => e.title === title);  // title lookup stays O(n) — only used for seeAlso
     if (entry) {
       return `<a href="#entry=${entry.sourcePageId}">${esc(title)}</a>`;
     }

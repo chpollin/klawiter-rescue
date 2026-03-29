@@ -27,8 +27,10 @@ const Facets = {
     container.innerHTML = sorted.map(([val, count]) => {
       const label = labels ? (labels[val] || val) : val;
       const isActive = active === val;
-      return `<div class="facet-item ${isActive ? 'active' : ''}"
-                   onclick="Facets.toggle('${filterKey}', '${val.replace(/'/g, "\\'")}')">
+      const escaped = val.replace(/'/g, "\\'");
+      return `<div class="facet-item ${isActive ? 'active' : ''}" tabindex="0" role="button"
+                   onclick="Facets.toggle('${filterKey}', '${escaped}')"
+                   onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Facets.toggle('${filterKey}','${escaped}')}">
         <span>${esc(label)}</span>
         <span class="facet-count">${count}</span>
       </div>`;

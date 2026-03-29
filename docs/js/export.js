@@ -3,7 +3,7 @@
  */
 const Export = {
   _getEntry(pageId) {
-    return App.entries.find(e => e.sourcePageId === pageId);
+    return App.entryMap.get(pageId);
   },
 
   bibtex(pageId) {
@@ -16,13 +16,13 @@ const Export = {
     if (!isAboutZweig) {
       fields.push(`  author = {Zweig, Stefan}`);
     }
-    if (e.title) fields.push(`  title = {${e.title}}`);
+    if (e.title) fields.push(`  title = {${escapeBibtex(e.title)}}`);
     if (e.year) fields.push(`  year = {${e.year}}`);
-    if (e.publisher) fields.push(`  publisher = {${e.publisher}}`);
-    if (e.location) fields.push(`  address = {${e.location}}`);
+    if (e.publisher) fields.push(`  publisher = {${escapeBibtex(e.publisher)}}`);
+    if (e.location) fields.push(`  address = {${escapeBibtex(e.location)}}`);
     if (e.pageCount) fields.push(`  pages = {${e.pageCount}}`);
-    if (e.language) fields.push(`  language = {${e.language}}`);
-    if (e.translator) fields.push(`  note = {Translated by ${e.translator}}`);
+    if (e.language) fields.push(`  language = {${escapeBibtex(e.language)}}`);
+    if (e.translator) fields.push(`  note = {Translated by ${escapeBibtex(e.translator)}}`);
     if (isAboutZweig) fields.push(`  keywords = {Stefan Zweig}`);
 
     const type = (e.entryType === 'essay' || e.entryType === 'newspaper') ? 'article' : 'book';
@@ -46,7 +46,7 @@ const Export = {
     if (e.location) lines.push(`CY  - ${e.location}`);
     if (e.language) lines.push(`LA  - ${e.language}`);
     if (e.translator) lines.push(`A2  - ${e.translator}`);
-    if (e.pageCount) lines.push(`SP  - ${e.pageCount}`);
+    if (e.pageCount) lines.push(`N1  - ${e.pageCount} pages`);
     lines.push(`ER  -`);
     downloadBlob(lines.join('\n'), `klawiter-${pageId}.ris`, 'application/x-research-info-systems');
   },
@@ -77,6 +77,26 @@ const Export = {
         setTimeout(() => { btn.innerHTML = orig; }, 2000);
       }
     });
+  },
+
+  batchBibtex(entries) {
+    const bibs = entries.map(e => {
+      const key = `klawiter${e.sourcePageId}`;
+      const fields = [];
+      const isAboutZweig = ABOUT_ZWEIG_TYPES.includes(e.entryType);
+      if (!isAboutZweig) fields.push(`  author = {Zweig, Stefan}`);
+      if (e.title) fields.push(`  title = {${escapeBibtex(e.title)}}`);
+      if (e.year) fields.push(`  year = {${e.year}}`);
+      if (e.publisher) fields.push(`  publisher = {${escapeBibtex(e.publisher)}}`);
+      if (e.location) fields.push(`  address = {${escapeBibtex(e.location)}}`);
+      if (e.pageCount) fields.push(`  pages = {${e.pageCount}}`);
+      if (e.language) fields.push(`  language = {${escapeBibtex(e.language)}}`);
+      if (e.translator) fields.push(`  note = {Translated by ${escapeBibtex(e.translator)}}`);
+      if (isAboutZweig) fields.push(`  keywords = {Stefan Zweig}`);
+      const type = (e.entryType === 'essay' || e.entryType === 'newspaper') ? 'article' : 'book';
+      return `@${type}{${key},\n${fields.join(',\n')}\n}`;
+    });
+    downloadBlob(bibs.join('\n\n'), 'klawiter-results.bib', 'application/x-bibtex');
   },
 
   fullDataset() {

@@ -5,6 +5,7 @@
 const App = {
   data: null,
   entries: [],    // namespace 0 only
+  entryMap: new Map(),  // sourcePageId → entry for O(1) lookup
   index: null,
   filtered: [],
   state: {
@@ -23,6 +24,7 @@ const App = {
       this.data = await resp.json();
       // Filter to namespace 0 only
       this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
+      this.entryMap = new Map(this.entries.map(e => [e.sourcePageId, e]));
       this.logDataSummary();
       this.buildIndex();
       this.bindEvents();
@@ -123,7 +125,7 @@ const App = {
     // Entry view — show in results with card expanded
     if (params.has('entry')) {
       const pid = parseInt(params.get('entry'));
-      const entry = this.entries.find(e => e.sourcePageId === pid);
+      const entry = this.entryMap.get(pid);
       if (entry) {
         // Show all entries of the same type as context, with this entry visible
         this.state.query = '';
@@ -214,7 +216,7 @@ const App = {
     if (s === 'year-asc') {
       this.filtered.sort((a, b) => (a.year || 9999) - (b.year || 9999));
     } else if (s === 'year-desc') {
-      this.filtered.sort((a, b) => (b.year || 0) - (a.year || 0));
+      this.filtered.sort((a, b) => (b.year || -1) - (a.year || -1));
     } else if (s === 'title') {
       this.filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
     }
@@ -245,7 +247,7 @@ const App = {
   },
 
   showDetail(pageId) {
-    const entry = this.entries.find(e => e.sourcePageId === pageId);
+    const entry = this.entryMap.get(pageId);
     this.state.view = 'detail';
     this.state.entryId = pageId;
     this.showView('detail');
@@ -259,10 +261,23 @@ const App = {
     const end = Math.min((this.state.page + 1) * this.state.pageSize, total);
     const visible = this.filtered.slice(0, end);
 
-    document.getElementById('results-count').textContent =
-      `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
+    const countEl = document.getElementById('results-count');
+    countEl.textContent = `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
+
+    // Show/hide batch export button
+    const exportBtn = document.getElementById('batch-export-btn');
+    if (exportBtn) exportBtn.classList.toggle('hidden', total === 0);
 
     const list = document.getElementById('results-list');
+    if (total === 0) {
+      const q = this.state.query ? `for "${esc(this.state.query)}"` : '';
+      list.innerHTML = `<div class="empty-state">
+        <p>No results ${q}.</p>
+        <p>Try broadening your search or removing filters.</p>
+      </div>`;
+      document.getElementById('load-more').classList.add('hidden');
+      return;
+    }
     list.innerHTML = visible.map(e => this.renderCard(e)).join('');
 
     document.getElementById('load-more').classList.toggle('hidden', end >= total);
@@ -284,7 +299,9 @@ const App = {
     const snippet = esc((e.fullBibliographicEntry || '').slice(0, 180));
 
     return `<div class="entry-card" id="card-${e.sourcePageId}">
-      <div class="card-header" onclick="App.toggleCard(${e.sourcePageId})">
+      <div class="card-header" tabindex="0" role="button"
+           onclick="App.toggleCard(${e.sourcePageId})"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.toggleCard(${e.sourcePageId})}">
         <div class="card-meta">${badge} ${year} ${lang} ${loc}</div>
         <div class="card-title">${title}</div>
         ${secondary}
@@ -313,7 +330,7 @@ const App = {
     });
 
     // Render detail content and expand
-    const entry = this.entries.find(e => e.sourcePageId === pageId);
+    const entry = this.entryMap.get(pageId);
     if (entry) {
       detailEl.innerHTML = Detail.renderInline(entry);
       detailEl.classList.remove('hidden');

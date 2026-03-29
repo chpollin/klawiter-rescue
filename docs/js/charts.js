@@ -40,23 +40,23 @@ const Charts = {
 
       <div class="chart-card chart-card-full">
         <div class="chart-title">Publications by Decade</div>
-        <canvas id="chart-timeline" height="180"></canvas>
+        <div class="chart-container chart-container-timeline"><canvas id="chart-timeline"></canvas></div>
       </div>
 
       <div class="charts-grid" style="margin-top:1.5rem">
         <div class="chart-card">
           <div class="chart-title">Languages (Top 10)</div>
-          <canvas id="chart-languages" height="220"></canvas>
+          <div class="chart-container chart-container-square"><canvas id="chart-languages"></canvas></div>
         </div>
         <div class="chart-card">
           <div class="chart-title">Locations (Top 15)</div>
-          <canvas id="chart-locations" height="220"></canvas>
+          <div class="chart-container chart-container-square"><canvas id="chart-locations"></canvas></div>
         </div>
       </div>
 
       <div class="chart-card chart-card-full" style="margin-top:1.5rem">
         <div class="chart-title">Entry Types</div>
-        <canvas id="chart-types" height="140"></canvas>
+        <div class="chart-container chart-container-types"><canvas id="chart-types"></canvas></div>
       </div>
 
       <div class="stats-export">
@@ -105,6 +105,8 @@ const Charts = {
           }],
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: true,
           plugins: { legend: { display: false } },
           scales: {
             y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#EDE8DF' } },
@@ -151,6 +153,8 @@ const Charts = {
           datasets: [{ data, backgroundColor: colors }],
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: true,
           plugins: {
             legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } },
           },
@@ -188,6 +192,8 @@ const Charts = {
           }],
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: true,
           indexAxis: 'y',
           plugins: { legend: { display: false } },
           scales: {
@@ -233,6 +239,8 @@ const Charts = {
           }],
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: true,
           indexAxis: 'y',
           plugins: { legend: { display: false } },
           scales: {
