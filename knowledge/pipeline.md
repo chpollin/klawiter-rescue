@@ -18,6 +18,17 @@ zweig_page (6,725 pages)
 
 **zweig_page**: `page_id` (unique), `page_namespace` (0 = main namespace, 6,296 pages), `page_title` (underscores instead of spaces), `page_latest` (current revision).
 
+Total pages in database: 6,725. Breakdown by namespace:
+
+| Namespace | Pages | Content |
+|-----------|-------|---------|
+| 0 (Main) | 6,296 | **Bibliography entries — extracted by pipeline** |
+| 14 (Category) | 420 | Category descriptions — currently not extracted |
+| 8 (MediaWiki) | 5 | System messages |
+| 10 (Template) | 2 | Templates |
+| 12 (Help) | 1 | Help page |
+| 6 (File) | 1 | File description |
+
 **zweig_content**: `content_address` in format `tt:XXXXX` — pointer to text ID in BLOB.
 
 ### BLOB Files
@@ -32,23 +43,26 @@ INSERT INTO zweig_text VALUES
 
 | File | Size | Entries |
 |------|------|---------|
-| zt_00 | ~28 MB | 2,736 |
-| zt_01 | ~37 MB | 6,869 |
-| zt_02 | ~35 MB | 5,841 |
-| zt_03 | ~30 MB | 11,613 |
-| zt_04 | ~42 MB | 10,587 |
-| zt_05 | ~44 MB | 5,731 |
-| zt_06 | ~35 MB | 8,217 |
-| zt_07 | ~11 MB | 1,422 |
+| zt_00 | 27.4 MB | 2,736 |
+| zt_01 | 49.0 MB | 6,869 |
+| zt_02 | 48.7 MB | 5,841 |
+| zt_03 | 49.0 MB | 11,613 |
+| zt_04 | 48.1 MB | 10,587 |
+| zt_05 | 48.2 MB | 5,731 |
+| zt_06 | 49.3 MB | 8,217 |
+| zt_07 | 10.6 MB | 1,422 |
 
 The BLOBs contain not only current versions but all historical revisions (53,016 text entries for 6,296 pages).
 
 ### SQL Dump
 
-`zweig_part_01.sql` (33 MB) contains:
-- 48 CREATE TABLE statements (full MediaWiki schema)
-- INSERT data for all tables except `zweig_text`
-- The `zweig_text` data lives in the separate BLOB files
+Three SQL files exist in `data/raw/`:
+
+| File | Size | Content | Used by pipeline |
+|------|------|---------|-----------------|
+| `zweig_part_01.sql` | 33 MB | 48 CREATE TABLE + INSERT data for all tables except `zweig_text` | **Yes** |
+| `zweig_part_02.sql` | 522 B | Empty `zweig_text` table schema (no data) | No (data is in zt_* files) |
+| `zweig_part_03.sql` | 21 KB | System metadata (users, watchlists, update logs) | No (not bibliography data) |
 
 ### Wiki Markup
 
@@ -96,7 +110,7 @@ Parses the SQL dump and 8 binary files directly in Python. No MySQL needed.
 
 **Output**: `01_extracted.csv` — columns: `page_id`, `page_title`, `text_id`, `content`, `flags`, `blob_id`
 
-**Result**: 6,295 of 6,296 entries (99.99%)
+**Result**: 6,295 of 6,296 namespace-0 entries (99.98%). The 1 missing entry: page_id 2979, text_id 18046, "A unidade espiritual do mundo" — exists in database mapping but not found in any BLOB file.
 
 ### 02_fix_encoding.py — Encoding Fix
 

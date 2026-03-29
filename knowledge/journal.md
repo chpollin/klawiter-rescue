@@ -4,6 +4,31 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 1b: Raw Data Verification
+
+### What we did
+
+Ran two parallel analysis agents to cross-verify raw source data against pipeline extraction logic:
+- Agent 1: Analyzed all files in `data/raw/` — file sizes, SQL structure, BLOB format, text ID counts
+- Agent 2: Analyzed `pipeline/01_extract.py` — extraction logic, namespace filtering, BLOB parsing, coverage
+
+### Learnings
+
+- **Pipeline is verified correct**: All 6,296 namespace-0 pages are processed. 6,295 find their content in BLOBs (99.98%).
+- **The missing entry is identified**: page_id 2979, text_id 18046, "A unidade espiritual do mundo" (Portuguese edition). The text_id exists in the database mapping but is absent from all 8 BLOB files — this is a source data issue, not a pipeline bug.
+- **429 non-namespace-0 pages are excluded by design**: Most notably **420 Category pages** (namespace 14). These contain category descriptions and hierarchies that could be valuable metadata but are not bibliography entries.
+- **SQL dump files 02 and 03 are correctly ignored**: `zweig_part_02.sql` is just the empty `zweig_text` table schema. `zweig_part_03.sql` contains system metadata (4 user accounts, 47 update log entries, 48 watchlist records) — none relevant to bibliography.
+- **BLOBs contain 53,016 text entries** across all 8 files, covering all historical revisions. Pipeline correctly extracts only the latest revision per page (via `page_latest`).
+- **BLOB file sizes were wrong in documentation**: Previously listed as 28–44 MB, actual sizes are 27–49 MB. Updated in pipeline.md.
+
+### Ideas & open threads
+
+- **420 Category pages**: Should we extract these? They could provide richer category descriptions for the frontend (currently categories are just labels). Would need a separate extraction step or expanding namespace filter.
+- **Historical revisions**: 45,650 earlier versions are discarded. Could be interesting for a "history of the bibliography" analysis, but not needed for the current project scope.
+- **The missing Portuguese entry**: Could try to recover by searching the BLOB files for the page title string rather than the text_id. Might be a text_id mismatch from a re-import.
+
+---
+
 ## 2026-03-29 — Session 1: Repository Restructuring & Planning
 
 ### What we did

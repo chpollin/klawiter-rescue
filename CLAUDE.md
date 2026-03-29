@@ -27,13 +27,20 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **Static frontend**: Vanilla JS + Tailwind CDN + FlexSearch + Chart.js, no build step
 - **GitHub Pages**: Deploy from `docs/` folder
 
+## Source Data Coverage
+
+- Database has 6,725 pages total; pipeline extracts **namespace 0 only** (6,296 bibliography entries)
+- 420 Category-namespace pages (ns 14) are not extracted — contain category descriptions
+- Only `zweig_part_01.sql` is used; `_02` (empty schema) and `_03` (system metadata) are correctly ignored
+- BLOBs contain 53,016 text entries (all revisions); pipeline uses only the latest revision per page
+- 1 missing entry: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB
+
 ## Known Limitations
 
 - Publisher extraction: 34.5% coverage (needs more regex patterns or NER)
 - Translator: 35.1% coverage (0% false positives, but many format variants missed)
 - 33 bracket-titles remain where no page_title fallback exists
 - JSON-LD namespace URL (`klawiter-rescue.github.io/vocab/`) not yet resolvable
-- 1 of 6,296 entries not found in any BLOB
 
 ## Documentation
 
