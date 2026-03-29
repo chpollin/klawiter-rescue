@@ -348,11 +348,167 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-/* Category tile grid */
+/* Category list (expandable rows) */
 .category-section {
   margin-bottom: 2rem;
 }
 
+.category-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-row {
+  border-bottom: 1px solid var(--sz-border-light);
+}
+.category-row:last-child {
+  border-bottom: none;
+}
+
+.category-row-header {
+  display: flex;
+  align-items: center;
+  padding: 0.625rem 0;
+  gap: 0.5rem;
+}
+
+.category-row-name {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--sz-text);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.category-row-name:hover {
+  color: var(--sz-burgundy);
+}
+
+.category-row-count {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--sz-burgundy);
+  margin-left: auto;
+}
+
+.category-expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--sz-text-light);
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+}
+.category-expand-btn:hover {
+  color: var(--sz-burgundy);
+}
+.expand-chevron {
+  transition: transform 0.2s ease;
+}
+.category-row.expanded .expand-chevron {
+  transform: rotate(180deg);
+}
+
+/* Subcategory expand area */
+.category-expand {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding-left: 1rem;
+}
+.category-row.expanded .category-expand {
+  max-height: 500px;
+}
+
+.subcategory-group {
+  margin-bottom: 0.5rem;
+}
+
+.subcategory-format {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--sz-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.subcategory-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.375rem;
+}
+
+.subcategory-item {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-text);
+  background: var(--sz-white);
+  border: 1px solid var(--sz-border);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.subcategory-item:hover {
+  border-color: var(--sz-burgundy);
+  color: var(--sz-burgundy);
+}
+
+.subcategory-count {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  color: var(--sz-text-light);
+}
+
+.subcategory-more {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--sz-text-light);
+  padding: 0.2rem 0.5rem;
+}
+
+/* Browse & Explore buttons */
+.home-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.browse-btn {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sz-cream);
+  background: var(--sz-burgundy);
+  border: none;
+  border-radius: 4px;
+  padding: 0.625rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.browse-btn:hover {
+  background: var(--sz-burgundy-dark);
+}
+
+.explore-link {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--sz-burgundy);
+  text-decoration: none;
+}
+.explore-link:hover {
+  text-decoration: underline;
+}
+
+/* Keep tile grid for backward compat (used by "other" section) */
 .tile-grid {
   display: flex;
   flex-wrap: wrap;

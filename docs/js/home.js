@@ -1,8 +1,8 @@
 /**
- * Startseite — Category portal with tiles grouped by Werke / Rezeption / Editionen.
+ * Startseite — Expandable category list with subcategories, browse CTA, explore link.
  */
 const Home = {
-  // Uses CATEGORY_GROUPS from constants.js
+  expandedType: null,
 
   render(entries) {
     const container = document.getElementById('view-home');
@@ -13,6 +13,9 @@ const Home = {
       if (e.entryType) counts[e.entryType] = (counts[e.entryType] || 0) + 1;
     }
 
+    // Build subcategory tree from categories arrays
+    const subcats = this._buildSubcategories(entries);
+
     // Stats
     const languages = new Set(entries.map(e => e.language).filter(Boolean));
     const locations = new Set(entries.map(e => e.location).filter(Boolean));
@@ -22,22 +25,16 @@ const Home = {
 
     // Build groups HTML
     const groupsHtml = CATEGORY_GROUPS.map(group => {
-      const tiles = group.types
+      const rows = group.types
         .filter(t => counts[t])
-        .map(t => `
-          <div class="category-tile" tabindex="0" role="button"
-               onclick="App.setFilter('type', '${t}')"
-               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('type','${t}')}">
-            <div class="tile-name">${esc(ENTRY_TYPE_LABELS[t] || t)}</div>
-            <div class="tile-count">${(counts[t] || 0).toLocaleString('de-DE')}</div>
-          </div>
-        `).join('');
+        .map(t => this._renderCategoryRow(t, counts[t], subcats[t]))
+        .join('');
 
-      if (!tiles) return '';
+      if (!rows) return '';
       return `
         <div class="category-section">
           <h2 class="section-heading">${esc(group.heading)}</h2>
-          <div class="tile-grid">${tiles}</div>
+          <div class="category-list">${rows}</div>
         </div>
       `;
     }).join('');
@@ -47,18 +44,13 @@ const Home = {
     const otherTypes = Object.keys(counts).filter(t => !groupedTypes.has(t) && counts[t] > 0);
     let otherHtml = '';
     if (otherTypes.length) {
-      const otherTiles = otherTypes.map(t => `
-        <div class="category-tile" tabindex="0" role="button"
-             onclick="App.setFilter('type', '${t}')"
-             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('type','${t}')}">
-          <div class="tile-name">${esc(ENTRY_TYPE_LABELS[t] || t)}</div>
-          <div class="tile-count">${counts[t]}</div>
-        </div>
-      `).join('');
+      const otherRows = otherTypes.map(t =>
+        this._renderCategoryRow(t, counts[t], subcats[t])
+      ).join('');
       otherHtml = `
         <div class="category-section">
           <h2 class="section-heading">Other</h2>
-          <div class="tile-grid">${otherTiles}</div>
+          <div class="category-list">${otherRows}</div>
         </div>
       `;
     }
@@ -75,10 +67,14 @@ const Home = {
         </p>
         <div class="home-search">
           <input type="search" id="home-search-input"
-                 placeholder="Search ${entries.length.toLocaleString('en')} entries… (press Enter)">
+                 placeholder="Search ${entries.length.toLocaleString('en')} entries\u2026 (press Enter)">
           <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
+        </div>
+        <div class="home-actions">
+          <button class="browse-btn" onclick="location.hash='browse'">Browse Catalogue</button>
+          <a href="#stats" class="explore-link">Explore the Collection &rarr;</a>
         </div>
       </div>
 
@@ -86,23 +82,149 @@ const Home = {
       ${otherHtml}
 
       <div class="home-stats-line">
-        ${entries.length.toLocaleString('en')} entries · ${languages.size} languages ·
-        ${locations.size} locations · ${minYear}–${maxYear}
-        &nbsp;&middot;&nbsp; <a href="#stats">Detailed statistics →</a>
+        ${entries.length.toLocaleString('en')} entries &middot; ${languages.size} languages &middot;
+        ${locations.size} locations &middot; ${minYear}&ndash;${maxYear}
       </div>
     `;
 
-    // Bind home search — navigate only on Enter, not on every keystroke
+    // Bind home search
     const homeSearch = document.getElementById('home-search-input');
     if (homeSearch) {
       homeSearch.addEventListener('keydown', (ev) => {
         if (ev.key === 'Enter') {
           const q = ev.target.value.trim();
-          if (q) {
-            location.hash = `q=${encodeURIComponent(q)}`;
-          }
+          if (q) location.hash = `q=${encodeURIComponent(q)}`;
         }
       });
+    }
+  },
+
+  _renderCategoryRow(type, count, subcatData) {
+    const label = ENTRY_TYPE_LABELS[type] || type;
+    const hasSubcats = subcatData && subcatData.length > 0;
+    const chevron = hasSubcats
+      ? `<button class="category-expand-btn" onclick="event.stopPropagation();Home.toggleExpand('${type}')" aria-label="Expand ${label}">
+           <svg class="expand-chevron" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="8">
+             <path d="M1 1.5L6 6.5L11 1.5"/>
+           </svg>
+         </button>`
+      : '';
+
+    const subcatHtml = hasSubcats
+      ? `<div class="category-expand" id="subcats-${type}">${this._renderSubcategories(subcatData)}</div>`
+      : '';
+
+    return `
+      <div class="category-row" id="catrow-${type}">
+        <div class="category-row-header">
+          <span class="category-row-name" role="button" tabindex="0"
+                onclick="App.setFilter('type','${type}')"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('type','${type}')}">${esc(label)}</span>
+          <span class="category-row-count">${count.toLocaleString('en')}</span>
+          ${chevron}
+        </div>
+        ${subcatHtml}
+      </div>
+    `;
+  },
+
+  _renderSubcategories(subcatData) {
+    // Group by format (e.g., "Individual Stories", "Volumes")
+    const byFormat = {};
+    for (const { format, language, count, fullCategory } of subcatData) {
+      if (!byFormat[format]) byFormat[format] = [];
+      byFormat[format].push({ language, count, fullCategory });
+    }
+
+    return Object.entries(byFormat).map(([format, items]) => {
+      // Sort by count descending
+      items.sort((a, b) => b.count - a.count);
+      const itemsHtml = items.slice(0, 10).map(it =>
+        `<span class="subcategory-item" role="button" tabindex="0"
+              onclick="App.setFilter('category','${esc(it.fullCategory)}')"
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('category','${esc(it.fullCategory)}')}">${esc(it.language)} <span class="subcategory-count">${it.count}</span></span>`
+      ).join('');
+      const moreCount = items.length - 10;
+      const more = moreCount > 0 ? `<span class="subcategory-more">+${moreCount} more</span>` : '';
+      return `
+        <div class="subcategory-group">
+          <span class="subcategory-format">${esc(format)}</span>
+          <div class="subcategory-items">${itemsHtml}${more}</div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  _buildSubcategories(entries) {
+    // Parse "MainCategory / Format (Language)" patterns from categories arrays
+    const tree = {}; // entryType -> [{ format, language, count, fullCategory }]
+
+    const catCounts = {};
+    for (const e of entries) {
+      if (!e.categories) continue;
+      for (const cat of e.categories) {
+        catCounts[cat] = (catCounts[cat] || 0) + 1;
+      }
+    }
+
+    // Map entryType labels to match category prefixes
+    const typeToPrefix = {};
+    for (const [type, label] of Object.entries(ENTRY_TYPE_LABELS)) {
+      // "fiction" -> "Fiction", "secondary-literature" -> "Secondary Literature"
+      typeToPrefix[type] = label;
+    }
+
+    for (const [cat, count] of Object.entries(catCounts)) {
+      if (!cat.includes(' / ')) continue;
+
+      const slashPos = cat.indexOf(' / ');
+      const prefix = cat.substring(0, slashPos);
+      const rest = cat.substring(slashPos + 3);
+
+      // Find which entryType this prefix belongs to
+      let matchedType = null;
+      for (const [type, label] of Object.entries(ENTRY_TYPE_LABELS)) {
+        if (prefix === label || prefix.startsWith(label)) {
+          matchedType = type;
+          break;
+        }
+      }
+      if (!matchedType) continue;
+
+      // Parse "Format (Language)" from rest
+      const parenMatch = rest.match(/^(.+?)\s*\(([^)]+)\)$/);
+      let format, language;
+      if (parenMatch) {
+        format = parenMatch[1].trim();
+        language = parenMatch[2].trim();
+      } else {
+        format = rest.trim();
+        language = '';
+      }
+
+      if (!tree[matchedType]) tree[matchedType] = [];
+      tree[matchedType].push({ format, language: language || format, count, fullCategory: cat });
+    }
+
+    return tree;
+  },
+
+  toggleExpand(type) {
+    const row = document.getElementById(`catrow-${type}`);
+    const subcats = document.getElementById(`subcats-${type}`);
+    if (!row || !subcats) return;
+
+    if (row.classList.contains('expanded')) {
+      row.classList.remove('expanded');
+      this.expandedType = null;
+    } else {
+      // Close any other expanded row
+      if (this.expandedType && this.expandedType !== type) {
+        const prev = document.getElementById(`catrow-${this.expandedType}`);
+        if (prev) prev.classList.remove('expanded');
+      }
+      row.classList.add('expanded');
+      this.expandedType = type;
     }
   },
 };

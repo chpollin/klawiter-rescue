@@ -120,6 +120,21 @@ const App = {
       return;
     }
 
+    // Browse view — show all entries, no filters
+    if (hash === 'browse') {
+      this.state.query = '';
+      this.state.filters = {};
+      document.getElementById('search-input').value = '';
+      this.filtered = [...this.entries];
+      this.state.page = 0;
+      this.sortEntries();
+      this.showView('results');
+      this.renderResults();
+      Facets.render(this.filtered);
+      this.renderChips();
+      return;
+    }
+
     // Stats view — always shows full dataset, clears filters
     if (hash === 'stats') {
       this.state.query = '';
@@ -165,7 +180,7 @@ const App = {
     this.state.query = params.get('q') || '';
     this.state.filters = {};
     for (const [key, val] of params) {
-      if (['type', 'language', 'period', 'location'].includes(key)) {
+      if (['type', 'language', 'period', 'location', 'category'].includes(key)) {
         this.state.filters[key] = val;
       }
     }
@@ -208,6 +223,7 @@ const App = {
         if (f.language && e.language !== f.language) return false;
         if (f.period && e.timePeriod !== f.period) return false;
         if (f.location && e.location !== f.location) return false;
+        if (f.category && !(e.categories || []).includes(f.category)) return false;
         return true;
       });
 
@@ -360,7 +376,7 @@ const App = {
     const chips = [];
     for (const [key, val] of Object.entries(this.state.filters)) {
       const label = key === 'type' ? 'Type' : key === 'language' ? 'Language' :
-                    key === 'period' ? 'Period' : 'Location';
+                    key === 'period' ? 'Period' : key === 'category' ? 'Category' : 'Location';
       const display = key === 'type' ? (ENTRY_TYPE_LABELS[val] || val) :
                       key === 'period' ? (PERIOD_LABELS[val] || val) : val;
       chips.push(`<span class="chip">${esc(label)}: ${esc(display)}
