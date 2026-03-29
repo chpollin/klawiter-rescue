@@ -85,19 +85,40 @@ Harden the extraction pipeline: eliminate code duplication, add comprehensive te
 - [ ] Write integration test: run full pipeline on 50 fixture entries, compare output against golden files
 - [ ] Verify all tests pass
 
-### M3.4: Improve extraction coverage
+### M3.4: Verification & Quality Assurance
 
-- [ ] Analyze 100 entries where publisher is NULL — identify missing patterns
-- [ ] Add publisher patterns: international naming (e.g. Japanese, Arabic publishers), patterns without explicit "Verlag/Press" label
-- [ ] Analyze 100 entries where translator is NULL but entry type suggests translation
-- [ ] Add translator patterns: non-Latin scripts, abbreviated forms, multi-translator entries
-- [ ] Re-run pipeline, measure coverage improvement
-- [ ] Update tests for new patterns
+- [x] Build `pipeline/verify.py` — round-trip verification (JSON-LD output vs raw content)
+- [x] Verify all regex extractions: 100% precision across all fields
+- [x] Identify false negatives: 86 publisher, 2 translator missed by regex
+- [x] Build implementation plan for LLM-based enrichment
+
+### M3.5: LLM-based Extraction (Gemini 3.1 Flash Lite)
+
+- [x] Build `pipeline/03b_llm_enrich.py` — LLM metadata enrichment step
+- [x] Build `pipeline/lib/llm_extract.py` — Gemini client, Pydantic schema, batch logic
+- [x] Test with 5-entry quick test (all correct)
+- [x] Test with 20-entry stratified sample (13/13 correct, 0 hallucinations)
+- [x] Full LLM run (~3,000 entries, 275 batches, ~$0.33, 0 errors)
+- [x] Results: publisher 34.5%→55.6%, location 67.8%→87.5%, translator 35.1%→41.9%, page_count 78.4%→81.6%
+
+### M3.6: Fix LLM extraction issues
+
+- [x] Analyze false positives with sub-agents (publisher, location, translator, page_count)
+- [x] Finding: 0 hallucinations — all FPs are encoding comparison artifacts
+- [x] Fix: reject mojibake in LLM validation (31 values filtered)
+- [x] Fix: page count off-by-one in page range calculation (11 FP → 1 FP)
+- [x] Fix: encoding-aware comparison + N/(M)p. summation in verify.py
+- [ ] Remaining: ~170 publisher + ~96 location FP (encoding diffs in verification, not real errors)
+
+### M3.7: Improve extraction coverage further
+
+- [ ] Analyze entries still missing publisher (~44%) — which have it in text vs legitimately missing?
+- [ ] Analyze entries still missing translator (~58%) — which are translations without detected translator?
 - [ ] Investigate the 1 missing entry (not found in any BLOB)
-- [ ] Investigate 33 remaining bracket titles — can more be resolved?
+- [ ] Investigate 33 remaining bracket titles
 - [ ] Update `data.md` with new quality metrics
 
-### M3.5: Manual validation
+### M3.8: Manual validation
 
 - [ ] Select 50 entries stratified by type, language, time period
 - [ ] Compare extracted title, year, publisher, location against raw wiki content

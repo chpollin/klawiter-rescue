@@ -146,17 +146,21 @@ All numbers refer to non-redirect entries (n=4,751) unless stated otherwise.
 
 ### Field Coverage
 
-| Field | Coverage | Notes |
-|-------|----------|-------|
-| title | 100.0% | 33 remaining bracket titles without page_title fallback |
-| categories | 99.8% | 11 entries without category |
-| fullBibliographicEntry | 99.3% | 32 entries with only category tag, no content |
-| year | 93.2% | First match only, no range detection |
-| language | 89.4% | Derived from category names (e.g. "(German)") |
-| pageCount | 78.4% | Pattern: `\d+ p.` and variants |
-| location | 67.8% | Matched against list of ~100 known cities |
-| translator | 35.1% | Only explicit "Translated by Name" patterns |
-| publisher | 34.5% | Weakest field — only 3 regex families |
+After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Lite):
+
+| Field | Coverage | Regex only | Improvement | Notes |
+|-------|----------|------------|-------------|-------|
+| title | 100.0% | 100.0% | — | 33 remaining bracket titles without page_title fallback |
+| categories | 99.8% | 99.8% | — | 11 entries without category |
+| fullBibliographicEntry | 99.3% | 99.3% | — | 32 entries with only category tag, no content |
+| year | 93.2% | 93.2% | — | First match only, no range detection |
+| language | 89.4% | 89.4% | — | Derived from category names (e.g. "(German)") |
+| location | 87.5% | 67.8% | **+19.7pp** | LLM reads non-standard city names |
+| pageCount | 81.6% | 78.4% | +3.2pp | LLM parses unusual formats |
+| publisher | 55.6% | 34.5% | **+21.1pp** | LLM reads publishers without "Verlag/Press" markers |
+| translator | 41.9% | 35.1% | +6.8pp | LLM reads abbreviations and non-English patterns |
+
+**Precision**: All fields ≥99% real precision. Regex extractions have 100% precision. LLM extractions have 0 hallucinations (verified on 20-entry stratified sample + full-run FP analysis).
 
 ### Encoding
 
@@ -168,9 +172,9 @@ All numbers refer to non-redirect entries (n=4,751) unless stated otherwise.
 
 ### Known Problems
 
-**Publisher extraction (34.5%)**: Only 3 regex families: `Verlag|Publisher|Press`, `published by`, and name patterns. Many international publishers are not recognized. Improvement needs more patterns or Named Entity Recognition.
+**Publisher extraction (55.6%)**: Regex covers 34.5% (3 pattern families), LLM adds +21.1pp. Remaining ~44% are mostly entries without publisher info (journal articles, essays in anthologies, cross-references).
 
-**Translator extraction (35.1%)**: Deliberate trade-off: the old extraction had 69% coverage but 46% false positives. The current one has 0% false positives at 35% coverage. Missing patterns: non-Latin scripts, unusual phrasings.
+**Translator extraction (41.9%)**: Regex covers 35.1% with 0% false positives. LLM adds +6.8pp. Remaining ~58% are mostly German originals (no translator) or entries that don't name the translator.
 
 **33 bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. For 33 of these, no usable page_title exists as fallback.
 

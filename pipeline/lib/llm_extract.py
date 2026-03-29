@@ -123,26 +123,43 @@ def call_gemini(client, batch_entries):
                 return []
 
 
+import re
+
+# Mojibake patterns that indicate the LLM worsened encoding
+_LLM_MOJIBAKE_RE = re.compile(r'â€[™œ"˜]|â€™|â€œ|â€\x9d|â€\x98|Ã[\x80-\xbf]|Â[\xa0-\xff]')
+
+
+def _has_llm_mojibake(text):
+    """Detect mojibake patterns introduced by the LLM."""
+    return bool(text and _LLM_MOJIBAKE_RE.search(text))
+
+
 def validate_extraction(extraction):
     """Validate a single LLM extraction result. Returns cleaned dict."""
     result = {'page_id': extraction.page_id}
 
-    # Publisher: 3-80 chars, no wiki markup
+    # Publisher: 3-80 chars, no wiki markup, no mojibake
     if extraction.publisher:
         pub = extraction.publisher.strip().rstrip('.,;:')
-        if 3 <= len(pub) <= 80 and '[[' not in pub and "'''" not in pub:
+        if (3 <= len(pub) <= 80
+                and '[[' not in pub and "'''" not in pub
+                and not _has_llm_mojibake(pub)):
             result['publisher'] = pub
 
-    # Location: 2-60 chars, no wiki markup
+    # Location: 2-60 chars, no wiki markup, no mojibake
     if extraction.location:
         loc = extraction.location.strip().rstrip('.,;:')
-        if 2 <= len(loc) <= 60 and '[[' not in loc and "'''" not in loc:
+        if (2 <= len(loc) <= 60
+                and '[[' not in loc and "'''" not in loc
+                and not _has_llm_mojibake(loc)):
             result['location'] = loc
 
-    # Translator: 3-60 chars, starts with uppercase
+    # Translator: 3-60 chars, starts with uppercase, no mojibake
     if extraction.translator:
         tr = extraction.translator.strip().rstrip('.,;:')
-        if 3 <= len(tr) <= 60 and tr[0].isupper() and '[[' not in tr:
+        if (3 <= len(tr) <= 60 and tr[0].isupper()
+                and '[[' not in tr
+                and not _has_llm_mojibake(tr)):
             result['translator'] = tr
 
     # Page count: 1-10000

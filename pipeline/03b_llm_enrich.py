@@ -78,13 +78,36 @@ def filter_entries(rows):
     return candidates
 
 
+import re
+
+# Page range pattern: pp. (X)-Y or pp. X-Y
+_PAGE_RANGE_RE = re.compile(r'pp?\.\s*\(?(\d+)\)?[-–](\d+)')
+
+
+def _correct_page_count(page_count, raw_content):
+    """Fix off-by-one errors in LLM page range calculations.
+    When text has 'pp. (X)-Y', correct count is Y - X + 1.
+    """
+    if not page_count or not raw_content:
+        return page_count
+    for m in _PAGE_RANGE_RE.finditer(raw_content):
+        start, end = int(m.group(1)), int(m.group(2))
+        correct = end - start + 1
+        # LLM often computes end - start (off by one)
+        if page_count == end - start:
+            return correct
+    return page_count
+
+
 def merge_result(row, validated):
     """Merge LLM result into row, filling gaps only."""
     for field in ['publisher', 'location', 'translator']:
         if not row.get(field) and validated.get(field):
             row[field] = validated[field]
     if not row.get('page_count') and validated.get('page_count'):
-        row['page_count'] = str(validated['page_count'])
+        raw = row.get('raw_content', '') or row.get('content', '')
+        corrected = _correct_page_count(validated['page_count'], raw)
+        row['page_count'] = str(corrected)
     return row
 
 
@@ -165,11 +188,29 @@ def main():
         save_cache(CACHE_PATH, cache)
         log.info(f"  LLM processing complete: {processed} entries, {api_errors} batch errors")
 
+    # Re-validate cached results with current validation rules (catches mojibake)
+    from lib.llm_extract import _has_llm_mojibake
+    revalidated_cache = {}
+    rejected = 0
+    for pid, validated in cache.items():
+        clean = {'page_id': validated['page_id']}
+        for field in ['publisher', 'location', 'translator']:
+            val = validated.get(field)
+            if val and not _has_llm_mojibake(val):
+                clean[field] = val
+            elif val:
+                rejected += 1
+        if 'page_count' in validated:
+            clean['page_count'] = validated['page_count']
+        revalidated_cache[pid] = clean
+    if rejected:
+        log.info(f"  Re-validation: rejected {rejected} mojibake values from cache")
+
     # Merge all cached results into rows
     merged = 0
     fields_filled = {'publisher': 0, 'location': 0, 'translator': 0, 'page_count': 0}
 
-    for pid, validated in cache.items():
+    for pid, validated in revalidated_cache.items():
         if pid in row_index:
             row = row_index[pid]
             old = {f: row.get(f, '') for f in fields_filled}

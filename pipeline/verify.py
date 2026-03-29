@@ -40,6 +40,28 @@ def load_raw_content_map():
     return content_map
 
 
+import re
+
+# Common mojibake substitution pairs for encoding-aware comparison
+_ENCODING_PAIRS = [
+    ('ä', 'Ã¤'), ('ö', 'Ã¶'), ('ü', 'Ã¼'), ('ß', 'Ã\x9f'),
+    ('é', 'Ã©'), ('è', 'Ã¨'), ('ê', 'Ãª'), ('ë', 'Ã«'),
+    ('á', 'Ã¡'), ('à', 'Ã '), ('â', 'Ã¢'), ('ã', 'Ã£'),
+    ('ó', 'Ã³'), ('ò', 'Ã²'), ('ô', 'Ã´'), ('õ', 'Ãµ'),
+    ('ú', 'Ãº'), ('ù', 'Ã¹'), ('û', 'Ã»'),
+    ('ñ', 'Ã±'), ('ø', 'Ã¸'), ('å', 'Ã¥'), ('æ', 'Ã¦'),
+    ('ş', 'Å\x9f'), ('ţ', 'Å£'), ('ă', 'Ä'), ('ē', 'Ä'),
+    ('š', 'Å¡'), ('č', 'Ä\x8d'), ('ž', 'Å¾'), ('ř', 'Å\x99'),
+    ('ī', 'Ä«'), ('ū', 'Å«'),
+    ("'", 'â'), ("'", 'â'),  # smart quotes → garbled
+]
+
+# Page count: N/(M)p. pattern (numbered + unnumbered pages)
+_PARENS_PAGE_RE = re.compile(r'(\d+)/\((\d+)\)\s*p', re.IGNORECASE)
+# Page range: pp. (X)-Y
+_PAGE_RANGE_RE = re.compile(r'pp?\.\s*\(?(\d+)\)?[-–](\d+)')
+
+
 def normalize(text):
     """Normalize text for comparison: lowercase, collapse whitespace."""
     if not text:
@@ -47,11 +69,55 @@ def normalize(text):
     return ' '.join(str(text).lower().split())
 
 
+def strip_encoding(text):
+    """Strip common mojibake artifacts for looser comparison."""
+    if not text:
+        return ''
+    # Remove common garbled byte sequences
+    result = text
+    for clean, garbled in _ENCODING_PAIRS:
+        result = result.replace(garbled, clean)
+    # Collapse combining characters and diacritics differences
+    result = re.sub(r'[\u0300-\u036f]', '', result)  # combining diacriticals
+    return result
+
+
 def value_in_content(value, content):
-    """Check if a value appears in the raw content (case-insensitive, whitespace-normalized)."""
+    """Check if a value appears in the raw content.
+    Tries exact match first, then encoding-aware match.
+    """
     if not value or not content:
         return False
-    return normalize(value) in normalize(content)
+    # Exact (case-insensitive, whitespace-normalized)
+    if normalize(value) in normalize(content):
+        return True
+    # Encoding-aware: strip mojibake from both sides
+    if normalize(strip_encoding(value)) in normalize(strip_encoding(content)):
+        return True
+    return False
+
+
+def page_count_in_content(page_count, content):
+    """Check if a page count value appears in raw content.
+    Handles: literal number, N/(M)p. summation, pp. X-Y ranges.
+    """
+    if page_count is None or not content:
+        return False
+    pc = int(page_count)
+    # Direct match
+    if str(pc) in content:
+        return True
+    # N/(M)p. summation: e.g. 285/(3)p. → 288
+    for m in _PARENS_PAGE_RE.finditer(content):
+        numbered, unnumbered = int(m.group(1)), int(m.group(2))
+        if numbered + unnumbered == pc:
+            return True
+    # pp. X-Y range: correct count is Y - X + 1
+    for m in _PAGE_RANGE_RE.finditer(content):
+        start, end = int(m.group(1)), int(m.group(2))
+        if end - start + 1 == pc:
+            return True
+    return False
 
 
 def has_publisher_indicator(text):
@@ -61,7 +127,6 @@ def has_publisher_indicator(text):
     """
     if not text:
         return None
-    import re
     # Pattern: "City: Something" or "City, Something, year"
     m = re.search(r'(?:Wien|Berlin|Leipzig|London|New York|Paris|Zürich|Frankfurt|München|Hamburg|Stockholm)\s*[,:]\s*([A-Z][\w\s&.\'-]{2,60})', text)
     if m:
@@ -78,7 +143,6 @@ def has_translator_indicator(text):
     """
     if not text:
         return None
-    import re
     indicators = [
         # German abbreviations
         re.compile(r'[Üü]bers\.?\s+(?:v\.?\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
@@ -207,8 +271,7 @@ def verify_entry(entry, raw_content):
     # --- Page count verification ---
     page_count = entry.get('klawiter:pageCount')
     if page_count is not None:
-        pc_str = str(page_count)
-        found = pc_str in raw_content
+        found = page_count_in_content(page_count, raw_content)
         result['fields']['page_count'] = {
             'extracted': page_count,
             'in_raw': found,
