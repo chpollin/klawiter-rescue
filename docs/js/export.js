@@ -55,7 +55,7 @@ const Export = {
     const e = this._getEntry(pageId);
     if (!e) return;
     const jsonld = {
-      '@context': { 'klawiter': 'https://klawiter-rescue.github.io/vocab/' },
+      '@context': { 'klawiter': 'https://chpollin.github.io/klawiter-rescue/vocab/' },
       '@type': e['@type'] || `klawiter:${e.entryType}Entry`,
       '@id': e['@id'] || `klawiter:entry/${pageId}`,
     };

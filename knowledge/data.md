@@ -4,13 +4,13 @@ The Klawiter bibliography dataset: its model, entity types, field coverage, and 
 
 ## Data Model
 
-Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://klawiter-rescue.github.io/vocab/`). See [[architecture]] for the rationale behind a custom namespace vs Schema.org. See [[ontology]] for the planned mapping to established vocabularies.
+Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://chpollin.github.io/klawiter-rescue/vocab/`). See [[architecture]] for the rationale behind a custom namespace vs Schema.org. See [[ontology]] for the planned mapping to established vocabularies.
 
 ### Example Entry
 
 ```json
 {
-  "@context": { "klawiter": "https://klawiter-rescue.github.io/vocab/" },
+  "@context": { "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/" },
   "@type": "klawiter:FictionEntry",
   "@id": "klawiter:entry/3",
   "klawiter:title": "Amok. Novellen einer Leidenschaft",

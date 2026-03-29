@@ -4,6 +4,32 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 8: Deployment Preparation & Namespace Fix
+
+### What we did
+
+- **Namespace URI fix**: Changed all references from `klawiter-rescue.github.io` to `chpollin.github.io/klawiter-rescue` across 10 files (vocabulary.py, export.js, pages.js, vocab/index.html, data.md, ontology.md, CLAUDE.md)
+- **GitHub link fix**: Footer link corrected from `chrstncrrnd/klawiter-rescue` to `chpollin/klawiter-rescue`
+- **LICENSE file**: Created dual-license (MIT for code, CC BY 4.0 for data)
+- **CITATION.cff**: Created for academic citation (Klawiter + Pollin as authors)
+- **README.md**: Added live URL and updated license section (was "To be clarified")
+- **Pipeline regeneration**: Steps 05+06 re-run to produce JSON-LD and frontend JSON with corrected namespace
+- **Documentation update**: Updated CLAUDE.md (test count 260→270, 9→10 JS modules, live URL), plan.md (M7 tasks checked), IMPLEMENTATION-PLAN.md (Phase 8 added)
+- **Tests verified**: 264 passed, 6 skipped, 0 failed
+
+### What we learned
+
+- The namespace URI had been set to `klawiter-rescue.github.io` (as if the repo were deployed as an organization page), but the actual deployment is at `chpollin.github.io/klawiter-rescue/` (project page under personal account). This affected JSON-LD @context resolution and all hardcoded URLs in content pages.
+- The GitHub footer link pointed to a different user (`chrstncrrnd`) — likely a leftover from an earlier contributor.
+
+### What's next
+
+- **M3.8**: Manual validation — browse 50+ entries in live frontend, spot-check against wiki source
+- **M5**: Semantic enrichment — Wikidata/GND/VIAF reconciliation for works, persons, places, publishers
+- **M7 remaining**: Live deployment testing, Zenodo DOI, announcement
+
+---
+
 ## 2026-03-29 — Session 7: Design Alignment, Verbund Navigation & EIL Curation Interface
 
 ### What we did

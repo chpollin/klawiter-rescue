@@ -255,19 +255,20 @@ Redesigned to match Stefan Zweig Digital visual language. See [[design]] and [[u
 
 ---
 
-## M7: Deployment & Publication
+## M7: Deployment & Publication ✅ (partial)
 
 Ship it. Make it citable. Make it findable.
 
 ### Tasks
 
-- [ ] Configure GitHub Pages: source = `docs/` on `main` branch
+- [x] Configure GitHub Pages: source = `docs/` on `main` branch — live at `https://chpollin.github.io/klawiter-rescue/`
+- [x] Fix namespace URI: all references updated from `klawiter-rescue.github.io` to `chpollin.github.io/klawiter-rescue`
+- [x] Add LICENSE file (MIT for code, CC BY 4.0 for data)
+- [x] Add CITATION.cff for academic citation
+- [x] Final README update with live URL and citation info
 - [ ] Test live deployment: verify all routes, search, data loading
-- [ ] Add LICENSE file (choose: CC BY 4.0 for data, MIT for code — or clarify with rights holder)
-- [ ] Add CITATION.cff for academic citation
 - [ ] Consider Zenodo deposit for DOI
 - [ ] Add link from Stefan Zweig Digital to Klawiter bibliography (coordinate with project team)
-- [ ] Final README update with live URL and citation info
 - [ ] Announce / publish
 
 ---
@@ -275,10 +276,9 @@ Ship it. Make it citable. Make it findable.
 ## Dependencies
 
 ```
-M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M3.8 (Validation) → M5 (Enrichment) → M7 (Deploy)
+M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M7 ✅ (partial) → M3.8 (Validation) → M5 (Enrichment)
 ```
 
-**Actual order** (2026-03-29): M6 (Frontend) and M4 (Ontology) were completed before M5.
-- M3.8 (Manual Validation) is deferred to after M6 — browsing entries in the frontend
-- M5 (Semantic Enrichment) is the main remaining research task
-- M7 (Deployment) can happen before M5 if desired — the site is functional
+**Status** (2026-03-29): M1–M6 complete. M7 partially done (LICENSE, CITATION.cff, namespace fix, README).
+- M3.8 (Manual Validation): deferred to after deployment — browse entries in the live frontend
+- M5 (Semantic Enrichment): main remaining research task (Wikidata/GND/VIAF reconciliation)

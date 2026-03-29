@@ -27,9 +27,10 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
 - **Vocabulary blend**: Schema.org + Dublin Core + `klawiter:` namespace (implemented in `pipeline/lib/vocabulary.py`, documented at `docs/vocab/index.html`)
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
-- **Static frontend**: Vanilla JS (9 modules) + custom CSS (SZD design) + FlexSearch + Chart.js, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
-- **Test suite**: 260 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge)
-- **GitHub Pages**: Deploy from `docs/` folder
+- **Static frontend**: Vanilla JS (10 modules) + custom CSS (SZD design) + FlexSearch + Chart.js, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
+- **Test suite**: 270 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge)
+- **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`
+- **License**: MIT (code) + CC BY 4.0 (data)
 
 ## Source Data Coverage
 
@@ -45,7 +46,7 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator
 - Location: 87.5% coverage (regex 67.8% + LLM +19.7pp)
 - ~15 bracket-titles remain where no page_title fallback exists (wiki markup cleaned in step 03)
-- JSON-LD namespace URL (`klawiter-rescue.github.io/vocab/`) resolves to `docs/vocab/index.html` (after GitHub Pages deploy)
+- JSON-LD namespace URL (`chpollin.github.io/klawiter-rescue/vocab/`) resolves to `docs/vocab/index.html` (GitHub Pages)
 
 ## EIL Curation Interface
 

@@ -188,3 +188,20 @@ Redesigned to match Stefan Zweig Digital visual language. See `knowledge/design.
 - [ ] Linked authority data display (depends on M5)
 - [ ] Performance optimization (~9 MB JSON → lazy loading?)
 - [ ] WCAG 2.1 AA accessibility audit
+
+## Phase 8: Deployment & Publication (M7) — partial ✅
+
+### Completed
+- [x] GitHub Pages live at `https://chpollin.github.io/klawiter-rescue/`
+- [x] Fix namespace URI across all files (was `klawiter-rescue.github.io`, now `chpollin.github.io/klawiter-rescue`)
+- [x] Fix GitHub repository link in footer (was `chrstncrrnd`, now `chpollin`)
+- [x] Add LICENSE file (MIT for code, CC BY 4.0 for data)
+- [x] Add CITATION.cff for academic citation
+- [x] Update README.md with live URL and license section
+- [x] Regenerate JSON-LD and frontend JSON with corrected namespace
+
+### Remaining
+- [ ] Test live deployment (all routes, search, data loading)
+- [ ] Consider Zenodo deposit for DOI
+- [ ] Coordinate link from Stefan Zweig Digital
+- [ ] Announce / publish

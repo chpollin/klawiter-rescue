@@ -55,7 +55,7 @@ Properties with no Schema.org or DC equivalent:
 
 ## Namespace
 
-`klawiter:` resolves to `https://klawiter-rescue.github.io/vocab/`
+`klawiter:` resolves to `https://chpollin.github.io/klawiter-rescue/vocab/`
 
 This URL serves a human-readable vocabulary document at `docs/vocab/index.html` listing all domain-specific terms with definitions, types, and Schema.org equivalents.
 
@@ -70,7 +70,7 @@ Defined in `pipeline/lib/vocabulary.py`:
   "@context": {
     "schema": "https://schema.org/",
     "dcterms": "http://purl.org/dc/terms/",
-    "klawiter": "https://klawiter-rescue.github.io/vocab/",
+    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "name": "schema:name",
     "datePublished": "schema:datePublished",

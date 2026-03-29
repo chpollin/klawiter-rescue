@@ -9,7 +9,7 @@ CONTEXT = {
         # --- Namespace prefixes ---
         "schema": "https://schema.org/",
         "dcterms": "http://purl.org/dc/terms/",
-        "klawiter": "https://klawiter-rescue.github.io/vocab/",
+        "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
 
         # --- Schema.org mappings ---

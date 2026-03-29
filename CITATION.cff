@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+title: "Klawiter Bibliography — Stefan Zweig: An International Bibliography (Digital Edition)"
+message: "If you use this dataset or software, please cite it as below."
+type: dataset
+authors:
+  - family-names: Klawiter
+    given-names: Randolph J.
+    affiliation: University of Notre Dame
+    orcid: ""
+  - family-names: Pollin
+    given-names: Christopher
+    affiliation: University of Graz
+    orcid: "https://orcid.org/0000-0003-3909-0746"
+repository-code: "https://github.com/chpollin/klawiter-rescue"
+url: "https://chpollin.github.io/klawiter-rescue/"
+abstract: >-
+  Digital edition of the Stefan Zweig bibliography compiled by
+  Dr. Randolph J. Klawiter (University of Notre Dame). Extracted from
+  a decommissioned MediaWiki database, structured as JSON-LD using
+  Schema.org, Dublin Core, and a domain-specific vocabulary. Includes
+  a static web frontend with faceted search, citation export, and
+  interactive visualizations.
+keywords:
+  - Stefan Zweig
+  - bibliography
+  - digital humanities
+  - JSON-LD
+  - linked data
+  - data rescue
+license: MIT
+license-url: "https://github.com/chpollin/klawiter-rescue/blob/main/LICENSE"
+date-released: "2026-03-29"

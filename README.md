@@ -1,5 +1,7 @@
 # Klawiter Bibliography
 
+**Live site: [chpollin.github.io/klawiter-rescue](https://chpollin.github.io/klawiter-rescue/)**
+
 Extraction and structuring of the Stefan Zweig Bibliography (Dr. Randolph J. Klawiter, University of Notre Dame) from a decommissioned MediaWiki database as JSON-LD with a static web frontend.
 
 ## Status
@@ -94,4 +96,7 @@ This project is connected to [Stefan Zweig Digital](https://stefanzweig.digital/
 
 ## License
 
-*To be clarified — rights to the bibliographic data need to be coordinated with the University of Notre Dame.*
+- **Code** (pipeline, frontend): [MIT License](LICENSE)
+- **Data** (bibliographic dataset): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+See [LICENSE](LICENSE) for details.

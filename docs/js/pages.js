@@ -497,7 +497,7 @@ const Pages = {
       <blockquote>
         Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
         Bibliography.</em> Digital edition, 2026.
-        Available at: <code>https://klawiter-rescue.github.io/</code>
+        Available at: <code>https://chpollin.github.io/klawiter-rescue/</code>
       </blockquote>
     </div>`;
   },
@@ -544,11 +544,11 @@ const Pages = {
       <blockquote>
         Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
         Bibliography.</em> Digital edition, 2026.
-        URL: <code>https://klawiter-rescue.github.io/</code>
+        URL: <code>https://chpollin.github.io/klawiter-rescue/</code>
       </blockquote>
       <p>
         To cite a specific entry, use its permalink URL
-        (e.g. <code>https://klawiter-rescue.github.io/#entry=3</code>).
+        (e.g. <code>https://chpollin.github.io/klawiter-rescue/#entry=3</code>).
       </p>
 
       <h2>License</h2>
