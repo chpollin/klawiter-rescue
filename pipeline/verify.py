@@ -21,6 +21,7 @@ from lib.patterns import (
     extract_year, extract_all_years, extract_publisher, extract_location,
     extract_page_count, extract_translator, YEAR_RE, PUBLISHER_PATTERNS,
     LOCATION_RE, PAGE_COUNT_PATTERNS, TRANSLATOR_PATTERNS,
+    PARENS_PAGE_RE, PAGE_RANGE_RE,
 )
 from lib.wiki_parser import remove_wiki_markup
 
@@ -42,7 +43,7 @@ def load_raw_content_map():
 
 import re
 
-# Common mojibake substitution pairs for encoding-aware comparison
+# Common mojibake substitution pairs for encoding-aware comparison (verify-only, too specific for lib)
 _ENCODING_PAIRS = [
     ('ä', 'Ã¤'), ('ö', 'Ã¶'), ('ü', 'Ã¼'), ('ß', 'Ã\x9f'),
     ('é', 'Ã©'), ('è', 'Ã¨'), ('ê', 'Ãª'), ('ë', 'Ã«'),
@@ -55,12 +56,6 @@ _ENCODING_PAIRS = [
     ('ī', 'Ä«'), ('ū', 'Å«'),
     ("'", 'â'), ("'", 'â'),  # smart quotes → garbled
 ]
-
-# Page count: N/(M)p. pattern (numbered + unnumbered pages)
-_PARENS_PAGE_RE = re.compile(r'(\d+)/\((\d+)\)\s*p', re.IGNORECASE)
-# Page range: pp. (X)-Y
-_PAGE_RANGE_RE = re.compile(r'pp?\.\s*\(?(\d+)\)?[-–](\d+)')
-
 
 def normalize(text):
     """Normalize text for comparison: lowercase, collapse whitespace."""
@@ -108,12 +103,12 @@ def page_count_in_content(page_count, content):
     if str(pc) in content:
         return True
     # N/(M)p. summation: e.g. 285/(3)p. → 288
-    for m in _PARENS_PAGE_RE.finditer(content):
+    for m in PARENS_PAGE_RE.finditer(content):
         numbered, unnumbered = int(m.group(1)), int(m.group(2))
         if numbered + unnumbered == pc:
             return True
     # pp. X-Y range: correct count is Y - X + 1
-    for m in _PAGE_RANGE_RE.finditer(content):
+    for m in PAGE_RANGE_RE.finditer(content):
         start, end = int(m.group(1)), int(m.group(2))
         if end - start + 1 == pc:
             return True

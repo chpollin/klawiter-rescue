@@ -14,7 +14,7 @@ import sys
 import json
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, load_csv, write_csv, STEP_02_OUTPUT, STEP_03_OUTPUT
+from lib.config import setup_logging, load_csv, write_csv, STEP_02_OUTPUT, STEP_03_OUTPUT, PARSED_FIELDS
 from lib.wiki_parser import extract_structured_data, is_redirect, remove_wiki_markup
 from lib.patterns import (
     extract_year, extract_all_years, extract_publisher,
@@ -24,19 +24,6 @@ from lib.patterns import (
 from lib.vocabulary import language_to_iso
 
 log = setup_logging(__name__)
-
-OUTPUT_FIELDS = [
-    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
-    'is_redirect', 'redirect_target',
-    'title', 'original_title', 'sortkey',
-    'year', 'all_years',
-    'publisher', 'location', 'all_locations',
-    'language', 'language_iso',
-    'page_count', 'translator',
-    'categories', 'main_category',
-    'see_also', 'reprints', 'translations', 'content_items',
-    'clean_content', 'raw_content',
-]
 
 
 def derive_main_category(categories):
@@ -64,7 +51,7 @@ def process_entry(row):
     }
 
     if not content:
-        result.update({k: '' for k in OUTPUT_FIELDS if k not in result})
+        result.update({k: '' for k in PARSED_FIELDS if k not in result})
         return result
 
     # Parse structured data from wiki content
@@ -75,7 +62,7 @@ def process_entry(row):
 
     if result['is_redirect']:
         result['title'] = parsed.get('redirect_target', '')
-        result.update({k: '' for k in OUTPUT_FIELDS if k not in result})
+        result.update({k: '' for k in PARSED_FIELDS if k not in result})
         return result
 
     # Title: prefer parsed title, but fall back to page_title
@@ -175,7 +162,7 @@ def main():
     log.info(f"  With location: {stats['location']} ({100*stats['location']/total:.1f}%)")
     log.info(f"  With language: {stats['language']} ({100*stats['language']/total:.1f}%)")
 
-    write_csv(STEP_03_OUTPUT, results, OUTPUT_FIELDS)
+    write_csv(STEP_03_OUTPUT, results, PARSED_FIELDS)
     log.info(f"Output written to {STEP_03_OUTPUT}")
 
 

@@ -65,6 +65,12 @@ TRANSLATOR_PATTERNS = [
     re.compile(r'[Tt]rans\.\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
 ]
 
+# Page range patterns (shared by verify.py and 03b_llm_enrich.py)
+# N/(M)p. — numbered + unnumbered pages (e.g. 285/(3)p. → 288 total)
+PARENS_PAGE_RE = re.compile(r'(\d+)/\((\d+)\)\s*p', re.IGNORECASE)
+# pp. (X)-Y or pp. X-Y — page range
+PAGE_RANGE_RE = re.compile(r'pp?\.\s*\(?(\d+)\)?[-–](\d+)')
+
 # Language detection from category names
 CATEGORY_LANGUAGE_RE = re.compile(r'\((\w+)\)\s*$')
 

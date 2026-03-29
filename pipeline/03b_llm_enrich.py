@@ -17,7 +17,10 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, load_csv, write_csv, STEP_03_OUTPUT, STEP_03B_OUTPUT, INTERMEDIATE_DIR
+from lib.config import (
+    setup_logging, load_csv, write_csv, load_env, csv_bool,
+    STEP_03_OUTPUT, STEP_03B_OUTPUT, INTERMEDIATE_DIR, PARSED_FIELDS, MIN_CONTENT_LENGTH,
+)
 from lib.llm_extract import (
     create_client, prepare_batch_entry, determine_needed_fields,
     call_gemini, validate_extraction, load_cache, save_cache,
@@ -26,35 +29,7 @@ from lib.llm_extract import (
 
 log = setup_logging(__name__)
 
-# Use same output fields as step 03
-OUTPUT_FIELDS = [
-    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
-    'is_redirect', 'redirect_target',
-    'title', 'original_title', 'sortkey',
-    'year', 'all_years',
-    'publisher', 'location', 'all_locations',
-    'language', 'language_iso',
-    'page_count', 'translator',
-    'categories', 'main_category',
-    'see_also', 'reprints', 'translations', 'content_items',
-    'clean_content', 'raw_content',
-]
-
 CACHE_PATH = os.path.join(INTERMEDIATE_DIR, '03b_llm_cache.json')
-
-
-def load_env():
-    """Load .env file from project root if GEMINI_API_KEY not already set."""
-    if os.environ.get('GEMINI_API_KEY'):
-        return
-    env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env')
-    if os.path.exists(env_path):
-        with open(env_path, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith('#') and '=' in line:
-                    key, value = line.split('=', 1)
-                    os.environ[key.strip()] = value.strip()
 
 
 def filter_entries(rows):
@@ -65,11 +40,11 @@ def filter_entries(rows):
         if row.get('page_namespace', '0') != '0':
             continue
         # Skip redirects
-        if row.get('is_redirect') in ('True', 'true', '1'):
+        if csv_bool(row.get('is_redirect')):
             continue
         # Skip entries without substantial content
         raw = row.get('raw_content', '') or row.get('content', '')
-        if len(raw) < 80:
+        if len(raw) < MIN_CONTENT_LENGTH:
             continue
         # Check if any field is missing
         needed = determine_needed_fields(row)
@@ -78,10 +53,7 @@ def filter_entries(rows):
     return candidates
 
 
-import re
-
-# Page range pattern: pp. (X)-Y or pp. X-Y
-_PAGE_RANGE_RE = re.compile(r'pp?\.\s*\(?(\d+)\)?[-–](\d+)')
+from lib.patterns import PAGE_RANGE_RE
 
 
 def _correct_page_count(page_count, raw_content):
@@ -90,7 +62,7 @@ def _correct_page_count(page_count, raw_content):
     """
     if not page_count or not raw_content:
         return page_count
-    for m in _PAGE_RANGE_RE.finditer(raw_content):
+    for m in PAGE_RANGE_RE.finditer(raw_content):
         start, end = int(m.group(1)), int(m.group(2))
         correct = end - start + 1
         # LLM often computes end - start (off by one)
@@ -225,16 +197,16 @@ def main():
         log.info(f"    {field}: +{count}")
 
     # Write enriched output
-    write_csv(STEP_03B_OUTPUT, rows, OUTPUT_FIELDS)
+    write_csv(STEP_03B_OUTPUT, rows, PARSED_FIELDS)
     log.info(f"Output written to {STEP_03B_OUTPUT}")
 
     # Summary stats
     total = len([r for r in rows if r.get('page_namespace', '0') == '0'
-                 and r.get('is_redirect') not in ('True', 'true', '1')])
+                 and not csv_bool(r.get('is_redirect'))])
     for field in ['publisher', 'location', 'translator', 'page_count']:
         count = sum(1 for r in rows if r.get(field)
                     and r.get('page_namespace', '0') == '0'
-                    and r.get('is_redirect') not in ('True', 'true', '1'))
+                    and not csv_bool(r.get('is_redirect')))
         log.info(f"  {field}: {count}/{total} ({100*count/total:.1f}%)")
 
 

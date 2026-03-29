@@ -44,15 +44,9 @@ def pytest_generate_tests(metafunc):
 @pytest.fixture(scope="session")
 def gemini_client():
     """Create Gemini client, loading API key from .env if needed."""
-    env_path = PROJECT_ROOT / ".env"
-    if not os.environ.get("GEMINI_API_KEY") and env_path.exists():
-        for line in env_path.read_text().splitlines():
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                key, value = line.split("=", 1)
-                os.environ[key.strip()] = value.strip()
-
+    from lib.config import load_env
     from lib.llm_extract import create_client
+    load_env()
     return create_client()
 
 

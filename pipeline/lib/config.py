@@ -67,6 +67,63 @@ def load_csv(path):
     return rows
 
 
+# --- Shared constants ---
+
+# CSV output fields for steps 03, 03b, 04
+PARSED_FIELDS = [
+    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
+    'is_redirect', 'redirect_target',
+    'title', 'original_title', 'sortkey',
+    'year', 'all_years',
+    'publisher', 'location', 'all_locations',
+    'language', 'language_iso',
+    'page_count', 'translator',
+    'categories', 'main_category',
+    'see_also', 'reprints', 'translations', 'content_items',
+    'clean_content', 'raw_content',
+]
+
+# Step 04 adds entry_type and time_period
+CLASSIFIED_FIELDS = [
+    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
+    'entry_type', 'is_redirect', 'redirect_target',
+    'title', 'original_title', 'sortkey',
+    'year', 'all_years', 'time_period',
+    'publisher', 'location', 'all_locations',
+    'language', 'language_iso',
+    'page_count', 'translator',
+    'categories', 'main_category',
+    'see_also', 'reprints', 'translations', 'content_items',
+    'clean_content', 'raw_content',
+]
+
+# Minimum content length for LLM processing
+MIN_CONTENT_LENGTH = 80
+
+
+def csv_bool(value):
+    """Convert CSV boolean string to bool."""
+    return value in ('True', 'true', '1', True)
+
+
+def load_env():
+    """Load .env file from project root if GEMINI_API_KEY not already set."""
+    if os.environ.get('GEMINI_API_KEY'):
+        return
+    env_path = os.path.join(PROJECT_ROOT, '.env')
+    if os.path.exists(env_path):
+        with open(env_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#') or '=' not in line:
+                    continue
+                key, value = line.split('=', 1)
+                key = key.strip()
+                value = value.strip().strip('"\'')
+                if key and not os.environ.get(key):
+                    os.environ[key] = value
+
+
 def write_csv(path, rows, fieldnames):
     """Write rows to CSV atomically (write to .tmp, then rename)."""
     os.makedirs(os.path.dirname(path), exist_ok=True)

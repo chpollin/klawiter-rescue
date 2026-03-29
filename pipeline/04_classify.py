@@ -8,28 +8,17 @@ Input:  data/intermediate/03_parsed.csv
 Output: data/intermediate/04_classified.csv
 """
 
-import json
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, load_csv, write_csv, STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_04_OUTPUT
+from lib.config import (
+    setup_logging, load_csv, write_csv, csv_bool,
+    STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_04_OUTPUT, CLASSIFIED_FIELDS,
+)
 from lib.vocabulary import category_to_entry_type, classify_time_period
 
 log = setup_logging(__name__)
-
-OUTPUT_FIELDS = [
-    'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',
-    'entry_type', 'is_redirect', 'redirect_target',
-    'title', 'original_title', 'sortkey',
-    'year', 'all_years', 'time_period',
-    'publisher', 'location', 'all_locations',
-    'language', 'language_iso',
-    'page_count', 'translator',
-    'categories', 'main_category',
-    'see_also', 'reprints', 'translations', 'content_items',
-    'clean_content', 'raw_content',
-]
 
 # MediaWiki namespace names
 NAMESPACE_NAMES = {
@@ -46,7 +35,7 @@ def classify_entry(row):
         return NAMESPACE_NAMES.get(namespace, f'namespace-{namespace}')
 
     # Redirects
-    if row.get('is_redirect') in ('True', 'true', '1'):
+    if csv_bool(row.get('is_redirect')):
         return 'redirect'
 
     # Try category-based classification
@@ -105,7 +94,7 @@ def main():
         year = row.get('year', '')
         if year:
             try:
-                year_int = int(float(year))
+                year_int = int(year)
                 period = classify_time_period(year_int)
                 row['time_period'] = period or ''
                 if period:
@@ -129,7 +118,7 @@ def main():
     for p, count in sorted(period_counts.items(), key=lambda x: -x[1]):
         log.info(f"  {p}: {count}")
 
-    write_csv(STEP_04_OUTPUT, rows, OUTPUT_FIELDS)
+    write_csv(STEP_04_OUTPUT, rows, CLASSIFIED_FIELDS)
     log.info(f"Output written to {STEP_04_OUTPUT}")
 
 

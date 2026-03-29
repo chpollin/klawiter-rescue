@@ -15,7 +15,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    setup_logging, load_csv, STEP_04_OUTPUT,
+    setup_logging, load_csv, csv_bool, STEP_04_OUTPUT,
     OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON,
 )
 from lib.vocabulary import CONTEXT, ENTRY_TYPES
@@ -66,7 +66,7 @@ def row_to_jsonld(row):
             pass
 
     # Redirect
-    if row.get('is_redirect') in ('True', 'true', '1'):
+    if csv_bool(row.get('is_redirect')):
         entry["klawiter:isRedirect"] = True
         redirect_target = row.get('redirect_target', '')
         if redirect_target:
@@ -77,7 +77,7 @@ def row_to_jsonld(row):
     year = row.get('year', '')
     if year:
         try:
-            entry["klawiter:year"] = int(float(year))
+            entry["klawiter:year"] = int(year)
         except (ValueError, TypeError):
             pass
 
@@ -116,7 +116,7 @@ def row_to_jsonld(row):
     page_count = row.get('page_count', '')
     if page_count:
         try:
-            entry["klawiter:pageCount"] = int(float(page_count))
+            entry["klawiter:pageCount"] = int(page_count)
         except (ValueError, TypeError):
             pass
 
