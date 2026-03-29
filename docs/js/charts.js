@@ -1,55 +1,82 @@
 /**
- * Dashboard charts — timeline, language distribution, type distribution.
+ * Statistics page — timeline, languages, locations, types.
+ * All chart elements are clickable → navigate to filtered results.
  */
 const Charts = {
   instances: {},
 
   render(entries) {
-    this.renderStats(entries);
-    this.renderTimeline(entries);
-    this.renderLanguages(entries);
-    this.renderTypes(entries);
-  },
+    const container = document.getElementById('view-stats');
 
-  renderStats(entries) {
+    // Stats
     const types = new Set(entries.map(e => e.entryType).filter(Boolean));
     const languages = new Set(entries.map(e => e.language).filter(Boolean));
+    const locations = new Set(entries.map(e => e.location).filter(Boolean));
     const years = entries.map(e => e.year).filter(Boolean);
     const minYear = years.length ? Math.min(...years) : '—';
     const maxYear = years.length ? Math.max(...years) : '—';
 
-    document.getElementById('stats-cards').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-value">${entries.length.toLocaleString('de-DE')}</div>
-        <div class="stat-label">Einträge</div>
+    container.innerHTML = `
+      <h2 class="section-heading">Statistics</h2>
+
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-value">${entries.length.toLocaleString('en')}</div>
+          <div class="stat-label">Entries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${types.size}</div>
+          <div class="stat-label">Types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${languages.size}</div>
+          <div class="stat-label">Languages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${minYear}–${maxYear}</div>
+          <div class="stat-label">Time Span</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">${types.size}</div>
-        <div class="stat-label">Entitätstypen</div>
+
+      <div class="chart-card chart-card-full">
+        <div class="chart-title">Publications by Decade</div>
+        <canvas id="chart-timeline" height="180"></canvas>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">${languages.size}</div>
-        <div class="stat-label">Sprachen</div>
+
+      <div class="charts-grid" style="margin-top:1.5rem">
+        <div class="chart-card">
+          <div class="chart-title">Languages (Top 10)</div>
+          <canvas id="chart-languages" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Locations (Top 15)</div>
+          <canvas id="chart-locations" height="220"></canvas>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">${minYear}–${maxYear}</div>
-        <div class="stat-label">Zeitraum</div>
+
+      <div class="chart-card chart-card-full" style="margin-top:1.5rem">
+        <div class="chart-title">Entry Types</div>
+        <canvas id="chart-types" height="140"></canvas>
       </div>
     `;
+
+    this.renderTimeline(entries);
+    this.renderLanguages(entries);
+    this.renderLocations(entries);
+    this.renderTypes(entries);
   },
 
   renderTimeline(entries) {
-    const years = {};
+    const decades = {};
     for (const e of entries) {
-      if (e.year && e.year >= 1880 && e.year <= 2025) {
-        // Group by decade
+      if (e.year && e.year >= 1800 && e.year <= 2025) {
         const decade = Math.floor(e.year / 10) * 10;
-        years[decade] = (years[decade] || 0) + 1;
+        decades[decade] = (decades[decade] || 0) + 1;
       }
     }
 
-    const labels = Object.keys(years).sort();
-    const data = labels.map(y => years[y]);
+    const labels = Object.keys(decades).sort();
+    const data = labels.map(y => decades[y]);
 
     this.destroy('timeline');
     this.instances.timeline = new Chart(
@@ -57,25 +84,31 @@ const Charts = {
       {
         type: 'bar',
         data: {
-          labels: labels.map(y => `${y}er`),
+          labels: labels.map(y => `${y}s`),
           datasets: [{
             data,
             backgroundColor: labels.map(y =>
-              y >= 1881 && y <= 1942 ? '#93c5fd' : '#dbeafe'
-            ),
+              y >= 1880 && y <= 1940 ? '#B8963E' : '#7A1B2D'
+            ),  // Gold = Zweig's lifetime decades, Burgundy = all others
             borderRadius: 3,
           }],
         },
         options: {
           plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, ticks: { precision: 0 } },
+            y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#EDE8DF' } },
             x: { grid: { display: false } },
           },
           onClick: (_, elements) => {
             if (elements.length) {
-              const decade = labels[elements[0].index];
-              // Could filter by decade range
+              const decade = parseInt(labels[elements[0].index]);
+              let period;
+              if (decade < 1880) period = 'pre-zweig';
+              else if (decade <= 1940) period = 'lifetime';
+              else if (decade <= 1980) period = 'post-wwii';
+              else if (decade <= 2000) period = 'late-20c';
+              else period = 'contemporary';
+              location.hash = `period=${period}`;
             }
           },
         },
@@ -93,8 +126,8 @@ const Charts = {
     const labels = sorted.map(([l]) => l);
     const data = sorted.map(([, c]) => c);
     const colors = [
-      '#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6',
-      '#ec4899', '#06b6d4', '#f97316', '#84cc16', '#6366f1',
+      '#7A1B2D', '#B8963E', '#6B7A3A', '#5B5040', '#8B5C3A',
+      '#5B3A7A', '#3A5B6B', '#7A4A1B', '#3A3A5B', '#6B3A4A',
     ];
 
     this.destroy('languages');
@@ -104,10 +137,7 @@ const Charts = {
         type: 'doughnut',
         data: {
           labels,
-          datasets: [{
-            data,
-            backgroundColor: colors,
-          }],
+          datasets: [{ data, backgroundColor: colors }],
         },
         options: {
           plugins: {
@@ -115,7 +145,47 @@ const Charts = {
           },
           onClick: (_, elements) => {
             if (elements.length) {
-              App.setFilter('language', labels[elements[0].index]);
+              location.hash = `language=${encodeURIComponent(labels[elements[0].index])}`;
+            }
+          },
+        },
+      }
+    );
+  },
+
+  renderLocations(entries) {
+    const locs = {};
+    for (const e of entries) {
+      if (e.location) locs[e.location] = (locs[e.location] || 0) + 1;
+    }
+
+    const sorted = Object.entries(locs).sort((a, b) => b[1] - a[1]).slice(0, 15);
+    const labels = sorted.map(([l]) => l);
+    const data = sorted.map(([, c]) => c);
+
+    this.destroy('locations');
+    this.instances.locations = new Chart(
+      document.getElementById('chart-locations'),
+      {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: '#7A1B2D',
+            borderRadius: 3,
+          }],
+        },
+        options: {
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#EDE8DF' } },
+            y: { grid: { display: false } },
+          },
+          onClick: (_, elements) => {
+            if (elements.length) {
+              location.hash = `location=${encodeURIComponent(labels[elements[0].index])}`;
             }
           },
         },
@@ -128,13 +198,15 @@ const Charts = {
     for (const e of entries) {
       if (e.entryType) {
         const label = ENTRY_TYPE_LABELS[e.entryType] || e.entryType;
-        types[label] = (types[label] || 0) + 1;
+        types[e.entryType] = types[e.entryType] || { label, count: 0 };
+        types[e.entryType].count++;
       }
     }
 
-    const sorted = Object.entries(types).sort((a, b) => b[1] - a[1]);
-    const labels = sorted.map(([t]) => t);
-    const data = sorted.map(([, c]) => c);
+    const sorted = Object.entries(types).sort((a, b) => b[1].count - a[1].count);
+    const typeKeys = sorted.map(([k]) => k);
+    const labels = sorted.map(([, v]) => v.label);
+    const data = sorted.map(([, v]) => v.count);
 
     this.destroy('types');
     this.instances.types = new Chart(
@@ -145,7 +217,7 @@ const Charts = {
           labels,
           datasets: [{
             data,
-            backgroundColor: '#dbeafe',
+            backgroundColor: '#B8963E',
             borderRadius: 3,
           }],
         },
@@ -153,8 +225,13 @@ const Charts = {
           indexAxis: 'y',
           plugins: { legend: { display: false } },
           scales: {
-            x: { beginAtZero: true, ticks: { precision: 0 } },
+            x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#EDE8DF' } },
             y: { grid: { display: false } },
+          },
+          onClick: (_, elements) => {
+            if (elements.length) {
+              location.hash = `type=${typeKeys[elements[0].index]}`;
+            }
           },
         },
       }

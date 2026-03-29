@@ -43,29 +43,3 @@ const Facets = {
     }
   },
 };
-
-const ENTRY_TYPE_LABELS = {
-  'fiction': 'Belletristik',
-  'essay': 'Essays',
-  'poetry': 'Lyrik',
-  'drama': 'Dramatik',
-  'correspondence': 'Korrespondenz',
-  'film': 'Film / Oper',
-  'historical-study': 'Historische Studien',
-  'secondary-literature': 'Sekundärliteratur',
-  'collected-works': 'Gesammelte Werke',
-  'foreword': 'Vor-/Nachworte',
-  'translation': 'Übersetzungen (von Zweig)',
-  'symposium': 'Symposien / Ausstellungen',
-  'dramatic-reading': 'Dramatische Lesungen',
-  'newspaper': 'Zeitungsartikel',
-  'other': 'Sonstige',
-};
-
-const PERIOD_LABELS = {
-  'pre-zweig': 'Vor Zweig (–1880)',
-  'lifetime': 'Lebenszeit (1881–1942)',
-  'post-wwii': 'Nachkriegszeit (1943–1980)',
-  'late-20c': 'Spätes 20. Jh. (1981–2000)',
-  'contemporary': 'Gegenwart (2001–)',
-};

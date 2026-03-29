@@ -1,35 +1,93 @@
 /**
  * Klawiter Bibliography — Main Application
- * State management, data loading, routing.
+ * 4-view routing: home, results, detail, stats
  */
 const App = {
-  data: null,        // { entries: [], redirects: {} }
-  index: null,       // FlexSearch index
-  filtered: [],      // Current filtered entries
+  data: null,
+  entries: [],    // namespace 0 only
+  index: null,
+  filtered: [],
   state: {
     query: '',
-    filters: {},     // { type: 'fiction', language: 'German', ... }
+    filters: {},
     sort: 'relevance',
-    view: 'dashboard', // 'dashboard' | 'results' | 'detail'
+    view: 'home',
     entryId: null,
     page: 0,
     pageSize: 50,
   },
 
   async init() {
-    this.showLoading(true);
     try {
       const resp = await fetch('data/klawiter.json');
       this.data = await resp.json();
+      // Filter to namespace 0 only
+      this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
+      this.logDataSummary();
       this.buildIndex();
       this.bindEvents();
       this.handleRoute();
       window.addEventListener('hashchange', () => this.handleRoute());
     } catch (err) {
-      document.getElementById('dashboard').innerHTML =
-        `<p class="text-red-600">Fehler beim Laden: ${err.message}</p>`;
+      document.getElementById('view-home').innerHTML =
+        `<p style="color:#7A1B2D">Error loading data: ${err.message}</p>`;
     }
-    this.showLoading(false);
+  },
+
+  logDataSummary() {
+    const e = this.entries;
+    const all = this.data.entries;
+
+    // Counts by type
+    const types = {};
+    e.forEach(x => { types[x.entryType] = (types[x.entryType] || 0) + 1; });
+
+    // Field coverage
+    const fields = ['title', 'year', 'publisher', 'location', 'language', 'translator', 'pageCount'];
+    const coverage = {};
+    fields.forEach(f => {
+      const count = e.filter(x => x[f] != null && x[f] !== '').length;
+      coverage[f] = `${count}/${e.length} (${(100 * count / e.length).toFixed(1)}%)`;
+    });
+
+    // Array fields
+    const arrayFields = ['reprints', 'translations', 'contentItems', 'seeAlso', 'categories'];
+    const arrayCoverage = {};
+    arrayFields.forEach(f => {
+      const count = e.filter(x => x[f] && x[f].length > 0).length;
+      arrayCoverage[f] = `${count}/${e.length} (${(100 * count / e.length).toFixed(1)}%)`;
+    });
+
+    // Languages + locations
+    const langs = new Set(e.map(x => x.language).filter(Boolean));
+    const locs = new Set(e.map(x => x.location).filter(Boolean));
+    const years = e.map(x => x.year).filter(Boolean);
+
+    // Data quality
+    const wikiMarkupTitles = e.filter(x => x.title && (/'''/.test(x.title) || /\[\[|\]\]/.test(x.title)));
+    const noTitle = e.filter(x => !x.title);
+    const noYear = e.filter(x => !x.year);
+
+    console.group('%c📚 Klawiter Bibliography — Data Summary', 'font-weight:bold; font-size:14px');
+    console.log(`Total entries in JSON: ${all.length}`);
+    console.log(`Namespace 0 (displayed): ${e.length}`);
+    console.log(`Excluded (ns≠0): ${all.length - e.length}`);
+    console.log(`Redirects: ${Object.keys(this.data.redirects).length}`);
+    console.log('');
+    console.log('%cEntry Types:', 'font-weight:bold');
+    console.table(types);
+    console.log('%cField Coverage:', 'font-weight:bold');
+    console.table(coverage);
+    console.log('%cArray Field Coverage:', 'font-weight:bold');
+    console.table(arrayCoverage);
+    console.log('%cOverview:', 'font-weight:bold');
+    console.log(`Languages: ${langs.size} | Locations: ${locs.size} | Year range: ${Math.min(...years)}–${Math.max(...years)}`);
+    console.log('%cData Quality:', 'font-weight:bold');
+    console.log(`Titles with wiki markup: ${wikiMarkupTitles.length}`);
+    if (wikiMarkupTitles.length) console.log('  Examples:', wikiMarkupTitles.slice(0, 5).map(x => x.title));
+    console.log(`Entries without title: ${noTitle.length}`);
+    console.log(`Entries without year: ${noYear.length}`);
+    console.groupEnd();
   },
 
   buildIndex() {
@@ -37,7 +95,7 @@ const App = {
       tokenize: 'forward',
       resolution: 9,
     });
-    this.data.entries.forEach((e, i) => {
+    this.entries.forEach((e, i) => {
       const text = [
         e.title, e.originalTitle, e.fullBibliographicEntry,
         e.publisher, e.location, e.language, e.translator,
@@ -52,13 +110,24 @@ const App = {
     const hash = location.hash.slice(1);
     const params = new URLSearchParams(hash);
 
+    // Stats view — always shows full dataset, clears filters
+    if (hash === 'stats') {
+      this.state.query = '';
+      this.state.filters = {};
+      document.getElementById('search-input').value = '';
+      this.showView('stats');
+      Charts.render(this.entries);
+      return;
+    }
+
+    // Detail view
     if (params.has('entry')) {
       const pid = parseInt(params.get('entry'));
       this.showDetail(pid);
       return;
     }
 
-    // Redirect resolution: #title=Some+Page+Title
+    // Redirect resolution
     if (params.has('title')) {
       const title = params.get('title');
       const targetPid = this.data.redirects[title];
@@ -68,7 +137,7 @@ const App = {
       }
     }
 
-    // Parse filters from URL
+    // Parse filters
     this.state.query = params.get('q') || '';
     this.state.filters = {};
     for (const [key, val] of params) {
@@ -83,9 +152,8 @@ const App = {
       this.applyFilters();
       this.showView('results');
     } else {
-      this.showView('dashboard');
-      Charts.render(this.data.entries);
-      Facets.render(this.data.entries);
+      this.showView('home');
+      Home.render(this.entries);
     }
   },
 
@@ -102,17 +170,14 @@ const App = {
   // --- Filtering ---
   applyFilters() {
     let indices;
-
-    // Text search
     if (this.state.query) {
       indices = this.index.search(this.state.query, { limit: 5000 });
     } else {
-      indices = this.data.entries.map((_, i) => i);
+      indices = this.entries.map((_, i) => i);
     }
 
-    // Facet filters
     this.filtered = indices
-      .map(i => this.data.entries[i])
+      .map(i => this.entries[i])
       .filter(e => {
         const f = this.state.filters;
         if (f.type && e.entryType !== f.type) return false;
@@ -122,9 +187,7 @@ const App = {
         return true;
       });
 
-    // Sort
     this.sortEntries();
-
     this.state.page = 0;
     this.renderResults();
     Facets.render(this.filtered);
@@ -141,80 +204,124 @@ const App = {
     } else if (s === 'title') {
       this.filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
     }
-    // 'relevance' = search order, no re-sort needed
   },
 
   // --- Views ---
   showView(view) {
     this.state.view = view;
-    document.getElementById('dashboard').classList.toggle('hidden', view !== 'dashboard');
-    document.getElementById('results').classList.toggle('hidden', view !== 'results');
-    document.getElementById('detail').classList.toggle('hidden', view !== 'detail');
+    document.getElementById('view-home').classList.toggle('hidden', view !== 'home');
+    document.getElementById('view-results').classList.toggle('hidden', view !== 'results');
+    document.getElementById('view-detail').classList.toggle('hidden', view !== 'detail');
+    document.getElementById('view-stats').classList.toggle('hidden', view !== 'stats');
+
+    // Sidebar only on results view
+    document.getElementById('facets').classList.toggle('hidden', view !== 'results');
+
+    // Filter chips only on results view
+    const chips = document.getElementById('filter-chips');
+    if (view !== 'results') chips.innerHTML = '';
+
+    // Nav active state
+    document.getElementById('nav-home').classList.toggle('active', view === 'home');
+    document.getElementById('nav-stats').classList.toggle('active', view === 'stats');
+
+    // Update search placeholder
+    const input = document.getElementById('search-input');
+    input.placeholder = `Search ${this.entries.length.toLocaleString('en')} entries…`;
   },
 
   showDetail(pageId) {
-    const entry = this.data.entries.find(e => e.sourcePageId === pageId);
-    if (!entry) {
-      // Try redirect
-      const targetPid = Object.values(this.data.redirects).find(p => p === pageId);
-      if (!targetPid) {
-        document.getElementById('detail-content').innerHTML =
-          '<p class="text-gray-500">Eintrag nicht gefunden.</p>';
-      }
-    }
+    const entry = this.entries.find(e => e.sourcePageId === pageId);
     this.state.view = 'detail';
     this.state.entryId = pageId;
     this.showView('detail');
     Detail.render(entry);
+    window.scrollTo(0, 0);
   },
 
   // --- Results ---
   renderResults() {
     const total = this.filtered.length;
-    const start = 0;
     const end = Math.min((this.state.page + 1) * this.state.pageSize, total);
-    const visible = this.filtered.slice(start, end);
+    const visible = this.filtered.slice(0, end);
 
     document.getElementById('results-count').textContent =
-      `${total.toLocaleString('de-DE')} Ergebnis${total !== 1 ? 'se' : ''}`;
+      `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
 
     const list = document.getElementById('results-list');
     list.innerHTML = visible.map(e => this.renderCard(e)).join('');
 
-    const loadMore = document.getElementById('load-more');
-    loadMore.classList.toggle('hidden', end >= total);
+    document.getElementById('load-more').classList.toggle('hidden', end >= total);
   },
 
   renderCard(e) {
-    const badge = `<span class="badge badge-${e.entryType}">${e.entryType}</span>`;
-    const year = e.year ? `<span class="text-gray-500">${e.year}</span>` : '';
-    const lang = e.language ? `<span class="text-gray-400 text-xs">${e.language}</span>` : '';
-    const loc = e.location ? `<span class="text-gray-400 text-xs">${esc(e.location)}</span>` : '';
-    const title = hl(esc(e.title || 'Ohne Titel'), this.state.query);
-    const snippet = esc((e.fullBibliographicEntry || '').slice(0, 200));
+    const badge = `<span class="badge badge-${e.entryType}">${ENTRY_TYPE_LABELS[e.entryType] || e.entryType}</span>`;
+    const year = e.year ? `<span class="card-meta-text">${e.year}</span>` : '';
+    const lang = e.language ? `<span class="card-meta-text">${e.language}</span>` : '';
+    const loc = e.location ? `<span class="card-meta-text">${esc(e.location)}</span>` : '';
 
-    return `<div class="entry-card" onclick="location.hash='entry=${e.sourcePageId}'">
-      <div class="flex items-start gap-3">
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 flex-wrap">
-            ${badge} ${year} ${lang} ${loc}
-          </div>
-          <h3 class="font-medium mt-1 leading-snug">${title}</h3>
-          <p class="text-sm text-gray-500 mt-1 line-clamp-2">${snippet}</p>
-        </div>
+    const title = hl(esc(e.title || 'Untitled'), this.state.query);
+
+    const parts = [];
+    if (e.publisher) parts.push(esc(e.publisher));
+    if (e.pageCount) parts.push(e.pageCount + ' pp.');
+    const secondary = parts.length ? `<div class="card-secondary">${parts.join(' · ')}</div>` : '';
+
+    const snippet = esc((e.fullBibliographicEntry || '').slice(0, 180));
+
+    return `<div class="entry-card" id="card-${e.sourcePageId}">
+      <div class="card-header" onclick="App.toggleCard(${e.sourcePageId})">
+        <div class="card-meta">${badge} ${year} ${lang} ${loc}</div>
+        <div class="card-title">${title}</div>
+        ${secondary}
+        <div class="card-snippet">${snippet}</div>
       </div>
+      <div class="card-detail hidden" id="card-detail-${e.sourcePageId}"></div>
     </div>`;
+  },
+
+  toggleCard(pageId) {
+    const detailEl = document.getElementById(`card-detail-${pageId}`);
+    const cardEl = document.getElementById(`card-${pageId}`);
+    if (!detailEl || !cardEl) return;
+
+    // If already open, close it
+    if (!detailEl.classList.contains('hidden')) {
+      detailEl.classList.add('hidden');
+      cardEl.classList.remove('card-expanded');
+      return;
+    }
+
+    // Close any other open card
+    document.querySelectorAll('.card-detail:not(.hidden)').forEach(el => {
+      el.classList.add('hidden');
+      el.closest('.entry-card').classList.remove('card-expanded');
+    });
+
+    // Render detail content and expand
+    const entry = this.entries.find(e => e.sourcePageId === pageId);
+    if (entry) {
+      detailEl.innerHTML = Detail.renderInline(entry);
+      detailEl.classList.remove('hidden');
+      cardEl.classList.add('card-expanded');
+      // Scroll card into view if needed
+      cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   },
 
   renderChips() {
     const container = document.getElementById('filter-chips');
     const chips = [];
     for (const [key, val] of Object.entries(this.state.filters)) {
-      chips.push(`<span class="chip">${key}: ${esc(val)}
+      const label = key === 'type' ? 'Type' : key === 'language' ? 'Language' :
+                    key === 'period' ? 'Period' : 'Location';
+      const display = key === 'type' ? (ENTRY_TYPE_LABELS[val] || val) :
+                      key === 'period' ? (PERIOD_LABELS[val] || val) : val;
+      chips.push(`<span class="chip">${esc(label)}: ${esc(display)}
         <button onclick="App.removeFilter('${key}')">&times;</button></span>`);
     }
     if (this.state.query) {
-      chips.push(`<span class="chip">Suche: ${esc(this.state.query)}
+      chips.push(`<span class="chip">Search: ${esc(this.state.query)}
         <button onclick="App.clearSearch()">&times;</button></span>`);
     }
     container.innerHTML = chips.join('');
@@ -245,13 +352,8 @@ const App = {
     }
   },
 
-  showLoading(show) {
-    const inp = document.getElementById('search-input');
-    inp.placeholder = show ? 'Lade Bibliographie...' : `Suche in ${this.data?.totalEntries?.toLocaleString('de-DE') || ''} Einträgen...`;
-  },
-
+  // --- Events ---
   bindEvents() {
-    // Search
     let timer;
     document.getElementById('search-input').addEventListener('input', (ev) => {
       clearTimeout(timer);
@@ -266,48 +368,32 @@ const App = {
       }, 200);
     });
 
-    // Sort
     document.getElementById('sort-select').addEventListener('change', (ev) => {
       this.state.sort = ev.target.value;
       this.sortEntries();
       this.renderResults();
     });
 
-    // Load more
     document.getElementById('load-more-btn').addEventListener('click', () => {
       this.state.page++;
-      // Append instead of replace
       const start = this.state.page * this.state.pageSize;
       const end = Math.min(start + this.state.pageSize, this.filtered.length);
       const visible = this.filtered.slice(start, end);
-      const list = document.getElementById('results-list');
-      list.insertAdjacentHTML('beforeend', visible.map(e => this.renderCard(e)).join(''));
+      document.getElementById('results-list')
+        .insertAdjacentHTML('beforeend', visible.map(e => this.renderCard(e)).join(''));
       document.getElementById('load-more').classList.toggle('hidden', end >= this.filtered.length);
     });
 
-    // Home link
     document.getElementById('home-link').addEventListener('click', (ev) => {
       ev.preventDefault();
       location.hash = '';
     });
 
-    // Back button
     document.getElementById('back-btn').addEventListener('click', () => {
       history.back();
     });
 
-    // Export
-    document.getElementById('export-btn').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(this.data, null, 2)], { type: 'application/ld+json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'klawiter-bibliography.jsonld';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    // Mobile filter toggle
+    // Mobile filter
     document.getElementById('mobile-filter-btn').addEventListener('click', () => {
       document.getElementById('mobile-facets').classList.remove('hidden');
       document.getElementById('mobile-facet-content').innerHTML =
@@ -317,6 +403,33 @@ const App = {
       document.getElementById('mobile-facets').classList.add('hidden');
     });
   },
+};
+
+// --- Shared constants ---
+const ENTRY_TYPE_LABELS = {
+  'fiction': 'Fiction',
+  'essay': 'Essays',
+  'poetry': 'Poetry',
+  'drama': 'Drama',
+  'correspondence': 'Correspondence',
+  'film': 'Film / Opera',
+  'historical-study': 'Historical Studies',
+  'secondary-literature': 'Secondary Literature',
+  'collected-works': 'Collected Works',
+  'foreword': 'Forewords / Afterwords',
+  'translation': 'Translations (by Zweig)',
+  'symposium': 'Symposia / Exhibitions',
+  'dramatic-reading': 'Dramatic Readings',
+  'newspaper': 'Newspaper Articles',
+  'other': 'Other',
+};
+
+const PERIOD_LABELS = {
+  'pre-zweig': 'Pre-Zweig (–1880)',
+  'lifetime': 'Lifetime (1881–1942)',
+  'post-wwii': 'Post-WWII (1943–1980)',
+  'late-20c': 'Late 20th C. (1981–2000)',
+  'contemporary': 'Contemporary (2001–)',
 };
 
 // --- Helpers ---

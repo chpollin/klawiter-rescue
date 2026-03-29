@@ -110,10 +110,13 @@ Harden the extraction pipeline: eliminate code duplication, add comprehensive te
 - [ ] Investigate 33 remaining bracket titles
 - [ ] Update `data.md` with new quality metrics
 
-### M3.8: Manual validation
+### M3.8: Manual validation (deferred to after M6)
 
-- [ ] Select 50 entries stratified by type, language, time period
-- [ ] Compare extracted title, year, publisher, location against raw wiki content
+Manual validation is more effective once entries are visible in the frontend.
+Moved to after M6 — validate by browsing entries in the UI.
+
+- [ ] Browse 50+ entries in frontend, stratified by type, language, time period
+- [ ] Compare displayed fields against raw wiki content
 - [ ] Document accuracy: true positives, false positives, false negatives
 - [ ] Fix any systematic extraction errors found
 
@@ -276,11 +279,13 @@ Ship it. Make it citable. Make it findable.
 ## Dependencies
 
 ```
-M1 (Knowledge) ──→ M2 (Cleanup) ──→ M3 (Pipeline) ──→ M4 (Ontology) ──→ M5 (Enrichment) ──→ M6 (Frontend) ──→ M7 (Deploy)
-                                         ↓                                        ↓
-                                    M3 can start              M6 design (M6.1) can start
-                                    in parallel               in parallel with M4/M5
-                                    with M1/M2
+M1 (Knowledge) ──→ M2 (Cleanup) ──→ M3 (Pipeline) ──→ M6 (Frontend) ──→ M3.8 (Validation) ──→ M4 (Ontology) ──→ M5 (Enrichment) ──→ M7 (Deploy)
 ```
 
-M1+M2 are quick (documentation). M3 is the foundation and must be solid before M4. M4 determines the data structure for M5. M6 design work (M6.1) can happen in parallel with M4/M5, but implementation (M6.2+) depends on finalized data model. M7 is the final step.
+**Revised order** (2026-03-29): M6 (Frontend Redesign) moves before M4/M5. Rationale:
+- The pipeline data is stable (264 tests, LLM enrichment done)
+- Manual validation (M3.8) is easier in the browser than in JSON files
+- Ontology changes (M4) only affect JSON-LD keys, not the display
+- Frontend progress is motivating and makes the project tangible
+
+M4/M5 can still happen before M7 — the frontend JS adapts to new field names easily.
