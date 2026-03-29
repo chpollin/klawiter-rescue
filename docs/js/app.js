@@ -1,6 +1,6 @@
 /**
  * Klawiter Bibliography — Main Application
- * 4-view routing: home, results, detail, stats
+ * 5-view routing: home, results, detail, stats, page (static content)
  */
 const App = {
   data: null,
@@ -111,6 +111,14 @@ const App = {
   handleRoute() {
     const hash = location.hash.slice(1);
     const params = new URLSearchParams(hash);
+
+    // Static content pages
+    const staticPages = ['about', 'methodology', 'help', 'data', 'imprint'];
+    if (staticPages.includes(hash)) {
+      this.showView('page');
+      Pages.render(hash);
+      return;
+    }
 
     // Stats view — always shows full dataset, clears filters
     if (hash === 'stats') {
@@ -229,6 +237,7 @@ const App = {
     document.getElementById('view-results').classList.toggle('hidden', view !== 'results');
     document.getElementById('view-detail').classList.toggle('hidden', view !== 'detail');
     document.getElementById('view-stats').classList.toggle('hidden', view !== 'stats');
+    document.getElementById('view-page').classList.toggle('hidden', view !== 'page');
 
     // Sidebar only on results view
     document.getElementById('facets').classList.toggle('hidden', view !== 'results');
@@ -240,6 +249,12 @@ const App = {
     // Nav active state
     document.getElementById('nav-home').classList.toggle('active', view === 'home');
     document.getElementById('nav-stats').classList.toggle('active', view === 'stats');
+    document.getElementById('nav-about').classList.toggle('active',
+      view === 'page' && location.hash === '#about');
+
+    // Close dropdown when navigating
+    const dropdown = document.getElementById('nav-more');
+    if (dropdown) dropdown.classList.remove('open');
 
     // Update search placeholder
     const input = document.getElementById('search-input');
@@ -423,6 +438,22 @@ const App = {
     document.getElementById('back-btn').addEventListener('click', () => {
       history.back();
     });
+
+    // Nav "More" dropdown
+    const dropdownToggle = document.querySelector('#nav-more .nav-dropdown-toggle');
+    if (dropdownToggle) {
+      dropdownToggle.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const dropdown = document.getElementById('nav-more');
+        const isOpen = dropdown.classList.toggle('open');
+        dropdownToggle.setAttribute('aria-expanded', isOpen);
+      });
+      document.addEventListener('click', () => {
+        const dropdown = document.getElementById('nav-more');
+        dropdown.classList.remove('open');
+        dropdownToggle.setAttribute('aria-expanded', 'false');
+      });
+    }
 
     // Mobile filter
     document.getElementById('mobile-filter-btn').addEventListener('click', () => {

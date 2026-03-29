@@ -29,6 +29,21 @@
       <nav class="site-nav">
         <a href="#" id="nav-home">Overview</a>
         <a href="#stats" id="nav-stats">Statistics</a>
+        <a href="#about" id="nav-about">About</a>
+        <div class="nav-dropdown" id="nav-more">
+          <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+            More
+            <svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="8">
+              <path d="M1 1.5L6 6.5L11 1.5"/>
+            </svg>
+          </button>
+          <div class="nav-dropdown-menu" role="menu">
+            <a href="#methodology" role="menuitem">Methodology</a>
+            <a href="#help" role="menuitem">Help</a>
+            <a href="#data" role="menuitem">Data Access</a>
+            <a href="#imprint" role="menuitem">Imprint</a>
+          </div>
+        </div>
       </nav>
       <div class="header-search">
         <input type="search" id="search-input" placeholder="Search..." aria-label="Search bibliography">
@@ -108,6 +123,9 @@
       <!-- View: Statistics -->
       <div id="view-stats" class="hidden"></div>
 
+      <!-- View: Static pages (About, Methodology, Help, Data, Imprint) -->
+      <div id="view-page" class="hidden"></div>
+
     </main>
   </div>
 
@@ -148,6 +166,16 @@
         </div>
       </div>
       <div>
+        <div class="footer-heading">Information</div>
+        <div class="footer-text">
+          <a href="#about">About</a><br>
+          <a href="#methodology">Methodology</a><br>
+          <a href="#help">Help</a><br>
+          <a href="#data">Data Access</a><br>
+          <a href="#imprint">Imprint</a>
+        </div>
+      </div>
+      <div>
         <div class="footer-heading">Links</div>
         <div class="footer-text">
           <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a><br>
@@ -160,6 +188,7 @@
   <script src="js/constants.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/export.js"></script>
+  <script src="js/pages.js"></script>
   <script src="js/app.js"></script>
   <script src="js/home.js"></script>
   <script src="js/facets.js"></script>
