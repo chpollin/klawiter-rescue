@@ -4,6 +4,55 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-29 — Session 3: Test Suite & LLM-as-a-Judge
+
+### What we did
+
+**Phase 3: Test suite** (from IMPLEMENTATION-PLAN.md)
+- Built initial test suite: 171 tests across 3 files (test_patterns.py, test_wiki_parser.py, test_encoding.py)
+- Critically reviewed all tests — identified ~40-50 as trivial or redundant (guard-clause tests for every function, dictionary lookups tested individually, language whitelist tested 8×)
+
+**Test refactoring**
+- Trimmed redundant tests: test_encoding.py 36→13, test_patterns.py 58→48
+- Fixed weakened title tests to test actual pipeline flow (categories stripped before title extraction)
+- **Result**: leaner, more focused unit tests
+
+**Real-data tests** (`tests/test_real_entries.py`)
+- Parametrized over 20 hand-labeled entries from `test_sample_20.json`
+- Tests 5 extractors per entry: location, publisher, translator, page_count, language
+- Plus structural tests: not-redirect, has-clean-content, categories-extracted
+- 6 skips for fixture/text mismatches (truncated text doesn't contain expected data)
+
+**LLM-as-a-Judge** (`tests/test_llm_judge.py`)
+- Gemini 3.1 Flash Lite evaluates extraction quality on 10 diverse entries
+- Structured output via Pydantic: each field judged as correct/wrong/missed/not_applicable
+- Findings establish a baseline of known limitations:
+  - 10 "wrong": title from `'''[year]: Publisher'''` headers (6×), mojibake truncation (2×), page-range-as-count (2×)
+  - 13 "missed": publisher/location from headers, `N/(M)p.` format, languages without `[[Category:]]`
+- Tests assert: no *unexpected* wrong extractions, ≥60% correct/not_applicable
+
+**Infrastructure**
+- Created `pytest.ini` with `llm` marker and PYTHONPATH config
+- Tests runnable separately: `pytest -m "not llm"` (fast) vs `pytest -m llm` (API call)
+
+### Learnings
+
+- **Redundant tests create false confidence**: 171 tests sounded impressive, but many tested `if not x: return None` eight times. The real-data tests found more issues than all guard-clause tests combined.
+- **LLM-as-a-Judge is surprisingly effective**: For ~$0.001, Gemini identified 10 concrete extraction errors and 13 coverage gaps. It catches semantic issues (wrong publisher name, truncated translator) that pattern-based tests can't.
+- **Fixture text truncation matters**: The `test_sample_20.json` entries have truncated text that doesn't always contain the same information the full pipeline had. This caused 6 false test failures that needed skips.
+- **LLM non-determinism in testing**: The judge produces slightly different verdicts on repeated runs. The `_KNOWN_WRONG` set handles this — if the LLM finds something new, the test fails and forces investigation. If it misses a known issue, a warning fires.
+
+### Files created/modified
+- `pytest.ini` — test configuration
+- `tests/conftest.py` — fixtures (real-data loader, Gemini client, wiki content samples)
+- `tests/test_patterns.py` — trimmed unit tests (48)
+- `tests/test_wiki_parser.py` — fixed + trimmed unit tests (80)
+- `tests/test_encoding.py` — trimmed unit tests (13)
+- `tests/test_real_entries.py` — parametrized real-data tests (100)
+- `tests/test_llm_judge.py` — LLM-as-a-Judge validation (4)
+
+---
+
 ## 2026-03-29 — Session 2: Pipeline Quality Assurance & LLM Enrichment
 
 ### What we did

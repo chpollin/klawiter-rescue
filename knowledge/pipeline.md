@@ -245,6 +245,28 @@ Category name parsing: extracts e.g. "German" from `Poetry / Individual Poems (G
 
 ---
 
+## Testing
+
+Test suite in `tests/` using pytest. Configured via `pytest.ini` (sets PYTHONPATH to `pipeline/`, registers `llm` marker).
+
+```bash
+pytest tests/ -m "not llm" -v   # fast tests, no API key needed (~1s)
+pytest tests/ -m llm -v         # LLM-as-a-Judge, requires GEMINI_API_KEY (~10s)
+pytest tests/ -v                # everything
+```
+
+| Test file | Tests | What it covers |
+|-----------|-------|----------------|
+| `test_encoding.py` | 13 | Mojibake detection/repair, HTML entity handling |
+| `test_patterns.py` | 48 | All 8 extraction functions with real examples |
+| `test_wiki_parser.py` | 80 | 12 parser functions (redirect, categories, title, blocks) |
+| `test_real_entries.py` | 100 | Parametrized over 20 hand-labeled entries from `test_sample_20.json` |
+| `test_llm_judge.py` | 4 | Gemini evaluates extraction correctness on 10 diverse entries |
+
+**LLM-as-a-Judge**: Sends extracted fields + raw text to Gemini 3.1 Flash Lite. The model judges each field as correct/wrong/missed/not_applicable. Known limitations are tracked in `_KNOWN_WRONG` — unexpected errors fail the test, known issues are baselined. Cost: ~$0.001 per run.
+
+---
+
 ## Execution
 
 ```bash

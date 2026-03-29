@@ -34,21 +34,33 @@ Built `pipeline/03b_llm_enrich.py` using Gemini 3.1 Flash Lite.
 - Mojibake validation filter: 31 bad values rejected
 - Coverage improvement: publisher +21.1pp, location +19.7pp, translator +6.8pp, page_count +3.2pp
 
-## Phase 3: Unit Tests
+## Phase 3: Unit Tests ✅
 
-Build test suite for extraction functions using real examples from the dataset.
+Built comprehensive test suite with real-data tests and LLM-as-a-Judge validation.
+
+**Results**: 245 tests passed, 6 skipped, 0 failed (10.7s including Gemini API call).
+
+| Test file | Tests | Focus |
+|-----------|-------|-------|
+| `test_encoding.py` | 13 | Mojibake detection/repair, HTML entities |
+| `test_patterns.py` | 48 | All 8 extraction functions (year, publisher, location, page_count, translator, language) |
+| `test_wiki_parser.py` | 80 | 12 parser functions (redirect, categories, title, reprints, translations, etc.) |
+| `test_real_entries.py` | 100 | Parametrized over 20 hand-labeled entries × 5 field extractors |
+| `test_llm_judge.py` | 4 | Gemini evaluates extraction quality on 10 diverse entries |
+
+**LLM-Judge findings** (known limitations baseline):
+- 10 "wrong" verdicts: title from `'''[year]: Publisher'''` headers (6×), mojibake-truncated fields (2×), page-range-as-count (2×)
+- 13 "missed" verdicts: publisher/location from headers not extracted, `N/(M)p.` format, languages without `[[Category:]]`
 
 ### Tasks
-- [ ] Create `tests/conftest.py` with fixtures (sample raw entries + expected extractions)
-- [ ] Create `tests/test_patterns.py` — unit tests for `lib/patterns.py`:
-  - `extract_year`, `extract_publisher`, `extract_location`
-  - `extract_page_count`, `extract_translator`, `extract_language_from_category`
-- [ ] Create `tests/test_wiki_parser.py` — unit tests for `lib/wiki_parser.py`:
-  - `parse_redirect`, `extract_categories`, `extract_title`
-  - `extract_see_references`, `extract_reprints`, `extract_structured_data`
-- [ ] Create `tests/test_encoding.py` — unit tests for `lib/encoding.py`:
-  - `has_mojibake`, `fix_encoding`
-- [ ] Run all tests, ensure they pass
+- [x] Create `tests/conftest.py` with fixtures (sample entries + Gemini client + real-data loader)
+- [x] Create `tests/test_patterns.py` — unit tests for `lib/patterns.py`
+- [x] Create `tests/test_wiki_parser.py` — unit tests for `lib/wiki_parser.py`
+- [x] Create `tests/test_encoding.py` — unit tests for `lib/encoding.py`
+- [x] Create `tests/test_real_entries.py` — parametrized real-data tests
+- [x] Create `tests/test_llm_judge.py` — LLM-as-a-Judge validation
+- [x] Create `pytest.ini` — markers (`llm`), PYTHONPATH config
+- [x] Run all tests, ensure they pass
 
 ## Phase 4: Manual Validation
 

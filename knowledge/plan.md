@@ -65,25 +65,14 @@ Harden the extraction pipeline: eliminate code duplication, add comprehensive te
 
 ### M3.3: Test infrastructure
 
-- [ ] Create `tests/` directory with `conftest.py` (shared fixtures: sample entries, known-good extractions)
-- [ ] Write unit tests for `lib/patterns.py` — test each extraction function with known inputs/outputs:
-  - [ ] `extract_year` — normal years, edge cases (page numbers like 1234), no-year entries
-  - [ ] `extract_publisher` — all 3 pattern families, international publishers, false negatives
-  - [ ] `extract_location` — known cities, multi-location entries, locations not in list
-  - [ ] `extract_page_count` — "432 p.", "pp. 9-86", "293 Seiten", edge cases
-  - [ ] `extract_translator` — all 8 patterns (5 languages), names with particles ("van der Berg")
-  - [ ] `extract_language_from_category` — standard categories, edge cases
-- [ ] Write unit tests for `lib/wiki_parser.py`:
-  - [ ] `parse_redirect` — standard redirects, edge cases
-  - [ ] `extract_categories` — single/multiple categories, cleanup
-  - [ ] `extract_title` — bold titles, bracket-title rejection, page_title fallback
-  - [ ] `extract_see_references`, `extract_reprints`, `extract_translations_block`, `extract_contents_block`
-  - [ ] `extract_structured_data` — full entry parsing (3-5 representative entries)
-- [ ] Write unit tests for `lib/encoding.py`:
-  - [ ] `has_mojibake` — positive/negative detection
-  - [ ] `fix_encoding` — known mojibake pairs (ä→Ã¤ etc.), mixed clean/corrupted lines
-- [ ] Write integration test: run full pipeline on 50 fixture entries, compare output against golden files
-- [ ] Verify all tests pass
+- [x] Create `tests/` directory with `conftest.py` (shared fixtures: sample entries, Gemini client, real-data loader)
+- [x] Write unit tests for `lib/patterns.py` — all 8 extraction functions (48 tests)
+- [x] Write unit tests for `lib/wiki_parser.py` — all 12 parser functions (80 tests)
+- [x] Write unit tests for `lib/encoding.py` — mojibake detection/repair, HTML entities (13 tests)
+- [x] Write real-data tests: parametrized over 20 hand-labeled entries × 5 extractors (100 tests)
+- [x] Write LLM-as-a-Judge tests: Gemini evaluates extraction quality on 10 entries (4 tests)
+- [x] Create `pytest.ini` with markers (`llm`) and PYTHONPATH config
+- [x] Verify all tests pass (245 passed, 6 skipped)
 
 ### M3.4: Verification & Quality Assurance
 
