@@ -63,16 +63,19 @@ Harden the extraction pipeline: eliminate code duplication, add comprehensive te
 - [x] Add `page_namespace` field through entire pipeline
 - [x] Verify pipeline runs successfully (35.9s, 6,721/6,725 found)
 
-### M3.3: Test infrastructure
+### M3.3: Test infrastructure & pipeline refactoring
 
-- [x] Create `tests/` directory with `conftest.py` (shared fixtures: sample entries, Gemini client, real-data loader)
-- [x] Write unit tests for `lib/patterns.py` — all 8 extraction functions (48 tests)
-- [x] Write unit tests for `lib/wiki_parser.py` — all 12 parser functions (80 tests)
-- [x] Write unit tests for `lib/encoding.py` — mojibake detection/repair, HTML entities (13 tests)
+- [x] Create `tests/` directory with `conftest.py` (shared fixtures, Gemini client, real-data loader)
+- [x] Write unit tests for patterns, wiki_parser, encoding (141 focused tests)
 - [x] Write real-data tests: parametrized over 20 hand-labeled entries × 5 extractors (100 tests)
 - [x] Write LLM-as-a-Judge tests: Gemini evaluates extraction quality on 10 entries (4 tests)
+- [x] Write unit tests for `lib/vocabulary.py`: classify_time_period, category_to_entry_type, language_to_iso (19 tests)
 - [x] Create `pytest.ini` with markers (`llm`) and PYTHONPATH config
-- [x] Verify all tests pass (245 passed, 6 skipped)
+- [x] Consolidate `OUTPUT_FIELDS` into `lib/config.py` as `PARSED_FIELDS`/`CLASSIFIED_FIELDS` (was duplicated in 3 files)
+- [x] Add `csv_bool()`, `load_env()`, `MIN_CONTENT_LENGTH` to `lib/config.py` (eliminate duplication + magic numbers)
+- [x] Move `PAGE_RANGE_RE`/`PARENS_PAGE_RE` to `lib/patterns.py` (was duplicated in 03b + verify.py)
+- [x] Strengthen real-data tests: assert concrete values instead of just not-None
+- [x] Verify all tests pass (264 passed, 6 skipped)
 
 ### M3.4: Verification & Quality Assurance
 
