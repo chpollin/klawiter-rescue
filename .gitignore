@@ -7,3 +7,6 @@ data/output/entries/
 # Python cache
 __pycache__/
 *.pyc
+
+# Obsidian (user-specific workspace state)
+knowledge/.obsidian/
