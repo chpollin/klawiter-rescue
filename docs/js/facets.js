@@ -10,11 +10,7 @@ const Facets = {
   },
 
   renderFacet(containerId, entries, field, filterKey, labels, limit) {
-    const counts = {};
-    for (const e of entries) {
-      const val = e[field];
-      if (val) counts[val] = (counts[val] || 0) + 1;
-    }
+    const counts = countByField(entries, field);
 
     const sorted = Object.entries(counts)
       .sort((a, b) => b[1] - a[1])

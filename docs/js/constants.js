@@ -1,6 +1,25 @@
 /**
- * Shared constants — entry type labels, period labels, category groupings.
+ * Shared constants — colors, entry type labels, period labels, category groupings.
  */
+
+/** Canonical color palette (mirrors CSS custom properties in styles.css) */
+const COLORS = {
+  burgundy: '#631a34',
+  burgundyDark: '#4A1228',
+  burgundyLight: '#7A2D45',
+  gold: '#C2A360',
+  goldLight: '#D4B87A',
+  cream: '#FAF8F3',
+  gridLine: '#EDE8DF',
+  textLight: '#6B6B6B',
+};
+/** Chart dimensions for explore visualizations */
+const CHART_DIMS = {
+  overview: { width: 320, height: 160 },
+  timeline: { height: 400 },
+  network: { height: 420 },
+};
+
 const ENTRY_TYPE_LABELS = {
   'fiction': 'Fiction',
   'essay': 'Essays',

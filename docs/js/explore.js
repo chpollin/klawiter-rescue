@@ -19,19 +19,19 @@ const Explore = {
   topLanguages: [],
   yearExtent: [1815, 2020],
 
-  // Color palette (SZD design system extended)
+  // Color palette — base values from shared COLORS constant, language palette local
   colors: {
     languages: {
-      'German': '#7A1B2D', 'Chinese': '#B8963E', 'French': '#6B7A3A',
+      'German': COLORS.burgundy, 'Chinese': COLORS.gold, 'French': '#6B7A3A',
       'English': '#5B5040', 'Spanish': '#8B5C3A', 'Arabic': '#5B3A7A',
       'Bulgarian': '#3A5B6B', 'Albanian': '#7A4A1B', 'Russian': '#3A3A5B',
       'Croatian': '#6B3A4A', 'Other': '#9E9585',
     },
-    burgundy: '#7A1B2D',
-    gold: '#B8963E',
-    cream: '#FAF8F3',
-    gridLine: '#EDE8DF',
-    textLight: '#8A7E6B',
+    burgundy: COLORS.burgundy,
+    gold: COLORS.gold,
+    cream: COLORS.cream,
+    gridLine: COLORS.gridLine,
+    textLight: COLORS.textLight,
   },
 
   // -------------------------------------------------------------------------
@@ -284,13 +284,11 @@ const Explore = {
 
   _renderDetailGroup(entries) {
     // Top languages in selection
-    const langCounts = {};
-    entries.forEach(e => { if (e.language) langCounts[e.language] = (langCounts[e.language] || 0) + 1; });
+    const langCounts = countByField(entries, 'language');
     const topLangs = Object.entries(langCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
     // Top types in selection
-    const typeCounts = {};
-    entries.forEach(e => { if (e.entryType) typeCounts[e.entryType] = (typeCounts[e.entryType] || 0) + 1; });
+    const typeCounts = countByField(entries, 'entryType');
     const topTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
     // Year range

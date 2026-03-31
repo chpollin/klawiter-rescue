@@ -1,5 +1,5 @@
 /**
- * Startseite — Expandable category list with subcategories, browse CTA, explore link.
+ * Home — Expandable category list with subcategories, browse CTA, explore link.
  */
 const Home = {
   expandedType: null,
@@ -8,10 +8,7 @@ const Home = {
     const container = document.getElementById('view-home');
 
     // Count entries per type
-    const counts = {};
-    for (const e of entries) {
-      if (e.entryType) counts[e.entryType] = (counts[e.entryType] || 0) + 1;
-    }
+    const counts = countByField(entries, 'entryType');
 
     // Build subcategory tree from categories arrays
     const subcats = this._buildSubcategories(entries);

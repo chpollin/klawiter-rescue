@@ -96,7 +96,7 @@ const ExploreOverview = {
 
     if (!sorted.length) { el.innerHTML += '<div class="ov-empty">No data</div>'; return; }
 
-    const width = 320, height = 160;
+    const { width, height } = CHART_DIMS.overview;
     const m = { top: 5, right: 10, bottom: 25, left: 35 };
     const w = width - m.left - m.right, h = height - m.top - m.bottom;
 
@@ -104,7 +104,8 @@ const ExploreOverview = {
     const y = d3.scaleLinear().domain([0, d3.max(sorted, d => d.count)]).nice().range([h, 0]);
 
     const svg = d3.select(el).append('svg')
-      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg');
+      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg')
+      .attr('role', 'img').attr('aria-label', `Publications by decade: ${sorted.length} decades shown`);
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
 
     g.selectAll('rect').data(sorted).join('rect')
@@ -140,11 +141,7 @@ const ExploreOverview = {
     el.innerHTML = '<div class="ov-title">Entry Types</div>';
 
     const data = this.filtered;
-    const counts = {};
-    for (const e of data) {
-      const t = e.entryType || 'other';
-      counts[t] = (counts[t] || 0) + 1;
-    }
+    const counts = countByField(data, 'entryType');
 
     const children = Object.entries(counts)
       .map(([type, count]) => ({ type, count, label: ENTRY_TYPE_LABELS[type] || type }))
@@ -152,16 +149,17 @@ const ExploreOverview = {
 
     if (!children.length) { el.innerHTML += '<div class="ov-empty">No data</div>'; return; }
 
-    const width = 320, height = 160;
+    const { width, height } = CHART_DIMS.overview;
     const root = d3.hierarchy({ children }).sum(d => d.count);
     d3.treemap().size([width, height]).padding(2).round(true)(root);
 
     const colorScale = d3.scaleSequential()
       .domain([0, d3.max(children, d => d.count)])
-      .interpolator(d3.interpolate('#E8DFD4', '#631a34'));
+      .interpolator(d3.interpolate('#E8DFD4', COLORS.burgundy));
 
     const svg = d3.select(el).append('svg')
-      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg');
+      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg')
+      .attr('role', 'img').attr('aria-label', `Entry types: ${children.length} types shown`);
 
     const cells = svg.selectAll('g').data(root.leaves()).join('g')
       .attr('transform', d => `translate(${d.x0},${d.y0})`)
@@ -198,10 +196,7 @@ const ExploreOverview = {
     el.innerHTML = '<div class="ov-title">Languages (Top 15)</div>';
 
     const data = this.filtered;
-    const counts = {};
-    for (const e of data) {
-      if (e.language) counts[e.language] = (counts[e.language] || 0) + 1;
-    }
+    const counts = countByField(data, 'language');
 
     const sorted = Object.entries(counts)
       .sort((a, b) => b[1] - a[1])
@@ -210,7 +205,7 @@ const ExploreOverview = {
 
     if (!sorted.length) { el.innerHTML += '<div class="ov-empty">No data</div>'; return; }
 
-    const width = 320, height = 160;
+    const { width, height } = CHART_DIMS.overview;
     const m = { top: 5, right: 10, bottom: 5, left: 80 };
     const w = width - m.left - m.right, h = height - m.top - m.bottom;
 
@@ -218,7 +213,8 @@ const ExploreOverview = {
     const x = d3.scaleLinear().domain([0, d3.max(sorted, d => d.count)]).range([0, w]);
 
     const svg = d3.select(el).append('svg')
-      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg');
+      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg')
+      .attr('role', 'img').attr('aria-label', `Top ${sorted.length} languages`);
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
 
     g.selectAll('rect').data(sorted).join('rect')
@@ -250,10 +246,7 @@ const ExploreOverview = {
     el.innerHTML = '<div class="ov-title">Locations (Top 10)</div>';
 
     const data = this.filtered;
-    const counts = {};
-    for (const e of data) {
-      if (e.location) counts[e.location] = (counts[e.location] || 0) + 1;
-    }
+    const counts = countByField(data, 'location');
 
     const sorted = Object.entries(counts)
       .sort((a, b) => b[1] - a[1])
@@ -262,7 +255,7 @@ const ExploreOverview = {
 
     if (!sorted.length) { el.innerHTML += '<div class="ov-empty">No data</div>'; return; }
 
-    const width = 320, height = 160;
+    const { width, height } = CHART_DIMS.overview;
     const m = { top: 5, right: 10, bottom: 5, left: 95 };
     const w = width - m.left - m.right, h = height - m.top - m.bottom;
 
@@ -270,7 +263,8 @@ const ExploreOverview = {
     const x = d3.scaleLinear().domain([0, d3.max(sorted, d => d.count)]).range([0, w]);
 
     const svg = d3.select(el).append('svg')
-      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg');
+      .attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'explore-svg')
+      .attr('role', 'img').attr('aria-label', `Top ${sorted.length} publication locations`);
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
 
     // Lollipop lines

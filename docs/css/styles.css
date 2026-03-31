@@ -278,7 +278,7 @@ h1, h2, h3, h4 {
   color: var(--sz-text-light);
 }
 
-/* --- Home / Startseite --- */
+/* --- Home --- */
 .home-intro {
   max-width: 720px;
   margin-bottom: 2rem;
@@ -517,44 +517,7 @@ h1, h2, h3, h4 {
   text-decoration: underline;
 }
 
-/* Keep tile grid for backward compat (used by "other" section) */
-.tile-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.category-tile {
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 0.875rem 1.25rem;
-  cursor: pointer;
-  border-left: 3px solid transparent;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  min-width: 140px;
-}
-.category-tile:hover {
-  border-left-color: var(--sz-gold);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-}
-
-.tile-name {
-  font-family: var(--font-serif);
-  font-size: 0.9375rem;
-  color: var(--sz-text);
-  margin-bottom: 0.125rem;
-}
-
-.tile-count {
-  font-family: var(--font-serif);
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: var(--sz-burgundy);
-}
-
-/* Kurzstatistik */
+/* Stats summary line */
 .home-stats-line {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -563,11 +526,6 @@ h1, h2, h3, h4 {
   font-size: 0.8125rem;
   color: var(--sz-text-light);
 }
-.home-stats-line a {
-  color: var(--sz-burgundy);
-  font-weight: 500;
-}
-
 /* --- Results --- */
 .results-header {
   display: flex;
@@ -1249,7 +1207,6 @@ h1, h2, h3, h4 {
 
 /* --- Focus Visible --- */
 .action-btn:focus-visible,
-.category-tile:focus-visible,
 .facet-item:focus-visible,
 .card-header:focus-visible,
 .sort-select:focus-visible,
@@ -1760,12 +1717,5 @@ body.edit-mode .meta-table {
   }
   .stats-cards {
     grid-template-columns: 1fr 1fr;
-  }
-  .tile-grid {
-    gap: 0.5rem;
-  }
-  .category-tile {
-    min-width: 100px;
-    padding: 0.625rem 0.875rem;
   }
 }

@@ -36,7 +36,7 @@ const App = {
       window.addEventListener('hashchange', () => this.handleRoute());
     } catch (err) {
       document.getElementById('view-home').innerHTML =
-        `<p style="color:#7A1B2D">Error loading data: ${err.message}</p>`;
+        `<p style="color:var(--sz-burgundy)">Error loading data: ${err.message}</p>`;
     }
   },
 
@@ -241,11 +241,12 @@ const App = {
   },
 
   sortEntries() {
+    // Sort in place — filtered is always a fresh copy from applyFilters()
     const s = this.state.sort;
     if (s === 'year-asc') {
-      this.filtered.sort((a, b) => (a.year || 9999) - (b.year || 9999));
+      this.filtered.sort((a, b) => (a.year ?? Infinity) - (b.year ?? Infinity));
     } else if (s === 'year-desc') {
-      this.filtered.sort((a, b) => (b.year || -1) - (a.year || -1));
+      this.filtered.sort((a, b) => (b.year ?? -Infinity) - (a.year ?? -Infinity));
     } else if (s === 'title') {
       this.filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
     }
@@ -363,10 +364,8 @@ const App = {
 
     const snippet = esc((e.fullBibliographicEntry || '').slice(0, 180));
 
-    return `<div class="entry-card" id="card-${e.sourcePageId}">
-      <div class="card-header" tabindex="0" role="button"
-           onclick="App.toggleCard(${e.sourcePageId})"
-           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.toggleCard(${e.sourcePageId})}">
+    return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
+      <div class="card-header" tabindex="0" role="button">
         <div class="card-meta">${badge} ${year} ${lang} ${loc}</div>
         <div class="card-title">${title}</div>
         ${secondary}
@@ -413,12 +412,12 @@ const App = {
                     key === 'period' ? 'Period' : key === 'category' ? 'Category' : 'Location';
       const display = key === 'type' ? (ENTRY_TYPE_LABELS[val] || val) :
                       key === 'period' ? (PERIOD_LABELS[val] || val) : val;
-      chips.push(`<span class="chip">${esc(label)}: ${esc(display)}
-        <button onclick="App.removeFilter('${key}')">&times;</button></span>`);
+      chips.push(`<span class="chip" data-filter-key="${key}">${esc(label)}: ${esc(display)}
+        <button>&times;</button></span>`);
     }
     if (this.state.query) {
-      chips.push(`<span class="chip">Search: ${esc(this.state.query)}
-        <button onclick="App.clearSearch()">&times;</button></span>`);
+      chips.push(`<span class="chip" data-filter-key="search">Search: ${esc(this.state.query)}
+        <button>&times;</button></span>`);
     }
     container.innerHTML = chips.join('');
   },
@@ -480,6 +479,42 @@ const App = {
       this.state.sort = ev.target.value;
       this.sortEntries();
       this.renderResults();
+    });
+
+    // Delegated click/keydown on results list (replaces per-card inline handlers)
+    const resultsList = document.getElementById('results-list');
+    resultsList.addEventListener('click', (ev) => {
+      const header = ev.target.closest('.card-header');
+      if (header) {
+        const card = header.closest('.entry-card');
+        if (card) this.toggleCard(parseInt(card.dataset.pid));
+      }
+    });
+    resultsList.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        const header = ev.target.closest('.card-header');
+        if (header) {
+          ev.preventDefault();
+          const card = header.closest('.entry-card');
+          if (card) this.toggleCard(parseInt(card.dataset.pid));
+        }
+      }
+    });
+
+    // Delegated click on filter chips
+    document.getElementById('filter-chips').addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button');
+      if (!btn) return;
+      const chip = btn.closest('.chip');
+      if (!chip) return;
+      const key = chip.dataset.filterKey;
+      if (key === 'search') this.clearSearch();
+      else this.removeFilter(key);
+    });
+
+    // Batch export button
+    document.getElementById('batch-export-btn').addEventListener('click', () => {
+      Export.batchBibtex(this.filtered);
     });
 
     document.getElementById('load-more-btn').addEventListener('click', () => {

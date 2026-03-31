@@ -31,7 +31,7 @@ const ExploreNetwork = {
 
     const rect = container.getBoundingClientRect();
     const width = rect.width || 700;
-    const height = 420;
+    const height = CHART_DIMS.network.height;
 
     // Info bar
     const info = document.createElement('div');
@@ -43,7 +43,7 @@ const ExploreNetwork = {
     const typeColor = d3.scaleOrdinal()
       .domain(Object.keys(ENTRY_TYPE_LABELS))
       .range([
-        '#7A1B2D', '#B8963E', '#6B7A3A', '#5B5040', '#8B5C3A',
+        COLORS.burgundy, COLORS.gold, '#6B7A3A', '#5B5040', '#8B5C3A',
         '#5B3A7A', '#3A5B6B', '#7A4A1B', '#3A3A5B', '#6B3A4A',
         '#9E9585', '#4A6B3A', '#6B5B3A', '#3A4A6B', '#5B3A3A', '#7A6B3A',
       ]);
@@ -56,7 +56,14 @@ const ExploreNetwork = {
     this.svg = d3.select(container).append('svg')
       .attr('class', 'explore-svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMidYMid meet');
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .attr('role', 'img')
+      .attr('aria-labelledby', 'network-title network-desc');
+
+    this.svg.append('title').attr('id', 'network-title')
+      .text('Cross-reference network');
+    this.svg.append('desc').attr('id', 'network-desc')
+      .text(`Force-directed graph of ${this.nodes.length} entries connected by ${this.links.length} cross-references`);
 
     // Zoom
     const zoomG = this.svg.append('g');
@@ -156,19 +163,13 @@ const ExploreNetwork = {
     const nodeMap = new Map();
     const links = [];
 
-    // Build title-to-id lookup
-    const titleMap = new Map();
-    for (const e of entries) {
-      if (e.title) titleMap.set(e.title, e.sourcePageId);
-    }
-
-    // Build graph from seeAlso
+    // Build graph from seeAlso (reuse App.titleMap built at init)
     for (const entry of entries) {
       if (!entry.seeAlso || !entry.seeAlso.length) continue;
 
       for (const ref of entry.seeAlso) {
         // Try to resolve the reference
-        let targetId = titleMap.get(ref);
+        let targetId = App.titleMap.get(ref);
         if (!targetId && App.data && App.data.redirects) {
           targetId = App.data.redirects[ref];
         }

@@ -91,12 +91,10 @@ const Edit = {
       patches: patches,
     };
 
-    const blob = new Blob([JSON.stringify(patchDoc, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `klawiter-patch-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(
+      JSON.stringify(patchDoc, null, 2),
+      `klawiter-patch-${new Date().toISOString().slice(0, 10)}.json`,
+      'application/json'
+    );
   },
 };

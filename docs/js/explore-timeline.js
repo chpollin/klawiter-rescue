@@ -24,7 +24,7 @@ const ExploreTimeline = {
 
     const rect = container.getBoundingClientRect();
     const width = rect.width || 700;
-    const height = 400;
+    const height = CHART_DIMS.timeline.height;
     const m = this.margin;
     const w = width - m.left - m.right;
     const h = height - m.top - m.bottom;
@@ -58,7 +58,14 @@ const ExploreTimeline = {
       .append('svg')
       .attr('class', 'explore-svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMidYMid meet');
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .attr('role', 'img')
+      .attr('aria-labelledby', 'timeline-title timeline-desc');
+
+    this.svg.append('title').attr('id', 'timeline-title')
+      .text('Publication timeline');
+    this.svg.append('desc').attr('id', 'timeline-desc')
+      .text(`Stacked area chart showing ${entries.length} publications from ${Explore.yearExtent[0]} to ${Explore.yearExtent[1]}, colored by language`);
 
     const g = this.svg.append('g')
       .attr('transform', `translate(${m.left},${m.top})`);
