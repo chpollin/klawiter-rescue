@@ -57,6 +57,12 @@ jobs:
           print('All entries valid')
           "
 
+      - name: Run regression tests
+        if: hashFiles('data/output/quality-report.json') != ''
+        run: |
+          pip install pytest
+          python -m pytest tests/test_regression.py -v
+
       - name: Report coverage changes
         run: |
           python -c "
@@ -72,4 +78,41 @@ jobs:
                   p = (e.get('_provenance') or {}).get(field, 'unknown')
                   prov[p] = prov.get(p, 0) + 1
               print(f'{field}: {count}/{total} ({100*count/total:.1f}%) — {prov}')
+          "
+
+      - name: Check quality report regression
+        if: hashFiles('data/output/quality-report.json') != ''
+        run: |
+          python -c "
+          import json, sys
+          with open('.github/baseline-metrics.json') as f:
+              baseline = json.load(f)
+          with open('data/output/quality-report.json') as f:
+              current = json.load(f)
+
+          fails = []
+          # Entry count check
+          b_total = baseline['summary']['total_entries']
+          c_total = current['summary']['total_entries']
+          if c_total < b_total * 0.99:
+              fails.append(f'Entry count dropped >1%: {b_total} -> {c_total}')
+
+          # Critical field coverage
+          for field in ['name', 'datePublished', 'bibliographicCitation']:
+              b_pct = baseline['field_coverage'][field]['percentage']
+              c_pct = current['field_coverage'][field]['percentage']
+              if b_pct - c_pct > 1.0:
+                  fails.append(f'{field} coverage dropped {b_pct - c_pct:.1f}pp: {b_pct}% -> {c_pct}%')
+
+          # Error severity
+          errors = current['summary']['severity_counts'].get('error', 0)
+          if errors > 0:
+              fails.append(f'{errors} error-severity issues found')
+
+          if fails:
+              for f in fails:
+                  print(f'FAIL: {f}')
+              sys.exit(1)
+          else:
+              print('All regression checks passed')
           "

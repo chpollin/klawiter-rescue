@@ -61,6 +61,12 @@ def remove_wiki_markup(text):
     result = re.sub(r'<br\s*/?>', '\n', result)
     result = re.sub(r'</?[a-zA-Z][^>]*>', '', result)
 
+    # MediaWiki magic words
+    result = re.sub(r'__(?:TOC|NOTOC|FORCETOC|NOEDITSECTION)__', '', result)
+
+    # DEFAULTSORT key
+    result = re.sub(r'\{\{DEFAULTSORT(?:KEY)?:[^}]*\}\}', '', result, flags=re.IGNORECASE)
+
     # Section headers: ==text== → text, ===text=== → text
     result = re.sub(r'^={2,6}\s*(.+?)\s*={2,6}$', r'\1', result, flags=re.MULTILINE)
 

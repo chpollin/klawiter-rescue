@@ -65,13 +65,23 @@ def process_entry(row):
         result.update({k: '' for k in PARSED_FIELDS if k not in result})
         return result
 
-    # Title: prefer parsed title, but fall back to page_title
+    # Title: prefer parsed title, but fall back to page_title.
+    # When wiki extraction returns a [year]: pattern (metadata, not a title),
+    # look for the real title in a subsequent bold block before falling back.
     extracted_title = parsed.get('title', '')
     page_title = row.get('page_title', '')
-    if page_title and (not extracted_title or re.match(r'\[\d{4}', extracted_title)):
+    if extracted_title and re.match(r'\[\d{4}', extracted_title):
+        # [year]: pattern detected — look for the actual title in content
+        bold_matches = re.findall(r"'''\s*(.+?)\s*'''", content)
+        real_title = next(
+            (m for m in bold_matches if not re.match(r'\[\d{4}', m)),
+            None,
+        )
+        result['title'] = real_title or page_title or extracted_title
+    elif not extracted_title:
         result['title'] = page_title
     else:
-        result['title'] = extracted_title or page_title
+        result['title'] = extracted_title
     # Clean any remaining wiki markup from title (e.g. page_title fallbacks)
     if result['title']:
         result['title'] = remove_wiki_markup(result['title'])

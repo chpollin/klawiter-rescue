@@ -4,6 +4,52 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-03-31 — Session 10: Frontend Cleanup, Data Quality Analysis & Regression Testing
+
+### What we did
+
+- **Frontend refactoring** (12 files, 6 phases):
+  - Unified color palette: `COLORS` constant in constants.js as single source of truth (fixed CSS `#631a34` vs JS `#7A1B2D` mismatch)
+  - Deduplicated code: wired up unused `countByField()` at 6 call sites, eliminated redundant titleMap in ExploreNetwork, reused `downloadBlob()` in Edit module
+  - Performance: replaced DOM-based `esc()` with regex (~10x faster), fixed asymmetric sort fallbacks (`?? Infinity`)
+  - Security: added SRI hashes to FlexSearch and D3 CDN scripts
+  - Replaced inline `onclick` handlers with event delegation on results list and filter chips
+  - Removed ~50 lines dead CSS, added ARIA labels to all 6 D3 SVGs, added `og:url` meta tag
+  - Extracted `CHART_DIMS` constant for magic numbers in explore modules
+
+- **Data quality deep-dive** (3 parallel investigations):
+  - **Title precision**: 880 "false positives" in verify.py were a methodology issue, not extraction errors. page_title fallbacks are metadata — they correctly don't appear in raw content. Real precision ~95%+
+  - **Publisher gap**: 44% missing = 15-20% legitimately absent (anthology poems, journal articles) + 80-85% structural (implicit `[[Collection]] [City, Year]` format, only 1.7% contain publisher keywords)
+  - **Regression testing**: zero system-level checks existed before this session
+
+- **Regression testing infrastructure** (3 new files):
+  - `.github/baseline-metrics.json`: frozen coverage snapshot for comparison
+  - `tests/test_regression.py`: 18 tests (entry counts, field coverage thresholds, severity bounds, frontend integrity)
+  - Extended `.github/workflows/validate-patch.yml` with regression checks and quality report comparison
+
+- **Title extraction improvements**:
+  - `verify.py`: new `correct_fallback` status for page_title-sourced titles (fixes misleading 81.5% precision)
+  - `03_parse_entries.py`: when `[year]:` pattern detected, search for second bold block as real title before falling back to page_title
+  - `wiki_parser.py`: added removal of `__TOC__`, `__NOTOC__`, `__FORCETOC__`, `{{DEFAULTSORT:...}}`
+  - 10 new tests (wiki parser + regression), total: 270 → 280
+
+### What we learned
+
+1. **Verification must match extraction methodology**: verify.py did a blind "value in raw text?" check without knowing the pipeline uses page_title fallback. This produced 880 phantom false positives. Always ensure verification tools understand the extraction strategy.
+2. **Not every coverage gap is a bug**: The 44% publisher gap is mostly structural — anthology poems and journal articles genuinely lack standalone publishers. Distinguishing "not extracted" from "not present" requires entry-type-aware analysis.
+3. **Unit tests ≠ regression safety**: 270 extraction tests caught individual pattern bugs but couldn't detect if overall coverage silently degraded. System-level baseline comparison is essential for data pipelines.
+4. **CSS/JS color sync in vanilla projects**: Without CSS-in-JS or a build step, color values drift. A shared constants file (`COLORS`) is the simplest workaround.
+
+### What's next
+
+- **Publisher patterns**: Add non-Western keywords (chubanshe, Izdatelstvo), type-specific rules (poetry → no publisher expected)
+- **Re-run pipeline**: Apply title extraction improvements to actual data, measure impact
+- **Expand test sample**: 20 → 50+ hand-labeled entries with non-Western languages and edge cases
+- **M3.8**: Manual validation — browse 50+ entries in live frontend
+- **M5**: Semantic enrichment (Wikidata/GND/VIAF reconciliation)
+
+---
+
 ## 2026-03-29 — Session 9: Interactive Exploration Interface & Refactoring
 
 ### What we did

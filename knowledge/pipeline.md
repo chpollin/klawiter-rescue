@@ -168,6 +168,19 @@ Checks JSON-LD structure, field coverage, residual Mojibake. Generates `quality-
 
 Generates per-field provenance metadata (`_provenance` object) by diffing regex output (03_parsed.csv) against LLM cache (03b_llm_cache.json). Injects into `docs/data/klawiter.json`. Fields tracked: publisher, location, translator, pageCount. Values: `regex` (extracted by patterns.py), `llm` (filled by Gemini), `missing` (not extracted). Run manually: `python pipeline/inject_provenance.py`
 
+### verify.py — Round-trip Verification
+
+Compares extracted fields against raw wiki content to measure precision and recall. For each entry and field (title, year, publisher, location, translator, page count), checks whether the extracted value actually appears in the raw source text.
+
+**Title verification**: Distinguishes three cases:
+- `correct` — extracted title found in raw content
+- `correct_fallback` — title came from page_title fallback (wiki metadata, not in raw content by design)
+- `false_positive` — extracted title not found and not a known fallback
+
+This distinction is important: verify.py previously reported 81.5% title precision because it didn't account for the ~880 page_title fallbacks. With the `correct_fallback` category, actual precision is ~95%+.
+
+Run: `python pipeline/verify.py` → `data/output/verification-report.json`
+
 ---
 
 ## Encoding Fix
@@ -263,9 +276,14 @@ pytest tests/ -v                # everything
 |-----------|-------|----------------|
 | `test_encoding.py` | 13 | Mojibake detection/repair, HTML entity handling |
 | `test_patterns.py` | 48 | All 8 extraction functions with real examples |
-| `test_wiki_parser.py` | 80 | 12 parser functions (redirect, categories, title, blocks) |
+| `test_wiki_parser.py` | 83 | 12 parser functions (redirect, categories, title, blocks, magic words) |
 | `test_real_entries.py` | 100 | Parametrized over 20 hand-labeled entries from `test_sample_20.json` |
 | `test_llm_judge.py` | 4 | Gemini evaluates extraction correctness on 10 diverse entries |
+| `test_regression.py` | 18 | Entry counts, field coverage thresholds, severity bounds, frontend integrity |
+
+**Total: 280 tests** (276 without LLM). Run `pytest tests/ -m "not llm" -v` for fast feedback.
+
+**Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>1%), field coverage regressions (>1-2pp for critical fields), new error-severity issues, Mojibake spikes. Baseline must be updated after intentional improvements.
 
 **LLM-as-a-Judge**: Sends extracted fields + raw text to Gemini 3.1 Flash Lite. The model judges each field as correct/wrong/missed/not_applicable. Known limitations are tracked in `_KNOWN_WRONG` — unexpected errors fail the test, known issues are baselined. Cost: ~$0.001 per run.
 

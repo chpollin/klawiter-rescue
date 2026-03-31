@@ -88,6 +88,18 @@ class TestRemoveWikiMarkup:
         assert remove_wiki_markup(None) is None
         assert remove_wiki_markup("") == ""
 
+    def test_magic_words_removed(self):
+        assert "__TOC__" not in remove_wiki_markup("__TOC__\nContent here")
+        assert "__NOTOC__" not in remove_wiki_markup("__NOTOC__\nContent")
+        assert "__FORCETOC__" not in remove_wiki_markup("__FORCETOC__")
+        assert "__NOEDITSECTION__" not in remove_wiki_markup("__NOEDITSECTION__")
+
+    def test_defaultsort_removed(self):
+        text = "Title\n{{DEFAULTSORT:Zweig, Stefan}}"
+        result = remove_wiki_markup(text)
+        assert "DEFAULTSORT" not in result
+        assert "DEFAULTSORTKEY" not in remove_wiki_markup("{{DEFAULTSORTKEY:Test}}")
+
 
 class TestExtractTitle:
     def test_bold_title(self, entry_bold_title):

@@ -29,7 +29,8 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
 - **Static frontend**: Vanilla JS (13 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
 - **Exploration interface**: 3-mode interactive visualization (Timeline stacked area, Overview linked views, Network force graph) replacing the former Chart.js dashboard
-- **Test suite**: 270 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge)
+- **Test suite**: 280 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge, regression)
+- **Regression testing**: Baseline metrics in `.github/baseline-metrics.json`, 18 regression tests in `tests/test_regression.py`, CI checks in `validate-patch.yml`
 - **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`
 - **License**: MIT (code) + CC BY 4.0 (data)
 
@@ -43,10 +44,11 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 
 ## Known Limitations
 
-- Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining ~44% mostly entries without publisher info
+- Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining ~44% is 15-20% legitimately missing (anthology poems, journal articles) + 80-85% structural gap (implicit citation formats not matched by regex)
 - Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator
 - Location: 87.5% coverage (regex 67.8% + LLM +19.7pp)
-- ~15 bracket-titles remain where no page_title fallback exists (wiki markup cleaned in step 03)
+- ~15 bracket-titles remain where no page_title fallback exists (wiki markup cleaned in step 03). Title extraction improved: `[year]:` patterns now search for second bold block before falling back to page_title
+- Title precision: verify.py reports 81.5% but actual precision is ~95%+ (880 "false positives" are page_title fallbacks — titles from wiki metadata, not content — now classified as `correct_fallback`)
 - JSON-LD namespace URL (`chpollin.github.io/klawiter-rescue/vocab/`) resolves to `docs/vocab/index.html` (GitHub Pages)
 
 ## EIL Curation Interface
@@ -54,7 +56,7 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **edit.js**: Localhost-only edit mode (`location.hostname === 'localhost'`) enabling inline field editing with provenance awareness
 - **Provenance badges**: Visual indicators (regex/llm/missing) on publisher, location, translator, pageCount fields, driven by `_provenance` metadata from `inject_provenance.py`
 - **JSON patch export**: Edits are collected as JSON patches and exported for review, not written directly to the dataset
-- **GitHub Actions validation**: `.github/workflows/validate.yml` runs pipeline validation on PRs to ensure data integrity
+- **GitHub Actions validation**: `.github/workflows/validate-patch.yml` runs patch format checks, frontend JSON integrity, regression tests (coverage thresholds), and quality report comparison on PRs
 
 ## Zweig Forschungsverbund
 

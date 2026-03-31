@@ -31,13 +31,16 @@ REPORT_PATH = os.path.join(OUTPUT_DIR, 'verification-report.json')
 
 
 def load_raw_content_map():
-    """Load step 02 CSV and build text_id -> raw content mapping."""
+    """Load step 02 CSV and build text_id -> {content, page_title} mapping."""
     rows = load_csv(STEP_02_OUTPUT)
     content_map = {}
     for row in rows:
         text_id = row.get('text_id', '')
         if text_id:
-            content_map[int(text_id)] = row.get('content', '')
+            content_map[int(text_id)] = {
+                'content': row.get('content', ''),
+                'page_title': row.get('page_title', ''),
+            }
     return content_map
 
 
@@ -125,7 +128,7 @@ def has_translator_indicator(text):
     return None
 
 
-def verify_entry(entry, raw_content):
+def verify_entry(entry, raw_content, page_title=''):
     """Verify a single entry's extracted fields against raw content.
     Returns dict with per-field verification results.
     """
@@ -143,14 +146,31 @@ def verify_entry(entry, raw_content):
     raw_clean = remove_wiki_markup(raw_content)
 
     # --- Title verification ---
+    # The pipeline uses page_title as fallback when wiki extraction returns a
+    # [year]: pattern (metadata, not a real title). page_title is wiki page name
+    # metadata and will never appear in raw_content — that's expected, not a
+    # false positive. We detect this case and classify it separately.
     title = entry.get('name', '')
     if title:
-        # Compare against both raw and cleaned versions
         found = value_in_content(title, raw_content) or value_in_content(title, raw_clean)
+        if found:
+            status = 'correct'
+            title_source = 'wiki_extract'
+        elif page_title and (
+            normalize(title) == normalize(page_title)
+            or normalize(title) == normalize(remove_wiki_markup(page_title))
+        ):
+            # Title came from page_title fallback — not in raw content by design
+            status = 'correct_fallback'
+            title_source = 'page_title_fallback'
+        else:
+            status = 'false_positive'
+            title_source = 'unknown'
         result['fields']['title'] = {
             'extracted': title,
             'in_raw': found,
-            'status': 'correct' if found else 'false_positive',
+            'status': status,
+            'title_source': title_source,
         }
 
     # --- Year verification ---
@@ -252,6 +272,7 @@ def compute_summary(results):
     for field in fields:
         total_extracted = 0
         correct = 0
+        correct_fallback = 0
         false_positive = 0
         false_negative = 0
 
@@ -259,9 +280,12 @@ def compute_summary(results):
             f = r.get('fields', {})
             if field in f:
                 total_extracted += 1
-                if f[field]['status'] == 'correct':
+                status = f[field]['status']
+                if status == 'correct':
                     correct += 1
-                elif f[field]['status'] == 'false_positive':
+                elif status == 'correct_fallback':
+                    correct_fallback += 1
+                elif status == 'false_positive':
                     false_positive += 1
 
             fn_key = f'{field}_false_negative'
@@ -270,12 +294,15 @@ def compute_summary(results):
 
         total_entries = len(results)
         coverage = total_extracted / total_entries if total_entries else 0
-        precision = correct / total_extracted if total_extracted else 0
+        # Precision: both correct and correct_fallback count as correct
+        total_correct = correct + correct_fallback
+        precision = total_correct / total_extracted if total_extracted else 0
 
         summary[field] = {
             'total_entries': total_entries,
             'extracted': total_extracted,
             'correct': correct,
+            'correct_fallback': correct_fallback,
             'false_positive': false_positive,
             'false_negative': false_negative,
             'coverage': round(coverage * 100, 1),
@@ -311,11 +338,13 @@ def main():
     no_raw = 0
     for entry in bib_entries:
         text_id = entry.get('sourceTextId')
-        raw_content = content_map.get(text_id, '') if text_id else ''
+        raw_data = content_map.get(text_id, {}) if text_id else {}
+        raw_content = raw_data.get('content', '') if isinstance(raw_data, dict) else raw_data
+        page_title = raw_data.get('page_title', '') if isinstance(raw_data, dict) else ''
         if not raw_content:
             no_raw += 1
 
-        result = verify_entry(entry, raw_content)
+        result = verify_entry(entry, raw_content, page_title=page_title)
         results.append(result)
 
     log.info(f"  Entries without raw content: {no_raw}")

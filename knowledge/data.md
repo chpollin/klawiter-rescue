@@ -182,11 +182,13 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 
 ### Known Problems
 
-**Publisher extraction (55.6%)**: Regex covers 34.5% (3 pattern families), LLM adds +21.1pp. Remaining ~44% are mostly entries without publisher info (journal articles, essays in anthologies, cross-references).
+**Publisher extraction (55.6%)**: Regex covers 34.5% (3 pattern families), LLM adds +21.1pp. The ~44% gap breaks down: 15-20% (~350 entries) legitimately missing (anthology poems, journal articles, see-also references — no publisher in source text). 80-85% (~1,750 entries) structural extraction failures (publisher present in implicit formats like `[[Collection]] [City, Year]` that regex doesn't match). Only 1.7% of entries without publisher contain publisher keywords. Poetry/Individual Poems: 80.7% gap — anthology entries structurally lack standalone publishers.
 
 **Translator extraction (41.9%)**: Regex covers 35.1% with 0% false positives. LLM adds +6.8pp. Remaining ~58% are mostly German originals (no translator) or entries that don't name the translator. A newline-leaking bug in the translator regex (`\s` matching `\n`) was fixed — 34 translator fields previously contained trailing wiki markup from subsequent sections.
 
-**Bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. Originally 33 without page_title fallback, reduced to ~15 after `remove_wiki_markup()` improvements (section header stripping and unpaired bold marker removal).
+**Title precision**: verify.py previously reported 81.5% precision (880 false positives). Investigation showed these are page_title fallbacks — titles sourced from wiki metadata, correctly absent from raw content. verify.py now classifies these as `correct_fallback`. Actual title precision is ~95%+. Title extraction improved: `[year]:` patterns now search for second bold block as real title before falling back to page_title.
+
+**Bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. Originally 33 without page_title fallback, reduced to ~15 after `remove_wiki_markup()` improvements (section header stripping, unpaired bold marker removal, magic word removal).
 
 **originalTitle false positives (fixed)**: The `extract_original_title()` regex previously matched bare years in brackets (e.g. `[1931]`) as original titles, producing 272 false positives. Fixed by rejecting candidates that match `^\d{4}$`.
 

@@ -24,15 +24,19 @@ docs/
   .nojekyll           Prevents Jekyll processing on GitHub Pages
   css/styles.css      Full custom CSS (SZD burgundy/gold/cream palette)
   js/
-    constants.js      Shared labels, period labels, category groups
-    utils.js          esc(), hl(), downloadBlob()
-    export.js         BibTeX, RIS, JSON-LD, permalink, full dataset
-    app.js            State, routing, search, expandable cards, logging
-    home.js           Category portal landing page
-    facets.js         Faceted navigation
-    detail.js         Inline detail rendering (metadata table, sections)
-    charts.js         Statistics page (timeline, languages, locations, types)
-    pages.js          Static content pages (About, Methodology, Help, Data, Imprint)
+    constants.js         Shared COLORS, CHART_DIMS, type/period labels, category groups
+    utils.js             esc() (regex-based), hl(), countByField(), downloadBlob()
+    export.js            BibTeX, RIS, JSON-LD, permalink, full dataset
+    app.js               State, routing, search, event delegation, expandable cards
+    home.js              Category portal landing page
+    facets.js            Faceted navigation (type, language, period, location)
+    detail.js            Inline detail rendering (metadata table, provenance badges)
+    edit.js              Expert-in-the-Loop curation (localhost only, JSON patch export)
+    explore.js           Shared explore controller (mode tabs, detail panel, tooltips)
+    explore-timeline.js  D3.js stacked area chart (year × language, brushing, annotations)
+    explore-overview.js  4 linked small multiples (decades, types, languages, locations)
+    explore-network.js   Force-directed graph of seeAlso cross-references
+    pages.js             Static content pages (About, Methodology, Help, Data, Imprint)
   data/
     klawiter.json     5,179 total entries (4,751 ns0 displayed) + 1,056 redirects
   vocab/

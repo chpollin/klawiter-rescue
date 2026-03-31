@@ -292,6 +292,10 @@ Replaced generic Chart.js dashboard with D3.js v7 exploration tool. See [[explor
 M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M7 ✅ (partial) → M8 ✅ → M3.8 (Validation) → M5 (Enrichment)
 ```
 
-**Status** (2026-03-29): M1–M8 complete. Remaining: M3.8 (manual validation), M5 (semantic enrichment).
+**Status** (2026-03-31): M1–M8 complete. Session 10 added regression testing, fixed title verification, refactored frontend.
+
 - M3.8 (Manual Validation): browse entries in the live frontend
+- M3.9 (Data Quality): publisher coverage improvement (new regex patterns for non-Western publishers, type-specific rules), expand test sample 20→50+
 - M5 (Semantic Enrichment): main remaining research task (Wikidata/GND/VIAF reconciliation)
+
+**Session 10 additions**: Regression test infrastructure (`.github/baseline-metrics.json` + `tests/test_regression.py` + CI checks). verify.py title methodology fixed (880 FPs → `correct_fallback`). Title extraction improved for `[year]:` patterns. Frontend refactored (unified colors, deduplicated code, event delegation, ARIA, SRI hashes). 280 tests total.
