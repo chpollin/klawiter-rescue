@@ -1,0 +1,3226 @@
+{
+  "Paris": {
+    "lat": 48.8566,
+    "lng": 2.3522,
+    "country": "FR",
+    "wikidataId": "Q90",
+    "wikidataLabel": "Paris",
+    "wikidataScore": 100,
+    "countryQid": "Q142"
+  },
+  "Beijing": {
+    "lat": 39.9042,
+    "lng": 116.4074,
+    "country": "CN",
+    "wikidataId": "Q956",
+    "wikidataLabel": "Beijing",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Berlin": {
+    "lat": 52.52,
+    "lng": 13.405,
+    "country": "DE",
+    "wikidataId": "Q64",
+    "wikidataLabel": "Berlin",
+    "wikidataScore": 100
+  },
+  "Wien": {
+    "lat": 48.2082,
+    "lng": 16.3738,
+    "country": "AT",
+    "wikidataId": "Q1741",
+    "wikidataLabel": "Wien",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Vienna": {
+    "lat": 48.2082,
+    "lng": 16.3738,
+    "country": "AT",
+    "wikidataId": "Q1741",
+    "wikidataLabel": "Vienna",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Barcelona": {
+    "lat": 41.3874,
+    "lng": 2.1686,
+    "country": "ES",
+    "wikidataId": "Q1492",
+    "wikidataLabel": "Barcelona",
+    "wikidataScore": 100,
+    "countryQid": "Q29"
+  },
+  "London": {
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "country": "GB",
+    "wikidataId": "Q84",
+    "wikidataLabel": "London",
+    "wikidataScore": 100,
+    "countryQid": "Q145"
+  },
+  "Frankfurt am Main": {
+    "lat": 50.1109,
+    "lng": 8.6821,
+    "country": "DE",
+    "wikidataId": "Q1794",
+    "wikidataLabel": "Frankfurt",
+    "wikidataScore": 100
+  },
+  "Frankfurt": {
+    "lat": 50.1109,
+    "lng": 8.6821,
+    "country": "DE",
+    "wikidataId": "Q1794",
+    "wikidataLabel": "Frankfurt",
+    "wikidataScore": 100
+  },
+  "New York": {
+    "lat": 40.7128,
+    "lng": -74.006,
+    "country": "US",
+    "wikidataId": "Q60",
+    "wikidataLabel": "New York City",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Leipzig": {
+    "lat": 51.3397,
+    "lng": 12.3731,
+    "country": "DE",
+    "wikidataId": "Q2079",
+    "wikidataLabel": "Leipzig",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Sofija": {
+    "lat": 42.6977,
+    "lng": 23.3219,
+    "country": "BG",
+    "wikidataId": "Q472",
+    "wikidataLabel": "Sofia",
+    "wikidataScore": 100,
+    "countryQid": "Q219"
+  },
+  "Salzburg": {
+    "lat": 47.8095,
+    "lng": 13.055,
+    "country": "AT",
+    "wikidataId": "Q34713",
+    "wikidataLabel": "Salzburg",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "München": {
+    "lat": 48.1351,
+    "lng": 11.582,
+    "country": "DE",
+    "wikidataId": "Q1726",
+    "wikidataLabel": "Munich",
+    "wikidataScore": 100
+  },
+  "Munich": {
+    "lat": 48.1351,
+    "lng": 11.582,
+    "country": "DE",
+    "wikidataId": "Q1726",
+    "wikidataLabel": "Munich",
+    "wikidataScore": 100
+  },
+  "Rio de Janeiro": {
+    "lat": -22.9068,
+    "lng": -43.1729,
+    "country": "BR",
+    "wikidataId": "Q8678",
+    "wikidataLabel": "Rio de Janeiro",
+    "wikidataScore": 100,
+    "countryQid": "Q155"
+  },
+  "Rio de Janiro": {
+    "lat": -22.9068,
+    "lng": -43.1729,
+    "country": "BR"
+  },
+  "Rio de Janiero": {
+    "lat": -22.9068,
+    "lng": -43.1729,
+    "country": "BR",
+    "wikidataId": "Q2720540",
+    "wikidataLabel": "Greater Rio de Janeiro",
+    "wikidataScore": 79,
+    "countryQid": "Q155"
+  },
+  "Moskva": {
+    "lat": 55.7558,
+    "lng": 37.6173,
+    "country": "RU",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100
+  },
+  "Moskau": {
+    "lat": 55.7558,
+    "lng": 37.6173,
+    "country": "RU",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100
+  },
+  "Moscow": {
+    "lat": 55.7558,
+    "lng": 37.6173,
+    "country": "RU",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100
+  },
+  "Moskva / Vladivostok": {
+    "lat": 55.7558,
+    "lng": 37.6173,
+    "country": "RU",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100
+  },
+  "Stuttgart": {
+    "lat": 48.7758,
+    "lng": 9.1829,
+    "country": "DE",
+    "wikidataId": "Q1022",
+    "wikidataLabel": "Stuttgart",
+    "wikidataScore": 100
+  },
+  "Stockholm": {
+    "lat": 59.3293,
+    "lng": 18.0686,
+    "country": "SE",
+    "wikidataId": "Q1754",
+    "wikidataLabel": "Stockholm",
+    "wikidataScore": 100,
+    "countryQid": "Q34"
+  },
+  "Weimar": {
+    "lat": 50.9795,
+    "lng": 11.3235,
+    "country": "DE",
+    "wikidataId": "Q3955",
+    "wikidataLabel": "Weimar",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Cairo": {
+    "lat": 30.0444,
+    "lng": 31.2357,
+    "country": "EG",
+    "wikidataId": "Q85",
+    "wikidataLabel": "Cairo",
+    "wikidataScore": 100,
+    "countryQid": "Q79"
+  },
+  "Praha": {
+    "lat": 50.0755,
+    "lng": 14.4378,
+    "country": "CZ",
+    "wikidataId": "Q1085",
+    "wikidataLabel": "Prague",
+    "wikidataScore": 100,
+    "countryQid": "Q213"
+  },
+  "Prag": {
+    "lat": 50.0755,
+    "lng": 14.4378,
+    "country": "CZ",
+    "wikidataId": "Q1085",
+    "wikidataLabel": "Prague",
+    "wikidataScore": 100,
+    "countryQid": "Q213"
+  },
+  "Prague": {
+    "lat": 50.0755,
+    "lng": 14.4378,
+    "country": "CZ",
+    "wikidataId": "Q1085",
+    "wikidataLabel": "Prague",
+    "wikidataScore": 100,
+    "countryQid": "Q213"
+  },
+  "Beirut": {
+    "lat": 33.8938,
+    "lng": 35.5018,
+    "country": "LB",
+    "wikidataId": "Q3820",
+    "wikidataLabel": "Beirut",
+    "wikidataScore": 100
+  },
+  "Amsterdam": {
+    "lat": 52.3676,
+    "lng": 4.9041,
+    "country": "NL",
+    "wikidataId": "Q727",
+    "wikidataLabel": "Amsterdam",
+    "wikidataScore": 100
+  },
+  "Amsterdan": {
+    "lat": 52.3676,
+    "lng": 4.9041,
+    "country": "NL",
+    "wikidataId": "Q727",
+    "wikidataLabel": "Amsterdam",
+    "wikidataScore": 100
+  },
+  "København": {
+    "lat": 55.6761,
+    "lng": 12.5683,
+    "country": "DK",
+    "wikidataId": "Q1748",
+    "wikidataLabel": "Copenhagen",
+    "wikidataScore": 100,
+    "countryQid": "Q35"
+  },
+  "Athēna": {
+    "lat": 37.9838,
+    "lng": 23.7275,
+    "country": "GR",
+    "wikidataId": "Q1524",
+    "wikidataLabel": "Athens",
+    "wikidataScore": 100,
+    "countryQid": "Q41"
+  },
+  "Athena": {
+    "lat": 37.9838,
+    "lng": 23.7275,
+    "country": "GR",
+    "wikidataId": "Q1524",
+    "wikidataLabel": "Athens",
+    "wikidataScore": 100,
+    "countryQid": "Q41"
+  },
+  "Budapest": {
+    "lat": 47.4979,
+    "lng": 19.0402,
+    "country": "HU",
+    "wikidataId": "Q1781",
+    "wikidataLabel": "Budapest",
+    "wikidataScore": 100
+  },
+  "Hamburg": {
+    "lat": 53.5511,
+    "lng": 9.9937,
+    "country": "DE",
+    "wikidataId": "Q1055",
+    "wikidataLabel": "Hamburg",
+    "wikidataScore": 100
+  },
+  "Buenos Aires": {
+    "lat": -34.6037,
+    "lng": -58.3816,
+    "country": "AR",
+    "wikidataId": "Q1486",
+    "wikidataLabel": "Buenos Aires",
+    "wikidataScore": 100,
+    "countryQid": "Q414"
+  },
+  "Beograd": {
+    "lat": 44.7866,
+    "lng": 20.4489,
+    "country": "RS",
+    "wikidataId": "Q3711",
+    "wikidataLabel": "Belgrade",
+    "wikidataScore": 100,
+    "countryQid": "Q403"
+  },
+  "Tiranë": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Tiranë (Tirana)": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Tiranë [Tirana]": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Tiranë/Tirana": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Tirana": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Tirana?": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Tirane/Tirana": {
+    "lat": 41.3275,
+    "lng": 19.8187,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Rijeka": {
+    "lat": 45.3271,
+    "lng": 14.4422,
+    "country": "HR",
+    "wikidataId": "Q1647",
+    "wikidataLabel": "Rijeka",
+    "wikidataScore": 100
+  },
+  "Zürich": {
+    "lat": 47.3769,
+    "lng": 8.5417,
+    "country": "CH",
+    "wikidataId": "Q72",
+    "wikidataLabel": "Zurich",
+    "wikidataScore": 100
+  },
+  "Ljubljana": {
+    "lat": 46.0569,
+    "lng": 14.5058,
+    "country": "SI",
+    "wikidataId": "Q437",
+    "wikidataLabel": "Ljubljana",
+    "wikidataScore": 100,
+    "countryQid": "Q215"
+  },
+  "Oslo": {
+    "lat": 59.9139,
+    "lng": 10.7522,
+    "country": "NO",
+    "wikidataId": "Q585",
+    "wikidataLabel": "Oslo",
+    "wikidataScore": 100,
+    "countryQid": "Q20"
+  },
+  "Milano": {
+    "lat": 45.4642,
+    "lng": 9.19,
+    "country": "IT",
+    "wikidataId": "Q490",
+    "wikidataLabel": "Milan",
+    "wikidataScore": 100
+  },
+  "Milan": {
+    "lat": 45.4642,
+    "lng": 9.19,
+    "country": "IT",
+    "wikidataId": "Q490",
+    "wikidataLabel": "Milan",
+    "wikidataScore": 100
+  },
+  "Shanghai": {
+    "lat": 31.2304,
+    "lng": 121.4737,
+    "country": "CN",
+    "wikidataId": "Q8686",
+    "wikidataLabel": "Shanghai",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Zagreb": {
+    "lat": 45.815,
+    "lng": 15.9819,
+    "country": "HR",
+    "wikidataId": "Q1435",
+    "wikidataLabel": "Zagreb",
+    "wikidataScore": 100
+  },
+  "Bern": {
+    "lat": 46.948,
+    "lng": 7.4474,
+    "country": "CH",
+    "wikidataId": "Q70",
+    "wikidataLabel": "Bern",
+    "wikidataScore": 100
+  },
+  "Krems an der Donau": {
+    "lat": 48.4093,
+    "lng": 15.6141,
+    "country": "AT",
+    "wikidataId": "Q131266",
+    "wikidataLabel": "Krems",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Krems": {
+    "lat": 48.4093,
+    "lng": 15.6141,
+    "country": "AT",
+    "wikidataId": "Q131266",
+    "wikidataLabel": "Krems",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "San Francisco": {
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "country": "US",
+    "wikidataId": "Q62",
+    "wikidataLabel": "San Francisco",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "San Francisco, CA": {
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "country": "US",
+    "wikidataId": "Q62",
+    "wikidataLabel": "San Francisco",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Würzburg": {
+    "lat": 49.7913,
+    "lng": 9.9534,
+    "country": "DE",
+    "wikidataId": "Q2999",
+    "wikidataLabel": "Würzburg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Wũrzburg": {
+    "lat": 49.7913,
+    "lng": 9.9534,
+    "country": "DE",
+    "wikidataId": "Q2999",
+    "wikidataLabel": "Würzburg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Tallinn": {
+    "lat": 59.437,
+    "lng": 24.7536,
+    "country": "EE",
+    "wikidataId": "Q1770",
+    "wikidataLabel": "Tallinn",
+    "wikidataScore": 100,
+    "countryQid": "Q191"
+  },
+  "Köln": {
+    "lat": 50.9375,
+    "lng": 6.9603,
+    "country": "DE",
+    "wikidataId": "Q365",
+    "wikidataLabel": "Cologne",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Bratislava": {
+    "lat": 48.1486,
+    "lng": 17.1077,
+    "country": "SK",
+    "wikidataId": "Q1780",
+    "wikidataLabel": "Bratislava",
+    "wikidataScore": 100,
+    "countryQid": "Q214"
+  },
+  "Yerevan": {
+    "lat": 40.1792,
+    "lng": 44.4991,
+    "country": "AM",
+    "wikidataId": "Q1953",
+    "wikidataLabel": "Yerevan",
+    "wikidataScore": 100
+  },
+  "Delhi": {
+    "lat": 28.7041,
+    "lng": 77.1025,
+    "country": "IN",
+    "wikidataId": "Q987",
+    "wikidataLabel": "New Delhi",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "New Delhi": {
+    "lat": 28.6139,
+    "lng": 77.209,
+    "country": "IN",
+    "wikidataId": "Q987",
+    "wikidataLabel": "New Delhi",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Tokyo": {
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "country": "JP",
+    "wikidataId": "Q1490",
+    "wikidataLabel": "Tokyo",
+    "wikidataScore": 100,
+    "countryQid": "Q17"
+  },
+  "Tōkyō": {
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "country": "JP",
+    "wikidataId": "Q1490",
+    "wikidataLabel": "Tokyo",
+    "wikidataScore": 100,
+    "countryQid": "Q17"
+  },
+  "T'aipei": {
+    "lat": 25.033,
+    "lng": 121.5654,
+    "country": "TW"
+  },
+  "Changsha": {
+    "lat": 28.2282,
+    "lng": 112.9388,
+    "country": "CN",
+    "wikidataId": "Q174091",
+    "wikidataLabel": "Changsha",
+    "wikidataScore": 100
+  },
+  "Tbilisi": {
+    "lat": 41.7151,
+    "lng": 44.8271,
+    "country": "GE",
+    "wikidataId": "Q994",
+    "wikidataLabel": "Tbilisi",
+    "wikidataScore": 100,
+    "countryQid": "Q230"
+  },
+  "Celovec": {
+    "lat": 46.6247,
+    "lng": 14.3052,
+    "country": "AT",
+    "wikidataId": "Q41753",
+    "wikidataLabel": "Klagenfurt am Wörthersee",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Celovec/Klagenfurt": {
+    "lat": 46.6247,
+    "lng": 14.3052,
+    "country": "AT",
+    "wikidataId": "Q41753",
+    "wikidataLabel": "Klagenfurt am Wörthersee",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Istanbul": {
+    "lat": 41.0082,
+    "lng": 28.9784,
+    "country": "TR",
+    "wikidataId": "Q406",
+    "wikidataLabel": "Istanbul",
+    "wikidataScore": 100
+  },
+  "İstanbul": {
+    "lat": 41.0082,
+    "lng": 28.9784,
+    "country": "TR",
+    "wikidataId": "Q406",
+    "wikidataLabel": "Istanbul",
+    "wikidataScore": 100
+  },
+  "Tunis": {
+    "lat": 36.8065,
+    "lng": 10.1815,
+    "country": "TN",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "countryQid": "Q948"
+  },
+  "Tūnis": {
+    "lat": 36.8065,
+    "lng": 10.1815,
+    "country": "TN",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "countryQid": "Q948"
+  },
+  "Tūnis [Tunis]": {
+    "lat": 36.8065,
+    "lng": 10.1815,
+    "country": "TN",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "countryQid": "Q948"
+  },
+  "Tūnis / Ottawa, ON": {
+    "lat": 36.8065,
+    "lng": 10.1815,
+    "country": "TN",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "countryQid": "Q948"
+  },
+  "Minsk": {
+    "lat": 53.9045,
+    "lng": 27.5615,
+    "country": "BY",
+    "wikidataId": "Q2280",
+    "wikidataLabel": "Minsk",
+    "wikidataScore": 100,
+    "countryQid": "Q184"
+  },
+  "Calcutta": {
+    "lat": 22.5726,
+    "lng": 88.3639,
+    "country": "IN",
+    "wikidataId": "Q1348",
+    "wikidataLabel": "Kolkata",
+    "wikidataScore": 100
+  },
+  "Kolkata": {
+    "lat": 22.5726,
+    "lng": 88.3639,
+    "country": "IN",
+    "wikidataId": "Q1348",
+    "wikidataLabel": "Kolkata",
+    "wikidataScore": 100
+  },
+  "Warszawa": {
+    "lat": 52.2297,
+    "lng": 21.0122,
+    "country": "PL",
+    "wikidataId": "Q270",
+    "wikidataLabel": "Warschau",
+    "wikidataScore": 100,
+    "countryQid": "Q36"
+  },
+  "Warsaw": {
+    "lat": 52.2297,
+    "lng": 21.0122,
+    "country": "PL",
+    "wikidataId": "Q270",
+    "wikidataLabel": "Warsaw",
+    "wikidataScore": 100,
+    "countryQid": "Q36"
+  },
+  "Düsseldorf": {
+    "lat": 51.2277,
+    "lng": 6.7735,
+    "country": "DE",
+    "wikidataId": "Q1718",
+    "wikidataLabel": "Düsseldorf",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Taiyuan/Xi'an": {
+    "lat": 37.8706,
+    "lng": 112.5489,
+    "country": "CN",
+    "wikidataId": "Q72778",
+    "wikidataLabel": "Taiyuan",
+    "wikidataScore": 100
+  },
+  "Taiyuan": {
+    "lat": 37.8706,
+    "lng": 112.5489,
+    "country": "CN",
+    "wikidataId": "Q72778",
+    "wikidataLabel": "Taiyuan",
+    "wikidataScore": 100
+  },
+  "Taiyuan/Xián": {
+    "lat": 37.8706,
+    "lng": 112.5489,
+    "country": "CN",
+    "wikidataId": "Q72778",
+    "wikidataLabel": "Taiyuan",
+    "wikidataScore": 100
+  },
+  "México": {
+    "lat": 19.4326,
+    "lng": -99.1332,
+    "country": "MX",
+    "wikidataId": "Q1489",
+    "wikidataLabel": "Mexico City",
+    "wikidataScore": 100,
+    "countryQid": "Q96"
+  },
+  "Mexico City": {
+    "lat": 19.4326,
+    "lng": -99.1332,
+    "country": "MX",
+    "wikidataId": "Q1489",
+    "wikidataLabel": "Mexico City",
+    "wikidataScore": 100,
+    "countryQid": "Q96"
+  },
+  "Marburg": {
+    "lat": 50.8021,
+    "lng": 8.7711,
+    "country": "DE",
+    "wikidataId": "Q3869",
+    "wikidataLabel": "Marburg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Tel Aviv": {
+    "lat": 32.0853,
+    "lng": 34.7818,
+    "country": "IL",
+    "wikidataId": "Q33935",
+    "wikidataLabel": "Tel Aviv",
+    "wikidataScore": 100,
+    "countryQid": "Q801"
+  },
+  "Tel-Aviv": {
+    "lat": 32.0853,
+    "lng": 34.7818,
+    "country": "IL",
+    "wikidataId": "Q33935",
+    "wikidataLabel": "Tel Aviv",
+    "wikidataScore": 100,
+    "countryQid": "Q801"
+  },
+  "Tel-ʾAviv": {
+    "lat": 32.0853,
+    "lng": 34.7818,
+    "country": "IL",
+    "wikidataId": "Q33935",
+    "wikidataLabel": "Tel Aviv",
+    "wikidataScore": 100,
+    "countryQid": "Q801"
+  },
+  "Guilin": {
+    "lat": 25.2736,
+    "lng": 110.29,
+    "country": "CN",
+    "wikidataId": "Q189633",
+    "wikidataLabel": "Guilin",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "București": {
+    "lat": 44.4268,
+    "lng": 26.1025,
+    "country": "RO",
+    "wikidataId": "Q19660",
+    "wikidataLabel": "Bucharest",
+    "wikidataScore": 100
+  },
+  "Bucureşti": {
+    "lat": 44.4268,
+    "lng": 26.1025,
+    "country": "RO",
+    "wikidataId": "Q19660",
+    "wikidataLabel": "Bucharest",
+    "wikidataScore": 100
+  },
+  "Bucharest": {
+    "lat": 44.4268,
+    "lng": 26.1025,
+    "country": "RO",
+    "wikidataId": "Q19660",
+    "wikidataLabel": "Bucharest",
+    "wikidataScore": 100
+  },
+  "Jerusalem": {
+    "lat": 31.7683,
+    "lng": 35.2137,
+    "country": "PS",
+    "wikidataId": "Q1218",
+    "wikidataLabel": "Jerusalem",
+    "wikidataScore": 100,
+    "countryQid": "Q219060"
+  },
+  "Sarajevo": {
+    "lat": 43.8563,
+    "lng": 18.4131,
+    "country": "BA",
+    "wikidataId": "Q11194",
+    "wikidataLabel": "Sarajevo",
+    "wikidataScore": 100
+  },
+  "Madrid": {
+    "lat": 40.4168,
+    "lng": -3.7038,
+    "country": "ES",
+    "wikidataId": "Q2807",
+    "wikidataLabel": "Madrid",
+    "wikidataScore": 100,
+    "countryQid": "Q29"
+  },
+  "Lisboa": {
+    "lat": 38.7223,
+    "lng": -9.1393,
+    "country": "PT",
+    "wikidataId": "Q597",
+    "wikidataLabel": "Lisbon",
+    "wikidataScore": 100
+  },
+  "Basel": {
+    "lat": 47.5596,
+    "lng": 7.5886,
+    "country": "CH",
+    "wikidataId": "Q78",
+    "wikidataLabel": "Basel",
+    "wikidataScore": 100,
+    "countryQid": "Q39"
+  },
+  "São Paulo": {
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "country": "BR",
+    "wikidataId": "Q174",
+    "wikidataLabel": "São Paulo",
+    "wikidataScore": 100
+  },
+  "Dresden": {
+    "lat": 51.0504,
+    "lng": 13.7373,
+    "country": "DE",
+    "wikidataId": "Q1731",
+    "wikidataLabel": "Dresden",
+    "wikidataScore": 100
+  },
+  "Bakı": {
+    "lat": 40.4093,
+    "lng": 49.8671,
+    "country": "AZ",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100
+  },
+  "Bakı [Baku]": {
+    "lat": 40.4093,
+    "lng": 49.8671,
+    "country": "AZ",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100
+  },
+  "Bakı/Baku": {
+    "lat": 40.4093,
+    "lng": 49.8671,
+    "country": "AZ",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100
+  },
+  "Bakı (Baku)": {
+    "lat": 40.4093,
+    "lng": 49.8671,
+    "country": "AZ",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100
+  },
+  "Ulaanbaatar": {
+    "lat": 47.8864,
+    "lng": 106.9057,
+    "country": "MN",
+    "wikidataId": "Q23430",
+    "wikidataLabel": "Ulaanbaatar",
+    "wikidataScore": 100
+  },
+  "Ulaanbaatar [formerly Ulan Bator]": {
+    "lat": 47.8864,
+    "lng": 106.9057,
+    "country": "MN",
+    "wikidataId": "Q23430",
+    "wikidataLabel": "Ulaanbaatar",
+    "wikidataScore": 100
+  },
+  "Vilnius": {
+    "lat": 54.6872,
+    "lng": 25.2797,
+    "country": "LT",
+    "wikidataId": "Q216",
+    "wikidataLabel": "Vilnius",
+    "wikidataScore": 100
+  },
+  "Guangzhou": {
+    "lat": 23.1291,
+    "lng": 113.2644,
+    "country": "CN",
+    "wikidataId": "Q16572",
+    "wikidataLabel": "Guangzhou",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Dimashq [Damascus]": {
+    "lat": 33.5138,
+    "lng": 36.2765,
+    "country": "SY",
+    "wikidataId": "Q3766",
+    "wikidataLabel": "Damascus",
+    "wikidataScore": 100
+  },
+  "Dimashq": {
+    "lat": 33.5138,
+    "lng": 36.2765,
+    "country": "SY",
+    "wikidataId": "Q3766",
+    "wikidataLabel": "Damascus",
+    "wikidataScore": 100
+  },
+  "Damascus": {
+    "lat": 33.5138,
+    "lng": 36.2765,
+    "country": "SY",
+    "wikidataId": "Q3766",
+    "wikidataLabel": "Damascus",
+    "wikidataScore": 100
+  },
+  "Reykjavík": {
+    "lat": 64.1466,
+    "lng": -21.9426,
+    "country": "IS",
+    "wikidataId": "Q1764",
+    "wikidataLabel": "Reykjavík",
+    "wikidataScore": 100,
+    "countryQid": "Q189"
+  },
+  "Reykjavik": {
+    "lat": 64.1466,
+    "lng": -21.9426,
+    "country": "IS",
+    "wikidataId": "Q1764",
+    "wikidataLabel": "Reykjavík",
+    "wikidataScore": 100,
+    "countryQid": "Q189"
+  },
+  "Bonn": {
+    "lat": 50.7374,
+    "lng": 7.0982,
+    "country": "DE",
+    "wikidataId": "Q586",
+    "wikidataLabel": "Bonn",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Tübingen": {
+    "lat": 48.5216,
+    "lng": 9.0576,
+    "country": "DE",
+    "wikidataId": "Q3806",
+    "wikidataLabel": "Tübingen",
+    "wikidataScore": 100
+  },
+  "Darmstadt": {
+    "lat": 49.8728,
+    "lng": 8.6512,
+    "country": "DE",
+    "wikidataId": "Q2973",
+    "wikidataLabel": "Darmstadt",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Mainz": {
+    "lat": 49.9929,
+    "lng": 8.2473,
+    "country": "DE",
+    "wikidataId": "Q1720",
+    "wikidataLabel": "Mainz",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Girona": {
+    "lat": 41.9794,
+    "lng": 2.8214,
+    "country": "ES"
+  },
+  "Freiburg": {
+    "lat": 47.999,
+    "lng": 7.8421,
+    "country": "DE",
+    "wikidataId": "Q2833",
+    "wikidataLabel": "Freiburg im Breisgau",
+    "wikidataScore": 100
+  },
+  "Novi Sad": {
+    "lat": 45.2671,
+    "lng": 19.8335,
+    "country": "RS",
+    "wikidataId": "Q55630",
+    "wikidataLabel": "Novi Sad",
+    "wikidataScore": 100
+  },
+  "Hefei": {
+    "lat": 31.8206,
+    "lng": 117.2272,
+    "country": "CN",
+    "wikidataId": "Q185684",
+    "wikidataLabel": "Hefei",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Maribor": {
+    "lat": 46.5547,
+    "lng": 15.6459,
+    "country": "SI",
+    "wikidataId": "Q1010",
+    "wikidataLabel": "Maribor",
+    "wikidataScore": 100,
+    "countryQid": "Q215"
+  },
+  "Rochester, NY": {
+    "lat": 43.1566,
+    "lng": -77.6088,
+    "country": "US",
+    "wikidataId": "Q49218",
+    "wikidataLabel": "Rochester",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Tehran": {
+    "lat": 35.6892,
+    "lng": 51.389,
+    "country": "IR",
+    "wikidataId": "Q3616",
+    "wikidataLabel": "Tehran",
+    "wikidataScore": 100,
+    "countryQid": "Q794"
+  },
+  "Tihrān [Tehran]": {
+    "lat": 35.6892,
+    "lng": 51.389,
+    "country": "IR",
+    "wikidataId": "Q3616",
+    "wikidataLabel": "Tehran",
+    "wikidataScore": 100,
+    "countryQid": "Q794"
+  },
+  "Tihrān": {
+    "lat": 35.6892,
+    "lng": 51.389,
+    "country": "IR",
+    "wikidataId": "Q3616",
+    "wikidataLabel": "Tehran",
+    "wikidataScore": 100,
+    "countryQid": "Q794"
+  },
+  "Kiiv": {
+    "lat": 50.4501,
+    "lng": 30.5234,
+    "country": "UA",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Kiïv/Kiev": {
+    "lat": 50.4501,
+    "lng": 30.5234,
+    "country": "UA",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Kiiv/Kiev": {
+    "lat": 50.4501,
+    "lng": 30.5234,
+    "country": "UA",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Kiev": {
+    "lat": 50.4501,
+    "lng": 30.5234,
+    "country": "UA",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Kyïv": {
+    "lat": 50.4501,
+    "lng": 30.5234,
+    "country": "UA",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Kiïv": {
+    "lat": 50.4501,
+    "lng": 30.5234,
+    "country": "UA",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Leikanger": {
+    "lat": 61.1874,
+    "lng": 6.8094,
+    "country": "NO",
+    "wikidataId": "Q844106",
+    "wikidataLabel": "Hermansverk",
+    "wikidataScore": 100,
+    "countryQid": "Q20"
+  },
+  "Santiago": {
+    "lat": -33.4489,
+    "lng": -70.6693,
+    "country": "CL",
+    "wikidataId": "Q2887",
+    "wikidataLabel": "Santiago",
+    "wikidataScore": 100,
+    "countryQid": "Q298"
+  },
+  "Nanjing": {
+    "lat": 32.0603,
+    "lng": 118.7969,
+    "country": "CN",
+    "wikidataId": "Q16666",
+    "wikidataLabel": "Nanjing",
+    "wikidataScore": 100
+  },
+  "Riga": {
+    "lat": 56.9496,
+    "lng": 24.1052,
+    "country": "LV",
+    "wikidataId": "Q1773",
+    "wikidataLabel": "Riga",
+    "wikidataScore": 100
+  },
+  "Rīga": {
+    "lat": 56.9496,
+    "lng": 24.1052,
+    "country": "LV",
+    "wikidataId": "Q1773",
+    "wikidataLabel": "Riga",
+    "wikidataScore": 100
+  },
+  "RĀ«ga": {
+    "lat": 56.9496,
+    "lng": 24.1052,
+    "country": "LV"
+  },
+  "Wiesbaden": {
+    "lat": 50.0782,
+    "lng": 8.2398,
+    "country": "DE",
+    "wikidataId": "Q1721",
+    "wikidataLabel": "Wiesbaden",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Roma": {
+    "lat": 41.9028,
+    "lng": 12.4964,
+    "country": "IT",
+    "wikidataId": "Q220",
+    "wikidataLabel": "Rome",
+    "wikidataScore": 100,
+    "countryQid": "Q38"
+  },
+  "Innsbruck": {
+    "lat": 47.2692,
+    "lng": 11.4041,
+    "country": "AT",
+    "wikidataId": "Q1735",
+    "wikidataLabel": "Innsbruck",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Göttingen": {
+    "lat": 51.5413,
+    "lng": 9.9158,
+    "country": "DE",
+    "wikidataId": "Q3033",
+    "wikidataLabel": "Göttingen",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Helsinki": {
+    "lat": 60.1699,
+    "lng": 24.9384,
+    "country": "FI",
+    "wikidataId": "Q1757",
+    "wikidataLabel": "Helsinki",
+    "wikidataScore": 100,
+    "countryQid": "Q33"
+  },
+  "Baghdad": {
+    "lat": 33.3152,
+    "lng": 44.3661,
+    "country": "IQ",
+    "wikidataId": "Q1530",
+    "wikidataLabel": "Bagdad",
+    "wikidataScore": 100
+  },
+  "Baghdād": {
+    "lat": 33.3152,
+    "lng": 44.3661,
+    "country": "IQ",
+    "wikidataId": "Q1530",
+    "wikidataLabel": "Bagdad",
+    "wikidataScore": 100
+  },
+  "Almaty": {
+    "lat": 43.222,
+    "lng": 76.8512,
+    "country": "KZ",
+    "wikidataId": "Q35493",
+    "wikidataLabel": "Almaty",
+    "wikidataScore": 100,
+    "countryQid": "Q232"
+  },
+  "Tórshavn": {
+    "lat": 62.0079,
+    "lng": -6.7906,
+    "country": "DK",
+    "wikidataId": "Q10704",
+    "wikidataLabel": "Tórshavn",
+    "wikidataScore": 100
+  },
+  "Kaapstad (Capetown)": {
+    "lat": -33.9249,
+    "lng": 18.4241,
+    "country": "ZA",
+    "wikidataId": "Q5465",
+    "wikidataLabel": "Cape Town",
+    "wikidataScore": 100
+  },
+  "Mountain View, CA": {
+    "lat": 35.865,
+    "lng": -92.108611111,
+    "country": "US",
+    "wikidataId": "Q79498",
+    "wikidataLabel": "Mountain View",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Menlo Park, CA": {
+    "lat": 37.453,
+    "lng": -122.1817,
+    "country": "US",
+    "wikidataId": "Q74195",
+    "wikidataLabel": "Menlo Park",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Pleven": {
+    "lat": 43.417,
+    "lng": 24.6069,
+    "country": "BG",
+    "wikidataId": "Q165420",
+    "wikidataLabel": "Pleven",
+    "wikidataScore": 100,
+    "countryQid": "Q219"
+  },
+  "Lanzhou": {
+    "lat": 36.0611,
+    "lng": 103.8343,
+    "country": "CN",
+    "wikidataId": "Q183584",
+    "wikidataLabel": "Lanzhou",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Shenyang": {
+    "lat": 41.8057,
+    "lng": 123.4315,
+    "country": "CN",
+    "wikidataId": "Q11720",
+    "wikidataLabel": "Shenyang",
+    "wikidataScore": 100
+  },
+  "Tianjin": {
+    "lat": 39.3434,
+    "lng": 117.3616,
+    "country": "CN",
+    "wikidataId": "Q11736",
+    "wikidataLabel": "Tianjin",
+    "wikidataScore": 100
+  },
+  "Varna": {
+    "lat": 43.2141,
+    "lng": 27.9147,
+    "country": "BG",
+    "wikidataId": "Q6506",
+    "wikidataLabel": "Varna",
+    "wikidataScore": 100,
+    "countryQid": "Q219"
+  },
+  "Varna, Sofija": {
+    "lat": 43.2141,
+    "lng": 27.9147,
+    "country": "BG"
+  },
+  "Sofija, Varna": {
+    "lat": 42.6977,
+    "lng": 23.3219,
+    "country": "BG"
+  },
+  "Chicago": {
+    "lat": 41.8781,
+    "lng": -87.6298,
+    "country": "US",
+    "wikidataId": "Q1297",
+    "wikidataLabel": "Chicago",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Heidelberg": {
+    "lat": 49.3988,
+    "lng": 8.6724,
+    "country": "DE",
+    "wikidataId": "Q2966",
+    "wikidataLabel": "Heidelberg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Porto": {
+    "lat": 41.1579,
+    "lng": -8.6291,
+    "country": "PT",
+    "wikidataId": "Q36433",
+    "wikidataLabel": "Porto",
+    "wikidataScore": 100
+  },
+  "Pôrto [Porto]": {
+    "lat": 41.1579,
+    "lng": -8.6291,
+    "country": "PT",
+    "wikidataId": "Q36433",
+    "wikidataLabel": "Porto",
+    "wikidataScore": 100
+  },
+  "Chennai": {
+    "lat": 13.0827,
+    "lng": 80.2707,
+    "country": "IN",
+    "wikidataId": "Q1352",
+    "wikidataLabel": "Chennai",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Ürümchi [Ürümqi]": {
+    "lat": 43.8256,
+    "lng": 87.6168,
+    "country": "CN",
+    "wikidataId": "Q16959",
+    "wikidataLabel": "Ürümqi",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Ürümqi": {
+    "lat": 43.8256,
+    "lng": 87.6168,
+    "country": "CN",
+    "wikidataId": "Q16959",
+    "wikidataLabel": "Ürümqi",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Mumbai": {
+    "lat": 19.076,
+    "lng": 72.8777,
+    "country": "IN",
+    "wikidataId": "Q1156",
+    "wikidataLabel": "Mumbai",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Bambaī": {
+    "lat": 19.076,
+    "lng": 72.8777,
+    "country": "IN",
+    "wikidataId": "Q26085641",
+    "wikidataLabel": "Bambaira",
+    "wikidataScore": 86
+  },
+  "St. Petersburg": {
+    "lat": 59.9343,
+    "lng": 30.3351,
+    "country": "RU",
+    "wikidataId": "Q656",
+    "wikidataLabel": "Saint Petersburg",
+    "wikidataScore": 100,
+    "countryQid": "Q159"
+  },
+  "St.-Peterburg": {
+    "lat": 59.9343,
+    "lng": 30.3351,
+    "country": "RU",
+    "wikidataId": "Q656",
+    "wikidataLabel": "Saint Petersburg",
+    "wikidataScore": 100,
+    "countryQid": "Q159"
+  },
+  "Sankt-Peterburg": {
+    "lat": 59.9343,
+    "lng": 30.3351,
+    "country": "RU",
+    "wikidataId": "Q656",
+    "wikidataLabel": "Saint Petersburg",
+    "wikidataScore": 100,
+    "countryQid": "Q159"
+  },
+  "Friedrichsfehn": {
+    "lat": 53.1433,
+    "lng": 8.1539,
+    "country": "DE",
+    "wikidataId": "Q1464215",
+    "wikidataLabel": "Friedrichsfehn",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Toshkent": {
+    "lat": 41.2995,
+    "lng": 69.2401,
+    "country": "UZ",
+    "wikidataId": "Q269",
+    "wikidataLabel": "Tashkent",
+    "wikidataScore": 100,
+    "countryQid": "Q265"
+  },
+  "Tashkent": {
+    "lat": 41.2995,
+    "lng": 69.2401,
+    "country": "UZ",
+    "wikidataId": "Q269",
+    "wikidataLabel": "Tashkent",
+    "wikidataScore": 100,
+    "countryQid": "Q265"
+  },
+  "Tashkent?": {
+    "lat": 41.2995,
+    "lng": 69.2401,
+    "country": "UZ",
+    "wikidataId": "Q269",
+    "wikidataLabel": "Tashkent",
+    "wikidataScore": 100,
+    "countryQid": "Q265"
+  },
+  "Gent": {
+    "lat": 51.0543,
+    "lng": 3.7174,
+    "country": "BE",
+    "wikidataId": "Q1296",
+    "wikidataLabel": "Ghent",
+    "wikidataScore": 100
+  },
+  "Hà Nội [Hanoi]": {
+    "lat": 21.0278,
+    "lng": 105.8342,
+    "country": "VN",
+    "wikidataId": "Q1858",
+    "wikidataLabel": "Hanoi",
+    "wikidataScore": 100,
+    "countryQid": "Q881"
+  },
+  "Hà Nội": {
+    "lat": 21.0278,
+    "lng": 105.8342,
+    "country": "VN",
+    "wikidataId": "Q1858",
+    "wikidataLabel": "Hanoi",
+    "wikidataScore": 100,
+    "countryQid": "Q881"
+  },
+  "Hà-Nội": {
+    "lat": 21.0278,
+    "lng": 105.8342,
+    "country": "VN",
+    "wikidataId": "Q1858",
+    "wikidataLabel": "Hanoi",
+    "wikidataScore": 100,
+    "countryQid": "Q881"
+  },
+  "Wuhan": {
+    "lat": 30.5928,
+    "lng": 114.3055,
+    "country": "CN",
+    "wikidataId": "Q11746",
+    "wikidataLabel": "Wuhan",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Plovdiv": {
+    "lat": 42.1354,
+    "lng": 24.7453,
+    "country": "BG",
+    "wikidataId": "Q459",
+    "wikidataLabel": "Plovdiv",
+    "wikidataScore": 100
+  },
+  "Seoul": {
+    "lat": 37.5665,
+    "lng": 126.978,
+    "country": "KR",
+    "wikidataId": "Q8684",
+    "wikidataLabel": "Seoul",
+    "wikidataScore": 100
+  },
+  "Soul T'ŭkpyŏlsi, Sŏul-si": {
+    "lat": 37.5665,
+    "lng": 126.978,
+    "country": "KR"
+  },
+  "Soul-si [Seoul, South Korea]": {
+    "lat": 37.5665,
+    "lng": 126.978,
+    "country": "KR"
+  },
+  "Hong Kong": {
+    "lat": 22.3193,
+    "lng": 114.1694,
+    "country": "CN",
+    "wikidataId": "Q8646",
+    "wikidataLabel": "Hong Kong",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Iruñea [Pamplona]": {
+    "lat": 42.8125,
+    "lng": -1.6458,
+    "country": "ES",
+    "wikidataId": "Q16518701",
+    "wikidataLabel": "Pompaelo",
+    "wikidataScore": 100
+  },
+  "Irun (Iruñea) [Pamplona]": {
+    "lat": 43.33904,
+    "lng": -1.78938,
+    "country": "ES",
+    "wikidataId": "Q23999366",
+    "wikidataLabel": "Irun",
+    "wikidataScore": 100,
+    "countryQid": "Q29"
+  },
+  "Evanston, IL": {
+    "lat": 42.0451,
+    "lng": -87.6877,
+    "country": "US",
+    "wikidataId": "Q462799",
+    "wikidataLabel": "Evanston",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Skopje": {
+    "lat": 41.9973,
+    "lng": 21.428,
+    "country": "MK",
+    "wikidataId": "Q384",
+    "wikidataLabel": "Skopje",
+    "wikidataScore": 100
+  },
+  "Bielefeld": {
+    "lat": 52.0302,
+    "lng": 8.5325,
+    "country": "DE",
+    "wikidataId": "Q2112",
+    "wikidataLabel": "Bielefeld",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Rotterdam": {
+    "lat": 51.9244,
+    "lng": 4.4777,
+    "country": "NL",
+    "wikidataId": "Q34370",
+    "wikidataLabel": "Rotterdam",
+    "wikidataScore": 100
+  },
+  "Riverside, CA": {
+    "lat": 33.9806,
+    "lng": -117.3755,
+    "country": "US",
+    "wikidataId": "Q49243",
+    "wikidataLabel": "Riverside",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Rudolstadt": {
+    "lat": 50.72,
+    "lng": 11.34,
+    "country": "DE",
+    "wikidataId": "Q517107",
+    "wikidataLabel": "Rudolstadt",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Duisburg": {
+    "lat": 51.4344,
+    "lng": 6.7623,
+    "country": "DE",
+    "wikidataId": "Q2100",
+    "wikidataLabel": "Duisburg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Longpont-sur-Orge": {
+    "lat": 48.6341,
+    "lng": 2.2883,
+    "country": "FR"
+  },
+  "Melbourne": {
+    "lat": -37.8136,
+    "lng": 144.9631,
+    "country": "AU",
+    "wikidataId": "Q3141",
+    "wikidataLabel": "Melbourne",
+    "wikidataScore": 100,
+    "countryQid": "Q408"
+  },
+  "Jyväskylä": {
+    "lat": 62.2426,
+    "lng": 25.7473,
+    "country": "FI",
+    "wikidataId": "Q134620",
+    "wikidataLabel": "Jyväskylä",
+    "wikidataScore": 100,
+    "countryQid": "Q33"
+  },
+  "Lexington, MA": {
+    "lat": 42.4473,
+    "lng": -71.2246,
+    "country": "US",
+    "wikidataId": "Q49241",
+    "wikidataLabel": "Lexington",
+    "wikidataScore": 100
+  },
+  "Hollfeld": {
+    "lat": 49.9381,
+    "lng": 11.2892,
+    "country": "DE",
+    "wikidataId": "Q503048",
+    "wikidataLabel": "Hollfeld",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Hollfeld/Oberfranken": {
+    "lat": 49.9381,
+    "lng": 11.2892,
+    "country": "DE",
+    "wikidataId": "Q503048",
+    "wikidataLabel": "Hollfeld",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "New Orleans, LA": {
+    "lat": 29.9511,
+    "lng": -90.0715,
+    "country": "US",
+    "wikidataId": "Q34404",
+    "wikidataLabel": "New Orleans",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Kraków": {
+    "lat": 50.0647,
+    "lng": 19.945,
+    "country": "PL",
+    "wikidataId": "Q31487",
+    "wikidataLabel": "Kraków",
+    "wikidataScore": 100,
+    "countryQid": "Q36"
+  },
+  "Amman": {
+    "lat": 31.9454,
+    "lng": 35.9284,
+    "country": "JO",
+    "wikidataId": "Q3805",
+    "wikidataLabel": "Amman",
+    "wikidataScore": 100,
+    "countryQid": "Q810"
+  },
+  "Amman, Jordan": {
+    "lat": 31.9454,
+    "lng": 35.9284,
+    "country": "JO",
+    "wikidataId": "Q3805",
+    "wikidataLabel": "Amman",
+    "wikidataScore": 100,
+    "countryQid": "Q810"
+  },
+  "Lannuon": {
+    "lat": 48.7325,
+    "lng": -3.4569,
+    "country": "FR"
+  },
+  "Montevideo": {
+    "lat": -34.9011,
+    "lng": -56.1645,
+    "country": "UY",
+    "wikidataId": "Q1335",
+    "wikidataLabel": "Montevideo",
+    "wikidataScore": 100,
+    "countryQid": "Q77"
+  },
+  "Montevideo, Uruguay": {
+    "lat": -34.9011,
+    "lng": -56.1645,
+    "country": "UY"
+  },
+  "Doha": {
+    "lat": 25.2854,
+    "lng": 51.531,
+    "country": "QA",
+    "wikidataId": "Q3861",
+    "wikidataLabel": "Doha",
+    "wikidataScore": 100,
+    "countryQid": "Q846"
+  },
+  "Kuwait": {
+    "lat": 29.3759,
+    "lng": 47.9774,
+    "country": "KW",
+    "wikidataId": "Q35178",
+    "wikidataLabel": "Kuwait City",
+    "wikidataScore": 100
+  },
+  "Jena": {
+    "lat": 50.9272,
+    "lng": 11.5892,
+    "country": "DE",
+    "wikidataId": "Q3150",
+    "wikidataLabel": "Jena",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Astana": {
+    "lat": 51.1694,
+    "lng": 71.4491,
+    "country": "KZ",
+    "wikidataId": "Q1520",
+    "wikidataLabel": "Astana",
+    "wikidataScore": 100,
+    "countryQid": "Q232"
+  },
+  "Frunze": {
+    "lat": 42.8746,
+    "lng": 74.5698,
+    "country": "KG",
+    "wikidataId": "Q9361",
+    "wikidataLabel": "Bishkek",
+    "wikidataScore": 100,
+    "countryQid": "Q813"
+  },
+  "Utrecht": {
+    "lat": 52.0907,
+    "lng": 5.1214,
+    "country": "NL",
+    "wikidataId": "Q803",
+    "wikidataLabel": "Utrecht",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Thành-phô-Hồ-chí-Minh": {
+    "lat": 10.8231,
+    "lng": 106.6297,
+    "country": "VN",
+    "wikidataId": "Q1854",
+    "wikidataLabel": "Ho Chi Minh City",
+    "wikidataScore": 100,
+    "countryQid": "Q881"
+  },
+  "Thành-phô-Hô-chí-Minh": {
+    "lat": 10.8231,
+    "lng": 106.6297,
+    "country": "VN",
+    "wikidataId": "Q1854",
+    "wikidataLabel": "Ho Chi Minh City",
+    "wikidataScore": 100,
+    "countryQid": "Q881"
+  },
+  "Thành-phô-Hô-chí-Minh [Ho Chi Minh City]": {
+    "lat": 10.8231,
+    "lng": 106.6297,
+    "country": "VN",
+    "wikidataId": "Q1854",
+    "wikidataLabel": "Ho Chi Minh City",
+    "wikidataScore": 100,
+    "countryQid": "Q881"
+  },
+  "Jinan": {
+    "lat": 36.6512,
+    "lng": 116.9971,
+    "country": "CN",
+    "wikidataId": "Q170247",
+    "wikidataLabel": "Jinan",
+    "wikidataScore": 100
+  },
+  "Bangkok": {
+    "lat": 13.7563,
+    "lng": 100.5018,
+    "country": "TH",
+    "wikidataId": "Q1861",
+    "wikidataLabel": "Bangkok",
+    "wikidataScore": 100
+  },
+  "Prishtinë": {
+    "lat": 42.6629,
+    "lng": 21.1655,
+    "country": "XK",
+    "wikidataId": "Q25270",
+    "wikidataLabel": "Pristina",
+    "wikidataScore": 100,
+    "countryQid": "Q1246"
+  },
+  "Prishtina?": {
+    "lat": 42.6629,
+    "lng": 21.1655,
+    "country": "XK",
+    "wikidataId": "Q25270",
+    "wikidataLabel": "Pristina",
+    "wikidataScore": 100,
+    "countryQid": "Q1246"
+  },
+  "Prishtina": {
+    "lat": 42.6629,
+    "lng": 21.1655,
+    "country": "XK",
+    "wikidataId": "Q25270",
+    "wikidataLabel": "Pristina",
+    "wikidataScore": 100,
+    "countryQid": "Q1246"
+  },
+  "Genève": {
+    "lat": 46.2044,
+    "lng": 6.1432,
+    "country": "FR",
+    "wikidataId": "Q71",
+    "wikidataLabel": "Geneva",
+    "wikidataScore": 100
+  },
+  "Genève/Geneva": {
+    "lat": 46.2044,
+    "lng": 6.1432,
+    "country": "FR",
+    "wikidataId": "Q71",
+    "wikidataLabel": "Geneva",
+    "wikidataScore": 100
+  },
+  "Pune": {
+    "lat": 18.5204,
+    "lng": 73.8567,
+    "country": "IN",
+    "wikidataId": "Q1538",
+    "wikidataLabel": "Pune",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Graz": {
+    "lat": 47.0707,
+    "lng": 15.4395,
+    "country": "AT",
+    "wikidataId": "Q13298",
+    "wikidataLabel": "Graz",
+    "wikidataScore": 100,
+    "countryQid": "Q40"
+  },
+  "Craiova": {
+    "lat": 44.3302,
+    "lng": 23.7949,
+    "country": "RO",
+    "wikidataId": "Q168057",
+    "wikidataLabel": "Craiova",
+    "wikidataScore": 100,
+    "countryQid": "Q218"
+  },
+  "Yanji": {
+    "lat": 39.90403,
+    "lng": 116.407526,
+    "country": "CN",
+    "wikidataId": "Q956",
+    "wikidataLabel": "Beijing",
+    "wikidataScore": 83,
+    "countryQid": "Q148"
+  },
+  "Hoyvík": {
+    "lat": 62.0167,
+    "lng": -6.75,
+    "country": "DK",
+    "wikidataId": "Q677723",
+    "wikidataLabel": "Hoyvík",
+    "wikidataScore": 100
+  },
+  "Meerut": {
+    "lat": 28.9845,
+    "lng": 77.7064,
+    "country": "IN",
+    "wikidataId": "Q200237",
+    "wikidataLabel": "Meerut",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Olomouc": {
+    "lat": 49.5938,
+    "lng": 17.2509,
+    "country": "CZ",
+    "wikidataId": "Q81137",
+    "wikidataLabel": "Olomouc",
+    "wikidataScore": 100,
+    "countryQid": "Q213"
+  },
+  "La Tour d'Aigues": {
+    "lat": 43.7289,
+    "lng": 5.5553,
+    "country": "FR"
+  },
+  "Bordeaux": {
+    "lat": 44.8378,
+    "lng": -0.5792,
+    "country": "FR",
+    "wikidataId": "Q1479",
+    "wikidataLabel": "Bordeaux",
+    "wikidataScore": 100
+  },
+  "Xi'an": {
+    "lat": 34.3416,
+    "lng": 108.9398,
+    "country": "CN",
+    "wikidataId": "Q5826",
+    "wikidataLabel": "Xi'an",
+    "wikidataScore": 100
+  },
+  "Celje": {
+    "lat": 46.2361,
+    "lng": 15.2677,
+    "country": "SI",
+    "wikidataId": "Q1012",
+    "wikidataLabel": "Celje",
+    "wikidataScore": 100,
+    "countryQid": "Q215"
+  },
+  "Koper": {
+    "lat": 45.548,
+    "lng": 13.7302,
+    "country": "SI",
+    "wikidataId": "Q1015",
+    "wikidataLabel": "Koper",
+    "wikidataScore": 100,
+    "countryQid": "Q215"
+  },
+  "Fuzhou": {
+    "lat": 26.0745,
+    "lng": 119.2965,
+    "country": "CN",
+    "wikidataId": "Q68481",
+    "wikidataLabel": "Fuzhou",
+    "wikidataScore": 100
+  },
+  "Locarno": {
+    "lat": 46.1711,
+    "lng": 8.7958,
+    "country": "CH",
+    "wikidataId": "Q11935",
+    "wikidataLabel": "Locarno",
+    "wikidataScore": 100,
+    "countryQid": "Q39"
+  },
+  "Saratov": {
+    "lat": 51.5462,
+    "lng": 46.0154,
+    "country": "RU",
+    "wikidataId": "Q5332",
+    "wikidataLabel": "Saratov",
+    "wikidataScore": 100,
+    "countryQid": "Q159"
+  },
+  "Oberhausen": {
+    "lat": 51.4963,
+    "lng": 6.8625,
+    "country": "DE",
+    "wikidataId": "Q2838",
+    "wikidataLabel": "Oberhausen",
+    "wikidataScore": 100
+  },
+  "Bamberg": {
+    "lat": 49.8989,
+    "lng": 10.8978,
+    "country": "DE",
+    "wikidataId": "Q3936",
+    "wikidataLabel": "Bamberg",
+    "wikidataScore": 100
+  },
+  "Växjö": {
+    "lat": 56.879,
+    "lng": 14.8059,
+    "country": "SE",
+    "wikidataId": "Q26152",
+    "wikidataLabel": "Växjö",
+    "wikidataScore": 100
+  },
+  "Erfurt": {
+    "lat": 50.9848,
+    "lng": 11.0299,
+    "country": "DE",
+    "wikidataId": "Q1729",
+    "wikidataLabel": "Erfurt",
+    "wikidataScore": 100
+  },
+  "Augsburg": {
+    "lat": 48.3705,
+    "lng": 10.8978,
+    "country": "DE",
+    "wikidataId": "Q2749",
+    "wikidataLabel": "Augsburg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Bruxelles": {
+    "lat": 50.8503,
+    "lng": 4.3517,
+    "country": "BE",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "countryQid": "Q31"
+  },
+  "Brussels": {
+    "lat": 50.8503,
+    "lng": 4.3517,
+    "country": "BE",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "countryQid": "Q31"
+  },
+  "Brussel": {
+    "lat": 50.8503,
+    "lng": 4.3517,
+    "country": "BE",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "countryQid": "Q31"
+  },
+  "Stamford, CT": {
+    "lat": 41.0534,
+    "lng": -73.5387,
+    "country": "US",
+    "wikidataId": "Q49169",
+    "wikidataLabel": "Stamford",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Ludwigshafen am Rhein": {
+    "lat": 49.4774,
+    "lng": 8.4452,
+    "country": "DE",
+    "wikidataId": "Q2910",
+    "wikidataLabel": "Ludwigshafen",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Firenze": {
+    "lat": 43.7696,
+    "lng": 11.2558,
+    "country": "IT",
+    "wikidataId": "Q2044",
+    "wikidataLabel": "Florence",
+    "wikidataScore": 100,
+    "countryQid": "Q38"
+  },
+  "Lille": {
+    "lat": 50.6292,
+    "lng": 3.0573,
+    "country": "FR",
+    "wikidataId": "Q648",
+    "wikidataLabel": "Lille",
+    "wikidataScore": 100,
+    "countryQid": "Q142"
+  },
+  "Villeneuve d'Ascq": {
+    "lat": 50.623,
+    "lng": 3.1419,
+    "country": "FR"
+  },
+  "Bogotá": {
+    "lat": 4.711,
+    "lng": -74.0721,
+    "country": "CO",
+    "wikidataId": "Q2841",
+    "wikidataLabel": "Bogotá",
+    "wikidataScore": 100
+  },
+  "Lausanne": {
+    "lat": 46.5197,
+    "lng": 6.6323,
+    "country": "CH",
+    "wikidataId": "Q807",
+    "wikidataLabel": "Lausanne",
+    "wikidataScore": 100,
+    "countryQid": "Q39"
+  },
+  "Münster": {
+    "lat": 51.9607,
+    "lng": 7.6261,
+    "country": "DE",
+    "wikidataId": "Q2742",
+    "wikidataLabel": "Münster",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Charkiv": {
+    "lat": 49.9935,
+    "lng": 36.2304,
+    "country": "UA",
+    "wikidataId": "Q42308",
+    "wikidataLabel": "Kharkiv",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Porto Alegre": {
+    "lat": -30.0346,
+    "lng": -51.2177,
+    "country": "BR",
+    "wikidataId": "Q40269",
+    "wikidataLabel": "Porto Alegre",
+    "wikidataScore": 100,
+    "countryQid": "Q155"
+  },
+  "Porto Alegre, RS": {
+    "lat": -30.0346,
+    "lng": -51.2177,
+    "country": "BR",
+    "wikidataId": "Q40269",
+    "wikidataLabel": "Porto Alegre",
+    "wikidataScore": 100,
+    "countryQid": "Q155"
+  },
+  "Memmingen": {
+    "lat": 47.9878,
+    "lng": 10.1811,
+    "country": "DE",
+    "wikidataId": "Q14825",
+    "wikidataLabel": "Memmingen",
+    "wikidataScore": 100
+  },
+  "Tilburg": {
+    "lat": 51.5555,
+    "lng": 5.0913,
+    "country": "NL",
+    "wikidataId": "Q9871",
+    "wikidataLabel": "Tilburg",
+    "wikidataScore": 100
+  },
+  "Sulzbach": {
+    "lat": 49.3001,
+    "lng": 7.0574,
+    "country": "DE",
+    "wikidataId": "Q120357",
+    "wikidataLabel": "Sulzbach am Main",
+    "wikidataScore": 100
+  },
+  "Batumi": {
+    "lat": 41.6168,
+    "lng": 41.6367,
+    "country": "GE",
+    "wikidataId": "Q25475",
+    "wikidataLabel": "Batumi",
+    "wikidataScore": 100,
+    "countryQid": "Q230"
+  },
+  "Gyoma": {
+    "lat": 46.9475,
+    "lng": 20.8275,
+    "country": "HU",
+    "wikidataId": "Q18980272",
+    "wikidataLabel": "Gyoma",
+    "wikidataScore": 100
+  },
+  "Neckarsteinach": {
+    "lat": 49.4014,
+    "lng": 8.8456,
+    "country": "DE",
+    "wikidataId": "Q1973855",
+    "wikidataLabel": "Neckarsteinach",
+    "wikidataScore": 100
+  },
+  "Vigo": {
+    "lat": 51.329,
+    "lng": 0.348,
+    "country": "ES",
+    "wikidataId": "Q2468399",
+    "wikidataLabel": "Vigo Village",
+    "wikidataScore": 100,
+    "countryQid": "Q145"
+  },
+  "Bad Nauheim": {
+    "lat": 50.366,
+    "lng": 8.7388,
+    "country": "DE",
+    "wikidataId": "Q16105",
+    "wikidataLabel": "Bad Nauheim",
+    "wikidataScore": 100
+  },
+  "Madison, WI": {
+    "lat": 43.0731,
+    "lng": -89.4012,
+    "country": "US",
+    "wikidataId": "Q43788",
+    "wikidataLabel": "Madison",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Toronto": {
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "country": "CA",
+    "wikidataId": "Q172",
+    "wikidataLabel": "Toronto",
+    "wikidataScore": 100,
+    "countryQid": "Q16"
+  },
+  "Apeldoorn": {
+    "lat": 52.2112,
+    "lng": 5.9699,
+    "country": "NL",
+    "wikidataId": "Q3018561",
+    "wikidataLabel": "Apeldoorn",
+    "wikidataScore": 100
+  },
+  "Brescia": {
+    "lat": 45.5416,
+    "lng": 10.2118,
+    "country": "IT",
+    "wikidataId": "Q6221",
+    "wikidataLabel": "Brescia",
+    "wikidataScore": 100,
+    "countryQid": "Q38"
+  },
+  "Linz": {
+    "lat": 48.3069,
+    "lng": 14.2858,
+    "country": "AT",
+    "wikidataId": "Q41329",
+    "wikidataLabel": "Linz",
+    "wikidataScore": 100
+  },
+  "Baden-Baden": {
+    "lat": 48.7625,
+    "lng": 8.2409,
+    "country": "DE",
+    "wikidataId": "Q4100",
+    "wikidataLabel": "Baden-Baden",
+    "wikidataScore": 100
+  },
+  "Nicosia, Cyprus": {
+    "lat": 35.1856,
+    "lng": 33.3823,
+    "country": "CY",
+    "wikidataId": "Q3856",
+    "wikidataLabel": "Nicosia",
+    "wikidataScore": 70
+  },
+  "Donetsk": {
+    "lat": 48.0159,
+    "lng": 37.8029,
+    "country": "UA",
+    "wikidataId": "Q43070",
+    "wikidataLabel": "Donetsk",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Sydney": {
+    "lat": -33.8688,
+    "lng": 151.2093,
+    "country": "AU",
+    "wikidataId": "Q3130",
+    "wikidataLabel": "Sydney",
+    "wikidataScore": 100,
+    "countryQid": "Q408"
+  },
+  "Bloemfontein": {
+    "lat": -29.0852,
+    "lng": 26.1596,
+    "country": "ZA",
+    "wikidataId": "Q37701",
+    "wikidataLabel": "Bloemfontein",
+    "wikidataScore": 100,
+    "countryQid": "Q258"
+  },
+  "Bloemfontein, Kaapstad": {
+    "lat": -29.0852,
+    "lng": 26.1596,
+    "country": "ZA"
+  },
+  "Bloemfontein, Kaapstad (Capetown)": {
+    "lat": 40.4661,
+    "lng": -124.367,
+    "country": "ZA",
+    "wikidataId": "Q5035316",
+    "wikidataLabel": "Capetown",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Den Haag": {
+    "lat": 52.0705,
+    "lng": 4.3007,
+    "country": "NL",
+    "wikidataId": "Q36600",
+    "wikidataLabel": "The Hague",
+    "wikidataScore": 100
+  },
+  "'s-Gravenhage": {
+    "lat": 52.0705,
+    "lng": 4.3007,
+    "country": "NL",
+    "wikidataId": "Q36600",
+    "wikidataLabel": "The Hague",
+    "wikidataScore": 100
+  },
+  "Jakarta": {
+    "lat": -6.2088,
+    "lng": 106.8456,
+    "country": "ID",
+    "wikidataId": "Q3630",
+    "wikidataLabel": "Jakarta",
+    "wikidataScore": 100,
+    "countryQid": "Q252"
+  },
+  "Jakarta?": {
+    "lat": -6.2088,
+    "lng": 106.8456,
+    "country": "ID",
+    "wikidataId": "Q3630",
+    "wikidataLabel": "Jakarta",
+    "wikidataScore": 100,
+    "countryQid": "Q252"
+  },
+  "Ottawa, ON": {
+    "lat": 45.4215,
+    "lng": -75.6972,
+    "country": "CA",
+    "wikidataId": "Q1930",
+    "wikidataLabel": "Ottawa",
+    "wikidataScore": 100
+  },
+  "Yogyakarta": {
+    "lat": -7.7956,
+    "lng": 110.3695,
+    "country": "ID",
+    "wikidataId": "Q7568",
+    "wikidataLabel": "Yogyakarta",
+    "wikidataScore": 100
+  },
+  "Beverly Hills, CA": {
+    "lat": 34.0736,
+    "lng": -118.4004,
+    "country": "US",
+    "wikidataId": "Q127856",
+    "wikidataLabel": "Beverly Hills",
+    "wikidataScore": 100
+  },
+  "Wilmington, DE": {
+    "lat": 39.7391,
+    "lng": -75.5398,
+    "country": "US",
+    "wikidataId": "Q174224",
+    "wikidataLabel": "Wilmington",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Muscat": {
+    "lat": 23.588,
+    "lng": 58.3829,
+    "country": "OM",
+    "wikidataId": "Q3826",
+    "wikidataLabel": "Muscat",
+    "wikidataScore": 100,
+    "countryQid": "Q842"
+  },
+  "Bandung": {
+    "lat": -6.9175,
+    "lng": 107.6191,
+    "country": "ID",
+    "wikidataId": "Q10389",
+    "wikidataLabel": "Bandung",
+    "wikidataScore": 100
+  },
+  "Algiers": {
+    "lat": 36.7538,
+    "lng": 3.0588,
+    "country": "DZ",
+    "wikidataId": "Q3561",
+    "wikidataLabel": "Algiers",
+    "wikidataScore": 100
+  },
+  "Grenoble": {
+    "lat": 45.1885,
+    "lng": 5.7245,
+    "country": "FR",
+    "wikidataId": "Q1289",
+    "wikidataLabel": "Grenoble",
+    "wikidataScore": 100,
+    "countryQid": "Q142"
+  },
+  "Rostock": {
+    "lat": 54.0924,
+    "lng": 12.0991,
+    "country": "DE",
+    "wikidataId": "Q2861",
+    "wikidataLabel": "Rostock",
+    "wikidataScore": 100
+  },
+  "Oldenburg": {
+    "lat": 53.1439,
+    "lng": 8.2146,
+    "country": "DE",
+    "wikidataId": "Q2936",
+    "wikidataLabel": "Oldenburg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Hannover": {
+    "lat": 52.3759,
+    "lng": 9.732,
+    "country": "DE",
+    "wikidataId": "Q1715",
+    "wikidataLabel": "Hanover",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Badalona": {
+    "lat": 41.4501,
+    "lng": 2.2474,
+    "country": "ES",
+    "wikidataId": "Q15468",
+    "wikidataLabel": "Badalona",
+    "wikidataScore": 100
+  },
+  "Mataró": {
+    "lat": 41.5381,
+    "lng": 2.4445,
+    "country": "ES",
+    "wikidataId": "Q24009568",
+    "wikidataLabel": "Mataró",
+    "wikidataScore": 100,
+    "countryQid": "Q29"
+  },
+  "Luxembourg City": {
+    "lat": 49.6117,
+    "lng": 6.13,
+    "country": "LU",
+    "wikidataId": "Q1842",
+    "wikidataLabel": "Luxembourg",
+    "wikidataScore": 100,
+    "countryQid": "Q32"
+  },
+  "Luxembourg City, Luxembourg": {
+    "lat": 49.6117,
+    "lng": 6.13,
+    "country": "LU",
+    "wikidataId": "Q1842",
+    "wikidataLabel": "Luxembourg",
+    "wikidataScore": 77,
+    "countryQid": "Q32"
+  },
+  "Irbid": {
+    "lat": 32.5568,
+    "lng": 35.8469,
+    "country": "JO",
+    "wikidataId": "Q194165",
+    "wikidataLabel": "Irbid",
+    "wikidataScore": 100
+  },
+  "Amersfoort": {
+    "lat": 52.1561,
+    "lng": 5.3878,
+    "country": "NL",
+    "wikidataId": "Q119517",
+    "wikidataLabel": "Kamp Amersfoort",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Soesterberg": {
+    "lat": 52.12,
+    "lng": 5.28,
+    "country": "NL",
+    "wikidataId": "Q1025080",
+    "wikidataLabel": "Soesterberg",
+    "wikidataScore": 100
+  },
+  "Antwerpen": {
+    "lat": 51.2194,
+    "lng": 4.4025,
+    "country": "BE",
+    "wikidataId": "Q12892",
+    "wikidataLabel": "Antwerp",
+    "wikidataScore": 100
+  },
+  "Antwerpen / Rotterdam": {
+    "lat": 51.2194,
+    "lng": 4.4025,
+    "country": "BE",
+    "wikidataId": "Q34370",
+    "wikidataLabel": "Rotterdam",
+    "wikidataScore": 100
+  },
+  "Pretoria": {
+    "lat": -25.7479,
+    "lng": 28.2293,
+    "country": "ZA",
+    "wikidataId": "Q3926",
+    "wikidataLabel": "Pretoria",
+    "wikidataScore": 100,
+    "countryQid": "Q258"
+  },
+  "Brno": {
+    "lat": 49.1951,
+    "lng": 16.6068,
+    "country": "CZ",
+    "wikidataId": "Q14960",
+    "wikidataLabel": "Brno",
+    "wikidataScore": 100
+  },
+  "Bishkek": {
+    "lat": 42.8746,
+    "lng": 74.5698,
+    "country": "KG",
+    "wikidataId": "Q9361",
+    "wikidataLabel": "Bishkek",
+    "wikidataScore": 100,
+    "countryQid": "Q813"
+  },
+  "Enschede": {
+    "lat": 52.2215,
+    "lng": 6.8937,
+    "country": "DE",
+    "wikidataId": "Q10002",
+    "wikidataLabel": "Enschede",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Huis ter Heide": {
+    "lat": 52.1167,
+    "lng": 5.25,
+    "country": "NL",
+    "wikidataId": "Q130619",
+    "wikidataLabel": "Huis ter Heide",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Maastricht / Brussel": {
+    "lat": 50.846666666,
+    "lng": 4.351666666,
+    "country": "BE",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "countryQid": "Q31"
+  },
+  "Namur": {
+    "lat": 50.4669,
+    "lng": 4.8675,
+    "country": "BE",
+    "wikidataId": "Q134121",
+    "wikidataLabel": "Namur",
+    "wikidataScore": 100,
+    "countryQid": "Q31"
+  },
+  "Lelystad": {
+    "lat": 52.5185,
+    "lng": 5.4714,
+    "country": "NL",
+    "wikidataId": "Q49280656",
+    "wikidataLabel": "Lelystad",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Dushanbe": {
+    "lat": 38.5598,
+    "lng": 68.774,
+    "country": "TJ",
+    "wikidataId": "Q9365",
+    "wikidataLabel": "Dushanbe",
+    "wikidataScore": 100
+  },
+  "Surabaya": {
+    "lat": -7.2575,
+    "lng": 112.7521,
+    "country": "ID",
+    "wikidataId": "Q11462",
+    "wikidataLabel": "Surabaya",
+    "wikidataScore": 100,
+    "countryQid": "Q252"
+  },
+  "Berat": {
+    "lat": 40.7058,
+    "lng": 19.9522,
+    "country": "AL",
+    "wikidataId": "Q170244",
+    "wikidataLabel": "Berat",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Đà Nẵng": {
+    "lat": 16.0544,
+    "lng": 108.2022,
+    "country": "VN",
+    "wikidataId": "Q25282",
+    "wikidataLabel": "Da Nang",
+    "wikidataScore": 100
+  },
+  "Metz": {
+    "lat": 49.1193,
+    "lng": 6.1757,
+    "country": "FR",
+    "wikidataId": "Q22690",
+    "wikidataLabel": "Metz",
+    "wikidataScore": 100,
+    "countryQid": "Q142"
+  },
+  "Toulouse": {
+    "lat": 43.6047,
+    "lng": 1.4442,
+    "country": "FR",
+    "wikidataId": "Q7880",
+    "wikidataLabel": "Toulouse",
+    "wikidataScore": 100
+  },
+  "Nanning": {
+    "lat": 22.817,
+    "lng": 108.3669,
+    "country": "CN",
+    "wikidataId": "Q179608",
+    "wikidataLabel": "Nanning",
+    "wikidataScore": 100
+  },
+  "Hvannasund": {
+    "lat": 62.0601,
+    "lng": -6.75,
+    "country": "DK",
+    "wikidataId": "Q933117",
+    "wikidataLabel": "Hvannasund",
+    "wikidataScore": 100,
+    "countryQid": "Q4628"
+  },
+  "Dhaka": {
+    "lat": 23.8103,
+    "lng": 90.4125,
+    "country": "BD",
+    "wikidataId": "Q1354",
+    "wikidataLabel": "Dhaka",
+    "wikidataScore": 100,
+    "countryQid": "Q902"
+  },
+  "Chengdou": {
+    "lat": 30.5728,
+    "lng": 104.0668,
+    "country": "CN",
+    "wikidataId": "Q30002",
+    "wikidataLabel": "Chengdu",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Chengdu": {
+    "lat": 30.5728,
+    "lng": 104.0668,
+    "country": "CN",
+    "wikidataId": "Q30002",
+    "wikidataLabel": "Chengdu",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Cambridge, MA": {
+    "lat": 42.3736,
+    "lng": -71.1097,
+    "country": "US",
+    "wikidataId": "Q350",
+    "wikidataLabel": "Cambridge",
+    "wikidataScore": 100
+  },
+  "Nablus": {
+    "lat": 32.2211,
+    "lng": 35.2544,
+    "country": "PS",
+    "wikidataId": "Q214178",
+    "wikidataLabel": "Nablus",
+    "wikidataScore": 100
+  },
+  "Abu Dhabi": {
+    "lat": 24.4539,
+    "lng": 54.3773,
+    "country": "AE",
+    "wikidataId": "Q1519",
+    "wikidataLabel": "Abu Dhabi",
+    "wikidataScore": 100
+  },
+  "Durrës": {
+    "lat": 41.3233,
+    "lng": 19.4517,
+    "country": "AL",
+    "wikidataId": "Q83285",
+    "wikidataLabel": "Durrës",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Kuala Lampur": {
+    "lat": 3.139,
+    "lng": 101.6869,
+    "country": "MY"
+  },
+  "Aalborg": {
+    "lat": 57.0488,
+    "lng": 9.9217,
+    "country": "DK",
+    "wikidataId": "Q25410",
+    "wikidataLabel": "Aalborg",
+    "wikidataScore": 100,
+    "countryQid": "Q35"
+  },
+  "Los Angeles, CA": {
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "country": "US",
+    "wikidataId": "Q65",
+    "wikidataLabel": "Los Angeles",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Arnhem": {
+    "lat": 51.9851,
+    "lng": 5.8987,
+    "country": "NL",
+    "wikidataId": "Q1310",
+    "wikidataLabel": "Arnhem",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Hyderabad": {
+    "lat": 17.385,
+    "lng": 78.4867,
+    "country": "IN",
+    "wikidataId": "Q1361",
+    "wikidataLabel": "Hyderabad",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Riyadh": {
+    "lat": 24.7136,
+    "lng": 46.6753,
+    "country": "SA",
+    "wikidataId": "Q3692",
+    "wikidataLabel": "Riyadh",
+    "wikidataScore": 100
+  },
+  "al-Riyāḍ": {
+    "lat": 24.7136,
+    "lng": 46.6753,
+    "country": "SA",
+    "wikidataId": "Q3692",
+    "wikidataLabel": "Riyadh",
+    "wikidataScore": 100
+  },
+  "Korçë/Korce, Tiranë/Tirana": {
+    "lat": 41.328333333,
+    "lng": 19.818055555,
+    "country": "AL",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "countryQid": "Q222"
+  },
+  "Norderstedt": {
+    "lat": 53.696,
+    "lng": 9.9866,
+    "country": "DE",
+    "wikidataId": "Q3928",
+    "wikidataLabel": "Norderstedt",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Harbin": {
+    "lat": 45.8038,
+    "lng": 126.535,
+    "country": "CN",
+    "wikidataId": "Q42956",
+    "wikidataLabel": "Harbin",
+    "wikidataScore": 100,
+    "countryQid": "Q148"
+  },
+  "Philadelphia": {
+    "lat": 39.9526,
+    "lng": -75.1652,
+    "country": "US",
+    "wikidataId": "Q1345",
+    "wikidataLabel": "Philadelphia",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Braunschweig": {
+    "lat": 52.2689,
+    "lng": 10.5268,
+    "country": "DE",
+    "wikidataId": "Q2773",
+    "wikidataLabel": "Brunswick",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Cham, Switzerland": {
+    "lat": 47.1824,
+    "lng": 8.4614,
+    "country": "CH",
+    "wikidataId": "Q69235",
+    "wikidataLabel": "Cham",
+    "wikidataScore": 100,
+    "countryQid": "Q39"
+  },
+  "Garden City, NY": {
+    "lat": 1.3,
+    "lng": 103.8,
+    "country": "US",
+    "wikidataId": "Q334",
+    "wikidataLabel": "Singapore",
+    "wikidataScore": 100,
+    "countryQid": "Q334"
+  },
+  "Tutzing": {
+    "lat": 47.9093,
+    "lng": 11.2806,
+    "country": "DE",
+    "wikidataId": "Q49291934",
+    "wikidataLabel": "Tutzing",
+    "wikidataScore": 100
+  },
+  "Baltimore, MD": {
+    "lat": 39.2904,
+    "lng": -76.6122,
+    "country": "US",
+    "wikidataId": "Q5092",
+    "wikidataLabel": "Baltimore",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Baton Rouge, LA": {
+    "lat": 30.4515,
+    "lng": -91.1871,
+    "country": "US",
+    "wikidataId": "Q28218",
+    "wikidataLabel": "Baton Rouge",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Nanterre (Hauts-de-Seine)": {
+    "lat": 48.8924,
+    "lng": 2.2069,
+    "country": "FR",
+    "wikidataId": "Q170507",
+    "wikidataLabel": "Nanterre",
+    "wikidataScore": 100,
+    "countryQid": "Q142"
+  },
+  "Nanterre": {
+    "lat": 48.8924,
+    "lng": 2.2069,
+    "country": "FR",
+    "wikidataId": "Q170507",
+    "wikidataLabel": "Nanterre",
+    "wikidataScore": 100,
+    "countryQid": "Q142"
+  },
+  "Eberswalde": {
+    "lat": 52.8355,
+    "lng": 13.8133,
+    "country": "DE",
+    "wikidataId": "Q9306",
+    "wikidataLabel": "Eberswalde",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Nokis": {
+    "lat": 42.66,
+    "lng": 59.61,
+    "country": "UZ",
+    "wikidataId": "Q489898",
+    "wikidataLabel": "Nukus",
+    "wikidataScore": 100
+  },
+  "Lahr (Schwarzwald)": {
+    "lat": 48.3392,
+    "lng": 7.87,
+    "country": "DE",
+    "wikidataId": "Q7039",
+    "wikidataLabel": "Lahr/Schwarzwald",
+    "wikidataScore": 100
+  },
+  "Morsbach/Sieg": {
+    "lat": 51.1789,
+    "lng": 7.15224,
+    "country": "DE",
+    "wikidataId": "Q1283112",
+    "wikidataLabel": "Morsbach",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Laaber": {
+    "lat": 48.9833,
+    "lng": 12.0333,
+    "country": "DE",
+    "wikidataId": "Q491811",
+    "wikidataLabel": "Laaber",
+    "wikidataScore": 100
+  },
+  "Olpe": {
+    "lat": 51.0289,
+    "lng": 7.8489,
+    "country": "DE",
+    "wikidataId": "Q10898",
+    "wikidataLabel": "Olpe",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Planegg": {
+    "lat": 48.1033,
+    "lng": 11.4267,
+    "country": "DE",
+    "wikidataId": "Q32227127",
+    "wikidataLabel": "Planegg",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Sewanee, TN": {
+    "lat": 35.2031,
+    "lng": -85.9211,
+    "country": "US",
+    "wikidataId": "Q1987614",
+    "wikidataLabel": "Sewanee",
+    "wikidataScore": 100,
+    "countryQid": "Q30"
+  },
+  "Mengen": {
+    "lat": 48.0478,
+    "lng": 9.3294,
+    "country": "DE",
+    "wikidataId": "Q82279",
+    "wikidataLabel": "Mengen",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Beltershausen": {
+    "lat": 51.208,
+    "lng": 9.2029,
+    "country": "DE",
+    "wikidataId": "Q816202",
+    "wikidataLabel": "Beltershausen",
+    "wikidataScore": 100,
+    "countryQid": "Q183"
+  },
+  "Saint-Aignan": {
+    "lat": 47.2681,
+    "lng": 1.3764,
+    "country": "FR"
+  },
+  "Nabeul": {
+    "lat": 36.4561,
+    "lng": 10.7364,
+    "country": "TN"
+  },
+  "Udin [Udine]": {
+    "lat": 46.0711,
+    "lng": 13.2346,
+    "country": "IT",
+    "wikidataId": "Q2790",
+    "wikidataLabel": "Udine",
+    "wikidataScore": 100,
+    "countryQid": "Q38"
+  },
+  "Lattakia": {
+    "lat": 35.5317,
+    "lng": 35.7918,
+    "country": "SY",
+    "wikidataId": "Q200030",
+    "wikidataLabel": "Latakia",
+    "wikidataScore": 100,
+    "countryQid": "Q858"
+  },
+  "Amstelveen": {
+    "lat": 52.3013,
+    "lng": 4.8649,
+    "country": "NL",
+    "wikidataId": "Q9898",
+    "wikidataLabel": "Amstelveen",
+    "wikidataScore": 100
+  },
+  "Scheveningen, Netherlands": {
+    "lat": 52.1083,
+    "lng": 4.2769,
+    "country": "NL"
+  },
+  "Vestmanna, Streymoy, Faeroe Islands": {
+    "lat": 62.1558,
+    "lng": -7.1642,
+    "country": "DK"
+  },
+  "Kafr El Sheikh, Egypt": {
+    "lat": 31.1107,
+    "lng": 30.9388,
+    "country": "EG"
+  },
+  "Heronsgate/Rickmansworth, England": {
+    "lat": 51.6481,
+    "lng": -0.4731,
+    "country": "GB",
+    "wikidataId": "Q3889674",
+    "wikidataLabel": "Heronsgate",
+    "wikidataScore": 100
+  },
+  "Czeladź": {
+    "lat": 50.3167,
+    "lng": 19.0833,
+    "country": "PL",
+    "wikidataId": "Q161605",
+    "wikidataLabel": "Czeladź",
+    "wikidataScore": 100,
+    "countryQid": "Q36"
+  },
+  "Aldershot, Hants, England / Brookfield, Vt": {
+    "lat": 51.248,
+    "lng": -0.759,
+    "country": "GB",
+    "wikidataId": "Q646980",
+    "wikidataLabel": "Aldershot",
+    "wikidataScore": 100,
+    "countryQid": "Q145"
+  },
+  "Coimbatore": {
+    "lat": 11.0168,
+    "lng": 76.9558,
+    "country": "IN",
+    "wikidataId": "Q9885",
+    "wikidataLabel": "Coimbatore",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Gurugram": {
+    "lat": 28.4595,
+    "lng": 77.0266,
+    "country": "IN",
+    "wikidataId": "Q238508",
+    "wikidataLabel": "Gurgaon",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Cuttack": {
+    "lat": 20.4625,
+    "lng": 85.883,
+    "country": "IN",
+    "wikidataId": "Q207324",
+    "wikidataLabel": "Cuttack",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Meppadi": {
+    "lat": 11.56,
+    "lng": 76.13,
+    "country": "IN",
+    "wikidataId": "Q14224739",
+    "wikidataLabel": "Meppadi",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Secunderabad": {
+    "lat": 17.4399,
+    "lng": 78.4983,
+    "country": "IN",
+    "wikidataId": "Q1003502",
+    "wikidataLabel": "Secunderabad",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  },
+  "Kottayam": {
+    "lat": 9.5916,
+    "lng": 76.5222,
+    "country": "IN",
+    "wikidataId": "Q659887",
+    "wikidataLabel": "Kottayam",
+    "wikidataScore": 100
+  },
+  "Ernakulam": {
+    "lat": 9.9816,
+    "lng": 76.2999,
+    "country": "IN",
+    "wikidataId": "Q1025408",
+    "wikidataLabel": "Ernakulam",
+    "wikidataScore": 100
+  },
+  "Étival-lès-Le Mans": {
+    "lat": 48.0519,
+    "lng": 0.14,
+    "country": "FR"
+  },
+  "Tyresö": {
+    "lat": 59.2383,
+    "lng": 18.2267,
+    "country": "SE"
+  },
+  "Borås, Sweden": {
+    "lat": 57.721,
+    "lng": 12.9401,
+    "country": "SE",
+    "wikidataId": "Q26040",
+    "wikidataLabel": "Borås",
+    "wikidataScore": 73
+  },
+  "Lavin": {
+    "lat": 46.7619,
+    "lng": 10.1103,
+    "country": "CH",
+    "wikidataId": "Q65557",
+    "wikidataLabel": "Lavin",
+    "wikidataScore": 100
+  },
+  "Maastricht": {
+    "lat": 50.8514,
+    "lng": 5.691,
+    "country": "BE",
+    "wikidataId": "Q1309",
+    "wikidataLabel": "Maastricht",
+    "wikidataScore": 100,
+    "countryQid": "Q55"
+  },
+  "Simferopol'": {
+    "lat": 44.9521,
+    "lng": 34.1024,
+    "country": "RU",
+    "wikidataId": "Q19566",
+    "wikidataLabel": "Simferopol",
+    "wikidataScore": 100,
+    "countryQid": "Q212"
+  },
+  "Indaura": {
+    "lat": 22.718611111,
+    "lng": 75.855,
+    "country": "IN",
+    "wikidataId": "Q66616",
+    "wikidataLabel": "Indore",
+    "wikidataScore": 100,
+    "countryQid": "Q668"
+  }
+}

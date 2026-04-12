@@ -1,0 +1,3342 @@
+[
+  {
+    "location": "Paris",
+    "searchName": "Paris",
+    "status": "matched",
+    "wikidataId": "Q90",
+    "wikidataLabel": "Paris",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Beijing",
+    "searchName": "Beijing",
+    "status": "matched",
+    "wikidataId": "Q956",
+    "wikidataLabel": "Beijing",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Berlin",
+    "searchName": "Berlin",
+    "status": "matched",
+    "wikidataId": "Q64",
+    "wikidataLabel": "Berlin",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Wien",
+    "searchName": "Wien",
+    "status": "matched",
+    "wikidataId": "Q1741",
+    "wikidataLabel": "Wien",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Vienna",
+    "searchName": "Vienna",
+    "status": "matched",
+    "wikidataId": "Q1741",
+    "wikidataLabel": "Vienna",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Barcelona",
+    "searchName": "Barcelona",
+    "status": "matched",
+    "wikidataId": "Q1492",
+    "wikidataLabel": "Barcelona",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "London",
+    "searchName": "London",
+    "status": "matched",
+    "wikidataId": "Q84",
+    "wikidataLabel": "London",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Frankfurt am Main",
+    "searchName": "Frankfurt am Main",
+    "status": "matched",
+    "wikidataId": "Q1794",
+    "wikidataLabel": "Frankfurt",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Frankfurt",
+    "searchName": "Frankfurt",
+    "status": "matched",
+    "wikidataId": "Q1794",
+    "wikidataLabel": "Frankfurt",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "New York",
+    "searchName": "New York",
+    "status": "matched",
+    "wikidataId": "Q60",
+    "wikidataLabel": "New York City",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Leipzig",
+    "searchName": "Leipzig",
+    "status": "matched",
+    "wikidataId": "Q2079",
+    "wikidataLabel": "Leipzig",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Sofija",
+    "searchName": "Sofija",
+    "status": "matched",
+    "wikidataId": "Q472",
+    "wikidataLabel": "Sofia",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Salzburg",
+    "searchName": "Salzburg",
+    "status": "matched",
+    "wikidataId": "Q34713",
+    "wikidataLabel": "Salzburg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "München",
+    "searchName": "München",
+    "status": "matched",
+    "wikidataId": "Q1726",
+    "wikidataLabel": "Munich",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Munich",
+    "searchName": "Munich",
+    "status": "matched",
+    "wikidataId": "Q1726",
+    "wikidataLabel": "Munich",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rio de Janeiro",
+    "searchName": "Rio de Janeiro",
+    "status": "matched",
+    "wikidataId": "Q8678",
+    "wikidataLabel": "Rio de Janeiro",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rio de Janiero",
+    "searchName": "Rio de Janiero",
+    "status": "matched",
+    "wikidataId": "Q2720540",
+    "wikidataLabel": "Greater Rio de Janeiro",
+    "wikidataScore": 79,
+    "matchExact": false
+  },
+  {
+    "location": "Moskva",
+    "searchName": "Moskva",
+    "status": "matched",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Moskva / Vladivostok",
+    "searchName": "Moskva",
+    "status": "matched",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Moskau",
+    "searchName": "Moskau",
+    "status": "matched",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Moscow",
+    "searchName": "Moscow",
+    "status": "matched",
+    "wikidataId": "Q649",
+    "wikidataLabel": "Moscow",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Stuttgart",
+    "searchName": "Stuttgart",
+    "status": "matched",
+    "wikidataId": "Q1022",
+    "wikidataLabel": "Stuttgart",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Stockholm",
+    "searchName": "Stockholm",
+    "status": "matched",
+    "wikidataId": "Q1754",
+    "wikidataLabel": "Stockholm",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Weimar",
+    "searchName": "Weimar",
+    "status": "matched",
+    "wikidataId": "Q3955",
+    "wikidataLabel": "Weimar",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Cairo",
+    "searchName": "Cairo",
+    "status": "matched",
+    "wikidataId": "Q85",
+    "wikidataLabel": "Cairo",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Praha",
+    "searchName": "Praha",
+    "status": "matched",
+    "wikidataId": "Q1085",
+    "wikidataLabel": "Prague",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Prag",
+    "searchName": "Prag",
+    "status": "matched",
+    "wikidataId": "Q1085",
+    "wikidataLabel": "Prague",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Prague",
+    "searchName": "Prague",
+    "status": "matched",
+    "wikidataId": "Q1085",
+    "wikidataLabel": "Prague",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Beirut",
+    "searchName": "Beirut",
+    "status": "matched",
+    "wikidataId": "Q3820",
+    "wikidataLabel": "Beirut",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Amsterdam",
+    "searchName": "Amsterdam",
+    "status": "matched",
+    "wikidataId": "Q727",
+    "wikidataLabel": "Amsterdam",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Amsterdan",
+    "searchName": "Amsterdan",
+    "status": "matched",
+    "wikidataId": "Q727",
+    "wikidataLabel": "Amsterdam",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "København",
+    "searchName": "København",
+    "status": "matched",
+    "wikidataId": "Q1748",
+    "wikidataLabel": "Copenhagen",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Athēna",
+    "searchName": "Athēna",
+    "status": "matched",
+    "wikidataId": "Q1524",
+    "wikidataLabel": "Athens",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Athena",
+    "searchName": "Athena",
+    "status": "matched",
+    "wikidataId": "Q1524",
+    "wikidataLabel": "Athens",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Budapest",
+    "searchName": "Budapest",
+    "status": "matched",
+    "wikidataId": "Q1781",
+    "wikidataLabel": "Budapest",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hamburg",
+    "searchName": "Hamburg",
+    "status": "matched",
+    "wikidataId": "Q1055",
+    "wikidataLabel": "Hamburg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Buenos Aires",
+    "searchName": "Buenos Aires",
+    "status": "matched",
+    "wikidataId": "Q1486",
+    "wikidataLabel": "Buenos Aires",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Beograd",
+    "searchName": "Beograd",
+    "status": "matched",
+    "wikidataId": "Q3711",
+    "wikidataLabel": "Belgrade",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tiranë",
+    "searchName": "Tiranë",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tiranë (Tirana)",
+    "searchName": "Tiranë",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tiranë [Tirana]",
+    "searchName": "Tiranë",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tiranë/Tirana",
+    "searchName": "Tiranë",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tirana",
+    "searchName": "Tirana",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tirana?",
+    "searchName": "Tirana",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tirane/Tirana",
+    "searchName": "Tirana",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Korçë/Korce, Tiranë/Tirana",
+    "searchName": "Tirana",
+    "status": "matched",
+    "wikidataId": "Q19689",
+    "wikidataLabel": "Tirana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rijeka",
+    "searchName": "Rijeka",
+    "status": "matched",
+    "wikidataId": "Q1647",
+    "wikidataLabel": "Rijeka",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Zürich",
+    "searchName": "Zürich",
+    "status": "matched",
+    "wikidataId": "Q72",
+    "wikidataLabel": "Zurich",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ljubljana",
+    "searchName": "Ljubljana",
+    "status": "matched",
+    "wikidataId": "Q437",
+    "wikidataLabel": "Ljubljana",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Oslo",
+    "searchName": "Oslo",
+    "status": "matched",
+    "wikidataId": "Q585",
+    "wikidataLabel": "Oslo",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Milano",
+    "searchName": "Milano",
+    "status": "matched",
+    "wikidataId": "Q490",
+    "wikidataLabel": "Milan",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Milan",
+    "searchName": "Milan",
+    "status": "matched",
+    "wikidataId": "Q490",
+    "wikidataLabel": "Milan",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Shanghai",
+    "searchName": "Shanghai",
+    "status": "matched",
+    "wikidataId": "Q8686",
+    "wikidataLabel": "Shanghai",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Zagreb",
+    "searchName": "Zagreb",
+    "status": "matched",
+    "wikidataId": "Q1435",
+    "wikidataLabel": "Zagreb",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bern",
+    "searchName": "Bern",
+    "status": "matched",
+    "wikidataId": "Q70",
+    "wikidataLabel": "Bern",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Krems an der Donau",
+    "searchName": "Krems an der Donau",
+    "status": "matched",
+    "wikidataId": "Q131266",
+    "wikidataLabel": "Krems",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Krems",
+    "searchName": "Krems",
+    "status": "matched",
+    "wikidataId": "Q131266",
+    "wikidataLabel": "Krems",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "San Francisco",
+    "searchName": "San Francisco",
+    "status": "matched",
+    "wikidataId": "Q62",
+    "wikidataLabel": "San Francisco",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "San Francisco, CA",
+    "searchName": "San Francisco",
+    "status": "matched",
+    "wikidataId": "Q62",
+    "wikidataLabel": "San Francisco",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Würzburg",
+    "searchName": "Würzburg",
+    "status": "matched",
+    "wikidataId": "Q2999",
+    "wikidataLabel": "Würzburg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Wũrzburg",
+    "searchName": "Wũrzburg",
+    "status": "matched",
+    "wikidataId": "Q2999",
+    "wikidataLabel": "Würzburg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tallinn",
+    "searchName": "Tallinn",
+    "status": "matched",
+    "wikidataId": "Q1770",
+    "wikidataLabel": "Tallinn",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Köln",
+    "searchName": "Köln",
+    "status": "matched",
+    "wikidataId": "Q365",
+    "wikidataLabel": "Cologne",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bratislava",
+    "searchName": "Bratislava",
+    "status": "matched",
+    "wikidataId": "Q1780",
+    "wikidataLabel": "Bratislava",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Yerevan",
+    "searchName": "Yerevan",
+    "status": "matched",
+    "wikidataId": "Q1953",
+    "wikidataLabel": "Yerevan",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Delhi",
+    "searchName": "Delhi",
+    "status": "matched",
+    "wikidataId": "Q987",
+    "wikidataLabel": "New Delhi",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "New Delhi",
+    "searchName": "New Delhi",
+    "status": "matched",
+    "wikidataId": "Q987",
+    "wikidataLabel": "New Delhi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tokyo",
+    "searchName": "Tokyo",
+    "status": "matched",
+    "wikidataId": "Q1490",
+    "wikidataLabel": "Tokyo",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tōkyō",
+    "searchName": "Tōkyō",
+    "status": "matched",
+    "wikidataId": "Q1490",
+    "wikidataLabel": "Tokyo",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Changsha",
+    "searchName": "Changsha",
+    "status": "matched",
+    "wikidataId": "Q174091",
+    "wikidataLabel": "Changsha",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tbilisi",
+    "searchName": "Tbilisi",
+    "status": "matched",
+    "wikidataId": "Q994",
+    "wikidataLabel": "Tbilisi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Celovec",
+    "searchName": "Celovec",
+    "status": "matched",
+    "wikidataId": "Q41753",
+    "wikidataLabel": "Klagenfurt am Wörthersee",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Celovec/Klagenfurt",
+    "searchName": "Celovec",
+    "status": "matched",
+    "wikidataId": "Q41753",
+    "wikidataLabel": "Klagenfurt am Wörthersee",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Istanbul",
+    "searchName": "Istanbul",
+    "status": "matched",
+    "wikidataId": "Q406",
+    "wikidataLabel": "Istanbul",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "İstanbul",
+    "searchName": "İstanbul",
+    "status": "matched",
+    "wikidataId": "Q406",
+    "wikidataLabel": "Istanbul",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tunis",
+    "searchName": "Tunis",
+    "status": "matched",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tūnis [Tunis]",
+    "searchName": "Tunis",
+    "status": "matched",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tūnis",
+    "searchName": "Tūnis",
+    "status": "matched",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tūnis / Ottawa, ON",
+    "searchName": "Tūnis",
+    "status": "matched",
+    "wikidataId": "Q3572",
+    "wikidataLabel": "Tunis",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ottawa, ON",
+    "searchName": "Ottawa",
+    "status": "matched",
+    "wikidataId": "Q1930",
+    "wikidataLabel": "Ottawa",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Minsk",
+    "searchName": "Minsk",
+    "status": "matched",
+    "wikidataId": "Q2280",
+    "wikidataLabel": "Minsk",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Calcutta",
+    "searchName": "Calcutta",
+    "status": "matched",
+    "wikidataId": "Q1348",
+    "wikidataLabel": "Kolkata",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Kolkata",
+    "searchName": "Kolkata",
+    "status": "matched",
+    "wikidataId": "Q1348",
+    "wikidataLabel": "Kolkata",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Warszawa",
+    "searchName": "Warszawa",
+    "status": "matched",
+    "wikidataId": "Q270",
+    "wikidataLabel": "Warschau",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Warsaw",
+    "searchName": "Warsaw",
+    "status": "matched",
+    "wikidataId": "Q270",
+    "wikidataLabel": "Warsaw",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Düsseldorf",
+    "searchName": "Düsseldorf",
+    "status": "matched",
+    "wikidataId": "Q1718",
+    "wikidataLabel": "Düsseldorf",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Taiyuan/Xi'an",
+    "searchName": "Taiyuan",
+    "status": "matched",
+    "wikidataId": "Q72778",
+    "wikidataLabel": "Taiyuan",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Taiyuan",
+    "searchName": "Taiyuan",
+    "status": "matched",
+    "wikidataId": "Q72778",
+    "wikidataLabel": "Taiyuan",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Taiyuan/Xián",
+    "searchName": "Taiyuan",
+    "status": "matched",
+    "wikidataId": "Q72778",
+    "wikidataLabel": "Taiyuan",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Xi'an",
+    "searchName": "Xi'an",
+    "status": "matched",
+    "wikidataId": "Q5826",
+    "wikidataLabel": "Xi'an",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "México",
+    "searchName": "México",
+    "status": "matched",
+    "wikidataId": "Q1489",
+    "wikidataLabel": "Mexico City",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Mexico City",
+    "searchName": "Mexico City",
+    "status": "matched",
+    "wikidataId": "Q1489",
+    "wikidataLabel": "Mexico City",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Marburg",
+    "searchName": "Marburg",
+    "status": "matched",
+    "wikidataId": "Q3869",
+    "wikidataLabel": "Marburg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tel Aviv",
+    "searchName": "Tel Aviv",
+    "status": "matched",
+    "wikidataId": "Q33935",
+    "wikidataLabel": "Tel Aviv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tel-Aviv",
+    "searchName": "Tel-Aviv",
+    "status": "matched",
+    "wikidataId": "Q33935",
+    "wikidataLabel": "Tel Aviv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tel-ʾAviv",
+    "searchName": "Tel-ʾAviv",
+    "status": "matched",
+    "wikidataId": "Q33935",
+    "wikidataLabel": "Tel Aviv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Guilin",
+    "searchName": "Guilin",
+    "status": "matched",
+    "wikidataId": "Q189633",
+    "wikidataLabel": "Guilin",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "București",
+    "searchName": "București",
+    "status": "matched",
+    "wikidataId": "Q19660",
+    "wikidataLabel": "Bucharest",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bucureşti",
+    "searchName": "Bucureşti",
+    "status": "matched",
+    "wikidataId": "Q19660",
+    "wikidataLabel": "Bucharest",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bucharest",
+    "searchName": "Bucharest",
+    "status": "matched",
+    "wikidataId": "Q19660",
+    "wikidataLabel": "Bucharest",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Jerusalem",
+    "searchName": "Jerusalem",
+    "status": "matched",
+    "wikidataId": "Q1218",
+    "wikidataLabel": "Jerusalem",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Sarajevo",
+    "searchName": "Sarajevo",
+    "status": "matched",
+    "wikidataId": "Q11194",
+    "wikidataLabel": "Sarajevo",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Madrid",
+    "searchName": "Madrid",
+    "status": "matched",
+    "wikidataId": "Q2807",
+    "wikidataLabel": "Madrid",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Lisboa",
+    "searchName": "Lisboa",
+    "status": "matched",
+    "wikidataId": "Q597",
+    "wikidataLabel": "Lisbon",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Basel",
+    "searchName": "Basel",
+    "status": "matched",
+    "wikidataId": "Q78",
+    "wikidataLabel": "Basel",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "São Paulo",
+    "searchName": "São Paulo",
+    "status": "matched",
+    "wikidataId": "Q174",
+    "wikidataLabel": "São Paulo",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Dresden",
+    "searchName": "Dresden",
+    "status": "matched",
+    "wikidataId": "Q1731",
+    "wikidataLabel": "Dresden",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bakı",
+    "searchName": "Bakı",
+    "status": "matched",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bakı [Baku]",
+    "searchName": "Bakı",
+    "status": "matched",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bakı/Baku",
+    "searchName": "Bakı",
+    "status": "matched",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bakı (Baku)",
+    "searchName": "Bakı",
+    "status": "matched",
+    "wikidataId": "Q9248",
+    "wikidataLabel": "Baku",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ulaanbaatar",
+    "searchName": "Ulaanbaatar",
+    "status": "matched",
+    "wikidataId": "Q23430",
+    "wikidataLabel": "Ulaanbaatar",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ulaanbaatar [formerly Ulan Bator]",
+    "searchName": "Ulaanbaatar",
+    "status": "matched",
+    "wikidataId": "Q23430",
+    "wikidataLabel": "Ulaanbaatar",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Vilnius",
+    "searchName": "Vilnius",
+    "status": "matched",
+    "wikidataId": "Q216",
+    "wikidataLabel": "Vilnius",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Guangzhou",
+    "searchName": "Guangzhou",
+    "status": "matched",
+    "wikidataId": "Q16572",
+    "wikidataLabel": "Guangzhou",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Dimashq [Damascus]",
+    "searchName": "Dimashq",
+    "status": "matched",
+    "wikidataId": "Q3766",
+    "wikidataLabel": "Damascus",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Dimashq",
+    "searchName": "Dimashq",
+    "status": "matched",
+    "wikidataId": "Q3766",
+    "wikidataLabel": "Damascus",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Damascus",
+    "searchName": "Damascus",
+    "status": "matched",
+    "wikidataId": "Q3766",
+    "wikidataLabel": "Damascus",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Reykjavík",
+    "searchName": "Reykjavík",
+    "status": "matched",
+    "wikidataId": "Q1764",
+    "wikidataLabel": "Reykjavík",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Reykjavik",
+    "searchName": "Reykjavik",
+    "status": "matched",
+    "wikidataId": "Q1764",
+    "wikidataLabel": "Reykjavík",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bonn",
+    "searchName": "Bonn",
+    "status": "matched",
+    "wikidataId": "Q586",
+    "wikidataLabel": "Bonn",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tübingen",
+    "searchName": "Tübingen",
+    "status": "matched",
+    "wikidataId": "Q3806",
+    "wikidataLabel": "Tübingen",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Darmstadt",
+    "searchName": "Darmstadt",
+    "status": "matched",
+    "wikidataId": "Q2973",
+    "wikidataLabel": "Darmstadt",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Mainz",
+    "searchName": "Mainz",
+    "status": "matched",
+    "wikidataId": "Q1720",
+    "wikidataLabel": "Mainz",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Freiburg",
+    "searchName": "Freiburg",
+    "status": "matched",
+    "wikidataId": "Q2833",
+    "wikidataLabel": "Freiburg im Breisgau",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Novi Sad",
+    "searchName": "Novi Sad",
+    "status": "matched",
+    "wikidataId": "Q55630",
+    "wikidataLabel": "Novi Sad",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hefei",
+    "searchName": "Hefei",
+    "status": "matched",
+    "wikidataId": "Q185684",
+    "wikidataLabel": "Hefei",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Maribor",
+    "searchName": "Maribor",
+    "status": "matched",
+    "wikidataId": "Q1010",
+    "wikidataLabel": "Maribor",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rochester, NY",
+    "searchName": "Rochester",
+    "status": "matched",
+    "wikidataId": "Q49218",
+    "wikidataLabel": "Rochester",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tehran",
+    "searchName": "Tehran",
+    "status": "matched",
+    "wikidataId": "Q3616",
+    "wikidataLabel": "Tehran",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tihrān [Tehran]",
+    "searchName": "Tehran",
+    "status": "matched",
+    "wikidataId": "Q3616",
+    "wikidataLabel": "Tehran",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tihrān",
+    "searchName": "Tihrān",
+    "status": "matched",
+    "wikidataId": "Q3616",
+    "wikidataLabel": "Tehran",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Kiiv",
+    "searchName": "Kiiv",
+    "status": "matched",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kiiv/Kiev",
+    "searchName": "Kiiv",
+    "status": "matched",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kiïv/Kiev",
+    "searchName": "Kiïv",
+    "status": "matched",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kiïv",
+    "searchName": "Kiïv",
+    "status": "matched",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kiev",
+    "searchName": "Kiev",
+    "status": "matched",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kyïv",
+    "searchName": "Kyïv",
+    "status": "matched",
+    "wikidataId": "Q1899",
+    "wikidataLabel": "Kyiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Leikanger",
+    "searchName": "Leikanger",
+    "status": "matched",
+    "wikidataId": "Q844106",
+    "wikidataLabel": "Hermansverk",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Santiago",
+    "searchName": "Santiago",
+    "status": "matched",
+    "wikidataId": "Q2887",
+    "wikidataLabel": "Santiago",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Nanjing",
+    "searchName": "Nanjing",
+    "status": "matched",
+    "wikidataId": "Q16666",
+    "wikidataLabel": "Nanjing",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Riga",
+    "searchName": "Riga",
+    "status": "matched",
+    "wikidataId": "Q1773",
+    "wikidataLabel": "Riga",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rīga",
+    "searchName": "Rīga",
+    "status": "matched",
+    "wikidataId": "Q1773",
+    "wikidataLabel": "Riga",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Wiesbaden",
+    "searchName": "Wiesbaden",
+    "status": "matched",
+    "wikidataId": "Q1721",
+    "wikidataLabel": "Wiesbaden",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Roma",
+    "searchName": "Roma",
+    "status": "matched",
+    "wikidataId": "Q220",
+    "wikidataLabel": "Rome",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Innsbruck",
+    "searchName": "Innsbruck",
+    "status": "matched",
+    "wikidataId": "Q1735",
+    "wikidataLabel": "Innsbruck",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Göttingen",
+    "searchName": "Göttingen",
+    "status": "matched",
+    "wikidataId": "Q3033",
+    "wikidataLabel": "Göttingen",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Helsinki",
+    "searchName": "Helsinki",
+    "status": "matched",
+    "wikidataId": "Q1757",
+    "wikidataLabel": "Helsinki",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Baghdad",
+    "searchName": "Baghdad",
+    "status": "matched",
+    "wikidataId": "Q1530",
+    "wikidataLabel": "Bagdad",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Baghdād",
+    "searchName": "Baghdād",
+    "status": "matched",
+    "wikidataId": "Q1530",
+    "wikidataLabel": "Bagdad",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Almaty",
+    "searchName": "Almaty",
+    "status": "matched",
+    "wikidataId": "Q35493",
+    "wikidataLabel": "Almaty",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tórshavn",
+    "searchName": "Tórshavn",
+    "status": "matched",
+    "wikidataId": "Q10704",
+    "wikidataLabel": "Tórshavn",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Kaapstad (Capetown)",
+    "searchName": "Kaapstad",
+    "status": "matched",
+    "wikidataId": "Q5465",
+    "wikidataLabel": "Cape Town",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bloemfontein, Kaapstad (Capetown)",
+    "searchName": "Capetown",
+    "status": "matched",
+    "wikidataId": "Q5035316",
+    "wikidataLabel": "Capetown",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Mountain View, CA",
+    "searchName": "Mountain View",
+    "status": "matched",
+    "wikidataId": "Q79498",
+    "wikidataLabel": "Mountain View",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Menlo Park, CA",
+    "searchName": "Menlo Park",
+    "status": "matched",
+    "wikidataId": "Q74195",
+    "wikidataLabel": "Menlo Park",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Pleven",
+    "searchName": "Pleven",
+    "status": "matched",
+    "wikidataId": "Q165420",
+    "wikidataLabel": "Pleven",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lanzhou",
+    "searchName": "Lanzhou",
+    "status": "matched",
+    "wikidataId": "Q183584",
+    "wikidataLabel": "Lanzhou",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Shenyang",
+    "searchName": "Shenyang",
+    "status": "matched",
+    "wikidataId": "Q11720",
+    "wikidataLabel": "Shenyang",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tianjin",
+    "searchName": "Tianjin",
+    "status": "matched",
+    "wikidataId": "Q11736",
+    "wikidataLabel": "Tianjin",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Varna",
+    "searchName": "Varna",
+    "status": "matched",
+    "wikidataId": "Q6506",
+    "wikidataLabel": "Varna",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Chicago",
+    "searchName": "Chicago",
+    "status": "matched",
+    "wikidataId": "Q1297",
+    "wikidataLabel": "Chicago",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Heidelberg",
+    "searchName": "Heidelberg",
+    "status": "matched",
+    "wikidataId": "Q2966",
+    "wikidataLabel": "Heidelberg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Porto",
+    "searchName": "Porto",
+    "status": "matched",
+    "wikidataId": "Q36433",
+    "wikidataLabel": "Porto",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Pôrto [Porto]",
+    "searchName": "Porto",
+    "status": "matched",
+    "wikidataId": "Q36433",
+    "wikidataLabel": "Porto",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Chennai",
+    "searchName": "Chennai",
+    "status": "matched",
+    "wikidataId": "Q1352",
+    "wikidataLabel": "Chennai",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ürümchi [Ürümqi]",
+    "searchName": "Ürümchi",
+    "status": "matched",
+    "wikidataId": "Q16959",
+    "wikidataLabel": "Ürümqi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ürümqi",
+    "searchName": "Ürümqi",
+    "status": "matched",
+    "wikidataId": "Q16959",
+    "wikidataLabel": "Ürümqi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Mumbai",
+    "searchName": "Mumbai",
+    "status": "matched",
+    "wikidataId": "Q1156",
+    "wikidataLabel": "Mumbai",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bambaī",
+    "searchName": "Bambaī",
+    "status": "matched",
+    "wikidataId": "Q26085641",
+    "wikidataLabel": "Bambaira",
+    "wikidataScore": 86,
+    "matchExact": false
+  },
+  {
+    "location": "St. Petersburg",
+    "searchName": "St. Petersburg",
+    "status": "matched",
+    "wikidataId": "Q656",
+    "wikidataLabel": "Saint Petersburg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "St.-Peterburg",
+    "searchName": "St.-Peterburg",
+    "status": "matched",
+    "wikidataId": "Q656",
+    "wikidataLabel": "Saint Petersburg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Sankt-Peterburg",
+    "searchName": "Sankt-Peterburg",
+    "status": "matched",
+    "wikidataId": "Q656",
+    "wikidataLabel": "Saint Petersburg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Friedrichsfehn",
+    "searchName": "Friedrichsfehn",
+    "status": "matched",
+    "wikidataId": "Q1464215",
+    "wikidataLabel": "Friedrichsfehn",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Toshkent",
+    "searchName": "Toshkent",
+    "status": "matched",
+    "wikidataId": "Q269",
+    "wikidataLabel": "Tashkent",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tashkent",
+    "searchName": "Tashkent",
+    "status": "matched",
+    "wikidataId": "Q269",
+    "wikidataLabel": "Tashkent",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Tashkent?",
+    "searchName": "Tashkent",
+    "status": "matched",
+    "wikidataId": "Q269",
+    "wikidataLabel": "Tashkent",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Gent",
+    "searchName": "Gent",
+    "status": "matched",
+    "wikidataId": "Q1296",
+    "wikidataLabel": "Ghent",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hà Nội [Hanoi]",
+    "searchName": "Hà Nội",
+    "status": "matched",
+    "wikidataId": "Q1858",
+    "wikidataLabel": "Hanoi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hà Nội",
+    "searchName": "Hà Nội",
+    "status": "matched",
+    "wikidataId": "Q1858",
+    "wikidataLabel": "Hanoi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hà-Nội",
+    "searchName": "Hà-Nội",
+    "status": "matched",
+    "wikidataId": "Q1858",
+    "wikidataLabel": "Hanoi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Wuhan",
+    "searchName": "Wuhan",
+    "status": "matched",
+    "wikidataId": "Q11746",
+    "wikidataLabel": "Wuhan",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Plovdiv",
+    "searchName": "Plovdiv",
+    "status": "matched",
+    "wikidataId": "Q459",
+    "wikidataLabel": "Plovdiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Seoul",
+    "searchName": "Seoul",
+    "status": "matched",
+    "wikidataId": "Q8684",
+    "wikidataLabel": "Seoul",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hong Kong",
+    "searchName": "Hong Kong",
+    "status": "matched",
+    "wikidataId": "Q8646",
+    "wikidataLabel": "Hong Kong",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Iruñea [Pamplona]",
+    "searchName": "Iruñea",
+    "status": "matched",
+    "wikidataId": "Q16518701",
+    "wikidataLabel": "Pompaelo",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Irun (Iruñea) [Pamplona]",
+    "searchName": "Irun",
+    "status": "matched",
+    "wikidataId": "Q23999366",
+    "wikidataLabel": "Irun",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Evanston, IL",
+    "searchName": "Evanston",
+    "status": "matched",
+    "wikidataId": "Q462799",
+    "wikidataLabel": "Evanston",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Skopje",
+    "searchName": "Skopje",
+    "status": "matched",
+    "wikidataId": "Q384",
+    "wikidataLabel": "Skopje",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bielefeld",
+    "searchName": "Bielefeld",
+    "status": "matched",
+    "wikidataId": "Q2112",
+    "wikidataLabel": "Bielefeld",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rotterdam",
+    "searchName": "Rotterdam",
+    "status": "matched",
+    "wikidataId": "Q34370",
+    "wikidataLabel": "Rotterdam",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Antwerpen / Rotterdam",
+    "searchName": "Rotterdam",
+    "status": "matched",
+    "wikidataId": "Q34370",
+    "wikidataLabel": "Rotterdam",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Riverside, CA",
+    "searchName": "Riverside",
+    "status": "matched",
+    "wikidataId": "Q49243",
+    "wikidataLabel": "Riverside",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Rudolstadt",
+    "searchName": "Rudolstadt",
+    "status": "matched",
+    "wikidataId": "Q517107",
+    "wikidataLabel": "Rudolstadt",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Duisburg",
+    "searchName": "Duisburg",
+    "status": "matched",
+    "wikidataId": "Q2100",
+    "wikidataLabel": "Duisburg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Melbourne",
+    "searchName": "Melbourne",
+    "status": "matched",
+    "wikidataId": "Q3141",
+    "wikidataLabel": "Melbourne",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Jyväskylä",
+    "searchName": "Jyväskylä",
+    "status": "matched",
+    "wikidataId": "Q134620",
+    "wikidataLabel": "Jyväskylä",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lexington, MA",
+    "searchName": "Lexington",
+    "status": "matched",
+    "wikidataId": "Q49241",
+    "wikidataLabel": "Lexington",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Hollfeld",
+    "searchName": "Hollfeld",
+    "status": "matched",
+    "wikidataId": "Q503048",
+    "wikidataLabel": "Hollfeld",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Hollfeld/Oberfranken",
+    "searchName": "Hollfeld",
+    "status": "matched",
+    "wikidataId": "Q503048",
+    "wikidataLabel": "Hollfeld",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "New Orleans, LA",
+    "searchName": "New Orleans",
+    "status": "matched",
+    "wikidataId": "Q34404",
+    "wikidataLabel": "New Orleans",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kraków",
+    "searchName": "Kraków",
+    "status": "matched",
+    "wikidataId": "Q31487",
+    "wikidataLabel": "Kraków",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Amman",
+    "searchName": "Amman",
+    "status": "matched",
+    "wikidataId": "Q3805",
+    "wikidataLabel": "Amman",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Amman, Jordan",
+    "searchName": "Amman, Jordan",
+    "status": "matched",
+    "wikidataId": "Q3805",
+    "wikidataLabel": "Amman",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lannuon",
+    "searchName": "Lannuon",
+    "status": "low_score",
+    "wikidataId": "Q20584357",
+    "wikidataLabel": "Chapel Skolaj Sant-Jozef Lannuon",
+    "wikidataScore": 18
+  },
+  {
+    "location": "Montevideo",
+    "searchName": "Montevideo",
+    "status": "matched",
+    "wikidataId": "Q1335",
+    "wikidataLabel": "Montevideo",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Doha",
+    "searchName": "Doha",
+    "status": "matched",
+    "wikidataId": "Q3861",
+    "wikidataLabel": "Doha",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kuwait",
+    "searchName": "Kuwait",
+    "status": "matched",
+    "wikidataId": "Q35178",
+    "wikidataLabel": "Kuwait City",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Jena",
+    "searchName": "Jena",
+    "status": "matched",
+    "wikidataId": "Q3150",
+    "wikidataLabel": "Jena",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Astana",
+    "searchName": "Astana",
+    "status": "matched",
+    "wikidataId": "Q1520",
+    "wikidataLabel": "Astana",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Frunze",
+    "searchName": "Frunze",
+    "status": "matched",
+    "wikidataId": "Q9361",
+    "wikidataLabel": "Bishkek",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Utrecht",
+    "searchName": "Utrecht",
+    "status": "matched",
+    "wikidataId": "Q803",
+    "wikidataLabel": "Utrecht",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Thành-phô-Hồ-chí-Minh",
+    "searchName": "Thành-phô-Hồ-chí-Minh",
+    "status": "matched",
+    "wikidataId": "Q1854",
+    "wikidataLabel": "Ho Chi Minh City",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Thành-phô-Hô-chí-Minh",
+    "searchName": "Thành-phô-Hô-chí-Minh",
+    "status": "matched",
+    "wikidataId": "Q1854",
+    "wikidataLabel": "Ho Chi Minh City",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Thành-phô-Hô-chí-Minh [Ho Chi Minh City]",
+    "searchName": "Thành-phô-Hô-chí-Minh",
+    "status": "matched",
+    "wikidataId": "Q1854",
+    "wikidataLabel": "Ho Chi Minh City",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Jinan",
+    "searchName": "Jinan",
+    "status": "matched",
+    "wikidataId": "Q170247",
+    "wikidataLabel": "Jinan",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bangkok",
+    "searchName": "Bangkok",
+    "status": "matched",
+    "wikidataId": "Q1861",
+    "wikidataLabel": "Bangkok",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Prishtinë",
+    "searchName": "Prishtinë",
+    "status": "matched",
+    "wikidataId": "Q25270",
+    "wikidataLabel": "Pristina",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Prishtina?",
+    "searchName": "Prishtina",
+    "status": "matched",
+    "wikidataId": "Q25270",
+    "wikidataLabel": "Pristina",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Prishtina",
+    "searchName": "Prishtina",
+    "status": "matched",
+    "wikidataId": "Q25270",
+    "wikidataLabel": "Pristina",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Genève",
+    "searchName": "Genève",
+    "status": "matched",
+    "wikidataId": "Q71",
+    "wikidataLabel": "Geneva",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Genève/Geneva",
+    "searchName": "Genève",
+    "status": "matched",
+    "wikidataId": "Q71",
+    "wikidataLabel": "Geneva",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Pune",
+    "searchName": "Pune",
+    "status": "matched",
+    "wikidataId": "Q1538",
+    "wikidataLabel": "Pune",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Graz",
+    "searchName": "Graz",
+    "status": "matched",
+    "wikidataId": "Q13298",
+    "wikidataLabel": "Graz",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Craiova",
+    "searchName": "Craiova",
+    "status": "matched",
+    "wikidataId": "Q168057",
+    "wikidataLabel": "Craiova",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Yanji",
+    "searchName": "Yanji",
+    "status": "matched",
+    "wikidataId": "Q956",
+    "wikidataLabel": "Beijing",
+    "wikidataScore": 83,
+    "matchExact": false
+  },
+  {
+    "location": "Hoyvík",
+    "searchName": "Hoyvík",
+    "status": "matched",
+    "wikidataId": "Q677723",
+    "wikidataLabel": "Hoyvík",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Meerut",
+    "searchName": "Meerut",
+    "status": "matched",
+    "wikidataId": "Q200237",
+    "wikidataLabel": "Meerut",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Olomouc",
+    "searchName": "Olomouc",
+    "status": "matched",
+    "wikidataId": "Q81137",
+    "wikidataLabel": "Olomouc",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bordeaux",
+    "searchName": "Bordeaux",
+    "status": "matched",
+    "wikidataId": "Q1479",
+    "wikidataLabel": "Bordeaux",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Celje",
+    "searchName": "Celje",
+    "status": "matched",
+    "wikidataId": "Q1012",
+    "wikidataLabel": "Celje",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Koper",
+    "searchName": "Koper",
+    "status": "matched",
+    "wikidataId": "Q1015",
+    "wikidataLabel": "Koper",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Fuzhou",
+    "searchName": "Fuzhou",
+    "status": "matched",
+    "wikidataId": "Q68481",
+    "wikidataLabel": "Fuzhou",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Locarno",
+    "searchName": "Locarno",
+    "status": "matched",
+    "wikidataId": "Q11935",
+    "wikidataLabel": "Locarno",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Saratov",
+    "searchName": "Saratov",
+    "status": "matched",
+    "wikidataId": "Q5332",
+    "wikidataLabel": "Saratov",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Oberhausen",
+    "searchName": "Oberhausen",
+    "status": "matched",
+    "wikidataId": "Q2838",
+    "wikidataLabel": "Oberhausen",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bamberg",
+    "searchName": "Bamberg",
+    "status": "matched",
+    "wikidataId": "Q3936",
+    "wikidataLabel": "Bamberg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Växjö",
+    "searchName": "Växjö",
+    "status": "matched",
+    "wikidataId": "Q26152",
+    "wikidataLabel": "Växjö",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Erfurt",
+    "searchName": "Erfurt",
+    "status": "matched",
+    "wikidataId": "Q1729",
+    "wikidataLabel": "Erfurt",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Augsburg",
+    "searchName": "Augsburg",
+    "status": "matched",
+    "wikidataId": "Q2749",
+    "wikidataLabel": "Augsburg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bruxelles",
+    "searchName": "Bruxelles",
+    "status": "matched",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Brussels",
+    "searchName": "Brussels",
+    "status": "matched",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Brussel",
+    "searchName": "Brussel",
+    "status": "matched",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Maastricht / Brussel",
+    "searchName": "Brussel",
+    "status": "matched",
+    "wikidataId": "Q239",
+    "wikidataLabel": "Brussels",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Stamford, CT",
+    "searchName": "Stamford",
+    "status": "matched",
+    "wikidataId": "Q49169",
+    "wikidataLabel": "Stamford",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Ludwigshafen am Rhein",
+    "searchName": "Ludwigshafen am Rhein",
+    "status": "matched",
+    "wikidataId": "Q2910",
+    "wikidataLabel": "Ludwigshafen",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Firenze",
+    "searchName": "Firenze",
+    "status": "matched",
+    "wikidataId": "Q2044",
+    "wikidataLabel": "Florence",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lille",
+    "searchName": "Lille",
+    "status": "matched",
+    "wikidataId": "Q648",
+    "wikidataLabel": "Lille",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bogotá",
+    "searchName": "Bogotá",
+    "status": "matched",
+    "wikidataId": "Q2841",
+    "wikidataLabel": "Bogotá",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lausanne",
+    "searchName": "Lausanne",
+    "status": "matched",
+    "wikidataId": "Q807",
+    "wikidataLabel": "Lausanne",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Münster",
+    "searchName": "Münster",
+    "status": "matched",
+    "wikidataId": "Q2742",
+    "wikidataLabel": "Münster",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Charkiv",
+    "searchName": "Charkiv",
+    "status": "matched",
+    "wikidataId": "Q42308",
+    "wikidataLabel": "Kharkiv",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Porto Alegre",
+    "searchName": "Porto Alegre",
+    "status": "matched",
+    "wikidataId": "Q40269",
+    "wikidataLabel": "Porto Alegre",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Porto Alegre, RS",
+    "searchName": "Porto Alegre",
+    "status": "matched",
+    "wikidataId": "Q40269",
+    "wikidataLabel": "Porto Alegre",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Memmingen",
+    "searchName": "Memmingen",
+    "status": "matched",
+    "wikidataId": "Q14825",
+    "wikidataLabel": "Memmingen",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tilburg",
+    "searchName": "Tilburg",
+    "status": "matched",
+    "wikidataId": "Q9871",
+    "wikidataLabel": "Tilburg",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Sulzbach",
+    "searchName": "Sulzbach",
+    "status": "matched",
+    "wikidataId": "Q120357",
+    "wikidataLabel": "Sulzbach am Main",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Batumi",
+    "searchName": "Batumi",
+    "status": "matched",
+    "wikidataId": "Q25475",
+    "wikidataLabel": "Batumi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Gyoma",
+    "searchName": "Gyoma",
+    "status": "matched",
+    "wikidataId": "Q18980272",
+    "wikidataLabel": "Gyoma",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Neckarsteinach",
+    "searchName": "Neckarsteinach",
+    "status": "matched",
+    "wikidataId": "Q1973855",
+    "wikidataLabel": "Neckarsteinach",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Vigo",
+    "searchName": "Vigo",
+    "status": "matched",
+    "wikidataId": "Q2468399",
+    "wikidataLabel": "Vigo Village",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bad Nauheim",
+    "searchName": "Bad Nauheim",
+    "status": "matched",
+    "wikidataId": "Q16105",
+    "wikidataLabel": "Bad Nauheim",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Madison, WI",
+    "searchName": "Madison",
+    "status": "matched",
+    "wikidataId": "Q43788",
+    "wikidataLabel": "Madison",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Toronto",
+    "searchName": "Toronto",
+    "status": "matched",
+    "wikidataId": "Q172",
+    "wikidataLabel": "Toronto",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Apeldoorn",
+    "searchName": "Apeldoorn",
+    "status": "matched",
+    "wikidataId": "Q3018561",
+    "wikidataLabel": "Apeldoorn",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Brescia",
+    "searchName": "Brescia",
+    "status": "matched",
+    "wikidataId": "Q6221",
+    "wikidataLabel": "Brescia",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Linz",
+    "searchName": "Linz",
+    "status": "matched",
+    "wikidataId": "Q41329",
+    "wikidataLabel": "Linz",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Baden-Baden",
+    "searchName": "Baden-Baden",
+    "status": "matched",
+    "wikidataId": "Q4100",
+    "wikidataLabel": "Baden-Baden",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Nicosia, Cyprus",
+    "searchName": "Nicosia, Cyprus",
+    "status": "matched",
+    "wikidataId": "Q3856",
+    "wikidataLabel": "Nicosia",
+    "wikidataScore": 70,
+    "matchExact": false
+  },
+  {
+    "location": "Donetsk",
+    "searchName": "Donetsk",
+    "status": "matched",
+    "wikidataId": "Q43070",
+    "wikidataLabel": "Donetsk",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Sydney",
+    "searchName": "Sydney",
+    "status": "matched",
+    "wikidataId": "Q3130",
+    "wikidataLabel": "Sydney",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bloemfontein",
+    "searchName": "Bloemfontein",
+    "status": "matched",
+    "wikidataId": "Q37701",
+    "wikidataLabel": "Bloemfontein",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Den Haag",
+    "searchName": "Den Haag",
+    "status": "matched",
+    "wikidataId": "Q36600",
+    "wikidataLabel": "The Hague",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "'s-Gravenhage",
+    "searchName": "'s-Gravenhage",
+    "status": "matched",
+    "wikidataId": "Q36600",
+    "wikidataLabel": "The Hague",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Jakarta",
+    "searchName": "Jakarta",
+    "status": "matched",
+    "wikidataId": "Q3630",
+    "wikidataLabel": "Jakarta",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Jakarta?",
+    "searchName": "Jakarta",
+    "status": "matched",
+    "wikidataId": "Q3630",
+    "wikidataLabel": "Jakarta",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Yogyakarta",
+    "searchName": "Yogyakarta",
+    "status": "matched",
+    "wikidataId": "Q7568",
+    "wikidataLabel": "Yogyakarta",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Beverly Hills, CA",
+    "searchName": "Beverly Hills",
+    "status": "matched",
+    "wikidataId": "Q127856",
+    "wikidataLabel": "Beverly Hills",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Wilmington, DE",
+    "searchName": "Wilmington",
+    "status": "matched",
+    "wikidataId": "Q174224",
+    "wikidataLabel": "Wilmington",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Muscat",
+    "searchName": "Muscat",
+    "status": "matched",
+    "wikidataId": "Q3826",
+    "wikidataLabel": "Muscat",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Bandung",
+    "searchName": "Bandung",
+    "status": "matched",
+    "wikidataId": "Q10389",
+    "wikidataLabel": "Bandung",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Algiers",
+    "searchName": "Algiers",
+    "status": "matched",
+    "wikidataId": "Q3561",
+    "wikidataLabel": "Algiers",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Grenoble",
+    "searchName": "Grenoble",
+    "status": "matched",
+    "wikidataId": "Q1289",
+    "wikidataLabel": "Grenoble",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rostock",
+    "searchName": "Rostock",
+    "status": "matched",
+    "wikidataId": "Q2861",
+    "wikidataLabel": "Rostock",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Oldenburg",
+    "searchName": "Oldenburg",
+    "status": "matched",
+    "wikidataId": "Q2936",
+    "wikidataLabel": "Oldenburg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hannover",
+    "searchName": "Hannover",
+    "status": "matched",
+    "wikidataId": "Q1715",
+    "wikidataLabel": "Hanover",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Badalona",
+    "searchName": "Badalona",
+    "status": "matched",
+    "wikidataId": "Q15468",
+    "wikidataLabel": "Badalona",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Mataró",
+    "searchName": "Mataró",
+    "status": "matched",
+    "wikidataId": "Q24009568",
+    "wikidataLabel": "Mataró",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Luxembourg City",
+    "searchName": "Luxembourg City",
+    "status": "matched",
+    "wikidataId": "Q1842",
+    "wikidataLabel": "Luxembourg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Luxembourg City, Luxembourg",
+    "searchName": "Luxembourg City, Luxembourg",
+    "status": "matched",
+    "wikidataId": "Q1842",
+    "wikidataLabel": "Luxembourg",
+    "wikidataScore": 77,
+    "matchExact": false
+  },
+  {
+    "location": "Irbid",
+    "searchName": "Irbid",
+    "status": "matched",
+    "wikidataId": "Q194165",
+    "wikidataLabel": "Irbid",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Amersfoort",
+    "searchName": "Amersfoort",
+    "status": "matched",
+    "wikidataId": "Q119517",
+    "wikidataLabel": "Kamp Amersfoort",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Soesterberg",
+    "searchName": "Soesterberg",
+    "status": "matched",
+    "wikidataId": "Q1025080",
+    "wikidataLabel": "Soesterberg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Antwerpen",
+    "searchName": "Antwerpen",
+    "status": "matched",
+    "wikidataId": "Q12892",
+    "wikidataLabel": "Antwerp",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Pretoria",
+    "searchName": "Pretoria",
+    "status": "matched",
+    "wikidataId": "Q3926",
+    "wikidataLabel": "Pretoria",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Brno",
+    "searchName": "Brno",
+    "status": "matched",
+    "wikidataId": "Q14960",
+    "wikidataLabel": "Brno",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Bishkek",
+    "searchName": "Bishkek",
+    "status": "matched",
+    "wikidataId": "Q9361",
+    "wikidataLabel": "Bishkek",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Enschede",
+    "searchName": "Enschede",
+    "status": "matched",
+    "wikidataId": "Q10002",
+    "wikidataLabel": "Enschede",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Huis ter Heide",
+    "searchName": "Huis ter Heide",
+    "status": "matched",
+    "wikidataId": "Q130619",
+    "wikidataLabel": "Huis ter Heide",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Maastricht",
+    "searchName": "Maastricht",
+    "status": "matched",
+    "wikidataId": "Q1309",
+    "wikidataLabel": "Maastricht",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Namur",
+    "searchName": "Namur",
+    "status": "matched",
+    "wikidataId": "Q134121",
+    "wikidataLabel": "Namur",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Lelystad",
+    "searchName": "Lelystad",
+    "status": "matched",
+    "wikidataId": "Q49280656",
+    "wikidataLabel": "Lelystad",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Dushanbe",
+    "searchName": "Dushanbe",
+    "status": "matched",
+    "wikidataId": "Q9365",
+    "wikidataLabel": "Dushanbe",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Surabaya",
+    "searchName": "Surabaya",
+    "status": "matched",
+    "wikidataId": "Q11462",
+    "wikidataLabel": "Surabaya",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Berat",
+    "searchName": "Berat",
+    "status": "matched",
+    "wikidataId": "Q170244",
+    "wikidataLabel": "Berat",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Đà Nẵng",
+    "searchName": "Đà Nẵng",
+    "status": "matched",
+    "wikidataId": "Q25282",
+    "wikidataLabel": "Da Nang",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Metz",
+    "searchName": "Metz",
+    "status": "matched",
+    "wikidataId": "Q22690",
+    "wikidataLabel": "Metz",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Toulouse",
+    "searchName": "Toulouse",
+    "status": "matched",
+    "wikidataId": "Q7880",
+    "wikidataLabel": "Toulouse",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Nanning",
+    "searchName": "Nanning",
+    "status": "matched",
+    "wikidataId": "Q179608",
+    "wikidataLabel": "Nanning",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hvannasund",
+    "searchName": "Hvannasund",
+    "status": "matched",
+    "wikidataId": "Q933117",
+    "wikidataLabel": "Hvannasund",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Dhaka",
+    "searchName": "Dhaka",
+    "status": "matched",
+    "wikidataId": "Q1354",
+    "wikidataLabel": "Dhaka",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Chengdou",
+    "searchName": "Chengdou",
+    "status": "matched",
+    "wikidataId": "Q30002",
+    "wikidataLabel": "Chengdu",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Chengdu",
+    "searchName": "Chengdu",
+    "status": "matched",
+    "wikidataId": "Q30002",
+    "wikidataLabel": "Chengdu",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Cambridge, MA",
+    "searchName": "Cambridge",
+    "status": "matched",
+    "wikidataId": "Q350",
+    "wikidataLabel": "Cambridge",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Nablus",
+    "searchName": "Nablus",
+    "status": "matched",
+    "wikidataId": "Q214178",
+    "wikidataLabel": "Nablus",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Abu Dhabi",
+    "searchName": "Abu Dhabi",
+    "status": "matched",
+    "wikidataId": "Q1519",
+    "wikidataLabel": "Abu Dhabi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Durrës",
+    "searchName": "Durrës",
+    "status": "matched",
+    "wikidataId": "Q83285",
+    "wikidataLabel": "Durrës",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Aalborg",
+    "searchName": "Aalborg",
+    "status": "matched",
+    "wikidataId": "Q25410",
+    "wikidataLabel": "Aalborg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Los Angeles, CA",
+    "searchName": "Los Angeles",
+    "status": "matched",
+    "wikidataId": "Q65",
+    "wikidataLabel": "Los Angeles",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Arnhem",
+    "searchName": "Arnhem",
+    "status": "matched",
+    "wikidataId": "Q1310",
+    "wikidataLabel": "Arnhem",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Hyderabad",
+    "searchName": "Hyderabad",
+    "status": "matched",
+    "wikidataId": "Q1361",
+    "wikidataLabel": "Hyderabad",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Riyadh",
+    "searchName": "Riyadh",
+    "status": "matched",
+    "wikidataId": "Q3692",
+    "wikidataLabel": "Riyadh",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "al-Riyāḍ",
+    "searchName": "al-Riyāḍ",
+    "status": "matched",
+    "wikidataId": "Q3692",
+    "wikidataLabel": "Riyadh",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Norderstedt",
+    "searchName": "Norderstedt",
+    "status": "matched",
+    "wikidataId": "Q3928",
+    "wikidataLabel": "Norderstedt",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Harbin",
+    "searchName": "Harbin",
+    "status": "matched",
+    "wikidataId": "Q42956",
+    "wikidataLabel": "Harbin",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Philadelphia",
+    "searchName": "Philadelphia",
+    "status": "matched",
+    "wikidataId": "Q1345",
+    "wikidataLabel": "Philadelphia",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Braunschweig",
+    "searchName": "Braunschweig",
+    "status": "matched",
+    "wikidataId": "Q2773",
+    "wikidataLabel": "Brunswick",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Cham, Switzerland",
+    "searchName": "Cham, Switzerland",
+    "status": "matched",
+    "wikidataId": "Q69235",
+    "wikidataLabel": "Cham",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Garden City, NY",
+    "searchName": "Garden City",
+    "status": "matched",
+    "wikidataId": "Q334",
+    "wikidataLabel": "Singapore",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Tutzing",
+    "searchName": "Tutzing",
+    "status": "matched",
+    "wikidataId": "Q49291934",
+    "wikidataLabel": "Tutzing",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Baltimore, MD",
+    "searchName": "Baltimore",
+    "status": "matched",
+    "wikidataId": "Q5092",
+    "wikidataLabel": "Baltimore",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Baton Rouge, LA",
+    "searchName": "Baton Rouge",
+    "status": "matched",
+    "wikidataId": "Q28218",
+    "wikidataLabel": "Baton Rouge",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Nanterre (Hauts-de-Seine)",
+    "searchName": "Nanterre",
+    "status": "matched",
+    "wikidataId": "Q170507",
+    "wikidataLabel": "Nanterre",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Nanterre",
+    "searchName": "Nanterre",
+    "status": "matched",
+    "wikidataId": "Q170507",
+    "wikidataLabel": "Nanterre",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Eberswalde",
+    "searchName": "Eberswalde",
+    "status": "matched",
+    "wikidataId": "Q9306",
+    "wikidataLabel": "Eberswalde",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Nokis",
+    "searchName": "Nokis",
+    "status": "matched",
+    "wikidataId": "Q489898",
+    "wikidataLabel": "Nukus",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lahr (Schwarzwald)",
+    "searchName": "Lahr",
+    "status": "matched",
+    "wikidataId": "Q7039",
+    "wikidataLabel": "Lahr/Schwarzwald",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Morsbach/Sieg",
+    "searchName": "Morsbach",
+    "status": "matched",
+    "wikidataId": "Q1283112",
+    "wikidataLabel": "Morsbach",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Laaber",
+    "searchName": "Laaber",
+    "status": "matched",
+    "wikidataId": "Q491811",
+    "wikidataLabel": "Laaber",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Olpe",
+    "searchName": "Olpe",
+    "status": "matched",
+    "wikidataId": "Q10898",
+    "wikidataLabel": "Olpe",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Planegg",
+    "searchName": "Planegg",
+    "status": "matched",
+    "wikidataId": "Q32227127",
+    "wikidataLabel": "Planegg",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Sewanee, TN",
+    "searchName": "Sewanee",
+    "status": "matched",
+    "wikidataId": "Q1987614",
+    "wikidataLabel": "Sewanee",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Mengen",
+    "searchName": "Mengen",
+    "status": "matched",
+    "wikidataId": "Q82279",
+    "wikidataLabel": "Mengen",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Beltershausen",
+    "searchName": "Beltershausen",
+    "status": "matched",
+    "wikidataId": "Q816202",
+    "wikidataLabel": "Beltershausen",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Udin [Udine]",
+    "searchName": "Udin",
+    "status": "matched",
+    "wikidataId": "Q2790",
+    "wikidataLabel": "Udine",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Lattakia",
+    "searchName": "Lattakia",
+    "status": "matched",
+    "wikidataId": "Q200030",
+    "wikidataLabel": "Latakia",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Amstelveen",
+    "searchName": "Amstelveen",
+    "status": "matched",
+    "wikidataId": "Q9898",
+    "wikidataLabel": "Amstelveen",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Scheveningen, Netherlands",
+    "searchName": "Scheveningen, Netherlands",
+    "status": "low_score",
+    "wikidataId": "Q2149259",
+    "wikidataLabel": "Bloedpoort",
+    "wikidataScore": 12
+  },
+  {
+    "location": "Kafr El Sheikh, Egypt",
+    "searchName": "Kafr El Sheikh, Egypt",
+    "status": "low_score",
+    "wikidataId": "Q100701089",
+    "wikidataLabel": "Faculty of Artificial Intelligence Kafr El-Sheikh University",
+    "wikidataScore": 21
+  },
+  {
+    "location": "Heronsgate/Rickmansworth, England",
+    "searchName": "Heronsgate",
+    "status": "matched",
+    "wikidataId": "Q3889674",
+    "wikidataLabel": "Heronsgate",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Czeladź",
+    "searchName": "Czeladź",
+    "status": "matched",
+    "wikidataId": "Q161605",
+    "wikidataLabel": "Czeladź",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Aldershot, Hants, England / Brookfield, Vt",
+    "searchName": "Aldershot",
+    "status": "matched",
+    "wikidataId": "Q646980",
+    "wikidataLabel": "Aldershot",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Coimbatore",
+    "searchName": "Coimbatore",
+    "status": "matched",
+    "wikidataId": "Q9885",
+    "wikidataLabel": "Coimbatore",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Gurugram",
+    "searchName": "Gurugram",
+    "status": "matched",
+    "wikidataId": "Q238508",
+    "wikidataLabel": "Gurgaon",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Cuttack",
+    "searchName": "Cuttack",
+    "status": "matched",
+    "wikidataId": "Q207324",
+    "wikidataLabel": "Cuttack",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Meppadi",
+    "searchName": "Meppadi",
+    "status": "matched",
+    "wikidataId": "Q14224739",
+    "wikidataLabel": "Meppadi",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Secunderabad",
+    "searchName": "Secunderabad",
+    "status": "matched",
+    "wikidataId": "Q1003502",
+    "wikidataLabel": "Secunderabad",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Kottayam",
+    "searchName": "Kottayam",
+    "status": "matched",
+    "wikidataId": "Q659887",
+    "wikidataLabel": "Kottayam",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Ernakulam",
+    "searchName": "Ernakulam",
+    "status": "matched",
+    "wikidataId": "Q1025408",
+    "wikidataLabel": "Ernakulam",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Borås, Sweden",
+    "searchName": "Borås, Sweden",
+    "status": "matched",
+    "wikidataId": "Q26040",
+    "wikidataLabel": "Borås",
+    "wikidataScore": 73,
+    "matchExact": false
+  },
+  {
+    "location": "Lavin",
+    "searchName": "Lavin",
+    "status": "matched",
+    "wikidataId": "Q65557",
+    "wikidataLabel": "Lavin",
+    "wikidataScore": 100,
+    "matchExact": false
+  },
+  {
+    "location": "Simferopol'",
+    "searchName": "Simferopol'",
+    "status": "matched",
+    "wikidataId": "Q19566",
+    "wikidataLabel": "Simferopol",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Indaura",
+    "searchName": "Indaura",
+    "status": "matched",
+    "wikidataId": "Q66616",
+    "wikidataLabel": "Indore",
+    "wikidataScore": 100,
+    "matchExact": true
+  },
+  {
+    "location": "Rio de Janiro",
+    "status": "unmatched"
+  },
+  {
+    "location": "T'aipei",
+    "status": "unmatched"
+  },
+  {
+    "location": "Girona",
+    "status": "unmatched"
+  },
+  {
+    "location": "RĀ«ga",
+    "status": "unmatched"
+  },
+  {
+    "location": "Varna, Sofija",
+    "status": "unmatched"
+  },
+  {
+    "location": "Sofija, Varna",
+    "status": "unmatched"
+  },
+  {
+    "location": "Soul T'ŭkpyŏlsi, Sŏul-si",
+    "status": "unmatched"
+  },
+  {
+    "location": "Soul-si [Seoul, South Korea]",
+    "status": "unmatched"
+  },
+  {
+    "location": "Longpont-sur-Orge",
+    "status": "unmatched"
+  },
+  {
+    "location": "Montevideo, Uruguay",
+    "status": "unmatched"
+  },
+  {
+    "location": "La Tour d'Aigues",
+    "status": "unmatched"
+  },
+  {
+    "location": "Villeneuve d'Ascq",
+    "status": "unmatched"
+  },
+  {
+    "location": "Bloemfontein, Kaapstad",
+    "status": "unmatched"
+  },
+  {
+    "location": "Kuala Lampur",
+    "status": "unmatched"
+  },
+  {
+    "location": "Saint-Aignan",
+    "status": "unmatched"
+  },
+  {
+    "location": "Nabeul",
+    "status": "unmatched"
+  },
+  {
+    "location": "Vestmanna, Streymoy, Faeroe Islands",
+    "status": "unmatched"
+  },
+  {
+    "location": "Étival-lès-Le Mans",
+    "status": "unmatched"
+  },
+  {
+    "location": "Tyresö",
+    "status": "unmatched"
+  }
+]

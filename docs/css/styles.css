@@ -941,6 +941,17 @@ h1, h2, h3, h4 {
 .explore-filter-chips:not(:empty) {
   margin-bottom: 0.75rem;
 }
+.explore-provenance-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--sz-text-light, #6B6B6B);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.explore-provenance-toggle input { cursor: pointer; }
 
 .explore-header-meta {
   font-family: var(--font-sans);
@@ -1187,23 +1198,23 @@ h1, h2, h3, h4 {
   border-color: var(--sz-burgundy);
 }
 .geo-ocean {
-  fill: #E8EDF2;
-  stroke: #C5CDD5;
+  fill: #D0DBE8;
+  stroke: #B8C5D5;
   stroke-width: 1px;
 }
 .geo-graticule {
   fill: none;
-  stroke: #E8E3DB;
+  stroke: #C8D2DC;
   stroke-width: 0.4px;
   stroke-dasharray: 2,2;
 }
 .geo-land {
-  fill: #EDE8DF;
+  fill: #F5F0E6;
   stroke: none;
 }
 .geo-borders {
   fill: none;
-  stroke: #D5CFC4;
+  stroke: #C8C0B4;
   stroke-width: 0.5px;
 }
 .geo-bubble {
@@ -1229,6 +1240,17 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: opacity 0.2s, background 0.15s;
+}
+.geo-legend-item:hover {
+  background: rgba(99, 26, 52, 0.08);
+}
+.geo-legend-item.active {
+  background: rgba(99, 26, 52, 0.12);
+  font-weight: 600;
 }
 .geo-legend-dot {
   display: inline-block;
