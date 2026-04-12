@@ -43,6 +43,7 @@ OUTPUT_FRONTEND_JSON = os.path.join(PROJECT_ROOT, 'docs', 'data', 'klawiter.json
 
 # Year validation range
 import datetime
+MIN_VALID_YEAR = 1800
 MAX_VALID_YEAR = datetime.datetime.now().year + 5
 
 

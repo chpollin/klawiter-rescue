@@ -115,7 +115,7 @@ const Pages = {
       <p>
         The source material consists of a MediaWiki SQL database dump
         (<code>zweig_part_01.sql</code>, 33&nbsp;MB) and eight binary content files
-        (<code>zt_00</code> to <code>zt_07</code>, 330&nbsp;MB combined). Together,
+        (<code>zt_00</code> to <code>zt_07</code>, 363&nbsp;MB combined). Together,
         they contain the full content of the original Klawiter wiki: 6,725 pages
         with 53,016 text revisions.
       </p>
@@ -203,7 +203,7 @@ const Pages = {
 
       <h2>Quality Assurance</h2>
       <p>
-        The pipeline is validated by a test suite of 315 automated tests covering
+        The pipeline is validated by a test suite of 326 automated tests covering
         encoding repair, regex patterns, wiki markup parsing, entry classification,
         and real-data extraction. Additionally, a round-trip verification script
         compares the final JSON-LD output against the original wiki content for

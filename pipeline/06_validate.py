@@ -12,7 +12,7 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, OUTPUT_JSONLD, OUTPUT_QUALITY_REPORT
+from lib.config import setup_logging, OUTPUT_JSONLD, OUTPUT_QUALITY_REPORT, MIN_VALID_YEAR, MAX_VALID_YEAR
 from lib.encoding import has_mojibake
 
 log = setup_logging(__name__)
@@ -36,7 +36,7 @@ def validate_entry(entry):
     if year:
         try:
             y = int(year)
-            if y < 1800 or y > 2035:
+            if y < MIN_VALID_YEAR or y > MAX_VALID_YEAR:
                 issues.append({'field': 'datePublished', 'issue': f'invalid value: {year}', 'severity': 'warning'})
         except (ValueError, TypeError):
             issues.append({'field': 'datePublished', 'issue': f'non-integer: {year}', 'severity': 'warning'})
@@ -58,7 +58,7 @@ def main():
     with open(OUTPUT_JSONLD, 'r', encoding='utf-8') as f:
         dataset = json.load(f)
 
-    entries = dataset.get('klawiter:entries', [])
+    entries = dataset.get('entries', [])
     log.info(f"Loaded {len(entries)} entries, validating...")
 
     all_issues = []

@@ -287,7 +287,7 @@ pytest tests/ -v                # everything
 | | `test_real_entries.py` | 160 | Parametrized over 20 hand-labeled entries from `test_sample_20.json` |
 | | `test_llm_judge.py` | 4 | Gemini evaluates extraction correctness on 10 diverse entries |
 
-**Total: 314 tests** (310 without LLM). Run `pytest tests/ -m "not llm" -v` for fast feedback (~1.5s).
+**Total: 326 tests** (322 without LLM). Run `pytest tests/ -m "not llm" -v` for fast feedback (~1.5s).
 
 **Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>0.5%), field coverage regressions (>1pp), type distribution drift (>2pp), error-severity increases. Baseline must be updated after intentional improvements.
 

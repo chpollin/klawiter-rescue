@@ -28,16 +28,16 @@ Key decisions in the Klawiter project with rationale and trade-offs.
 
 ## 3. Vanilla JS Frontend Without Framework
 
-**Decision**: HTML + Tailwind (CDN) + vanilla JS. No React, Vue, Svelte, or Astro.
+**Decision**: HTML + custom CSS (SZD design) + vanilla JS. No React, Vue, Svelte, or Astro.
 
 **Rationale**:
 - 4,751 entries are small enough for full client-side rendering
 - No build step → directly deployable on GitHub Pages
 - No CI/CD configuration needed
-- FlexSearch + Chart.js cover search and visualization
+- FlexSearch + D3.js v7 cover search and visualization
 
 **Trade-off**:
-- ~4 MB JSON must be loaded entirely (no lazy loading)
+- ~9 MB JSON must be loaded entirely (no lazy loading)
 - No SSR/SSG → no SEO for individual entries
 - State management is manual (no reactive framework)
 

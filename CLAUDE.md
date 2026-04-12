@@ -27,7 +27,7 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 **The pipeline must never invent data.** Every extracted value must exist in the raw wiki source text. The pipeline's job is to extract, structure, and normalize — not to enrich or infer. Specifically:
 - Fields left empty because the source text doesn't contain them are **correct** (e.g., anthology poems without a standalone publisher, German originals without a translator)
 - Coverage gaps are only bugs if the value **is present in the raw text** but the pipeline fails to extract it (regex miss or LLM miss)
-- The LLM enrichment step (03b) is constrained to extract **only explicitly stated** values. It has 5 anti-hallucination layers: prompt constraint, gap-fill-only merge, structured output schema, post-extraction validation, and mojibake re-validation. Verified: 0 hallucinated values found in audit (Session 12)
+- The LLM enrichment step (03b) is constrained to extract **only explicitly stated** values. It has 5 anti-hallucination layers: prompt constraint, gap-fill-only merge, structured output schema, post-extraction validation, and mojibake re-validation. Verified: 0 hallucinated values found in full audit
 - Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing` — making the extraction source transparent and auditable
 
 ## Key Technical Decisions
@@ -35,9 +35,9 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
 - **Vocabulary blend**: Schema.org + Dublin Core + `klawiter:` namespace (implemented in `pipeline/lib/vocabulary.py`, documented at `docs/vocab/index.html`)
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
-- **Static frontend**: Vanilla JS (13 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
+- **Static frontend**: Vanilla JS (14 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 6 content pages (About, Methodology, Help, Data, JSON-LD Playground, Imprint)
 - **Exploration interface**: 3-mode interactive visualization (Timeline stacked area, Overview linked views, Network force graph) replacing the former Chart.js dashboard
-- **Test suite**: 311 tests in 5-category strategy (census, schema, consistency, distribution, extraction). See `knowledge/testing.md`
+- **Test suite**: 326 tests in 5-category strategy (census, schema, consistency, distribution, extraction). See `knowledge/testing.md`
 - **Testing categories**: Census (completeness — all page_ids, no dupes), Schema (every entry — types, ranges, markup, mojibake), Consistency (cross-field — German+translator, film+pageCount, seeAlso integrity), Distribution (regression ≤1pp), Extraction (unit + real-data + LLM-judge). Shared fixtures in `conftest.py`
 - **Regression testing**: Baseline metrics in `.github/baseline-metrics.json`, 19 regression tests in `tests/test_regression.py`, CI checks in `validate-patch.yml`
 - **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`

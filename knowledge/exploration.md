@@ -52,7 +52,7 @@ Different research questions require different visual encodings. A single visual
 | Time Period | 5 buckets | 100% | Derived from year |
 | Publisher | ~1,000+ | 55.6% | Weak coverage, many missing |
 | Translator | ~500+ | 41.9% | Weak coverage |
-| Page Count | integer | 81.6% | |
+| Page Count | integer | 54.1% | Previously 81.6%, corrected after pp. N-M FP removal |
 
 ### Array fields (relational data)
 

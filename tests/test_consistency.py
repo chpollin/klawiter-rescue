@@ -8,6 +8,8 @@ Fixtures (ns0_entries, all_titles, redirect_targets) are defined in conftest.py.
 
 import pytest
 
+from lib.vocabulary import TIME_PERIODS
+
 
 # ---------------------------------------------------------------------------
 # German entries should not have translators (with known exceptions)
@@ -98,13 +100,7 @@ class TestPublisherLocationDistinct:
 class TestYearPeriodConsistency:
     """The timePeriod classification must match the year."""
 
-    PERIOD_RANGES = {
-        "pre-zweig": (None, 1880),
-        "lifetime": (1881, 1942),
-        "post-wwii": (1943, 1980),
-        "late-20c": (1981, 2000),
-        "contemporary": (2001, None),
-    }
+    PERIOD_RANGES = {k: v["range"] for k, v in TIME_PERIODS.items()}
 
     def test_year_matches_period(self, ns0_entries):
         """Every entry with both year and timePeriod has a consistent pair."""

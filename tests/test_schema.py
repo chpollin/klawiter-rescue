@@ -10,6 +10,8 @@ import re
 
 import pytest
 
+from lib.config import MIN_VALID_YEAR, MAX_VALID_YEAR
+
 # --- Valid value sets ---
 
 VALID_NS0_ENTRY_TYPES = {
@@ -104,8 +106,8 @@ class TestEntryTypes:
 class TestYearRange:
     """Publication years must be within historically plausible bounds."""
 
-    YEAR_MIN = 1800
-    YEAR_MAX = 2030
+    YEAR_MIN = MIN_VALID_YEAR
+    YEAR_MAX = MAX_VALID_YEAR
 
     def test_all_years_in_range(self, ns0_entries):
         """Every year value (where present) is between 1800 and 2030."""

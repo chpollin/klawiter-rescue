@@ -4,6 +4,39 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-04-12 — Session 12: JSON-LD Validation, Playground, Project Audit
+
+### What we did
+
+- **Data Integrity Principle** documented in CLAUDE.md: pipeline extracts only, never invents data. LLM audit confirmed 0 hallucinated values across 5 anti-hallucination layers.
+- **JSON-LD @context fixed** (5 issues): removed incorrect `author @type:@id` coercion, typed `datePublished` as `xsd:gYear`, added `@version: 1.1`, mapped dataset-level properties as short aliases, added `@container:@list` for entries array.
+- **JSON-LD validated with PyLD**: expansion, compaction, and N-Quads generation all pass. 53 triples per entry, author objects expand correctly.
+- **JSON-LD Playground frontend** (`#jsonld`): interactive compact/expanded/triples view with entry search, random selection, syntax highlighting, vocabulary reference table.
+- **Full project audit**: found 3 bugs (2 critical), 8 documentation inconsistencies, 4 refactoring opportunities.
+- **Bugs fixed**: `06_validate.py`/`verify.py` read wrong key (`klawiter:entries` instead of `entries` — validation silently processed 0 entries); year validation had 4 different caps (unified to `config.MIN/MAX_VALID_YEAR`); `ABOUT_ZWEIG_TYPES` inconsistent across 3 files (aligned to pipeline as source of truth).
+- **Refactoring**: `Export.jsonld()` now uses full @context via `JsonldPlayground._toCompactJsonld()`; removed duplicate `escapeHtml`; `PERIOD_RANGES` imported from `vocabulary.py` instead of duplicated; Windows encoding fix deduplicated.
+- **Documentation corrected**: test count 311→326 in 5 files, architecture.md (Tailwind→CSS, Chart.js→D3, 4MB→9MB), ontology.md @context block, data.md quality report (32→442 info issues), testing.md seeAlso clarification, journal Session 12.
+
+### What we found
+
+| Finding | Severity | Fix |
+|---------|----------|-----|
+| `06_validate.py` reads 0 entries (wrong key) | Critical | `'klawiter:entries'` → `'entries'` |
+| `ABOUT_ZWEIG_TYPES` 3 different definitions | Critical | Aligned to pipeline logic |
+| Year caps: 2025/2030/2035/dynamic | High | Unified to `config.MIN/MAX_VALID_YEAR` |
+| Test count wrong in 5 docs | Medium | All updated to 326 |
+| architecture.md: Tailwind, Chart.js, 4 MB | Medium | Updated to CSS, D3.js, 9 MB |
+| data.md quality report: 32 info → 442 | Medium | Corrected |
+| ontology.md @context outdated | Medium | Mirrors current vocabulary.py |
+
+### Learnings
+
+1. **Silent validation failures are the worst bugs**: `06_validate.py` processed 0 entries and reported no errors because the fallback was `[]`. Always validate that inputs are non-empty.
+2. **Constants defined in multiple places will drift**: `ABOUT_ZWEIG_TYPES` had 3 different definitions. The pipeline is the source of truth; frontend must mirror it.
+3. **Documentation decays faster than code**: 8 inconsistencies accumulated over 3 sessions. Automated checks (grep for known numbers) would catch these.
+
+---
+
 ## 2026-04-12 — Session 11: Testing Strategy Overhaul
 
 ### What we did

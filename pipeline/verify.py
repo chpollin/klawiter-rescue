@@ -317,7 +317,7 @@ def main():
     log.info(f"Loading JSON-LD: {OUTPUT_JSONLD}")
     with open(OUTPUT_JSONLD, 'r', encoding='utf-8') as f:
         dataset = json.load(f)
-    entries = dataset.get('klawiter:entries', [])
+    entries = dataset.get('entries', [])
     log.info(f"  Loaded {len(entries)} entries")
 
     # Load raw content

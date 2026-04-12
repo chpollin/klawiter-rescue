@@ -47,7 +47,7 @@ const PERIOD_LABELS = {
 };
 
 /** Entry types that are about Zweig (not by Zweig) */
-const ABOUT_ZWEIG_TYPES = ['secondary-literature', 'symposium', 'film', 'dramatic-reading'];
+const ABOUT_ZWEIG_TYPES = ['secondary-literature', 'historical-study', 'symposium', 'other'];
 
 /** Category groupings for the home page */
 const CATEGORY_GROUPS = [

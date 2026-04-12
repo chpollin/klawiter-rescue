@@ -348,12 +348,12 @@ const JsonldPlayground = {
             .replace('https://chpollin.github.io/klawiter-rescue/vocab/', 'klawiter:')
             .replace('http://www.w3.org/2001/XMLSchema#', 'xsd:')
             .replace('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:');
-          return `<span class="jh-prefix" title="${escapeHtml(v)}">${escapeHtml(short)}</span>`;
+          return `<span class="jh-prefix" title="${esc(v)}">${esc(short)}</span>`;
         }
         if (typeof v === 'string' && v.startsWith('"')) {
-          return `<span class="jh-str">${escapeHtml(v)}</span>`;
+          return `<span class="jh-str">${esc(v)}</span>`;
         }
-        return `<span class="jh-uri">${escapeHtml(v)}</span>`;
+        return `<span class="jh-uri">${esc(v)}</span>`;
       };
       return `<tr><td>${fmtUri(s)}</td><td>${fmtUri(p)}</td><td>${fmtUri(o)}</td></tr>`;
     }).join('');
@@ -373,7 +373,3 @@ const JsonldPlayground = {
     );
   },
 };
-
-function escapeHtml(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}

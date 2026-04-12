@@ -4,6 +4,8 @@ Regex patterns for extracting bibliographic metadata from Klawiter entries.
 
 import re
 
+from lib.config import MIN_VALID_YEAR, MAX_VALID_YEAR
+
 # Year patterns
 YEAR_RE = re.compile(r'\b(1[789]\d{2}|20[0-3]\d)\b')
 
@@ -88,7 +90,7 @@ def extract_year(text):
     # Prefer years near the beginning of the text
     years = [int(y) for y in matches]
     # Filter out obviously wrong years (page numbers, etc.)
-    valid = [y for y in years if 1800 <= y <= 2035]
+    valid = [y for y in years if MIN_VALID_YEAR <= y <= MAX_VALID_YEAR]
     return valid[0] if valid else None
 
 
@@ -97,7 +99,7 @@ def extract_all_years(text):
     if not text:
         return []
     matches = YEAR_RE.findall(text)
-    return sorted(set(int(y) for y in matches if 1800 <= int(y) <= 2025))
+    return sorted(set(int(y) for y in matches if MIN_VALID_YEAR <= int(y) <= MAX_VALID_YEAR))
 
 
 def extract_publisher(text):

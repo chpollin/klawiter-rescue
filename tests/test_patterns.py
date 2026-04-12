@@ -30,7 +30,9 @@ class TestExtractYear:
 
     def test_boundary_years(self):
         assert extract_year("Printed in 1800") == 1800
-        assert extract_year("Expected in 2035") == 2035
+        assert extract_year("Expected in 2030") == 2030
+        # Years beyond MAX_VALID_YEAR are rejected
+        assert extract_year("Far future 2099") is None
 
     def test_empty_and_none(self):
         assert extract_year(None) is None

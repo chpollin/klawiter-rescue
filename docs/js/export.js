@@ -61,16 +61,7 @@ const Export = {
   jsonld(pageId) {
     const e = this._getEntry(pageId);
     if (!e) return;
-    const jsonld = {
-      '@context': { 'klawiter': 'https://chpollin.github.io/klawiter-rescue/vocab/' },
-      '@type': e['@type'] || `klawiter:${e.entryType}Entry`,
-      '@id': e['@id'] || `klawiter:entry/${pageId}`,
-    };
-    for (const [k, v] of Object.entries(e)) {
-      if (!k.startsWith('@') && v != null) {
-        jsonld[`klawiter:${k}`] = v;
-      }
-    }
+    const jsonld = JsonldPlayground._toCompactJsonld(e);
     downloadBlob(JSON.stringify(jsonld, null, 2), `klawiter-${pageId}.jsonld`, 'application/ld+json');
   },
 

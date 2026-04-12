@@ -14,11 +14,6 @@ import sys
 import os
 import time
 
-# Fix Windows console encoding
-if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
-
 STEPS = [
     ('01_extract.py', 'Extract entries from SQL dump + BLOBs'),
     ('02_fix_encoding.py', 'Fix Mojibake encoding'),
