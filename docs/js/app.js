@@ -29,7 +29,7 @@ const App = {
       this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
       this.entryMap = new Map(this.entries.map(e => [e.sourcePageId, e]));
       this.titleMap = new Map(this.entries.filter(e => e.title).map(e => [e.title, e.sourcePageId]));
-      this.logDataSummary();
+      this.verifyData();
       this.buildIndex();
       this.bindEvents();
       this.handleRoute();
@@ -40,60 +40,71 @@ const App = {
     }
   },
 
-  logDataSummary() {
-    if (!this.state.isLocal) return;
+  verifyData() {
     const e = this.entries;
-    const all = this.data.entries;
+    const meta = this.data._meta;
+    const warnings = [];
 
-    // Counts by type
-    const types = {};
-    e.forEach(x => { types[x.entryType] = (types[x.entryType] || 0) + 1; });
+    // Compute actual counts
+    const ns0 = e.length;
+    const nonNs0 = this.data.entries.length - ns0;
+    const redirects = Object.keys(this.data.redirects || {}).length;
 
-    // Field coverage
+    // Field coverage (actual)
     const fields = ['title', 'year', 'publisher', 'location', 'language', 'translator', 'pageCount'];
-    const coverage = {};
+    const cov = {};
     fields.forEach(f => {
       const count = e.filter(x => x[f] != null && x[f] !== '').length;
-      coverage[f] = `${count}/${e.length} (${(100 * count / e.length).toFixed(1)}%)`;
+      cov[f] = { count, pct: +(100 * count / ns0).toFixed(1) };
     });
 
-    // Array fields
-    const arrayFields = ['reprints', 'translations', 'contentItems', 'seeAlso', 'categories'];
-    const arrayCoverage = {};
-    arrayFields.forEach(f => {
-      const count = e.filter(x => x[f] && x[f].length > 0).length;
-      arrayCoverage[f] = `${count}/${e.length} (${(100 * count / e.length).toFixed(1)}%)`;
-    });
-
-    // Languages + locations
+    // Diversity
     const langs = new Set(e.map(x => x.language).filter(Boolean));
     const locs = new Set(e.map(x => x.location).filter(Boolean));
     const years = e.map(x => x.year).filter(Boolean);
+    const minYear = years.length ? Math.min(...years) : '?';
+    const maxYear = years.length ? Math.max(...years) : '?';
 
-    // Data quality
-    const wikiMarkupTitles = e.filter(x => x.title && (/'''/.test(x.title) || /\[\[|\]\]/.test(x.title)));
-    const noTitle = e.filter(x => !x.title);
-    const noYear = e.filter(x => !x.year);
+    // Types
+    const types = {};
+    e.forEach(x => { types[x.entryType] = (types[x.entryType] || 0) + 1; });
+    const typeCount = Object.keys(types).length;
 
-    console.group('%c📚 Klawiter Bibliography — Data Summary', 'font-weight:bold; font-size:14px');
-    console.log(`Total entries in JSON: ${all.length}`);
-    console.log(`Namespace 0 (displayed): ${e.length}`);
-    console.log(`Excluded (ns≠0): ${all.length - e.length}`);
-    console.log(`Redirects: ${Object.keys(this.data.redirects).length}`);
-    console.log('');
-    console.log('%cEntry Types:', 'font-weight:bold');
-    console.table(types);
-    console.log('%cField Coverage:', 'font-weight:bold');
-    console.table(coverage);
-    console.log('%cArray Field Coverage:', 'font-weight:bold');
-    console.table(arrayCoverage);
-    console.log('%cOverview:', 'font-weight:bold');
-    console.log(`Languages: ${langs.size} | Locations: ${locs.size} | Year range: ${Math.min(...years)}–${Math.max(...years)}`);
-    console.log('%cData Quality:', 'font-weight:bold');
-    console.log(`Titles with wiki markup: ${wikiMarkupTitles.length}`);
-    if (wikiMarkupTitles.length) console.log('  Examples:', wikiMarkupTitles.slice(0, 5).map(x => x.title));
-    console.log(`Entries without title: ${noTitle.length}`);
-    console.log(`Entries without year: ${noYear.length}`);
+    // Provenance
+    const provCount = e.filter(x => x._provenance).length;
+
+    // Compare against pipeline _meta (if present)
+    if (meta) {
+      if (meta.ns0Count !== ns0) warnings.push(`ns0 count: expected ${meta.ns0Count}, got ${ns0}`);
+      if (meta.redirectCount !== redirects) warnings.push(`redirects: expected ${meta.redirectCount}, got ${redirects}`);
+      for (const f of fields) {
+        if (meta.fieldCoverage && meta.fieldCoverage[f]) {
+          const diff = Math.abs(cov[f].pct - meta.fieldCoverage[f].pct);
+          if (diff > 0.1) warnings.push(`${f} coverage: expected ${meta.fieldCoverage[f].pct}%, got ${cov[f].pct}%`);
+        }
+      }
+    }
+
+    // Data quality checks
+    const markupTitles = e.filter(x => x.title && (/'''/.test(x.title) || /\[\[|\]\]/.test(x.title)));
+    if (markupTitles.length) warnings.push(`${markupTitles.length} titles with wiki markup residue`);
+    const noTitle = e.filter(x => !x.title).length;
+    if (noTitle) warnings.push(`${noTitle} entries without title`);
+
+    // Compact output
+    const gen = meta ? ` | generated ${meta.generated}` : '';
+    const covLine = fields.map(f => `${f} ${cov[f].pct}%`).join(' | ');
+
+    console.groupCollapsed(`Klawiter Data Verification — ${ns0} entries (ns0)`);
+    console.log(`${ns0} entries (ns0) | ${nonNs0} non-ns0 | ${redirects} redirects${gen}`);
+    console.log(covLine);
+    console.log(`${typeCount} types | ${langs.size} languages | ${locs.size} locations | ${minYear}–${maxYear}`);
+    if (provCount) console.log(`Provenance: ${provCount} entries with _provenance data`);
+    if (warnings.length === 0) {
+      console.log(meta ? 'OK — all counts match pipeline baseline' : 'OK — no _meta baseline (pipeline <v14)');
+    } else {
+      warnings.forEach(w => console.warn(`WARN: ${w}`));
+    }
     console.groupEnd();
   },
 

@@ -16,6 +16,7 @@ Output: data/output/klawiter.jsonld (complete dataset)
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
@@ -291,11 +292,50 @@ def main():
                 if source_title != target_title:
                     redirect_map[source_title] = target_pid
 
+    # Compute _meta for frontend data verification
+    ns0 = [e for e in non_redirect_entries if e.get('pageNamespace') == 0]
+    ns0_count = len(ns0)
+
+    coverage_fields = {
+        'title': 'title', 'year': 'year', 'publisher': 'publisher',
+        'location': 'location', 'language': 'language',
+        'translator': 'translator', 'pageCount': 'pageCount',
+    }
+    field_coverage = {}
+    for label, key in coverage_fields.items():
+        count = sum(1 for e in ns0 if e.get(key) not in (None, ''))
+        field_coverage[label] = {
+            "count": count,
+            "pct": round(100 * count / ns0_count, 1) if ns0_count else 0,
+        }
+
+    type_counts = {}
+    for e in ns0:
+        t = e.get('entryType', 'unknown')
+        type_counts[t] = type_counts.get(t, 0) + 1
+
+    years = [e['year'] for e in ns0 if e.get('year')]
+    languages = set(e.get('language') for e in ns0 if e.get('language'))
+    locations = set(e.get('location') for e in ns0 if e.get('location'))
+
+    _meta = {
+        "generated": datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        "ns0Count": ns0_count,
+        "totalCount": len(non_redirect_entries),
+        "redirectCount": len(redirect_map),
+        "fieldCoverage": field_coverage,
+        "entryTypes": type_counts,
+        "yearRange": {"min": min(years) if years else None, "max": max(years) if years else None},
+        "languageCount": len(languages),
+        "locationCount": len(locations),
+    }
+
     frontend_data = {
         "name": "Stefan Zweig Bibliography (Klawiter)",
         "compiler": "Dr. Randolph J. Klawiter",
         "institution": "University of Notre Dame",
         "totalEntries": len(non_redirect_entries),
+        "_meta": _meta,
         "entries": non_redirect_entries,
         "redirects": redirect_map,
     }
