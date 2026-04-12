@@ -14,6 +14,7 @@ const Explore = {
     location: null,
     publisher: null,
     period: null,
+    showProvenance: false,
   },
 
   // Precomputed indices
@@ -54,10 +55,12 @@ const Explore = {
 
   render(entries) {
     this.entries = entries;
+    this._initializing = true;
     this._preprocess();
     this._renderScaffolding();
     this._bindModeTabs();
     this.setMode('timeline');
+    this._initializing = false;
   },
 
   _preprocess() {
@@ -202,6 +205,7 @@ const Explore = {
     } else if (mode === 'network' && typeof ExploreNetwork !== 'undefined') {
       ExploreNetwork.render(data);
     }
+    this.updateExploreURL(true);
   },
 
   // -------------------------------------------------------------------------
@@ -256,8 +260,19 @@ const Explore = {
     this.filters = {
       languages: [], types: [], yearRange: [null, null],
       decade: null, location: null, publisher: null, period: null,
+      showProvenance: false,
     };
     this._onFilterChange();
+  },
+
+  setProvenance(enabled) {
+    this.filters.showProvenance = enabled;
+    if (this.mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
+      ExploreTimeline.showProvenance = enabled;
+      if (ExploreTimeline.entries) ExploreTimeline.render(ExploreTimeline.entries);
+    }
+    // Geography/Network: no provenance rendering yet — toggle state persists via filters
+    this.updateExploreURL(false);
   },
 
   _onFilterChange() {
@@ -274,6 +289,7 @@ const Explore = {
     document.dispatchEvent(new CustomEvent('explore:filterChange', {
       detail: { filters: { ...this.filters }, filtered: data.length },
     }));
+    this.updateExploreURL(false);
   },
 
   _renderFilterChips() {
@@ -308,7 +324,14 @@ const Explore = {
     if (chips.length) {
       chips.push(`<button class="chip-clear" onclick="Explore.clearAllFilters()">Clear all</button>`);
     }
-    el.innerHTML = chips.join(' ');
+
+    // Provenance toggle — always visible, not a removable chip
+    const provChecked = f.showProvenance ? 'checked' : '';
+    const provToggle = `<label class="explore-provenance-toggle" title="Show data quality overlay (Timeline only)">
+      <input type="checkbox" ${provChecked} onchange="Explore.setProvenance(this.checked)"> Data quality
+    </label>`;
+
+    el.innerHTML = provToggle + chips.join(' ');
   },
 
   updateSelection(entries) {
@@ -338,6 +361,73 @@ const Explore = {
       if (v) params.set(k, v);
     }
     location.hash = params.toString();
+  },
+
+  // -------------------------------------------------------------------------
+  // URL hash state persistence
+  // -------------------------------------------------------------------------
+
+  updateExploreURL(pushState) {
+    if (this._initializing) return;
+    const params = new URLSearchParams();
+    const f = this.filters;
+    if (f.languages.length) params.set('language', f.languages.join(','));
+    if (f.types.length) params.set('type', f.types.join(','));
+    if (f.yearRange[0] != null || f.yearRange[1] != null) {
+      params.set('years', `${f.yearRange[0] || ''}-${f.yearRange[1] || ''}`);
+    }
+    if (f.decade != null) params.set('decade', f.decade);
+    if (f.location) params.set('location', f.location);
+    if (f.publisher) params.set('publisher', f.publisher);
+    if (f.period) params.set('period', f.period);
+    if (f.showProvenance) params.set('provenance', 'true');
+    // Timeline-specific state
+    if (this.mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
+      if (ExploreTimeline.layerMode !== 'language') params.set('layers', ExploreTimeline.layerMode);
+      if (ExploreTimeline.chartMode !== 'bars') params.set('chart', ExploreTimeline.chartMode);
+    }
+    const paramStr = params.toString();
+    const hash = `stats/${this.mode}${paramStr ? '?' + paramStr : ''}`;
+    const method = pushState ? 'pushState' : 'replaceState';
+    history[method](null, '', '#' + hash);
+    // Keep App._lastHash in sync to prevent double-processing
+    if (typeof App !== 'undefined') App._lastHash = hash;
+  },
+
+  restoreFromHash(mode, params) {
+    // Restore filter state from URL parameters
+    const lang = params.get('language');
+    if (lang) this.filters.languages = lang.split(',');
+    const type = params.get('type');
+    if (type) this.filters.types = type.split(',');
+    const years = params.get('years');
+    if (years) {
+      const [y0, y1] = years.split('-').map(v => v ? parseInt(v, 10) : null);
+      this.filters.yearRange = [y0, y1];
+    }
+    const decade = params.get('decade');
+    if (decade) this.filters.decade = parseInt(decade, 10);
+    const loc = params.get('location');
+    if (loc) this.filters.location = loc;
+    const pub = params.get('publisher');
+    if (pub) this.filters.publisher = pub;
+    const period = params.get('period');
+    if (period) this.filters.period = period;
+    if (params.get('provenance') === 'true') this.filters.showProvenance = true;
+    // Timeline-specific state
+    if (typeof ExploreTimeline !== 'undefined') {
+      const layers = params.get('layers');
+      if (layers) ExploreTimeline.layerMode = layers;
+      const chart = params.get('chart');
+      if (chart) ExploreTimeline.chartMode = chart;
+    }
+    // Apply: switch to the requested mode (re-renders with filters)
+    // Suppress pushState during restore — use replaceState instead
+    this._initializing = true;
+    const validModes = ['timeline', 'geography', 'network'];
+    this.setMode(validModes.includes(mode) ? mode : 'timeline');
+    this._initializing = false;
+    this.updateExploreURL(false);
   },
 
   // -------------------------------------------------------------------------

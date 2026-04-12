@@ -14,7 +14,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
     setup_logging, load_csv, write_csv, csv_bool,
-    STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_04_OUTPUT, CLASSIFIED_FIELDS,
+    STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_03C_OUTPUT, STEP_04_OUTPUT, CLASSIFIED_FIELDS,
 )
 from lib.vocabulary import category_to_entry_type, classify_time_period
 
@@ -77,7 +77,13 @@ def build_redirect_map(rows):
 
 
 def main():
-    input_path = STEP_03B_OUTPUT if os.path.exists(STEP_03B_OUTPUT) else STEP_03_OUTPUT
+    # Prefer normalized > LLM-enriched > parsed
+    if os.path.exists(STEP_03C_OUTPUT):
+        input_path = STEP_03C_OUTPUT
+    elif os.path.exists(STEP_03B_OUTPUT):
+        input_path = STEP_03B_OUTPUT
+    else:
+        input_path = STEP_03_OUTPUT
     rows = load_csv(input_path)
     log.info(f"Loaded {len(rows)} entries, classifying...")
 

@@ -1,0 +1,12 @@
+{
+  "patterns": [
+    "^\\d+(st|nd|rd|th)\\s+edition",
+    "^(Company|House|company|house)$",
+    "cataloging|website",
+    "^p\\.\\s",
+    "^(Vol|Part|Chapter|Section)\\b",
+    "^[,;:\\.\\-\\s]+$",
+    "^& Distribution$",
+    "^and Distribution$"
+  ]
+}

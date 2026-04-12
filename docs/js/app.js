@@ -32,8 +32,10 @@ const App = {
       this.verifyData();
       this.buildIndex();
       this.bindEvents();
+      this._lastHash = '';
       this.handleRoute();
       window.addEventListener('hashchange', () => this.handleRoute());
+      window.addEventListener('popstate', () => this.handleRoute());
     } catch (err) {
       document.getElementById('view-home').innerHTML =
         `<p style="color:var(--sz-burgundy)">Error loading data: ${err.message}</p>`;
@@ -126,6 +128,9 @@ const App = {
   // --- Routing ---
   handleRoute() {
     const hash = location.hash.slice(1);
+    // Guard: skip if hash unchanged (avoids double-processing from popstate + hashchange)
+    if (hash === this._lastHash) return;
+    this._lastHash = hash;
     const params = new URLSearchParams(hash);
 
     // Static content pages
@@ -151,13 +156,21 @@ const App = {
       return;
     }
 
-    // Stats view — always shows full dataset, clears filters
-    if (hash === 'stats') {
+    // Stats view — explore interface with optional sub-state in hash
+    if (hash === 'stats' || hash.startsWith('stats/')) {
       this.state.query = '';
       this.state.filters = {};
       document.getElementById('search-input').value = '';
       this.showView('stats');
       Explore.render(this.entries);
+      // Restore explore sub-state from hash if present
+      if (hash.startsWith('stats/')) {
+        const rest = hash.slice(6);
+        const qIdx = rest.indexOf('?');
+        const mode = qIdx >= 0 ? rest.slice(0, qIdx) : rest;
+        const paramStr = qIdx >= 0 ? rest.slice(qIdx + 1) : '';
+        Explore.restoreFromHash(mode, new URLSearchParams(paramStr));
+      }
       return;
     }
 

@@ -1,6 +1,6 @@
 {
   "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json.",
-  "date": "2026-04-12-s14",
+  "date": "2026-04-12-s15",
   "summary": {
     "total_entries": 6725,
     "redirects": 1546,
@@ -23,8 +23,8 @@
       "percentage": 93.2
     },
     "publisher": {
-      "count": 2639,
-      "percentage": 55.5
+      "count": 2479,
+      "percentage": 52.2
     },
     "locationCreated": {
       "count": 4158,
@@ -35,8 +35,8 @@
       "percentage": 89.4
     },
     "numberOfPages": {
-      "count": 2542,
-      "percentage": 53.5
+      "count": 2530,
+      "percentage": 53.3
     },
     "translator": {
       "count": 1990,

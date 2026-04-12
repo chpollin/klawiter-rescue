@@ -17,8 +17,9 @@ import time
 STEPS = [
     ('01_extract.py', 'Extract entries from SQL dump + BLOBs'),
     ('02_fix_encoding.py', 'Fix Mojibake encoding'),
-    ('03_parse_entries.py', 'Parse wiki markup → structured fields'),
+    ('03_parse_entries.py', 'Parse wiki markup \u2192 structured fields'),
     ('03b_llm_enrich.py', 'LLM-based metadata enrichment (Gemini)'),
+    ('03c_normalize.py', 'Normalize fields (locations, publishers, translators)'),
     ('04_classify.py', 'Classify entry types + time periods'),
     ('05_to_jsonld.py', 'Convert to JSON-LD'),
     ('06_validate.py', 'Validate + quality report'),

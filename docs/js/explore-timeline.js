@@ -14,6 +14,7 @@ const ExploreTimeline = {
   y: null,
   color: null,
   layerMode: 'language',   // 'language' or 'type'
+  chartMode: 'bars',        // 'bars' or 'stream'
   showProvenance: false,
   fullExtent: null,         // [minYear, maxYear] — always the full range
   zoomedDomain: null,       // [y0, y1] when brushed, null for full extent
@@ -31,6 +32,7 @@ const ExploreTimeline = {
     if (!container) return;
     container.innerHTML = '';
     this.entries = entries;
+    this.showProvenance = Explore.filters.showProvenance;
 
     const rect = container.getBoundingClientRect();
     const width = rect.width || 700;
@@ -39,27 +41,12 @@ const ExploreTimeline = {
     const w = width - m.left - m.right;
     const h = height - m.top - m.bottom;
 
-    // Build stacked data based on current layer mode
+    // Build data (sets this.data, this.keys for all modes)
     this._buildData(entries);
     this.fullExtent = d3.extent(this.data, d => d.year);
 
-    // Scales — use zoomed domain if set, otherwise full extent
     const xDomain = this.zoomedDomain || this.fullExtent;
-    this.x = d3.scaleLinear()
-      .domain(xDomain)
-      .range([0, w]);
-
-    const stack = d3.stack()
-      .keys(this.keys)
-      .order(d3.stackOrderInsideOut)
-      .offset(d3.stackOffsetNone);
-
-    const series = stack(this.data);
-
-    this.y = d3.scaleLinear()
-      .domain([0, d3.max(series, s => d3.max(s, d => d[1]))])
-      .nice()
-      .range([h, 0]);
+    this.x = d3.scaleLinear().domain(xDomain).range([0, w]);
 
     this.color = d3.scaleOrdinal()
       .domain(this.keys)
@@ -77,10 +64,11 @@ const ExploreTimeline = {
       .attr('role', 'img')
       .attr('aria-labelledby', 'timeline-title timeline-desc');
 
-    this.svg.append('title').attr('id', 'timeline-title')
-      .text('Publication timeline');
+    const modeLabel = this.chartMode === 'sparklines' ? 'Small multiples'
+      : this.chartMode === 'ranks' ? 'Language rank chart' : 'Stacked bar chart';
+    this.svg.append('title').attr('id', 'timeline-title').text('Publication timeline');
     this.svg.append('desc').attr('id', 'timeline-desc')
-      .text(`Stacked area chart showing ${entries.length} publications from ${this.fullExtent[0]} to ${this.fullExtent[1]}, colored by ${this.layerMode}`);
+      .text(`${modeLabel} showing ${entries.length} publications from ${this.fullExtent[0]} to ${this.fullExtent[1]}, colored by ${this.layerMode}`);
 
     this.g = this.svg.append('g')
       .attr('transform', `translate(${m.left},${m.top})`);
@@ -88,112 +76,37 @@ const ExploreTimeline = {
     // Zweig lifetime band
     this.g.append('rect')
       .attr('class', 'lifetime-band')
-      .attr('x', this.x(1881))
-      .attr('y', 0)
-      .attr('width', this.x(1942) - this.x(1881))
-      .attr('height', h)
-      .attr('fill', Explore.colors.gold)
-      .attr('opacity', 0.08);
+      .attr('x', this.x(1881)).attr('y', 0)
+      .attr('width', this.x(1942) - this.x(1881)).attr('height', h)
+      .attr('fill', Explore.colors.gold).attr('opacity', 0.08);
 
-    // Grid lines
-    this.g.append('g')
-      .attr('class', 'grid')
-      .call(d3.axisLeft(this.y)
-        .ticks(5)
-        .tickSize(-w)
-        .tickFormat('')
-      )
-      .selectAll('line')
-      .attr('stroke', Explore.colors.gridLine)
-      .attr('stroke-dasharray', '2,2');
-    this.g.select('.grid .domain').remove();
-
-    // Stacked bars — discrete data (one value per year), not continuous
-    const domain = this.x.domain();
-    const yearSpan = domain[1] - domain[0] + 1;
-    const barWidth = Math.max(1, (w / yearSpan) - 0.5);
-    const self = this;
-
-    for (const s of series) {
-      this.g.selectAll(`.bar-${s.key.replace(/[^a-zA-Z0-9]/g, '_')}`)
-        .data(s.filter(d => d.data.year >= domain[0] && d.data.year <= domain[1]))
-        .join('rect')
-        .attr('class', `stream-bar stream-bar-${s.key.replace(/[^a-zA-Z0-9]/g, '_')}`)
-        .attr('x', d => this.x(d.data.year) - barWidth / 2)
-        .attr('y', d => this.y(d[1]))
-        .attr('width', barWidth)
-        .attr('height', d => this.y(d[0]) - this.y(d[1]))
-        .attr('fill', this.color(s.key))
-        .attr('opacity', 0.85)
-        .style('cursor', 'pointer')
-        .on('mouseenter', function () {
-          self.g.selectAll('.stream-bar').attr('opacity', function () {
-            return this.classList.contains(`stream-bar-${s.key.replace(/[^a-zA-Z0-9]/g, '_')}`) ? 1 : 0.2;
-          });
-        })
-        .on('mousemove', function (event) {
-          const d = d3.select(this).datum();
-          const yearVal = d.data.year;
-          const count = d[1] - d[0];
-          const label = self.layerMode === 'type' ? (ENTRY_TYPE_LABELS[s.key] || s.key) : s.key;
-          Explore.showTooltip(
-            `<strong>${label}</strong><br>${yearVal}: ${count} publication${count !== 1 ? 's' : ''}`,
-            event
-          );
-        })
-        .on('mouseleave', () => {
-          self.g.selectAll('.stream-bar').attr('opacity', 0.85);
-          Explore.hideTooltip();
-        })
-        .on('click', () => {
-          if (self.layerMode === 'type') Explore.toggleFilter('types', s.key);
-          else Explore.toggleFilter('languages', s.key);
-        });
+    // Mode-specific rendering
+    if (this.chartMode === 'sparklines') {
+      this._renderSparklines(w, h);
+    } else if (this.chartMode === 'ranks') {
+      this._renderRanks(w, h);
+    } else {
+      this._renderBars(w, h);
     }
 
-    // Provenance overlay (if enabled)
-    if (this.showProvenance) {
-      this._drawProvenance(this.g, entries, w, h);
-    }
-
-    // Axes (with semantic zoom tick formatting)
+    // Common: x-axis, annotations, brush, controls
     this._drawXAxis(this.g, w, h);
-
-    this.g.append('g')
-      .attr('class', 'y-axis')
-      .call(d3.axisLeft(this.y).ticks(5))
-      .selectAll('text')
-      .attr('fill', Explore.colors.textLight)
-      .style('font-size', '0.7rem');
-
-    this.g.selectAll('.y-axis .domain').attr('stroke', Explore.colors.gridLine);
-    this.g.selectAll('.y-axis line').attr('stroke', Explore.colors.gridLine);
-
-    // Annotations
     this._drawAnnotations(this.g, h);
 
-    // Brush
     this.brush = d3.brushX()
       .extent([[0, 0], [w, h]])
       .on('brush', (event) => this._onBrushMove(event))
       .on('end', (event) => this._onBrushEnd(event, entries, w, h));
+    this.g.append('g').attr('class', 'brush').call(this.brush);
 
-    this.g.append('g')
-      .attr('class', 'brush')
-      .call(this.brush);
-
-    // Controls bar (toggles + active filters + inline legend)
     this._drawControls(container);
 
-    // Brush hint (compact, below x-axis)
     this.g.append('text')
       .attr('class', 'brush-hint')
-      .attr('x', w / 2)
-      .attr('y', h + 28)
+      .attr('x', w / 2).attr('y', h + 28)
       .attr('text-anchor', 'middle')
       .attr('fill', Explore.colors.textLight)
-      .style('font-size', '0.6rem')
-      .style('font-style', 'italic')
+      .style('font-size', '0.6rem').style('font-style', 'italic')
       .style('font-family', 'var(--font-sans)')
       .text('Drag to select \u00b7 double-click to reset');
   },
@@ -258,6 +171,62 @@ const ExploreTimeline = {
       }
       this.data.push(row);
     }
+  },
+
+  // ---------------------------------------------------------------------------
+  // Bars mode — stacked bars with decade aggregation at full extent
+  // ---------------------------------------------------------------------------
+
+  _renderBars(w, h) {
+    const domainSpan = this.x.domain()[1] - this.x.domain()[0];
+    const plotData = domainSpan > 50
+      ? this._aggregateToDecades(this.data) : this.data;
+
+    const stack = d3.stack()
+      .keys(this.keys)
+      .order(d3.stackOrderInsideOut)
+      .offset(d3.stackOffsetNone);
+    const series = stack(plotData);
+
+    this.y = d3.scaleLinear()
+      .domain([0, d3.max(series, s => d3.max(s, d => d[1]))])
+      .nice().range([h, 0]);
+
+    // Grid
+    this.g.append('g').attr('class', 'grid')
+      .call(d3.axisLeft(this.y).ticks(5).tickSize(-w).tickFormat(''))
+      .selectAll('line')
+      .attr('stroke', Explore.colors.gridLine).attr('stroke-dasharray', '2,2');
+    this.g.select('.grid .domain').remove();
+
+    this._drawBarRects(series, w, h, plotData.length);
+
+    if (this.showProvenance) {
+      this._drawProvenance(this.g, this.entries, w, h);
+    }
+
+    // Y-axis
+    this.g.append('g').attr('class', 'y-axis')
+      .call(d3.axisLeft(this.y).ticks(5))
+      .selectAll('text')
+      .attr('fill', Explore.colors.textLight).style('font-size', '0.7rem');
+    this.g.selectAll('.y-axis .domain').attr('stroke', Explore.colors.gridLine);
+    this.g.selectAll('.y-axis line').attr('stroke', Explore.colors.gridLine);
+  },
+
+  _aggregateToDecades(data) {
+    const decadeMap = new Map();
+    for (const row of data) {
+      const decade = Math.floor(row.year / 10) * 10;
+      if (!decadeMap.has(decade)) {
+        const d = { year: decade };
+        this.keys.forEach(k => d[k] = 0);
+        decadeMap.set(decade, d);
+      }
+      const d = decadeMap.get(decade);
+      this.keys.forEach(k => d[k] += (row[k] || 0));
+    }
+    return [...decadeMap.values()].sort((a, b) => a.year - b.year);
   },
 
   // ---------------------------------------------------------------------------
@@ -413,7 +382,247 @@ const ExploreTimeline = {
   },
 
   // ---------------------------------------------------------------------------
-  // Controls — layer mode toggle + provenance toggle
+  // Drawing modes — bars (discrete) vs. stream (continuous)
+  // ---------------------------------------------------------------------------
+
+  _drawBarRects(series, w, h, dataLength) {
+    const domain = this.x.domain();
+    const barWidth = Math.max(2, (w / (dataLength || 140)) * 0.85);
+    const self = this;
+
+    for (const s of series) {
+      this.g.selectAll(`.bar-${s.key.replace(/[^a-zA-Z0-9]/g, '_')}`)
+        .data(s.filter(d => d.data.year >= domain[0] && d.data.year <= domain[1]))
+        .join('rect')
+        .attr('class', `stream-bar stream-bar-${s.key.replace(/[^a-zA-Z0-9]/g, '_')}`)
+        .attr('x', d => this.x(d.data.year) - barWidth / 2)
+        .attr('y', d => this.y(d[1]))
+        .attr('width', barWidth)
+        .attr('height', d => this.y(d[0]) - this.y(d[1]))
+        .attr('fill', this.color(s.key))
+        .attr('opacity', 0.85)
+        .style('cursor', 'pointer')
+        .on('mouseenter', function () {
+          self.g.selectAll('.stream-bar').attr('opacity', function () {
+            return this.classList.contains(`stream-bar-${s.key.replace(/[^a-zA-Z0-9]/g, '_')}`) ? 1 : 0.2;
+          });
+        })
+        .on('mousemove', function (event) {
+          const d = d3.select(this).datum();
+          const yearVal = d.data.year;
+          const count = d[1] - d[0];
+          const label = self.layerMode === 'type' ? (ENTRY_TYPE_LABELS[s.key] || s.key) : s.key;
+          Explore.showTooltip(
+            `<strong>${label}</strong><br>${yearVal}: ${count} publication${count !== 1 ? 's' : ''}`,
+            event
+          );
+        })
+        .on('mouseleave', () => {
+          self.g.selectAll('.stream-bar').attr('opacity', 0.85);
+          Explore.hideTooltip();
+        })
+        .on('click', () => {
+          if (self.layerMode === 'type') Explore.toggleFilter('types', s.key);
+          else Explore.toggleFilter('languages', s.key);
+        });
+    }
+  },
+
+  // ---------------------------------------------------------------------------
+  // Sparklines mode — small multiples: one line per language/type
+  // ---------------------------------------------------------------------------
+
+  _renderSparklines(w, h) {
+    const domain = this.x.domain();
+    const visibleData = this.data.filter(d => d.year >= domain[0] && d.year <= domain[1]);
+    const rowH = h / this.keys.length;
+    const self = this;
+
+    for (let i = 0; i < this.keys.length; i++) {
+      const key = this.keys[i];
+      const rowY = i * rowH;
+      const sparkH = rowH - 4;
+
+      // Per-key timeseries
+      const ts = visibleData.map(d => ({ year: d.year, value: d[key] || 0 }));
+      const total = d3.sum(ts, d => d.value);
+      const maxVal = d3.max(ts, d => d.value) || 1;
+
+      const yScale = d3.scaleLinear()
+        .domain([0, maxVal]).range([rowY + rowH - 2, rowY + 2]);
+
+      // Filled area
+      const area = d3.area()
+        .x(d => this.x(d.year)).y0(rowY + rowH - 2).y1(d => yScale(d.value))
+        .curve(d3.curveMonotoneX);
+      this.g.append('path').datum(ts)
+        .attr('d', area).attr('fill', this.color(key)).attr('opacity', 0.2);
+
+      // Line
+      const line = d3.line()
+        .x(d => this.x(d.year)).y(d => yScale(d.value))
+        .curve(d3.curveMonotoneX);
+      this.g.append('path').datum(ts)
+        .attr('d', line).attr('fill', 'none')
+        .attr('stroke', this.color(key)).attr('stroke-width', 1.5);
+
+      // Label (left, inside chart)
+      const label = this.layerMode === 'type' ? (ENTRY_TYPE_LABELS[key] || key) : key;
+      this.g.append('text')
+        .attr('x', 4).attr('y', rowY + 11)
+        .attr('fill', this.color(key))
+        .style('font-size', '0.6rem').style('font-family', 'var(--font-sans)')
+        .style('font-weight', 'bold')
+        .text(`${label} (${total})`);
+
+      // Hover: show value at cursor year
+      this.g.append('rect')
+        .attr('x', 0).attr('y', rowY).attr('width', w).attr('height', rowH)
+        .attr('fill', 'transparent').style('cursor', 'crosshair')
+        .on('mousemove', function (event) {
+          const [mx] = d3.pointer(event, self.g.node());
+          const yearVal = Math.round(self.x.invert(mx));
+          const d = ts.find(dd => dd.year === yearVal);
+          if (d) {
+            Explore.showTooltip(
+              `<strong>${label}</strong><br>${yearVal}: ${d.value} publication${d.value !== 1 ? 's' : ''}`,
+              event
+            );
+          }
+        })
+        .on('mouseleave', () => Explore.hideTooltip())
+        .on('click', () => {
+          if (self.layerMode === 'type') Explore.toggleFilter('types', key);
+          else Explore.toggleFilter('languages', key);
+        });
+
+      // Separator
+      if (i < this.keys.length - 1) {
+        this.g.append('line')
+          .attr('x1', 0).attr('x2', w)
+          .attr('y1', rowY + rowH).attr('y2', rowY + rowH)
+          .attr('stroke', Explore.colors.gridLine).attr('stroke-dasharray', '1,2');
+      }
+    }
+    // Set y for annotation compatibility (full height)
+    this.y = d3.scaleLinear().domain([0, 1]).range([h, 0]);
+  },
+
+  // ---------------------------------------------------------------------------
+  // Ranks mode — bump chart showing language rank over decades
+  // ---------------------------------------------------------------------------
+
+  _renderRanks(w, h) {
+    const domain = this.x.domain();
+    const self = this;
+
+    // Compute decade bins within visible domain
+    const minDec = Math.floor(domain[0] / 10) * 10;
+    const maxDec = Math.floor(domain[1] / 10) * 10;
+    const decades = [];
+    for (let d = minDec; d <= maxDec; d += 10) decades.push(d);
+
+    const maxRank = Math.min(this.keys.length, 8);
+
+    // Per decade: rank keys by sum
+    const rankData = new Map();
+    this.keys.forEach(k => rankData.set(k, []));
+
+    for (const dec of decades) {
+      const sums = {};
+      this.keys.forEach(k => sums[k] = 0);
+      for (const d of this.data) {
+        if (d.year >= dec && d.year < dec + 10) {
+          this.keys.forEach(k => sums[k] += (d[k] || 0));
+        }
+      }
+      const ranked = Object.entries(sums)
+        .filter(([, v]) => v > 0)
+        .sort((a, b) => b[1] - a[1]);
+      ranked.forEach(([k, v], i) => {
+        rankData.get(k).push({ decade: dec, rank: i + 1, count: v });
+      });
+    }
+
+    // Y scale: rank 1 (top) to maxRank (bottom)
+    const yScale = d3.scaleLinear()
+      .domain([0.5, maxRank + 0.5]).range([0, h]);
+
+    // Grid: horizontal rank lines
+    for (let r = 1; r <= maxRank; r++) {
+      this.g.append('line')
+        .attr('x1', 0).attr('x2', w)
+        .attr('y1', yScale(r)).attr('y2', yScale(r))
+        .attr('stroke', Explore.colors.gridLine).attr('stroke-dasharray', '2,2');
+      this.g.append('text')
+        .attr('x', -8).attr('y', yScale(r))
+        .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+        .attr('fill', Explore.colors.textLight)
+        .style('font-size', '0.6rem').style('font-family', 'var(--font-sans)')
+        .text(`#${r}`);
+    }
+
+    // Draw line + dots for each key that appears in top maxRank
+    const line = d3.line()
+      .x(d => this.x(d.decade + 5))
+      .y(d => yScale(d.rank))
+      .curve(d3.curveMonotoneX);
+
+    for (const key of this.keys) {
+      const rd = rankData.get(key).filter(d => d.rank <= maxRank);
+      if (rd.length === 0) continue;
+
+      // Line
+      this.g.append('path').datum(rd)
+        .attr('d', line).attr('fill', 'none')
+        .attr('stroke', this.color(key)).attr('stroke-width', 2.5)
+        .attr('opacity', 0.8);
+
+      // Dots with tooltips
+      const safeKey = key.replace(/[^a-zA-Z0-9]/g, '_');
+      this.g.selectAll(`.rank-dot-${safeKey}`)
+        .data(rd).join('circle')
+        .attr('class', `rank-dot rank-dot-${safeKey}`)
+        .attr('cx', d => this.x(d.decade + 5))
+        .attr('cy', d => yScale(d.rank))
+        .attr('r', 4)
+        .attr('fill', this.color(key))
+        .attr('stroke', '#fff').attr('stroke-width', 1)
+        .style('cursor', 'pointer')
+        .on('mouseenter', function (event) {
+          const d = d3.select(this).datum();
+          const label = self.layerMode === 'type' ? (ENTRY_TYPE_LABELS[key] || key) : key;
+          Explore.showTooltip(
+            `<strong>${label}</strong><br>${d.decade}s: #${d.rank} (${d.count} publications)`,
+            event
+          );
+        })
+        .on('mouseleave', () => Explore.hideTooltip())
+        .on('click', () => {
+          if (self.layerMode === 'type') Explore.toggleFilter('types', key);
+          else Explore.toggleFilter('languages', key);
+        });
+
+      // Label at last visible position
+      const last = rd[rd.length - 1];
+      if (last) {
+        const label = this.layerMode === 'type' ? (ENTRY_TYPE_LABELS[key] || key) : key;
+        this.g.append('text')
+          .attr('x', this.x(last.decade + 5) + 8)
+          .attr('y', yScale(last.rank))
+          .attr('dominant-baseline', 'middle')
+          .attr('fill', this.color(key))
+          .style('font-size', '0.58rem').style('font-family', 'var(--font-sans)')
+          .style('font-weight', 'bold')
+          .text(label);
+      }
+    }
+
+    this.y = yScale;
+  },
+
+  // ---------------------------------------------------------------------------
+  // Controls — layer mode toggle
   // ---------------------------------------------------------------------------
 
   _drawControls(container) {
@@ -442,17 +651,18 @@ const ExploreTimeline = {
       return `<span style="white-space:nowrap;"><span style="display:inline-block;width:8px;height:8px;background:${c};border-radius:1px;vertical-align:middle;margin-right:2px;"></span>${label}</span>`;
     }).join(' ');
 
+    const cm = this.chartMode;
+
     bar.innerHTML = `
       <span style="display:flex;align-items:center;gap:4px;">
         <button onclick="ExploreTimeline.setLayerMode('language')" style="${btnStyle(langActive)}">by Language</button>
         <button onclick="ExploreTimeline.setLayerMode('type')" style="${btnStyle(!langActive)}">by Type</button>
       </span>
-      <label style="display:flex;align-items:center;gap:3px;cursor:pointer;"
-             title="Per year: proportion of fields extracted by regex, LLM, or missing">
-        <input type="checkbox" ${this.showProvenance ? 'checked' : ''}
-          onchange="ExploreTimeline.toggleProvenance(this.checked)" style="cursor:pointer;">
-        Data quality
-      </label>
+      <span style="display:flex;align-items:center;gap:4px;">
+        <button onclick="ExploreTimeline.setChartMode('bars')" style="${btnStyle(cm === 'bars')}" title="Stacked bars — volume per year/decade">Bars</button>
+        <button onclick="ExploreTimeline.setChartMode('sparklines')" style="${btnStyle(cm === 'sparklines')}" title="Small multiples — one chart per language">Sparklines</button>
+        <button onclick="ExploreTimeline.setChartMode('ranks')" style="${btnStyle(cm === 'ranks')}" title="Bump chart — language ranking over decades">Ranks</button>
+      </span>
       ${provLegend}
       <div style="width:100%;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:0.62rem;line-height:1.4;color:#888;">
         ${legendItems}
@@ -521,10 +731,16 @@ const ExploreTimeline = {
   setLayerMode(mode) {
     this.layerMode = mode;
     if (this.entries) this.render(this.entries);
+    Explore.updateExploreURL(false);
   },
 
   toggleProvenance(enabled) {
-    this.showProvenance = enabled;
+    Explore.setProvenance(enabled);
+  },
+
+  setChartMode(mode) {
+    this.chartMode = mode;
     if (this.entries) this.render(this.entries);
+    Explore.updateExploreURL(false);
   },
 };

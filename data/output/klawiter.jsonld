@@ -1665,7 +1665,7 @@
         "Salzburg",
         "Marburg",
         "München",
-        "Prag",
+        "Praha",
         "Paris",
         "Weimar"
       ],
@@ -1936,9 +1936,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "Der Morgen",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
+        "Praha",
         "Wien",
         "Leipzig",
         "Zürich",
@@ -1947,7 +1947,6 @@
         "Darmstadt",
         "Stuttgart",
         "München",
-        "Praha",
         "Basel",
         "New York",
         "Roma",
@@ -1955,7 +1954,7 @@
         "Stockholm",
         "London",
         "Santiago",
-        "Moskau",
+        "Moskva",
         "Warszawa",
         "Paris",
         "Hamburg"
@@ -3046,7 +3045,6 @@
         2011
       ],
       "timePeriod": "late-20c",
-      "publisher": "p.\n \nS. Fischer Verlag",
       "locationCreated": "Frankfurt am Main",
       "inLanguage": "German",
       "languageCode": "de",
@@ -3297,7 +3295,6 @@
         "Beijing",
         "Shanghai",
         "Praha",
-        "Prague",
         "Tallinn",
         "Delhi",
         "Budapest",
@@ -4928,12 +4925,7 @@
         1989
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p. 1968. 2nd edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 351,
@@ -5153,7 +5145,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 222,
-      "translator": "Alzir Hella et Olivier Bournac. Cover design by Bernard Flagu",
+      "translator": "Alzir Hella et Olivier Bournac",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -5352,12 +5344,12 @@
         "Tokyo",
         "Wien",
         "Salzburg",
-        "Moscow"
+        "Moskva"
       ],
       "inLanguage": "Japanese",
       "languageCode": "ja",
       "numberOfPages": 397,
-      "translator": "Hikaru Tsuji et al. Afterword by Hikaru Tsuji",
+      "translator": "Hikaru Tsuji et al",
       "categories": [
         "Collected and Selected Works in Translation (Japanese)"
       ],
@@ -5532,7 +5524,6 @@
         "São Paulo",
         "New York",
         "Salzburg",
-        "Vienna",
         "Wien",
         "Weimar",
         "Zurich"
@@ -5540,7 +5531,7 @@
       "inLanguage": "Portuguese",
       "languageCode": "pt",
       "numberOfPages": 458,
-      "translator": "Odilon Gallotti. Afterword by Richard Friedenthal",
+      "translator": "Odilon Gallotti",
       "categories": [
         "Collected and Selected Works in Translation (Portuguese)"
       ],
@@ -5717,7 +5708,6 @@
       "locationCreated": "Rio de Janeiro",
       "allLocations": [
         "Rio de Janeiro",
-        "Vienna",
         "Wien",
         "New York",
         "Salzburg"
@@ -6468,7 +6458,6 @@
         1983
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Leipzig",
       "allLocations": [
         "Leipzig",
@@ -7160,7 +7149,7 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Moskau",
+        "Moskva",
         "Frankfurt am Main",
         "Leipzig",
         "Stockholm",
@@ -7660,7 +7649,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 22,
-      "translator": "David H. Lowenherz. Introduction by the translator. Four Kurt",
+      "translator": "David H. Lowenherz",
       "categories": [
         "Essays / Volumes (English)"
       ],
@@ -7689,7 +7678,7 @@
       "publisher": "Athena",
       "locationCreated": "Tallinn",
       "numberOfPages": 101,
-      "translator": "Airis Erme. Afterword Ita Põder",
+      "translator": "Airis Erme",
       "categories": [
         "Essays / Volumes (Estonian)",
         "Historical Studies / Volumes (Estonian)"
@@ -7761,7 +7750,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 226,
-      "translator": "Hélène Denis-Jeanroy. Foreword by Raymond Jeanroy. Cover Bern",
+      "translator": "Hélène Denis-Jeanroy",
       "categories": [
         "Essays / Volumes (French)"
       ],
@@ -7829,7 +7818,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 249,
-      "translator": "Hélène Denis-Jeanroy. Preface Raymond Jeanroy. Cover Marc Tar",
+      "translator": "Hélène Denis-Jeanroy",
       "categories": [
         "Essays / Volumes (French)"
       ],
@@ -7943,7 +7932,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 152,
-      "translator": "Hélène Denis-Jeanroy. Cover photograph",
+      "translator": "Hélène Denis-Jeanroy",
       "categories": [
         "Essays / Volumes (French)"
       ],
@@ -8305,7 +8294,7 @@
       "locationCreated": "Tokyo",
       "allLocations": [
         "Tokyo",
-        "Moscow",
+        "Moskva",
         "Wien"
       ],
       "inLanguage": "Japanese",
@@ -8540,7 +8529,7 @@
       "publisher": "Editura Varlamm",
       "locationCreated": "Craiova",
       "numberOfPages": 95,
-      "translator": "Sandra S. Cover design by Cîr",
+      "translator": "Sandra S",
       "categories": [
         "Essays / Volumes (Rumanian)"
       ],
@@ -8667,7 +8656,7 @@
       "allLocations": [
         "Barcelona",
         "London",
-        "Munich",
+        "München",
         "Bern",
         "Roma",
         "New York",
@@ -8718,7 +8707,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 301,
-      "translator": "Claudio Gancho. Cover design by Marta Serrano",
+      "translator": "Claudio Gancho",
       "categories": [
         "Essays / Volumes (Spanish)"
       ],
@@ -8777,7 +8766,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 150,
-      "translator": "Alfredo Cahn. Foreword Héctor Orestes Aguilar",
+      "translator": "Alfredo Cahn",
       "categories": [
         "Essays / Volumes (Spanish)"
       ],
@@ -8879,7 +8868,7 @@
       "locationCreated": "Buenos Aires",
       "allLocations": [
         "Buenos Aires",
-        "Munich"
+        "München"
       ],
       "inLanguage": "Spanish",
       "languageCode": "es",
@@ -9205,7 +9194,7 @@
       "inLanguage": "Turkish",
       "languageCode": "tr",
       "numberOfPages": 285,
-      "translator": "Ahmet Arpad.  Edited by Kemal Özer. Cover design by Sava",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Essays / Volumes (Turkish)"
       ],
@@ -9704,7 +9693,7 @@
         "München",
         "Stuttgart",
         "Salzburg",
-        "Moskau",
+        "Moskva",
         "Weimar",
         "Bonn",
         "Cairo",
@@ -9714,7 +9703,6 @@
         "Barcelona",
         "Shanghai",
         "Praha",
-        "Prague",
         "Amsterdam",
         "London",
         "Toronto",
@@ -9727,7 +9715,7 @@
         "Ljubljana",
         "Madrid",
         "Stockholm",
-        "Warsaw"
+        "Warszawa"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -9825,7 +9813,6 @@
       },
       "datePublished": "1957",
       "timePeriod": "post-wwii",
-      "publisher": "p.  Licensed edition",
       "locationCreated": "Frankfurt am Main",
       "inLanguage": "German",
       "languageCode": "de",
@@ -10482,7 +10469,7 @@
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
-        "Prag",
+        "Praha",
         "Salzburg",
         "Wien"
       ],
@@ -10590,7 +10577,6 @@
         2009
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p.  Reprinted 1962. Licensed edition",
       "locationCreated": "Frankfurt am Main",
       "allLocations": [
         "Frankfurt am Main",
@@ -10705,9 +10691,9 @@
       ],
       "timePeriod": "post-wwii",
       "publisher": "für fremdsprachige Literatur",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "allLocations": [
-        "Moskau",
+        "Moskva",
         "Berlin",
         "Weimar",
         "Leipzig",
@@ -10852,7 +10838,6 @@
         "Beijing",
         "Shanghai",
         "Praha",
-        "Prague",
         "København",
         "Amsterdam",
         "Paris",
@@ -10862,8 +10847,7 @@
         "Ljubljana",
         "Barcelona",
         "Stockholm",
-        "Warszawa",
-        "Warsaw"
+        "Warszawa"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -11068,7 +11052,6 @@
         1981
       ],
       "timePeriod": "post-wwii",
-      "publisher": "1st edition",
       "locationCreated": "Frankfurt am Main",
       "allLocations": [
         "Frankfurt am Main",
@@ -11746,7 +11729,7 @@
         "Stockholm",
         "Leipzig",
         "Zürich",
-        "Moskau",
+        "Moskva",
         "Weimar",
         "Hamburg",
         "Frankfurt",
@@ -12063,7 +12046,6 @@
         2019
       ],
       "timePeriod": "lifetime",
-      "publisher": "Company",
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
@@ -12471,7 +12453,7 @@
         "Weimar",
         "Zürich",
         "Marburg",
-        "Moskau",
+        "Moskva",
         "Hamburg",
         "Salzburg",
         "München",
@@ -12482,7 +12464,6 @@
         "Calcutta",
         "Beijing",
         "Praha",
-        "Prague",
         "København",
         "Copenhagen",
         "New York",
@@ -12493,7 +12474,6 @@
         "Tokyo",
         "Warszawa",
         "Rio de Janeiro",
-        "Moscow",
         "Barcelona"
       ],
       "inLanguage": "German",
@@ -12776,8 +12756,7 @@
         "Barcelona",
         "Madrid",
         "Buenos Aires",
-        "Warszawa",
-        "Warsaw"
+        "Warszawa"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -13008,7 +12987,7 @@
         "Leipzig",
         "Zürich",
         "Beijing",
-        "Moskau",
+        "Moskva",
         "Weimar",
         "Stuttgart",
         "Salzburg",
@@ -13030,8 +13009,7 @@
         "Ljubljana",
         "Barcelona",
         "Stockholm",
-        "Warszawa",
-        "Warsaw"
+        "Warszawa"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -13151,7 +13129,6 @@
         "Beijing",
         "Shanghai",
         "Praha",
-        "Prague",
         "Paris"
       ],
       "inLanguage": "German",
@@ -13340,7 +13317,6 @@
         "Tokyo",
         "Oslo",
         "Warszawa",
-        "Warsaw",
         "Rio de Janeiro",
         "Madrid"
       ],
@@ -13437,7 +13413,7 @@
         "Leipzig",
         "Wien",
         "Zürich",
-        "Moskau",
+        "Moskva",
         "Weimar",
         "London",
         "Tallinn",
@@ -13624,7 +13600,7 @@
         "Wien",
         "Zürich",
         "Weimar",
-        "Moskau",
+        "Moskva",
         "Salzburg",
         "Paris"
       ],
@@ -13765,7 +13741,7 @@
         "Stockholm",
         "Darmstadt",
         "Amsterdam",
-        "Prag",
+        "Praha",
         "Stuttgart",
         "Hamburg",
         "München",
@@ -13994,7 +13970,7 @@
         "Graz",
         "Leipzig",
         "Zürich",
-        "Moskau",
+        "Moskva",
         "Weimar",
         "København",
         "Heidelberg",
@@ -14338,7 +14314,6 @@
         "Paris",
         "Barcelona",
         "Praha",
-        "Prague",
         "Amsterdam"
       ],
       "inLanguage": "German",
@@ -14571,12 +14546,11 @@
         2014
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Tiranë",
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 586,
-      "translator": "Klio Evangjeli and Mahmud Bobrati. Edited with a  preface by",
+      "translator": "Klio Evangjeli and Mahmud Bobrati",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Collected and Selected Works in Translation (Albanian)"
@@ -14762,7 +14736,7 @@
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 166,
-      "translator": "Elisaveta Kuzmanova. Foreword by Erika Lazarova",
+      "translator": "Elisaveta Kuzmanova",
       "categories": [
         "Fiction / Volumes (Bulgarian)",
         "Fiction / Individual Stories (Bulgarian)"
@@ -14814,12 +14788,11 @@
       },
       "datePublished": "1987",
       "timePeriod": "late-20c",
-      "publisher": "2nd edition",
       "locationCreated": "Plovdiv",
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 195,
-      "translator": "Elena Matusheva-Popova. Foreword by Ventseslav Konstantinov",
+      "translator": "Elena Matusheva-Popova",
       "categories": [
         "Fiction / Volumes (Bulgarian)",
         "Fiction / Individual Stories (Bulgarian)"
@@ -14877,12 +14850,11 @@
         2013
       ],
       "timePeriod": "late-20c",
-      "publisher": "p. 1st edition",
       "locationCreated": "Barcelona",
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 91,
-      "translator": "Carme Gala Fernández. Cover by Marta Serrano",
+      "translator": "Carme Gala Fernández",
       "categories": [
         "Fiction / Volumes (Catalan)",
         "Fiction / Individual Stories (Catalan)"
@@ -14918,7 +14890,7 @@
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 187,
-      "translator": "Carme Gala. Cover by",
+      "translator": "Carme Gala",
       "categories": [
         "Fiction / Volumes (Catalan)",
         "Fiction / Individual Stories (Catalan)"
@@ -14950,7 +14922,7 @@
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 109,
-      "translator": "Ester Capdevila. Cover by Leonard Beard",
+      "translator": "Ester Capdevila",
       "categories": [
         "Fiction / Volumes (Catalan)",
         "Fiction / Individual Stories (Catalan)"
@@ -15128,7 +15100,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 335,
-      "translator": "Rongcheng Zhao. Foreword by Yushu Zhang",
+      "translator": "Rongcheng Zhao",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Fiction / Individual Stories (Chinese)"
@@ -15164,7 +15136,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 451,
-      "translator": "Jiaguo Wei et al. Foreword by Jiaguo Wei",
+      "translator": "Jiaguo Wei et al",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Collected and Selected Works in Translation (Chinese)"
@@ -15361,7 +15333,7 @@
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 103,
-      "translator": "Manuel Lobo. Cover by Marta Serrano",
+      "translator": "Manuel Lobo",
       "categories": [
         "Fiction / Volumes (Catalan)",
         "Fiction / Individual Stories (Catalan)"
@@ -16006,10 +15978,6 @@
       "timePeriod": "lifetime",
       "publisher": "Brzoza/Bzshoza",
       "locationCreated": "Warszawa",
-      "allLocations": [
-        "Warszawa",
-        "Warsaw"
-      ],
       "inLanguage": "Yiddish",
       "languageCode": "yi",
       "numberOfPages": 186,
@@ -16169,10 +16137,6 @@
       "datePublished": "1928",
       "timePeriod": "lifetime",
       "locationCreated": "Warszawa",
-      "allLocations": [
-        "Warszawa",
-        "Warsaw"
-      ],
       "inLanguage": "Yiddish",
       "languageCode": "yi",
       "categories": [
@@ -16345,7 +16309,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 353,
-      "translator": "Rongheng Zhao. Preface by the publisher",
+      "translator": "Rongheng Zhao",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Fiction / Individual Stories (Chinese)"
@@ -16613,7 +16577,6 @@
         2003
       ],
       "timePeriod": "late-20c",
-      "publisher": "2nd edition",
       "locationCreated": "Beijing",
       "inLanguage": "Chinese",
       "languageCode": "zh",
@@ -16677,7 +16640,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 202,
-      "translator": "Ying Chen. Edited by Haishan Zhang. Illustrated version",
+      "translator": "Ying Chen",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Fiction / Individual Stories (Chinese)"
@@ -16731,7 +16694,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 346,
-      "translator": "Enhua Peng. Foreword  by Jin Fu",
+      "translator": "Enhua Peng",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Fiction / Individual Stories (Chinese)"
@@ -16798,7 +16761,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 97,
-      "translator": "Yushu Zhang. Preface by Lili Liu",
+      "translator": "Yushu Zhang",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Fiction / Individual Stories (Chinese)"
@@ -17046,7 +17009,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 212,
-      "translator": "Yushu Zhang. Foreword by an unnamed editor",
+      "translator": "Yushu Zhang",
       "categories": [
         "Fiction / Volumes (Chinese)"
       ],
@@ -17407,7 +17370,7 @@
       "publisher": "staff",
       "locationCreated": "Irun (Iruñea) [Pamplona]",
       "numberOfPages": 103,
-      "translator": "Xabier Mendiguren Bereziartu. Foreword by the editorial staff",
+      "translator": "Xabier Mendiguren Bereziartu",
       "categories": [
         "Fiction / Volumes (Basque)",
         "Fiction / Individual Stories (Basque)"
@@ -18117,12 +18080,7 @@
         1988
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 351,
@@ -18164,10 +18122,6 @@
       "timePeriod": "late-20c",
       "publisher": "Nakladatelství Brána",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 211,
@@ -18215,10 +18169,6 @@
       "timePeriod": "post-wwii",
       "publisher": "Translated by Božena Koseková. 2nd edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 348,
@@ -18254,12 +18204,7 @@
         1988
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p. 1968. 2nd edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 369,
@@ -18306,14 +18251,10 @@
       "timePeriod": "late-20c",
       "publisher": "by Jaroslav Střítecký. Cover design by  Václav Bláha. 1st edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 247,
-      "translator": "Sergej Machonin. Afterword by Jaroslav St",
+      "translator": "Sergej Machonin",
       "categories": [
         "Fiction / Volumes (Czech)",
         "Fiction / Individual Stories (Czech)"
@@ -18519,14 +18460,10 @@
       "timePeriod": "post-wwii",
       "publisher": "Československý Spisovatel",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 53,
-      "translator": "Ljuba and Rudolf Pellarovi. Foreword by Pavel Eisner. Illustr",
+      "translator": "Ljuba and Rudolf Pellarovi",
       "categories": [
         "Fiction / Volumes (Czech)",
         "Fiction / Individual Stories (Czech)"
@@ -18809,7 +18746,7 @@
       "inLanguage": "Danish",
       "languageCode": "da",
       "numberOfPages": 196,
-      "translator": "Erik Nander. Cover design by Peter Holm",
+      "translator": "Erik Nander",
       "categories": [
         "Fiction / Volumes (Danish)"
       ],
@@ -18877,7 +18814,7 @@
       "inLanguage": "Danish",
       "languageCode": "da",
       "numberOfPages": 290,
-      "translator": "Helge Kjaergaard. Cover design by Paul Høyrup",
+      "translator": "Helge Kjaergaard",
       "categories": [
         "Fiction / Volumes (Danish)"
       ],
@@ -18939,7 +18876,6 @@
         2015
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "København",
       "inLanguage": "Danish",
       "languageCode": "da",
@@ -19152,7 +19088,6 @@
         1970
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition. 168p. 1960. 3rd edition",
       "locationCreated": "København",
       "allLocations": [
         "København",
@@ -19238,7 +19173,6 @@
         1979
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "København",
       "inLanguage": "Danish",
       "languageCode": "da",
@@ -19557,7 +19491,7 @@
       "allLocations": [
         "London",
         "New York",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "English",
       "languageCode": "en",
@@ -19628,7 +19562,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 117,
-      "translator": "Anthea Bell. Cover illustration",
+      "translator": "Anthea Bell",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -19720,7 +19654,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 143,
-      "translator": "Anthea Bell. Cover illustration and postscript by Joel Rosent",
+      "translator": "Anthea Bell",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -19759,7 +19693,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 164,
-      "translator": "Anthea Bell and Eden and Cedar Paul. Cover",
+      "translator": "Anthea Bell and Eden and Cedar Paul",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -20065,7 +19999,6 @@
         2015
       ],
       "timePeriod": "post-wwii",
-      "publisher": "Company",
       "locationCreated": "New York",
       "allLocations": [
         "New York",
@@ -20218,7 +20151,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 250,
-      "translator": "Jill Sutcliffe.  Introduction by John Fowles. xviii",
+      "translator": "Jill Sutcliffe",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -20261,7 +20194,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 100,
-      "translator": "Anthea Bell. Cover illustration",
+      "translator": "Anthea Bell",
       "categories": [
         "Fiction / Volumes (English)",
         "Fiction / Individual Stories (English)"
@@ -20293,7 +20226,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 92,
-      "translator": "Eden and Cedar Paul. Cover illustration",
+      "translator": "Eden and Cedar Paul",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -21460,12 +21393,11 @@
         1936
       ],
       "timePeriod": "lifetime",
-      "publisher": "2nd edition",
       "locationCreated": "Milano",
       "inLanguage": "Italian",
       "languageCode": "it",
       "numberOfPages": 268,
-      "translator": "Marcella Dreyfus. Afterword by the editor",
+      "translator": "Marcella Dreyfus",
       "categories": [
         "Fiction / Volumes (Italian)"
       ],
@@ -21565,7 +21497,7 @@
       "inLanguage": "Italian",
       "languageCode": "it",
       "numberOfPages": 376,
-      "translator": "Umberto Gandini. Cover photograph",
+      "translator": "Umberto Gandini",
       "categories": [
         "Fiction / Volumes (Italian)"
       ],
@@ -21759,7 +21691,7 @@
       "inLanguage": "Japanese",
       "languageCode": "ja",
       "numberOfPages": 397,
-      "translator": "Hikaru Tsuji et al. Afterword Hikaru Tsuji",
+      "translator": "Hikaru Tsuji et al",
       "categories": [
         "Fiction / Volumes (Japanese)"
       ],
@@ -21941,7 +21873,7 @@
       "publisher": "Abeona. Casa EditorialÄƒ Pentru Turism ÅŸi CulturÄƒ",
       "locationCreated": "BucureÅŸti",
       "numberOfPages": 142,
-      "translator": "Eugen Relgis. Cover Constantin Pohrib",
+      "translator": "Eugen Relgis",
       "categories": [
         "Fiction / Volumes (Rumanian)"
       ],
@@ -22033,7 +21965,7 @@
       "publisher": "Editura librÄƒrici Socec et Co",
       "locationCreated": "BucureÅŸti",
       "numberOfPages": 389,
-      "translator": "Liviu M. Teodoru.  Edited with a preface by Tudor Nedelcea",
+      "translator": "Liviu M. Teodoru",
       "categories": [
         "Fiction / Volumes (Rumanian)"
       ],
@@ -22062,7 +21994,7 @@
       "publisher": "Company / Grupul editiorial RAO",
       "locationCreated": "BucureÅŸti",
       "numberOfPages": 411,
-      "translator": "Horia Matei. Cover illustration Florica Zahiu",
+      "translator": "Horia Matei",
       "categories": [
         "Fiction / Volumes (Rumanian)"
       ],
@@ -22795,7 +22727,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 112,
-      "translator": "Anthea Bell. Cover illustration by Petra Börner",
+      "translator": "Anthea Bell",
       "categories": [
         "Fiction / Volumes (English)",
         "Fiction / Individual Stories (English)"
@@ -24956,7 +24888,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 199,
-      "translator": "Jean-Claude Capèle. Cover Bernard Flaguel. Cover photograph",
+      "translator": "Jean-Claude Capèle",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25022,7 +24954,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 222,
-      "translator": "Alzir Hella and Olivier Bournac. Cover Bernard Flaguel. Cover",
+      "translator": "Alzir Hella and Olivier Bournac",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25072,7 +25004,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 198,
-      "translator": "Alzir Hella and Olivier Bournac. Preface by Romain Rolland. F",
+      "translator": "Alzir Hella and Olivier Bournac",
       "categories": [
         "Fiction / Volumes (French)",
         "Fiction / Individual Stories (French)"
@@ -25118,7 +25050,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 162,
-      "translator": "Hélène Denis. Cover design by Bernard Flaguel",
+      "translator": "Hélène Denis",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25311,7 +25243,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 178,
-      "translator": "Alzir Hella and Olivier Bournac. Introduction by Jacques Berg",
+      "translator": "Alzir Hella and Olivier Bournac",
       "categories": [
         "Fiction / Volumes (French)",
         "Fiction / Individual Stories (French)"
@@ -25356,7 +25288,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 116,
-      "translator": "Alzir Hella and Olivier Bournac. Cover illustration by Louis",
+      "translator": "Alzir Hella and Olivier Bournac",
       "categories": [
         "Fiction / Volumes (French)",
         "Fiction / Individual Stories (French)"
@@ -25398,7 +25330,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 269,
-      "translator": "Robert Dumont. Cover Bernard Flaguel. Cover photograph",
+      "translator": "Robert Dumont",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25547,7 +25479,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 141,
-      "translator": "Hélène Denis. Cover Bernard Flaguel",
+      "translator": "Hélène Denis",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25604,7 +25536,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 176,
-      "translator": "Hélène Denis. Cover design by Michel Waxmann",
+      "translator": "Hélène Denis",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25764,7 +25696,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 329,
-      "translator": "Alzir Hella. Cover Bernard Flaguel. Cover photograph",
+      "translator": "Alzir Hella",
       "categories": [
         "Fiction / Volumes (French)",
         "Fiction / Individual Stories (French)"
@@ -25799,7 +25731,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 120,
-      "translator": "Hélène Denis. Introductions and notes by Isabelle Hausser. Co",
+      "translator": "Hélène Denis",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25845,7 +25777,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 175,
-      "translator": "Alzir Hella and Olivier Bournac. Introduction by Alzier Hella",
+      "translator": "Alzir Hella and Olivier Bournac",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25925,7 +25857,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 139,
-      "translator": "Olivier Bournac and Alzir Hella. Introduction by Alzir Hella",
+      "translator": "Olivier Bournac and Alzir Hella",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -25973,7 +25905,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 149,
-      "translator": "Olivier Bournac and Alzir Hella. Cover design by  Bernard Fla",
+      "translator": "Olivier Bournac and Alzir Hella",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -26056,7 +25988,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 178,
-      "translator": "Hélène Denis. Cover design by Bernard Flaguel",
+      "translator": "Hélène Denis",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -26187,7 +26119,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 173,
-      "translator": "Aline Oudoul. Preface by Catherine Audiert",
+      "translator": "Aline Oudoul",
       "categories": [
         "Fiction / Volumes (French)",
         "Fiction / Individual Stories (French)"
@@ -28120,7 +28052,6 @@
       },
       "datePublished": "1954",
       "timePeriod": "post-wwii",
-      "publisher": "House",
       "locationCreated": "Delhi",
       "inLanguage": "Hindi",
       "languageCode": "hi",
@@ -28791,7 +28722,7 @@
         "München",
         "Berlin",
         "Weimar",
-        "Moskau",
+        "Moskva",
         "Salzburg",
         "Wiesbaden",
         "Köln",
@@ -28803,7 +28734,6 @@
         "Shanghai",
         "Zagreb",
         "Praha",
-        "Prague",
         "København",
         "New York",
         "London",
@@ -29814,7 +29744,7 @@
         "Berlin",
         "Leipzig",
         "Paris",
-        "Prague",
+        "Praha",
         "Wien",
         "München",
         "Wiesbaden",
@@ -29825,11 +29755,9 @@
         "Basel",
         "Amsterdam",
         "Hamburg",
-        "Munich",
         "Zürich",
         "Zurich",
-        "Warszawa",
-        "Warsaw"
+        "Warszawa"
       ],
       "numberOfPages": 192,
       "translator": "Stefan Zweig. Leipzig",
@@ -30002,7 +29930,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 212,
-      "translator": "Jorgji Doksani. Edited by Manjola Ali",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -30038,7 +29966,6 @@
         1984
       ],
       "timePeriod": "late-20c",
-      "publisher": "p. The Rusian language edition",
       "locationCreated": "Yerevan",
       "inLanguage": "Armenian",
       "languageCode": "hy",
@@ -30216,7 +30143,7 @@
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 531,
-      "translator": "Joan Fontcuberta.  Cover design by Marta Serrano",
+      "translator": "Joan Fontcuberta",
       "categories": [
         "Historical Studies / Volumes (Catalan)"
       ],
@@ -30258,7 +30185,7 @@
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 285,
-      "translator": "Maria Pous. Edited by Ruth José Prat",
+      "translator": "Maria Pous",
       "categories": [
         "Historical Studies / Volumes (Catalan)"
       ],
@@ -30305,7 +30232,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 229,
-      "translator": "Joan Fontcuberta. Cover by Albert Romero",
+      "translator": "Joan Fontcuberta",
       "categories": [
         "Historical Studies / Volumes (Spanish)"
       ],
@@ -31042,7 +30969,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 704,
-      "translator": "Wenlin Shen. Edited by Zhongfu Gao",
+      "translator": "Wenlin Shen",
       "categories": [
         "Historical Studies / Volumes (Chinese)"
       ],
@@ -31183,7 +31110,6 @@
         2010
       ],
       "timePeriod": "late-20c",
-      "publisher": "Company",
       "locationCreated": "Beijing",
       "allLocations": [
         "Beijing",
@@ -31257,7 +31183,6 @@
       ],
       "inLanguage": "Spanish",
       "languageCode": "es",
-      "numberOfPages": 1861,
       "translator": "Alfredo Cahn",
       "categories": [
         "Collected and Selected Works in Translation (Spanish)"
@@ -31336,7 +31261,7 @@
       "locationCreated": "Barcelona",
       "allLocations": [
         "Barcelona",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "Spanish",
       "languageCode": "es",
@@ -31970,7 +31895,7 @@
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 183,
-      "translator": "Jenny Poláková. Cover illustration by Edvard Much",
+      "translator": "Jenny Poláková",
       "categories": [
         "Historical Studies / Volumes (Czech)"
       ],
@@ -32021,7 +31946,7 @@
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 267,
-      "translator": "R. Vapeník and V. Bláha. Edited by Fr",
+      "translator": "R. Vapeník and V. Bláha",
       "categories": [
         "Historical Studies / Volumes (Czech)"
       ],
@@ -32063,10 +31988,6 @@
       "timePeriod": "late-20c",
       "publisher": "Odeon",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 284,
@@ -32109,7 +32030,7 @@
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 292,
-      "translator": "Anna Siebenscheinová. Afterword by Josef Poli",
+      "translator": "Anna Siebenscheinová",
       "categories": [
         "Historical Studies / Volumes (Czech)"
       ],
@@ -32142,10 +32063,6 @@
       "timePeriod": "lifetime",
       "publisher": "Jan Laichter",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 130,
@@ -32183,7 +32100,7 @@
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 252,
-      "translator": "Valter Feldstein. Afterword by Josef Poli",
+      "translator": "Valter Feldstein",
       "categories": [
         "Historical Studies / Volumes (Czech)"
       ],
@@ -32216,7 +32133,7 @@
       "inLanguage": "Danish",
       "languageCode": "da",
       "numberOfPages": 379,
-      "translator": "Helge Kjærgaard. Cover Axel Surland",
+      "translator": "Helge Kjærgaard",
       "categories": [
         "Historical Studies / Volumes (Danish)"
       ],
@@ -32270,7 +32187,7 @@
       "inLanguage": "Dutch",
       "languageCode": "nl",
       "numberOfPages": 532,
-      "translator": "Willem van Toorn. Cover design by Nico Richter",
+      "translator": "Willem van Toorn",
       "categories": [
         "Historical Studies / Volumes (Dutch)"
       ],
@@ -32513,13 +32430,12 @@
         2013
       ],
       "timePeriod": "lifetime",
-      "publisher": "Company",
       "locationCreated": "London",
       "allLocations": [
         "London",
         "New York",
         "Paris",
-        "Vienna",
+        "Wien",
         "Leipzig"
       ],
       "inLanguage": "English",
@@ -32642,7 +32558,7 @@
       "timePeriod": "late-20c",
       "publisher": "Kupar",
       "locationCreated": "Tallinn",
-      "translator": "Vilma Jürisalu. Afterword by Richard Friedenthal",
+      "translator": "Vilma Jürisalu",
       "categories": [
         "Historical Studies / Volumes (Estonian)"
       ],
@@ -32723,7 +32639,7 @@
       "publisher": "Eesti Raamat",
       "locationCreated": "Tallinn",
       "numberOfPages": 252,
-      "translator": "Vilma  Jürisalu. Edited by Maarja Ojamaa. Cover design by Rud",
+      "translator": "Vilma  Jürisalu",
       "categories": [
         "Historical Studies / Volumes (Estonian)"
       ],
@@ -32850,7 +32766,6 @@
         1983
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Tallinn",
       "numberOfPages": 240,
       "translator": "Rein Sepp",
@@ -32880,7 +32795,7 @@
       "publisher": "Eesti Riiklik Kirjastus",
       "locationCreated": "Tallinn",
       "numberOfPages": 221,
-      "translator": "Karin Reinla. Afterword by Ivan Inozemtsev",
+      "translator": "Karin Reinla",
       "categories": [
         "Historical Studies / Volumes (Estonian)"
       ],
@@ -32953,7 +32868,6 @@
         1998
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Tallinn",
       "numberOfPages": 238,
       "translator": "Jaan Kross",
@@ -32993,7 +32907,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 380,
-      "translator": "Jean Longeville. New pref. Alain Mangin. Cover Antoinelle Stu",
+      "translator": "Jean Longeville. New pref. Alain Mangin",
       "categories": [
         "Historical Studies / Volumes (French)"
       ],
@@ -33044,7 +32958,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 204,
-      "translator": "Alzir Hella. Foreword by Hervé Le Tellier. Afterword by Silva",
+      "translator": "Alzir Hella",
       "categories": [
         "Historical Studies / Volumes (French)"
       ],
@@ -33164,7 +33078,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 381,
-      "translator": "Alzir Hella and Juliette Pary. Cover",
+      "translator": "Alzir Hella and Juliette Pary",
       "categories": [
         "Historical Studies / Volumes (French)"
       ],
@@ -33500,7 +33414,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 316,
-      "translator": "Alzir Hella and Hélène Denis-Jeanroy. Cover by Isidore Pils",
+      "translator": "Alzir Hella and Hélène Denis-Jeanroy",
       "categories": [
         "Historical Studies / Volumes (French)"
       ],
@@ -33551,7 +33465,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 263,
-      "translator": "Jorgji Doksani. Edited by Xhevahir Lleshi",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Fiction / Individual Stories (Albanian)"
@@ -33741,7 +33655,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 438,
-      "translator": "Muhamet M. Muço. Edited by Isuf Baça",
+      "translator": "Muhamet M. Muço",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -34827,7 +34741,6 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Vienna",
         "Budapest",
         "Salzburg",
         "Graz",
@@ -34912,9 +34825,9 @@
         1981
       ],
       "timePeriod": "late-20c",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "Jerusalem",
         "Frankfurt"
       ],
@@ -35612,7 +35525,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 97,
-      "translator": "Yushu Zhang. Foreword by Lili Liu",
+      "translator": "Yushu Zhang",
       "categories": [
         "Fiction / Volumes (Chinese)",
         "Fiction / Individual Stories (Chinese)"
@@ -35736,7 +35649,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 169,
-      "translator": "Wenlin Shen. Edited with a foreword by Zhongfu Gao",
+      "translator": "Wenlin Shen",
       "categories": [
         "Historical Studies / Volumes (Chinese)"
       ],
@@ -36037,7 +35950,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 250,
-      "translator": "Huiwen Guan. Edited with a foreword by Yushu Zhang",
+      "translator": "Huiwen Guan",
       "categories": [
         "Historical Studies / Volumes (Chinese)"
       ],
@@ -40785,7 +40698,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 478,
-      "translator": "Shimei Liang. Edited with a foreword by Shiqiu Liang. Illustr",
+      "translator": "Shimei Liang",
       "categories": [
         "Historical Studies / Volumes (Chinese)"
       ],
@@ -43104,7 +43017,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 253,
-      "translator": "Anthea Bell and Eden and Cedar Paul. Cover",
+      "translator": "Anthea Bell and Eden and Cedar Paul",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -43973,7 +43886,6 @@
       "locationCreated": "Beijing",
       "inLanguage": "Chinese",
       "languageCode": "zh",
-      "numberOfPages": 1990,
       "translator": "Yan Zhu",
       "categories": [
         "Poetry / Individual Poems (Chinese)"
@@ -45225,7 +45137,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 122,
-      "translator": "Xiaosong Pan. Foreword by Aidehua E. Luowensiji",
+      "translator": "Xiaosong Pan",
       "categories": [
         "Correspondence / Volumes (Chinese)"
       ],
@@ -47388,7 +47300,6 @@
         1974
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Ljubljana",
       "inLanguage": "Slovenian",
       "languageCode": "sl",
@@ -47453,7 +47364,7 @@
       "inLanguage": "Slovenian",
       "languageCode": "sl",
       "numberOfPages": 382,
-      "translator": "Angela Vode. Foreword by Bo",
+      "translator": "Angela Vode",
       "categories": [
         "Historical Studies / Volumes (Slovenian)"
       ],
@@ -47848,7 +47759,7 @@
         "Bern",
         "Frankfurt am Main",
         "Berlin",
-        "Vienna",
+        "Wien",
         "Paris",
         "New York",
         "New Delhi"
@@ -47895,7 +47806,7 @@
         "Bern",
         "Frankfurt am Main",
         "Berlin",
-        "Vienna",
+        "Wien",
         "Paris"
       ],
       "inLanguage": "English",
@@ -48149,7 +48060,7 @@
       "inLanguage": "Slovenian",
       "languageCode": "sl",
       "numberOfPages": 597,
-      "translator": "Evald Flisar. Cover design by Zvest Apollonio",
+      "translator": "Evald Flisar",
       "categories": [
         "Historical Studies / Volumes (Slovenian)"
       ],
@@ -48207,7 +48118,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 373,
-      "translator": "Luiza Prifti and Edit Dibra. Edited by Rexhep Hida",
+      "translator": "Luiza Prifti and Edit Dibra",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -48242,7 +48153,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 127,
-      "translator": "Edmond Tupja. Edited by Rexhep Hida",
+      "translator": "Edmond Tupja",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -48277,7 +48188,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 187,
-      "translator": "Alfredo Cahn. Foreword by M. S. M",
+      "translator": "Alfredo Cahn",
       "categories": [
         "Essays / Volumes (Spanish)"
       ],
@@ -48783,7 +48694,7 @@
       "locationCreated": "New York",
       "allLocations": [
         "New York",
-        "Vienna",
+        "Wien",
         "Salzburg",
         "Rio de Janeiro",
         "Berlin"
@@ -49761,7 +49672,6 @@
         1970
       ],
       "timePeriod": "lifetime",
-      "publisher": "2nd edition",
       "locationCreated": "Shanghai",
       "inLanguage": "Chinese",
       "languageCode": "zh",
@@ -50347,7 +50257,6 @@
         "Paris",
         "Wien",
         "Praha",
-        "Vienna",
         "Frankfurt am Main",
         "München",
         "Innsbruck",
@@ -50651,7 +50560,7 @@
       "locationCreated": "Ljubljana",
       "inLanguage": "Slovenian",
       "languageCode": "sl",
-      "translator": "Angela Vode. Afterwords by Amalija Ma",
+      "translator": "Angela Vode",
       "categories": [
         "Secondary Literature / Authors (Slovenian)"
       ],
@@ -50702,7 +50611,7 @@
       "locationCreated": "Ljubljana",
       "inLanguage": "Slovenian",
       "languageCode": "sl",
-      "translator": "Angela Vode.  Afterwords by Amalija Ma",
+      "translator": "Angela Vode",
       "categories": [
         "Secondary Literature / Authors (Slovenian)"
       ],
@@ -50957,7 +50866,6 @@
         "Frankfurt am Main",
         "Wien",
         "Leipzig",
-        "Vienna",
         "Hamburg",
         "New York",
         "Zürich"
@@ -51528,12 +51436,10 @@
         "Berlin",
         "Wien",
         "Paris",
-        "Zürich",
-        "Vienna"
+        "Zürich"
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 1914,
       "categories": [
         "Secondary Literature / Authors (German)",
         "Secondary Literature / Authors (French)"
@@ -52125,7 +52031,6 @@
         2018
       ],
       "timePeriod": "post-wwii",
-      "publisher": "& Distribution",
       "locationCreated": "Cairo",
       "allLocations": [
         "Cairo",
@@ -52220,7 +52125,6 @@
         2015
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -52834,7 +52738,6 @@
         2005
       ],
       "timePeriod": "contemporary",
-      "publisher": "Company",
       "locationCreated": "Beirut",
       "allLocations": [
         "Beirut",
@@ -53095,12 +52998,11 @@
         1993
       ],
       "timePeriod": "pre-zweig",
-      "publisher": "2nd edition",
       "locationCreated": "Weimar",
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 182,
-      "translator": "Liuben Ivanov. Edited by Zh. Pavon",
+      "translator": "Liuben Ivanov",
       "categories": [
         "Historical Studies / Volumes (Bulgarian)"
       ],
@@ -53964,7 +53866,7 @@
       "publisher": "Translated by Antanas Gailius. 2nd edition",
       "locationCreated": "Vilnius",
       "numberOfPages": 323,
-      "translator": "Antanas Gailius. Foreword by Jolanta Bajaruniene",
+      "translator": "Antanas Gailius",
       "categories": [
         "Historical Studies / Volumes (Lithuanian)"
       ],
@@ -54219,12 +54121,11 @@
       },
       "datePublished": "2006",
       "timePeriod": "contemporary",
-      "publisher": "p. 2nd edition",
       "locationCreated": "Sofija",
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 238,
-      "translator": "Elena Matusheva-Popova. Edited by Temenuzhka Petrova",
+      "translator": "Elena Matusheva-Popova",
       "categories": [
         "Fiction / Volumes (Bulgarian)",
         "Fiction / Individual Stories (Bulgarian)"
@@ -54255,7 +54156,7 @@
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 88,
-      "translator": "Nona Toneva-Radeva. Foreword by Ivan Mladenov",
+      "translator": "Nona Toneva-Radeva",
       "categories": [
         "Historical Studies / Volumes (Bulgarian)"
       ],
@@ -54689,7 +54590,7 @@
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 224,
-      "translator": "Pavel Spasov. Foreword by Edmon Jalu",
+      "translator": "Pavel Spasov",
       "categories": [
         "Historical Studies / Volumes (Bulgarian)"
       ],
@@ -54722,7 +54623,7 @@
       "inLanguage": "Bulgarian",
       "languageCode": "bg",
       "numberOfPages": 160,
-      "translator": "Strashimir Dzhamdzhiev. Foreword by Efrem Karanfilov",
+      "translator": "Strashimir Dzhamdzhiev",
       "categories": [
         "Historical Studies / Volumes (Bulgarian)"
       ],
@@ -55087,7 +54988,6 @@
         2005
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Zagreb",
       "allLocations": [
         "Zagreb",
@@ -56350,7 +56250,7 @@
       "allLocations": [
         "London",
         "Wien",
-        "Moskau"
+        "Moskva"
       ],
       "inLanguage": "Croatian",
       "languageCode": "hr",
@@ -57720,7 +57620,7 @@
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 349,
-      "translator": "R. Gal'perina. Foreword by Boris L. Suchkov. Verses  translat",
+      "translator": "R. Gal'perina",
       "categories": [
         "Secondary Literature / Authors (Russian)"
       ],
@@ -57780,7 +57680,6 @@
         1952
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p. 2nd edition",
       "locationCreated": "Reykjavík",
       "numberOfPages": 134,
       "translator": "Þórarinn Guđnason",
@@ -58274,7 +58173,7 @@
       "locationCreated": "New York",
       "allLocations": [
         "New York",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "English",
       "languageCode": "en",
@@ -58792,7 +58691,6 @@
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 1930,
       "categories": [
         "Correspondence / Volumes (German)"
       ],
@@ -58868,8 +58766,7 @@
       "allLocations": [
         "Wien",
         "Delhi",
-        "Bombay",
-        "Vienna"
+        "Bombay"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -61681,7 +61578,7 @@
       },
       "datePublished": "2010",
       "timePeriod": "contemporary",
-      "locationCreated": "Moscow",
+      "locationCreated": "Moskva",
       "inLanguage": "Russian",
       "languageCode": "ru",
       "categories": [
@@ -62590,7 +62487,7 @@
         "Zürich",
         "London",
         "Salzburg",
-        "Moskau"
+        "Moskva"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -62891,7 +62788,7 @@
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
-        "Moscow",
+        "Moskva",
         "St. Petersburg"
       ],
       "inLanguage": "German",
@@ -63956,11 +63853,10 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Prag"
+        "Praha"
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 1956,
       "categories": [
         "Secondary Literature / Titles (German)",
         "Secondary Literature / Titles (English)"
@@ -64362,7 +64258,6 @@
         2009
       ],
       "timePeriod": "late-20c",
-      "publisher": "Company",
       "locationCreated": "New York",
       "allLocations": [
         "New York",
@@ -64370,7 +64265,6 @@
         "Weimar",
         "Stockholm",
         "Wien",
-        "Vienna",
         "Toronto",
         "Melbourne"
       ],
@@ -65242,7 +65136,7 @@
       "locationCreated": "Leipzig",
       "allLocations": [
         "Leipzig",
-        "Moskau",
+        "Moskva",
         "Berlin"
       ],
       "inLanguage": "German",
@@ -65364,7 +65258,6 @@
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 1995,
       "categories": [
         "Secondary Literature / Authors (German)"
       ],
@@ -65905,7 +65798,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 84,
-      "translator": "Joel Rotenberg. Introduction by Peter Gay. xiv",
+      "translator": "Joel Rotenberg",
       "categories": [
         "Secondary Literature / Authors (English)"
       ],
@@ -65986,8 +65879,7 @@
       "allLocations": [
         "New York",
         "Jerusalem",
-        "Wien",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "English",
       "languageCode": "en",
@@ -66727,7 +66619,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 90,
-      "translator": "Enver Fico. Edited by Sotir Caci. Preface by Sergej L'vov",
+      "translator": "Enver Fico",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Fiction / Individual Stories (Albanian)"
@@ -66929,7 +66821,7 @@
       "allLocations": [
         "Wien",
         "Paris",
-        "Prag",
+        "Praha",
         "Salzburg"
       ],
       "inLanguage": "German",
@@ -68216,7 +68108,7 @@
       ],
       "inLanguage": "French",
       "languageCode": "fr",
-      "translator": "Jacqueline Des Gouttes. Preface by Brigitte Vergne-Cain and G",
+      "translator": "Jacqueline Des Gouttes",
       "categories": [
         "Secondary Literature / Authors (French)"
       ],
@@ -68459,7 +68351,6 @@
         "London",
         "Wien",
         "Salzburg",
-        "Vienna",
         "Jerusalem",
         "Stuttgart",
         "München",
@@ -68470,7 +68361,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 82,
-      "translator": "Benjamin W. Huebsch and Helmut Ripperger. Introduction by Har",
+      "translator": "Benjamin W. Huebsch and Helmut Ripperger",
       "categories": [
         "Secondary Literature / Authors (German)",
         "Secondary Literature / Authors (French)",
@@ -68502,7 +68393,7 @@
       "locationCreated": "Paris",
       "allLocations": [
         "Paris",
-        "Prague"
+        "Praha"
       ],
       "inLanguage": "French",
       "languageCode": "fr",
@@ -68777,7 +68668,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 200,
-      "translator": "Rose Freeman-Ishill. Preface by Stefan Zweig. Illustrated by",
+      "translator": "Rose Freeman-Ishill",
       "categories": [
         "Forewords and Afterwords",
         "Secondary Literature / Authors (German)",
@@ -69494,7 +69385,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 156,
-      "translator": "Hendrik Coopman. Foreword by Franz Hellens",
+      "translator": "Hendrik Coopman",
       "categories": [
         "Essays / Volumes (French)"
       ],
@@ -69572,7 +69463,7 @@
         "Heidelberg",
         "Innsbruck",
         "Wien",
-        "Prag",
+        "Praha",
         "Zürich",
         "München"
       ],
@@ -69648,7 +69539,7 @@
       "inLanguage": "Italian",
       "languageCode": "it",
       "numberOfPages": 426,
-      "translator": "Anita Limentani. Introduction and Notes  by  Lavinia Mazzucch",
+      "translator": "Anita Limentani",
       "categories": [
         "Essays / Volumes (Italian)"
       ],
@@ -69989,7 +69880,6 @@
         2013
       ],
       "timePeriod": "lifetime",
-      "publisher": "Company",
       "locationCreated": "New York",
       "allLocations": [
         "New York",
@@ -70053,7 +69943,7 @@
       "inLanguage": "Italian",
       "languageCode": "it",
       "numberOfPages": 306,
-      "translator": "Donata Berra. Cover",
+      "translator": "Donata Berra",
       "categories": [
         "Historical Studies / Volumes (Italian)"
       ],
@@ -70133,7 +70023,7 @@
       "inLanguage": "Swedish",
       "languageCode": "sv",
       "numberOfPages": 305,
-      "translator": "Hugo Hultenberg. Edited by an afterword by Richard Friedentha",
+      "translator": "Hugo Hultenberg",
       "categories": [
         "Essays / Volumes (Swedish)"
       ],
@@ -70554,7 +70444,6 @@
       "sourceTextId": 10043,
       "datePublished": "1952",
       "timePeriod": "post-wwii",
-      "publisher": "Company",
       "locationCreated": "Stamford, CT",
       "inLanguage": "German",
       "languageCode": "de",
@@ -71314,7 +71203,6 @@
         2010
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Frankfurt am Main",
       "inLanguage": "German",
       "languageCode": "de",
@@ -71436,9 +71324,9 @@
       ],
       "timePeriod": "pre-zweig",
       "publisher": "Payot",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "London",
         "New York",
         "Paris",
@@ -71810,7 +71698,7 @@
       "allLocations": [
         "New York",
         "London",
-        "Moskau",
+        "Moskva",
         "Wien",
         "Salzburg"
       ],
@@ -71899,7 +71787,6 @@
         2014
       ],
       "timePeriod": "lifetime",
-      "publisher": "Company",
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
@@ -72783,7 +72670,7 @@
         "Wien",
         "Leipzig",
         "Salzburg",
-        "Munich",
+        "München",
         "Jerusalem"
       ],
       "inLanguage": "German",
@@ -73018,7 +72905,7 @@
         "Frankfurt am Main",
         "München",
         "Zürich",
-        "Moskau",
+        "Moskva",
         "Graz",
         "Weimar",
         "Kolkata",
@@ -73424,7 +73311,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "2nd edition",
       "locationCreated": "Paris",
       "inLanguage": "Turkish",
       "languageCode": "tr",
@@ -74259,7 +74145,6 @@
         "Linz",
         "Paris",
         "Roma",
-        "Vienna",
         "Dresden",
         "New York",
         "Budapest",
@@ -74269,14 +74154,13 @@
         "Zürich",
         "Istanbul",
         "Frankfurt",
-        "Moscow",
-        "Moskau",
+        "Moskva",
         "Rio de Janeiro",
         "São Paulo",
         "Milano",
         "Lisboa",
         "Rome",
-        "Prague",
+        "Praha",
         "Stuttgart"
       ],
       "inLanguage": "German",
@@ -74317,9 +74201,9 @@
       ],
       "timePeriod": "contemporary",
       "publisher": "Königshausen & Neumann Verlag",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "Salzburg"
       ],
       "inLanguage": "German",
@@ -74535,9 +74419,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "Königshausen & Neumann Verlag",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "Salzburg"
       ],
       "inLanguage": "German",
@@ -74628,7 +74512,6 @@
         "Paris",
         "Toronto",
         "Frankfurt am Main",
-        "Vienna",
         "Wien",
         "Salzburg"
       ],
@@ -76254,7 +76137,7 @@
         "Montreal",
         "Sydney",
         "Madrid",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "English",
       "languageCode": "en",
@@ -77195,8 +77078,7 @@
         "Leipzig",
         "Zürich",
         "Milano",
-        "Roma",
-        "Vienna"
+        "Roma"
       ],
       "numberOfPages": 116,
       "translator": "Stefan Zweig from the original manuscript before its publicat",
@@ -77300,7 +77182,7 @@
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 205,
-      "translator": "A. S. Kulisher. Introduction by I. Inozemtsev. Illustrated by",
+      "translator": "A. S. Kulisher",
       "categories": [
         "Secondary Literature / Authors (Russian)"
       ],
@@ -77345,7 +77227,7 @@
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 205,
-      "translator": "Anna S. Kulisher. Foreword by Ivan Inozemtsev. Edited by N. N",
+      "translator": "Anna S. Kulisher",
       "categories": [
         "Historical Studies / Volumes (Russian)"
       ],
@@ -77432,7 +77314,7 @@
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 219,
-      "translator": "Anna. S. Kulisher. Afterword by EvgeniÄ",
+      "translator": "Anna. S. Kulisher",
       "categories": [
         "Secondary Literature / Authors (Russian)"
       ],
@@ -77460,7 +77342,7 @@
       "timePeriod": "lifetime",
       "publisher": "Julius Zeitler Verlag",
       "locationCreated": "Leipzig",
-      "translator": "Stefan Zweig. Edited by Archibald G. B. Russell",
+      "translator": "Stefan Zweig",
       "categories": [
         "Translations by Zweig"
       ],
@@ -77576,7 +77458,7 @@
         "Frankfurt am Main"
       ],
       "numberOfPages": 65,
-      "translator": "Stefan Zweig and Richard Friedenthal. Foreword by Stefan Zwei",
+      "translator": "Stefan Zweig and Richard Friedenthal",
       "categories": [
         "Translations by Zweig"
       ],
@@ -77783,7 +77665,7 @@
       "datePublished": "2010",
       "timePeriod": "contemporary",
       "publisher": "Ariadne Press",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 132,
@@ -78117,7 +77999,7 @@
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
-        "Prag",
+        "Praha",
         "Wien",
         "Leipzig",
         "Salzburg"
@@ -78311,7 +78193,7 @@
       "inLanguage": "Japanese",
       "languageCode": "ja",
       "numberOfPages": 37,
-      "translator": "Kazuo Fujiwara. Edited by Knut Beck",
+      "translator": "Kazuo Fujiwara",
       "categories": [
         "Collected and Selected Works in Translation (Japanese)"
       ],
@@ -78417,7 +78299,6 @@
         2013
       ],
       "timePeriod": "contemporary",
-      "publisher": "2nd edition",
       "locationCreated": "Ä°stanbul",
       "inLanguage": "Turkish",
       "languageCode": "tr",
@@ -78546,7 +78427,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 153,
-      "translator": "Anthea Bell. Cover design by David Pearson",
+      "translator": "Anthea Bell",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -78605,7 +78486,7 @@
       "locationCreated": "Leipzig",
       "allLocations": [
         "Leipzig",
-        "Prag",
+        "Praha",
         "Berlin"
       ],
       "inLanguage": "German",
@@ -78795,8 +78676,8 @@
       "locationCreated": "Paris",
       "allLocations": [
         "Paris",
-        "Prague",
-        "Vienna",
+        "Praha",
+        "Wien",
         "Amsterdam",
         "New York",
         "Rio de Janeiro"
@@ -78856,7 +78737,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 216,
-      "translator": "Alzir Hella. Preface by Jacques Le Rider",
+      "translator": "Alzir Hella",
       "categories": [
         "Essays / Volumes (French)"
       ],
@@ -79076,7 +78957,7 @@
       "locationCreated": "Paris",
       "allLocations": [
         "Paris",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "French",
       "languageCode": "fr",
@@ -79110,7 +78991,6 @@
       "locationCreated": "Paris",
       "allLocations": [
         "Paris",
-        "Vienna",
         "Wien"
       ],
       "inLanguage": "French",
@@ -79399,7 +79279,6 @@
         1986
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Amsterdam",
       "inLanguage": "Dutch",
       "languageCode": "nl",
@@ -79443,7 +79322,6 @@
         1980
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "København",
       "inLanguage": "Danish",
       "languageCode": "da",
@@ -79529,7 +79407,6 @@
         1954
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Jyväskylä",
       "inLanguage": "Finnish",
       "languageCode": "fi",
@@ -79582,7 +79459,6 @@
         1979
       ],
       "timePeriod": "post-wwii",
-      "publisher": "1st edition",
       "locationCreated": "Tbilisi",
       "inLanguage": "Georgian",
       "languageCode": "ka",
@@ -79651,7 +79527,6 @@
         1950
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Tel Aviv",
       "inLanguage": "Hebrew",
       "languageCode": "he",
@@ -79759,7 +79634,6 @@
         1997
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Milano",
       "inLanguage": "Italian",
       "languageCode": "it",
@@ -80023,7 +79897,6 @@
       "sourceTextId": 47533,
       "datePublished": "1936",
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Oslo",
       "inLanguage": "Norwegian",
       "languageCode": "no",
@@ -80070,7 +79943,6 @@
         1998
       ],
       "timePeriod": "post-wwii",
-      "publisher": "1st edition",
       "locationCreated": "TihrÄ n [Tehran]",
       "inLanguage": "Persian",
       "languageCode": "fa",
@@ -80111,7 +79983,6 @@
         1986
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Warszawa",
       "inLanguage": "Polish",
       "languageCode": "pl",
@@ -80324,7 +80195,7 @@
       "inLanguage": "Slovak",
       "languageCode": "sk",
       "numberOfPages": 329,
-      "translator": "Anton Skácel. Verses translated by Lubomír Feldek. Afterword",
+      "translator": "Anton Skácel. Verses translated by Lubomír Feldek",
       "categories": [
         "Historical Studies / Volumes (Slovak)"
       ],
@@ -80356,7 +80227,6 @@
         1990
       ],
       "timePeriod": "lifetime",
-      "publisher": "1st edition",
       "locationCreated": "Stockholm",
       "inLanguage": "Swedish",
       "languageCode": "sv",
@@ -81282,9 +81152,7 @@
         "Bern",
         "New York",
         "Warszawa",
-        "Warsaw",
         "Wien",
-        "Vienna",
         "Leipzig"
       ],
       "inLanguage": "German",
@@ -81602,7 +81470,6 @@
         "Leipzig",
         "Beijing",
         "Praha",
-        "Prague",
         "New York",
         "Tallinn",
         "Paris",
@@ -81683,7 +81550,6 @@
         1977
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p.  Licensed edition",
       "locationCreated": "Stuttgart",
       "allLocations": [
         "Stuttgart",
@@ -81994,7 +81860,6 @@
         2017
       ],
       "timePeriod": "pre-zweig",
-      "publisher": "House",
       "locationCreated": "Amsterdam",
       "allLocations": [
         "Amsterdam",
@@ -82020,7 +81885,6 @@
         "Köln",
         "Toronto",
         "Sydney",
-        "Prag",
         "Praha"
       ],
       "inLanguage": "German",
@@ -83582,7 +83446,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 445,
-      "translator": "K. L. Ammer. Introduction by Stefan Zweig. Leipzig",
+      "translator": "K. L. Ammer",
       "categories": [
         "Secondary Literature / Titles (German)"
       ],
@@ -83624,7 +83488,7 @@
       "inLanguage": "Danish",
       "languageCode": "da",
       "numberOfPages": 159,
-      "translator": "Clara Hammerich. Cover illustration by Des Asmussen",
+      "translator": "Clara Hammerich",
       "categories": [
         "Fiction / Volumes (Danish)"
       ],
@@ -84210,7 +84074,7 @@
       "locationCreated": "Lexington, MA",
       "inLanguage": "English",
       "languageCode": "en",
-      "translator": "Eden and Cedar Paul. Cover bby Susan Erony",
+      "translator": "Eden and Cedar Paul",
       "categories": [
         "Essays / Individual Essays (English)",
         "Essays / Volumes (English)",
@@ -84533,7 +84397,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 320,
-      "translator": "Hannah Szass. Foreword by Stefan Zweig",
+      "translator": "Hannah Szass",
       "categories": [
         "Forewords and Afterwords",
         "Essays / Individual Essays (German)"
@@ -84584,9 +84448,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "1971 edition",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
+        "Praha",
         "Frankfurt",
         "Leipzig",
         "Frankfurt am Main",
@@ -84627,7 +84491,6 @@
         2012
       ],
       "timePeriod": "lifetime",
-      "publisher": "Company",
       "locationCreated": "New York",
       "allLocations": [
         "New York",
@@ -85056,7 +84919,7 @@
       "inLanguage": "Hungarian",
       "languageCode": "hu",
       "numberOfPages": 208,
-      "translator": "György Bányäsz. Edited with an afterword by Richard Friedenth",
+      "translator": "György Bányäsz",
       "categories": [
         "Essays / Volumes (Hungarian)"
       ],
@@ -85334,7 +85197,7 @@
       "allLocations": [
         "Rio de Janeiro",
         "Salzburg",
-        "Vienna",
+        "Wien",
         "Roma",
         "Rome",
         "Milan"
@@ -85823,7 +85686,7 @@
       "inLanguage": "Portuguese",
       "languageCode": "pt",
       "numberOfPages": 307,
-      "translator": "Kristina Michahelles. Edited with a foreword and an afterword",
+      "translator": "Kristina Michahelles",
       "categories": [
         "Essays / Volumes (Portuguese)"
       ],
@@ -86022,7 +85885,6 @@
       "locationCreated": "Paris",
       "inLanguage": "French",
       "languageCode": "fr",
-      "numberOfPages": 1936,
       "translator": "Pierre Deshusses",
       "categories": [
         "Correspondence / Volumes (French)"
@@ -86250,7 +86112,7 @@
         1994
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 268,
@@ -86435,7 +86297,6 @@
         2018
       ],
       "timePeriod": "late-20c",
-      "publisher": "2nd edition",
       "locationCreated": "Barcelona",
       "allLocations": [
         "Barcelona",
@@ -86477,7 +86338,6 @@
       },
       "datePublished": "1936",
       "timePeriod": "lifetime",
-      "publisher": "P. S. King & Sons, Ltd",
       "locationCreated": "London",
       "numberOfPages": 268,
       "categories": [
@@ -87310,7 +87170,6 @@
         "Tokyo",
         "Rio de Janeiro",
         "Bratislava",
-        "Munich",
         "Barcelona",
         "Buenos Aires",
         "Stockholm",
@@ -87412,7 +87271,6 @@
         "Zürich",
         "Stuttgart",
         "Wien",
-        "Vienna",
         "München",
         "London"
       ],
@@ -88366,14 +88224,14 @@
         "Köln",
         "Berlin",
         "New York",
-        "Vienna",
+        "Wien",
         "Paris",
         "Amsterdam"
       ],
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 624,
-      "translator": "Ahmet Arpad. Edited by Enis Batur",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Correspondence / Volumes (German)"
       ],
@@ -88616,7 +88474,6 @@
       "allLocations": [
         "Paris",
         "Wien",
-        "Vienna",
         "London"
       ],
       "inLanguage": "French",
@@ -89136,7 +88993,6 @@
         2014
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Barcelona",
       "inLanguage": "Spanish",
       "languageCode": "es",
@@ -89831,7 +89687,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 241,
-      "translator": "Tristán La Rosa. Cover design by Will Faber",
+      "translator": "Tristán La Rosa",
       "categories": [
         "Essays / Volumes (Spanish)"
       ],
@@ -90468,9 +90324,9 @@
       ],
       "timePeriod": "post-wwii",
       "publisher": "da Universidade do Estado do Rio de Janeiro",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "Rio de Janeiro"
       ],
       "inLanguage": "English",
@@ -90630,7 +90486,7 @@
       ],
       "timePeriod": "contemporary",
       "publisher": "Novoe literaturnoe obozrenie",
-      "locationCreated": "Moscow",
+      "locationCreated": "Moskva",
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 635,
@@ -91325,18 +91181,17 @@
         2012
       ],
       "timePeriod": "post-wwii",
-      "publisher": "company",
       "locationCreated": "New York",
       "allLocations": [
         "New York",
         "Toronto",
-        "Vienna",
+        "Wien",
         "London"
       ],
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 404,
-      "translator": "William and Dorothy Rose. Afterword by Richard Friedenthal. v",
+      "translator": "William and Dorothy Rose",
       "categories": [
         "Historical Studies / Volumes (English)"
       ],
@@ -91445,7 +91300,7 @@
       "inLanguage": "Portuguese",
       "languageCode": "pt",
       "numberOfPages": 584,
-      "translator": "Odilon Gallotti. Afterword by Richard Friedenthal",
+      "translator": "Odilon Gallotti",
       "categories": [
         "Historical Studies / Volumes (Portuguese)"
       ],
@@ -91532,7 +91387,7 @@
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 494,
-      "translator": "Aleksandra Golemba. Edited by E. Zaks. Afterword and commenta",
+      "translator": "Aleksandra Golemba",
       "categories": [
         "Historical Studies / Volumes (Russian)"
       ],
@@ -91957,7 +91812,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "3rd edition",
       "locationCreated": "Ä°stanbul",
       "inLanguage": "Turkish",
       "languageCode": "tr",
@@ -92210,7 +92064,6 @@
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 1901,
       "categories": [
         "Correspondence / Volumes (German)"
       ],
@@ -92274,7 +92127,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 238,
-      "translator": "Klio  Evangjeli.  Edited by  Koli Xoxi",
+      "translator": "Klio  Evangjeli",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -92943,7 +92796,7 @@
       "inLanguage": "Japanese",
       "languageCode": "ja",
       "numberOfPages": 378,
-      "translator": "Kusuo Seki and Tadahiko Kawahara. Afterword by Tadahiko Kawah",
+      "translator": "Kusuo Seki and Tadahiko Kawahara",
       "categories": [
         "Historical Studies / Volumes (Japanese)"
       ],
@@ -93012,7 +92865,7 @@
       "publisher": "IzdevniecÄ«ba Liesma",
       "locationCreated": "RÄ«ga",
       "numberOfPages": 206,
-      "translator": "Velta Balode. Edited by I. BÄ",
+      "translator": "Velta Balode",
       "categories": [
         "Historical Studies / Volumes (Latvian)"
       ],
@@ -93737,7 +93590,6 @@
       "sourceTextId": 36478,
       "datePublished": "1999",
       "timePeriod": "late-20c",
-      "publisher": "House",
       "locationCreated": "Thành-phô-Hô-chí-Minh",
       "inLanguage": "Vietnamese",
       "languageCode": "vi",
@@ -94546,7 +94398,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 106,
-      "translator": "Dominique Autrand. Cover design by Michel Waxmann",
+      "translator": "Dominique Autrand",
       "categories": [
         "Historical Studies / Volumes (French)"
       ],
@@ -94598,7 +94450,7 @@
         "Dresden",
         "Salzburg",
         "Paris",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -94754,7 +94606,6 @@
         2017
       ],
       "timePeriod": "contemporary",
-      "publisher": "2nd edition",
       "locationCreated": "Weimar",
       "inLanguage": "Turkish",
       "languageCode": "tr",
@@ -95089,7 +94940,6 @@
         "Stuttgart",
         "Hamburg",
         "München",
-        "Prag",
         "Praha",
         "Beijing"
       ],
@@ -95497,7 +95347,6 @@
         2015
       ],
       "timePeriod": "contemporary",
-      "publisher": "2nd edition 2007. 4th edition. 99p. 2011. 6th edition",
       "locationCreated": "Istanbul",
       "inLanguage": "Turkish",
       "languageCode": "tr",
@@ -95608,7 +95457,7 @@
       "inLanguage": "Portuguese",
       "languageCode": "pt",
       "numberOfPages": 173,
-      "translator": "Adriana Lisboa and Raquel Abi-Sâmara. Edited with an introduc",
+      "translator": "Adriana Lisboa and Raquel Abi-Sâmara",
       "categories": [
         "Fiction / Volumes (Portuguese)"
       ],
@@ -95648,7 +95497,7 @@
       "inLanguage": "Portuguese",
       "languageCode": "pt",
       "numberOfPages": 399,
-      "translator": "Kristina Michahelles. Foreword and afterword by Alberto Dines",
+      "translator": "Kristina Michahelles",
       "categories": [
         "Historical Studies / Volumes (Portuguese)"
       ],
@@ -96033,7 +95882,6 @@
         1968
       ],
       "timePeriod": "lifetime",
-      "publisher": "2nd edition",
       "locationCreated": "London",
       "allLocations": [
         "London",
@@ -96079,7 +95927,6 @@
         1968
       ],
       "timePeriod": "lifetime",
-      "publisher": "2nd edition",
       "locationCreated": "London",
       "allLocations": [
         "London",
@@ -97997,7 +97844,6 @@
       "allLocations": [
         "Berlin",
         "Wien",
-        "Vienna",
         "Frankfurt am Main",
         "Hamburg",
         "Zürich",
@@ -99627,7 +99473,6 @@
       "allLocations": [
         "London",
         "Paris",
-        "Vienna",
         "Wien",
         "New York"
       ],
@@ -99700,7 +99545,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 374,
-      "translator": "Anthea Bell. Cover illustration by Nathan Burton",
+      "translator": "Anthea Bell",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -99768,7 +99613,7 @@
       "inLanguage": "Turkish",
       "languageCode": "tr",
       "numberOfPages": 379,
-      "translator": "Ahmet Arpad.  Edited by Ay",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Correspondence / Volumes (Turkish)"
       ],
@@ -99962,7 +99807,7 @@
       "allLocations": [
         "Salzburg",
         "London",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -100265,7 +100110,6 @@
         "Leipzig",
         "Stockholm",
         "København",
-        "Vienna",
         "London",
         "Budapest",
         "Tokyo",
@@ -100470,10 +100314,6 @@
       "timePeriod": "lifetime",
       "publisher": "Instytut Wydawniczy \"Rój\"",
       "locationCreated": "Warszawa",
-      "allLocations": [
-        "Warszawa",
-        "Warsaw"
-      ],
       "inLanguage": "Polish",
       "languageCode": "pl",
       "numberOfPages": 173,
@@ -100932,7 +100772,7 @@
         "Salzburg",
         "New York",
         "Jerusalem",
-        "Vienna",
+        "Wien",
         "Zürich"
       ],
       "categories": [
@@ -101246,7 +101086,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 418,
-      "translator": "Eden and Cedar Paul. Foreword by Stefan Zweig",
+      "translator": "Eden and Cedar Paul",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -102442,7 +102282,6 @@
         2014
       ],
       "timePeriod": "late-20c",
-      "publisher": "2nd edition",
       "locationCreated": "AthÄ“na",
       "inLanguage": "Greek",
       "languageCode": "el",
@@ -102589,7 +102428,6 @@
         2003
       ],
       "timePeriod": "late-20c",
-      "publisher": "3rd edition",
       "locationCreated": "Weimar",
       "inLanguage": "Greek",
       "languageCode": "el",
@@ -102680,7 +102518,7 @@
         "Beirut",
         "Freiburg",
         "Hamburg",
-        "Moscow"
+        "Moskva"
       ],
       "numberOfPages": 11,
       "categories": [
@@ -102852,10 +102690,6 @@
       "timePeriod": "lifetime",
       "publisher": "Die Internationale Kunstwelt",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "German",
       "languageCode": "de",
       "categories": [
@@ -105297,7 +105131,6 @@
       },
       "datePublished": "1903",
       "timePeriod": "lifetime",
-      "publisher": "3rd edition",
       "locationCreated": "Hamburg",
       "allLocations": [
         "Hamburg",
@@ -105516,11 +105349,10 @@
         1957
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
         "Wien",
-        "Prag",
+        "Praha",
         "Budapest",
         "Linz"
       ],
@@ -105846,7 +105678,6 @@
         2005
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p. 2nd edition",
       "locationCreated": "Budapest",
       "allLocations": [
         "Budapest",
@@ -105890,7 +105721,7 @@
       "inLanguage": "Italian",
       "languageCode": "it",
       "numberOfPages": 107,
-      "translator": "Simona Martini Vigezzi. Introduction by Daniele Del Giudice",
+      "translator": "Simona Martini Vigezzi",
       "categories": [
         "Secondary Literature / Authors (Italian)"
       ],
@@ -106691,10 +106522,6 @@
       "timePeriod": "contemporary",
       "publisher": "A bilingual edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "numberOfPages": 215,
@@ -106787,7 +106614,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 84,
-      "translator": "Joel Rotenberg. Introduction by Peter Gay. Cover design by Ka",
+      "translator": "Joel Rotenberg",
       "categories": [
         "Fiction / Volumes (English)"
       ],
@@ -106940,7 +106767,6 @@
         1969
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Jyväskylä",
       "inLanguage": "Finnish",
       "languageCode": "fi",
@@ -107799,7 +107625,6 @@
       },
       "datePublished": "1947",
       "timePeriod": "post-wwii",
-      "publisher": "p. 1st edition",
       "locationCreated": "Bratislava",
       "inLanguage": "Slovak",
       "languageCode": "sk",
@@ -107835,7 +107660,6 @@
         2004
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Zagreb",
       "inLanguage": "Croatian",
       "languageCode": "hr",
@@ -107870,7 +107694,6 @@
       },
       "datePublished": "2004",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "Vigo",
       "numberOfPages": 100,
       "translator": "Patricia Buján Otero and Saleta Fernández",
@@ -107927,7 +107750,6 @@
         2014
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Madrid",
       "allLocations": [
         "Madrid",
@@ -108493,7 +108315,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 74,
-      "translator": "Alfredo Cahn. Foreword by Rodolfo Bucio",
+      "translator": "Alfredo Cahn",
       "categories": [
         "Secondary Literature / Authors (Spanish)"
       ],
@@ -109121,7 +108943,6 @@
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 8477,
       "categories": [
         "Secondary Literature / Authors (German)"
       ],
@@ -109772,7 +109593,6 @@
         1977
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Warszawa",
       "allLocations": [
         "Warszawa",
@@ -111042,10 +110862,6 @@
       "datePublished": "1995",
       "timePeriod": "late-20c",
       "locationCreated": "Wien",
-      "allLocations": [
-        "Wien",
-        "Vienna"
-      ],
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 202,
@@ -111320,7 +111136,7 @@
         "London",
         "Salzburg",
         "Amsterdam",
-        "Vienna"
+        "Wien"
       ],
       "categories": [
         "Symposia and Exhibitions | 20170320"
@@ -111935,7 +111751,6 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Vienna",
         "Berlin"
       ],
       "inLanguage": "English",
@@ -112643,7 +112458,7 @@
       "inLanguage": "Turkish",
       "languageCode": "tr",
       "numberOfPages": 159,
-      "translator": "Ahmet Arpad. Cover design by Tu",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Fiction / Volumes (Turkish)"
       ],
@@ -113476,7 +113291,6 @@
         "Wien",
         "Innsbruck"
       ],
-      "numberOfPages": 1992,
       "categories": [
         "Symposia and Exhibitions | 19921019/20"
       ],
@@ -114316,7 +114130,7 @@
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
-        "Prag"
+        "Praha"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -115323,7 +115137,6 @@
       "locationCreated": "Berlin",
       "allLocations": [
         "Berlin",
-        "Prag",
         "Praha"
       ],
       "inLanguage": "German",
@@ -115610,7 +115423,6 @@
         2005
       ],
       "timePeriod": "lifetime",
-      "publisher": "2nd edition",
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
@@ -115709,7 +115521,6 @@
         2005
       ],
       "timePeriod": "lifetime",
-      "publisher": "p. 4 unnumbered pages of facsimiles. Limited edition",
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
@@ -116497,9 +116308,9 @@
         2016
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "allLocations": [
-        "Moskau",
+        "Moskva",
         "Salzburg"
       ],
       "inLanguage": "German",
@@ -116537,9 +116348,9 @@
         2016
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "allLocations": [
-        "Moskau",
+        "Moskva",
         "Berlin"
       ],
       "inLanguage": "German",
@@ -117779,7 +117590,7 @@
       "inLanguage": "Chinese",
       "languageCode": "zh",
       "numberOfPages": 412,
-      "translator": "Xiesheng Zhao and Yuan Tan. Edited by Xiesheng Zhao",
+      "translator": "Xiesheng Zhao and Yuan Tan",
       "categories": [
         "Historical Studies / Volumes (Chinese)"
       ],
@@ -118151,7 +117962,6 @@
         1975
       ],
       "timePeriod": "post-wwii",
-      "publisher": "p. Licensed edition",
       "locationCreated": "Stuttgart",
       "allLocations": [
         "Stuttgart",
@@ -118603,7 +118413,6 @@
         1998
       ],
       "timePeriod": "post-wwii",
-      "publisher": "1st edition",
       "locationCreated": "Amman",
       "inLanguage": "German",
       "languageCode": "de",
@@ -118990,7 +118799,6 @@
         2015
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -119467,7 +119275,6 @@
         2017
       ],
       "timePeriod": "post-wwii",
-      "publisher": "& Distribution",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -119531,7 +119338,7 @@
       "inLanguage": "Esperanto",
       "languageCode": "eo",
       "numberOfPages": 83,
-      "translator": "Kathe R. Schwerin and Paul E. Schwerin. Edited by Franko Luin",
+      "translator": "Kathe R. Schwerin and Paul E. Schwerin",
       "categories": [
         "Fiction / Volumes (Esperanto)"
       ],
@@ -120296,7 +120103,7 @@
       "publisher": "An Alarc'h embannadurioù",
       "locationCreated": "Lannuon",
       "numberOfPages": 104,
-      "translator": "Gérard Cornillet. Stefan Zweig portrait. Cover illustration",
+      "translator": "Gérard Cornillet. Stefan Zweig portrait",
       "categories": [
         "Fiction / Volumes (Breton)",
         "Fiction / Individual Stories (Breton)"
@@ -120339,7 +120146,7 @@
       "publisher": "An Alarc'h embann",
       "locationCreated": "Lannuon",
       "numberOfPages": 78,
-      "translator": "Gérard Cornillet. Cover illustration",
+      "translator": "Gérard Cornillet",
       "categories": [
         "Fiction / Volumes (Breton)",
         "Fiction / Individual Stories (Breton)"
@@ -121166,7 +120973,7 @@
       "datePublished": "1929",
       "timePeriod": "lifetime",
       "publisher": "á¹¬urem",
-      "locationCreated": "Warsaw",
+      "locationCreated": "Warszawa",
       "inLanguage": "Yiddish",
       "languageCode": "yi",
       "numberOfPages": 182,
@@ -121204,7 +121011,7 @@
       "datePublished": "1929",
       "timePeriod": "lifetime",
       "publisher": "Bikher",
-      "locationCreated": "Warsaw",
+      "locationCreated": "Warszawa",
       "inLanguage": "Yiddish",
       "languageCode": "yi",
       "numberOfPages": 290,
@@ -121280,7 +121087,6 @@
         2013
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Istanbul",
       "inLanguage": "Turkish",
       "languageCode": "tr",
@@ -121549,7 +121355,7 @@
       "datePublished": "2016",
       "timePeriod": "contemporary",
       "publisher": "Eldonejo \"Impeto\"",
-      "locationCreated": "Moscow",
+      "locationCreated": "Moskva",
       "inLanguage": "Esperanto",
       "languageCode": "eo",
       "numberOfPages": 62,
@@ -121581,10 +121387,6 @@
       "timePeriod": "post-wwii",
       "publisher": "[s.n.]",
       "locationCreated": "Wien",
-      "allLocations": [
-        "Wien",
-        "Vienna"
-      ],
       "inLanguage": "Esperanto",
       "languageCode": "eo",
       "numberOfPages": 17,
@@ -121926,7 +121728,6 @@
       "sourceTextId": 33859,
       "datePublished": "2005",
       "timePeriod": "contemporary",
-      "publisher": "Company",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -122121,7 +121922,6 @@
       "sourceTextId": 40728,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "TÅ«nis / Ottawa, ON",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -122431,10 +122231,6 @@
       "timePeriod": "lifetime",
       "publisher": "[s.n.]",
       "locationCreated": "Wien",
-      "allLocations": [
-        "Wien",
-        "Vienna"
-      ],
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 242,
@@ -122866,7 +122662,6 @@
       "sourceTextId": 40726,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "London",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -123921,12 +123716,11 @@
       "sourceTextId": 31581,
       "datePublished": "1958",
       "timePeriod": "post-wwii",
-      "publisher": "House",
       "locationCreated": "Budapest",
       "inLanguage": "Hungarian",
       "languageCode": "hu",
       "numberOfPages": 397,
-      "translator": "Tamás Mátrai. Afterword by Richard Friedenthal",
+      "translator": "Tamás Mátrai",
       "categories": [
         "Historical Studies / Volumes (Hungarian)"
       ],
@@ -124411,7 +124205,6 @@
       "sourceTextId": 34653,
       "datePublished": "1986",
       "timePeriod": "late-20c",
-      "publisher": "1st edition",
       "locationCreated": "Jakarta",
       "inLanguage": "Indonesian",
       "languageCode": "id",
@@ -124757,7 +124550,7 @@
       "publisher": "G. Mignolet Éditeur",
       "locationCreated": "Paris",
       "numberOfPages": 222,
-      "translator": "S. Pavès. Introduction by Philéas Lebesgue. Preface by Stefan",
+      "translator": "S. Pavès",
       "categories": [
         "Forewords and Afterwords"
       ],
@@ -124904,7 +124697,7 @@
       "publisher": "Oriole Press",
       "locationCreated": "New York",
       "numberOfPages": 200,
-      "translator": "Rose Freeman-Ishill. Preface by Stefan Zweig. Illustrated by",
+      "translator": "Rose Freeman-Ishill",
       "categories": [
         "Forewords and Afterwords"
       ],
@@ -125729,7 +125522,7 @@
       "inLanguage": "Turkish",
       "languageCode": "tr",
       "numberOfPages": 62,
-      "translator": "Ahmet Cemal. Edited by Rûken  K",
+      "translator": "Ahmet Cemal",
       "categories": [
         "Fiction / Volumes (Turkish)"
       ],
@@ -125948,7 +125741,7 @@
       "datePublished": "2017",
       "timePeriod": "contemporary",
       "publisher": "Prague Daily Monitor",
-      "locationCreated": "Prague",
+      "locationCreated": "Praha",
       "inLanguage": "English",
       "languageCode": "en",
       "categories": [
@@ -127093,7 +126886,6 @@
         1984
       ],
       "timePeriod": "post-wwii",
-      "publisher": "2nd edition",
       "locationCreated": "Tehran",
       "inLanguage": "Persian",
       "languageCode": "fa",
@@ -127278,7 +127070,6 @@
       "sourceTextId": 32424,
       "datePublished": "1996",
       "timePeriod": "late-20c",
-      "publisher": "2nd edition",
       "locationCreated": "Tehran",
       "inLanguage": "Persian",
       "languageCode": "fa",
@@ -127524,7 +127315,6 @@
         2003
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Vaá¸ odarÄ  [Vadodara, formerly Baroda]",
       "numberOfPages": 71,
       "translator": "Śirīsha Pañcāla",
@@ -127557,7 +127347,6 @@
         2002
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Mumbai",
       "allLocations": [
         "Mumbai",
@@ -127616,7 +127405,6 @@
       "sourceTextId": 32513,
       "datePublished": "2004",
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "TihrÄ n [Tehran]",
       "inLanguage": "Persian",
       "languageCode": "fa",
@@ -127646,7 +127434,6 @@
         2015
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "Doha",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -127773,7 +127560,6 @@
       "sourceTextId": 32592,
       "datePublished": "2005",
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "TihrÄ n [Tehran]",
       "inLanguage": "Persian",
       "languageCode": "fa",
@@ -128846,7 +128632,6 @@
       "sourceTextId": 40783,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "numberOfPages": 105,
@@ -129259,7 +129044,6 @@
         2013
       ],
       "timePeriod": "contemporary",
-      "publisher": "Company",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -129569,8 +129353,7 @@
         "Berlin",
         "Roma",
         "München",
-        "Praha",
-        "Prague"
+        "Praha"
       ],
       "categories": [
         "Films / Plays / Operas"
@@ -129867,7 +129650,6 @@
       },
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -130131,11 +129913,7 @@
       "datePublished": "2005",
       "timePeriod": "contemporary",
       "publisher": "Kinokompaniya Telefilm",
-      "locationCreated": "Moskau",
-      "allLocations": [
-        "Moskau",
-        "Moscow"
-      ],
+      "locationCreated": "Moskva",
       "categories": [
         "Films / Plays / Operas"
       ],
@@ -130648,7 +130426,6 @@
       "sourceTextId": 33348,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "BakÄ±",
       "categories": [
         "Historical Studies / Volumes (Azerbaijani)"
@@ -130692,7 +130469,6 @@
       "sourceTextId": 33343,
       "datePublished": "2015",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "BakÄ±",
       "numberOfPages": 344,
       "translator": "Vur",
@@ -130788,7 +130564,6 @@
       },
       "datePublished": "2016",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "BakÄ± [Baku]",
       "numberOfPages": 116,
       "translator": "Çərkəz Qurbanlı",
@@ -131528,7 +131303,6 @@
       "sourceTextId": 40725,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "London",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -132121,7 +131895,7 @@
       "locationCreated": "Krems",
       "allLocations": [
         "Krems",
-        "Prag"
+        "Praha"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -132202,7 +131976,6 @@
       "sourceTextId": 33852,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "á¸¤imá¹£",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -132315,7 +132088,7 @@
       "sourceTextId": 33997,
       "datePublished": "2015",
       "timePeriod": "contemporary",
-      "locationCreated": "Prague",
+      "locationCreated": "Praha",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "categories": [
@@ -132463,9 +132236,9 @@
       ],
       "timePeriod": "contemporary",
       "publisher": "the Asociación Almendrón",
-      "locationCreated": "Prague",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prague",
+        "Praha",
         "Delhi",
         "Madrid"
       ],
@@ -132616,7 +132389,6 @@
         2016
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Bandung",
       "inLanguage": "Indonesian",
       "languageCode": "id",
@@ -133476,7 +133248,6 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Vienna",
         "København",
         "Copenhagen"
       ],
@@ -133698,7 +133469,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 84,
-      "translator": "Michel Tremousa. Foreword by Heinz Schwarzinger. Afterword an",
+      "translator": "Michel Tremousa",
       "categories": [
         "Dramas / Volumes (French)"
       ],
@@ -134006,7 +133777,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 493,
-      "translator": "Ali Hashorva. Edited by Loredan Bubani",
+      "translator": "Ali Hashorva",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -134084,7 +133855,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 147,
-      "translator": "Elda Gjana-Boriçi. Edited by Afrim Koçi",
+      "translator": "Elda Gjana-Boriçi",
       "categories": [
         "Fiction / Individual Stories (Albanian)",
         "Fiction / Volumes (Albanian)"
@@ -134226,9 +133997,9 @@
       "datePublished": "2007",
       "timePeriod": "contemporary",
       "publisher": "Company F",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "Beirut"
       ],
       "inLanguage": "Arabic",
@@ -134340,7 +134111,6 @@
       "sourceTextId": 34481,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "Nabeul",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -134364,7 +134134,6 @@
       "sourceTextId": 40789,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "numberOfPages": 105,
@@ -135178,7 +134947,6 @@
         2017
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "Jakarta?",
       "inLanguage": "Indonesian",
       "languageCode": "id",
@@ -135646,10 +135414,6 @@
       "timePeriod": "contemporary",
       "publisher": "MONO Verlag",
       "locationCreated": "Wien",
-      "allLocations": [
-        "Wien",
-        "Vienna"
-      ],
       "categories": [
         "Dramatic Readings"
       ],
@@ -135691,11 +135455,7 @@
       },
       "datePublished": "1930",
       "timePeriod": "lifetime",
-      "locationCreated": "Prag",
-      "allLocations": [
-        "Prag",
-        "Prague"
-      ],
+      "locationCreated": "Praha",
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 8,
@@ -136655,7 +136415,7 @@
       "inLanguage": "Catalan",
       "languageCode": "ca",
       "numberOfPages": 115,
-      "translator": "Joan Fontcuberta i Gel. Preface and annotations by Jordi Bayo",
+      "translator": "Joan Fontcuberta i Gel",
       "categories": [
         "Historical Studies / Volumes (Catalan)"
       ],
@@ -137027,7 +136787,7 @@
       "locationCreated": "Barcelona",
       "inLanguage": "Catalan",
       "languageCode": "ca",
-      "translator": "Joan Fontcuberta. Cover design by Marta Serrano. Barcelona",
+      "translator": "Joan Fontcuberta",
       "categories": [
         "Secondary Literature / Authors (Catalan)"
       ],
@@ -137498,7 +137258,7 @@
       "publisher": "house ad",
       "locationCreated": "Istanbul",
       "numberOfPages": 211,
-      "translator": "Osman Özçelik. Afterword by Stefan Zweig",
+      "translator": "Osman Özçelik",
       "categories": [
         "Essays / Individual Essays (Kurdish/Kurmanji)"
       ],
@@ -137625,7 +137385,6 @@
         2015
       ],
       "timePeriod": "late-20c",
-      "publisher": "3rd edition",
       "locationCreated": "Amsterdam",
       "inLanguage": "Dutch",
       "languageCode": "nl",
@@ -137907,7 +137666,6 @@
         1935
       ],
       "timePeriod": "lifetime",
-      "publisher": "p. 199\n\nThis is a review of the first German edition",
       "locationCreated": "Wien",
       "inLanguage": "Dutch",
       "languageCode": "nl",
@@ -137995,7 +137753,7 @@
       "inLanguage": "French",
       "languageCode": "fr",
       "numberOfPages": 1312,
-      "translator": "Jörg Stickan and Sacha Zilberfarb. Introduction by Jörg Stick",
+      "translator": "Jörg Stickan and Sacha Zilberfarb",
       "categories": [
         "Fiction / Volumes (French)"
       ],
@@ -139464,10 +139222,6 @@
       "timePeriod": "late-20c",
       "publisher": "the Centre for Classical Studies at the Institute of Philosophy of the Czech Aca",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "categories": [
@@ -139726,7 +139480,6 @@
       "sourceTextId": 35852,
       "datePublished": "1930",
       "timePeriod": "lifetime",
-      "publisher": "P. A. Norstedt Förlag",
       "locationCreated": "Stockholm",
       "inLanguage": "Swedish",
       "languageCode": "sv",
@@ -140926,7 +140679,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "London",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -141017,8 +140769,7 @@
       "locationCreated": "Bratislava",
       "allLocations": [
         "Bratislava",
-        "Praha",
-        "Prague"
+        "Praha"
       ],
       "inLanguage": "Slovak",
       "languageCode": "sk",
@@ -141261,7 +141012,7 @@
         "Leipzig",
         "Frankfurt am Main",
         "Berlin",
-        "Prag",
+        "Praha",
         "München",
         "Zurich",
         "Stuttgart",
@@ -141390,7 +141141,6 @@
         1977
       ],
       "timePeriod": "lifetime",
-      "publisher": "2nd edition",
       "locationCreated": "Porto",
       "inLanguage": "Portuguese",
       "languageCode": "pt",
@@ -141680,7 +141430,6 @@
         2017
       ],
       "timePeriod": "contemporary",
-      "publisher": "Company",
       "locationCreated": "Surabaya",
       "inLanguage": "Indonesian",
       "languageCode": "id",
@@ -141931,7 +141680,6 @@
         2014
       ],
       "timePeriod": "contemporary",
-      "publisher": "House",
       "locationCreated": "Hà-Nội",
       "inLanguage": "Vietnamese",
       "languageCode": "vi",
@@ -142092,7 +141840,6 @@
         2016
       ],
       "timePeriod": "contemporary",
-      "publisher": "House",
       "locationCreated": "Đà Nẵng",
       "inLanguage": "Vietnamese",
       "languageCode": "vi",
@@ -142164,7 +141911,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 260,
-      "translator": "Përparim Sinani. Edited by Maklena Çabej",
+      "translator": "Përparim Sinani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -142190,7 +141937,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 330,
-      "translator": "Doriana Ndoi. Edited by Xhevahir Lleshi",
+      "translator": "Doriana Ndoi",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -142216,7 +141963,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 390,
-      "translator": "Jorgji Doksani. Edited by Vangjush Gambeta",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -142246,7 +141993,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 203,
-      "translator": "Jorgji Doksani. Edited by Xhevahir Lleshi",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -142284,7 +142031,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 84,
-      "translator": "Vedat Kokona. Edited by Kornelja Sima",
+      "translator": "Vedat Kokona",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Fiction / Individual Stories (Albanian)"
@@ -142311,12 +142058,11 @@
       },
       "datePublished": "2005",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "Tiranë [Tirana]",
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 160,
-      "translator": "Robert Shvarc and Enver Fico. Edited by Alba Kokalari",
+      "translator": "Robert Shvarc and Enver Fico",
       "categories": [
         "Fiction / Volumes (Albanian)"
       ],
@@ -142461,7 +142207,6 @@
       "sourceTextId": 36459,
       "datePublished": "1999",
       "timePeriod": "late-20c",
-      "publisher": "House",
       "locationCreated": "Thành-phô-Hô-chí-Minh [Ho Chi Minh City]",
       "inLanguage": "Vietnamese",
       "languageCode": "vi",
@@ -142544,7 +142289,6 @@
       },
       "datePublished": "1982",
       "timePeriod": "late-20c",
-      "publisher": "Company",
       "locationCreated": "Tórshavn",
       "numberOfPages": 100,
       "translator": "Hans Thomsen. Photos by Ingi Joensen",
@@ -142653,7 +142397,6 @@
       },
       "datePublished": "2011",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "Ürümchi [Ürümqi]",
       "numberOfPages": 568,
       "translator": "Raxman Mamut",
@@ -142813,7 +142556,6 @@
       },
       "datePublished": "2014",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "Hà Nội",
       "inLanguage": "Vietnamese",
       "languageCode": "vi",
@@ -143053,7 +142795,6 @@
       "pageNamespace": 0,
       "name": "\"Stefan Zweig\" in Bókadeildin [The Book Division] [Tórshavn]",
       "sourceTextId": 37688,
-      "publisher": "Company",
       "locationCreated": "Tórshavn",
       "categories": [
         "Secondary Literature / Titles (Faeroese)"
@@ -143233,7 +142974,7 @@
       "datePublished": "1929",
       "timePeriod": "lifetime",
       "publisher": "á¹¬urem",
-      "locationCreated": "Warsaw",
+      "locationCreated": "Warszawa",
       "inLanguage": "Yiddish",
       "languageCode": "yi",
       "numberOfPages": 302,
@@ -143370,7 +143111,7 @@
       "publisher": "Shinjang xelq neshriyati",
       "locationCreated": "Ürümchi [Ürümqi]",
       "numberOfPages": 560,
-      "translator": "Raxman Mamut. Edited by Munarjan Toxtaxun. Proofread by Gülsh",
+      "translator": "Raxman Mamut",
       "categories": [
         "Fiction / Volumes (Uyghur)"
       ],
@@ -143496,7 +143237,7 @@
       },
       "datePublished": "1925",
       "timePeriod": "lifetime",
-      "locationCreated": "Warsaw",
+      "locationCreated": "Warszawa",
       "inLanguage": "Yiddish",
       "languageCode": "yi",
       "numberOfPages": 106,
@@ -144186,9 +143927,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "the MuÊ¾assasat al-Waá¸¥dah li-l-á¹¢aá¸¥Äfah waÊ¾l-á¹¬ibÄÊ¿ah waÊ¾l-Nashr waÊ¾",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "allLocations": [
-        "Vienna",
+        "Wien",
         "London"
       ],
       "inLanguage": "Arabic",
@@ -144701,7 +144442,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 78,
-      "translator": "Jorgji Doksani. Edited by Kujtim Gjonaj",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -144780,7 +144521,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 77,
-      "translator": "Robert Shvarc. Edited by Robert Vullkani",
+      "translator": "Robert Shvarc",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Fiction / Individual Stories (Albanian)"
@@ -145007,7 +144748,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 151,
-      "translator": "Vullnet Muço. Edited by Rexhep Hida",
+      "translator": "Vullnet Muço",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -145037,7 +144778,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 115,
-      "translator": "Vullnet Muço. Edited by Rexhep Hida",
+      "translator": "Vullnet Muço",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -145068,7 +144809,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 156,
-      "translator": "Jorgji Doksani. Edited by Kujtim Gjonaj",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -145102,7 +144843,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 173,
-      "translator": "Jorgji Doksani and Fatmir M. Dibra. Edited by Kujtim Gjonaj",
+      "translator": "Jorgji Doksani and Fatmir M. Dibra",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -145479,7 +145220,7 @@
       "inLanguage": "Turkish",
       "languageCode": "tr",
       "numberOfPages": 14,
-      "translator": "Ahmet Arpad. Edited by Ay",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Secondary Literature / Authors (Turkish)"
       ],
@@ -145510,7 +145251,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 319,
-      "translator": "Nikolla Sudar. Edited by Kujtim Gjonaj",
+      "translator": "Nikolla Sudar",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Fiction / Individual Stories (Albanian)"
@@ -145537,7 +145278,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 372,
-      "translator": "Jorgji Doksani. Edited by Oriana Osmani",
+      "translator": "Jorgji Doksani",
       "categories": [
         "Historical Studies / Volumes (Albanian)"
       ],
@@ -145600,7 +145341,7 @@
       "locationCreated": "Istanbul",
       "inLanguage": "Turkish",
       "languageCode": "tr",
-      "translator": "Ahmet Arpad. Edited by Ay",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Secondary Literature / Authors (Turkish)"
       ],
@@ -145730,7 +145471,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 74,
-      "translator": "Katerina Dhima. Edited by Aqif Hysa",
+      "translator": "Katerina Dhima",
       "categories": [
         "Fiction / Volumes (Albanian)",
         "Fiction  / Individual Stories (Albanian)"
@@ -146264,7 +146005,7 @@
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "numberOfPages": 183,
-      "translator": "Edit Dibra. Edited by Rexhep Hida",
+      "translator": "Edit Dibra",
       "categories": [
         "Fiction / Volumes (Albanian)"
       ],
@@ -148390,10 +148131,10 @@
       "sourceTextId": 38426,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "inLanguage": "Albanian",
       "languageCode": "sq",
-      "translator": "Aristidh Ristani. Edited by Gazmend Krasniqi in ''Palimpsest",
+      "translator": "Aristidh Ristani",
       "categories": [
         "Historical Studies / Extracts (Albanian)"
       ],
@@ -148418,7 +148159,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -149214,7 +148954,7 @@
       "inLanguage": "Ukrainian",
       "languageCode": "uk",
       "numberOfPages": 249,
-      "translator": "Osval'd Burgardt. Edited with an introduction by Galini Iag",
+      "translator": "Osval'd Burgardt",
       "categories": [
         "Fiction / Volumes (Ukrainian)"
       ],
@@ -150428,10 +150168,6 @@
       "timePeriod": "post-wwii",
       "publisher": "1979 edition",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "translator": "Ljuba and Rudolf Pellarovi",
@@ -150558,7 +150294,7 @@
       "locationCreated": "Tirana",
       "inLanguage": "Albanian",
       "languageCode": "sq",
-      "translator": "Aristidh Ristani. Edited by Gazmend Krasniqi",
+      "translator": "Aristidh Ristani",
       "categories": [
         "Historical Studies / Extracts (Albanian)"
       ],
@@ -150630,7 +150366,7 @@
       "datePublished": "2018",
       "timePeriod": "contemporary",
       "publisher": "Palimpsest. Revistë kulturore-letrare online",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "inLanguage": "Albanian",
       "languageCode": "sq",
       "translator": "Aristidh Ristani",
@@ -150768,10 +150504,6 @@
       "datePublished": "2016",
       "timePeriod": "contemporary",
       "locationCreated": "Praha",
-      "allLocations": [
-        "Praha",
-        "Prague"
-      ],
       "inLanguage": "Czech",
       "languageCode": "cs",
       "translator": "Jana Zoubková",
@@ -152193,7 +151925,7 @@
       "publisher": "Mönkhiin Üseg",
       "locationCreated": "Ulaanbaatar",
       "numberOfPages": 126,
-      "translator": "Tserendashiin Sarangerel. Edited by Ts. Narangerel",
+      "translator": "Tserendashiin Sarangerel",
       "categories": [
         "Fiction / Volumes (Mongolian)"
       ],
@@ -152619,10 +152351,9 @@
         2016
       ],
       "timePeriod": "post-wwii",
-      "publisher": "House",
       "locationCreated": "Ulaanbaatar",
       "numberOfPages": 187,
-      "translator": "Z. Tungalag. Edited by Ch. Altankhuyag",
+      "translator": "Z. Tungalag",
       "categories": [
         "Fiction / Volumes (Mongolian)"
       ],
@@ -153245,10 +152976,9 @@
       },
       "datePublished": "2018",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "Ulaanbaatar",
       "numberOfPages": 100,
-      "translator": "N. Luvsandorj. Edited by N. Javkhlan",
+      "translator": "N. Luvsandorj",
       "categories": [
         "Fiction  / Volumes (Mongolian)"
       ],
@@ -153302,10 +153032,9 @@
       "sourceTextId": 38920,
       "datePublished": "2018",
       "timePeriod": "contemporary",
-      "publisher": "House",
       "locationCreated": "Ulaanbaatar",
       "numberOfPages": 20,
-      "translator": "N. Luvsandorj. Edited by N. Javkhlan",
+      "translator": "N. Luvsandorj",
       "categories": [
         "Secondary Literature / Titles (Mongolian)"
       ],
@@ -153329,7 +153058,7 @@
       "publisher": "Mönkhiin Üseg",
       "locationCreated": "Ulaanbaatar",
       "numberOfPages": 126,
-      "translator": "Tserendashiin Sarangerel. Edited by Ts. Narangerel",
+      "translator": "Tserendashiin Sarangerel",
       "categories": [
         "Secondary Literature /  Authors (Mongolian)"
       ],
@@ -153352,7 +153081,7 @@
       "timePeriod": "contemporary",
       "publisher": "Notes on Books",
       "numberOfPages": 333,
-      "translator": "L. Sodov. Edited by G. Dagva",
+      "translator": "L. Sodov",
       "categories": [
         "Secondary Literature / Authors (Mongolian)"
       ],
@@ -155119,7 +154848,6 @@
       },
       "datePublished": "2016",
       "timePeriod": "contemporary",
-      "publisher": "house",
       "locationCreated": "Paris",
       "numberOfPages": 91,
       "translator": "Kaonn Vandy",
@@ -156183,9 +155911,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "Juventud",
-      "locationCreated": "Munich",
+      "locationCreated": "München",
       "allLocations": [
-        "Munich",
+        "München",
         "Barcelona",
         "Buenos Aires",
         "Wien",
@@ -159765,7 +159493,6 @@
       "sourceTextId": 40000,
       "datePublished": "2018",
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco, CA",
       "numberOfPages": 120,
       "translator": "A. K. Abdul Majeed",
@@ -161599,7 +161326,6 @@
       },
       "datePublished": "2018",
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
       "locationCreated": "TÅ«nis [Tunis]",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -161629,7 +161355,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -161671,7 +161396,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -161859,7 +161583,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -161888,7 +161611,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -161971,7 +161693,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -162000,7 +161721,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -162029,7 +161749,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "numberOfPages": 105,
       "translator": "Mais",
@@ -162118,7 +161837,6 @@
       "sourceTextId": 40668,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "& Distribution",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -162785,7 +162503,6 @@
         2016
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -162815,7 +162532,6 @@
         2017
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163003,7 +162719,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163034,7 +162749,7 @@
       "inLanguage": "Turkish",
       "languageCode": "tr",
       "numberOfPages": 272,
-      "translator": "Ahmet Arpad. Cover design by Gökçe Alper. Cover illustration",
+      "translator": "Ahmet Arpad",
       "categories": [
         "Historical Studies / Volumes (Turkish)"
       ],
@@ -163099,7 +162814,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163129,7 +162843,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Tunis",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163159,7 +162872,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Tunis",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163189,7 +162901,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Tunis",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163219,7 +162930,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Tunis",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163249,7 +162959,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163279,7 +162988,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Tunis",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163309,7 +163017,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "numberOfPages": 207,
@@ -163338,7 +163045,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Tunis",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163368,7 +163074,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "numberOfPages": 83,
@@ -163397,7 +163102,6 @@
         2013
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "numberOfPages": 207,
@@ -163421,7 +163125,6 @@
       "sourceTextId": 41038,
       "datePublished": "2017",
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "Beirut",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163450,7 +163153,6 @@
         2018
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "inLanguage": "Arabic",
       "languageCode": "ar",
       "numberOfPages": 207,
@@ -163624,7 +163326,6 @@
         2017
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -163653,7 +163354,6 @@
         2017
       ],
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -165136,7 +164836,6 @@
       "sourceTextId": 41687,
       "datePublished": "2018",
       "timePeriod": "contemporary",
-      "publisher": "is a social cataloging website for books",
       "locationCreated": "San Francisco",
       "inLanguage": "Arabic",
       "languageCode": "ar",
@@ -167176,7 +166875,6 @@
         2009
       ],
       "timePeriod": "post-wwii",
-      "publisher": "House",
       "locationCreated": "Tel Aviv",
       "inLanguage": "Yiddish",
       "languageCode": "yi",
@@ -168996,7 +168694,6 @@
         "Ljubljana",
         "Barcelona",
         "Madrid",
-        "Prag",
         "Praha"
       ],
       "inLanguage": "German",
@@ -169504,7 +169201,7 @@
         "Wiesbaden",
         "Leipzig",
         "Zürich",
-        "Prag",
+        "Praha",
         "München",
         "Wien",
         "Barcelona",
@@ -169889,7 +169586,6 @@
       "allLocations": [
         "Wien",
         "Frankfurt am Main",
-        "Prag",
         "Praha",
         "Berlin",
         "Paris",
@@ -170593,9 +170289,8 @@
         2003
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
         "Praha",
         "Leipzig",
         "Frankfurt am Main",
@@ -170669,7 +170364,7 @@
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "translator": "Hans Reisiger. Edited by the Goethe-Museum",
+      "translator": "Hans Reisiger",
       "categories": [
         "Essays / Individual Essays (German)"
       ],
@@ -171392,7 +171087,7 @@
       "publisher": "Stock",
       "locationCreated": "Paris",
       "numberOfPages": 360,
-      "translator": "Alzir Hella and Isa Altkaufer. Foreword by Stefan Zweig. viii",
+      "translator": "Alzir Hella and Isa Altkaufer",
       "categories": [
         "Forewords and Afterwords"
       ],
@@ -173284,7 +172979,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 359,
-      "translator": "Charlotte Rau. Foreword by Stefan Zweig",
+      "translator": "Charlotte Rau",
       "categories": [
         "Essays / Individual Essays (German)"
       ],
@@ -173788,7 +173483,6 @@
       "locationCreated": "Frankfurt am Main",
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 1937,
       "categories": [
         "Secondary Literature / Authors (German)"
       ],
@@ -174242,7 +173936,7 @@
       "locationCreated": "London",
       "allLocations": [
         "London",
-        "Vienna"
+        "Wien"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -174290,7 +173984,7 @@
       "locationCreated": "Leipzig",
       "allLocations": [
         "Leipzig",
-        "Prag",
+        "Praha",
         "Frankfurt am Main"
       ],
       "inLanguage": "German",
@@ -174368,7 +174062,7 @@
         "Berlin",
         "Wien",
         "Stuttgart",
-        "Prag"
+        "Praha"
       ],
       "numberOfPages": 152,
       "translator": "Camill Hoffmann",
@@ -175508,11 +175202,9 @@
         "Hamburg",
         "Berlin",
         "München",
-        "Munich",
         "Zürich",
         "Zurich",
-        "Warszawa",
-        "Warsaw"
+        "Warszawa"
       ],
       "numberOfPages": 313,
       "categories": [
@@ -175594,7 +175286,7 @@
         "Frankfurt",
         "Krems an der Donau",
         "Stuttgart",
-        "Prag"
+        "Praha"
       ],
       "numberOfPages": 23,
       "categories": [
@@ -175808,7 +175500,7 @@
       "allLocations": [
         "Berlin",
         "Leipzig",
-        "Prag",
+        "Praha",
         "Frankfurt am Main"
       ],
       "numberOfPages": 248,
@@ -175845,7 +175537,7 @@
       },
       "datePublished": "1930",
       "timePeriod": "lifetime",
-      "locationCreated": "Moscow",
+      "locationCreated": "Moskva",
       "inLanguage": "Russian",
       "languageCode": "ru",
       "categories": [
@@ -175990,7 +175682,6 @@
         1907
       ],
       "timePeriod": "lifetime",
-      "publisher": "Company",
       "locationCreated": "Leipzig",
       "allLocations": [
         "Leipzig",
@@ -178378,7 +178069,6 @@
         1970
       ],
       "timePeriod": "post-wwii",
-      "publisher": "and Distribution",
       "locationCreated": "Cairo",
       "allLocations": [
         "Cairo",
@@ -178762,8 +178452,7 @@
       "sourceTextId": 47851,
       "datePublished": "2016",
       "timePeriod": "contemporary",
-      "publisher": "1st edition",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "inLanguage": "Hindi",
       "languageCode": "hi",
       "numberOfPages": 176,
@@ -178801,7 +178490,7 @@
       "datePublished": "2016",
       "timePeriod": "contemporary",
       "publisher": "reviews-of-my-books",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "inLanguage": "Hindi",
       "languageCode": "hi",
       "numberOfPages": 70,
@@ -179003,7 +178692,7 @@
       "locationCreated": "New Delhi",
       "allLocations": [
         "New Delhi",
-        "Vienna"
+        "Wien"
       ],
       "categories": [
         "Symposia and Exhibitions | 2016728"
@@ -179541,7 +179230,7 @@
         "Berlin",
         "Leipzig",
         "Linz",
-        "Vienna",
+        "Wien",
         "Buenos Aires"
       ],
       "inLanguage": "German",
@@ -181158,7 +180847,7 @@
       "inLanguage": "Spanish",
       "languageCode": "es",
       "numberOfPages": 192,
-      "translator": "Nicolás Gelormini. Foreword by Sergio Bufano",
+      "translator": "Nicolás Gelormini",
       "categories": [
         "Fiction / Volumes (Spanish)"
       ],
@@ -181975,7 +181664,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 275,
-      "translator": "Felix Warren Crosse. Foreword by Stefan Zweig. Stefan Zweig's",
+      "translator": "Felix Warren Crosse",
       "categories": [
         "Forewords and Afterwords",
         "Essays / Individual Essays (German)"
@@ -182391,10 +182080,6 @@
       "timePeriod": "post-wwii",
       "publisher": "Universität Wien",
       "locationCreated": "Wien",
-      "allLocations": [
-        "Wien",
-        "Vienna"
-      ],
       "inLanguage": "German",
       "languageCode": "de",
       "categories": [
@@ -183279,8 +182964,7 @@
         1928
       ],
       "timePeriod": "lifetime",
-      "publisher": "House",
-      "locationCreated": "Moscow",
+      "locationCreated": "Moskva",
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 396,
@@ -183589,7 +183273,6 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Vienna",
         "Salzburg"
       ],
       "inLanguage": "German",
@@ -183855,7 +183538,6 @@
       "locationCreated": "Wien",
       "allLocations": [
         "Wien",
-        "Vienna",
         "Frankfurt am Main",
         "Paris"
       ],
@@ -184466,7 +184148,6 @@
         2019
       ],
       "timePeriod": "lifetime",
-      "publisher": "P. S. King & Son / Robert Anscombe & Co",
       "locationCreated": "London",
       "allLocations": [
         "London",
@@ -184992,9 +184673,9 @@
         2019
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "allLocations": [
-        "Moskau",
+        "Moskva",
         "Wien"
       ],
       "inLanguage": "German",
@@ -185098,9 +184779,9 @@
         2019
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "allLocations": [
-        "Moskau",
+        "Moskva",
         "Wien"
       ],
       "inLanguage": "German",
@@ -185309,9 +184990,9 @@
         2020
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "allLocations": [
-        "Moskau",
+        "Moskva",
         "Wien",
         "Dresden",
         "Leipzig",
@@ -185612,7 +185293,7 @@
       },
       "datePublished": "1929",
       "timePeriod": "lifetime",
-      "locationCreated": "Vienna",
+      "locationCreated": "Wien",
       "numberOfPages": 30,
       "categories": [
         "Films / Plays / Operas"
@@ -185812,7 +185493,6 @@
         2017
       ],
       "timePeriod": "late-20c",
-      "publisher": "p. VII. Written by Stefan Zweig for this edition",
       "locationCreated": "Frankfurt am Main",
       "allLocations": [
         "Frankfurt am Main",
@@ -186025,7 +185705,7 @@
         "Berlin",
         "Weimar",
         "Salzburg",
-        "Moskau",
+        "Moskva",
         "Hamburg",
         "Wiesbaden",
         "Leipzig",
@@ -186037,7 +185717,6 @@
         "Beijing",
         "Shanghai",
         "Praha",
-        "Prague",
         "København",
         "London",
         "Toronto",
@@ -187006,7 +186685,7 @@
       "locationCreated": "Frankfurt am Main",
       "allLocations": [
         "Frankfurt am Main",
-        "Moscow"
+        "Moskva"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -187441,7 +187120,7 @@
       "sourceTextId": 51344,
       "datePublished": "2003",
       "timePeriod": "contemporary",
-      "locationCreated": "Moskau",
+      "locationCreated": "Moskva",
       "categories": [
         "Historical Studies | 2 Russian"
       ],
@@ -188327,10 +188006,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "Europa Verlag",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
-        "Prague",
+        "Praha",
         "Frankfurt am Main",
         "Zürich"
       ],
@@ -189212,7 +188890,6 @@
         2020
       ],
       "timePeriod": "contemporary",
-      "publisher": "P. S. King & Son",
       "locationCreated": "Paris",
       "allLocations": [
         "Paris",
@@ -195004,7 +194681,6 @@
       ],
       "inLanguage": "German",
       "languageCode": "de",
-      "numberOfPages": 2023,
       "categories": [
         "Essays / Individual Essays (German)"
       ],
@@ -197515,8 +197191,7 @@
         "Wien",
         "Leipzig",
         "Zürich",
-        "Prag",
-        "Prague",
+        "Praha",
         "London",
         "Paris",
         "Budapest",
@@ -198712,7 +198387,7 @@
       "inLanguage": "German",
       "languageCode": "de",
       "numberOfPages": 115,
-      "translator": "Joan Fontcuberta i Gel. Preface and annotations by Jordi Bayo",
+      "translator": "Joan Fontcuberta i Gel",
       "categories": [
         "Essays / Individual Essays (German)"
       ],
@@ -201995,9 +201670,9 @@
       ],
       "timePeriod": "lifetime",
       "publisher": "Verein deutscher bildender Künstler in Böhmen",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
+        "Praha",
         "Krems an der Donau"
       ],
       "inLanguage": "German",
@@ -204517,10 +204192,9 @@
         2008
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
-        "Prague",
+        "Praha",
         "Berlin",
         "Frankfurt am Main",
         "Beijing"
@@ -204714,10 +204388,9 @@
         2008
       ],
       "timePeriod": "lifetime",
-      "locationCreated": "Prag",
+      "locationCreated": "Praha",
       "allLocations": [
-        "Prag",
-        "Prague",
+        "Praha",
         "Berlin",
         "Frankfurt am Main",
         "Beijing"
@@ -205758,9 +205431,8 @@
         "London",
         "Wien",
         "Berlin",
-        "Munich",
+        "München",
         "Tübingen",
-        "Vienna",
         "Paris",
         "Amsterdam"
       ],
@@ -205820,7 +205492,7 @@
       "inLanguage": "English",
       "languageCode": "en",
       "numberOfPages": 390,
-      "translator": "Anthea Bell. Cover design by  David Pearson and Clare Skeats",
+      "translator": "Anthea Bell",
       "categories": [
         "Historical Studies / Volumes (English)"
       ],
@@ -206075,7 +205747,7 @@
         "Zürich",
         "Beijing",
         "Stuttgart",
-        "Moskau",
+        "Moskva",
         "Weimar",
         "Salzburg",
         "Wiesbaden",
@@ -206087,7 +205759,6 @@
         "Barcelona",
         "Shanghai",
         "Praha",
-        "Prague",
         "København",
         "London",
         "Toronto",
@@ -206099,11 +205770,10 @@
         "Riga",
         "Rio de Janeiro",
         "Lisboa",
-        "Moscow",
         "Beograd",
         "Ljubljana",
         "Madrid",
-        "Warsaw"
+        "Warszawa"
       ],
       "inLanguage": "German",
       "languageCode": "de",
@@ -206667,7 +206337,7 @@
       "sourceTextId": 60755,
       "datePublished": "1928",
       "timePeriod": "lifetime",
-      "locationCreated": "Moscow",
+      "locationCreated": "Moskva",
       "inLanguage": "Russian",
       "languageCode": "ru",
       "numberOfPages": 5,
