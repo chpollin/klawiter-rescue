@@ -143,9 +143,9 @@ class TestYearPeriodConsistency:
 class TestSeeAlsoIntegrity:
     """Cross-references should point to entries that exist."""
 
-    # Known count of broken references — high due to formatted reference strings
-    # like "Clarissa (IS) / Spanish" that include language suffixes
-    KNOWN_BROKEN_REFS = 1140
+    # Known count of broken references — reduced from 1140 to 727 after title fix
+    # (correct titles resolve more redirects). Remaining: language suffixes, person names
+    KNOWN_BROKEN_REFS = 727
 
     def test_broken_references_bounded(self, ns0_entries, all_titles, redirect_targets):
         """Count of broken seeAlso references must not increase."""

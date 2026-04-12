@@ -25,6 +25,18 @@ from lib.vocabulary import language_to_iso
 
 log = setup_logging(__name__)
 
+# Section headers that are not real titles (extracted from ==Header== or '''Header:''')
+SECTION_HEADER_RE = re.compile(
+    r'^(Contents|Volumes|German|Italian|French|English|Spanish|Russian|Chinese|'
+    r'Japanese|Arabic|Hebrew|Portuguese|Dutch|Swedish|Norwegian|Danish|Finnish|'
+    r'Polish|Czech|Hungarian|Romanian|Bulgarian|Croatian|Serbian|Turkish|Greek|'
+    r'Albanian|Catalan|Korean|Slovenian|Slovak|Ukrainian|Georgian|Persian|'
+    r'First printing|First edition|Reprinted in|See also|Translations|'
+    r'Manuscript|Reviews|Book editions|Excerpts|'
+    r'Collected Works / [A-Za-z]+):?\s*$',
+    re.IGNORECASE
+)
+
 
 def derive_main_category(categories):
     """Derive the main (top-level) category from category list."""
@@ -66,22 +78,30 @@ def process_entry(row):
         return result
 
     # Title: prefer parsed title, but fall back to page_title.
-    # When wiki extraction returns a [year]: pattern (metadata, not a title),
-    # look for the real title in a subsequent bold block before falling back.
+    # Reject extracted titles that are section headers, [year]: patterns,
+    # or full citation text (>200 chars).
     extracted_title = parsed.get('title', '')
     page_title = row.get('page_title', '')
+
+    # Reject: [year]: Publisher, Location (metadata, not a title)
     if extracted_title and re.match(r'\[\d{4}', extracted_title):
-        # [year]: pattern detected — look for the actual title in content
+        # Look for the real title in a subsequent bold block
         bold_matches = re.findall(r"'''\s*(.+?)\s*'''", content)
         real_title = next(
             (m for m in bold_matches if not re.match(r'\[\d{4}', m)),
             None,
         )
-        result['title'] = real_title or page_title or extracted_title
-    elif not extracted_title:
-        result['title'] = page_title
-    else:
-        result['title'] = extracted_title
+        extracted_title = real_title or ''
+
+    # Reject: section headers ("Contents:", "Volumes:", "German:", etc.)
+    if extracted_title and SECTION_HEADER_RE.match(extracted_title):
+        extracted_title = ''
+
+    # Reject: full citation text (>200 chars is not a title)
+    if extracted_title and len(extracted_title) > 200:
+        extracted_title = ''
+
+    result['title'] = extracted_title or page_title
     # Clean any remaining wiki markup from title (e.g. page_title fallbacks)
     if result['title']:
         result['title'] = remove_wiki_markup(result['title'])

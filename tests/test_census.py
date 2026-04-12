@@ -44,8 +44,9 @@ class TestEntryCounts:
         but the frontend JSON redirect map only stores redirect page titles
         that resolve to actual entries. The map is a subset.
         """
-        # Frozen reference from current output — update if pipeline changes redirect handling
-        EXPECTED_REDIRECT_MAP_SIZE = 430
+        # Frozen reference — updated after title fix (section headers → page_titles)
+        # which resolved 618 additional redirects (430 → 1048)
+        EXPECTED_REDIRECT_MAP_SIZE = 1048
         actual = len(redirects)
         assert actual == EXPECTED_REDIRECT_MAP_SIZE, (
             f"Expected {EXPECTED_REDIRECT_MAP_SIZE} redirect map entries, got {actual} "

@@ -16,19 +16,24 @@ import pytest
 # --- Bounded thresholds (lower = better; update when extraction improves) ---
 
 # Titles that are wiki section headers like "Contents:", "Volumes:", "German:"
-KNOWN_SECTION_HEADER_TITLES = 812
+# Fixed in Session 14: section headers rejected, fallback to page_title (812 → 0)
+KNOWN_SECTION_HEADER_TITLES = 0
 
 # Titles longer than 200 characters (likely full citation text, not a title)
-KNOWN_LONG_TITLES = 387
+# Fixed in Session 14: long titles rejected, fallback to page_title (387 → 0)
+KNOWN_LONG_TITLES = 0
 
 # PageCount values that look like years (1800-2030)
-KNOWN_YEAR_AS_PAGECOUNT = 27
+# Reduced by parenthesized lookahead fix and N/(M)p. pattern (27 → 11)
+KNOWN_YEAR_AS_PAGECOUNT = 11
 
 # Publisher fields containing wiki markup ('')
-KNOWN_PUBLISHER_MARKUP = 20
+# Fixed in Session 14: wiki markup stripped from publisher (20 → 0)
+KNOWN_PUBLISHER_MARKUP = 0
 
 # Publisher fields containing metadata phrases instead of publisher names
-KNOWN_PUBLISHER_METADATA = 10
+# Fixed in Session 14: metadata phrases rejected (10 → 0)
+KNOWN_PUBLISHER_METADATA = 0
 
 
 # --- Patterns ---

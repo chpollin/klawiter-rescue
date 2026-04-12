@@ -52,9 +52,10 @@ LOCATION_RE = re.compile(rf'\[?\b({_loc_pattern})\b\]?')
 # Pattern 2 requires the number to NOT be followed by a hyphen+digit (range).
 # The \b after \d+ prevents backtracking from shortening the number match.
 PAGE_COUNT_PATTERNS = [
-    re.compile(r'(\d{1,5})\s*(?:pp?\.|pages?|Seiten|S\.)', re.IGNORECASE),
-    re.compile(r'pp?\.\s*(\d{1,5})\b(?!\s*[-–—]\s*\d)', re.IGNORECASE),
-    re.compile(r'(\d{1,5})\s*p\b'),
+    re.compile(r'(\d{1,5})\s*(?:pp?\.|pages?|Seiten|S\.)', re.IGNORECASE),   # 500p. (standard)
+    re.compile(r'(\d{1,5})/\(\d+\)\s*p\.', re.IGNORECASE),                   # 253/(2)p. notation
+    re.compile(r'pp?\.\s*(\d{1,5})\b(?!\s*[-–—]\s*[\d(])', re.IGNORECASE),   # pp. 153 (NOT pp. 7-(19))
+    re.compile(r'(\d{1,5})\s*p\b'),                                           # 38p
 ]
 
 # Translator patterns — only match explicit "Translated by Name" patterns.
@@ -102,6 +103,12 @@ def extract_all_years(text):
     return sorted(set(int(y) for y in matches if MIN_VALID_YEAR <= int(y) <= MAX_VALID_YEAR))
 
 
+# Phrases that are metadata, not publisher names
+_PUBLISHER_REJECT = [
+    'comments concerning', 'staff of the', 'see also', 'contents',
+]
+
+
 def extract_publisher(text):
     """Extract publisher name from text."""
     if not text:
@@ -110,8 +117,14 @@ def extract_publisher(text):
         m = pattern.search(text)
         if m:
             pub = m.group(1).strip().rstrip('.,;:')
-            if len(pub) >= 3:
-                return pub
+            # Clean wiki markup from publisher
+            pub = re.sub(r"'{2,3}", '', pub).strip()
+            if len(pub) < 3:
+                continue
+            # Reject metadata phrases
+            if any(p in pub.lower() for p in _PUBLISHER_REJECT):
+                continue
+            return pub
     return None
 
 

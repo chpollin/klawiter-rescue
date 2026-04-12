@@ -114,9 +114,9 @@ class TestExtractPageCount:
     def test_real_entry_simple(self):
         assert extract_page_count("Translated by Hymne Weiss. 160p.") == 160
 
-    def test_parenthesized_supplement_not_matched(self):
-        # 347/(1)p. — the /(1) prevents match; known limitation
-        assert extract_page_count("Hugo Hultenberg. 347/(1)p.") is None
+    def test_parenthesized_supplement_matched(self):
+        # 347/(1)p. — N/(M)p. notation: N numbered + M unnumbered pages
+        assert extract_page_count("Hugo Hultenberg. 347/(1)p.") == 347
 
     def test_rejects_page_ranges(self):
         """pp. N-M is a page range (start-end), not a page count."""
