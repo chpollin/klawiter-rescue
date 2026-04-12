@@ -1460,6 +1460,136 @@ h1, h2, h3, h4 {
   background: var(--sz-burgundy-dark);
 }
 
+/* --- JSON-LD Playground --- */
+.page-content-wide {
+  max-width: 960px;
+}
+
+.jsonld-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin: 0.75rem 0 1rem;
+}
+.jsonld-search-wrap {
+  position: relative;
+  flex: 1;
+}
+.jsonld-search {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--sz-border);
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  background: var(--sz-cream);
+  color: var(--sz-text);
+  box-sizing: border-box;
+}
+.jsonld-search:focus {
+  outline: none;
+  border-color: var(--sz-burgundy);
+  box-shadow: 0 0 0 2px rgba(99, 26, 52, 0.15);
+}
+.jsonld-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--sz-border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.jsonld-suggestion {
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--sz-border-light);
+}
+.jsonld-suggestion:hover {
+  background: rgba(184, 150, 62, 0.1);
+}
+.jsonld-suggestion:last-child {
+  border-bottom: none;
+}
+
+.jsonld-stats {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-text-light, #6B6B6B);
+  margin-bottom: 0.5rem;
+}
+
+.jsonld-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--sz-border);
+  margin-bottom: 0;
+}
+.jsonld-tab {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--sz-text-light, #6B6B6B);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.jsonld-tab:hover {
+  color: var(--sz-burgundy);
+}
+.jsonld-tab.active {
+  color: var(--sz-burgundy);
+  border-bottom-color: var(--sz-burgundy);
+}
+
+.jsonld-code {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  padding: 1rem 1.25rem;
+  border-radius: 0 0 4px 4px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  white-space: pre;
+  max-height: 480px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+}
+
+/* JSON syntax highlighting (dark theme) */
+.jh-key { color: #89b4fa; }
+.jh-str { color: #a6e3a1; }
+.jh-num { color: #fab387; }
+.jh-bool { color: #f38ba8; }
+.jh-ctx { color: #cba6f7; font-weight: 600; }
+.jh-uri { color: #89dceb; }
+.jh-prefix { color: #f9e2af; }
+
+/* Triples table */
+.triples-table {
+  margin-top: 0;
+  border-radius: 0 0 4px 4px;
+  margin-bottom: 1.5rem;
+}
+.triples-table td {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.75rem;
+  word-break: break-all;
+  max-width: 320px;
+}
+
 /* --- Utility --- */
 .hidden { display: none !important; }
 

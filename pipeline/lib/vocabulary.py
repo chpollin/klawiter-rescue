@@ -6,6 +6,8 @@ and klawiter: (domain-specific extensions for Stefan Zweig bibliography types).
 
 CONTEXT = {
     "@context": {
+        "@version": 1.1,
+
         # --- Namespace prefixes ---
         "schema": "https://schema.org/",
         "dcterms": "http://purl.org/dc/terms/",
@@ -14,7 +16,10 @@ CONTEXT = {
 
         # --- Schema.org mappings ---
         "name": "schema:name",
-        "datePublished": "schema:datePublished",
+        "description": "schema:description",
+        "creator": "schema:creator",
+        "sourceOrganization": "schema:sourceOrganization",
+        "datePublished": {"@id": "schema:datePublished", "@type": "xsd:gYear"},
         "publisher": "schema:publisher",
         "inLanguage": "schema:inLanguage",
         "numberOfPages": {"@id": "schema:numberOfPages", "@type": "xsd:integer"},
@@ -24,7 +29,7 @@ CONTEXT = {
         "isRelatedTo": {"@id": "schema:isRelatedTo", "@container": "@set"},
         "workTranslation": {"@id": "schema:workTranslation", "@container": "@set"},
         "hasPart": {"@id": "schema:hasPart", "@container": "@list"},
-        "author": {"@id": "schema:author", "@type": "@id"},
+        "author": "schema:author",
 
         # --- Dublin Core mappings ---
         "bibliographicCitation": "dcterms:bibliographicCitation",
@@ -32,6 +37,8 @@ CONTEXT = {
         # --- Domain-specific (klawiter:) ---
         "entryType": "klawiter:entryType",
         "timePeriod": "klawiter:timePeriod",
+        "totalEntries": {"@id": "klawiter:totalEntries", "@type": "xsd:integer"},
+        "entries": {"@id": "klawiter:entries", "@container": "@list"},
         "categories": {"@id": "klawiter:categories", "@container": "@set"},
         "contentItems": {"@id": "klawiter:contentItems", "@container": "@list"},
         "mainCategory": "klawiter:mainCategory",

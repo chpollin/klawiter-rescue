@@ -242,11 +242,11 @@ def main():
         "@type": "schema:Dataset",
         "@id": "klawiter:klawiter-bibliography",
         "name": "Stefan Zweig Bibliography (Klawiter)",
-        "schema:description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
-        "schema:creator": "Dr. Randolph J. Klawiter",
-        "schema:sourceOrganization": "University of Notre Dame",
-        "klawiter:totalEntries": len(entries),
-        "klawiter:entries": entries,
+        "description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
+        "creator": "Dr. Randolph J. Klawiter",
+        "sourceOrganization": "University of Notre Dame",
+        "totalEntries": len(entries),
+        "entries": entries,
     }
 
     with open(OUTPUT_JSONLD, 'w', encoding='utf-8') as f:

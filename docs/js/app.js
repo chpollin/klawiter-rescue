@@ -118,7 +118,7 @@ const App = {
     const params = new URLSearchParams(hash);
 
     // Static content pages
-    const staticPages = ['about', 'methodology', 'help', 'data', 'imprint'];
+    const staticPages = ['about', 'methodology', 'help', 'data', 'jsonld', 'imprint'];
     if (staticPages.includes(hash)) {
       this.showView('page');
       Pages.render(hash);

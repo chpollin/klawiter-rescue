@@ -1,11 +1,18 @@
 {
   "@context": {
+    "@version": 1.1,
     "schema": "https://schema.org/",
     "dcterms": "http://purl.org/dc/terms/",
     "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "name": "schema:name",
-    "datePublished": "schema:datePublished",
+    "description": "schema:description",
+    "creator": "schema:creator",
+    "sourceOrganization": "schema:sourceOrganization",
+    "datePublished": {
+      "@id": "schema:datePublished",
+      "@type": "xsd:gYear"
+    },
     "publisher": "schema:publisher",
     "inLanguage": "schema:inLanguage",
     "numberOfPages": {
@@ -30,13 +37,18 @@
       "@id": "schema:hasPart",
       "@container": "@list"
     },
-    "author": {
-      "@id": "schema:author",
-      "@type": "@id"
-    },
+    "author": "schema:author",
     "bibliographicCitation": "dcterms:bibliographicCitation",
     "entryType": "klawiter:entryType",
     "timePeriod": "klawiter:timePeriod",
+    "totalEntries": {
+      "@id": "klawiter:totalEntries",
+      "@type": "xsd:integer"
+    },
+    "entries": {
+      "@id": "klawiter:entries",
+      "@container": "@list"
+    },
     "categories": {
       "@id": "klawiter:categories",
       "@container": "@set"
@@ -79,11 +91,11 @@
   "@type": "schema:Dataset",
   "@id": "klawiter:klawiter-bibliography",
   "name": "Stefan Zweig Bibliography (Klawiter)",
-  "schema:description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
-  "schema:creator": "Dr. Randolph J. Klawiter",
-  "schema:sourceOrganization": "University of Notre Dame",
-  "klawiter:totalEntries": 6725,
-  "klawiter:entries": [
+  "description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
+  "creator": "Dr. Randolph J. Klawiter",
+  "sourceOrganization": "University of Notre Dame",
+  "totalEntries": 6725,
+  "entries": [
     {
       "@type": [
         "schema:CreativeWork"

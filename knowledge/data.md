@@ -166,7 +166,7 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 | year | 93.2% | 93.2% | — | First match only, no range detection |
 | language | 89.4% | 89.4% | — | Derived from category names (e.g. "(German)") |
 | location | 87.5% | 67.8% | **+19.7pp** | LLM reads non-standard city names |
-| pageCount | 81.6% | 78.4% | +3.2pp | LLM parses unusual formats |
+| pageCount | 54.1% | 51.0% | +3.1pp | Previously 81.6%, corrected after `pp. N-M` page range FPs removed (Session 11) |
 | publisher | 55.6% | 34.5% | **+21.1pp** | LLM reads publishers without "Verlag/Press" markers |
 | translator | 41.9% | 35.1% | +6.8pp | LLM reads abbreviations and non-English patterns |
 

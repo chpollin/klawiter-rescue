@@ -19,6 +19,7 @@ const Pages = {
     methodology: 'Methodology — Klawiter Bibliography',
     help: 'Help — Klawiter Bibliography',
     data: 'Data Access — Klawiter Bibliography',
+    jsonld: 'JSON-LD Playground — Klawiter Bibliography',
     imprint: 'Imprint — Klawiter Bibliography',
   },
 
@@ -196,13 +197,13 @@ const Pages = {
           <tr><td>Publisher</td><td>34.5%</td><td>55.6%</td><td>+21.1 pp.</td></tr>
           <tr><td>Location</td><td>67.8%</td><td>87.5%</td><td>+19.7 pp.</td></tr>
           <tr><td>Translator</td><td>35.1%</td><td>41.9%</td><td>+6.8 pp.</td></tr>
-          <tr><td>Page count</td><td>78.4%</td><td>81.6%</td><td>+3.2 pp.</td></tr>
+          <tr><td>Page count</td><td>51.0%</td><td>54.1%</td><td>+3.1 pp.</td></tr>
         </tbody>
       </table>
 
       <h2>Quality Assurance</h2>
       <p>
-        The pipeline is validated by a test suite of 264 automated tests covering
+        The pipeline is validated by a test suite of 315 automated tests covering
         encoding repair, regex patterns, wiki markup parsing, entry classification,
         and real-data extraction. Additionally, a round-trip verification script
         compares the final JSON-LD output against the original wiki content for
@@ -530,6 +531,98 @@ const Pages = {
         Bibliography.</em> Digital edition, 2026.
         Available at: <code>https://chpollin.github.io/klawiter-rescue/</code>
       </blockquote>
+    </div>`;
+  },
+
+  // ---------------------------------------------------------------------------
+  // JSON-LD Playground
+  // ---------------------------------------------------------------------------
+  jsonld() {
+    // Render HTML first, then init interactive parts after DOM update
+    setTimeout(() => JsonldPlayground.init(), 0);
+
+    return `<div class="page-content page-content-wide">
+      <h1>JSON-LD Playground</h1>
+
+      <p>
+        Explore the Linked Data structure of the Klawiter Bibliography. Each entry
+        is a JSON-LD node combining
+        <a href="https://schema.org" target="_blank" rel="noopener">Schema.org</a>,
+        <a href="http://purl.org/dc/terms/" target="_blank" rel="noopener">Dublin Core</a>,
+        and the domain-specific
+        <a href="vocab/index.html"><code>klawiter:</code> namespace</a>.
+      </p>
+
+      <h2>Select an Entry</h2>
+      <div class="jsonld-controls">
+        <div class="jsonld-search-wrap">
+          <input type="text" id="jsonld-search" class="jsonld-search"
+                 placeholder="Search by title..." autocomplete="off">
+          <div id="jsonld-suggestions" class="jsonld-suggestions hidden"></div>
+        </div>
+        <button class="action-btn" id="jsonld-random">Random Entry</button>
+      </div>
+
+      <div id="jsonld-stats" class="jsonld-stats"></div>
+
+      <div class="jsonld-tabs">
+        <button class="jsonld-tab active" data-tab="compact">Compact</button>
+        <button class="jsonld-tab" data-tab="expanded">Expanded</button>
+        <button class="jsonld-tab" data-tab="triples">Triples</button>
+      </div>
+
+      <div id="jsonld-compact" class="jsonld-panel jsonld-code"></div>
+      <div id="jsonld-expanded" class="jsonld-panel jsonld-code hidden"></div>
+      <div id="jsonld-triples" class="jsonld-panel hidden"></div>
+
+      <h2>Vocabulary</h2>
+      <table class="page-table">
+        <thead><tr><th>Prefix</th><th>Namespace</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>schema:</code></td>
+            <td><code>https://schema.org/</code></td>
+            <td>Standard bibliographic properties (name, datePublished, publisher, inLanguage, numberOfPages, translator, locationCreated, author)</td>
+          </tr>
+          <tr>
+            <td><code>dcterms:</code></td>
+            <td><code>http://purl.org/dc/terms/</code></td>
+            <td>Full bibliographic citation text (bibliographicCitation)</td>
+          </tr>
+          <tr>
+            <td><code>klawiter:</code></td>
+            <td><code>chpollin.github.io/klawiter-rescue/vocab/</code></td>
+            <td>Domain-specific: entryType, timePeriod, categories, sourcePageId, and 16 entry type classes</td>
+          </tr>
+          <tr>
+            <td><code>xsd:</code></td>
+            <td><code>w3.org/2001/XMLSchema#</code></td>
+            <td>Typed literals: integer (page counts, IDs), gYear (publication dates)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>@context Explained</h2>
+      <p>
+        The <code>@context</code> maps short property names to full IRIs. For example,
+        <code>"name"</code> expands to <code>https://schema.org/name</code>, and
+        <code>"entryType"</code> expands to
+        <code>https://chpollin.github.io/klawiter-rescue/vocab/entryType</code>.
+        This means the same JSON data is both human-readable and machine-processable
+        as RDF.
+      </p>
+      <p>
+        The <strong>Compact</strong> tab shows the entry as a JSON-LD processor would
+        receive it. The <strong>Expanded</strong> tab shows all URIs fully resolved.
+        The <strong>Triples</strong> tab shows the RDF statements a processor would
+        extract.
+      </p>
+      <p>
+        The full dataset (${App.entries ? App.entries.length.toLocaleString('en') : '5,000+'} entries)
+        is available as <a href="data/klawiter.json">JSON</a> (frontend format) and as
+        <a href="https://github.com/chpollin/klawiter-rescue/blob/main/data/output/klawiter.jsonld" target="_blank" rel="noopener">JSON-LD</a>
+        (semantic format with @context).
+      </p>
     </div>`;
   },
 

@@ -22,6 +22,14 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - `OUTPUT_DIR` = `data/output/`
 - `OUTPUT_FRONTEND_JSON` = `docs/data/klawiter.json`
 
+## Data Integrity Principle
+
+**The pipeline must never invent data.** Every extracted value must exist in the raw wiki source text. The pipeline's job is to extract, structure, and normalize — not to enrich or infer. Specifically:
+- Fields left empty because the source text doesn't contain them are **correct** (e.g., anthology poems without a standalone publisher, German originals without a translator)
+- Coverage gaps are only bugs if the value **is present in the raw text** but the pipeline fails to extract it (regex miss or LLM miss)
+- The LLM enrichment step (03b) is constrained to extract **only explicitly stated** values. It has 5 anti-hallucination layers: prompt constraint, gap-fill-only merge, structured output schema, post-extraction validation, and mojibake re-validation. Verified: 0 hallucinated values found in audit (Session 12)
+- Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing` — making the extraction source transparent and auditable
+
 ## Key Technical Decisions
 
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
