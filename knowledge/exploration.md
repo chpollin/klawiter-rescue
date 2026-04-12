@@ -247,6 +247,8 @@ The design follows Shneiderman's Visual Information Seeking Mantra (Overview fir
 - Click = dims non-selected to 0.35 + filter chip + cross-view event (no destructive filter)
 - Click ocean/land = deselect. Interactive legend = `toggleFilter()`. Animated playback = decade iteration.
 
+**Wikidata Reconciliation (Session 15).** All 382 locations reconciled against Wikidata via `reconcile_locations.py` (two-phase: Reconciliation API en+de → SPARQL metadata enrichment). 360/382 matched (94.2%) with Q-IDs. Country QIDs provide the ISO Alpha-2 codes that enable semantic zoom (country aggregation requires knowing which city belongs to which country). 22 unmatched locations logged for manual review. See [[data#wikidata-reconciliation]] for details and field schema.
+
 **All original issues resolved** (click semantics, playback, labels, contrast, reset, legend).
 
 ## References
