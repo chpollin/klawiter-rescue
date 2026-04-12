@@ -39,12 +39,13 @@ KNOWN_PUBLISHER_METADATA = 0
 # --- Patterns ---
 
 SECTION_HEADER_RE = re.compile(
-    r'^(Contents|Volumes|German|Italian|French|English|Spanish|Russian|Chinese|'
+    r'^(Contents|Volumes|Vol\.\s*\d|German|Italian|French|English|Spanish|Russian|Chinese|'
     r'Japanese|Arabic|Hebrew|Portuguese|Dutch|Swedish|Norwegian|Danish|Finnish|'
     r'Polish|Czech|Hungarian|Romanian|Bulgarian|Croatian|Serbian|Turkish|Greek|'
     r'Albanian|Catalan|Korean|Slovenian|Slovak|Ukrainian|Georgian|Persian|'
-    r'First printing|First edition|Reprinted in|See also|Translations|'
-    r'Manuscript|Reviews|Book editions|Excerpts):?\s*$',
+    r'First printing|First edition|Reprinted in|See also|See:|Note:|Translations|'
+    r'Manuscript|Reviews|Book editions|Excerpts|Fischer Editions/Reprints|'
+    r'Collected Works / [A-Za-z]+):?\s*',
     re.IGNORECASE
 )
 

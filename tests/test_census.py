@@ -45,8 +45,8 @@ class TestEntryCounts:
         that resolve to actual entries. The map is a subset.
         """
         # Frozen reference — updated after title fix (section headers → page_titles)
-        # which resolved 618 additional redirects (430 → 1048)
-        EXPECTED_REDIRECT_MAP_SIZE = 1048
+        # 430 → 1048 → 1232 → 1228 (See:/Note:/Vol. fix, then See: false-positive fix)
+        EXPECTED_REDIRECT_MAP_SIZE = 1228
         actual = len(redirects)
         assert actual == EXPECTED_REDIRECT_MAP_SIZE, (
             f"Expected {EXPECTED_REDIRECT_MAP_SIZE} redirect map entries, got {actual} "
