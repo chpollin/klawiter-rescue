@@ -4,6 +4,48 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-04-12 — Session 11: Testing Strategy Overhaul
+
+### What we did
+
+- **Critical audit of existing 280 tests**: Identified structural weaknesses — unit tests against handcrafted fixtures, silent skip-logic in real-entry tests, broken regression test (`test_year_range_sane` didn't check year ranges), 100-entry spot-check on 5,179 entries.
+- **Web research**: Data pipeline testing best practices (OpenCitations bibliographic validation, golden file testing, Pandera schema contracts, Hypothesis fuzzing, risk-based threshold calibration).
+- **New knowledge document**: `knowledge/testing.md` — 5-category test taxonomy with honest assessment of what each category can and cannot detect.
+- **New test_census.py** (14 tests): Completeness verification — exact entry counts, no duplicates, known stubs, required fields on every entry, frontend JSON structure.
+- **New test_schema.py** (14 tests): Schema validation over all 5,179 entries — entry types, year ranges, language codes, page counts, wiki markup residue, mojibake, empty strings, JSON-LD type consistency.
+- **New test_consistency.py** (6 tests): Cross-field plausibility — German+translator bounded (111 FPs), film+pageCount bounded (10), publisher≠location, year/timePeriod consistency, seeAlso referential integrity (717 broken refs bounded), no self-references.
+- **Overhauled test_regression.py**: Fixed broken `test_year_range_sane`, sharpened thresholds (2pp→1pp, 1%→0.5%), extended spot-check to all entries, added entry type distribution stability test.
+- **Overhauled test_real_entries.py**: Removed silent skip-logic, LLM-only fields as xfail instead of pass-by-doing-nothing.
+- **Updated CLAUDE.md, plan.md**: 314→ tests, 5-category strategy, page 2979 as stub, 20 markup titles documented.
+
+### What we found
+
+| Finding | Count | Detected by |
+|---------|-------|-------------|
+| Titles = `__TOC__` (title extraction failure) | 14 | test_schema |
+| Titles with `]]`/`[[` markup | 6 | test_schema |
+| German entries with translator (regex FP) | 111 | test_consistency |
+| Broken seeAlso cross-references | 717 / 1,213 | test_consistency |
+| Films with pageCount | 10 | test_consistency |
+| Publisher == Location | 1 | test_consistency |
+| Page 2979 exists as stub (docs said "missing") | 1 | test_census |
+
+### What we learned
+
+1. **Testing the functions ≠ testing the data.** 280 unit/pattern tests proved the regex works on cherry-picked strings. Zero tests asked whether the actual output contained all entries or had correct field values.
+2. **Shape correctness ≠ content correctness.** A publisher field containing a city name passes all schema checks. Only cross-field consistency tests can flag implausible combinations.
+3. **Silent test passes are worse than no tests.** The old `test_real_entries.py` had 160 tests, many of which asserted nothing due to skip-logic. This gave false confidence.
+4. **The biggest gap is semantic accuracy.** We test 20 of 4,751 entries (0.4%) for correctness. Completeness and structure are fully automated; accuracy requires judgment.
+
+### Next steps
+
+- Fix the 20 markup titles in the pipeline (title extraction bug)
+- Investigate 111 German translator false positives (regex improvement)
+- Expand real-entry sample from 20 to 50 entries
+- Improve seeAlso matching (717 broken refs partly a suffix-matching problem)
+
+---
+
 ## 2026-03-31 — Session 10: Frontend Cleanup, Data Quality Analysis & Regression Testing
 
 ### What we did

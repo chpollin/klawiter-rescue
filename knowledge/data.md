@@ -192,7 +192,13 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 
 **originalTitle false positives (fixed)**: The `extract_original_title()` regex previously matched bare years in brackets (e.g. `[1931]`) as original titles, producing 272 false positives. Fixed by rejecting candidates that match `^\d{4}$`.
 
-**1 missing entry**: 1 of 6,296 pages could not be found in any of the 8 BLOBs.
+**1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as stub (sourcePageId + entryType only, no title/content).
+
+**20 titles with markup residue** (found by test_schema.py, Session 11): 14 entries have `__TOC__` as their title (title extraction fell through to magic word), 6 entries have unclosed `]]` or `[[` wiki links in titles. Pipeline bug in `extract_title()`.
+
+**111 German entries with translator** (found by test_consistency.py, Session 11): Regex false positives where author names, editors, or location text was extracted as translator (e.g. `translator: "Stefan Zweig. Leipzig"`).
+
+**717 broken seeAlso references** (found by test_consistency.py, Session 11): 717 of 1,213 cross-references don't match any entry title or redirect target. Partially a matching problem — reference strings include language suffixes like "/ Spanish" or formatting that doesn't match clean titles.
 
 ### Quality Report
 

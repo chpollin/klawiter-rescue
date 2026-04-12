@@ -29,8 +29,9 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
 - **Static frontend**: Vanilla JS (13 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 5 content pages (About, Methodology, Help, Data, Imprint)
 - **Exploration interface**: 3-mode interactive visualization (Timeline stacked area, Overview linked views, Network force graph) replacing the former Chart.js dashboard
-- **Test suite**: 280 tests (encoding, patterns, wiki parser, vocabulary, real-data, LLM-as-a-Judge, regression)
-- **Regression testing**: Baseline metrics in `.github/baseline-metrics.json`, 18 regression tests in `tests/test_regression.py`, CI checks in `validate-patch.yml`
+- **Test suite**: 311 tests in 5-category strategy (census, schema, consistency, distribution, extraction). See `knowledge/testing.md`
+- **Testing categories**: Census (completeness — all page_ids, no dupes), Schema (every entry — types, ranges, markup, mojibake), Consistency (cross-field — German+translator, film+pageCount, seeAlso integrity), Distribution (regression ≤1pp), Extraction (unit + real-data + LLM-judge). Shared fixtures in `conftest.py`
+- **Regression testing**: Baseline metrics in `.github/baseline-metrics.json`, 19 regression tests in `tests/test_regression.py`, CI checks in `validate-patch.yml`
 - **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`
 - **License**: MIT (code) + CC BY 4.0 (data)
 
@@ -40,13 +41,15 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Frontend displays ns 0 entries only; category/system pages are included in JSON-LD but filtered in the UI
 - Only `zweig_part_01.sql` is used; `_02` (empty schema) and `_03` (system metadata) are correctly ignored
 - BLOBs contain 53,016 text entries (all revisions); pipeline uses only the latest revision per page
-- 1 missing entry: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB
+- 1 stub entry: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB; present in output as stub without title/content
 
 ## Known Limitations
 
 - Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining ~44% is 15-20% legitimately missing (anthology poems, journal articles) + 80-85% structural gap (implicit citation formats not matched by regex)
 - Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator
 - Location: 87.5% coverage (regex 67.8% + LLM +19.7pp)
+- 6 titles with markup residue: unclosed `]]`/`[[` wiki links from source text. 14 `__TOC__` titles fixed in Session 11. Detected by `test_schema.py`
+- Page count: 54.1% coverage (previously reported as 81.6%, but ~1,300 values were false extractions from `pp. N-M` page ranges). Fixed in Session 11
 - ~15 bracket-titles remain where no page_title fallback exists (wiki markup cleaned in step 03). Title extraction improved: `[year]:` patterns now search for second bold block before falling back to page_title
 - Title precision: verify.py reports 81.5% but actual precision is ~95%+ (880 "false positives" are page_title fallbacks — titles from wiki metadata, not content — now classified as `correct_fallback`)
 - JSON-LD namespace URL (`chpollin.github.io/klawiter-rescue/vocab/`) resolves to `docs/vocab/index.html` (GitHub Pages)

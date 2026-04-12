@@ -116,6 +116,13 @@ class TestExtractPageCount:
         # 347/(1)p. — the /(1) prevents match; known limitation
         assert extract_page_count("Hugo Hultenberg. 347/(1)p.") is None
 
+    def test_rejects_page_ranges(self):
+        """pp. N-M is a page range (start-end), not a page count."""
+        assert extract_page_count("pp. 111-118") is None
+        assert extract_page_count("pp. 289-325") is None
+        assert extract_page_count("pp. 84-125") is None
+        assert extract_page_count("pp. 7-18") is None
+
     def test_rejects_over_10000(self):
         assert extract_page_count("99999p.") is None
 

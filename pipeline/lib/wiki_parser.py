@@ -93,6 +93,12 @@ def extract_title(content):
     if not content:
         return None
 
+    # Strip leading magic words only — __TOC__ at the start is not a title,
+    # but removing it mid-content would shift the first-line fallback
+    content = re.sub(r'^\s*__(?:TOC|NOTOC|FORCETOC|NOEDITSECTION)__\s*\n?', '', content).strip()
+    if not content:
+        return None
+
     # Pattern 1: '''Bold text''' at start — but reject if it looks like [year]: Publisher
     m = re.match(r"\s*'''(.+?)'''", content)
     if m:
@@ -104,7 +110,10 @@ def extract_title(content):
     # Pattern 2: "Title" in escaped or regular quotes at start
     m = re.match(r'\s*(?:\\")?"(.+?)"', content)
     if m:
-        return m.group(1).strip()
+        title = m.group(1).strip()
+        # Clean orphaned ]] from titles (e.g. unclosed wiki links in source)
+        title = re.sub(r'\]\]', '', title).strip()
+        return title
 
     # Pattern 3: For collected-works entries with '''[year]: Publisher''' format,
     # look for the page_title or the first meaningful text line

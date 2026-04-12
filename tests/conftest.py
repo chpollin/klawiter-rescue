@@ -15,6 +15,68 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "pipeline"))
 
 PROJECT_ROOT = Path(__file__).parent.parent
 TEST_SAMPLE_PATH = PROJECT_ROOT / "data" / "intermediate" / "test_sample_20.json"
+FRONTEND_JSON = PROJECT_ROOT / "docs" / "data" / "klawiter.json"
+BASELINE_PATH = PROJECT_ROOT / ".github" / "baseline-metrics.json"
+QUALITY_REPORT = PROJECT_ROOT / "data" / "output" / "quality-report.json"
+
+
+# --- Shared data fixtures (loaded once per session) ---
+
+@pytest.fixture(scope="session")
+def frontend_data():
+    """Load frontend JSON once for all data tests."""
+    if not FRONTEND_JSON.exists():
+        pytest.skip("Frontend JSON not found — run pipeline step 05 first")
+    with open(FRONTEND_JSON, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+@pytest.fixture(scope="session")
+def all_entries(frontend_data):
+    """All entries from frontend JSON."""
+    return frontend_data["entries"]
+
+
+@pytest.fixture(scope="session")
+def ns0_entries(all_entries):
+    """Namespace-0 (bibliography) entries only."""
+    return [e for e in all_entries if e.get("pageNamespace") == 0]
+
+
+@pytest.fixture(scope="session")
+def redirects(frontend_data):
+    """Redirect map from frontend JSON."""
+    return frontend_data.get("redirects", {})
+
+
+@pytest.fixture(scope="session")
+def all_titles(ns0_entries):
+    """Set of all ns-0 entry titles."""
+    return {e.get("title") for e in ns0_entries if e.get("title")}
+
+
+@pytest.fixture(scope="session")
+def redirect_targets(frontend_data):
+    """Set of all redirect target values."""
+    return set(frontend_data.get("redirects", {}).values())
+
+
+@pytest.fixture(scope="session")
+def baseline():
+    """Load baseline metrics once."""
+    if not BASELINE_PATH.exists():
+        pytest.skip("baseline-metrics.json not found")
+    with open(BASELINE_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+@pytest.fixture(scope="session")
+def quality_report():
+    """Load quality report once."""
+    if not QUALITY_REPORT.exists():
+        pytest.skip("quality-report.json not found (run pipeline step 06 first)")
+    with open(QUALITY_REPORT, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 # --- Real dataset fixtures ---

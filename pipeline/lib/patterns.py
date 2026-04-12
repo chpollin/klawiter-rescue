@@ -46,9 +46,12 @@ _loc_pattern = '|'.join(re.escape(loc) for loc in _loc_sorted)
 LOCATION_RE = re.compile(rf'\[?\b({_loc_pattern})\b\]?')
 
 # Page count patterns
+# Note: pp. N-M is a page RANGE (start-end), not a page count.
+# Pattern 2 requires the number to NOT be followed by a hyphen+digit (range).
+# The \b after \d+ prevents backtracking from shortening the number match.
 PAGE_COUNT_PATTERNS = [
     re.compile(r'(\d{1,5})\s*(?:pp?\.|pages?|Seiten|S\.)', re.IGNORECASE),
-    re.compile(r'pp?\.\s*(\d{1,5})', re.IGNORECASE),
+    re.compile(r'pp?\.\s*(\d{1,5})\b(?!\s*[-–—]\s*\d)', re.IGNORECASE),
     re.compile(r'(\d{1,5})\s*p\b'),
 ]
 

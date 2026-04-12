@@ -272,18 +272,24 @@ pytest tests/ -m llm -v         # LLM-as-a-Judge, requires GEMINI_API_KEY (~10s)
 pytest tests/ -v                # everything
 ```
 
-| Test file | Tests | What it covers |
-|-----------|-------|----------------|
-| `test_encoding.py` | 13 | Mojibake detection/repair, HTML entity handling |
-| `test_patterns.py` | 48 | All 8 extraction functions with real examples |
-| `test_wiki_parser.py` | 83 | 12 parser functions (redirect, categories, title, blocks, magic words) |
-| `test_real_entries.py` | 100 | Parametrized over 20 hand-labeled entries from `test_sample_20.json` |
-| `test_llm_judge.py` | 4 | Gemini evaluates extraction correctness on 10 diverse entries |
-| `test_regression.py` | 18 | Entry counts, field coverage thresholds, severity bounds, frontend integrity |
+5-category strategy — see [[testing]] for full taxonomy and rationale.
 
-**Total: 280 tests** (276 without LLM). Run `pytest tests/ -m "not llm" -v` for fast feedback.
+| Category | Test file | Tests | What it covers |
+|----------|-----------|-------|----------------|
+| Census | `test_census.py` | 14 | All page_ids present, no duplicates, stubs, required fields, frontend structure |
+| Schema | `test_schema.py` | 14 | Every entry validated: types, year ranges, language codes, markup residue, mojibake |
+| Consistency | `test_consistency.py` | 6 | Cross-field: German+translator, film+pageCount, seeAlso integrity, year/period |
+| Distribution | `test_regression.py` | 19 | Baseline comparison: counts (±0.5%), coverage (≤1pp), type distribution (±2%) |
+| Extraction | `test_encoding.py` | 13 | Mojibake detection/repair, HTML entity handling |
+| | `test_patterns.py` | 35 | Extraction functions (year, publisher, location, translator, page_count) |
+| | `test_wiki_parser.py` | 41 | Parser functions (redirect, categories, title, blocks, magic words) |
+| | `test_vocabulary.py` | 19 | Classification (time period, entry type, language-to-ISO) |
+| | `test_real_entries.py` | 160 | Parametrized over 20 hand-labeled entries from `test_sample_20.json` |
+| | `test_llm_judge.py` | 4 | Gemini evaluates extraction correctness on 10 diverse entries |
 
-**Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>1%), field coverage regressions (>1-2pp for critical fields), new error-severity issues, Mojibake spikes. Baseline must be updated after intentional improvements.
+**Total: 314 tests** (310 without LLM). Run `pytest tests/ -m "not llm" -v` for fast feedback (~1.5s).
+
+**Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>0.5%), field coverage regressions (>1pp), type distribution drift (>2pp), error-severity increases. Baseline must be updated after intentional improvements.
 
 **LLM-as-a-Judge**: Sends extracted fields + raw text to Gemini 3.1 Flash Lite. The model judges each field as correct/wrong/missed/not_applicable. Known limitations are tracked in `_KNOWN_WRONG` — unexpected errors fail the test, known issues are baselined. Cost: ~$0.001 per run.
 

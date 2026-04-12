@@ -1,6 +1,7 @@
 """
 Regression tests — ensure pipeline output quality doesn't degrade.
 Compares current quality-report.json against .github/baseline-metrics.json.
+Fixtures (quality_report, baseline) are defined in conftest.py.
 """
 
 import json
@@ -9,24 +10,6 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).parent.parent
-QUALITY_REPORT = PROJECT_ROOT / "data" / "output" / "quality-report.json"
-BASELINE_PATH = PROJECT_ROOT / ".github" / "baseline-metrics.json"
-
-
-@pytest.fixture(scope="module")
-def quality_report():
-    if not QUALITY_REPORT.exists():
-        pytest.skip("quality-report.json not found (run pipeline step 06 first)")
-    with open(QUALITY_REPORT, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-@pytest.fixture(scope="module")
-def baseline():
-    if not BASELINE_PATH.exists():
-        pytest.skip("baseline-metrics.json not found")
-    with open(BASELINE_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 # ---------------------------------------------------------------------------
@@ -51,11 +34,11 @@ class TestEntryCounts:
         )
 
     def test_no_significant_entry_loss(self, quality_report, baseline):
-        """Total entries within 1% of baseline."""
+        """Total entries within 0.5% of baseline (tighter than old 1%)."""
         baseline_total = baseline["summary"]["total_entries"]
         actual = quality_report["summary"]["total_entries"]
-        assert actual >= baseline_total * 0.99, (
-            f"Entry count dropped >1%: {baseline_total} → {actual}"
+        assert actual >= baseline_total * 0.995, (
+            f"Entry count dropped >0.5%: {baseline_total} → {actual}"
         )
 
 
@@ -84,15 +67,15 @@ class TestFieldCoverage:
 
     @pytest.mark.parametrize("field", TRACKED_FIELDS)
     def test_tracked_field_coverage_stable(self, quality_report, baseline, field):
-        """No tracked field drops more than 2pp from baseline."""
+        """No tracked field drops more than 1pp from baseline."""
         if field not in baseline["field_coverage"]:
             pytest.skip(f"{field} not in baseline")
         baseline_pct = baseline["field_coverage"][field]["percentage"]
         current_pct = quality_report["field_coverage"][field]["percentage"]
         drop = baseline_pct - current_pct
-        assert drop <= 2.0, (
+        assert drop <= 1.0, (
             f"{field} coverage dropped {drop:.1f}pp: "
-            f"{baseline_pct}% → {current_pct}%"
+            f"{baseline_pct}% → {current_pct}% (threshold: 1pp)"
         )
 
 
@@ -138,13 +121,26 @@ class TestDataIntegrity:
         assert "entry_type_distribution" in quality_report
 
     def test_year_range_sane(self, quality_report):
-        """Year range stays within expected bounds."""
+        """Year distribution spans the expected range (1815–2020)."""
         dist = quality_report.get("year_distribution", {})
-        # If year_distribution isn't in report, check via entry_type_distribution
-        # which always exists
-        assert "entry_type_distribution" in quality_report
-        total_types = sum(quality_report["entry_type_distribution"].values())
-        assert total_types > 0, "No entries in type distribution"
+        if not dist:
+            # Fallback: at least verify type distribution exists and is non-empty
+            assert "entry_type_distribution" in quality_report
+            total_types = sum(quality_report["entry_type_distribution"].values())
+            assert total_types > 0, "No entries in type distribution"
+            return
+
+        years = [int(y) for y in dist.keys()]
+        assert min(years) <= 1820, (
+            f"Earliest year {min(years)} > 1820 — possible data loss at lower bound"
+        )
+        assert max(years) >= 2015, (
+            f"Latest year {max(years)} < 2015 — possible data loss at upper bound"
+        )
+        total_with_year = sum(dist.values())
+        assert total_with_year >= 4000, (
+            f"Only {total_with_year} entries have year data — expected ≥ 4000"
+        )
 
     def test_frontend_json_exists(self):
         """Frontend JSON file exists and is valid."""
@@ -158,14 +154,57 @@ class TestDataIntegrity:
             f"Frontend JSON has only {len(data['entries'])} entries"
         )
 
+    def test_entry_type_distribution_stable(self, quality_report, baseline):
+        """No entry type disappears entirely; each stays within ±2% of baseline share."""
+        if "entry_type_distribution" not in baseline:
+            pytest.skip("entry_type_distribution not in baseline")
+        baseline_dist = baseline["entry_type_distribution"]
+        current_dist = quality_report["entry_type_distribution"]
+        baseline_total = sum(baseline_dist.values())
+        current_total = sum(current_dist.values())
+
+        vanished = [
+            t for t in baseline_dist
+            if baseline_dist[t] > 0 and current_dist.get(t, 0) == 0
+        ]
+        assert len(vanished) == 0, (
+            f"Entry types vanished entirely: {vanished}"
+        )
+
+        drifted = []
+        for entry_type, baseline_count in baseline_dist.items():
+            if baseline_count == 0:
+                continue
+            baseline_share = baseline_count / baseline_total * 100
+            current_count = current_dist.get(entry_type, 0)
+            current_share = current_count / current_total * 100 if current_total > 0 else 0
+            drift = abs(current_share - baseline_share)
+            if drift > 2.0:
+                drifted.append(
+                    f"{entry_type}: {baseline_share:.1f}% → {current_share:.1f}% "
+                    f"(drift {drift:.1f}pp)"
+                )
+        assert len(drifted) == 0, (
+            f"Entry type distribution drifted >2pp:\n" + "\n".join(f"  {d}" for d in drifted)
+        )
+
     def test_frontend_entries_have_required_fields(self):
-        """Spot-check: first 100 entries have sourcePageId and entryType."""
+        """Every entry has sourcePageId and entryType (not just first 100)."""
         frontend_path = PROJECT_ROOT / "docs" / "data" / "klawiter.json"
         if not frontend_path.exists():
             pytest.skip("Frontend JSON not found")
         with open(frontend_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        sample = data["entries"][:100]
-        for entry in sample:
-            assert "sourcePageId" in entry, f"Missing sourcePageId: {entry.get('title', '?')}"
-            assert "entryType" in entry, f"Missing entryType: {entry.get('title', '?')}"
+        missing_pid = [
+            i for i, e in enumerate(data["entries"]) if "sourcePageId" not in e
+        ]
+        missing_type = [
+            e.get("sourcePageId", f"index-{i}")
+            for i, e in enumerate(data["entries"]) if "entryType" not in e
+        ]
+        assert len(missing_pid) == 0, (
+            f"{len(missing_pid)} entries missing sourcePageId"
+        )
+        assert len(missing_type) == 0, (
+            f"{len(missing_type)} entries missing entryType: {missing_type[:10]}"
+        )

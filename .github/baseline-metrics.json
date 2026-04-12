@@ -1,6 +1,6 @@
 {
   "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json.",
-  "date": "2026-03-31",
+  "date": "2026-04-12",
   "summary": {
     "total_entries": 6725,
     "redirects": 1546,
@@ -14,16 +14,44 @@
     }
   },
   "field_coverage": {
-    "name": { "count": 4750, "percentage": 100.0 },
-    "datePublished": { "count": 4429, "percentage": 93.2 },
-    "publisher": { "count": 2642, "percentage": 55.6 },
-    "locationCreated": { "count": 4158, "percentage": 87.5 },
-    "inLanguage": { "count": 4248, "percentage": 89.4 },
-    "numberOfPages": { "count": 3877, "percentage": 81.6 },
-    "translator": { "count": 1990, "percentage": 41.9 },
-    "bibliographicCitation": { "count": 4719, "percentage": 99.3 }
+    "name": {
+      "count": 4750,
+      "percentage": 100.0
+    },
+    "datePublished": {
+      "count": 4429,
+      "percentage": 93.2
+    },
+    "publisher": {
+      "count": 2642,
+      "percentage": 55.6
+    },
+    "locationCreated": {
+      "count": 4158,
+      "percentage": 87.5
+    },
+    "inLanguage": {
+      "count": 4248,
+      "percentage": 89.4
+    },
+    "numberOfPages": {
+      "count": 2568,
+      "percentage": 54.1
+    },
+    "translator": {
+      "count": 1990,
+      "percentage": 41.9
+    },
+    "bibliographicCitation": {
+      "count": 4719,
+      "percentage": 99.3
+    }
   },
-  "year_range": { "min": 1815, "max": 2020, "count": 4440 },
+  "year_range": {
+    "min": 1815,
+    "max": 2020,
+    "count": 4440
+  },
   "thresholds": {
     "total_entries_min": 6700,
     "non_redirects_main_min": 4700,

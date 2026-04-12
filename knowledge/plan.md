@@ -299,3 +299,5 @@ M1 ✅ → M2 ✅ → M3 ✅ → M4 ✅ → M6 ✅ → M7 ✅ (partial) → M8 �
 - M5 (Semantic Enrichment): main remaining research task (Wikidata/GND/VIAF reconciliation)
 
 **Session 10 additions**: Regression test infrastructure (`.github/baseline-metrics.json` + `tests/test_regression.py` + CI checks). verify.py title methodology fixed (880 FPs → `correct_fallback`). Title extraction improved for `[year]:` patterns. Frontend refactored (unified colors, deduplicated code, event delegation, ARIA, SRI hashes). 280 tests total.
+
+**Session 11 additions**: Testing strategy overhaul — see [[testing]]. New test layers: census (completeness verification against all page_ids), schema contract (every entry validated for types, ranges, markup residue, mojibake), distribution stability (tighter regression thresholds). Existing tests critiqued and fixed: test_regression.py broken checks repaired, test_real_entries.py skip-logic removed. Documented in `knowledge/testing.md`.
