@@ -19,13 +19,18 @@ import pytest
 # Fixed in Session 14: section headers rejected, fallback to page_title (812 → 0)
 KNOWN_SECTION_HEADER_TITLES = 0
 
-# Titles longer than 200 characters (likely full citation text, not a title)
-# Fixed in Session 14: long titles rejected, fallback to page_title (387 → 0)
-KNOWN_LONG_TITLES = 0
+# Titles longer than 200 characters — remaining 43 are encoding-guard cases where
+# the long extracted title is preferred over a mojibake page_title (387 → 43)
+KNOWN_LONG_TITLES = 43
 
 # PageCount values that look like years (1800-2030)
 # Reduced by parenthesized lookahead fix and N/(M)p. pattern (27 → 11)
 KNOWN_YEAR_AS_PAGECOUNT = 11
+
+# Titles with encoding artifacts (0x80-0x9F bytes from broken page_titles)
+# Encoding guard fixes length-rejected cases (358 → 345). Remaining 345 are
+# entries where both extracted title (section header) AND page_title have issues
+KNOWN_ENCODING_TITLES = 345
 
 # Publisher fields containing wiki markup ('')
 # Fixed in Session 14: wiki markup stripped from publisher (20 → 0)
@@ -81,6 +86,17 @@ class TestTitleHeuristics:
         assert len(long) <= KNOWN_LONG_TITLES, (
             f"Long titles (>200 chars): {len(long)} (threshold {KNOWN_LONG_TITLES}). "
             f"Examples: {[(e['sourcePageId'], len(e['title'])) for e in long[:5]]}"
+        )
+
+    def test_no_encoding_artifacts_in_titles(self, ns0_entries):
+        """Titles should not contain raw encoding artifacts (0x80-0x9F bytes).
+        Root cause: page_title fallback for Arabic/Cyrillic transliterated titles
+        where the page_title has mojibake from the MediaWiki database."""
+        bad = [e for e in ns0_entries
+               if e.get('title') and re.search(r'[\x80-\x9f]', e['title'])]
+        assert len(bad) <= KNOWN_ENCODING_TITLES, (
+            f"Encoding artifacts in titles: {len(bad)} (threshold {KNOWN_ENCODING_TITLES}). "
+            f"Examples: {[(e['sourcePageId'], e['title'][:50]) for e in bad[:5]]}"
         )
 
 

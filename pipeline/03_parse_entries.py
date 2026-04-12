@@ -82,10 +82,10 @@ def process_entry(row):
     # or full citation text (>200 chars).
     extracted_title = parsed.get('title', '')
     page_title = row.get('page_title', '')
+    rejected_for_length = False
 
     # Reject: [year]: Publisher, Location (metadata, not a title)
     if extracted_title and re.match(r'\[\d{4}', extracted_title):
-        # Look for the real title in a subsequent bold block
         bold_matches = re.findall(r"'''\s*(.+?)\s*'''", content)
         real_title = next(
             (m for m in bold_matches if not re.match(r'\[\d{4}', m)),
@@ -99,7 +99,14 @@ def process_entry(row):
 
     # Reject: full citation text (>200 chars is not a title)
     if extracted_title and len(extracted_title) > 200:
+        rejected_for_length = True
         extracted_title = ''
+
+    # Guard: if page_title has encoding artifacts AND the extracted title was
+    # only rejected for length (not for being a section header), keep the
+    # long extracted title — it's better than a mojibake page_title
+    if rejected_for_length and page_title and re.search(r'[\x80-\x9f]', page_title):
+        extracted_title = remove_wiki_markup(parsed.get('title', ''))
 
     result['title'] = extracted_title or page_title
     # Clean any remaining wiki markup from title (e.g. page_title fallbacks)

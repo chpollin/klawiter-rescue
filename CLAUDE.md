@@ -37,9 +37,10 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
 - **Static frontend**: Vanilla JS (14 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 6 content pages (About, Methodology, Help, Data, JSON-LD Playground, Imprint)
 - **Exploration interface**: 3-mode interactive visualization (Timeline stacked area, Overview linked views, Network force graph) replacing the former Chart.js dashboard
-- **Test suite**: 401 tests in 6-category strategy (census, schema, consistency, distribution, extraction, semantic). See `knowledge/testing.md`
+- **Test suite**: 392 tests in 6-category strategy (census, schema, consistency, distribution, extraction, semantic). See `knowledge/testing.md`
 - **Testing categories**: Census (completeness — all page_ids, no dupes), Schema (every entry — types, ranges, markup, mojibake), Consistency (cross-field — German+translator, film+pageCount, seeAlso integrity), Distribution (regression ≤1pp), Extraction (unit + real-data + LLM-judge), Semantic (wiki-verified ground truth + heuristic validators). Shared fixtures in `conftest.py`
-- **Semantic testing**: 10 entries verified against live wiki (klawiter.stefanzweig.digital), 5 heuristic validators on all entries. Ground truth in `tests/wiki_ground_truth.json`. Current accuracy: 48/70 fields correct (69%). Run with `pytest -m semantic`
+- **Semantic testing**: 10 entries verified against live wiki (klawiter.stefanzweig.digital), 6 heuristic validators on all entries. Ground truth in `tests/wiki_ground_truth.json`. Current accuracy: 53/70 fields correct (76%). Run with `pytest -m semantic`
+- **Pipeline limit**: Regex extraction reached diminishing returns. Multi-edition pages (427 of 6,296 = 6.8%) cause systematic extraction errors. Further regex fixes shift problems rather than solving them. See `knowledge/pipeline.md`
 - **Regression testing**: Baseline metrics in `.github/baseline-metrics.json`, 19 regression tests in `tests/test_regression.py`, CI checks in `validate-patch.yml`
 - **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`
 - **License**: MIT (code) + CC BY 4.0 (data)
@@ -57,7 +58,9 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining 44.4% not in source text or in implicit citation formats — these gaps are correct per Data Integrity Principle
 - Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator — these gaps are correct
 - Location: 87.5% coverage (regex 67.8% + LLM +19.7pp)
-- 0 titles with markup residue: orphaned `]]`/`[[`/`'''` cleanup added in Session 14 (was 6→7→0). 14 `__TOC__` titles fixed in Session 11. Detected by `test_schema.py`
+- 0 titles with markup residue: orphaned `]]`/`[[`/`'''` cleanup added in Session 14 (was 6→7→0). 14 `__TOC__` titles fixed in Session 11
+- 0 section-header titles: "Contents:", "See:", "Note:", etc. rejected with page_title fallback (was 1,368). 345 titles have encoding artifacts in page_title (Arabic/Cyrillic transliterations)
+- Multi-edition pages: 427 pages contain multiple publications. Pipeline extracts one flat entry per page. Publisher, pageCount, year may come from wrong edition
 - Page count: 54.1% coverage (previously reported as 81.6%, but ~1,300 values were false extractions from `pp. N-M` page ranges). Fixed in Session 11
 - ~15 bracket-titles remain where no page_title fallback exists (wiki markup cleaned in step 03). Title extraction improved: `[year]:` patterns now search for second bold block before falling back to page_title
 - Title precision: verify.py reports 81.5% but actual precision is ~95%+ (880 "false positives" are page_title fallbacks — titles from wiki metadata, not content — now classified as `correct_fallback`)
