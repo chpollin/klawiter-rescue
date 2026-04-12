@@ -36,15 +36,17 @@ Different research questions require different visual encodings. A single visual
 
 | Mode | Research Focus | Visual Encoding |
 |------|---------------|-----------------|
-| **Timeline** | Temporal + linguistic | Stacked area chart (year x language) |
-| **Overview** | Multi-dimensional | 4 linked small multiples (cross-filtering) |
+| **Timeline** | Temporal + linguistic/typological | Stacked bar chart (year x language or type) |
+| **Geography** | Spatial + temporal | Bubble map with brushed linking from Timeline |
 | **Connections** | Relational | Force-directed network graph |
+
+Note: The Overview mode (4 linked small multiples) was removed in Session 14 to focus on three strong modes rather than four mediocre ones.
 
 ### Progressive disclosure
 
 - **Default**: Timeline mode — most familiar chart type, answers the broadest question
-- **On demand**: Mode tabs for Overview and Connections
-- **Detail panel**: Shows selected entries without leaving the visualization
+- **On demand**: Mode tabs for Geography and Connections
+- **Detail panel**: Appears on selection (not always visible) — maximizes chart space
 - **Exit to browse**: Double-click or "View entries" button navigates to the faceted search
 
 ## Data Landscape
@@ -82,39 +84,41 @@ Different research questions require different visual encodings. A single visual
 
 ## Visualization Techniques
 
-### Timeline: Stacked Area Chart
+### Timeline: Stacked Bar Chart
 
-**D3 implementation**: `d3.area()` + `d3.stack()` + `d3.brushX()`
+**D3 implementation**: `d3.stack()` + `rect` + `d3.brushX()`
 
-The stacked area chart shows publication volume over time, with layers colored by language. This encodes two dimensions simultaneously (time + language composition) and reveals patterns like the post-war translation wave and the Chinese boom.
+Stacked bar chart with one bar per year showing publication volume over time. Bars (not area curves) because the data is discrete — integer counts per year, not continuous flow. Layers colored by language (default) or entry type (toggle).
 
-**Stack order**: `d3.stackOrderInsideOut` places the largest streams in the center for visual stability. German (dominant) sits in the middle; smaller languages are at the edges.
+**Features (Session 14):**
+- **Layer toggle**: Switch between "by Language" (top 10 + Other) and "by Type" (top 10 entry types + other). Uses `Explore.colors.languages` and `Explore.colors.types`.
+- **Semantic zoom**: At full extent (200 years): decade labels on x-axis. On brush to small range (<30 years): individual year labels. Dynamic tick formatting based on domain width.
+- **Brush-state event**: Every brush update fires `explore:filterChange` CustomEvent on `document` with `Explore.filters.yearRange`. Consumed by Geography and Connections views for cross-view filtering, even when not visible (state applied on tab switch).
+- **Provenance overlay**: Toggle "Data quality" shows semi-transparent bars per year with regex (green) / LLM (gold) / missing (burgundy) proportions. Data from `_provenance` object in each entry.
+- **Annotations**: 5 markers — Born 1881, WWI 1914, Exile 1933, WWII 1939, Death 1942. Collision avoidance staggers overlapping labels. Hover shows detail text.
 
-**Zweig's lifetime**: A subtle gold band from 1881 to 1942 provides biographical context without dominating the visualization.
+**Stack order**: `d3.stackOrderInsideOut` — largest category in center for visual stability.
 
-**Annotations**: Vertical lines at 1881 (birth), 1914 (WWI), 1933 (exile from Austria), 1942 (death in Petrópolis). These anchor the temporal narrative.
+**Zweig's lifetime**: Subtle gold band from 1881 to 1942 provides biographical context.
 
-### Overview: Linked Small Multiples
+**Layout**: Full-width chart (no sidebar by default). Detail panel appears only on selection. Compact inline legend in controls bar above chart. Stats as text line in header ("4,751 entries . 41 languages . 15 types . 1815-2020").
 
-**D3 implementation**: 4 sub-views in a 2x2 grid, sharing a filter state via cross-filtering.
+### Connections: Two-Level Network
 
-1. **Decade histogram** (`d3.bin()` + rect): Temporal overview with brush
-2. **Type treemap** (`d3.treemap()`): Hierarchical composition of entry types
-3. **Language bars** (`d3.scaleBand()`): Top 15 languages, horizontal
-4. **Location lollipop** (line + circle): Top 20 locations
+**D3 implementation**: `d3.forceSimulation()` with two view levels (semantic zoom for networks).
 
-Cross-filtering logic: clicking any element in any view filters the data across all four views. Active filters appear as removable chips. This follows the established paradigm of Shneiderman's "overview first, zoom and filter, then details-on-demand."
+574 entries participate in seeAlso cross-references (~590 edges). A flat force-directed layout of all nodes is unreadable at this scale, so the visualization uses a two-level approach analogous to the Geography semantic zoom (countries → cities):
 
-### Connections: Force-Directed Graph
+**Level 1 — Community Overview (default):** Connected components are detected via BFS and aggregated into meta-nodes. Each meta-node represents one community, sized by member count, colored distinctly (d3.schemeTableau10), and labeled with the hub title. Small communities (< 3 members) are grouped into a "Small clusters" aggregate. Cross-community edges are shown as weighted meta-links. Result: ~10-20 readable bubbles instead of 574 overlapping dots. The detail panel lists all communities with their hub and dominant type.
 
-**D3 implementation**: `d3.forceSimulation()` with link, charge, center, and collide forces.
-
-Nodes represent entries that participate in seeAlso relationships (~500 nodes, ~500 edges). Node size encodes degree (number of connections), node color encodes entry type.
+**Level 2 — Community Detail (click to drill down):** Clicking a community expands it into a standard force-directed layout of its members. Hub highlighting (top 10 by degree, with halo + permanent labels), degree filter slider (live transitions), and entry-type coloring. A back button returns to the overview. For large communities (100+ nodes), the degree filter starts at 2 to suppress leaf nodes.
 
 The graph reveals structural patterns:
-- Which works are most cross-referenced?
-- Are there clusters by type or language?
-- Which entries serve as "hubs" connecting different parts of the bibliography?
+- Which works are most cross-referenced? (hub highlighting)
+- What clusters exist in the cross-reference network? (community overview)
+- How are communities connected? (meta-links between communities)
+
+**Sub-mode 2 — Translators:** Flat force-directed graph of top 50 translators linked by shared mainCategory (unchanged, manageable scale).
 
 ## Interaction Design
 
@@ -144,8 +148,9 @@ Switching modes preserves context where possible:
 ## Technology
 
 - **D3.js v7** via CDN — standard for academic information visualization
-- **Replaces Chart.js** — D3 provides brushing, force simulation, stacked area, treemaps
-- **4 JS modules**: `explore.js` (controller), `explore-timeline.js`, `explore-overview.js`, `explore-network.js`
+- **Replaces Chart.js** — D3 provides brushing, force simulation, stacked bars, bubble maps
+- **4 JS modules**: `explore.js` (controller), `explore-timeline.js`, `explore-geography.js`, `explore-network.js`
+- **Cross-view communication**: `explore:filterChange` CustomEvent on `document` — all views can react to filter changes from any other view
 - **SVG rendering** — lightweight, exportable, accessible via DOM
 
 ## Color Palette
@@ -167,6 +172,53 @@ Extended from the existing SZD design system:
 | Other | Light Gray | #9E9585 |
 | Zweig lifetime band | Gold (20% opacity) | #C2A360 |
 | Grid lines | Warm gray | #EDE8DF |
+
+## Information Seeking Mantra Assessment
+
+The design follows Shneiderman's Visual Information Seeking Mantra (Overview first, zoom and filter, then details-on-demand) extended to seven tasks. Assessment as of Session 14 (2026-04-12):
+
+| Task | Timeline | Overview | Geography | Connections |
+|------|----------|----------|-----------|-------------|
+| Overview | Good (stacked area) | Good (6 small multiples) | Weak (too many bubbles in Europe) | Weak (no aggregate level) |
+| Zoom | Good (brush = semantic zoom) | N/A (fixed) | Geometric only | Geometric only |
+| Filter | Good (brush, chips) | Good (cross-filter) | Good (click) | Missing |
+| Details | Good (panel + tooltips) | Good | Good | Good |
+| Relate | Good (cross-mode filters) | Good | Missing (no comparison) | Missing |
+| History | Missing | Missing | Missing | Missing |
+| Extract | JSON-LD download only | — | — | — |
+
+### Design Decisions (2026-04-12)
+
+**Overview-View not expanded.** The Overview (6 linked small multiples) remains as built but is not the focus of further development. Effort concentrates on three strong modes (Timeline, Geography, Connections) rather than four moderate ones.
+
+**Personas.** Each view has an analytical identity guiding its development:
+- L1 Temporal Analyst (Timeline) — time series, periodisation, trends
+- L2 Spatial Analyst (Geography) — spaces, diffusion, cartography
+- L3 Network Analyst (Connections) — graphs, hubs, communities, centrality
+
+**Geography prioritisation.** A) Brushed Linking Timeline → Geography (highest impact: shows Zweig reception migration Wien/Berlin → Amsterdam/London → Beijing/Barcelona). B) Animated Playback (Play button through decades). C) Semantic Zoom (country aggregation by default, city bubbles on zoom-in).
+
+**Brushed Linking (Geo-temporal Coupling).** The core cross-view feature: when a brush is set on the Timeline, Geography bubbles resize in real time via `explore:filterChange` events on `Explore.filters.yearRange`. This makes the spatial shift of Zweig reception visible as a continuous animation rather than a static snapshot.
+
+### Globe Implementation (2026-04-12)
+
+**Projection: `d3.geoOrthographic()`.** The Geography view uses an orthographic (globe) projection instead of the initially planned Natural Earth flat map. Rationale: (1) Globe is more visually impactful and presentation-ready, (2) shows only one hemisphere at a time, reducing bubble overlap, (3) drag-to-rotate is a natural interaction for exploring spatial distribution, (4) scroll-to-zoom lets users focus on individual regions (Europe, East Asia, Americas).
+
+**Architecture:**
+- Drag-to-rotate: `d3.drag()` updates `projection.rotate([λ, φ, 0])`, φ clamped to ±80°
+- Scroll-to-zoom: wheel event changes `projection.scale()` (0.8× to 6× base scale)
+- Visibility: `d3.geoDistance()` checks if point is on visible hemisphere (< π/2)
+- Semantic zoom: at 2× base scale, switches from country-aggregated to city-level bubbles
+- Bubble data: 374/382 locations geocoded with country codes in `locations.json`
+- Cross-view: listens to `explore:filterChange` events, rebuilds bubbles with `d3.transition()`
+
+**Known Issues (post-review):**
+1. Click = filter is destructive (removes all other bubbles). Should dim instead (highlight + preserve context)
+2. Animated Playback (Play/Slider) not functioning correctly
+3. City labels missing at zoom level
+4. Ocean/land contrast too low
+5. No reset-rotation button
+6. Legend not interactive (clicking language should filter)
 
 ## References
 

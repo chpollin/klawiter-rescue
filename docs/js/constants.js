@@ -15,9 +15,9 @@ const COLORS = {
 };
 /** Chart dimensions for explore visualizations */
 const CHART_DIMS = {
-  overview: { width: 320, height: 160 },
-  timeline: { height: 400 },
-  network: { height: 420 },
+  timeline: { height: 440 },
+  geography: { height: 560 },
+  network: { height: 560 },
 };
 
 const ENTRY_TYPE_LABELS = {

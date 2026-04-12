@@ -931,11 +931,34 @@ h1, h2, h3, h4 {
   border-color: var(--sz-burgundy);
 }
 
+.explore-filter-chips {
+  min-height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+}
+.explore-filter-chips:not(:empty) {
+  margin-bottom: 0.75rem;
+}
+
+.explore-header-meta {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--sz-text-light);
+  margin-top: -0.5rem;
+  margin-bottom: 0.75rem;
+}
+
 .explore-body {
   display: flex;
   gap: 1.5rem;
   min-height: 450px;
   margin-bottom: 1.5rem;
+}
+
+.explore-body-full .explore-viz-full {
+  flex: 1;
 }
 
 .explore-viz {
@@ -952,15 +975,16 @@ h1, h2, h3, h4 {
 .explore-panel { width: 100%; }
 
 .explore-detail {
-  width: 300px;
+  width: 320px;
   flex-shrink: 0;
   background: var(--sz-white);
   border: 1px solid var(--sz-border);
   border-radius: 4px;
   padding: 1.25rem;
   overflow-y: auto;
-  max-height: 550px;
+  max-height: 600px;
 }
+.explore-detail.hidden { display: none; }
 
 .explore-svg {
   width: 100%;
@@ -1116,18 +1140,152 @@ h1, h2, h3, h4 {
   text-decoration: underline;
 }
 
+/* Geography */
+.geo-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.geo-play-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+.geo-slider {
+  width: 160px;
+  accent-color: var(--sz-burgundy);
+  cursor: pointer;
+}
+.geo-decade-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sz-burgundy);
+  min-width: 3rem;
+}
+.geo-toggle {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--sz-text-light);
+  background: transparent;
+  border: 1px solid var(--sz-border);
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.geo-toggle:hover {
+  color: var(--sz-burgundy);
+  border-color: var(--sz-burgundy);
+}
+.geo-toggle.active {
+  color: var(--sz-white);
+  background: var(--sz-burgundy);
+  border-color: var(--sz-burgundy);
+}
+.geo-ocean {
+  fill: #E8EDF2;
+  stroke: #C5CDD5;
+  stroke-width: 1px;
+}
+.geo-graticule {
+  fill: none;
+  stroke: #E8E3DB;
+  stroke-width: 0.4px;
+  stroke-dasharray: 2,2;
+}
+.geo-land {
+  fill: #EDE8DF;
+  stroke: none;
+}
+.geo-borders {
+  fill: none;
+  stroke: #D5CFC4;
+  stroke-width: 0.5px;
+}
+.geo-bubble {
+  transition: stroke 0.15s, stroke-width 0.15s;
+}
+.geo-note {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+.geo-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--sz-text-light);
+}
+.geo-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.geo-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
 /* Network */
+.network-submode-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.network-controls {
+  margin-bottom: 0.5rem;
+}
 .network-info {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.network-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  font-family: var(--font-sans);
+}
+.network-slider-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+}
+.network-slider {
+  width: 120px;
+  accent-color: var(--sz-burgundy);
+  cursor: pointer;
+}
+.network-color-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
 }
 .network-legend {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 0.5rem;
+  font-family: var(--font-sans);
   font-size: 0.7rem;
   color: var(--sz-text-light);
 }
@@ -1140,6 +1298,29 @@ h1, h2, h3, h4 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+}
+/* Network stats in detail panel */
+.network-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.network-stat {
+  text-align: center;
+  padding: 0.4rem;
+  background: var(--sz-cream);
+  border-radius: 4px;
+}
+.network-stat strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--sz-burgundy);
+}
+.network-stat span {
+  font-size: 0.7rem;
+  color: var(--sz-text-light);
+  font-family: var(--font-sans);
   display: inline-block;
 }
 
