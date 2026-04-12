@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "pipeline"))
 
 PROJECT_ROOT = Path(__file__).parent.parent
 TEST_SAMPLE_PATH = PROJECT_ROOT / "data" / "intermediate" / "test_sample_20.json"
+WIKI_GROUND_TRUTH = PROJECT_ROOT / "tests" / "wiki_ground_truth.json"
 FRONTEND_JSON = PROJECT_ROOT / "docs" / "data" / "klawiter.json"
 BASELINE_PATH = PROJECT_ROOT / ".github" / "baseline-metrics.json"
 QUALITY_REPORT = PROJECT_ROOT / "data" / "output" / "quality-report.json"
@@ -93,12 +94,26 @@ def real_entries():
     return _load_test_sample()
 
 
+def _load_wiki_ground_truth():
+    """Load wiki-verified ground truth entries."""
+    if not WIKI_GROUND_TRUTH.exists():
+        return []
+    with open(WIKI_GROUND_TRUTH, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
 def pytest_generate_tests(metafunc):
-    """Parametrize tests that request 'real_entry' fixture."""
+    """Parametrize tests that request 'real_entry' or 'wiki_entry' fixture."""
     if "real_entry" in metafunc.fixturenames:
         entries = _load_test_sample()
         ids = [f"page_{e['page_id']}_{e['label']}" for e in entries]
         metafunc.parametrize("real_entry", entries, ids=ids)
+    if "wiki_entry" in metafunc.fixturenames:
+        entries = _load_wiki_ground_truth()
+        if not entries:
+            pytest.skip("wiki_ground_truth.json not found")
+        ids = [f"page_{e['page_id']}_{e.get('page_title', '')[:30]}" for e in entries]
+        metafunc.parametrize("wiki_entry", entries, ids=ids)
 
 
 # --- Gemini client fixture ---

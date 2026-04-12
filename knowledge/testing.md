@@ -40,7 +40,7 @@ Cannot catch: an entry that exists but has completely wrong content.
 
 Validates every entry (not a sample): entry types, year ranges (1800–2030), language codes (ISO 639), page counts (positive int ≤ 10,000), no wiki markup (`[[`, `__TOC__`), no mojibake, no empty strings, JSON-LD `@type` consistency.
 
-Catches: markup leaking into output (found 20 cases, fixed to 6), mojibake, invalid codes.
+Catches: markup leaking into output (found 20 cases, fixed to 0), mojibake, invalid codes.
 
 Cannot catch: structurally valid but semantically wrong values (e.g. `publisher: "Leipzig"`).
 
@@ -87,17 +87,19 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | Bug | Found by | Severity | Fix | Impact |
 |-----|----------|----------|-----|--------|
 | 14 titles = `__TOC__` | test_schema | High | Strip leading `__TOC__` in `extract_title()` | 14 → 0 |
-| 6 titles with `]]` | test_schema | Medium | Clean orphaned `]]` in quoted title extraction | 20 → 6 remaining |
+| 7 titles with `]]`/`[[`/`'''` | test_schema | Medium | Clean orphaned wiki brackets + bold markers in `remove_wiki_markup()` | 20 → 7 → 0 |
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (326 tests, 2026-04-12)
+## Current State (401 tests, 2026-04-12)
 
 ```
 test_census.py        14  — Completeness (all entries present)
 test_schema.py        14  — Structural validity (every entry)
 test_consistency.py    6  — Cross-field plausibility
 test_regression.py    19  — Distribution stability vs baseline
+test_heuristic.py      5  — Semantic heuristics (all entries)
+test_semantic.py      70  — Wiki-verified ground truth (10 entries x 7 fields)
 test_encoding.py      13  — Encoding functions
 test_patterns.py      36  — Regex extraction functions
 test_wiki_parser.py   41  — Wiki parser functions
@@ -105,6 +107,27 @@ test_vocabulary.py    19  — Classification mappings
 test_real_entries.py  160  — 20 hand-labeled entries
 test_llm_judge.py      4  — LLM quality judgment
 ```
+
+### F: Semantic — "Is the value correct?"
+
+**Files**: `test_semantic.py` (70 tests), `test_heuristic.py` (5 tests)
+
+Two layers:
+
+1. **Ground truth** (`test_semantic.py`): 10 entries verified against the live wiki at klawiter.stefanzweig.digital. Each entry checked for 7 fields (title, year, publisher, location, language, translator, pageCount). Current result: 48 passed, 22 failed. Ground truth file: `tests/wiki_ground_truth.json`.
+
+2. **Heuristics** (`test_heuristic.py`): Pattern-based validators on all 4,751 entries. Each test bounds the violation count:
+   - 812 titles are section headers ("Contents:", "Volumes:", "German:")
+   - 387 titles longer than 200 chars (full citation text as title)
+   - 27 pageCount values look like years (1800-2030)
+   - 20 publisher fields contain wiki markup (`''`)
+   - 10 publisher fields are metadata phrases ("comments concerning this series")
+
+Catches: wrong titles (section headers, full citations), wrong page counts (years, page numbers, start pages), wrong publishers (metadata text, wiki markup), cross-section contamination.
+
+Cannot catch: semantic errors not covered by heuristic patterns or ground truth.
+
+**Root cause**: Multi-edition wiki pages (one page containing multiple publications) cause systematic extraction failures. The pipeline treats each page as one flat entry, but Klawiter uses pages as containers.
 
 ## What We Can and Cannot Guarantee
 
@@ -115,18 +138,22 @@ test_llm_judge.py      4  — LLM quality judgment
 - Coverage metrics stable vs baseline
 - Extraction functions work on known inputs
 - Cross-field combinations bounded (German+translator, film+pageCount, seeAlso integrity)
+- Heuristic semantic checks bounded (section-header titles, year-as-pageCount, metadata-as-publisher)
 
 **Sample-based partial verification:**
-- 20 entries correct (0.4% of corpus)
+- 10 entries wiki-verified with ground truth (48/70 fields correct = 69%)
+- 20 entries extraction-tested (0.4% of corpus)
 - 10 entries judged by LLM (0.2%)
 - 5 entries manually verified end-to-end against raw data
 
 **Remaining gaps:**
-- Semantic accuracy on 99.6% of entries untested
-- 6 titles still contain `]]` markup (source-text issues)
+- Semantic accuracy: 69% on wiki-verified sample (22/70 fields wrong)
+- 812 titles are section headers (17% of entries)
+- 387 titles are full citation text (8% of entries)
+- 0 titles with wiki markup residue (fixed in Session 14)
 - 111 German entries with translator (complex: sub-translations in collected works)
-- seeAlso broken references bounded at 1,140 (format/matching problem — language suffixes like "/ Spanish")
-- 976 titles changed on pipeline re-run due to bold-match fallback logic in `03_parse_entries.py` (pre-existing, not caused by Session 11 fixes)
+- seeAlso broken references bounded at 1,140 (format/matching problem)
+- 976 titles changed on pipeline re-run due to bold-match fallback logic
 
 ## Key Principles
 

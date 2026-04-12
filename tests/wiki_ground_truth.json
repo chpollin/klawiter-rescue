@@ -1,0 +1,182 @@
+[
+  {
+    "page_id": 285,
+    "page_title": "Verwirrung der Gefühle (VIST)",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Verwirrung_der_Gef%C3%BChle_(VIST)",
+    "verified_date": "2026-04-12",
+    "entry_type": "fiction",
+    "is_multi_edition": true,
+    "expected": {
+      "title": "Verwirrung der Gefühle",
+      "year": 1927,
+      "publisher": "Insel-Verlag",
+      "location": "Leipzig",
+      "language": "German",
+      "translator": null,
+      "pageCount": null
+    },
+    "notes": "pp. (153)-(274) is a page range within the collection, not a page count. Translator (Alzir Hella) belongs to the French edition section only, not the German original."
+  },
+  {
+    "page_id": 33,
+    "page_title": "Legenden",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Legenden",
+    "verified_date": "2026-04-12",
+    "entry_type": "collected-works",
+    "is_multi_edition": true,
+    "expected": {
+      "title": "Legenden",
+      "year": 1945,
+      "publisher": "Bermann-Fischer Verlag",
+      "location": "Stockholm",
+      "language": "German",
+      "translator": null,
+      "pageCount": 249
+    },
+    "notes": "Title is 'Legenden', not 'Contents:' (section header). PageCount is 249 (1st ed.), not 1948 (year of 2nd edition). Contains 5 stories."
+  },
+  {
+    "page_id": 1667,
+    "page_title": "Fleischer, Victor",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Fleischer,_Victor",
+    "verified_date": "2026-04-12",
+    "entry_type": "correspondence",
+    "is_multi_edition": true,
+    "expected": {
+      "title": "Fleischer, Victor",
+      "year": null,
+      "publisher": null,
+      "location": null,
+      "language": "German",
+      "translator": null,
+      "pageCount": null
+    },
+    "notes": "Multi-section page: German postcards (1919, published Wien 1961) + Italian letters (Locarno 2009). No single year/publisher/location is correct for the whole page. Pipeline extracts 'German:' as title (section header), year=1919 (letter date), publisher='Armando Dadò Editore' (Italian section), location='Salzburg' (exhibition venue), pageCount=54 (page number p. 54)."
+  },
+  {
+    "page_id": 6342,
+    "page_title": "Der verwandelte Komödiant",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Der_verwandelte_Kom%C3%B6diant",
+    "verified_date": "2026-04-12",
+    "entry_type": "drama",
+    "is_multi_edition": true,
+    "expected": {
+      "title": "Der verwandelte Komödiant",
+      "year": 1912,
+      "publisher": "Bloch Erden Verlag",
+      "location": "Berlin-Wilmersdorf",
+      "language": "German",
+      "translator": null,
+      "pageCount": 38
+    },
+    "notes": "Title is 'Der verwandelte Komödiant', not 'First printing:' (section header). Publisher is Bloch Erden Verlag (stage script), not 'staff of the Velhagen und Klasings Monatshefte' (Almanach editorial staff). Location in wiki is 'Berlin-Wilmersdorf', pipeline truncates to 'Berlin'."
+  },
+  {
+    "page_id": 409,
+    "page_title": "Xiangqi de gushi",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Xiangqi_de_gushi",
+    "verified_date": "2026-04-12",
+    "entry_type": "fiction",
+    "is_multi_edition": true,
+    "expected": {
+      "title": "Xiangqi de gushi",
+      "year": 1983,
+      "publisher": "Shangwu Yinshunguan",
+      "location": "Beijing",
+      "language": "Chinese",
+      "translator": "Yushu Zhang",
+      "pageCount": 97
+    },
+    "notes": "Title is 'Xiangqi de gushi' (Schachnovelle), not 'Volumes:' (section header). Publisher is Shangwu Yinshunguan, not 'comments concerning this series' (metadata text). Translator should not include 'Preface by Lili Liu'."
+  },
+  {
+    "page_id": 4535,
+    "page_title": "Drei Leben - Friderike, Lotte und Stefan Zweig",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Drei_Leben_-_Friderike,_Lotte_und_Stefan_Zweig",
+    "verified_date": "2026-04-12",
+    "entry_type": "film",
+    "is_multi_edition": false,
+    "expected": {
+      "title": "Drei Leben - Friderike, Lotte und Stefan Zweig",
+      "year": 1993,
+      "publisher": "Matzka-Kiener-Filmproduktion",
+      "location": "München",
+      "language": "German",
+      "translator": null,
+      "pageCount": null
+    },
+    "notes": "Clean single-entry page. Language should be German (52 min color film). Publisher correctly extracted by LLM."
+  },
+  {
+    "page_id": 1166,
+    "page_title": "Huatielu jueding shengfu de yi shun",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Huatielu_jueding_shengfu_de_yi_shun",
+    "verified_date": "2026-04-12",
+    "entry_type": "essay",
+    "is_multi_edition": false,
+    "expected": {
+      "title": "Huatielu jueding shengfu de yi shun",
+      "year": 1983,
+      "publisher": null,
+      "location": "Beijing",
+      "language": "Chinese",
+      "translator": null,
+      "pageCount": null
+    },
+    "notes": "Year is 1983 (Beijing publication), not 1815 (historical date from subtitle 'Napoleon, 18. Juni 1815'). Publisher not named in wiki. pp. 104-122 is a page range (18 pages), not extracted as pageCount (correct: no false value)."
+  },
+  {
+    "page_id": 4133,
+    "page_title": "Ghanim, Emad M.",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php?title=Ghanim,_Emad_M.",
+    "verified_date": "2026-04-12",
+    "entry_type": "secondary-literature",
+    "is_multi_edition": false,
+    "expected": {
+      "title": "Einfluss und Rezeption deutscher Nachkriegsliteratur im arabischen Raum mit einem Schwerpunkt auf Wolfgang Borchert und Heinrich Böll",
+      "year": 2014,
+      "publisher": "Marburg University",
+      "location": "Marburg",
+      "language": "German",
+      "translator": null,
+      "pageCount": 371
+    },
+    "notes": "Clean single-entry page. PhD thesis. All fields correctly extracted. Publisher by LLM."
+  },
+  {
+    "page_id": 1308,
+    "page_title": "Ni!",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Ni!",
+    "verified_date": "2026-04-12",
+    "entry_type": "poetry",
+    "is_multi_edition": false,
+    "expected": {
+      "title": "Ni!",
+      "year": 2000,
+      "publisher": null,
+      "location": "Beijing",
+      "language": "Chinese",
+      "translator": "Yan Zhu",
+      "pageCount": null
+    },
+    "notes": "Title is 'Ni!' (page_title), not the full bib entry. Publisher not named in wiki. PageCount should be null: 'p. 23' is a page number, not a page count."
+  },
+  {
+    "page_id": 5487,
+    "page_title": "Leporella / Catalan",
+    "wiki_url": "https://klawiter.stefanzweig.digital/index.php/Leporella_/_Catalan",
+    "verified_date": "2026-04-12",
+    "entry_type": "fiction",
+    "is_multi_edition": false,
+    "expected": {
+      "title": "Leporella",
+      "year": 2015,
+      "publisher": null,
+      "location": "Girona",
+      "language": "Catalan",
+      "translator": "Marc Jiménez Buzzi",
+      "pageCount": null
+    },
+    "notes": "Title is 'Leporella', not the full citation. Publisher not named in wiki. pp. 55-92 is a page range (37 pages), not extracted (correct: no false value). Location extracted by LLM."
+  }
+]

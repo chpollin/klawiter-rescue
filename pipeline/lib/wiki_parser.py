@@ -45,6 +45,10 @@ def remove_wiki_markup(text):
     result = re.sub(r'\[\[([^\]|]+)\|([^\]]+)\]\]', r'\2', result)
     result = re.sub(r'\[\[([^\]]+)\]\]', r'\1', result)
 
+    # Orphaned wiki brackets (unmatched [[ or ]])
+    result = result.replace(']]', '')
+    result = result.replace('[[', '')
+
     # External links: [url text] → text
     result = re.sub(r'\[https?://\S+\s+([^\]]+)\]', r'\1', result)
     result = re.sub(r'\[https?://\S+\]', '', result)
@@ -70,8 +74,9 @@ def remove_wiki_markup(text):
     # Section headers: ==text== → text, ===text=== → text
     result = re.sub(r'^={2,6}\s*(.+?)\s*={2,6}$', r'\1', result, flags=re.MULTILINE)
 
-    # Unpaired bold markers at start of line
+    # Unpaired bold markers (start of line + any remaining)
     result = re.sub(r"^'''\s*", '', result, flags=re.MULTILINE)
+    result = result.replace("'''", '')
 
     # Escaped quotes from CSV
     result = result.replace('\\"', '"')
