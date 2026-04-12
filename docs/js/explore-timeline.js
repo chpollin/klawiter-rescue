@@ -14,7 +14,7 @@ const ExploreTimeline = {
   y: null,
   color: null,
   layerMode: 'language',   // 'language' or 'type'
-  chartMode: 'bars',        // 'bars' or 'stream'
+  chartMode: 'bars',        // 'bars', 'sparklines', or 'ranks'
   showProvenance: false,
   fullExtent: null,         // [minYear, maxYear] — always the full range
   zoomedDomain: null,       // [y0, y1] when brushed, null for full extent
@@ -382,7 +382,7 @@ const ExploreTimeline = {
   },
 
   // ---------------------------------------------------------------------------
-  // Drawing modes — bars (discrete) vs. stream (continuous)
+  // Bar drawing — stacked bars with decade aggregation
   // ---------------------------------------------------------------------------
 
   _drawBarRects(series, w, h, dataLength) {

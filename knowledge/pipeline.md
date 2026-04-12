@@ -106,6 +106,7 @@ data/raw/zt_00-07 + zweig_part_01.sql
   | 02_fix_encoding.py
   | 03_parse_entries.py
   | 03b_llm_enrich.py  (optional, requires GEMINI_API_KEY)
+  | 03c_normalize.py   (auditable mapping tables in pipeline/data/)
   | 04_classify.py
   | 05_to_jsonld.py
   | 06_validate.py
@@ -147,7 +148,21 @@ Uses Gemini 3.1 Flash Lite (`gemini-3.1-flash-lite-preview`) to extract metadata
 
 **Merge rule**: LLM results only fill empty fields — regex extractions (100% precision) are never overwritten.
 
-**Output**: `03b_llm_enriched.csv` — same schema as `03_parsed.csv`, with additional fields filled. Step 04 reads from `03b` if available, falls back to `03`.
+**Output**: `03b_llm_enriched.csv` — same schema as `03_parsed.csv`, with additional fields filled. Step 03c reads from `03b` if available, falls back to `03`.
+
+### 03c_normalize.py — Field Normalization
+
+Applies auditable normalization rules via external mapping tables in `pipeline/data/`. Does not invent data — only standardizes existing values or rejects garbage.
+
+**Normalization rules (Session 15):**
+- **Location**: 7 variant mappings (`pipeline/data/location_normalize.json`): Vienna→Wien, Munich→München, Moscow/Moskau→Moskva, Prague/Prag→Praha, Warsaw→Warszawa. Principle: original-language form as canonical. 45 entries affected.
+- **Publisher**: Regex reject patterns (`pipeline/data/publisher_reject_patterns.json`): edition numbers ("1st edition"), generic words ("Company"), metadata bleed ("cataloging website"), page references, structural markers. 160 entries rejected (set to empty). Publisher coverage drops from 55.5% to 52.2% — the removed values were never publishers.
+- **Translator**: Mojibake fix via `fix_encoding()` from `lib/encoding.py` + suffix stripping for afterword/foreword/introduction content (`TRANSLATOR_SUFFIX_RE`). 193 entries cleaned.
+- **PageCount**: Outlier rejection — values >2000 or year-like (1800–2030) set to empty. 12 entries affected.
+
+**Optional**: Publisher variant mapping (`pipeline/data/publisher_normalize.json`) for clustering variants like "S. Fischer Verlag"/"Fischer Verlag" → "S. Fischer". Requires manual review of generated cluster candidates.
+
+**Output**: `03c_normalized.csv` — same schema as `03_parsed.csv`. Step 04 reads from `03c` if available, falls back to `03b` or `03`.
 
 **Cache**: `03b_llm_cache.json` stores results for resume support. Re-running skips already-processed entries.
 

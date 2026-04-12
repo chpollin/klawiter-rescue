@@ -174,8 +174,8 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 | year | 93.2% | 93.2% | — | First match only, no range detection |
 | language | 89.4% | 89.4% | — | Derived from category names (e.g. "(German)") |
 | location | 87.5% | 67.8% | **+19.7pp** | LLM reads non-standard city names |
-| pageCount | 54.1% | 51.0% | +3.1pp | Previously 81.6%, corrected after `pp. N-M` page range FPs removed (Session 11) |
-| publisher | 55.6% | 34.5% | **+21.1pp** | LLM reads publishers without "Verlag/Press" markers |
+| pageCount | 53.3% | 51.0% | +2.3pp | Previously 81.6%, corrected after `pp. N-M` FPs (Session 11) + 12 outlier rejections (Session 15) |
+| publisher | 52.2% | 34.5% | **+17.7pp** | LLM reads publishers; Session 15 normalization rejected 160 garbage entries |
 | translator | 41.9% | 35.1% | +6.8pp | LLM reads abbreviations and non-English patterns |
 
 **Precision**: All fields ≥99% real precision. Regex extractions have 100% precision. LLM extractions have 0 hallucinations (verified on 20-entry stratified sample + full-run FP analysis).

@@ -53,6 +53,44 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-04-12 — Session 15: Timeline Modes, Pipeline Normalization, Data Analysis
+
+### What we did
+
+1. **Timeline visualization overhaul**: Replaced Bars/Stream toggle with three analytically grounded modes: Bars (decade-aggregated at full extent), Sparklines (small multiples per language — addresses Forschungsfrage 2 via individual baselines, Cleveland & McGill 1984), Ranks (bump chart showing language rank per decade). Stream mode removed (curveBasis smoothed discrete data, stackOffsetWiggle removed baseline, no analytical advantage).
+2. **Global provenance toggle**: Moved from Timeline-local to `Explore.filters.showProvenance`. Checkbox in shared filter chips area, persists across tab switches.
+3. **URL hash state persistence**: Full explore state encoded in URL (`#stats/timeline?years=1920-1940&chart=sparklines`). replaceState for brush, pushState for tab switches, popstate listener for back/forward, _lastHash guard against double-processing.
+4. **Pipeline step 03c (normalization)**: New step with auditable mapping tables in `pipeline/data/`. Location variant mapping (7 rules, 45 entries), publisher garbage rejection (8 patterns, 160 entries), translator mojibake fix + afterword/foreword suffix stripping (193 entries), pageCount outlier rejection (12 entries).
+5. **Systematic data profiling**: Analyzed all 8 fields for normalization issues. Found publisher critically broken (1,616 variants, 81% singletons, 245 garbage), translator has 3 distinct problems (mojibake, multi-person, non-person content), location has 5 fixable variant groups.
+6. **5 normalization tests** with bounded thresholds.
+
+### What we learned
+
+- **Stacked charts cannot answer language comparison questions** — non-adjacent layers share neither baseline nor top. Small multiples and bump charts are structurally better encodings for this data.
+- **Decade aggregation** at full extent (21 bars instead of 140) is the single most impactful readability improvement.
+- **Publisher normalization is the largest remaining data quality problem** — but clustering 1,316 singletons requires manual review, not automation.
+- **Normalization as a separate pipeline step** (03c) keeps extraction and standardization as distinct responsibilities with auditable mapping tables.
+
+### Numbers
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Timeline modes | Bars + Stream | Bars + Sparklines + Ranks |
+| Publisher coverage | 55.5% | 52.2% (160 garbage removed) |
+| PageCount coverage | 53.5% | 53.3% (12 outliers removed) |
+| Locations normalized | — | 45 (7 variant mappings) |
+| Translators cleaned | — | 193 (mojibake + suffixes) |
+| Tests | 392 | 397 |
+
+### What's next
+
+- Browser-test Sparklines and Ranks modes (only Bars confirmed via screenshot)
+- Publisher clustering (1,316 singletons → ~300 canonical forms, requires manual review)
+- Language detection for Film/Symposium/Translation entries (0% coverage)
+- seeAlso resolution (155 broken references)
+
+---
+
 ## 2026-04-12 — Session 12: JSON-LD Validation, Playground, Project Audit
 
 ### What we did
