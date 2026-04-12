@@ -54,8 +54,10 @@ const ExploreGeography = {
     if (!this.locationData) {
       try {
         const resp = await fetch('data/locations.json');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         this.locationData = await resp.json();
       } catch (e) {
+        console.error('Failed to load locations:', e);
         container.innerHTML = '<div class="ov-empty">Could not load location data.</div>';
         return;
       }
@@ -63,8 +65,10 @@ const ExploreGeography = {
     if (!this.worldData) {
       try {
         const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         this.worldData = await resp.json();
       } catch (e) {
+        console.error('Failed to load world map:', e);
         container.innerHTML = '<div class="ov-empty">Could not load world map data.</div>';
         return;
       }
@@ -464,16 +468,7 @@ const ExploreGeography = {
     // Click on ocean/land to deselect
     const self = this;
     this.globeG.selectAll('.geo-ocean, .geo-land').on('click', function() {
-      if (self.selectedLocation) {
-        self.selectedLocation = null;
-        Explore.filters.location = null;
-        Explore._renderFilterChips();
-        self._updateBubbles(200);
-        Explore.updateSelection([]);
-        document.dispatchEvent(new CustomEvent('explore:filterChange', {
-          detail: { filters: { ...Explore.filters }, mode: 'geography' },
-        }));
-      }
+      if (self.selectedLocation) self._deselectLocation();
     });
 
     // Bind interaction handlers (drag/wheel for globe, d3.zoom for flat)
@@ -597,24 +592,15 @@ const ExploreGeography = {
         const loc = d.locations[0];
 
         if (self.selectedLocation === loc) {
-          // Deselect
-          self.selectedLocation = null;
-          Explore.filters.location = null;
-          Explore._renderFilterChips();
-          self._updateBubbles(200);
-          Explore.updateSelection([]);
+          self._deselectLocation();
         } else {
-          // Select: highlight + dim, set filter for chip + cross-view
           self.selectedLocation = loc;
           Explore.filters.location = loc;
           Explore._renderFilterChips();
           self._updateBubbles(200);
           Explore.updateSelection(d.entries);
+          self._fireFilterEvent();
         }
-        // Notify other views (mode: 'geography' so we skip our own listener)
-        document.dispatchEvent(new CustomEvent('explore:filterChange', {
-          detail: { filters: { ...Explore.filters }, mode: 'geography' },
-        }));
       });
 
     // Update city labels
@@ -675,6 +661,23 @@ const ExploreGeography = {
       });
   },
 
+  /** Clear location selection, filter chip, and notify other views. */
+  _deselectLocation() {
+    this.selectedLocation = null;
+    Explore.filters.location = null;
+    Explore._renderFilterChips();
+    this._updateBubbles(200);
+    Explore.updateSelection([]);
+    this._fireFilterEvent();
+  },
+
+  /** Dispatch explore:filterChange with mode='geography' to skip own listener. */
+  _fireFilterEvent() {
+    document.dispatchEvent(new CustomEvent('explore:filterChange', {
+      detail: { filters: { ...Explore.filters }, mode: 'geography' },
+    }));
+  },
+
   /** Compute bubble opacity based on visibility and selection state. */
   _bubbleOpacity(d) {
     if (!this._isVisible(d)) return 0;
@@ -711,17 +714,12 @@ const ExploreGeography = {
         ? (Explore.colors.languages[dominant[0]] || Explore.colors.languages['Other'])
         : Explore.colors.languages['Other'];
     }
-    const periodColors = {
-      'pre-zweig': '#9E9585', 'lifetime': Explore.colors.burgundy,
-      'post-wwii': '#6B7A3A', 'late-20c': '#5B3A7A',
-      'contemporary': Explore.colors.gold,
-    };
     const periodCounts = {};
     for (const e of bubble.entries) {
       periodCounts[e.timePeriod || 'unknown'] = (periodCounts[e.timePeriod || 'unknown'] || 0) + 1;
     }
     const dominant = Object.entries(periodCounts).sort((a, b) => b[1] - a[1])[0];
-    return (dominant && periodColors[dominant[0]]) ? periodColors[dominant[0]] : '#9E9585';
+    return dominant ? this._getPeriodColor(dominant[0]) : '#9E9585';
   },
 
   // =========================================================================
@@ -776,12 +774,9 @@ const ExploreGeography = {
           `<span class="geo-legend-dot" style="background:${color}"></span>${esc(lang)}</span>`;
       }).join('');
     } else {
-      const periodColors = {
-        'pre-zweig': '#9E9585', 'lifetime': Explore.colors.burgundy,
-        'post-wwii': '#6B7A3A', 'late-20c': '#5B3A7A', 'contemporary': Explore.colors.gold,
-      };
+      const self = this;
       legendDiv.innerHTML = Object.entries(PERIOD_LABELS).map(([key, label]) => {
-        const color = periodColors[key] || '#9E9585';
+        const color = self._getPeriodColor(key);
         const active = Explore.filters.period === key;
         return `<span class="geo-legend-item${active ? ' active' : ''}" data-key="period" data-value="${key}">` +
           `<span class="geo-legend-dot" style="background:${color}"></span>${label}</span>`;
@@ -794,6 +789,19 @@ const ExploreGeography = {
       });
     });
     container.appendChild(legendDiv);
+  },
+
+  /** Period → color mapping (shared between _getBubbleColor and _drawLegend). */
+  _periodColors: {
+    'pre-zweig': '#9E9585', 'lifetime': null, // set at runtime from Explore.colors.burgundy
+    'post-wwii': '#6B7A3A', 'late-20c': '#5B3A7A', 'contemporary': null,
+  },
+
+  /** Get period color, resolving runtime references. */
+  _getPeriodColor(key) {
+    if (key === 'lifetime') return Explore.colors.burgundy;
+    if (key === 'contemporary') return Explore.colors.gold;
+    return this._periodColors[key] || '#9E9585';
   },
 
   /** ISO 3166-1 alpha-2 → readable country names (only countries in the dataset). */

@@ -212,11 +212,13 @@ docs/
     explore.js           Shared explore controller (mode tabs, detail panel, tooltips)
     explore-timeline.js  D3.js stacked area chart (year x language, brushing, annotations)
     explore-overview.js  4 linked small multiples (decades, types, languages, locations)
+    explore-geography.js D3.js bubble map (dual projection globe/flat, semantic zoom, Wikidata-linked locations)
     explore-network.js   Force-directed graph of seeAlso cross-references
     jsonld-playground.js JSON-LD interactive explorer (compact/expanded/triples)
     pages.js             Static content pages (About, Methodology, Help, Data, Imprint, JSON-LD Playground)
   data/
     klawiter.json     5,179 total entries (4,751 ns0 displayed) + 1,056 redirects
+    locations.json    382 geocoded locations with Wikidata Q-IDs (94.2% coverage)
   vocab/
     index.html        Vocabulary namespace documentation
 ```

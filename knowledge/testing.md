@@ -91,7 +91,7 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (392 tests, 2026-04-12)
+## Current State (397 tests, 2026-04-12)
 
 ```
 test_census.py        14  — Completeness (all entries present)
@@ -99,6 +99,7 @@ test_schema.py        14  — Structural validity (every entry)
 test_consistency.py    6  — Cross-field plausibility
 test_regression.py    19  — Distribution stability vs baseline
 test_heuristic.py      6  — Semantic heuristics (all entries)
+test_normalization.py  5  — Field normalization quality (Session 15)
 test_semantic.py      70  — Wiki-verified ground truth (10 entries x 7 fields)
 test_encoding.py      13  — Encoding functions
 test_patterns.py      36  — Regex extraction functions
@@ -106,6 +107,7 @@ test_wiki_parser.py   41  — Wiki parser functions
 test_vocabulary.py    19  — Classification mappings
 test_real_entries.py  160  — 20 hand-labeled entries
 test_llm_judge.py      4  — LLM quality judgment
+test_wikidata_locations.py  6  — Wikidata reconciliation quality
 ```
 
 ### F: Semantic — "Is the value correct?"
