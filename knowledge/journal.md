@@ -12,6 +12,47 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-04-12 — Session 14: Semantic Testing, Extraction Fixes, Pipeline Limits
+
+### What we did
+
+1. **Frontend data verification**: Added `_meta` block to `klawiter.json` (pipeline-generated baseline), replaced verbose `logDataSummary()` with compact `verifyData()` in app.js, injected `_provenance` data (43.1% regex, 11.8% LLM, 45.3% missing).
+2. **10-entry wiki verification**: Compared 10 strategically selected entries against the live wiki at klawiter.stefanzweig.digital. Found 23% of fields wrong, 12% problematic. Root cause: multi-edition wiki pages.
+3. **Semantic testing layer**: Created `test_semantic.py` (70 tests, 10 entries x 7 fields) and `test_heuristic.py` (6 pattern-based validators on all 4,751 entries). Ground truth in `tests/wiki_ground_truth.json`.
+4. **5 extraction fixes**: Title fallback to page_title (1,368 section headers → 0), PageCount `N/(M)p.` pattern + parenthesized lookahead fix, Publisher markup cleanup + metadata rejection.
+5. **Encoding guard**: If page_title has encoding artifacts AND extracted title was only rejected for length (not section header), keep the extracted title.
+6. **Documentation**: Updated all knowledge docs, added multi-edition limitation to pipeline.md.
+
+### What we learned
+
+- The pipeline is at the **natural limit of regex-based extraction**. Further regex fixes shift problems (wrong value A → wrong value B) rather than solving them.
+- **427 multi-edition pages** (6.8%) cause systematic extraction errors. The pipeline treats each page as one flat entry, but Klawiter's bibliography uses pages as containers for multiple publications.
+- **page_title** (MediaWiki metadata) is more reliable than extracted titles. The fallback was the highest-impact fix.
+- **Semantic tests** are the most valuable addition — they quantify what's wrong and prevent regressions.
+
+### Numbers
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Section-header titles | 1,368 | 0 |
+| Markup in titles | 7 | 0 |
+| Publisher markup | 20 | 0 |
+| Publisher metadata | 10 | 0 |
+| Year-as-pageCount | 27 | 11 |
+| Redirects resolved | 430 | 1,210 |
+| Broken seeAlso | 1,140 | 727 |
+| Tests | 326 | 392 |
+| Semantic accuracy | n/a | 53/70 (76%) |
+
+### What's next
+
+- Expand ground truth from 10 to 30+ entries (stratified by type/language)
+- Browse the frontend systematically to find remaining issues
+- Consider LLM-based edition-block segmentation for multi-edition pages (separate project)
+- WCAG 2.1 AA audit, performance measurement
+
+---
+
 ## 2026-04-12 — Session 12: JSON-LD Validation, Playground, Project Audit
 
 ### What we did

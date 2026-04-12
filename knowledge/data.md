@@ -202,11 +202,15 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 
 **1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as stub (sourcePageId + entryType only, no title/content).
 
-**20 titles with markup residue** (found by test_schema.py, Session 11): 14 entries have `__TOC__` as their title (title extraction fell through to magic word), 6 entries have unclosed `]]` or `[[` wiki links in titles. Pipeline bug in `extract_title()`.
+**0 titles with markup residue** (Session 14): Fixed — orphaned `]]`/`[[`/`'''` cleanup in `remove_wiki_markup()`. 14 `__TOC__` titles fixed in Session 11.
+
+**0 section-header titles** (Session 14): Fixed — "Contents:", "Volumes:", "German:", "See:", "Note:" etc. rejected with page_title fallback. Was 1,368 entries. 345 titles have encoding artifacts in page_title (Arabic/Cyrillic transliterations where the page_title has mojibake). 43 titles are >200 chars (encoding-guard cases — long extracted title preferred over mojibake page_title).
 
 **111 German entries with translator** (found by test_consistency.py, Session 11): Regex false positives where author names, editors, or location text was extracted as translator (e.g. `translator: "Stefan Zweig. Leipzig"`).
 
-**717 broken seeAlso references** (found by test_consistency.py, Session 11): 717 of 1,213 cross-references don't match any entry title or redirect target. Partially a matching problem — reference strings include language suffixes like "/ Spanish" or formatting that doesn't match clean titles.
+**727 broken seeAlso references** (Session 14, was 1,140 in Session 11): Reduced because title fix resolved 1,210 redirects (was 430). Remaining 727 broken due to language suffixes like "/ Spanish" or formatting mismatches.
+
+**427 multi-edition pages** (Session 14): 6.8% of wiki pages contain multiple publications. Publisher, pageCount, year extracted from first match — may come from wrong edition. See [[pipeline#known-limitations--multi-edition-pages]].
 
 ### Quality Report
 

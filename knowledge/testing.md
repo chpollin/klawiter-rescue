@@ -91,14 +91,14 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (401 tests, 2026-04-12)
+## Current State (392 tests, 2026-04-12)
 
 ```
 test_census.py        14  — Completeness (all entries present)
 test_schema.py        14  — Structural validity (every entry)
 test_consistency.py    6  — Cross-field plausibility
 test_regression.py    19  — Distribution stability vs baseline
-test_heuristic.py      5  — Semantic heuristics (all entries)
+test_heuristic.py      6  — Semantic heuristics (all entries)
 test_semantic.py      70  — Wiki-verified ground truth (10 entries x 7 fields)
 test_encoding.py      13  — Encoding functions
 test_patterns.py      36  — Regex extraction functions
@@ -110,18 +110,19 @@ test_llm_judge.py      4  — LLM quality judgment
 
 ### F: Semantic — "Is the value correct?"
 
-**Files**: `test_semantic.py` (70 tests), `test_heuristic.py` (5 tests)
+**Files**: `test_semantic.py` (70 tests), `test_heuristic.py` (6 tests)
 
 Two layers:
 
-1. **Ground truth** (`test_semantic.py`): 10 entries verified against the live wiki at klawiter.stefanzweig.digital. Each entry checked for 7 fields (title, year, publisher, location, language, translator, pageCount). Current result: 48 passed, 22 failed. Ground truth file: `tests/wiki_ground_truth.json`.
+1. **Ground truth** (`test_semantic.py`): 10 entries verified against the live wiki at klawiter.stefanzweig.digital. Each entry checked for 7 fields (title, year, publisher, location, language, translator, pageCount). Current result: 53 passed, 17 failed. Ground truth file: `tests/wiki_ground_truth.json`.
 
-2. **Heuristics** (`test_heuristic.py`): Pattern-based validators on all 4,751 entries. Each test bounds the violation count:
-   - 812 titles are section headers ("Contents:", "Volumes:", "German:")
-   - 387 titles longer than 200 chars (full citation text as title)
-   - 27 pageCount values look like years (1800-2030)
-   - 20 publisher fields contain wiki markup (`''`)
-   - 10 publisher fields are metadata phrases ("comments concerning this series")
+2. **Heuristics** (`test_heuristic.py`): Pattern-based validators on all 4,751 entries. Each test bounds the violation count (Session 14 final values):
+   - 0 section-header titles (was 1,368 — fixed with page_title fallback)
+   - 43 titles longer than 200 chars (encoding-guard cases, was 387)
+   - 345 titles with encoding artifacts in page_title (Arabic/Cyrillic transliterations)
+   - 11 pageCount values look like years (was 27)
+   - 0 publisher fields with wiki markup (was 20)
+   - 0 publisher fields with metadata phrases (was 10)
 
 Catches: wrong titles (section headers, full citations), wrong page counts (years, page numbers, start pages), wrong publishers (metadata text, wiki markup), cross-section contamination.
 
@@ -141,19 +142,20 @@ Cannot catch: semantic errors not covered by heuristic patterns or ground truth.
 - Heuristic semantic checks bounded (section-header titles, year-as-pageCount, metadata-as-publisher)
 
 **Sample-based partial verification:**
-- 10 entries wiki-verified with ground truth (48/70 fields correct = 69%)
+- 10 entries wiki-verified with ground truth (53/70 fields correct = 76%)
 - 20 entries extraction-tested (0.4% of corpus)
 - 10 entries judged by LLM (0.2%)
 - 5 entries manually verified end-to-end against raw data
 
 **Remaining gaps:**
-- Semantic accuracy: 69% on wiki-verified sample (22/70 fields wrong)
-- 812 titles are section headers (17% of entries)
-- 387 titles are full citation text (8% of entries)
-- 0 titles with wiki markup residue (fixed in Session 14)
+- Semantic accuracy: 76% on wiki-verified sample (17/70 fields wrong, mostly multi-edition pages)
+- 345 titles with encoding artifacts in page_title (Arabic/Cyrillic transliterations)
+- 43 titles >200 chars (encoding-guard cases — long but correct)
+- 11 pageCount values that may be years
+- 427 multi-edition pages (6.8%) where publisher/pageCount/year may come from wrong edition
 - 111 German entries with translator (complex: sub-translations in collected works)
-- seeAlso broken references bounded at 1,140 (format/matching problem)
-- 976 titles changed on pipeline re-run due to bold-match fallback logic
+- seeAlso broken references bounded at 727 (was 1,140; reduced by title fix resolving more redirects)
+- Pipeline reached diminishing returns on regex extraction (see [[pipeline#known-limitations--multi-edition-pages]])
 
 ## Key Principles
 
