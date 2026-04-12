@@ -1,3 +1,11 @@
+---
+title: Journal
+aliases: [work diary, sessions]
+tags: [journal]
+created: 2026-03-29
+updated: 2026-04-12
+---
+
 # Journal
 
 Work diary for the Klawiter Bibliography project. Each session documents what we did, what we learned, what ideas came up, and what's still open.
@@ -117,11 +125,8 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ### What's next
 
-- **Publisher patterns**: Add non-Western keywords (chubanshe, Izdatelstvo), type-specific rules (poetry → no publisher expected)
 - **Re-run pipeline**: Apply title extraction improvements to actual data, measure impact
-- **Expand test sample**: 20 → 50+ hand-labeled entries with non-Western languages and edge cases
 - **M3.8**: Manual validation — browse 50+ entries in live frontend
-- **M5**: Semantic enrichment (Wikidata/GND/VIAF reconciliation)
 
 ---
 
@@ -154,7 +159,6 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 ### What's next
 
 - **M3.8**: Manual validation (browse 50+ entries in live frontend)
-- **M5**: Semantic enrichment (Wikidata/GND/VIAF reconciliation)
 - **Explore refinement**: Consider adding a true streamgraph offset, improving mobile experience
 
 ---
@@ -180,7 +184,6 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 ### What's next
 
 - **M3.8**: Manual validation — browse 50+ entries in live frontend, spot-check against wiki source
-- **M5**: Semantic enrichment — Wikidata/GND/VIAF reconciliation for works, persons, places, publishers
 - **M7 remaining**: Live deployment testing, Zenodo DOI, announcement
 
 ---

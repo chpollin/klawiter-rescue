@@ -208,7 +208,7 @@
     <tr><td><code>isRelatedTo</code></td><td><code>schema:isRelatedTo</code></td><td>Cross-references ("see also")</td></tr>
     <tr><td><code>workTranslation</code></td><td><code>schema:workTranslation</code></td><td>Translation references</td></tr>
     <tr><td><code>hasPart</code></td><td><code>schema:hasPart</code></td><td>Table of contents / constituent works</td></tr>
-    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td><td>Authority URIs (Wikidata, GND, VIAF) &mdash; defined in @context, not yet populated on entries (planned for reconciliation phase)</td></tr>
+    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td><td>Authority URIs &mdash; used for Stefan Zweig's Wikidata ID (Q78491) as author metadata. Not populated on individual entries (authority reconciliation is out of scope per Data Integrity Principle).</td></tr>
   </tbody>
 </table>
 
@@ -234,8 +234,8 @@
 <h3>Wikidata</h3>
 <p>
   Stefan Zweig is identified as <a href="https://www.wikidata.org/entity/Q78491">Q78491</a> in Wikidata.
-  Reconciliation of works, persons (translators), places, and publishers against Wikidata is planned.
-  Authority URIs will be added as <code>schema:sameAs</code> values.
+  This identifier is used as author metadata in the JSON-LD output. Reconciliation of individual entries
+  against external authority systems is out of scope for this project (see Data Integrity Principle).
 </p>
 
 <footer>

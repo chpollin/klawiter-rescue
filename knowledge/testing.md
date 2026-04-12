@@ -1,3 +1,11 @@
+---
+title: Testing
+aliases: [test strategy, quality assurance]
+tags: [testing, quality]
+created: 2026-04-12
+updated: 2026-04-12
+---
+
 # Testing Strategy
 
 Testing approach for the Klawiter extraction pipeline and frontend dataset. Developed in Session 11 (2026-04-12), informed by data pipeline testing research, bibliographic data validation practices, and manual verification against raw data.
@@ -130,10 +138,4 @@ test_llm_judge.py      4  — LLM quality judgment
 
 ## References
 
-- [OpenCitations: Validating bibliographic data](https://arxiv.org/html/2504.12195) — 4-level validation (wellformedness → ID syntax → existence → semantics)
-- [Golden Tests for Data-Driven APIs](https://medium.com/@nidhipandya1606/golden-tests-how-a-small-set-of-real-inputs-helped-me-keep-a-data-driven-api-correct-through-0926b6384e9f) — 6 bug categories caught by golden files
-- [Integration Tests for Python Data Pipelines](https://www.startdataengineering.com/post/python-datapipeline-integration-test/)
-- [LOD Quality Assessment for GLAM](https://www.semantic-web-journal.net/system/files/swj4008.pdf) — completeness as core quality dimension
-- [Pandera](https://pandera.readthedocs.io/) — DataFrame schema contracts
-- [Hypothesis](https://github.com/HypothesisWorks/hypothesis) — property-based testing / fuzzing
-- [Risk-Based Data Quality Testing (Vinted)](https://vinted.engineering/2026/03/11/risk-based-testing/) — threshold calibration
+See [[references#data-pipeline-testing]] for full citations.

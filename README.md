@@ -86,7 +86,7 @@ Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Dig
 ## Documentation
 
 The `knowledge/` folder is an Obsidian vault with full project documentation:
-data model, pipeline, architecture decisions, ontology, reconciliation strategy, UI design, user stories, project journal.
+project context, data model, pipeline, architecture decisions, ontology, frontend design, exploration interface, testing strategy, project journal, references.
 
 ## Credits
 

@@ -1,3 +1,11 @@
+---
+title: Exploration
+aliases: [visualization, D3]
+tags: [exploration, visualization]
+created: 2026-03-29
+updated: 2026-04-12
+---
+
 # Exploration Interface
 
 Design concept for the interactive exploration tool of the Klawiter Bibliography.
@@ -162,6 +170,4 @@ Extended from the existing SZD design system:
 
 ## References
 
-- Shneiderman, B. (1996). "The Eyes Have It: A Task by Data Type Taxonomy for Information Visualizations." IEEE Symposium on Visual Languages.
-- Moretti, F. (2005). *Graphs, Maps, Trees: Abstract Models for Literary History.* Verso.
-- Jänicke, S. et al. (2015). "On Close and Distant Reading in Digital Humanities." Eurographics Conference on Visualization.
+See [[references#information-visualization]] for full citations.

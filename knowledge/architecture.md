@@ -1,3 +1,11 @@
+---
+title: Architecture
+aliases: [architecture decisions]
+tags: [architecture, decisions]
+created: 2026-03-29
+updated: 2026-04-12
+---
+
 # Architecture
 
 Key decisions in the Klawiter project with rationale and trade-offs.

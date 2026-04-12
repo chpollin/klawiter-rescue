@@ -1,6 +1,14 @@
+---
+title: Pipeline
+aliases: [extraction pipeline, data flow]
+tags: [pipeline, extraction]
+created: 2026-03-29
+updated: 2026-04-12
+---
+
 # Pipeline
 
-The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 7 stages (01–06 plus verify), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
+The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 7 stages (01-06 plus verify), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
 
 ## Source Data
 
@@ -180,6 +188,133 @@ Compares extracted fields against raw wiki content to measure precision and reca
 This distinction is important: verify.py previously reported 81.5% title precision because it didn't account for the ~880 page_title fallbacks. With the `correct_fallback` category, actual precision is ~95%+.
 
 Run: `python pipeline/verify.py` → `data/output/verification-report.json`
+
+---
+
+## Data Flow Diagram
+
+Visual overview of the complete pipeline from raw source to final outputs. See [[data]] for the data model and [[ontology]] for the vocabulary blend.
+
+```mermaid
+flowchart TD
+    subgraph RAW["data/raw/ (363 MB)"]
+        SQL["zweig_part_01.sql\n33 MB — 48 tables"]
+        BLOB["zt_00 – zt_07\n330 MB — 53,016 text entries"]
+    end
+
+    subgraph EXTRACT["01_extract.py"]
+        PARSE_SQL["Parse 4 tables:\nzweig_page → zweig_slots → zweig_content"]
+        PARSE_BLOB["Parse 8 BLOBs:\nregex on latin-1 decoded binary"]
+        JOIN["Join: page_id → text_id → content"]
+    end
+
+    SQL --> PARSE_SQL
+    BLOB --> PARSE_BLOB
+    PARSE_SQL --> JOIN
+    PARSE_BLOB --> JOIN
+
+    JOIN --> CSV1["01_extracted.csv\n6,725 rows × 7 cols\npage_id, page_namespace, page_title,\ntext_id, content, flags, blob_id"]
+
+    CSV1 --> ENC["02_fix_encoding.py\nDetect Ã[\\x80-\\xbf] → encode latin-1 → decode utf-8\nLine-by-line to protect clean lines"]
+
+    ENC --> CSV2["02_encoding_fixed.csv\n6,725 rows × 7 cols\ncontent + page_title cleaned"]
+
+    CSV2 --> PARSE["03_parse_entries.py\nWiki markup → structured fields\n26 columns"]
+
+    subgraph PARSE_DETAIL["Parsing (per entry)"]
+        direction LR
+        P1["Categories\nSortkey\nRedirects"]
+        P2["Title\nOriginal title"]
+        P3["Year, Publisher\nLocation, Language\nPage count, Translator"]
+        P4["See-also\nReprints\nTranslations\nContent items"]
+    end
+
+    PARSE --> PARSE_DETAIL
+    PARSE_DETAIL --> CSV3["03_parsed.csv\n6,725 rows × 26 cols"]
+
+    CSV3 --> CLASS["04_classify.py\nCategory → entry_type (16 types)\nYear → time_period (5 periods)\nNamespace → system types"]
+
+    CLASS --> CSV4["04_classified.csv\n6,725 rows × 28 cols\n+ entry_type, time_period"]
+
+    CSV4 --> JSONLD["05_to_jsonld.py"]
+
+    subgraph OUTPUTS["Final Outputs"]
+        direction TB
+        OUT1["data/output/klawiter.jsonld\n~12 MB — 6,725 entries\nComplete JSON-LD dataset"]
+        OUT2["data/output/entries/*.jsonld\n6,725 individual files"]
+        OUT3["docs/data/klawiter.json\n~9 MB — 5,179 entries\nFrontend-optimized\n(no redirects, short keys)"]
+    end
+
+    JSONLD --> OUT1
+    JSONLD --> OUT2
+    JSONLD --> OUT3
+
+    OUT1 --> VALID["06_validate.py"]
+    VALID --> REPORT["data/output/quality-report.json\nField coverage, issues,\ndistributions, year range"]
+
+    OUT3 --> FRONTEND["docs/index.html\nStatic site (GitHub Pages)\nSearch, facets, charts, detail views"]
+
+    style RAW fill:#f9f0e8,stroke:#d4a574
+    style OUTPUTS fill:#e8f5e9,stroke:#66bb6a
+    style PARSE_DETAIL fill:#e3f2fd,stroke:#42a5f5
+```
+
+### Data Transformations Per Step
+
+**Step 1: Extract** — Page metadata from `zweig_page` INSERT rows, content address from `zweig_slots` -> `zweig_content` chain, actual text from BLOB regex match on `text_id`. Loss point: 4 of 6,725 pages have no content in BLOBs.
+
+**Step 2: Fix Encoding** — content field: 57.3% Mojibake -> 0%. page_title: some Mojibake -> 0%. Risk point: line-wise repair could theoretically fail on mixed-encoding lines.
+
+**Step 3: Parse** — Wiki markup to structured fields. Main loss points: publisher (34.5%), translator (35.1%), location (67.8%).
+
+| Raw content pattern | Extracted field | Method |
+|---------------------|----------------|--------|
+| `'''Bold Title'''` | `title` | Regex on bold markup |
+| `[[Category:Fiction]]` | `categories`, `main_category` | Regex extraction |
+| `1922` | `year`, `all_years` | Year regex (1700-2039) |
+| `Insel-Verlag` | `publisher` | 3 regex families |
+| `Leipzig` | `location`, `all_locations` | City list matching |
+| `(German)` in category | `language`, `language_iso` | Category suffix extraction |
+| `432 p.` | `page_count` | Page count patterns |
+| `Translated by Name` | `translator` | 8 language-specific patterns |
+| `'''See:''' [[Link]]` | `see_also` | Wiki link extraction |
+| `'''Reprinted in:'''` block | `reprints` | Block extraction |
+| `'''Translations:'''` block | `translations` | Block extraction |
+| `'''Contents'''` block | `content_items` | Block extraction |
+| `#REDIRECT [[Target]]` | `is_redirect`, `redirect_target` | Redirect detection |
+
+**Step 4: Classify** — `main_category` -> `entry_type` (16 types), `year` -> `time_period` (5 periods), `page_namespace` -> system type.
+
+**Step 5: JSON-LD** — CSV columns to JSON-LD properties. Three outputs: `klawiter.jsonld` (all 6,725 entries), `entries/*.jsonld` (individual files), `klawiter.json` (frontend-optimized, no redirects, short keys).
+
+**Step 6: Validate** — Title present, entry type present, year in range, no residual Mojibake, fullBibliographicEntry present. Aggregates: field coverage, type/language/period/namespace distributions.
+
+### What Reaches the Frontend
+
+```
+docs/data/klawiter.json
++-- name, compiler, institution
++-- totalEntries: 5,179 (all non-redirects across all namespaces)
++-- entries[]: array of objects with short keys
+|   +-- @type, @id
+|   +-- entryType, title, year, timePeriod
+|   +-- publisher, location, language, languageCode
+|   +-- pageCount, translator
+|   +-- categories, mainCategory
+|   +-- seeAlso, reprints, translations, contentItems
+|   +-- fullBibliographicEntry
+|   +-- sourcePageId, sourceTextId, sourceBlobId
+|   +-- pageNamespace
++-- redirects{}: { "title" -> page_id } map (1,078 resolved)
+```
+
+---
+
+## Reconciliation -- Out of Scope
+
+Semantic enrichment via authority data (Wikidata, GND, VIAF, GeoNames) is out of scope per the Data Integrity Principle. The pipeline extracts, normalizes, and structures — it does not add external data. Coverage gaps where the raw wiki text does not contain a publisher, translator, or location are correct, not bugs.
+
+The `schema:sameAs` property is used only for Stefan Zweig's Wikidata ID (Q78491) as hardcoded author metadata, not a reconciliation result. If authority linking is needed in the future, it should be a separate project that consumes the Klawiter JSON-LD as input.
 
 ---
 

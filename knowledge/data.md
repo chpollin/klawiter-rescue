@@ -1,3 +1,11 @@
+---
+title: Data
+aliases: [data model, entity types]
+tags: [data, quality]
+created: 2026-03-29
+updated: 2026-04-12
+---
+
 # Data
 
 The Klawiter bibliography dataset: its model, entity types, field coverage, and known quality issues.

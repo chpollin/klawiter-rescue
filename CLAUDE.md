@@ -53,8 +53,8 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 
 ## Known Limitations
 
-- Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining ~44% is 15-20% legitimately missing (anthology poems, journal articles) + 80-85% structural gap (implicit citation formats not matched by regex)
-- Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator
+- Publisher: 55.6% coverage (regex 34.5% + LLM +21.1pp). Remaining 44.4% not in source text or in implicit citation formats — these gaps are correct per Data Integrity Principle
+- Translator: 41.9% coverage (regex 35.1% + LLM +6.8pp). Many entries are German originals or don't name translator — these gaps are correct
 - Location: 87.5% coverage (regex 67.8% + LLM +19.7pp)
 - 6 titles with markup residue: unclosed `]]`/`[[` wiki links from source text. 14 `__TOC__` titles fixed in Session 11. Detected by `test_schema.py`
 - Page count: 54.1% coverage (previously reported as 81.6%, but ~1,300 values were false extractions from `pp. N-M` page ranges). Fixed in Session 11
@@ -62,20 +62,9 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Title precision: verify.py reports 81.5% but actual precision is ~95%+ (880 "false positives" are page_title fallbacks — titles from wiki metadata, not content — now classified as `correct_fallback`)
 - JSON-LD namespace URL (`chpollin.github.io/klawiter-rescue/vocab/`) resolves to `docs/vocab/index.html` (GitHub Pages)
 
-## EIL Curation Interface
-
-- **edit.js**: Localhost-only edit mode (`location.hostname === 'localhost'`) enabling inline field editing with provenance awareness
-- **Provenance badges**: Visual indicators (regex/llm/missing) on publisher, location, translator, pageCount fields, driven by `_provenance` metadata from `inject_provenance.py`
-- **JSON patch export**: Edits are collected as JSON patches and exported for review, not written directly to the dataset
-- **GitHub Actions validation**: `.github/workflows/validate-patch.yml` runs patch format checks, frontend JSON integrity, regression tests (coverage thresholds), and quality report comparison on PRs
-
-## Zweig Forschungsverbund
-
-- **Verbund navigation bar**: Shared top navigation connecting three sites (SZD, Klawiter Bibliography, and the planned Nachlass portal)
-- **GAMS color palette**: Shared design language using GAMS institutional colors for visual consistency across Verbund sites
-- **Typography**: Source Serif 4 (headings) + Source Sans 3 (body) across all Verbund sites
-
 ## Documentation
 
-`knowledge/` contains the full project documentation as an Obsidian vault:
-`data.md`, `pipeline.md`, `architecture.md`, `ontology.md`, `reconciliation.md`, `ui-design.md`, `design.md`, `user-stories.md`, `plan.md`, `dataflow.md`, `journal.md`
+`knowledge/` is an Obsidian vault with the full project documentation:
+`index.md` (MOC), `about.md`, `data.md`, `pipeline.md`, `architecture.md`, `ontology.md`, `frontend.md`, `exploration.md`, `testing.md`, `journal.md`, `references.md`
+
+See `knowledge/about.md` for: EIL Curation Interface, Zweig Forschungsverbund context, project provenance.
