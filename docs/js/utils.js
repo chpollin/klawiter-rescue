@@ -40,6 +40,16 @@ function countByField(entries, field) {
   return counts;
 }
 
+/** Normalize translator name: strip trailing location/edition info */
+function normalizeTranslator(raw) {
+  if (!raw) return '';
+  let name = raw.trim();
+  // Strip trailing location-like patterns: "Name. City" or "Name. xxii"
+  name = name.replace(/\.\s+[A-Z][a-zà-ÿ]+(\s+[a-zà-ÿ]+)*\s*$/, '');
+  name = name.replace(/\.\s+[xivlc]+\s*$/i, '');
+  return name.trim();
+}
+
 /** Trigger a file download from in-memory content */
 function downloadBlob(content, filename, type) {
   const blob = new Blob([content], { type });

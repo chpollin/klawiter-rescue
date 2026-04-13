@@ -32,7 +32,7 @@ const App = {
       this.verifyData();
       this.buildIndex();
       this.bindEvents();
-      this._lastHash = '';
+      this._lastHash = null;
       this.handleRoute();
       window.addEventListener('hashchange', () => this.handleRoute());
       window.addEventListener('popstate', () => this.handleRoute());
