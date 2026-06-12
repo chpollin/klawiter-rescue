@@ -456,38 +456,10 @@ const Explore = {
   // Detail panel renderers
   // -------------------------------------------------------------------------
 
-  _renderDetailSummary(entries) {
-    const langs = new Set(entries.map(e => e.language).filter(Boolean));
-    const types = new Set(entries.map(e => e.entryType).filter(Boolean));
-    const withSeeAlso = entries.filter(e => e.seeAlso && e.seeAlso.length).length;
-    const withTranslations = entries.filter(e => e.translations && e.translations.length).length;
-
-    return `
-      <div class="detail-summary">
-        <h3 class="detail-summary-title">Collection Overview</h3>
-        <p class="detail-summary-text">
-          ${entries.length.toLocaleString('en')} entries in ${langs.size} languages
-          across ${types.size} types.
-        </p>
-        <p class="detail-summary-hint">
-          Click or brush elements in the visualization to explore entries.
-        </p>
-        <div class="detail-summary-stats">
-          <div><strong>${withSeeAlso}</strong> entries with cross-references</div>
-          <div><strong>${withTranslations}</strong> entries with translations</div>
-        </div>
-      </div>
-    `;
-  },
-
   _renderDetailGroup(entries) {
-    // Top languages in selection
-    const langCounts = countByField(entries, 'language');
-    const topLangs = Object.entries(langCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-
-    // Top types in selection
-    const typeCounts = countByField(entries, 'entryType');
-    const topTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    // Top languages and types in selection
+    const topLangs = topN(entries, 'language', 5);
+    const topTypes = topN(entries, 'entryType', 5);
 
     // Year range
     const years = entries.map(e => e.year).filter(Boolean);

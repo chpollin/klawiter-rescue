@@ -40,6 +40,13 @@ function countByField(entries, field) {
   return counts;
 }
 
+/** Top-N field values by frequency. Returns array of [value, count] pairs, descending. */
+function topN(entries, field, n) {
+  return Object.entries(countByField(entries, field))
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n);
+}
+
 /** Normalize translator name: strip trailing location/edition info */
 function normalizeTranslator(raw) {
   if (!raw) return '';

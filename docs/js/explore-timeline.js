@@ -734,10 +734,6 @@ const ExploreTimeline = {
     Explore.updateExploreURL(false);
   },
 
-  toggleProvenance(enabled) {
-    Explore.setProvenance(enabled);
-  },
-
   setChartMode(mode) {
     this.chartMode = mode;
     if (this.entries) this.render(this.entries);

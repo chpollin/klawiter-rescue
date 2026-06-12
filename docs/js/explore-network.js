@@ -32,7 +32,6 @@ const ExploreNetwork = {
   _activePeriod: 'all',
 
   _lastEntries: null,
-  _filterListenerBound: false,
 
   // =========================================================================
   // Entry point
@@ -44,17 +43,8 @@ const ExploreNetwork = {
     if (!container) return;
     container.innerHTML = '';
 
-    // Bind cross-view filter listener once
-    if (!this._filterListenerBound) {
-      document.addEventListener('explore:filterChange', () => {
-        if (Explore.mode !== 'network') return;
-        const data = Explore.hasActiveFilters() ? Explore.getFiltered() : Explore.entries;
-        this.viewLevel = 'overview';
-        this.activeCommunity = null;
-        this.render(data);
-      });
-      this._filterListenerBound = true;
-    }
+    // Cross-view filter listener
+    this._bindFilterListener();
 
     // Sub-mode toggle
     const toggle = document.createElement('div');
@@ -1271,6 +1261,25 @@ const ExploreNetwork = {
         <p class="detail-summary-hint">Hover flows for details. Click nodes for entries.</p>
       </div>
     `;
+  },
+
+  // =========================================================================
+  // Brushed Linking
+  // =========================================================================
+
+  _bindFilterListener() {
+    if (this._filterHandler) {
+      document.removeEventListener('explore:filterChange', this._filterHandler);
+    }
+    this._filterHandler = (event) => {
+      if (Explore.mode !== 'network') return;
+      if (event.detail && event.detail.mode === 'network') return;
+      const data = Explore.hasActiveFilters() ? Explore.getFiltered() : Explore.entries;
+      this.viewLevel = 'overview';
+      this.activeCommunity = null;
+      this.render(data);
+    };
+    document.addEventListener('explore:filterChange', this._filterHandler);
   },
 
   // =========================================================================

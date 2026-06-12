@@ -568,7 +568,7 @@ const ExploreGeography = {
       .on('mouseenter', function(event, d) {
         if (!self._isVisible(d)) return;
         d3.select(this).attr('stroke', Explore.colors.gold).attr('stroke-width', 2.5);
-        const topLangs = self._topN(d.entries, 'language', 3);
+        const topLangs = topN(d.entries, 'language', 3);
         const langList = topLangs.map(([l, c]) => `${l}: ${c}`).join(', ');
         const countryName = d.type === 'country' && d.country
           ? (ExploreGeography._countryNames[d.country] || d.country) : '';
@@ -745,15 +745,6 @@ const ExploreGeography = {
   // =========================================================================
   // Helpers
   // =========================================================================
-
-  _topN(entries, field, n) {
-    const counts = {};
-    for (const e of entries) {
-      const v = e[field];
-      if (v) counts[v] = (counts[v] || 0) + 1;
-    }
-    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, n);
-  },
 
   _drawLegend(container) {
     const old = container.querySelector('.geo-legend');

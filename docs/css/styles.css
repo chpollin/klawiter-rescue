@@ -1110,14 +1110,6 @@ h1, h2, h3, h4 {
   margin-top: 1rem;
 }
 
-/* Overview grid */
-.overview-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-.overview-cell { min-height: 170px; }
-
 .ov-title {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
@@ -1133,14 +1125,6 @@ h1, h2, h3, h4 {
   font-style: italic;
 }
 
-.overview-chips {
-  margin-bottom: 0.75rem;
-  min-height: 1.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  align-items: center;
-}
 .chip-clear {
   font-family: var(--font-sans);
   font-size: 0.75rem;
@@ -2012,9 +1996,6 @@ body.edit-mode .meta-table {
   .explore-detail {
     width: 100%;
     max-height: 300px;
-  }
-  .overview-grid {
-    grid-template-columns: 1fr;
   }
   .footer-inner {
     grid-template-columns: 1fr;
