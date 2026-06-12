@@ -71,6 +71,11 @@ def load_csv(path):
 
 # --- Shared constants ---
 
+# CSV output fields for steps 01, 02 (raw extraction + encoding fix)
+EXTRACTED_FIELDS = [
+    'page_id', 'page_namespace', 'page_title', 'text_id', 'content', 'flags', 'blob_id',
+]
+
 # CSV output fields for steps 03, 03b, 04
 PARSED_FIELDS = [
     'page_id', 'page_namespace', 'page_title', 'text_id', 'blob_id',

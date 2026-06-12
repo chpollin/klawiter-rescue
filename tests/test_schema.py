@@ -219,11 +219,12 @@ class TestNoMarkupResidue:
 
     # Known markup issues: 14 titles = "__TOC__" (title extraction fell through),
     # 6 titles contain "]]" or "[[" (unclosed wiki links in parsed text).
-    # These are real pipeline bugs to fix — tracked here so new violations are caught.
-    KNOWN_MARKUP_COUNT = 6
+    # These are real pipeline bugs to fix — frozen value in baseline
+    # known_issues.wiki_markup_in_fields so new violations are caught.
 
-    def test_no_wiki_markup_in_fields(self, ns0_entries):
+    def test_no_wiki_markup_in_fields(self, ns0_entries, baseline):
         """No field contains [[, ]], <lst, __TOC__, or {{DEFAULTSORT."""
+        known = baseline["known_issues"]["wiki_markup_in_fields"]
         violations = []
         for entry in ns0_entries:
             for field in self.FIELDS_TO_CHECK:
@@ -235,20 +236,20 @@ class TestNoMarkupResidue:
                     )
 
         # Fail if NEW violations appear beyond known count
-        assert len(violations) <= self.KNOWN_MARKUP_COUNT, (
-            f"Found {len(violations)} markup violations (known: {self.KNOWN_MARKUP_COUNT}). "
+        assert len(violations) <= known, (
+            f"Found {len(violations)} markup violations (known: {known}). "
             f"New violations:\n"
             + "\n".join(
                 f"  page {pid}, {field}: found '{match}' in '{val}'"
                 for pid, field, match, val in violations[:30]
             )
         )
-        # Warn if count decreased (fixes applied — update KNOWN_MARKUP_COUNT)
-        if violations and len(violations) < self.KNOWN_MARKUP_COUNT:
+        # Warn if count decreased (fixes applied — update known_issues.wiki_markup_in_fields)
+        if violations and len(violations) < known:
             import warnings
             warnings.warn(
-                f"Markup violations decreased from {self.KNOWN_MARKUP_COUNT} to "
-                f"{len(violations)} — update KNOWN_MARKUP_COUNT",
+                f"Markup violations decreased from {known} to "
+                f"{len(violations)} — update known_issues.wiki_markup_in_fields",
                 UserWarning, stacklevel=1,
             )
 

@@ -4,16 +4,25 @@ Normalization tests — verify that known data quality issues are fixed.
 These tests run on the frontend JSON (post-pipeline output) and assert
 that normalization rules have been applied correctly. Each test has a
 threshold of 0 — any violation is a regression.
+
+Location variants and publisher reject patterns are loaded from the real
+mapping tables (pipeline/data/*.json), the same tables the pipeline uses,
+so the tests stay in sync with the canonical normalization rules.
 """
+import json
 import re
+from pathlib import Path
+
 import pytest
+
+_DATA_DIR = Path(__file__).parent.parent / "pipeline" / "data"
 
 
 # --- Location ---
 
-KNOWN_LOCATION_VARIANTS = {
-    'Vienna', 'Munich', 'Moscow', 'Moskau', 'Prague', 'Prag', 'Warsaw',
-}
+# Canonical variant keys come straight from the pipeline's mapping table.
+with open(_DATA_DIR / "location_normalize.json", encoding="utf-8") as _f:
+    KNOWN_LOCATION_VARIANTS = set(json.load(_f).keys())
 
 
 def test_no_location_variants(ns0_entries):
@@ -27,22 +36,18 @@ def test_no_location_variants(ns0_entries):
 
 # --- Publisher ---
 
-_PUBLISHER_GARBAGE_RE = re.compile(
-    r'^\d+(st|nd|rd|th)\s+edition'
-    r'|^(Company|House|company|house)$'
-    r'|cataloging|website'
-    r'|^p\.\s'
-    r'|^(Vol|Part|Chapter|Section)\b'
-    r'|^[,;:\.\-\s]+$'
-    r'|^& Distribution$',
-    re.IGNORECASE
-)
+# Reject patterns come straight from the pipeline's reject table.
+with open(_DATA_DIR / "publisher_reject_patterns.json", encoding="utf-8") as _f:
+    _PUBLISHER_REJECT_PATTERNS = [
+        re.compile(p, re.IGNORECASE) for p in json.load(_f).get("patterns", [])
+    ]
 
 
 def test_no_publisher_garbage(ns0_entries):
     """Publisher field should not contain edition numbers, metadata, or garbage."""
     bad = [e for e in ns0_entries
-           if e.get('publisher') and _PUBLISHER_GARBAGE_RE.search(e['publisher'])]
+           if e.get('publisher')
+           and any(p.search(e['publisher']) for p in _PUBLISHER_REJECT_PATTERNS)]
     assert len(bad) == 0, (
         f"{len(bad)} entries with garbage publisher: "
         + ', '.join(f"{e['sourcePageId']}={e['publisher']}" for e in bad[:5])

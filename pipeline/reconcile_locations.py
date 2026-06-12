@@ -134,8 +134,8 @@ SELECT ?item ?coord ?countryItem WHERE {{
     return result
 
 
-def pick_best_match(hits_by_lang: dict, existing_lat: float, existing_lng: float) -> dict | None:
-    """Pick the best match from multi-language results, preferring geographic proximity."""
+def pick_best_match(hits_by_lang: dict) -> dict | None:
+    """Pick the best match from multi-language results: exact match first, then highest score."""
     all_hits = []
     for lang, hits in hits_by_lang.items():
         for h in hits:
@@ -196,8 +196,7 @@ def main():
         for orig_key in original_keys:
             if orig_key in matches:
                 continue  # already matched via another variant
-            loc = locations[orig_key]
-            best = pick_best_match(hits_by_lang, loc['lat'], loc['lng'])
+            best = pick_best_match(hits_by_lang)
             if best and best.get('score', 0) >= MIN_SCORE:
                 matches[orig_key] = {
                     'wikidataId': best['id'],

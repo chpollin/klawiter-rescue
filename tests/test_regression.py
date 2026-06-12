@@ -121,25 +121,16 @@ class TestDataIntegrity:
         assert "entry_type_distribution" in quality_report
 
     def test_year_range_sane(self, quality_report):
-        """Year distribution spans the expected range (1815–2020)."""
-        dist = quality_report.get("year_distribution", {})
-        if not dist:
-            # Fallback: at least verify type distribution exists and is non-empty
-            assert "entry_type_distribution" in quality_report
-            total_types = sum(quality_report["entry_type_distribution"].values())
-            assert total_types > 0, "No entries in type distribution"
-            return
-
-        years = [int(y) for y in dist.keys()]
-        assert min(years) <= 1820, (
-            f"Earliest year {min(years)} > 1820 — possible data loss at lower bound"
+        """Year range spans the expected bounds without data loss at the edges."""
+        year_range = quality_report["year_range"]
+        assert year_range["min"] <= 1820, (
+            f"Earliest year {year_range['min']} > 1820 — possible data loss at lower bound"
         )
-        assert max(years) >= 2015, (
-            f"Latest year {max(years)} < 2015 — possible data loss at upper bound"
+        assert year_range["max"] >= 2015, (
+            f"Latest year {year_range['max']} < 2015 — possible data loss at upper bound"
         )
-        total_with_year = sum(dist.values())
-        assert total_with_year >= 4000, (
-            f"Only {total_with_year} entries have year data — expected ≥ 4000"
+        assert year_range["count"] >= 4000, (
+            f"Only {year_range['count']} entries have year data — expected ≥ 4000"
         )
 
     def test_frontend_json_exists(self):

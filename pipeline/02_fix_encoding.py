@@ -11,12 +11,13 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, load_csv, write_csv, STEP_01_OUTPUT, STEP_02_OUTPUT
+from lib.config import (
+    setup_logging, load_csv, write_csv, EXTRACTED_FIELDS,
+    STEP_01_OUTPUT, STEP_02_OUTPUT,
+)
 from lib.encoding import fix_encoding, has_mojibake
 
 log = setup_logging(__name__)
-
-OUTPUT_FIELDS = ['page_id', 'page_namespace', 'page_title', 'text_id', 'content', 'flags', 'blob_id']
 
 
 def main():
@@ -44,7 +45,7 @@ def main():
     mojibake_after = sum(1 for r in rows if has_mojibake(r.get('content', '')) or has_mojibake(r.get('page_title', '')))
     log.info(f"Entries with Mojibake after fix: {mojibake_after} ({100*mojibake_after/len(rows):.1f}%)")
 
-    write_csv(STEP_02_OUTPUT, rows, OUTPUT_FIELDS)
+    write_csv(STEP_02_OUTPUT, rows, EXTRACTED_FIELDS)
     log.info(f"Output written to {STEP_02_OUTPUT}")
 
 

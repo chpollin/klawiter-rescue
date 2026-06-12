@@ -52,11 +52,48 @@
     "max": 2020,
     "count": 4440
   },
+  "entry_type_distribution": {
+    "redirect": 1545,
+    "secondary-literature": 1406,
+    "fiction": 1118,
+    "essay": 905,
+    "historical-study": 535,
+    "category": 420,
+    "poetry": 275,
+    "collected-works": 114,
+    "correspondence": 109,
+    "film": 92,
+    "translation": 56,
+    "drama": 43,
+    "symposium": 39,
+    "foreword": 36,
+    "dramatic-reading": 18,
+    "mediawiki": 5,
+    "other": 4,
+    "template": 2,
+    "newspaper": 1,
+    "help": 1,
+    "file": 1
+  },
   "thresholds": {
     "total_entries_min": 6700,
     "non_redirects_main_min": 4700,
     "critical_field_max_drop_pp": 1.0,
     "mojibake_warnings_max": 10,
     "error_severity_max": 0
+  },
+  "known_issues": {
+    "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better — when extraction improves, update the value.",
+    "redirect_map_size": 1210,
+    "german_translator_fp": 111,
+    "film_pagecount": 10,
+    "publisher_equals_location": 1,
+    "broken_see_also_refs": 622,
+    "wiki_markup_in_fields": 6,
+    "section_header_titles": 0,
+    "long_titles": 43,
+    "encoding_artifact_titles": 345,
+    "publisher_wiki_markup": 0,
+    "publisher_metadata": 0
   }
 }

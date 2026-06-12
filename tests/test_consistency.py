@@ -20,30 +20,28 @@ class TestGermanTranslator:
     Exceptions: Collected works that include translations, or entries where
     the 'translator' field was incorrectly extracted (false positives)."""
 
-    # Current known FP count — update when pipeline improves
-    KNOWN_GERMAN_TRANSLATOR_FP = 111
-
-    def test_german_translator_false_positives_bounded(self, ns0_entries):
+    def test_german_translator_false_positives_bounded(self, ns0_entries, baseline):
         """Count of German entries with translator must not increase."""
+        known = baseline["known_issues"]["german_translator_fp"]
         german_with_translator = [
             (e["sourcePageId"], e.get("translator"), str(e.get("title", ""))[:50])
             for e in ns0_entries
             if e.get("language") == "German" and e.get("translator")
         ]
-        assert len(german_with_translator) <= self.KNOWN_GERMAN_TRANSLATOR_FP, (
+        assert len(german_with_translator) <= known, (
             f"German entries with translator increased from "
-            f"{self.KNOWN_GERMAN_TRANSLATOR_FP} to {len(german_with_translator)}. "
+            f"{known} to {len(german_with_translator)}. "
             f"New cases:\n"
             + "\n".join(
                 f"  page {pid}: translator='{tr}', title='{t}'"
                 for pid, tr, t in german_with_translator[:10]
             )
         )
-        if german_with_translator and len(german_with_translator) < self.KNOWN_GERMAN_TRANSLATOR_FP:
+        if german_with_translator and len(german_with_translator) < known:
             import warnings
             warnings.warn(
-                f"German translator FPs decreased from {self.KNOWN_GERMAN_TRANSLATOR_FP} "
-                f"to {len(german_with_translator)} — update KNOWN_GERMAN_TRANSLATOR_FP",
+                f"German translator FPs decreased from {known} "
+                f"to {len(german_with_translator)} — update known_issues.german_translator_fp",
                 UserWarning, stacklevel=1,
             )
 
@@ -55,18 +53,17 @@ class TestGermanTranslator:
 class TestFilmPageCount:
     """Film entries typically don't have page counts. Screenplays may be exceptions."""
 
-    KNOWN_FILM_PAGECOUNT = 10
-
-    def test_film_pagecount_bounded(self, ns0_entries):
+    def test_film_pagecount_bounded(self, ns0_entries, baseline):
         """Count of film entries with pageCount must not increase."""
+        known = baseline["known_issues"]["film_pagecount"]
         films_with_pages = [
             (e["sourcePageId"], e.get("pageCount"), str(e.get("title", ""))[:50])
             for e in ns0_entries
             if e.get("entryType") == "film" and e.get("pageCount")
         ]
-        assert len(films_with_pages) <= self.KNOWN_FILM_PAGECOUNT, (
+        assert len(films_with_pages) <= known, (
             f"Film entries with pageCount increased from "
-            f"{self.KNOWN_FILM_PAGECOUNT} to {len(films_with_pages)}"
+            f"{known} to {len(films_with_pages)}"
         )
 
 
@@ -77,18 +74,17 @@ class TestFilmPageCount:
 class TestPublisherLocationDistinct:
     """Publisher and location should be different values."""
 
-    KNOWN_PUB_EQ_LOC = 1
-
-    def test_publisher_not_equal_location(self, ns0_entries):
+    def test_publisher_not_equal_location(self, ns0_entries, baseline):
         """Publisher and location fields should not contain the same value."""
+        known = baseline["known_issues"]["publisher_equals_location"]
         same = [
             (e["sourcePageId"], e.get("publisher"))
             for e in ns0_entries
             if e.get("publisher") and e.get("location")
             and e["publisher"] == e["location"]
         ]
-        assert len(same) <= self.KNOWN_PUB_EQ_LOC, (
-            f"Publisher == Location increased from {self.KNOWN_PUB_EQ_LOC} "
+        assert len(same) <= known, (
+            f"Publisher == Location increased from {known} "
             f"to {len(same)}: {same[:10]}"
         )
 
@@ -144,30 +140,31 @@ class TestSeeAlsoIntegrity:
     """Cross-references should point to entries that exist."""
 
     # Known count of broken references — reduced from 1140 to 727 after title fix
-    # (correct titles resolve more redirects). Remaining: language suffixes, person names
-    KNOWN_BROKEN_REFS = 727
+    # (correct titles resolve more redirects). Remaining: language suffixes, person names.
+    # Frozen value lives in baseline known_issues.broken_see_also_refs.
 
-    def test_broken_references_bounded(self, ns0_entries, all_titles, redirect_targets):
+    def test_broken_references_bounded(self, ns0_entries, all_titles, redirect_targets, baseline):
         """Count of broken seeAlso references must not increase."""
+        known = baseline["known_issues"]["broken_see_also_refs"]
         broken = []
         for entry in ns0_entries:
             for ref in (entry.get("seeAlso") or []):
                 if ref not in all_titles and ref not in redirect_targets:
                     broken.append((entry["sourcePageId"], ref))
 
-        assert len(broken) <= self.KNOWN_BROKEN_REFS, (
-            f"Broken seeAlso references increased from {self.KNOWN_BROKEN_REFS} "
+        assert len(broken) <= known, (
+            f"Broken seeAlso references increased from {known} "
             f"to {len(broken)}. Sample:\n"
             + "\n".join(
                 f"  page {pid} → '{ref}'"
                 for pid, ref in broken[:10]
             )
         )
-        if broken and len(broken) < self.KNOWN_BROKEN_REFS:
+        if broken and len(broken) < known:
             import warnings
             warnings.warn(
-                f"Broken seeAlso references decreased from {self.KNOWN_BROKEN_REFS} "
-                f"to {len(broken)} — update KNOWN_BROKEN_REFS",
+                f"Broken seeAlso references decreased from {known} "
+                f"to {len(broken)} — update known_issues.broken_see_also_refs",
                 UserWarning, stacklevel=1,
             )
 

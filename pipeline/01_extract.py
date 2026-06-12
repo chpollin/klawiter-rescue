@@ -13,11 +13,12 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, write_csv, RAW_DIR, STEP_01_OUTPUT, SQL_DUMP_PATH, BLOB_FILES
+from lib.config import (
+    setup_logging, write_csv, EXTRACTED_FIELDS,
+    RAW_DIR, STEP_01_OUTPUT, SQL_DUMP_PATH, BLOB_FILES,
+)
 
 log = setup_logging(__name__)
-
-OUTPUT_FIELDS = ['page_id', 'page_namespace', 'page_title', 'text_id', 'content', 'flags', 'blob_id']
 
 
 def parse_sql_inserts(sql_text, table_name):
@@ -308,7 +309,7 @@ def main():
         log.warning(f"  Missing: page_id={pid}, text_id={tid}, title=\"{title}\"")
 
     # Write output
-    write_csv(STEP_01_OUTPUT, results, OUTPUT_FIELDS)
+    write_csv(STEP_01_OUTPUT, results, EXTRACTED_FIELDS)
     log.info(f"Output written to {STEP_01_OUTPUT}")
     log.info(f"Success rate: {found}/{found+not_found} ({100*found/(found+not_found):.1f}%)")
 

@@ -18,10 +18,8 @@ from lib.config import (
     setup_logging, load_csv, STEP_02_OUTPUT, OUTPUT_JSONLD, OUTPUT_DIR,
 )
 from lib.patterns import (
-    extract_year, extract_all_years, extract_publisher, extract_location,
-    extract_page_count, extract_translator, YEAR_RE, PUBLISHER_PATTERNS,
-    LOCATION_RE, PAGE_COUNT_PATTERNS, TRANSLATOR_PATTERNS,
-    PARENS_PAGE_RE, PAGE_RANGE_RE,
+    extract_all_years, extract_publisher, extract_location,
+    extract_translator, PARENS_PAGE_RE, PAGE_RANGE_RE,
 )
 from lib.wiki_parser import remove_wiki_markup
 

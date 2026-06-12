@@ -37,20 +37,20 @@ class TestEntryCounts:
             f"(delta: {actual - expected})"
         )
 
-    def test_redirect_count_stable(self, redirects):
+    def test_redirect_count_stable(self, redirects, baseline):
         """Redirect map has a stable count.
 
         Note: baseline counts ALL redirects (1546 = total - non-redirects),
         but the frontend JSON redirect map only stores redirect page titles
         that resolve to actual entries. The map is a subset.
         """
-        # Frozen reference — updated after title fix (section headers → page_titles)
-        # 430 → 1228 → 1210 (encoding guard restores some longer extracted titles)
-        EXPECTED_REDIRECT_MAP_SIZE = 1210
+        # Frozen reference in baseline known_issues — updated after title fix
+        # (section headers → page_titles): 430 → 1228 → 1210.
+        expected = baseline["known_issues"]["redirect_map_size"]
         actual = len(redirects)
-        assert actual == EXPECTED_REDIRECT_MAP_SIZE, (
-            f"Expected {EXPECTED_REDIRECT_MAP_SIZE} redirect map entries, got {actual} "
-            f"(delta: {actual - EXPECTED_REDIRECT_MAP_SIZE})"
+        assert actual == expected, (
+            f"Expected {expected} redirect map entries, got {actual} "
+            f"(delta: {actual - expected})"
         )
 
 
@@ -107,16 +107,8 @@ class TestKnownGaps:
                 f"Stub page {stub['sourcePageId']} now has a title '{stub.get('title')}' — "
                 f"content may have been recovered. Update KNOWN_STUB_PAGE_IDS."
             )
-
-    def test_no_new_gaps_in_ns0(self, ns0_entries, baseline):
-        """No entries disappeared — ns-0 count matches baseline exactly."""
-        expected_total = baseline["summary"]["non_redirects_main"]
-        actual = len(ns0_entries)
-
-        assert actual >= expected_total, (
-            f"ns-0 entries dropped from {expected_total} to {actual} — "
-            f"{expected_total - actual} entries may have been lost."
-        )
+    # Note: a former `test_no_new_gaps_in_ns0` (ns-0 count >= baseline) was a strict
+    # subset of TestEntryCounts.test_ns0_entries_exact (==, same value) and was removed.
 
 
 # ---------------------------------------------------------------------------

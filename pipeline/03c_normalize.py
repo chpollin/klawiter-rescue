@@ -9,24 +9,20 @@ Input:  data/intermediate/03b_llm_enriched.csv (or 03_parsed.csv)
 Output: data/intermediate/03c_normalized.csv
 """
 
-import csv
 import json
 import os
 import re
 import sys
 
-csv.field_size_limit(10_000_000)
-
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    STEP_03_OUTPUT, STEP_03B_OUTPUT, INTERMEDIATE_DIR,
-    PARSED_FIELDS, setup_logging, load_csv,
+    STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_03C_OUTPUT,
+    PARSED_FIELDS, setup_logging, load_csv, write_csv,
 )
 from lib.encoding import fix_encoding, has_mojibake
 
 log = setup_logging('normalize')
 
-STEP_03C_OUTPUT = os.path.join(INTERMEDIATE_DIR, '03c_normalized.csv')
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
@@ -47,6 +43,12 @@ TRANSLATOR_SUFFIX_RE = re.compile(
     r'Postface|Nachwort|Vorwort|Einleitung).*$',
     re.IGNORECASE
 )
+
+# Page-count plausibility bounds (independent of config.MAX_VALID_YEAR, which is
+# dynamic year+5; these are fixed so the reject behavior is stable over time).
+MAX_PLAUSIBLE_PAGE_COUNT = 2000
+YEAR_LIKE_MIN = 1800
+YEAR_LIKE_MAX = 2030
 
 
 def normalize_location(value, loc_map):
@@ -109,9 +111,9 @@ def validate_page_count(value):
         n = int(value)
     except (ValueError, TypeError):
         return value
-    if n > 2000:
+    if n > MAX_PLAUSIBLE_PAGE_COUNT:
         return ''
-    if 1800 <= n <= 2030:
+    if YEAR_LIKE_MIN <= n <= YEAR_LIKE_MAX:
         return ''
     return value
 
@@ -172,10 +174,7 @@ def main():
             stats['pagecount_rejected'] += 1
 
     # Write output
-    with open(STEP_03C_OUTPUT, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=PARSED_FIELDS, extrasaction='ignore')
-        writer.writeheader()
-        writer.writerows(rows)
+    write_csv(STEP_03C_OUTPUT, rows, PARSED_FIELDS)
 
     log.info(f"Wrote {len(rows)} entries to {os.path.basename(STEP_03C_OUTPUT)}")
     log.info(f"Normalization stats:")
