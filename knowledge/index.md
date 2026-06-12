@@ -3,7 +3,7 @@ title: Klawiter Bibliography
 aliases: [MOC, map of content, index]
 tags: [index]
 created: 2026-04-12
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Klawiter Bibliography Knowledge Base
@@ -17,7 +17,7 @@ Map of Content for the project documentation vault.
 ## Data & Pipeline
 
 - [[data]] — Data model, 16 entity types, field coverage, known quality issues
-- [[pipeline]] — 7-step extraction, encoding fix, regex patterns, data flow diagram
+- [[pipeline]] — 8-step extraction, encoding fix, regex patterns, data flow diagram
 - [[architecture]] — 6 key technical decisions with rationale
 
 ## Semantics
@@ -27,15 +27,15 @@ Map of Content for the project documentation vault.
 ## Frontend
 
 - [[frontend]] — Design system, personas, user stories, views, components, routing
-- [[exploration]] — D3.js interactive visualization: Timeline, Overview, Connections
+- [[exploration]] — D3.js interactive visualization: Timeline, Geography, Connections
 
 ## Quality
 
-- [[testing]] — 326 tests, 5-category strategy, what we can and cannot guarantee
+- [[testing]] — 437 tests, 7-category strategy, what we can and cannot guarantee
 
 ## Process
 
-- [[journal]] — Work diary, 12 sessions (2026-03-29 to 2026-04-12)
+- [[journal]] — Work diary, 15 sessions (2026-03-29 to 2026-04-12)
 
 ## Reference
 
@@ -71,7 +71,19 @@ Remaining items from the original project plan (milestones M1-M8 all complete, M
 - [ ] Add link from Stefan Zweig Digital to Klawiter bibliography (coordinate with project team)
 - [ ] Announce / publish
 
+### Wikidata Reconciliation Follow-up (Session 15)
+
+- [ ] Manual review of 22 unmatched locations (encoding variants, composite slash-locations, obscure villages) + 3 low-score matches
+- [ ] Add `locationSameAs` field with Wikidata URIs to the JSON-LD output (Q-IDs currently live in `docs/data/locations.json` only)
+
+### Browser Verification (Session 15 features)
+
+- [ ] Browser-test new Explore features: Timeline Sparklines/Ranks modes, Geography Globe/Flat toggle, semantic zoom, Connections two-level drill-down
+
+### Future Project
+
+- [ ] Multi-edition page decomposition (LLM-based edition-block segmentation) — separate project, see [[pipeline#known-limitations--multi-edition-pages]]
+
 ### Housekeeping
 
-- [ ] Remove empty v2/ directory
-- [ ] Remaining ~170 publisher + ~96 location FP in verification (encoding comparison artifacts, not real errors)
+- [ ] 170 publisher + 96 location verification false positives (encoding-comparison artifacts vs. raw text, not real extraction errors)

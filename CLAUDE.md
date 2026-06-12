@@ -36,12 +36,12 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - **No MySQL**: Pipeline parses SQL dumps and BLOBs directly (Latin-1 encoding for BLOB processing)
 - **Vocabulary blend**: Schema.org + Dublin Core + `klawiter:` namespace (implemented in `pipeline/lib/vocabulary.py`, documented at `docs/vocab/index.html`)
 - **16 entry types**: 15 content types + redirect, mapped to Schema.org types (Book, Article, Play, Movie, etc.)
-- **Static frontend**: Vanilla JS (15 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 6 content pages (About, Methodology, Help, Data, JSON-LD Playground, Imprint)
+- **Static frontend**: Vanilla JS (14 modules) + custom CSS (SZD design) + FlexSearch + D3.js v7, no build step. 6 content pages (About, Methodology, Help, Data, JSON-LD Playground, Imprint)
 - **Exploration interface**: 3-mode interactive visualization (Timeline with Bars/Sparklines/Ranks, Geography globe/flat toggle, Connections network) with URL state persistence and cross-view filtering
-- **Wikidata reconciliation**: 382 locations matched against Wikidata via Reconciliation API (94.2% coverage). Script: `pipeline/reconcile_locations.py`. Q-IDs stored in `docs/data/locations.json`
-- **Test suite**: 397 tests in 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization). See `knowledge/testing.md`
+- **Wikidata reconciliation**: 382 geocoded locations reconciled against Wikidata via Reconciliation API, 360 with Q-IDs (94.2% coverage). Script: `pipeline/reconcile_locations.py`. Q-IDs stored in `docs/data/locations.json`
+- **Test suite**: 437 tests (15 files) in 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization). Normalization split into `test_normalize_unit.py` (rule unit tests) + `test_normalization.py` (output assertions). See `knowledge/testing.md`
 - **Testing categories**: Census (completeness — all page_ids, no dupes), Schema (every entry — types, ranges, markup, mojibake), Consistency (cross-field — German+translator, film+pageCount, seeAlso integrity), Distribution (regression ≤1pp), Extraction (unit + real-data + LLM-judge), Semantic (wiki-verified ground truth + heuristic validators). Shared fixtures in `conftest.py`
-- **Semantic testing**: 10 entries verified against live wiki (klawiter.stefanzweig.digital), 6 heuristic validators on all entries. Ground truth in `tests/wiki_ground_truth.json`. Current accuracy: 53/70 fields correct (76%). Run with `pytest -m semantic`
+- **Semantic testing**: 10 entries verified against live wiki (klawiter.stefanzweig.digital), 5 heuristic validators on all entries. Ground truth in `tests/wiki_ground_truth.json`. Current accuracy: 53/70 fields correct (76%). Run with `pytest -m semantic`
 - **Pipeline limit**: Regex extraction reached diminishing returns. Multi-edition pages (427 of 6,296 = 6.8%) cause systematic extraction errors. Further regex fixes shift problems rather than solving them. See `knowledge/pipeline.md`
 - **Regression testing**: Baseline metrics in `.github/baseline-metrics.json`, 19 regression tests in `tests/test_regression.py`, CI checks in `validate-patch.yml`
 - **GitHub Pages**: Deploy from `docs/` folder — live at `https://chpollin.github.io/klawiter-rescue/`

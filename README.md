@@ -15,12 +15,14 @@ Extraction and structuring of the Stefan Zweig Bibliography (Dr. Randolph J. Kla
 | JSON-LD | Schema.org + Dublin Core + `klawiter:` vocabulary blend |
 | Frontend | Static site (GitHub Pages), Stefan Zweig Digital design language |
 
+Two entry counts appear throughout: **6,296** = bibliography pages in MediaWiki namespace 0 (the source corpus); **5,179** = non-redirect entries across all namespaces in the frontend JSON (`docs/data/klawiter.json`), of which 4,751 namespace-0 entries are displayed in the UI. The full JSON-LD dataset (`data/output/klawiter.jsonld`) additionally carries 1,546 redirect entries, for 6,725 total records.
+
 ## Project Structure
 
 ```
-pipeline/               Python pipeline (7 steps, no external dependencies)
+pipeline/               Python pipeline (8 steps, no external dependencies)
 docs/                   Frontend (GitHub Pages) — static HTML/JS/CSS
-  js/                   13 JS modules (app, home, facets, detail, explore-*, export, pages, edit, …)
+  js/                   14 JS modules (app, home, facets, detail, explore-*, export, pages, edit, …)
   css/styles.css        Custom CSS (Stefan Zweig Digital design language)
 data/
   raw/                  MediaWiki SQL dump + 8 BLOB files (363 MB)
@@ -37,6 +39,7 @@ data/raw/zt_00–07 + zweig_part_01.sql
   ↓ 02_fix_encoding.py   Mojibake repair (Latin-1 → UTF-8)
   ↓ 03_parse_entries.py   Wiki markup → structured fields
   ↓ 03b_llm_enrich.py    LLM metadata gap-filling (Gemini 3.1 Flash Lite, optional)
+  ↓ 03c_normalize.py     Auditable normalization (location/publisher/translator/pageCount)
   ↓ 04_classify.py       Entity type + time period classification
   ↓ 05_to_jsonld.py      JSON-LD conversion
   ↓ 06_validate.py       Quality report
@@ -66,10 +69,14 @@ python pipeline/run_pipeline.py 2 4
 
 | File | Description |
 |------|-------------|
-| `data/output/klawiter.jsonld` | Full dataset (6,296 entries, ~8 MB) |
+| `data/output/klawiter.jsonld` | Full JSON-LD dataset (6,725 records incl. 1,546 redirects, ~12 MB) |
 | `data/output/entries/*.jsonld` | Individual files per entry |
 | `data/output/quality-report.json` | Validation results |
-| `docs/data/klawiter.json` | Frontend JSON (5,179 entries, ~9 MB) |
+| `docs/data/klawiter.json` | Frontend JSON (5,179 non-redirect entries, ~9 MB) |
+
+## Data Model
+
+Output is **JSON-LD** using a vocabulary blend of [Schema.org](https://schema.org/), [Dublin Core](https://www.dublincore.org/), and a domain-specific `klawiter:` namespace for types and provenance that the standard vocabularies do not cover (e.g. `dramatic-reading`, `symposium`, MediaWiki source IDs). Each of the 16 entry types maps to a Schema.org type (`Book`, `Article`, `Play`, `Movie`, …). The `klawiter:` namespace is documented at [`docs/vocab/`](docs/vocab/index.html) (live: [chpollin.github.io/klawiter-rescue/vocab/](https://chpollin.github.io/klawiter-rescue/vocab/)), and the `@context` plus an interactive compact/expanded/triples view are available in the JSON-LD Playground on the live site.
 
 ## Frontend
 
@@ -78,7 +85,7 @@ Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Dig
 - **Overview**: Category portal with tiles grouped by Works / Reception / Editions
 - **Browse**: Full-text search (FlexSearch) + faceted filtering (type, language, period, location)
 - **Detail**: Expandable cards with SZD-style metadata table, conditional sections
-- **Explore**: Interactive D3.js visualization with 3 modes — Timeline (stacked area by language), Overview (linked small multiples with cross-filtering), Connections (force-directed graph of cross-references)
+- **Explore**: Interactive D3.js visualization with 3 modes — Timeline (Bars/Sparklines/Ranks by language), Geography (interactive globe/flat map with Wikidata-linked locations), Connections (force-directed graph of cross-references)
 - **Export**: BibTeX, RIS, JSON-LD per entry + full dataset download
 - **Content Pages**: About, Methodology, Help, Data Access, Imprint
 - No framework, no build step
@@ -93,6 +100,10 @@ project context, data model, pipeline, architecture decisions, ontology, fronten
 The bibliography was compiled by **Dr. Randolph J. Klawiter** (University of Notre Dame) over decades. It covers 6,296 entries on Stefan Zweig's work — first editions, translations, secondary literature, film adaptations, correspondence — in over 40 languages.
 
 This project is connected to [Stefan Zweig Digital](https://stefanzweig.digital/) at the Stefan Zweig Centre Salzburg (University of Salzburg).
+
+## Citation
+
+If you use this dataset or software, please cite it. Machine-readable citation metadata is provided in [`CITATION.cff`](CITATION.cff) (GitHub renders a "Cite this repository" button in the sidebar). It credits Dr. Randolph J. Klawiter (University of Notre Dame) as the bibliography's compiler and Christopher Pollin (University of Graz) for the digital edition, and links the repository and live site.
 
 ## License
 

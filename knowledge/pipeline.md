@@ -3,12 +3,12 @@ title: Pipeline
 aliases: [extraction pipeline, data flow]
 tags: [pipeline, extraction]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Pipeline
 
-The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 7 stages (01-06 plus verify), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
+The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify and reconcile helpers), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
 
 ## Source Data
 
@@ -280,7 +280,7 @@ flowchart TD
 
 **Step 2: Fix Encoding** — content field: 57.3% Mojibake -> 0%. page_title: some Mojibake -> 0%. Risk point: line-wise repair could theoretically fail on mixed-encoding lines.
 
-**Step 3: Parse** — Wiki markup to structured fields. Main loss points: publisher (34.5%), translator (35.1%), location (67.8%).
+**Step 3: Parse** — Wiki markup to structured fields. Main loss points (regex-only, before LLM enrichment and normalization): publisher (34.5%), translator (35.1%), location (67.8%). Final coverage after steps 03b/03c is higher — see [[data#field-coverage]].
 
 | Raw content pattern | Extracted field | Method |
 |---------------------|----------------|--------|
@@ -320,16 +320,18 @@ docs/data/klawiter.json
 |   +-- fullBibliographicEntry
 |   +-- sourcePageId, sourceTextId, sourceBlobId
 |   +-- pageNamespace
-+-- redirects{}: { "title" -> page_id } map (1,078 resolved)
++-- redirects{}: { "title" -> page_id } map (1,210 of 1,546 redirects resolved)
 ```
 
 ---
 
-## Reconciliation -- Out of Scope
+## Reconciliation -- Linked Data Enrichment
 
-Semantic enrichment via authority data (Wikidata, GND, VIAF, GeoNames) is out of scope per the Data Integrity Principle. The pipeline extracts, normalizes, and structures — it does not add external data. Coverage gaps where the raw wiki text does not contain a publisher, translator, or location are correct, not bugs.
+**Linked Data enrichment** — matching extracted entities against authority files to add persistent IDs — **is allowed and implemented for locations**. The 382 geocoded locations are reconciled against Wikidata via the Reconciliation API (360/382 = 94.2% with Q-IDs); see `pipeline/reconcile_locations.py` and [[data#wikidata-reconciliation]]. The entity (the place name) comes from the source text; reconciliation only adds the LOD link (`wikidataId`, coordinates, country code) for interoperability. This is a core project goal, not data invention.
 
-The `schema:sameAs` property is used only for Stefan Zweig's Wikidata ID (Q78491) as hardcoded author metadata, not a reconciliation result. If authority linking is needed in the future, it should be a separate project that consumes the Klawiter JSON-LD as input.
+**Inventing bibliographic data is forbidden** per the Data Integrity Principle. The pipeline extracts, normalizes, and structures — it never adds metadata *values* (publisher, translator, year) that are not present in the raw wiki text. Coverage gaps where the source does not contain a value are correct, not bugs. Adding new metadata values not present in the source remains out of scope.
+
+The `schema:sameAs` property is used for Stefan Zweig's Wikidata ID (Q78491) as author metadata. Reconciliation of other entity classes (works, translators, publishers) against external authorities would be a separate project that consumes the Klawiter JSON-LD as input.
 
 ---
 
@@ -395,22 +397,22 @@ The verification must be broader than the repair. Detection and repair now use t
 
 ## Regex Patterns
 
-Defined in `pipeline/lib/patterns.py` and `pipeline/lib/wiki_parser.py`.
+Defined in `pipeline/lib/patterns.py` and `pipeline/lib/wiki_parser.py`. All percentages below are **regex-only coverage (step 03), before LLM enrichment (03b) and normalization (03c)**. For final field coverage see [[data#field-coverage]].
 
 ### Year
 Matches 1700–2039, takes first match. **Limitation**: No range detection ("1952-1978"), page numbers like "1234" can cause false positives.
 
-### Publisher (3 families, 34.5% coverage)
-Recognizes `Verlag|Publisher|Press` labels, `published by` phrases, and publisher-ending names. **Weakest field** — misses most international publishers.
+### Publisher (3 families, 34.5% regex-only coverage)
+Recognizes `Verlag|Publisher|Press` labels, `published by` phrases, and publisher-ending names. **Weakest field** — misses most international publishers. Final coverage after LLM + normalization: 52.2%.
 
-### Location (67.8% coverage)
-Matched against ~100 known cities, sorted by length (longest first).
+### Location (67.8% regex-only coverage)
+Matched against ~100 known cities, sorted by length (longest first). Final coverage after LLM: 87.5%.
 
-### Page Count (78.4% coverage)
-Recognizes `432 p.`, `pp. 9-86`, `293 Seiten` and variants.
+### Page Count (51.0% regex-only coverage)
+Recognizes `432 p.`, `pp. 9-86`, `293 Seiten` and variants. Final coverage after LLM + outlier rejection: 53.3% (the earlier 78.4%/81.6% figures counted `pp. N-M` page ranges as false page counts — corrected in Sessions 11 and 15).
 
-### Translator (8 patterns, 35.1% coverage, 0% false positives)
-8 patterns for 5 languages (EN, DE, FR, ES, IT). Name must start uppercase. Trade-off: old extraction had 69% coverage but 46% false positives.
+### Translator (8 patterns, 35.1% regex-only coverage, 0% false positives)
+8 patterns for 5 languages (EN, DE, FR, ES, IT). Name must start uppercase. Trade-off: old extraction had 69% coverage but 46% false positives. Final coverage after LLM: 41.9%.
 
 ### Language (89.4% coverage)
 Category name parsing: extracts e.g. "German" from `Poetry / Individual Poems (German)`.
@@ -437,22 +439,7 @@ pytest tests/ -m llm -v         # LLM-as-a-Judge, requires GEMINI_API_KEY (~10s)
 pytest tests/ -v                # everything
 ```
 
-5-category strategy — see [[testing]] for full taxonomy and rationale.
-
-| Category | Test file | Tests | What it covers |
-|----------|-----------|-------|----------------|
-| Census | `test_census.py` | 14 | All page_ids present, no duplicates, stubs, required fields, frontend structure |
-| Schema | `test_schema.py` | 14 | Every entry validated: types, year ranges, language codes, markup residue, mojibake |
-| Consistency | `test_consistency.py` | 6 | Cross-field: German+translator, film+pageCount, seeAlso integrity, year/period |
-| Distribution | `test_regression.py` | 19 | Baseline comparison: counts (±0.5%), coverage (≤1pp), type distribution (±2%) |
-| Extraction | `test_encoding.py` | 13 | Mojibake detection/repair, HTML entity handling |
-| | `test_patterns.py` | 35 | Extraction functions (year, publisher, location, translator, page_count) |
-| | `test_wiki_parser.py` | 41 | Parser functions (redirect, categories, title, blocks, magic words) |
-| | `test_vocabulary.py` | 19 | Classification (time period, entry type, language-to-ISO) |
-| | `test_real_entries.py` | 160 | Parametrized over 20 hand-labeled entries from `test_sample_20.json` |
-| | `test_llm_judge.py` | 4 | Gemini evaluates extraction correctness on 10 diverse entries |
-
-**Total: 326 tests** (322 without LLM). Run `pytest tests/ -m "not llm" -v` for fast feedback (~1.5s).
+The suite has **437 tests across 15 test files**, organized in a 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization). The full per-file breakdown and the rationale for each category live in [[testing]] (single source of truth) — this page does not duplicate the table.
 
 **Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>0.5%), field coverage regressions (>1pp), type distribution drift (>2pp), error-severity increases. Baseline must be updated after intentional improvements.
 

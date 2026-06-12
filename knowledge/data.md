@@ -3,7 +3,7 @@ title: Data
 aliases: [data model, entity types]
 tags: [data, quality]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Data
@@ -122,6 +122,8 @@ Redirects are stored as a map in the frontend: `{ "Old Page Name": target_page_i
 | `other` | 4 | 0.1% | Unclassifiable |
 | `newspaper` | 1 | 0.0% | Newspaper article |
 
+Counts above are `entry_type` classifications (from `.github/baseline-metrics.json`). The 1,545 `redirect` type count differs by one from the 1,546 records carrying the `isRedirect` flag (one redirect page is classified under another type); of those 1,546 redirects, 1,210 resolve to an existing entry in the frontend map (see [[architecture]]).
+
 ### Classification Logic
 
 1. **Redirects**: Entry begins with `#REDIRECT` → `redirect`
@@ -190,7 +192,7 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 
 ### Known Problems
 
-**Publisher extraction (55.6%)**: Regex covers 34.5% (3 pattern families), LLM adds +21.1pp. The ~44% gap breaks down: 15-20% (~350 entries) legitimately missing (anthology poems, journal articles, see-also references — no publisher in source text). 80-85% (~1,750 entries) structural extraction failures (publisher present in implicit formats like `[[Collection]] [City, Year]` that regex doesn't match). Only 1.7% of entries without publisher contain publisher keywords. Poetry/Individual Poems: 80.7% gap — anthology entries structurally lack standalone publishers.
+**Publisher extraction (52.2%)**: Regex covers 34.5% (3 pattern families), LLM adds +17.7pp net; Session 15 normalization then rejected 160 garbage values (raw regex+LLM coverage was 55.6%). The ~48% gap breaks down: 15-20% (~350 entries) legitimately missing (anthology poems, journal articles, see-also references — no publisher in source text). 80-85% (~1,750 entries) structural extraction failures (publisher present in implicit formats like `[[Collection]] [City, Year]` that regex doesn't match). Only 1.7% of entries without publisher contain publisher keywords. Poetry/Individual Poems: 80.7% gap — anthology entries structurally lack standalone publishers.
 
 **Translator extraction (41.9%)**: Regex covers 35.1% with 0% false positives. LLM adds +6.8pp. Remaining ~58% are mostly German originals (no translator) or entries that don't name the translator. A newline-leaking bug in the translator regex (`\s` matching `\n`) was fixed — 34 translator fields previously contained trailing wiki markup from subsequent sections.
 

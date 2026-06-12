@@ -3,7 +3,7 @@ title: Testing
 aliases: [test strategy, quality assurance]
 tags: [testing, quality]
 created: 2026-04-12
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Testing Strategy
@@ -24,7 +24,7 @@ A bibliographic data rescue pipeline has a specific failure mode: **silent data 
 
 ### A: Census — "Is the data there?"
 
-**File**: `test_census.py` (14 tests)
+**File**: `test_census.py` (13 tests)
 
 Verifies: record counts, page_id presence, no duplicates, stub entries, frontend JSON structure.
 
@@ -72,7 +72,7 @@ Cannot catch: offsetting errors (50 publishers lost, 50 wrong added = same cover
 
 ### E: Extraction — "Do the functions work?"
 
-**Files**: `test_patterns.py` (35), `test_encoding.py` (13), `test_wiki_parser.py` (41), `test_vocabulary.py` (19), `test_real_entries.py` (160), `test_llm_judge.py` (4) — 272 total
+**Files**: `test_patterns.py` (36), `test_encoding.py` (13), `test_wiki_parser.py` (41), `test_vocabulary.py` (19), `test_real_entries.py` (160), `test_llm_judge.py` (4) — 273 total
 
 Unit tests for extraction functions + 20 hand-labeled real entries + LLM judge on 10 entries.
 
@@ -80,7 +80,7 @@ Catches: regressions in specific functions, encoding edge cases.
 
 Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 
-**Verified**: 3 entries traced end-to-end through all 5 pipeline steps. Pipeline logic correct for clean entries (page 3). pageCount bug confirmed (page 7140: `pp. 111-118` → extracted 111 as start page). LLM enrichment verified (page 4868: translator correctly filled by Gemini).
+**Verified**: 3 entries traced end-to-end through the pipeline steps. Pipeline logic correct for clean entries (page 3). pageCount bug confirmed (page 7140: `pp. 111-118` → extracted 111 as start page). LLM enrichment verified (page 4868: translator correctly filled by Gemini).
 
 ## Bugs Found and Fixed
 
@@ -91,40 +91,48 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (397 tests, 2026-04-12)
+## Current State (437 tests across 15 files, 2026-06-12)
 
 ```
-test_census.py        14  — Completeness (all entries present)
-test_schema.py        14  — Structural validity (every entry)
-test_consistency.py    6  — Cross-field plausibility
-test_regression.py    19  — Distribution stability vs baseline
-test_heuristic.py      6  — Semantic heuristics (all entries)
-test_normalization.py  5  — Field normalization quality (Session 15)
-test_semantic.py      70  — Wiki-verified ground truth (10 entries x 7 fields)
-test_encoding.py      13  — Encoding functions
-test_patterns.py      36  — Regex extraction functions
-test_wiki_parser.py   41  — Wiki parser functions
-test_vocabulary.py    19  — Classification mappings
-test_real_entries.py  160  — 20 hand-labeled entries
-test_llm_judge.py      4  — LLM quality judgment
-test_wikidata_locations.py  6  — Wikidata reconciliation quality
+test_real_entries.py        160  — 20 hand-labeled entries (parametrized)
+test_semantic.py             70  — Wiki-verified ground truth (10 entries x 7 fields)
+test_wiki_parser.py          41  — Wiki parser functions
+test_patterns.py             36  — Regex extraction functions
+test_normalize_unit.py       26  — Normalization rules unit tests (Session 15)
+test_vocabulary.py           19  — Classification mappings
+test_regression.py           19  — Distribution stability vs baseline
+test_schema.py               14  — Structural validity (every entry)
+test_census.py               13  — Completeness (all entries present)
+test_encoding.py             13  — Encoding functions
+test_consistency.py           6  — Cross-field plausibility
+test_wikidata_locations.py    6  — Wikidata reconciliation quality
+test_normalization.py         5  — Normalization data-quality assertions (Session 15)
+test_heuristic.py             5  — Semantic heuristics (all entries)
+test_llm_judge.py             4  — LLM quality judgment
 ```
+
+Two normalization test files complement each other: `test_normalize_unit.py` unit-tests the mapping rules in `pipeline/data/` (location variants, publisher reject patterns, translator suffix stripping, pageCount outliers), while `test_normalization.py` asserts the resulting data-quality properties on the output JSON.
+
+### Centralized Known-Issue Thresholds
+
+Bounded-count tests (German+translator FPs, film+pageCount, broken seeAlso refs, long titles, encoding-artifact titles, etc.) read their frozen thresholds from the `known_issues` section of `.github/baseline-metrics.json` rather than hard-coding numbers in test files. The baseline also carries `entry_type_distribution` for the regression tests. Lower is better — when extraction improves, the value in the baseline is lowered, which tightens the bound.
 
 ### F: Semantic — "Is the value correct?"
 
-**Files**: `test_semantic.py` (70 tests), `test_heuristic.py` (6 tests)
+**Files**: `test_semantic.py` (70 tests), `test_heuristic.py` (5 tests)
 
 Two layers:
 
 1. **Ground truth** (`test_semantic.py`): 10 entries verified against the live wiki at klawiter.stefanzweig.digital. Each entry checked for 7 fields (title, year, publisher, location, language, translator, pageCount). Current result: 53 passed, 17 failed. Ground truth file: `tests/wiki_ground_truth.json`.
 
-2. **Heuristics** (`test_heuristic.py`): Pattern-based validators on all 4,751 entries. Each test bounds the violation count (Session 14 final values):
+2. **Heuristics** (`test_heuristic.py`): 5 pattern-based validators on all 4,751 entries. Each test bounds the violation count against the `known_issues` thresholds in `.github/baseline-metrics.json`:
    - 0 section-header titles (was 1,368 — fixed with page_title fallback)
    - 43 titles longer than 200 chars (encoding-guard cases, was 387)
    - 345 titles with encoding artifacts in page_title (Arabic/Cyrillic transliterations)
-   - 11 pageCount values look like years (was 27)
    - 0 publisher fields with wiki markup (was 20)
    - 0 publisher fields with metadata phrases (was 10)
+
+   (The "pageCount looks like a year" bound is checked in the consistency/normalization tests, not here.)
 
 Catches: wrong titles (section headers, full citations), wrong page counts (years, page numbers, start pages), wrong publishers (metadata text, wiki markup), cross-section contamination.
 

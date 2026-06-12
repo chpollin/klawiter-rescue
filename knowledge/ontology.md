@@ -3,7 +3,7 @@ title: Ontology
 aliases: [vocabulary, JSON-LD, Schema.org]
 tags: [ontology, vocabulary]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Ontology
@@ -176,7 +176,7 @@ Secondary literature, historical studies, and symposia omit the author field (Zw
 ### Future Alignment
 
 - **Stefan Zweig Digital** (Stefan Zweig Centre Salzburg, University of Salzburg): Uses CIDOC-CRM. A separate research project is planned to develop a Nachlass ontology that bridges both projects. The current `@type` arrays and `sameAs` links provide extension points for CIDOC-CRM alignment without restructuring.
-- **Authority linking**: The `sameAs` property is defined in the @context and used for Stefan Zweig's Wikidata ID (Q78491). Reconciliation of works, translators, places, and publishers against external authority systems (Wikidata, GND, VIAF) is out of scope for this project — see [[pipeline#reconciliation--out-of-scope]]. A future project could consume the JSON-LD output and produce a separate alignment dataset.
+- **Authority linking**: The `sameAs` property is defined in the @context and used for Stefan Zweig's Wikidata ID (Q78491). Linked Data enrichment is allowed and **implemented for places**: 382 locations are reconciled against Wikidata (360 with Q-IDs, stored in `docs/data/locations.json`) — see [[pipeline#reconciliation--linked-data-enrichment]]. Reconciliation of the other entity classes (works, translators, publishers) is not yet done and would be a separate alignment project consuming this JSON-LD; adding metadata values absent from the source remains out of scope.
 
 ---
 

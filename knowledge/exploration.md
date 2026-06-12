@@ -3,7 +3,7 @@ title: Exploration
 aliases: [visualization, D3]
 tags: [exploration, visualization]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Exploration Interface
@@ -40,7 +40,7 @@ Different research questions require different visual encodings. A single visual
 | **Geography** | Spatial + temporal | Bubble map with brushed linking from Timeline |
 | **Connections** | Relational | Force-directed network graph |
 
-Note: The Overview mode (4 linked small multiples) was removed in Session 14 to focus on three strong modes rather than four mediocre ones.
+Note: The former Overview mode (linked small multiples) was removed in Session 14 to focus on three strong modes rather than four mediocre ones.
 
 ### Progressive disclosure
 
@@ -57,12 +57,12 @@ Note: The Overview mode (4 linked small multiples) was removed in Session 14 to 
 |-----------|------------|----------|-------|
 | Year | 1815–2020 | 93.2% | Integer, sparse before 1880 |
 | Language | 41 unique | 89.4% | Top: German, Chinese, French, English, Spanish |
-| Location | 402 unique | 87.5% | Top: Paris, Beijing, Berlin, Wien, Frankfurt |
+| Location | 382 geocoded | 87.5% | Top: Paris, Beijing, Berlin, Wien, Frankfurt. 382 distinct locations geocoded in `locations.json`; 360 reconciled to Wikidata (see [[data#wikidata-reconciliation]]) |
 | Entry Type | 16 types | 100% | Secondary Lit (29%), Fiction (23%), Essays (19%) |
 | Time Period | 5 buckets | 100% | Derived from year |
-| Publisher | ~1,000+ | 55.6% | Weak coverage, many missing |
+| Publisher | ~1,000+ | 52.2% | Weak coverage, many missing |
 | Translator | ~500+ | 41.9% | Weak coverage |
-| Page Count | integer | 54.1% | Previously 81.6%, corrected after pp. N-M FP removal |
+| Page Count | integer | 53.3% | Previously 81.6%, corrected after pp. N-M FP removal + Session 15 outlier rejection |
 
 ### Array fields (relational data)
 
@@ -164,9 +164,9 @@ The visualization reveals:
 
 ### Mode transitions
 
-Switching modes preserves context where possible:
-- Timeline → Overview: Brushed year range → decade filter
-- Overview → Timeline: Type/language filters → highlighted streams
+Switching modes preserves context where possible (shared filter state: decade, location, publisher, period):
+- Timeline → Geography: Brushed year range → decade filter applied to the bubble map
+- Geography → Timeline: Selected location/period → filtered streams
 - Any → Connections: Selected entries' seeAlso links → highlighted nodes
 - Connections → Any: Selected node's type/language/year → filters
 
@@ -214,7 +214,7 @@ The design follows Shneiderman's Visual Information Seeking Mantra (Overview fir
 
 ### Design Decisions (2026-04-12)
 
-**Overview-View not expanded.** The Overview (6 linked small multiples) remains as built but is not the focus of further development. Effort concentrates on three strong modes (Timeline, Geography, Connections) rather than four moderate ones.
+**Overview mode removed (Session 14).** The former Overview mode (linked small multiples, `explore-overview.js`) was dropped to concentrate on three strong modes (Timeline, Geography, Connections) rather than four moderate ones. The "Overview first" task in the table above refers to Shneiderman's mantra step, not to that removed mode.
 
 **Personas.** Each view has an analytical identity guiding its development:
 - L1 Temporal Analyst (Timeline) — time series, periodisation, trends

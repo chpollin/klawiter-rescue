@@ -3,7 +3,7 @@ title: Frontend
 aliases: [design, ui-design, user-stories, frontend design]
 tags: [frontend, design, ui]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Frontend
@@ -113,7 +113,7 @@ Light gray/cream background. Three columns:
 
 ## Personas & User Stories
 
-User stories for the Klawiter Bibliography frontend. Derived from the target audience (Zweig scholars, librarians, DH researchers) and the data structure (4,751 entries, 15 types, 41 languages, 402 locations). The original Klawiter bibliography was a MediaWiki. Users are familiar with category-based browsing and expect to navigate by topic, not by statistics.
+User stories for the Klawiter Bibliography frontend. Derived from the target audience (Zweig scholars, librarians, DH researchers) and the data structure (4,751 entries, 15 types, 41 languages, 395 locations). The original Klawiter bibliography was a MediaWiki. Users are familiar with category-based browsing and expect to navigate by topic, not by statistics.
 
 User stories were written in German during the design phase and are preserved in their original language.
 
@@ -147,7 +147,7 @@ User stories were written in German during the design phase and are preserved in
 
 > **S8**: Als Nutzerin will ich sehen, **wie viele Ergebnisse** mein Filter liefert, und aktive Filter als **Chips** sehen und einzeln entfernen können.
 
-**Daten-Check**: Alle Facetten (Typ, Sprache, Zeitraum, Ort) sind als Felder vorhanden. 41 Sprachen, 402 Orte, 5 Zeiträume. Kombinierte Filter funktionieren über Array-Intersection.
+**Daten-Check**: Alle Facetten (Typ, Sprache, Zeitraum, Ort) sind als Felder vorhanden. 41 Sprachen, 395 Orte, 5 Zeiträume. Kombinierte Filter funktionieren über Array-Intersection.
 
 ### Detailansicht: Verstehen (S9-S13)
 
@@ -210,14 +210,13 @@ docs/
     detail.js            Inline detail rendering (metadata table, provenance badges)
     edit.js              Expert-in-the-Loop curation (localhost only, JSON patch export)
     explore.js           Shared explore controller (mode tabs, detail panel, tooltips)
-    explore-timeline.js  D3.js stacked area chart (year x language, brushing, annotations)
-    explore-overview.js  4 linked small multiples (decades, types, languages, locations)
+    explore-timeline.js  D3.js timeline (Bars/Sparklines/Ranks modes, year x language, brushing, annotations)
     explore-geography.js D3.js bubble map (dual projection globe/flat, semantic zoom, Wikidata-linked locations)
     explore-network.js   Force-directed graph of seeAlso cross-references
     jsonld-playground.js JSON-LD interactive explorer (compact/expanded/triples)
     pages.js             Static content pages (About, Methodology, Help, Data, Imprint, JSON-LD Playground)
   data/
-    klawiter.json     5,179 total entries (4,751 ns0 displayed) + 1,056 redirects
+    klawiter.json     5,179 total entries (4,751 ns0 displayed) + 1,210 resolved redirects
     locations.json    382 geocoded locations with Wikidata Q-IDs (94.2% coverage)
   vocab/
     index.html        Vocabulary namespace documentation
@@ -380,5 +379,5 @@ Minimum target: WCAG 2.1 AA.
 
 - **Landing page**: Category portal (wiki-style), not search-first
 - **SZD design**: Fully implemented via custom CSS — burgundy/gold/cream palette, serif/sans-serif typography. No SZD CSS assets needed.
-- **Exploration**: D3.js v7 interactive visualization with 3 modes (Timeline, Overview, Connections). See [[exploration]] for design concept.
-- **Authority data display**: Out of scope per Data Integrity Principle — see [[about#data-integrity-principle]]
+- **Exploration**: D3.js v7 interactive visualization with 3 modes (Timeline, Geography, Connections). See [[exploration]] for design concept.
+- **Authority data display**: Wikidata-linked locations are shown in the Geography mode (reconciled Q-IDs). Inventing bibliographic *values* not present in the source stays out of scope — see [[about#data-integrity-principle]].

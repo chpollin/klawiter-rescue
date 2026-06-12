@@ -3,14 +3,14 @@ title: About
 aliases: [project context, klawiter, provenance]
 tags: [project, context]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # About
 
 ## The Klawiter Bibliography
 
-The bibliography was compiled by **Dr. Randolph J. Klawiter** (University of Notre Dame) over decades. It covers Stefan Zweig's global literary reception: 6,296 entries spanning first editions, translations, secondary literature, film adaptations, correspondence, and more — in over 40 languages, from 402 publication locations, across 200 years (1815-2020).
+The bibliography was compiled by **Dr. Randolph J. Klawiter** (University of Notre Dame) over decades. It covers Stefan Zweig's global literary reception: 6,296 entries spanning first editions, translations, secondary literature, film adaptations, correspondence, and more — in over 40 languages, from 395 publication locations, across 200 years (1815-2020).
 
 The bibliography was originally hosted as a MediaWiki instance. When the wiki was decommissioned, the underlying database (SQL dumps and 8 binary BLOB files, 363 MB total) was preserved but the structured access was lost.
 
@@ -33,7 +33,7 @@ This project extracts and structures the raw database into [[pipeline|JSON-LD]],
 - Coverage gaps are only bugs if the value **is present in the raw text** but the pipeline fails to extract it (regex miss or LLM miss)
 - The LLM enrichment step (03b) is constrained to extract **only explicitly stated** values. It has 5 anti-hallucination layers: prompt constraint, gap-fill-only merge, structured output schema, post-extraction validation, and mojibake re-validation. Verified: 0 hallucinated values found in full audit
 - Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing` — making the extraction source transparent and auditable
-- Semantic enrichment via external authority data (Wikidata, GND, VIAF) is out of scope — see [[pipeline#reconciliation--out-of-scope]]
+- Linked Data enrichment — matching extracted entities against authority files (e.g. Wikidata) to add persistent IDs — is allowed and implemented for locations; inventing bibliographic *values* not present in the source remains out of scope. See [[pipeline#reconciliation--linked-data-enrichment]]
 
 ## Stefan Zweig Digital and the Forschungsverbund
 

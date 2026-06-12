@@ -3,7 +3,7 @@ title: Architecture
 aliases: [architecture decisions]
 tags: [architecture, decisions]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Architecture
@@ -51,14 +51,14 @@ Key decisions in the Klawiter project with rationale and trade-offs.
 
 ## 4. Redirects as Map Instead of Resolved Entries
 
-**Decision**: 1,545 redirects are not integrated into main entries but stored as `{ "Title" → page_id }` map in the frontend.
+**Decision**: 1,546 redirects are not integrated into main entries but stored as `{ "Title" → page_id }` map in the frontend.
 
 **Rationale**:
 - Redirects are not standalone content, but aliases
 - The map enables URL resolution (`#title=Old+Name` → `#entry=123`)
 - Keeps main data clean (4,751 real entries)
 
-**Trade-off**: 314 redirects (20%) cannot be resolved because the target title does not exactly match an existing entry.
+**Trade-off**: Of the 1,546 redirects, 1,210 resolve to an existing entry; the remaining 336 (22%) cannot be resolved because the target title does not exactly match an existing entry.
 
 ## 5. Encoding Fix Before Parsing
 
