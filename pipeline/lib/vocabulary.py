@@ -46,6 +46,7 @@ CONTEXT = {
         "languageCode": "klawiter:languageCode",
         "allYears": {"@id": "klawiter:allYears", "@container": "@set"},
         "allLocations": {"@id": "klawiter:allLocations", "@container": "@set"},
+        "locationSameAs": {"@id": "klawiter:locationSameAs", "@type": "@id"},
         "reprints": {"@id": "klawiter:reprints", "@container": "@set"},
         "sourcePageId": {"@id": "klawiter:sourcePageId", "@type": "xsd:integer"},
         "sourceTextId": {"@id": "klawiter:sourceTextId", "@type": "xsd:integer"},

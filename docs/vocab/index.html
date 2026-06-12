@@ -147,6 +147,11 @@
       <td>All publication locations when multiple are mentioned</td>
     </tr>
     <tr>
+      <td><code>klawiter:locationSameAs</code></td>
+      <td><code>@id</code> (IRI)</td>
+      <td>Wikidata URI of the primary publication location (e.g. <code>http://www.wikidata.org/entity/Q90</code> for Paris). The place is taken from the source and reconciled against Wikidata; a dedicated property, not <code>schema:sameAs</code>, which would conflate the work with the place.</td>
+    </tr>
+    <tr>
       <td><code>klawiter:reprints</code></td>
       <td><code>@set</code> of <code>xsd:string</code></td>
       <td>References to reprint editions</td>
@@ -208,7 +213,7 @@
     <tr><td><code>isRelatedTo</code></td><td><code>schema:isRelatedTo</code></td><td>Cross-references ("see also")</td></tr>
     <tr><td><code>workTranslation</code></td><td><code>schema:workTranslation</code></td><td>Translation references</td></tr>
     <tr><td><code>hasPart</code></td><td><code>schema:hasPart</code></td><td>Table of contents / constituent works</td></tr>
-    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td><td>Authority URIs &mdash; used for Stefan Zweig's Wikidata ID (Q78491) as author metadata. Not populated on individual entries (authority reconciliation is out of scope per Data Integrity Principle).</td></tr>
+    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td><td>Authority URIs &mdash; used for Stefan Zweig's Wikidata ID (Q78491) as author metadata. Place-of-publication links are carried by the dedicated <code>klawiter:locationSameAs</code> property (above), not by <code>schema:sameAs</code>, to avoid conflating the work with the place.</td></tr>
   </tbody>
 </table>
 

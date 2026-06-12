@@ -50,6 +50,7 @@ Properties with no Schema.org or DC equivalent:
 | `languageCode` | `klawiter:languageCode` | ISO 639-1 language code |
 | `allYears` | `klawiter:allYears` | All years in multi-edition entries |
 | `allLocations` | `klawiter:allLocations` | All publication locations |
+| `locationSameAs` | `klawiter:locationSameAs` | Wikidata URI of the primary publication location (`@type: @id`) |
 | `reprints` | `klawiter:reprints` | Reprint references (@set) |
 | `contentItems` | `klawiter:contentItems` | ToC for collected works (@list) |
 | `sourcePageId` | `klawiter:sourcePageId` | MediaWiki page ID (xsd:integer) |
@@ -108,6 +109,7 @@ Defined in `pipeline/lib/vocabulary.py`:
     "languageCode": "klawiter:languageCode",
     "allYears": { "@id": "klawiter:allYears", "@container": "@set" },
     "allLocations": { "@id": "klawiter:allLocations", "@container": "@set" },
+    "locationSameAs": { "@id": "klawiter:locationSameAs", "@type": "@id" },
     "reprints": { "@id": "klawiter:reprints", "@container": "@set" },
     "sourcePageId": { "@id": "klawiter:sourcePageId", "@type": "xsd:integer" },
     "sourceTextId": { "@id": "klawiter:sourceTextId", "@type": "xsd:integer" },
@@ -164,6 +166,26 @@ Secondary literature, historical studies, and symposia omit the author field (Zw
 
 ---
 
+## Location Linking
+
+`locationSameAs` carries the Wikidata URI of an entry's primary publication location.
+
+- **Range**: IRI (`@type: @id`), always of the form `http://www.wikidata.org/entity/<QID>`
+- **Source**: The location name is taken from the source text and reconciled in `docs/data/locations.json` (see [[pipeline#reconciliation--linked-data-enrichment]]). Step 05 maps the primary `locationCreated` value to its Wikidata Q-ID when one exists.
+- **Scope**: Only the single primary location (not `allLocations`). It is a dedicated property — **not** `schema:sameAs`, which would incorrectly assert that the *work* is the same as the place.
+- **Coverage**: 4,013 of 4,162 non-redirect entries with a location (~96% of located entries).
+
+```json
+{
+  "locationCreated": "Paris",
+  "locationSameAs": "http://www.wikidata.org/entity/Q90"
+}
+```
+
+In the frontend JSON the same key (`locationSameAs`) is used; the detail view renders a subtle external "Wikidata" link next to the location.
+
+---
+
 ## Design Rationale
 
 ### Why Schema.org + klawiter: (not BIBFRAME or CIDOC-CRM)?
@@ -176,7 +198,7 @@ Secondary literature, historical studies, and symposia omit the author field (Zw
 ### Future Alignment
 
 - **Stefan Zweig Digital** (Stefan Zweig Centre Salzburg, University of Salzburg): Uses CIDOC-CRM. A separate research project is planned to develop a Nachlass ontology that bridges both projects. The current `@type` arrays and `sameAs` links provide extension points for CIDOC-CRM alignment without restructuring.
-- **Authority linking**: The `sameAs` property is defined in the @context and used for Stefan Zweig's Wikidata ID (Q78491). Linked Data enrichment is allowed and **implemented for places**: 382 locations are reconciled against Wikidata (360 with Q-IDs, stored in `docs/data/locations.json`) — see [[pipeline#reconciliation--linked-data-enrichment]]. Reconciliation of the other entity classes (works, translators, publishers) is not yet done and would be a separate alignment project consuming this JSON-LD; adding metadata values absent from the source remains out of scope.
+- **Authority linking**: The `sameAs` property is defined in the @context and used for Stefan Zweig's Wikidata ID (Q78491). Linked Data enrichment is allowed and **implemented for places**: 382 locations are reconciled against Wikidata (360 with Q-IDs, stored in `docs/data/locations.json`) — see [[pipeline#reconciliation--linked-data-enrichment]]. These Q-IDs surface per entry via the dedicated `locationSameAs` property (see [[#location-linking]]). Reconciliation of the other entity classes (works, translators, publishers) is not yet done and would be a separate alignment project consuming this JSON-LD; adding metadata values absent from the source remains out of scope.
 
 ---
 

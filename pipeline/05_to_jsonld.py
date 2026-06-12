@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
     setup_logging, load_csv, csv_bool, STEP_04_OUTPUT,
-    OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON,
+    OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON, LOCATIONS_JSON,
 )
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP
 
@@ -33,6 +33,29 @@ STEFAN_ZWEIG = {
     "name": "Stefan Zweig",
     "sameAs": "https://www.wikidata.org/entity/Q78491",
 }
+
+WIKIDATA_ENTITY_PREFIX = "http://www.wikidata.org/entity/"
+
+
+def load_location_wikidata():
+    """Load location → Wikidata URI map from the reconciled locations file.
+
+    Returns an empty dict (with a warning) if the file is missing, so the
+    pipeline degrades gracefully without locationSameAs rather than failing.
+    """
+    if not os.path.exists(LOCATIONS_JSON):
+        log.warning(f"Locations file not found at {LOCATIONS_JSON}; "
+                    "locationSameAs will be omitted")
+        return {}
+    with open(LOCATIONS_JSON, 'r', encoding='utf-8') as f:
+        locations = json.load(f)
+    uri_map = {}
+    for name, info in locations.items():
+        qid = info.get('wikidataId')
+        if qid:
+            uri_map[name] = WIKIDATA_ENTITY_PREFIX + qid
+    log.info(f"Loaded {len(uri_map)} Wikidata-linked locations")
+    return uri_map
 
 
 def safe_json_parse(value):
@@ -46,8 +69,9 @@ def safe_json_parse(value):
         return None
 
 
-def row_to_jsonld(row):
+def row_to_jsonld(row, location_uris=None):
     """Convert a CSV row to a JSON-LD entry using Schema.org + DC + klawiter: blend."""
+    location_uris = location_uris or {}
     page_id = row['page_id']
     entry_type = row.get('entry_type', 'other')
     namespace = int(row.get('page_namespace', 0))
@@ -119,6 +143,10 @@ def row_to_jsonld(row):
     location = row.get('location', '')
     if location:
         entry["locationCreated"] = location
+        # Wikidata URI of the primary publication location (klawiter:locationSameAs)
+        location_uri = location_uris.get(location)
+        if location_uri:
+            entry["locationSameAs"] = location_uri
 
     all_locations = safe_json_parse(row.get('all_locations', ''))
     if all_locations and len(all_locations) > 1:
@@ -231,9 +259,11 @@ def main():
     rows = load_csv(STEP_04_OUTPUT)
     log.info(f"Loaded {len(rows)} entries, converting to JSON-LD...")
 
+    location_uris = load_location_wikidata()
+
     entries = []
     for row in rows:
-        entry = row_to_jsonld(row)
+        entry = row_to_jsonld(row, location_uris)
         entries.append(entry)
 
     # Write complete dataset

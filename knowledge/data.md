@@ -55,6 +55,7 @@ Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://chp
 |-------|------|-------------|
 | `publisher` | string | Publisher name |
 | `location` | string | Publication location |
+| `locationSameAs` | IRI | Wikidata URI of the primary location (e.g. `http://www.wikidata.org/entity/Q90`); present when the location is reconciled |
 | `language` | string | Language (English name, e.g. "German") |
 | `languageCode` | string | ISO 639-1 (e.g. "de") |
 | `pageCount` | integer | Page count |
@@ -205,6 +206,8 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 Fields added per location: `wikidataId` (Q-number), `wikidataLabel` (English name), `wikidataScore` (match confidence), `countryQid` (country Q-number from Wikidata). Ground truth fixture: `tests/wikidata_ground_truth.json` (20 entries). 6 deterministic tests in `tests/test_wikidata_locations.py`.
 
 22 locations unmatched (encoding variants, composite slash-locations, obscure villages). 3 low-score matches flagged for manual review.
+
+**Per-entry linking (`locationSameAs`)**: Step 05 maps each entry's primary location to its Wikidata URI and writes it as `klawiter:locationSameAs` (`@type: @id`) into both the JSON-LD and frontend JSON — see [[ontology#location-linking]]. Coverage: 4,013 of 4,162 located non-redirect entries (~96%); the gap is locations without a reconciled Q-ID. Only the primary `location` is linked, not `allLocations`.
 
 **Bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. Originally 33 without page_title fallback, reduced to ~15 after `remove_wiki_markup()` improvements (section header stripping, unpaired bold marker removal, magic word removal).
 

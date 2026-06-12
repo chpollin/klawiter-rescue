@@ -769,6 +769,20 @@ h1, h2, h3, h4 {
   color: var(--sz-text);
 }
 
+/* Subtle external authority link (Wikidata) in the metadata table */
+.wikidata-link {
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--sz-text-light);
+  margin-left: 0.4em;
+  white-space: nowrap;
+}
+.wikidata-link:hover {
+  color: var(--sz-gold);
+  border-bottom-color: var(--sz-gold);
+}
+
 /* Detail sections */
 .detail-section {
   margin-bottom: 1.5rem;

@@ -80,7 +80,13 @@ const Detail = {
       } else {
         locText = '<span class="missing-value">not extracted</span>';
       }
-      rows.push(this.row('Location', this._editableValue('location', locText, entry), 'location', entry));
+      let locValue = this._editableValue('location', locText, entry);
+      // Wikidata link for the primary location (klawiter:locationSameAs).
+      // Appended outside the editable wrapper so it never pollutes the raw edit value.
+      if (entry.location && entry.locationSameAs && !App.state.editMode) {
+        locValue += ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank" rel="noopener" title="View ${esc(entry.location)} on Wikidata">Wikidata</a>`;
+      }
+      rows.push(this.row('Location', locValue, 'location', entry));
     }
 
     if (entry.language) {

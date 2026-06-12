@@ -42,6 +42,9 @@ OUTPUT_ENTRIES_DIR = os.path.join(OUTPUT_DIR, 'entries')
 OUTPUT_QUALITY_REPORT = os.path.join(OUTPUT_DIR, 'quality-report.json')
 OUTPUT_FRONTEND_JSON = os.path.join(PROJECT_ROOT, 'docs', 'data', 'klawiter.json')
 
+# Wikidata-reconciled locations (produced by reconcile_locations.py)
+LOCATIONS_JSON = os.path.join(PROJECT_ROOT, 'docs', 'data', 'locations.json')
+
 # Year validation range
 import datetime
 MIN_VALID_YEAR = 1800

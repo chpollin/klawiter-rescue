@@ -39,11 +39,16 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 | broken seeAlso refs baseline | 727 | 622 |
 | Test result (non-LLM) | — | 408 passed, 15 pre-existing semantic failures, 10 skipped |
 
+### Follow-up (same day)
+
+6. **Browser smoke test (Playwright)**: all three explore modes render, cross-view filtering works (Leipzig bubble → chip → filtered network community view), 18× rapid tab switching and a filter-toggle storm produced 0 errors (the rebuilt listener holds), deep link + back/forward restore the mode, dead module returns 404. One expected console warning (stub page_id 2979).
+7. **`locationSameAs` implemented** (Session 15 follow-up): step 05 loads `locations.json` and emits `klawiter:locationSameAs` (`@type: @id`, Wikidata entity URI) for the primary location — 4,013 of 4,162 located non-redirect entries (~96%). Pipeline re-run 05→06→inject_provenance, diff-verified: no other changes. Detail view renders a discreet Wikidata link; vocab page and ontology.md document the property.
+8. **22 unmatched locations triaged** into `data/output/unmatched_locations_review.md` (editor review template): 17 match candidates (e.g. T'aipei→Q1867, Lannuon→Q207581), 3 ambiguous two-place strings, 1 mojibake (RĀ«ga→Riga via location_normalize.json), 1 genuinely ambiguous (Saint-Aignan). Noted: apostrophe encoding differs between klawiter.json (U+2019) and locations.json (U+0027) — relevant for any mapping work.
+
 ### What's next
 
-- Browser-test the explore views after the listener unification (manual smoke test)
 - EIL verification workflow (DIA-XAI deliverable) as the next major work package
-- 22 unmatched Wikidata locations; `locationSameAs` in JSON-LD output
+- Editor review of `unmatched_locations_review.md` (Accept/Correct decisions are domain calls)
 - Fill `publisher_normalize.json` with real variant mappings via the editor loop
 
 ---
