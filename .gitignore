@@ -14,3 +14,4 @@ __pycache__/
 
 # Obsidian (user-specific workspace state)
 knowledge/.obsidian/
+.claude/settings.local.json
