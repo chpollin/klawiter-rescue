@@ -3,12 +3,48 @@ title: Journal
 aliases: [work diary, sessions]
 tags: [journal]
 created: 2026-03-29
-updated: 2026-04-12
+updated: 2026-06-12
 ---
 
 # Journal
 
 Work diary for the Klawiter Bibliography project. Each session documents what we did, what we learned, what ideas came up, and what's still open.
+
+---
+
+## 2026-06-12 — Session 16: Full-Codebase Refactoring (Multi-Agent)
+
+### What we did
+
+1. **Four-lane analysis** (parallel Opus agents: pipeline, frontend, tests, docs) producing verified findings with file:line evidence, then two implementation waves on disjoint areas.
+2. **Frontend cleanup**: deleted dead `explore-overview.js` (orphaned since Session 14f, would crash on missing `CHART_DIMS.overview`; uncommitted rework discarded, saved as patch in `c:\tmp`), removed its CSS blocks and two unreachable methods (`Explore._renderDetailSummary`, `ExploreTimeline.toggleProvenance`), deleted empty `v2/`. New `utils.topN()` replaces the count-sort-slice pattern at the 4 semantically identical call sites; network filter listener unified with the geography pattern (named handler, removeEventListener, re-entrancy guard).
+3. **Pipeline cleanup (behavior-neutral)**: `03c_normalize.py` aligned with the step pattern (config constants, atomic `write_csv`, named thresholds); created missing `publisher_normalize.json` (the publisher variant path was silently a no-op); removed 7 dead imports in `verify.py` and unused proximity parameters in `reconcile_locations.py`; centralized `EXTRACTED_FIELDS` in config.
+4. **Test refactoring**: new `tests/test_normalize_unit.py` (26 unit tests for all six 03c functions, written *before* touching 03c). Activated two always-skipping regression tests (`entry_type_distribution` added to baseline; `year_range_sane` now checks the real key). Centralized scattered `KNOWN_*` constants into `known_issues` in `baseline-metrics.json`; tests now load the normalization mapping tables instead of duplicating them. Removed two redundant/obsolete tests. Ratcheted `broken_see_also_refs` 727→622 (real data improvement).
+5. **Documentation refactoring**: unified stale numbers everywhere (tests 326/328/397→437, 7→8 steps, Overview→Geography, locations 402→395 = pre-normalization value); resolved the "Wikidata/GND/VIAF out of scope" vs. implemented-reconciliation contradiction (canonical line: LOD linking allowed and implemented, inventing values forbidden); removed the duplicated test taxonomy from pipeline.md (single source: testing.md); README gained Citation and Data Model sections plus entry-count disambiguation; index.md Open Items synced with journal.
+
+### What we learned
+
+- **Numbers drift because they are hardcoded in 2–4 places.** Every stale count (tests, coverage, locations) had a single correct source (baseline-metrics.json, pytest collection, the data itself). The docs now follow a responsibility matrix: numbers live in one file, others link.
+- **Always-skipping tests are worse than no tests** — two regression tests suggested coverage that never executed (missing baseline key, wrong report key). Activating them cost three lines each.
+- **Deliberately not done**: mojibake regex consolidation, language-list dedup, SQL parser unification — not provably behavior-neutral without a pipeline re-run; documented in the analysis reports instead.
+
+### Numbers
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Tests collected | 413 (docs said 397) | 437 |
+| Dead JS module | 373 LOC | 0 |
+| 03c unit coverage | 0 direct tests | 26 |
+| Always-skipping regression tests | 2 | 0 |
+| broken seeAlso refs baseline | 727 | 622 |
+| Test result (non-LLM) | — | 408 passed, 15 pre-existing semantic failures, 10 skipped |
+
+### What's next
+
+- Browser-test the explore views after the listener unification (manual smoke test)
+- EIL verification workflow (DIA-XAI deliverable) as the next major work package
+- 22 unmatched Wikidata locations; `locationSameAs` in JSON-LD output
+- Fill `publisher_normalize.json` with real variant mappings via the editor loop
 
 ---
 
