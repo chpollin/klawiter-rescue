@@ -12,6 +12,83 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-04-12 — Session 15: Geography, Timeline Modes, Normalization, Wikidata
+
+### What we did
+
+1. **Geography view (L2, 816 LOC)**: Orthographic globe (`d3.geoOrthographic`) with flat map toggle (`d3.geoNaturalEarth1`), drag-to-rotate, scroll-to-zoom. Semantic zoom at 2× base scale: ~82 country-aggregated bubbles (zoom-out) → ~366 city bubbles (zoom-in). Click dims non-selected to 0.35 opacity with filter chip + cross-view event. Interactive legend, animated decade playback, city labels at zoom, improved ocean/land contrast.
+2. **Wikidata reconciliation**: `reconcile_locations.py` (293 LOC). Two-phase: Reconciliation API (en + de endpoints) → SPARQL metadata enrichment. 360/382 locations matched (94.2%). `locations.json` enriched with `wikidataId`, `wikidataLabel`, `wikidataScore`, `countryQid`. 22 unmatched logged in `locations_reconciliation_log.json`. 6 tests against 20-entry ground truth.
+3. **Timeline modes (L1)**: Three visualization modes: Bars (default, decade-aggregated when >50-year extent), Sparklines (small multiples per language/type with individual Y-scales), Ranks (bump chart showing language rank per decade). Stream mode removed — `curveBasis` smooths discrete data, `stackOffsetWiggle` removes baseline, no analytical value (Cleveland & McGill 1984).
+4. **URL state persistence**: Hash-based state encoding: `#stats/timeline?years=1920-1940&chart=sparklines&language=German`. `replaceState` for brush updates, `pushState` for tab switches, `popstate` listener for back/forward. `_lastHash` guard prevents double-processing.
+5. **Global provenance toggle**: `Explore.filters.showProvenance` checkbox in filter chips, persists across tab switches via URL state.
+6. **Pipeline 03c normalization** (187 LOC): Auditable normalization via external mapping tables. Location variants (7 mappings, 45 entries), publisher garbage rejection (regex patterns, 160 entries), translator cleanup (mojibake + suffix stripping, 193 entries), pageCount outlier rejection (>2000 and year-like, 12 entries). 5 regression tests.
+7. **Systematic field profiling**: All 8 data fields profiled for normalization candidates.
+
+### What we learned
+
+- **Country codes were missing entirely** — semantic zoom in geography was an empty shell until all 382 locations were geocoded with ISO Alpha-2 country codes. Wikidata reconciliation solved this and provided LOD-linkable Q-IDs as a bonus.
+- **Stream visualization was analytically weak** — curveBasis interpolation smooths discrete yearly counts into false continuity, stackOffsetWiggle removes the meaningful zero baseline. Bars + Sparklines + Ranks serve the three research questions better: total comparison (Bars), individual trends (Sparklines), relative dominance shifts (Ranks).
+- **Normalization must be a separate pipeline step** — mixing extraction and cleanup in 03_parse_entries.py made both harder to test. Step 03c with external config files (JSON) is auditable and doesn't violate the Data Integrity Principle.
+- **Publisher coverage drops are correct** — 55.5% → 52.2% because garbage (edition numbers, metadata strings) was removed, not because valid publishers were lost.
+
+### Numbers
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Timeline LOC | 288 | 746 |
+| Geography LOC | 0 | 816 |
+| explore.js LOC | 484 | 567 |
+| Pipeline steps | 7 (01–06 + verify) | 8 (+ 03c normalize) |
+| Wikidata matches | 0/382 | 360/382 (94.2%) |
+| Publisher coverage | 55.5% | 52.2% (garbage removed) |
+| Translator cleaned | — | 193 entries |
+| Tests | 317 | 328 |
+
+### What's next
+
+- Browser-test all new features (Sparklines, Ranks, Globe/Flat toggle, semantic zoom)
+- 22 unmatched locations: manual review
+- `locationSameAs` field with Wikidata URIs in JSON-LD output
+- L3 Connections: status update needed
+- Multi-edition decomposition (LLM-based, separate project)
+
+---
+
+## 2026-04-12 — Session 14f: Timeline Redesign
+
+### What we did
+
+1. **Timeline rewrite**: Stacked area → stacked bars. Discrete bibliographic data represented as bars per year, not interpolated curves. Full-width layout (detail panel only on selection).
+2. **Layer toggle**: "by Language" (default) or "by Type" showing 16 entry types as stacked bar layers.
+3. **Provenance overlay**: Toggle shows per-year ratio of regex/LLM/missing provenance as semi-transparent layer.
+4. **Semantic zoom**: X-axis adapts to brush extent: decades (>80 years) → 5-year ticks (30–80) → individual years (<30). Data aggregation: decade bars (>50 years) → year bars (<50 years).
+5. **5 annotations**: Born 1881, WWI 1914, Exile 1933, WWII 1939, Death 1942. Collision avoidance for overlapping labels.
+6. **Brush cross-view events**: `explore:filterChange` custom event on `document`, consumed by Geography and Connections views.
+7. **Overview mode removed**: Tab, panel, script tag, setMode handler, CHART_DIMS constant — all deleted. Three modes remain: Timeline, Geography, Connections.
+8. **Dead code cleanup**: Removed `_drawLegend()`, duplicate filter chip.
+
+### What we learned
+
+- **Stacked area was wrong for this data** — bibliographic entries are discrete counts per year, not continuous flows. Bars represent the data honestly.
+- **Overview was redundant** — the Timeline with layer toggle + semantic zoom covers what Overview's small multiples showed, with better interaction (brush, cross-view events).
+- **Provenance overlay works as Developer-in-the-Loop tool** — shows immediately where data quality varies over time (pre-1900 entries have more missing fields).
+
+### Numbers
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Timeline LOC | 288 | 496 |
+| Explore.js LOC | 484 | 567 |
+| Visualization modes | 4 (Timeline, Overview, Geography, Connections) | 3 (Timeline, Geography, Connections) |
+| Annotations | 3 (Born, Exile, Death) | 5 (+ WWI, WWII) |
+
+### What's next
+
+- Add more visualization modes (Sparklines, Ranks) → Session 15
+- Browser-test layer toggle and provenance overlay
+
+---
+
 ## 2026-04-12 — Session 14: Semantic Testing, Extraction Fixes, Pipeline Limits
 
 ### What we did

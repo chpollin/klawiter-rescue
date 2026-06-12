@@ -59,3 +59,17 @@ The Expert-in-the-Loop (EIL) curation interface enables manual validation and co
 - **GitHub Actions validation**: `.github/workflows/validate-patch.yml` runs patch format checks, frontend JSON integrity, regression tests, and quality report comparison on PRs
 
 The EIL approach supports the Data Integrity Principle: corrections go through a review process with provenance tracking, rather than being applied silently.
+
+### Two EIL Roles
+
+The workflow distinguishes two complementary feedback loops that operate at different levels:
+
+**Developer-in-the-Loop.** The DH developer works at pipeline level: reading test results and aggregated data diagnostics, identifying systematic errors (e.g. 1,368 section-header titles), implementing code fixes, re-running the pipeline. Feedback signal: tests and data visualisations. Output: systematic improvements affecting thousands of entries at once.
+
+**Editor-in-the-Loop.** Domain experts at the archive work at data level: checking individual entries against raw text, correcting or adding field values, validating reconciliation proposals. Feedback signal: domain knowledge about Zweig's oeuvre and publication history. Output: individual corrections that, in aggregate, form the gold standard.
+
+The two loops interlock: when the editor systematically corrects the same error type (e.g., wrong publishers on multi-edition pages), that signals the developer to improve the pipeline. When the developer solves multi-edition decomposition, the editor's correction effort decreases.
+
+## DIA-XAI Connection
+
+This project is EIL-Tool 1 in the DIA-XAI project (PLUS Early Career Grant 2025). The Klawiter verification workflow with provenance badges, confidence ranking, and Accept/Correct/Add actions is a mandatory deliverable. EQUALIS evaluation metrics (see [[data#equalis-metrics]]) measure the editor loop: Accept/Correct/Add ratio by provenance (regex/llm/missing), correction distribution by entity type and field, ratio shift across EIL iterations. No time-based metrics — ratios are measured as a byproduct of editor actions, not in controlled experiments.
