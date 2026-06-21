@@ -36,6 +36,10 @@ Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag
 
 **Offen**: Operator-Entscheidungen zu 2979 und zum Bau der Editier-Inkremente (siehe [[HANDOFF]]).
 
+**Addendum: Frontend-Validierung und Autarkie**
+
+Sichtung des laufenden Frontends gegen die Quelle, Befunde in [[validation]]. Vier Feldfehler-Klassen bestaetigt, darunter ein systematischer Location-Fehler ("Weimar" aus Kapiteltiteln, 48 Faelle, Ursache lokalisiert). Dabei trat ein Infrastruktur-Problem zutage: das Frontend lud vier JS-Bibliotheken (flexsearch, d3, topojson-client, d3-sankey) und die Schriftarten von externen CDNs. Bei mehreren gleichzeitig laufenden localhost-Apps verunreinigt der geteilte Browser-Cache die CORS-Header, und Suche wie Explore brechen. Ein Datenrettungswerkzeug darf nicht von externer Erreichbarkeit abhaengen. Alle Abhaengigkeiten lokal ins Repo vendoriert (docs/vendor/, docs/fonts/ mit 26 woff2 und umgeschriebener fonts.css, favicon.svg), index.html auf lokale Pfade umgestellt. Verifiziert: voller Reload macht 26 Requests, alle localhost, kein externer; Konsole fehlerfrei; d3 7.9.0, flexsearch, topojson, d3-sankey geladen. Das Frontend ist jetzt offline- und cache-robust.
+
 ## 2026-06-12 — Session 16: Full-Codebase Refactoring (Multi-Agent)
 
 ### What we did
