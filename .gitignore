@@ -4,6 +4,9 @@ data/intermediate/
 # Individual entry files (6.296 files, regenerable)
 data/output/entries/
 
+# Regenerable No-Op overlay report (empty corrections store, byte-identical re-run)
+data/output/corrections-report.json
+
 # Environment / secrets
 .env
 pipeline/.env

@@ -354,11 +354,11 @@ The `schema:sameAs` property is used for Stefan Zweig's Wikidata ID (Q78491) as 
 **Impact by field:**
 - **Title**: Solved — page_title fallback provides the correct title from MediaWiki metadata (Session 14). 345 page_titles have encoding artifacts from Arabic/Cyrillic transliterations.
 - **Publisher/PageCount/Year**: First-match-wins. On a page with 10 editions across 5 publishers, the pipeline extracts whichever publisher pattern matches first in the text. Further regex fixes shift which edition is matched rather than solving the problem.
-- **Location**: `allLocations` correctly aggregates all locations. The primary `location` field uses the first match.
+- **Location**: `allLocations` correctly aggregates all locations. The primary `location` field uses the first match. The same whole-page search also pulls locations out of chapter titles on single-edition pages (the "Weimar" class, 48 records), characterized with a measured scoped fix in [[validation#error-class-1-location-from-chapter-titles-weimar]].
 
 **Why not fixable with regex**: The editions on a page are separated by `'''[year]: Publisher, Location'''` headers, but the pipeline's field extraction functions search the entire page content, not individual edition blocks. Isolating edition blocks would require structural parsing (recognizing `'''[year]:'''` as a section delimiter), which is a different architecture than the current flat regex extraction.
 
-**Future approach**: Edition-block segmentation (split multi-edition pages at `'''[year]:'''` boundaries, extract each block separately) or LLM-based section recognition. This would be a separate project.
+**Future approach**: Edition-block segmentation (split multi-edition pages at `'''[year]:'''` boundaries, extract each block separately) or LLM-based section recognition. This would be a separate project. A scoped first application exists for the location field alone: constraining location extraction to the publication-line header instead of the whole page. It is designed and diffed across all records (fixes 30 of 48 "Weimar" cases, recovers 508 previously-missing non-Western locations), not yet landed, see [[validation#scoped-fix-designed-and-measured-not-yet-landed]].
 
 ---
 
