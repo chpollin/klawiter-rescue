@@ -91,25 +91,26 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (445 tests across 16 files, 2026-06-21)
+## Current State (464 tests across 17 files, 2026-06-21)
 
 ```
 test_real_entries.py        160  — 20 hand-labeled entries (parametrized)
 test_semantic.py             70  — Wiki-verified ground truth (10 entries x 7 fields)
+test_patterns.py             45  — Regex extraction functions (incl. location publication-header fix, Session 18)
 test_wiki_parser.py          41  — Wiki parser functions
-test_patterns.py             36  — Regex extraction functions
 test_normalize_unit.py       26  — Normalization rules unit tests (Session 15)
+test_encoding.py             20  — Encoding functions (incl. mojibake transliteration repair, Session 18)
 test_vocabulary.py           19  — Classification mappings
 test_regression.py           19  — Distribution stability vs baseline
 test_schema.py               14  — Structural validity (every entry)
 test_census.py               13  — Completeness (all entries present)
-test_encoding.py             13  — Encoding functions
 test_apply_patches.py         8  — Editor corrections overlay (write-back, edit history, idempotency; Session 17)
 test_consistency.py           6  — Cross-field plausibility
 test_wikidata_locations.py    6  — Wikidata reconciliation quality
 test_normalization.py         5  — Normalization data-quality assertions (Session 15)
 test_heuristic.py             5  — Semantic heuristics (all entries)
 test_llm_judge.py             4  — LLM quality judgment
+test_parse_entries.py         3  — Blanked-stub title (2979 show-with-title; Session 18)
 ```
 
 Two normalization test files complement each other: `test_normalize_unit.py` unit-tests the mapping rules in `pipeline/data/` (location variants, publisher reject patterns, translator suffix stripping, pageCount outliers), while `test_normalization.py` asserts the resulting data-quality properties on the output JSON.

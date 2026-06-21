@@ -4,7 +4,7 @@ tags: [process, transient]
 updated: 2026-06-21
 ---
 
-# Handoff-Notiz (Stand 2026-06-21, Konsolidierungsrunde)
+# Handoff-Notiz (Stand 2026-06-21, Milestone-Runde)
 
 Transiente Prozessnotiz fuer den Wiedereinstieg einer frischen Instanz. Wird beim naechsten Handoff ueberschrieben. Projektdoku liegt in den uebrigen knowledge/-Dokumenten, Verlauf im [[journal]], Quervergleich der Lane in `reports/synthese-klawiter-rescue.md` (Forschungsleitstelle-Repo).
 
@@ -16,14 +16,14 @@ Forschungsleitstelle-Lane klawiter-rescue, Portfolio-Runde 2026-06-21. Der Proto
 2. **Einzige Anomalie 2979** vollstaendig charakterisiert (geblankte Quellseite, quellseitiger Verlust, kein Pipeline-Fehler). Operator-Entscheidung gefallen: mit Titel zeigen. Einzeiler-Fix in `03_parse_entries.py` autorisiert, laeuft im naechsten Full-Run. Befund in [[data#known-problems]].
 3. **Rueckschreib- und Audit-Schicht** (`pipeline/apply_patches.py` plus 8 Tests gruen, `data/corrections/`): Overlay nach `inject_provenance`, Provenance `editor`, Edit-History, Review-Status, idempotent. Backend-Teil von Editier-Inkrement 1. Spezifikation in [[eil-editing]].
 4. **Frontend autark** (Commit ad270b1): vier JS-Bibliotheken und Schriften lokal vendoriert (docs/vendor/, docs/fonts/, favicon.svg), index.html auf lokale Pfade. Voller Reload ohne externen Request verifiziert. Anlass war eine CORS-Cache-Verunreinigung durch parallele localhost-Apps.
-5. **Weimar-Fix entworfen und vermessen** (Commit a482112, nur Wissensdokumente): Location-Extraktion auf die Publikationszeile begrenzen korrigiert 30 der 48 Weimar-Faelle und gewinnt 508 bisher fehlende Orte. Drei Bereinigungs-Teilprobleme benannt. Volle Charakterisierung in [[validation]] (Fehlerklasse 1). Noch nicht im Pipeline-Code gelandet.
+5. **Drei Strang-1-Datentreue-Fixes gelandet** (Milestone-Runde, getesteter Pipeline-Code): Location-Fix (6d3f6c0, Begrenzung auf den Publikationszeilen-Header; Nachtrag e2cfb1c, Trenner Doppelpunkt oder Punkt, verhindert einen Verlagsnamen als Ort bei page 14), Mojibake-Repair des Transliterations-Blocks (037e7d3), 2979 zeigen-mit-Titel (a0d128b). Vermessen gegen zwei committete, deterministische Artefakte: `data/output/location-fix-report.json` (4.751 ns0, 3.513 unveraendert, 443 geaendert, 795 gewonnen, 0 verloren, kein Verlagsname als Ort, Weimar 43/48) und `data/output/mojibake-repair-report.json` (62.351 Laeufe alle repariert, residual 0, idempotent). Voller Befund in [[validation]] (Fehlerklassen 1 und 3), Verlauf in [[journal]] (Session 18). Noch nicht im Frontend sichtbar, das regeneriert erst im Full-Run.
 
 ## Entscheidungen (Stand der order)
 
 - Werkzeugumfang freigegeben: komplettes Werkzeug bauen, beide Modellwege, Werkzeug zuerst. Editier-Inkremente sind beauftragt, kein Gate mehr.
 - 2979 mit Titel zeigen (order-Entscheidung, Empfehlung der Lane gefolgt).
-- Weimar-Fix nicht halbfertig committen: er landet erst mit den drei Teilproblemen und gemeinsam mit dem Mojibake-Repair.
-- Kein Pipeline-Neulauf in dieser Runde: 2979-Propagierung, Weimar-Fix und Mojibake-Repair gehoeren in einen dedizierten Full-Run-Commit.
+- Die drei Strang-1-Fixes liegen jetzt als getesteter Code vor, die drei Bereinigungs-Teilprobleme aus der Vorrunde sind behandelt. Der Pipeline-Neulauf ist davon entkoppelt und wird zu einem reinen Ausfuehr-Schritt (Milestone 3).
+- Milestone 3 (Full-Run mit 2979-Propagierung plus den drei Fixes) wird lokal autonom gebaut, der Push deployt GitHub Pages und ist daher operator-gated am Publish-Schritt. Aus dem Re-Run-Diff faellt die Stichprobe fuer die erste Operator-Verifikation.
 
 ## Offene Faeden
 
@@ -33,7 +33,7 @@ Forschungsleitstelle-Lane klawiter-rescue, Portfolio-Runde 2026-06-21. Der Proto
 
 ## Der eine naechste Schritt
 
-Weimar-Fix im Pipeline-Code landen (drei Teilprobleme plus Mojibake-Repair, dann Full-Run mit 2979-Propagierung, Re-Run-Diff als Stichprobe fuer die Operator-Verifikation), parallel der Frontend-Teil von Editier-Inkrement 1 (edit.js auf drei Status plus Accept/Correct/Add plus localStorage, Patch v2 wie von apply_patches erwartet) mit Browser-Sichtung ueber die Chrome-Lane.
+Milestone 3 bauen, der Full-Run, der die drei gelandeten Fixes plus die 2979-Propagierung erstmals in den Output und ins Frontend bringt. Lokaler Lauf, Diff und Screenshot-Spur autonom; Push operator-gated. Danach der Frontend-Teil von Editier-Inkrement 1 (edit.js auf drei Status plus Accept/Correct/Add plus localStorage, Patch v2 wie von apply_patches erwartet) mit Browser-Sichtung ueber die Chrome-Lane.
 
 ## Geteilt / gehalten
 
