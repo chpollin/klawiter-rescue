@@ -47,6 +47,18 @@ _loc_sorted = sorted(KNOWN_LOCATIONS, key=len, reverse=True)
 _loc_pattern = '|'.join(re.escape(loc) for loc in _loc_sorted)
 LOCATION_RE = re.compile(rf'\[?\b({_loc_pattern})\b\]?')
 
+# Publication line: the bold citation that opens an edition block,
+# '''[YEAR]: Publisher, Location'''. Constraining location extraction to this
+# header keeps a city inside a chapter title (e.g. "Karlsbad und Weimar") from
+# being taken as the place of publication.
+PUBLICATION_LINE_RE = re.compile(r"'''\s*\[\d{4}[^\]]*\]\s*:\s*(.+?)'''")
+# Headerless excerpt/review entries carry the place in a [City, year] reference.
+BRACKET_PLACE_RE = re.compile(r"\[([A-ZÀ-Ý][^\[\];]{1,38}?),\s*\d{4}")
+# A known city sitting right after an opening bracket, e.g. "[London]", "[Wien],".
+BRACKET_KNOWN_RE = re.compile(rf'\[({_loc_pattern})\b')
+# Two-letter uppercase token, e.g. a US state code trailing "City, ST".
+_US_STATE_RE = re.compile(r'^[A-Z]{2}$')
+
 # Page count patterns
 # Note: pp. N-M is a page RANGE (start-end), not a page count.
 # Pattern 2 requires the number to NOT be followed by a hyphen+digit (range).
@@ -128,13 +140,67 @@ def extract_publisher(text):
     return None
 
 
-def extract_location(text):
-    """Extract publication location from text."""
-    if not text:
-        return None
-    m = LOCATION_RE.search(text)
+def _clean_location(value):
+    """Strip bold markup, reduce a 'Primary [Alternate]' form to the primary
+    name, and trim brackets and trailing punctuation from a location token."""
+    value = re.sub(r"'{2,3}", '', value).strip()
+    value = re.split(r'\s*\[', value, maxsplit=1)[0]
+    return value.strip().strip('[]').strip().rstrip('.,;:').strip()
+
+
+def _location_from_header(header):
+    """Pick the location out of a publication-line header body (the text after
+    '[YEAR]:'). The location is the segment after the last comma; a trailing US
+    state code falls back to the city segment before it. A known city is
+    preferred where the tail contains one, otherwise the literal source token is
+    kept so non-Western places absent from the known list are still recovered."""
+    parts = [p.strip() for p in header.split(',') if p.strip()]
+    if len(parts) >= 2:
+        tail = _clean_location(parts[-1])
+        if _US_STATE_RE.match(tail) and len(parts) >= 3:
+            tail = _clean_location(parts[-2])
+        m = LOCATION_RE.search(tail)
+        if m:
+            return m.group(1).strip('[]')
+        if tail and 2 <= len(tail) <= 40 and not re.search(r'\d', tail):
+            return tail
+    m = LOCATION_RE.search(header)
     if m:
         return m.group(1).strip('[]')
+    return None
+
+
+def extract_location(text):
+    """Extract the publication location, preferring the publication line.
+
+    Reads the bold '''[YEAR]: Publisher, Location''' header first, so a city in a
+    chapter title cannot be taken as the place of publication. Headerless entries
+    (excerpts, reviews, secondary literature) prefer a bracketed place, a
+    [City, year] or [KnownCity] reference, and only fall back to a whole-text
+    known-city search when no bracketed place is present, which keeps the
+    location of entries that never had a publication header."""
+    if not text:
+        return None
+    m = PUBLICATION_LINE_RE.search(text)
+    if m:
+        loc = _location_from_header(m.group(1))
+        if loc:
+            return loc
+        # Header present but carries no location: fall through to body heuristics.
+    # A bracketed known city (the original journal's place, e.g. "[Berlin]") is
+    # preferred over a [City, year] reprint reference, so an article keeps its
+    # first place of publication rather than the city of a later anthology.
+    bk = BRACKET_KNOWN_RE.search(text)
+    if bk:
+        return bk.group(1)
+    bm = BRACKET_PLACE_RE.search(text)
+    if bm:
+        cleaned = _clean_location(bm.group(1))
+        if cleaned:
+            return cleaned
+    m2 = LOCATION_RE.search(text)
+    if m2:
+        return m2.group(1).strip('[]')
     return None
 
 

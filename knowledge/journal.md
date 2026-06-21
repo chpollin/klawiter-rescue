@@ -12,6 +12,18 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-06-21 — Session 18: Milestone-Runde, Location-Fix gelandet (Forschungsleitstelle-Lane)
+
+Milestone-Runde der Forschungsleitstelle. Auftrag: aus der Projekt-Fachlichkeit die naechsten zwei Milestones bestimmen, bauen, verifizieren, nach main sichern; den dritten scopen. Aus der Strang-1-Prioritaet (alle Daten quellentreu vom SQL ins Frontend) folgen Milestone 1 Location-Fix landen, Milestone 2 Mojibake-Reparatur der Transliterationen.
+
+**Milestone 1: Location-Fix im Pipeline-Code gelandet, getestet, vermessen**
+
+Der in Session 17 entworfene Fix ist jetzt im Code (`pipeline/lib/patterns.py`: `extract_location` plus Helfer `_clean_location`, `_location_from_header`) und durch Unit-Tests gesichert (`tests/test_patterns.py`, `TestExtractLocation`, acht neue Faelle: Header-Ort, verhinderter Kapiteltitel-Leak, nicht-westliche Stadt als Literal-Tail, US-Staatskuerzel-Ruecksprung, Bracket-Known vor Bracket-Reprint, kopfloser Fallback, Header-ohne-Ort-Durchfall). Volle Suite: keine neue Roteinfaerbung durch die Aenderung (die 15 roten `test_semantic`-Faelle und die 4 `test_llm_judge`-Fehler bestehen identisch auf sauberem HEAD 2a8e73d, sind also vorbestehende Feldfehler-Klassen beziehungsweise Gemini-API-Ausfaelle).
+
+Die in Session 17 berichteten Prototyp-Zahlen (4.035/202/6/508, 30 korrigiert) waren ein frueher Stand. Der Fix wurde danach verfeinert (Bracket-Known vor Bracket-Reprint, US-Staatskuerzel-Ruecksprung, Literal-Tail-Erhalt, verlustfreier Fallback-Pfad). Die gueltigen Zahlen stehen jetzt in einem committeten, reproduzierbaren Artefakt: `pipeline/measure_location_fix.py` laeuft den Extraktor erneut ueber `03_parsed.csv` (Encoding konstant gehalten) und schreibt deterministisch `data/output/location-fix-report.json`. Befund ueber 4.751 ns0-Datensaetze: 3.511 unveraendert, 445 geaendert, 795 neu gewonnen, 0 verloren (kein Ort wird je geleert). Von den 48 Weimar-Faellen wechseln 43 auf den echten Quellort, 5 bleiben "Weimar" (page_ids 1505, 1902, 4042, 5893, 5904). Vier davon sind kopflos (Weimar im Kapitel- oder Werktitel, kein Header, kein Bracket-Ort; 5893 und 5904 sind See-Querverweise auf "Lotte in Weimar"), der fuenfte (1902) hat einen Header, dessen Ort "Moskva" eine nicht gelistete Transliteration hinter einem Punkt statt Komma ist. Keiner ist eine Regression.
+
+Zwei der drei Bereinigungs-Teilprobleme aus Session 17 sind im gelandeten Code behandelt (US-Staatskuerzel, Bracket-Alternativen). Das dritte bleibt der Kopplungsgrund: Rest-Mojibake erreicht den Ort bei den Klasse-3-Eintraegen ("AthÄna" fuer Athína) und verschwindet erst mit der Mojibake-Reparatur. Deshalb wartet der Pipeline-Neulauf auf Milestone 2; der gelandete Code aendert das veroeffentlichte Frontend nicht, das regeneriert erst im Full-Run. [[validation]] Fehlerklasse 1 auf den gelandeten Stand und die Artefakt-Zahlen gebracht.
+
 ## 2026-06-21 — Session 17: Record Census + EIL Editing Design (Forschungsleitstelle-Lane)
 
 Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag mit zwei Straengen: die Datenintegritaet vom SQL-Quelldump bis ins Frontend verifizieren, und parallel den Ausbau des In-Tool-Editierens fuer die Expert-in-the-Loop-Kontrolle entwerfen.

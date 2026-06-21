@@ -88,6 +88,48 @@ class TestExtractLocation:
         assert extract_location(None) is None
         assert extract_location("No city here") is None
 
+    # --- Publication-line header fix (validation.md error class 1, "Weimar") ---
+
+    def test_location_from_publication_header(self):
+        # The bold '''[YEAR]: Publisher, Location''' header is read first.
+        assert extract_location("'''[1943]: Skoglunds Bokförlag, Stockholm'''") == "Stockholm"
+
+    def test_chapter_title_city_not_taken_as_location(self):
+        # A city inside a chapter title must not become the place of publication
+        # when a real publication header is present. This is the Weimar bug.
+        text = ("'''[1981]: Insel Verlag, Frankfurt am Main'''\n"
+                "''Die Marienbader Elegie. Goethe zwischen Karlsbad und Weimar''. 120p.")
+        assert extract_location(text) == "Frankfurt am Main"
+
+    def test_non_western_city_recovered_from_header(self):
+        # A place absent from the known-city list is kept as the literal header
+        # tail, so the fix enriches rather than only filters.
+        assert extract_location("'''[2010]: Apaga Press, Yerevan'''") == "Yerevan"
+
+    def test_trailing_us_state_code_falls_back_to_city(self):
+        # "City, ST" — a two-letter state code is not the place; use the segment
+        # before it. Ann Arbor is not in the known list, so it is kept literally.
+        assert extract_location("'''[1955]: Some Press, Ann Arbor, MI'''") == "Ann Arbor"
+
+    def test_primary_alternate_reduced_to_primary(self):
+        # "Wien [Vienna]" -> "Wien".
+        assert extract_location("'''[1935]: Herbert Reichner Verlag, Wien [Vienna]'''") == "Wien"
+
+    def test_bracket_known_city_preferred_over_reprint_reference(self):
+        # A headerless article keeps its original journal place ([Berlin]) rather
+        # than the city of a later reprint anthology ([Krems an der Donau, 2019]).
+        text = "Some review. [Berlin] Later reprinted in [Krems an der Donau, 2019]."
+        assert extract_location(text) == "Berlin"
+
+    def test_headerless_excerpt_uses_bracket_place(self):
+        # No publication header, no known city in a bracket: a [City, year]
+        # reference supplies the place.
+        assert extract_location("Excerpt. [Ljubljana, 1959] pp. 12-18.") == "Ljubljana"
+
+    def test_header_without_location_falls_through_to_body(self):
+        # Header carries no recognizable place: fall through to the body search.
+        assert extract_location("'''[1920]: Insel-Verlag'''\nsomething in Leipzig") == "Leipzig"
+
 
 class TestExtractAllLocations:
     def test_multiple_cities_ordered_deduped(self):
