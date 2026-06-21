@@ -48,10 +48,13 @@ _loc_pattern = '|'.join(re.escape(loc) for loc in _loc_sorted)
 LOCATION_RE = re.compile(rf'\[?\b({_loc_pattern})\b\]?')
 
 # Publication line: the bold citation that opens an edition block,
-# '''[YEAR]: Publisher, Location'''. Constraining location extraction to this
-# header keeps a city inside a chapter title (e.g. "Karlsbad und Weimar") from
-# being taken as the place of publication.
-PUBLICATION_LINE_RE = re.compile(r"'''\s*\[\d{4}[^\]]*\]\s*:\s*(.+?)'''")
+# '''[YEAR]: Publisher, Location'''. The separator after the year bracket is a
+# colon in most entries but a period in some ('''[1983]. Verlag, Stadt'''), so
+# both are accepted; this is a superset of the colon-only form and cannot change
+# the colon entries. Constraining location extraction to this header keeps a city
+# inside a chapter title (e.g. "Karlsbad und Weimar") from being taken as the
+# place of publication.
+PUBLICATION_LINE_RE = re.compile(r"'''\s*\[\d{4}[^\]]*\]\s*[:.]\s*(.+?)'''")
 # Headerless excerpt/review entries carry the place in a [City, year] reference.
 BRACKET_PLACE_RE = re.compile(r"\[([A-ZÀ-Ý][^\[\];]{1,38}?),\s*\d{4}")
 # A known city sitting right after an opening bracket, e.g. "[London]", "[Wien],".

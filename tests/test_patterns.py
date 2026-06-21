@@ -130,6 +130,14 @@ class TestExtractLocation:
         # Header carries no recognizable place: fall through to the body search.
         assert extract_location("'''[1920]: Insel-Verlag'''\nsomething in Leipzig") == "Leipzig"
 
+    def test_period_separator_header_read_like_colon(self):
+        # Some headers separate the year bracket with a period, not a colon
+        # ('''[1983]. Verlag, Stadt'''). Without this the header is missed and a
+        # fallback took the publisher as the location (entry 14: "Fischer
+        # Taschenbuch" instead of "Frankfurt am Main").
+        text = "'''[1983].  Fischer Taschenbuch Verlag, Frankfurt am Main'''"
+        assert extract_location(text) == "Frankfurt am Main"
+
 
 class TestExtractAllLocations:
     def test_multiple_cities_ordered_deduped(self):

@@ -1,11 +1,6 @@
 {
   "changed": [
     {
-      "new": "Fischer Taschenbuch",
-      "old": "Frankfurt am Main",
-      "pageId": 14
-    },
-    {
       "new": "Berlin",
       "old": "Frankfurt am Main",
       "pageId": 41
@@ -99,11 +94,6 @@
       "new": "Stockholm",
       "old": "Leipzig",
       "pageId": 285
-    },
-    {
-      "new": "Marburg",
-      "old": "Leipzig",
-      "pageId": 286
     },
     {
       "new": "Wien",
@@ -5412,11 +5402,11 @@
   "lost": [],
   "source": "data/intermediate/03_parsed.csv",
   "totals": {
-    "changed": 445,
+    "changed": 443,
     "gained": 795,
     "lost": 0,
     "ns0_records": 4751,
-    "unchanged": 3511
+    "unchanged": 3513
   },
   "weimar": {
     "corrected": 43,
