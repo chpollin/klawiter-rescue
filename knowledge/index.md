@@ -36,7 +36,7 @@ Map of Content for the project documentation vault.
 
 ## Process
 
-- [[journal]] — Work diary, 15 sessions (2026-03-29 to 2026-04-12)
+- [[journal]] — Work diary, 17 sessions (2026-03-29 to 2026-06-21)
 
 ## Reference
 
@@ -75,7 +75,7 @@ Remaining items from the original project plan (milestones M1-M8 all complete, M
 ### Wikidata Reconciliation Follow-up (Session 15)
 
 - [ ] Manual review of 22 unmatched locations (encoding variants, composite slash-locations, obscure villages) + 3 low-score matches
-- [ ] Add `locationSameAs` field with Wikidata URIs to the JSON-LD output (Q-IDs currently live in `docs/data/locations.json` only)
+- [x] Add `locationSameAs` field with Wikidata URIs to the JSON-LD output — done in Session 16 (`klawiter:locationSameAs`, see [[data#wikidata-reconciliation]])
 
 ### Browser Verification (Session 15 features)
 

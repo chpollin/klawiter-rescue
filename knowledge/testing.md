@@ -91,7 +91,7 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (437 tests across 15 files, 2026-06-12)
+## Current State (445 tests across 16 files, 2026-06-21)
 
 ```
 test_real_entries.py        160  — 20 hand-labeled entries (parametrized)
@@ -104,6 +104,7 @@ test_regression.py           19  — Distribution stability vs baseline
 test_schema.py               14  — Structural validity (every entry)
 test_census.py               13  — Completeness (all entries present)
 test_encoding.py             13  — Encoding functions
+test_apply_patches.py         8  — Editor corrections overlay (write-back, edit history, idempotency; Session 17)
 test_consistency.py           6  — Cross-field plausibility
 test_wikidata_locations.py    6  — Wikidata reconciliation quality
 test_normalization.py         5  — Normalization data-quality assertions (Session 15)

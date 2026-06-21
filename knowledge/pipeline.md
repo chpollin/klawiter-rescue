@@ -8,7 +8,7 @@ updated: 2026-06-12
 
 # Pipeline
 
-The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify and reconcile helpers), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
+The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify, reconcile, census, and apply-patches helpers), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
 
 ## Source Data
 
@@ -203,6 +203,18 @@ Compares extracted fields against raw wiki content to measure precision and reca
 This distinction is important: verify.py previously reported 81.5% title precision because it didn't account for the ~880 page_title fallbacks. With the `correct_fallback` category, actual precision is ~95%+.
 
 Run: `python pipeline/verify.py` → `data/output/verification-report.json`
+
+### census.py — Record Census
+
+End-to-end record reconciliation from the SQL source through the JSON-LD to the frontend. Where verify.py checks field *values*, census.py checks *completeness of records*: it asserts that every source page reaches the JSON-LD 1:1 (no loss, no invention, no duplicates), that the frontend is the JSON-LD minus redirects, and that the namespace counts reconcile. Empty-content source pages are isolated and split into bibliographic (the single blanked stub, page 2979) and non-bibliographic. Full reconciliation and the five identity checks live in [[data#record-census]].
+
+Run: `python pipeline/census.py` → `data/output/census-report.json`
+
+### apply_patches.py — Editor Corrections Overlay
+
+Write-back and audit step of the EIL editing interface ([[eil-editing]]), run after inject_provenance.py. Applies approved corrections from the git-tracked store `data/corrections/`, setting the corrected field's provenance to `editor`, appending an edit-history record that preserves the machine original, and raising the entry's review status. The store is authoritative, so the step is idempotent and a re-run of the base pipeline never silently overwrites editor values. An empty store is a byte-identical no-op.
+
+Run: `python pipeline/apply_patches.py` → updates `docs/data/klawiter.json` (only if corrections exist) + `data/output/corrections-report.json`
 
 ---
 
@@ -439,7 +451,7 @@ pytest tests/ -m llm -v         # LLM-as-a-Judge, requires GEMINI_API_KEY (~10s)
 pytest tests/ -v                # everything
 ```
 
-The suite has **437 tests across 15 test files**, organized in a 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization). The full per-file breakdown and the rationale for each category live in [[testing]] (single source of truth) — this page does not duplicate the table.
+The suite has **445 tests across 16 test files**, organized in a 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization). The full per-file breakdown and the rationale for each category live in [[testing]] (single source of truth) — this page does not duplicate the table.
 
 **Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>0.5%), field coverage regressions (>1pp), type distribution drift (>2pp), error-severity increases. Baseline must be updated after intentional improvements.
 

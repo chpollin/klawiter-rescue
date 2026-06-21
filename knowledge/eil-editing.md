@@ -28,7 +28,7 @@ The klawiter design below maps each of these onto bibliographic fields. The diff
 
 ## Current klawiter state
 
-`edit.js` (localhost-only, gated by `App.state.isLocal && App.state.editMode`) provides a working but thin core: inline editing of four provenance-tracked fields (publisher, location, translator, pageCount), per-entry change tracking carrying `oldValue` / `newValue` / `provenance`, and a Save action that downloads a `patchVersion: 1` JSON document. `.github/workflows/validate-patch.yml` validates patches on pull requests. What is missing is everything the szd-htr model supplies: a review lifecycle, a preserved edit history, a triage signal, durable in-progress edits, and a clean write-back path.
+`edit.js` (localhost-only, gated by `App.state.isLocal && App.state.editMode`) provides a working but thin core: inline editing of four provenance-tracked fields (publisher, location, translator, pageCount), per-entry change tracking carrying `oldValue` / `newValue` / `provenance`, and a Save action that downloads a `patchVersion: 1` JSON document. `.github/workflows/validate-patch.yml` validates patches on pull requests. The dataset-side write-back is now built: `pipeline/apply_patches.py` (Session 17, unit-tested) applies approved corrections as an overlay, sets the corrected field's provenance to `editor`, preserves the machine original in an edit history, and raises the review status. What remains on the frontend is what `edit.js` still lacks: the review lifecycle in the UI, the three typed actions, a triage signal, durable in-progress edits, and a live write-back that produces v2 patches for the apply step.
 
 ## Target design
 
@@ -108,7 +108,7 @@ The extraction and the automatic `agent_verified` check are written behind a mod
 1. **Review status + action typing + session durability**: add the three-status `review` model, type each interaction Accept/Correct/Add, write edit-history records, and back pending edits with `localStorage`. Patch format moves to v2. Lowest risk, unlocks the EQUALIS triad.
 2. **Uncertainty surface**: wire provenance classes and verify.py flags into a per-entry attention ranking and field badges, calibrated by the content spot-check.
 3. **Editing scope**: extend inline editing to all adjudicable fields with the raw wiki source shown alongside for evidence.
-4. **Write-back + apply step**: the local endpoint plus `apply_patches.py`, the `editor` provenance state, and conflict handling on re-run.
+4. **Write-back + apply step**: `apply_patches.py` (the dataset overlay, `editor` provenance, edit history, idempotent re-application from the git-tracked store) is implemented and unit-tested; what remains is the live local endpoint that lets the frontend write corrections without a manual file step.
 5. **Metric read-out**: derive the EQUALIS-I ratios directly from the accumulated edit history.
 
 Increments 1 to 3 are frontend-local and need browser verification; 4 and 5 touch the pipeline and the provenance model. The minimal next step is increment 1.
