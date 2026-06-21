@@ -33,6 +33,7 @@ Map of Content for the project documentation vault.
 ## Quality
 
 - [[testing]] — 445 tests, 7-category strategy, what we can and cannot guarantee
+- [[validation]] — Field-level fidelity check against source (M3.8): four error classes, Weimar root cause, provenance distribution
 
 ## Process
 
@@ -50,10 +51,12 @@ Remaining items from the original project plan (milestones M1-M8 all complete, M
 
 ### Manual Validation (M3.8)
 
-- [ ] Browse 50+ entries in frontend, stratified by type, language, time period
-- [ ] Compare displayed fields against raw wiki content
-- [ ] Document accuracy: true positives, false positives, false negatives
-- [ ] Fix any systematic extraction errors found
+Started Session 17, findings in [[validation]]. Error classes and mechanisms confirmed; per-field error rate across a stratified sample still open.
+
+- [x] Browse entries in frontend, identify systematic error classes (see [[validation]])
+- [x] Compare displayed fields against source text shown per entry
+- [ ] Measure per-field error rate on a stratified sample (triage calibration input)
+- [ ] Fix the systematic Weimar location error (constrain extraction to publication line)
 
 ### Performance (M6.5)
 
