@@ -1,43 +1,39 @@
 ---
 title: Handoff
 tags: [process, transient]
-updated: 2026-06-12
+updated: 2026-06-21
 ---
 
-# Handoff-Notiz (Stand 2026-06-12, Session 16)
+# Handoff-Notiz (Stand 2026-06-21, Session 17)
 
 Transiente Prozessnotiz fuer den Wiedereinstieg einer frischen Instanz. Wird beim naechsten Handoff ueberschrieben. Projektdoku liegt in den uebrigen knowledge/-Dokumenten, Verlauf im [[journal]].
 
 ## Aktueller Stand
 
-Session 16 ist abgeschlossen und vollstaendig committet (7 lokale Commits auf `main`, nicht gepusht). Inhalt der Session:
+Session 17 (Forschungsleitstelle-Lane klawiter-rescue, Portfolio-Runde 2026-06-21). Zwei Straenge im Operator-Auftrag: Datenintegritaet SQL -> Frontend verifizieren, und den Ausbau des In-Tool-Editierens fuer die Expert-in-the-Loop-Kontrolle entwerfen.
 
-1. **Codebase-Refactoring** in zwei Wellen (Analyse durch 4 Opus-Agents, Umsetzung durch 3): totes Overview-Modul entfernt, `topN()` zentralisiert, Network-Filter-Listener vereinheitlicht; Pipeline verhaltensneutral aufgeraeumt (03c an Step-Muster angeglichen, 26 neue Unit-Tests, 2 immer-skippende Regression-Tests aktiviert, `known_issues` in baseline-metrics.json zentralisiert); Doku-Zahlen vereinheitlicht und Reconciliation-Widerspruch aufgeloest.
-2. **Browser-Smoke-Test** (Playwright, headless Chromium): PASS. Alle drei Explore-Modi, Cross-View-Filterung, Listener-Stresstests ohne Fehler. Screenshots unter `c:\tmp\klawiter-smoke\`.
-3. **`locationSameAs` implementiert**: Step 05 emittiert `klawiter:locationSameAs` (Wikidata-Entity-URI) fuer den Primaerort, 4.013 von 4.162 verorteten Eintraegen. Pipeline-Neulauf 05, 06, inject_provenance diff-verifiziert. Detail-View zeigt Wikidata-Link.
-4. **22 unmatched Locations triagiert** in `data/output/unmatched_locations_review.md` (17 match-candidates, 3 ambiguous, 1 mojibake, 1 no-match). Nichts automatisch uebernommen.
+1. **Record-Census gebaut und ausgefuehrt** (`pipeline/census.py`, Report `data/output/census-report.json`). Beweist reproduzierbar die Vollstaendigkeit des Datenflusses: 6.725 Quellseiten -> 6.725 JSON-LD-Eintraege 1:1 (kein Verlust, kein erfundener Datensatz, keine Dublette), Frontend = JSON-LD minus 1.546 Redirects = 5.179, ns0 6.296 = 4.751 angezeigt + 1.545 Redirects. Alle fuenf Rekonziliations-Checks PASS.
+2. **Einzige Anomalie vollstaendig charakterisiert**: page_id 2979 ("A unidade espiritual do mundo"). Revisionsgeschichte-Trace ergab: die Seite hat drei Revisionen, die letzte (rev 18324, auf die page_latest zeigt) hat `rev_len = 0` — sie wurde drei Minuten nach Anlage geblankt. Nur zwei Kategorie-Stub-Revisionen ueberleben in den BLOBs (18044, 18045). Kein Pipeline-Fehler, sondern quellseitiger Verlust. Der Titel steht in der `zweig_page`-Tabelle und koennte propagiert werden (Einzeiler in `03_parse_entries.py`, Empty-Content-Zweig). Befund in [[data#known-problems]] praezisiert, Census in [[data#record-census]].
+3. **Editier-Werkzeug-Spezifikation** ([[eil-editing]]): Zielentwurf fuer den Ausbau von edit.js — Editierbereich auf alle adjudizierbaren Felder, drei getypte Aktionen Accept/Correct/Add (EQUALIS-Triade), Unsicherheits-Oberflaeche aus Provenance + verify.py-Flags + Census, Persistenz (localStorage, Patch v2, apply_patches-Pipelineschritt, neuer Provenance-Zustand `editor`), Nachvollziehbarkeit als EQUALIS-Messsubstrat. Fuenf Build-Inkremente, minimaler naechster Schritt = Inkrement 1.
 
-Teststand: 437 collected; ohne llm/semantic alles gruen (353 passed); die 15 semantic-Failures sind pre-existing Ground-Truth-Abweichungen (76-Prozent-Niveau, in CLAUDE.md dokumentiert).
+## Entscheidungen dieser Session
 
-## Entscheidungen dieser Session (mit Begruendung)
-
-- Eigene Property `klawiter:locationSameAs` statt `schema:sameAs`, weil sameAs am Entry das Werk mit dem Ort gleichsetzen wuerde.
-- Mojibake-Regex-Konsolidierung, Sprachlisten-Dedup und SQL-Parser-Vereinheitlichung bewusst NICHT umgesetzt: nicht beweisbar verhaltensneutral ohne kompletten Pipeline-Neulauf.
-- `publisher_normalize.json` als leeres Mapping angelegt statt den Code-Pfad zu entfernen: symmetrisch zu location_normalize.json, wird im Editor-Loop befuellt.
-- Uncommittete Overview-Weiterarbeit verworfen (als Patch gesichert: `c:\tmp\explore-overview-uncommitted-2026-06-12.patch`), da das Modul seit Session 14f tot und nicht mehr lauffaehig war.
+- Census als eigenes Werkzeug neben verify.py (Wert-Korrektheit) und 06_validate.py (Qualitaet): es prueft Record-Vollstaendigkeit, die bisher unbewiesene Achse.
+- 2979 NICHT eigenmaechtig gefixt: ob die geblankte Seite mit Titel gezeigt oder ausgeschlossen wird, ist eine editorische Entscheidung. Census detektiert und dokumentiert sie, der Fix wird dem Operator vorgelegt.
+- Kein Pipeline-Neulauf in dieser Runde: ein Neulauf regeneriert 6.725 Einzeldateien plus LLM-Schritt, grosser Diff; die Output-Regeneration gehoert in einen dedizierten Full-Run-Commit zusammen mit der 2979-Entscheidung.
 
 ## Offene Faeden
 
-- Editor-Review von `data/output/unmatched_locations_review.md` (fachliche Accept/Correct-Entscheidungen, Editor-in-the-Loop). Achtung Apostroph-Encoding: klawiter.json nutzt U+2019, locations.json U+0027.
-- Kosmetisch: Header-Kommentar in `docs/js/explore-geography.js` sagt "Flat (default)", Code-Default ist `globe` (Zeile 36).
-- UX-Detail: Wikidata-Link in der Detail-View steht hinter dem ganzen Orts-String, verweist aber nur auf den Primaerort.
-- `.claude/settings.local.json` ist lokal modifiziert (Permission-Akkumulation), bewusst nicht committet.
+- **Operator-Entscheidung 2979**: geblankte Seite mit page_title als Titel zeigen (Einzeiler-Fix + Full-Run) oder als leere Seite ausschliessen.
+- **Operator-Entscheidung Editier-Tool**: Bau der Inkremente aus [[eil-editing]] beauftragen; Inkrement 1 (Action-Typing + localStorage + Patch v2) ist der naechste Schritt. Frontend-Inkremente brauchen Browser-Verifikation.
+- Editor-Review von `data/output/unmatched_locations_review.md` (aus Session 16, unveraendert offen).
+- Kosmetik aus Session 16 unveraendert offen (Header-Kommentar explore-geography.js; Wikidata-Link-UX in Detail-View).
 
 ## Der eine naechste Schritt
 
-EIL-Verifikations-Interface (DIA-XAI-Pflicht-Deliverable): Verifikations-Workflow mit Provenance-Badges, Confidence-Ranking und Accept/Correct/Add-Aktionen. Kontext in [[about]] (Two EIL Roles, DIA-XAI Connection), Metriken-Definition in [[data]].
+Operator-Klaerung beider Entscheidungen, dann entweder die 2979-Propagierung mit Full-Pipeline-Run oder Inkrement 1 des Editier-Tools.
 
 ## Geteilt / gehalten
 
-- Keine parallelen Lanes in diesem Repo zum Handoff-Zeitpunkt; alle Aenderungen dieser Session sind eigene Arbeit.
-- Design-Kontrakt mit den SZD-Repos (GAMS Burgund/Gold) unveraendert.
+- Keine parallelen Lanes in diesem Repo. Alle Aenderungen dieser Session sind eigene Arbeit, eigene Pfade committet.
+- Census und Spezifikation sind additive Artefakte; klawiter.jsonld, frontend-JSON und Pipeline-Code inhaltlich unveraendert.

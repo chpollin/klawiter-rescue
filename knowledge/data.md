@@ -213,7 +213,7 @@ Fields added per location: `wikidataId` (Q-number), `wikidataLabel` (English nam
 
 **originalTitle false positives (fixed)**: The `extract_original_title()` regex previously matched bare years in brackets (e.g. `[1931]`) as original titles, producing 272 false positives. Fixed by rejecting candidates that match `^\d{4}$`.
 
-**1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as stub (sourcePageId + entryType only, no title/content).
+**1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as stub (sourcePageId + entryType only, no title/content). Root cause established by revision-history trace: the page has exactly three revisions (2014-06-24), and the latest one (rev 18324, the one `page_latest` points to) has `rev_len = 0` — the page was **blanked** three minutes after creation. The only non-empty revisions (18322, 18323) carry just a category tag (`[[Category:Essays / Individual Essays (Portuguese)]]`). No bibliographic content for this entry was ever preserved in the dump; this is source-side loss, not a pipeline parsing miss. The title "A unidade espiritual do mundo" survives in the `zweig_page` table and could be propagated as a name (one-line fix in `03_parse_entries.py`, the empty-content early-return branch) if the editor decides a titled-but-contentless stub is preferable to a nameless one. See [[#record-census]].
 
 **0 titles with markup residue** (Session 14): Fixed — orphaned `]]`/`[[`/`'''` cleanup in `remove_wiki_markup()`. 14 `__TOC__` titles fixed in Session 11.
 
@@ -224,6 +224,17 @@ Fields added per location: `wikidataId` (Q-number), `wikidataLabel` (English nam
 **727 broken seeAlso references** (Session 14, was 1,140 in Session 11): Reduced because title fix resolved 1,210 redirects (was 430). Remaining 727 broken due to language suffixes like "/ Spanish" or formatting mismatches.
 
 **427 multi-edition pages** (Session 14): 6.8% of wiki pages contain multiple publications. Publisher, pageCount, year extracted from first match — may come from wrong edition. See [[pipeline#known-limitations--multi-edition-pages]].
+
+### Record Census
+
+Where `verify.py` checks field *values* (false positives/negatives) and the quality report measures dataset completeness, `census.py` answers the completeness-of-records question the data rescue rests on: does every record reach the frontend from the SQL source, with nothing silently lost and nothing invented? It reconciles three layers — `01_extracted.csv` (source), `klawiter.jsonld` (Linked Data), `klawiter.json` (frontend) — and asserts the identities below (output: `data/output/census-report.json`, all five currently pass):
+
+- **JSON-LD is 1:1 with the source**: 6,725 source pages, 6,725 JSON-LD entries, every `sourcePageId` present exactly once. No record lost, none invented, no duplicates.
+- **Frontend = JSON-LD minus redirects**: 5,179 = 6,725 − 1,546. Redirects are correctly excluded from the frontend; 0 redirects leak into it.
+- **Source ns0 reconciles**: 6,296 = 4,751 displayed entries + 1,545 ns0 redirects.
+- **Empty-content pages are isolated and explained**: 4 source pages have no BLOB text row, of which exactly 1 is bibliographic (ns0 page 2979, the blanked stub above); the other 3 are non-bibliographic system pages (a `MediaWiki:Print.css`, an empty Armenian category, an image-description page). The census asserts that the set of empty bibliographic pages equals the set of unnamed displayed entries — currently the single page 2979.
+
+The census is the systematic proof behind the headline "every entry safely and correctly from SQL into the frontend": the path is lossless and invention-free, and the only anomaly is one source-blanked page, fully characterized. The "unverifiable" surface that the [[eil-editing|EIL editing interface]] targets is exactly what `verify.py` and the provenance metadata flag; the census guarantees the editor is working over a complete record set, not a leaky one.
 
 ### Quality Report
 

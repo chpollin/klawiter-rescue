@@ -1,0 +1,97 @@
+{
+  "source": {
+    "total_pages": 6725,
+    "by_namespace": {
+      "0": 6296,
+      "6": 1,
+      "8": 5,
+      "10": 2,
+      "12": 1,
+      "14": 420
+    },
+    "empty_content_pages": {
+      "total": 4,
+      "bibliographic_ns0": [
+        {
+          "page_id": 2979,
+          "title": "A unidade espiritual do mundo",
+          "text_id": "18046"
+        }
+      ],
+      "non_bibliographic": [
+        {
+          "page_id": 2365,
+          "namespace": 8,
+          "title": "Print.css"
+        },
+        {
+          "page_id": 5356,
+          "namespace": 14,
+          "title": "Historical Studies / Individual Essays (Armenian)"
+        },
+        {
+          "page_id": 7625,
+          "namespace": 6,
+          "title": "Randyklawiter.jpg"
+        }
+      ]
+    }
+  },
+  "jsonld": {
+    "total_entries": 6725,
+    "unique_source_pages": 6725,
+    "redirects": 1546,
+    "non_redirects": 5179,
+    "missing_source_pages": [],
+    "invented_records": [],
+    "duplicate_source_pages": {}
+  },
+  "frontend": {
+    "total_entries": 5179,
+    "redirects": 0,
+    "by_namespace": {
+      "0": 4751,
+      "6": 1,
+      "8": 5,
+      "10": 2,
+      "12": 1,
+      "14": 419
+    },
+    "displayed_ns0_entries": 4751,
+    "unnamed_displayed": [
+      {
+        "page_id": 2979,
+        "title_from_source": "A unidade espiritual do mundo",
+        "entry_type": "other"
+      }
+    ]
+  },
+  "reconciliation_checks": [
+    {
+      "check": "jsonld_is_1to1_with_source",
+      "pass": true,
+      "detail": "missing=0 invented=0 dups=0"
+    },
+    {
+      "check": "frontend_excludes_all_redirects",
+      "pass": true,
+      "detail": "redirects in frontend = 0"
+    },
+    {
+      "check": "frontend_equals_jsonld_minus_redirects",
+      "pass": true,
+      "detail": "5179 == 6725 - 1546"
+    },
+    {
+      "check": "source_ns0_equals_displayed_plus_ns0_redirects",
+      "pass": true,
+      "detail": "6296 == 4751 + 1545"
+    },
+    {
+      "check": "every_empty_biblio_page_is_unnamed_and_vice_versa",
+      "pass": true,
+      "detail": "empty_biblio=1 unnamed=1 symdiff=[]"
+    }
+  ],
+  "all_checks_pass": true
+}

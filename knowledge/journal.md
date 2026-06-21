@@ -12,6 +12,29 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-06-21 — Session 17: Record Census + EIL Editing Design (Forschungsleitstelle-Lane)
+
+Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag mit zwei Straengen: die Datenintegritaet vom SQL-Quelldump bis ins Frontend verifizieren, und parallel den Ausbau des In-Tool-Editierens fuer die Expert-in-the-Loop-Kontrolle entwerfen.
+
+**Datenintegritaet (Strang 1)**
+
+- `pipeline/census.py` gebaut: reproduzierbare Record-Rekonziliation ueber drei Schichten (`01_extracted.csv` -> `klawiter.jsonld` -> `klawiter.json`), Report nach `data/output/census-report.json`. Fuenf Identitaeten, alle PASS: JSON-LD 1:1 mit Quelle (6.725/6.725, kein Verlust, kein erfundener Datensatz, keine Dublette); Frontend = JSON-LD minus 1.546 Redirects = 5.179; ns0 6.296 = 4.751 angezeigt + 1.545 Redirects; genau 1 leere bibliografische Seite == genau 1 namenloser angezeigter Eintrag.
+- Die offene Frage aus Session 1 ("The 1 missing entry") abschliessend geklaert. page_id 2979 ("A unidade espiritual do mundo"): Revisionsgeschichte-Trace zeigt drei Revisionen, die letzte (rev 18324, page_latest) mit `rev_len = 0` — die Seite wurde drei Minuten nach Anlage geblankt. Nur zwei Kategorie-Stub-Revisionen ueberleben in den BLOBs. Kein Pipeline-Fehler, sondern quellseitiger Verlust; bibliografischer Inhalt wurde nie im Dump erhalten. Der Titel steht in der `zweig_page`-Tabelle.
+- Die anderen drei leeren Seiten sind nicht-bibliografisch (CSS-Systemseite, leere armenische Kategorie, Bildbeschreibung), also irrelevant fuer die Bibliografie.
+
+**EIL-Editier-Design (Strang 2)**
+
+- `knowledge/eil-editing.md`: Zielentwurf fuer den Ausbau von `edit.js`. Editierbereich auf alle adjudizierbaren Felder, drei getypte Aktionen Accept/Correct/Add (EQUALIS-Triade), Unsicherheits-Oberflaeche gespeist aus Provenance-Badges + verify.py-Flags + Census-Anomalien, Persistenz in drei Schichten (localStorage, Patch v2 mit Aktionstyp/Zeitstempel/Editor, apply_patches-Pipelineschritt mit neuem Provenance-Zustand `editor`), Nachvollziehbarkeit als EQUALIS-Messsubstrat. Fuenf Build-Inkremente, minimaler naechster Schritt = Inkrement 1.
+- DIA-XAI-Anbindung explizit gemacht: die Oberflaeche traegt Frontier- wie lokale Modelle ohne Aenderung, weil der Editor extrahierte Werte unabhaengig vom erzeugenden Modell adjudiziert und der Provenance-Zustand die Methode festhaelt.
+
+**Entscheidungen**
+
+- Census als drittes Verifikationswerkzeug neben verify.py (Wert-Korrektheit) und 06_validate.py (Qualitaet); es deckt die bisher unbewiesene Achse Record-Vollstaendigkeit ab.
+- 2979 nicht eigenmaechtig gefixt: zeigen-mit-Titel versus ausschliessen ist eine editorische Entscheidung, dem Operator vorgelegt.
+- Kein Pipeline-Neulauf in dieser Runde; Output-Regeneration gehoert in einen dedizierten Full-Run-Commit mit der 2979-Entscheidung.
+
+**Offen**: Operator-Entscheidungen zu 2979 und zum Bau der Editier-Inkremente (siehe [[HANDOFF]]).
+
 ## 2026-06-12 — Session 16: Full-Codebase Refactoring (Multi-Agent)
 
 ### What we did

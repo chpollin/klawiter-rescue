@@ -28,6 +28,7 @@ Map of Content for the project documentation vault.
 
 - [[frontend]] — Design system, personas, user stories, views, components, routing
 - [[exploration]] — D3.js interactive visualization: Timeline, Geography, Connections
+- [[eil-editing]] — In-tool expert editing design: Accept/Correct/Add, persistence, traceability (DIA-XAI EIL-Tool 1)
 
 ## Quality
 
