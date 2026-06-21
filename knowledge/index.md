@@ -3,7 +3,7 @@ title: Klawiter Bibliography
 aliases: [MOC, map of content, index]
 tags: [index]
 created: 2026-04-12
-updated: 2026-06-12
+updated: 2026-06-21
 ---
 
 # Klawiter Bibliography Knowledge Base
@@ -51,12 +51,14 @@ Remaining items from the original project plan (milestones M1-M8 all complete, M
 
 ### Manual Validation (M3.8)
 
-Started Session 17, findings in [[validation]]. Error classes and mechanisms confirmed; per-field error rate across a stratified sample still open.
+Started Session 17, findings in [[validation]]. Error classes and mechanisms confirmed; the Weimar fix is designed and measured but not yet landed; per-field error rate across a stratified sample still open.
 
 - [x] Browse entries in frontend, identify systematic error classes (see [[validation]])
 - [x] Compare displayed fields against source text shown per entry
+- [x] Design and measure the Weimar location fix (constrain extraction to publication line; diffed across all records, see [[validation]] class 1)
+- [ ] Land the location fix: handle state codes, bracket alternates, and source mojibake; recover the 508 non-Western locations; pair with title/mojibake repair
+- [ ] Extract location for the headerless excerpt entries (`[City, year]` bracket, separate path)
 - [ ] Measure per-field error rate on a stratified sample (triage calibration input)
-- [ ] Fix the systematic Weimar location error (constrain extraction to publication line)
 
 ### Performance (M6.5)
 

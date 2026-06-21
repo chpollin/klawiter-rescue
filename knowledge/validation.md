@@ -34,7 +34,23 @@ Publisher is regex-extracted for under a third of records and missing for nearly
 - Entry 804 (Armenian): location "Weimar", source publication line says Yerevan.
 - Entry 87 (Chinese): location "Weimar, New York", source publication line says Taiyuan/Xi'an.
 
-The error propagates into the LOD layer, because the Wikidata reconciliation then links "Weimar" to its entity. Scoped Strand-1 fix: constrain location extraction to the publication-line position rather than the whole entry text, then re-run and diff. This is a fidelity-restoration fix, not an editorial change.
+The error propagates into the LOD layer, because the Wikidata reconciliation then links "Weimar" to its entity.
+
+### Scoped fix, designed and measured (not yet landed)
+
+The fix constrains location extraction to the publication-line header, the bold citation `'''[YEAR]: Publisher, Location'''` that opens every edition block, instead of searching the whole entry text. The location is the segment after the last comma in that header, normalized against the known-city list when it matches. Prototyped offline against all 4,751 ns0 records and diffed against the current output: 4,035 unchanged, 202 changed, 6 emptied, 508 gained (a location where there was none before).
+
+The 48 "Weimar" records resolve as follows: 30 change away from "Weimar" to the true source location (Taiyuan/Xi'an, Yerevan, Moskva, Sofija, Rijeka, Tbilisi, Hanoi, Tirana, and others), 1 is emptied (the source uses a period not a comma before a city the known-list lacks), and 17 still read "Weimar", of which at least 8 are confirmed headerless excerpt or review entries whose location sits in a `[City, year]` bracket rather than a citation header.
+
+The 508 gains are the larger result. They are overwhelmingly non-Western cities the known-list never contained (Sofia, Athens, Moscow, Tirana, Istanbul, Baku, Tbilisi, Tehran, Hanoi, Seoul). Constraining to the header does not only remove the false "Weimar", it recovers the true location for hundreds of translation editions whose location was sitting in the source line all along. This is the Strand-1 payoff and the reason the fix is worth more than a narrow Weimar patch.
+
+The prototype surfaced three cleaning sub-issues to handle when the fix lands:
+
+- US state codes leak when the header reads "Publisher, City, ST" (entry 889: "Ariadne Press, Riverside, CA" yields "CA"; the city is "Riverside"). A two-letter uppercase tail must fall back to the previous comma segment.
+- Bracket alternates need the primary form: "Kyiv [Kiev]", "Baki [Baku]", "Tiranë [Tirana]" must yield the part before " [", not a truncated "Kyiv [Kiev".
+- Residual source mojibake reaches the location for the same entries flagged in class 3 (entry 3431: "AthÄna" for Athína). These clean up once the mojibake repair lands at the encoding stage, which couples this fix to the title-repair milestone.
+
+A fourth, smaller structural sub-class is the headerless excerpt entry: its location lives in a `[City, year]` bracket inside an "in ''Journal'' [City], date" citation and needs its own extraction path. This is a fidelity-restoration fix throughout, not an editorial change.
 
 ## Error class 2: multi-edition flattening
 
@@ -66,7 +82,7 @@ The four currently editable fields (publisher, location, translator, pageCount) 
 
 ## Method and limits
 
-This is a targeted, not exhaustive, pass: it confirms the error classes and their mechanisms against named example entries, and quantifies the Weimar class fully. It does not yet measure a per-field error rate across a stratified sample, which is the remaining part of M3.8 and the calibration input the triage signal needs.
+This is a targeted, not exhaustive, pass: it confirms the error classes and their mechanisms against named example entries, and quantifies the Weimar class fully, including a prototyped fix diffed across all 4,751 records. It does not yet measure a per-field error rate across a stratified sample, which is the remaining part of M3.8 and the calibration input the triage signal needs. The Weimar fix is designed and measured but not yet committed to the pipeline, because landing it well means handling the three cleaning sub-issues and pairs naturally with the mojibake repair.
 
 ## Related
 
