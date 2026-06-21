@@ -49,6 +49,53 @@ class TestFixMojibake:
         assert fix_mojibake(None) is None
 
 
+def corrupt(s):
+    """Reproduce the original corruption: UTF-8 bytes read back as Latin-1.
+    fix_mojibake must invert this, restoring the source string."""
+    return s.encode('utf-8').decode('latin-1')
+
+
+class TestMojibakeTransliteration:
+    """The broadened repair recovers the Latin Extended diacritics of
+    transliterated titles (validation.md error class 3), not only umlauts."""
+
+    def test_latin_extended_a(self):
+        # Arabic, Slavic, Turkish, Baltic romanization: macrons, carons, cedillas.
+        for word in ["al-Qāhira", "Athēna", "ūmūr", "Mektuplaşmalar",
+                     "Książki", "Muž", "čovek", "Tōkyō"]:
+            assert fix_mojibake(corrupt(word)) == word
+
+    def test_latin_extended_additional(self):
+        # Arabic and Indic romanization with dots below.
+        for word in ["ḥadīth", "ṭabaqāt", "ṣaḥīfa", "Ḥusayn"]:
+            assert fix_mojibake(corrupt(word)) == word
+
+    def test_double_encoded_smart_quotes(self):
+        assert fix_mojibake(corrupt("Izdatel’stvo “AST”")) == "Izdatel’stvo “AST”"
+
+    def test_clean_german_unchanged(self):
+        # Accented letters followed by ASCII are not a mojibake run.
+        for word in ["Amokläufer", "Erzählungen", "Dämon", "Hölderlin",
+                     "Büchern", "Aufsätze", "Größe", "Straße"]:
+            assert fix_mojibake(word) == word
+
+    def test_clean_accent_before_guillemet_not_corrupted(self):
+        # Catalan "nació»": the byte signature matches but is not valid UTF-8
+        # once re-encoded, so the run is left untouched (self-validation).
+        text = "una altra nació» ens mostren"
+        assert fix_mojibake(text) == text
+        assert has_mojibake(text) is False
+
+    def test_idempotent(self):
+        once = fix_mojibake(corrupt("al-Qāhira und Schäfer"))
+        assert fix_mojibake(once) == once
+
+    def test_mixed_line_repairs_only_corrupt_part(self):
+        # Clean text and a corrupt token on one line: only the token is repaired.
+        text = "Edited by " + corrupt("Książki") + " in Wien"
+        assert fix_mojibake(text) == "Edited by Książki in Wien"
+
+
 class TestFixHtmlEntities:
     def test_all_named_entities(self, html_entity_text, html_entity_fixed):
         """Single test covering nbsp, mdash, amp, and combined entities."""

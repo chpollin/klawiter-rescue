@@ -1,0 +1,106 @@
+{
+  "description": "Broadened mojibake repair characterized over 01_extracted.csv (namespace 0). Runs are repaired by per-run Latin-1 re-encode then UTF-8 decode, with self-validation. Deterministic.",
+  "not_idempotent_entries": 0,
+  "residual_entries_after_repair": 0,
+  "runs": {
+    "detected": 62351,
+    "distinct_mappings": 367,
+    "repaired": 62351,
+    "self_rejected": 0
+  },
+  "sample_titles": [
+    {
+      "after": "'''[1937]. Herbert Reichner Verlag, Wien/Leipzig/Zürich'''",
+      "before": "'''[1937]. Herbert Reichner Verlag, Wien/Leipzig/ZÃ¼rich'''",
+      "pageId": 15
+    },
+    {
+      "after": "'''[1936]: Herbert Reichner Verlag, Wien/Leipzig/Zürich'''",
+      "before": "'''[1936]: Herbert Reichner Verlag, Wien/Leipzig/ZÃ¼rich'''",
+      "pageId": 23
+    },
+    {
+      "after": "#REDIRECT [[Al-Sulṭānī, Fāḍil / Assultani, Fadhil]]",
+      "before": "#REDIRECT [[Al-Sulá¹­ÄnÄ«, FÄá¸il / Assultani, Fadhil]]",
+      "pageId": 35
+    },
+    {
+      "after": "'''[1990]: S. Fischer Verlag, Frankfurt am Main [Stefan Zweig. Gesammelte Werke in Einzelbänden]'''",
+      "before": "'''[1990]: S. Fischer Verlag, Frankfurt am Main [Stefan Zweig. Gesammelte Werke in EinzelbÃ¤nden]'''",
+      "pageId": 58
+    },
+    {
+      "after": "'''[1982]: Ex Libris Verlag, Zürich'''",
+      "before": "'''[1982]: Ex Libris Verlag, ZÃ¼rich'''",
+      "pageId": 69
+    },
+    {
+      "after": "'''[1960]: Deutscher Bücherbund, Düsseldorf'''",
+      "before": "'''[1960]: Deutscher BÃ¼cherbund, DÃ¼sseldorf'''",
+      "pageId": 75
+    },
+    {
+      "after": "'''[2003]: RM Buch und Medien Vertrieb + Der Club Bertelsmann, Gütersloh / Buchgemeinschaft Donauland, Wien'''",
+      "before": "'''[2003]: RM Buch und Medien Vertrieb + Der Club Bertelsmann, GÃ¼tersloh / Buchgemeinschaft Donauland, Wien'''",
+      "pageId": 77
+    },
+    {
+      "after": "'''[1936]: Herbert Reichner Verlag, Wien/Leipzig/Zürich'''",
+      "before": "'''[1936]: Herbert Reichner Verlag, Wien/Leipzig/ZÃ¼rich'''",
+      "pageId": 79
+    },
+    {
+      "after": "'''[1965-1966]: Otokar Keršovani, Rijeka'''",
+      "before": "'''[1965-1966]: Otokar KerÅ¡ovani, Rijeka'''",
+      "pageId": 90
+    },
+    {
+      "after": "'''[1986]: Éditions Pierre Belfond, Paris'''",
+      "before": "'''[1986]: Ãditions Pierre Belfond, Paris'''",
+      "pageId": 99
+    },
+    {
+      "after": "'''[1927-1932]: Izdatel’stvo \\\"Vremia\\\", Leningrad'''",
+      "before": "'''[1927-1932]: Izdatelâstvo \\\"Vremia\\\", Leningrad'''",
+      "pageId": 105
+    },
+    {
+      "after": "'''[1934-1950]: Livraria Civilização - Editora, Porto'''",
+      "before": "'''[1934-1950]: Livraria CivilizaÃ§Ã£o - Editora, Porto'''",
+      "pageId": 119
+    }
+  ],
+  "source": "data/intermediate/01_extracted.csv",
+  "unusual_outputs": [
+    {
+      "count": 1,
+      "output": "ἃ",
+      "output_codepoints": "U+1F03 GREEK SMALL LETTER ALPHA WITH DASIA AND VARIA",
+      "run_codepoints": "U+00E1 LATIN SMALL LETTER A WITH ACUTE U+00BC VULGAR FRACTION ONE QUARTER U+0083 ?"
+    },
+    {
+      "count": 1,
+      "output": "ὅ",
+      "output_codepoints": "U+1F45 GREEK SMALL LETTER OMICRON WITH DASIA AND OXIA",
+      "run_codepoints": "U+00E1 LATIN SMALL LETTER A WITH ACUTE U+00BD VULGAR FRACTION ONE HALF U+0085 ?"
+    },
+    {
+      "count": 1,
+      "output": "Ὁ",
+      "output_codepoints": "U+1F49 GREEK CAPITAL LETTER OMICRON WITH DASIA",
+      "run_codepoints": "U+00E1 LATIN SMALL LETTER A WITH ACUTE U+00BD VULGAR FRACTION ONE HALF U+0089 ?"
+    },
+    {
+      "count": 1,
+      "output": "Ῠ",
+      "output_codepoints": "U+1FE8 GREEK CAPITAL LETTER UPSILON WITH VRACHY",
+      "run_codepoints": "U+00E1 LATIN SMALL LETTER A WITH ACUTE U+00BF INVERTED QUESTION MARK U+00A8 DIAERESIS"
+    },
+    {
+      "count": 1,
+      "output": "◦",
+      "output_codepoints": "U+25E6 WHITE BULLET",
+      "run_codepoints": "U+00E2 LATIN SMALL LETTER A WITH CIRCUMFLEX U+0097 ? U+00A6 BROKEN BAR"
+    }
+  ]
+}

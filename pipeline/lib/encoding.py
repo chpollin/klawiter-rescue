@@ -20,38 +20,48 @@ HTML_ENTITIES = {
     "&#34;": '"',
 }
 
-# Regex to detect any Ã+continuation-byte sequence (the universal Mojibake signature)
-_MOJIBAKE_RE = re.compile(r'Ã[\x80-\xbf]|Â[\xa0-\xff]|Ã[\x80-\x9f]')
+# UTF-8 multibyte data decoded as Latin-1 leaves a run of one lead char
+# (U+00C2..U+00F4, the Latin-1 view of a UTF-8 lead byte) followed by one or
+# more continuation chars (U+0080..U+00BF). This is the universal mojibake
+# signature; it does not occur in clean NFC text, where a Latin letter is
+# followed by an ASCII letter or space, not a C1 control or Latin-1 symbol.
+# Matching whole runs lets one pass repair 2-, 3- and 4-byte sequences alike
+# (umlauts, the Latin Extended-A diacritics of transliterated titles, and
+# double-encoded smart quotes).
+_MOJIBAKE_RE = re.compile('[\u00c2-\u00f4][\u0080-\u00bf]+')
+
+
+def _redecode_run(match):
+    """Reverse one mojibake run: re-encode as Latin-1, decode as UTF-8.
+
+    Self-validating. The run consists only of U+0080..U+00F4, so the Latin-1
+    re-encode never fails; if the bytes are not valid UTF-8 the decode raises
+    and the original run is kept, so an accidental match on clean text (a
+    Latin letter that happens to precede a Latin-1 symbol) is left untouched.
+    A result that still carries a C1 control is rejected for the same reason.
+    """
+    run = match.group(0)
+    try:
+        fixed = run.encode('latin-1').decode('utf-8')
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        return run
+    if any('\u0080' <= c <= '\u009f' for c in fixed):
+        return run
+    return fixed
 
 
 def fix_mojibake(text):
     """Fix UTF-8 bytes misinterpreted as Latin-1/CP1252.
 
-    Strategy: encode the entire string as latin-1, then decode as utf-8.
-    This reverses the original corruption. We apply it per-line to limit
-    blast radius — if a line fails, we keep the original.
+    Repairs each mojibake run independently rather than re-decoding whole
+    lines, so clean characters on the same line are preserved and the repair
+    is idempotent (a repaired character is no longer in the lead-byte range).
     """
     if not text:
         return text
-
     if not _MOJIBAKE_RE.search(text):
         return text  # No Mojibake detected, skip
-
-    # Process line by line to avoid corrupting clean lines
-    lines = text.split('\n')
-    fixed_lines = []
-    for line in lines:
-        if _MOJIBAKE_RE.search(line):
-            try:
-                fixed = line.encode('latin-1').decode('utf-8')
-                fixed_lines.append(fixed)
-            except (UnicodeDecodeError, UnicodeEncodeError):
-                # Line has mixed encoding or non-latin-1 chars — keep original
-                fixed_lines.append(line)
-        else:
-            fixed_lines.append(line)
-
-    result = '\n'.join(fixed_lines)
+    result = _MOJIBAKE_RE.sub(_redecode_run, text)
     return unicodedata.normalize('NFC', result)
 
 
@@ -78,10 +88,18 @@ def fix_encoding(text):
 
 
 def has_mojibake(text):
-    """Detect whether text contains likely Mojibake patterns."""
+    """Detect whether text contains repairable Mojibake.
+
+    A run that matches the byte signature but is not valid UTF-8 once
+    re-encoded (a clean accented letter before a Latin-1 guillemet, e.g.
+    Catalan "nació»") is not reported, so the validator does not flag
+    text the repair correctly leaves untouched."""
     if not text:
         return False
-    return bool(_MOJIBAKE_RE.search(text))
+    for m in _MOJIBAKE_RE.finditer(text):
+        if _redecode_run(m) != m.group(0):
+            return True
+    return False
 
 
 # --- Comparison utilities (used by verify.py) ---
