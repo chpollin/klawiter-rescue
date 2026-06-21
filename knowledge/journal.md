@@ -36,6 +36,14 @@ Vermessen ueber alle ns0-Datensaetze von `01_extracted.csv` mit `pipeline/measur
 
 **Stand Milestone 1 und 2**: beide auf main gesichert, kein Pipeline-Neulauf, das veroeffentlichte Frontend unveraendert. Alle drei entschiedenen Strang-1-Code-Aenderungen (Location-Fix, Mojibake-Repair, 2979) liegen jetzt als getesteter Code vor. Der naechste Full-Run ist damit entkoppelt und rein ausfuehrend: er regeneriert die Outputs aus allen drei Aenderungen (Milestone 3, oeffentlich, operator-gated).
 
+**Milestone 3 gescopt (gebaut wird er noch nicht): gemeinsamer Full-Run und Frontend-Regeneration**
+
+Ergebnis-Artefakt: regenerierte `data/intermediate/02..04`, `data/output/klawiter.jsonld`, `docs/data/klawiter.json` und `docs/data/locations.json`, die alle drei gelandeten Fixes tragen; dazu ein committeter Re-Run-Diff und eine Operator-Stichprobe (Eintrags-IDs mit alt zu neu fuer Ort und Titel plus Quellzeile); dazu eine Chrome-Screenshot-Spur des frisch gebauten Frontends mit korrigierten Eintraegen (87 zu Taiyuan/Xi'an, 804 zu Yerevan, ein mojibake-bereinigter transliterierter Titel, 2979 betitelt).
+
+Verifikation mit konkretem Gruen-Kriterium: `census.py` PASS (Record-Identitaeten halten, 2979 bleibt genau ein angezeigter Eintrag, jetzt betitelt); `06_validate.py` schemavalide und Mojibake-Feldzahl gegen 0; `verify.py` Wert-im-Rohtext haelt; Regressions-Baselines geprueft und die ort-/mojibake-bezogenen `test_semantic`-Faelle nachgesehen (einige sollten gruen kippen); die committeten Messzahlen aus `location-fix-report.json` und `mojibake-repair-report.json` im Output gespiegelt.
+
+Ausfuehrungs-Bedingung: der Full-Run ruft `03b_llm_enrich.py` (Gemini) auf. Der Re-Run muss den committeten LLM-Cache (`data/intermediate/03b_llm_cache.json`) wiederverwenden, damit er deterministisch bleibt und keine neuen API-Aufrufe noetig sind; das ist relevant, weil die Gemini-API in der aktuellen Umgebung ausfaellt (sichtbar an den vier `test_llm_judge`-Fehlern). Oeffentlich: das Pushen der regenerierten `docs/data` nach main deployt GitHub Pages, also live. Nach Betriebsmodell gebe ich das nicht selbst live, sondern lege Diff und Screenshot-Spur vor und warte auf Freigabe. Darum ist M3 prepariert, nicht gebaut.
+
 ## 2026-06-21 — Session 17: Record Census + EIL Editing Design (Forschungsleitstelle-Lane)
 
 Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag mit zwei Straengen: die Datenintegritaet vom SQL-Quelldump bis ins Frontend verifizieren, und parallel den Ausbau des In-Tool-Editierens fuer die Expert-in-the-Loop-Kontrolle entwerfen.
