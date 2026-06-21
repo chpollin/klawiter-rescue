@@ -64,6 +64,12 @@ def process_entry(row):
 
     if not content:
         result.update({k: '' for k in PARSED_FIELDS if k not in result})
+        # Blanked source page (entry 2979): the BLOB text was emptied at the
+        # source, but the page title survives in the page table. Show it with
+        # that title rather than as "Untitled" (editor decision).
+        page_title = row.get('page_title', '')
+        if page_title:
+            result['title'] = remove_wiki_markup(page_title)
         return result
 
     # Parse structured data from wiki content
