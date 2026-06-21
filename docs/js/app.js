@@ -32,6 +32,7 @@ const App = {
       this.verifyData();
       this.buildIndex();
       this.bindEvents();
+      if (this.state.isLocal) Edit.restore();   // recover pending edits from a prior session
       this._lastHash = null;
       this.handleRoute();
       window.addEventListener('hashchange', () => this.handleRoute());
@@ -617,6 +618,10 @@ const App = {
       if (detail && entry) {
         detail.innerHTML = Detail.renderInline(entry);
       }
+    }
+    // Re-render the standalone detail view too (direct #entry= fallback path)
+    if (this.state.view === 'detail' && this.state.entryId != null) {
+      Detail.render(this.entryMap.get(this.state.entryId));
     }
   },
 };

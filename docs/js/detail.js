@@ -25,25 +25,71 @@ const Detail = {
     return this._buildContent(entry);
   },
 
-  // Provenance badge HTML
+  // Provenance badge HTML. A pending editor action overrides the machine
+  // provenance so the badge reflects the human verdict before it is saved.
   _provBadge(fieldName, entry) {
-    const prov = entry._provenance;
-    if (!prov || !prov[fieldName]) return '';
-    const source = prov[fieldName];
-    const labels = { regex: 'R', llm: 'L', missing: '\u2014', expert: 'E' };
-    const titles = { regex: 'Regex extracted', llm: 'LLM enriched', missing: 'Missing', expert: 'Expert curated' };
-    return `<span class="prov-badge prov-${source}" title="${titles[source] || source}">${labels[source] || source[0].toUpperCase()}</span>`;
+    const pid = entry.sourcePageId;
+    const pend = App.state.editMode ? Edit.pending(pid, fieldName) : undefined;
+    let source;
+    if (pend) {
+      source = 'editor';
+    } else {
+      const prov = entry._provenance;
+      if (!prov || !prov[fieldName]) return '';
+      source = prov[fieldName];
+    }
+    const labels = { regex: 'R', llm: 'L', missing: '\u2014', editor: 'E', expert: 'E' };
+    const titles = { regex: 'Regex extracted', llm: 'LLM enriched', missing: 'Missing',
+                     editor: 'Expert curated', expert: 'Expert curated' };
+    const cls = source === 'expert' ? 'editor' : source;   // unify legacy "expert" onto "editor"
+    return `<span class="prov-badge prov-${cls}" title="${titles[source] || source}">${labels[source] || source[0].toUpperCase()}</span>`;
   },
 
-  // Editable field wrapper
-  _editableValue(fieldName, value, entry) {
-    if (!App.state.editMode) return value;
+  // Three-status review chip (Ungepr\u00fcft / Agent-gepr\u00fcft / Mensch-gepr\u00fcft).
+  _reviewChip(entry) {
+    const st = Edit.entryStatus(entry.sourcePageId);
+    const map = {
+      unreviewed: { label: 'Ungepr\u00fcft', cls: 'review-unreviewed' },
+      agent_verified: { label: 'Agent-gepr\u00fcft', cls: 'review-agent' },
+      approved: { label: 'Mensch-gepr\u00fcft', cls: 'review-approved' },
+    };
+    const m = map[st.status] || map.unreviewed;
+    const note = st.pending ? ' <span class="review-pending">ungespeichert</span>' : '';
+    return `<div class="review-chip ${m.cls}">${m.label}${note}</div>`;
+  },
+
+  // Editable cell for a provenance-tracked field (edit mode only). An empty
+  // field shows a placeholder so typing into it is recorded as Add, not Correct.
+  _editableValue(fieldName, entry) {
     const pid = entry.sourcePageId;
-    const currentVal = value.replace(/<[^>]*>/g, ''); // strip HTML tags for raw text
-    return `<span class="editable-field" contenteditable="true"
+    const raw = entry[fieldName];
+    const has = raw != null && raw !== '';
+    const original = has ? String(raw) : '';
+    const ph = has ? '' : ' data-placeholder="add value\u2026"';
+    return `<span class="editable-field${has ? '' : ' editable-empty'}" contenteditable="true"
       data-field="${fieldName}" data-pid="${pid}"
-      data-original="${esc(currentVal)}"
-      onblur="Edit.trackChange(this)">${value}</span>`;
+      data-original="${esc(original)}"${ph}
+      onblur="Edit.trackChange(this)">${has ? esc(original) : ''}</span>`;
+  },
+
+  // Per-field action controls: Accept on a present value, Undo on a pending one.
+  _fieldControls(fieldName, entry) {
+    const pid = entry.sourcePageId;
+    const pend = Edit.pending(pid, fieldName);
+    const has = entry[fieldName] != null && entry[fieldName] !== '';
+    let inner = '';
+    if (pend) {
+      inner += `<span class="field-action field-action-${pend.action}">${pend.action}</span>`;
+      inner += `<button class="field-btn field-revert" title="Undo" onclick="Edit.revert(${pid}, '${fieldName}')">\u21ba</button>`;
+    } else if (has) {
+      inner += `<button class="field-btn field-accept" title="Accept this value" onclick="Edit.accept(${pid}, '${fieldName}')">\u2713</button>`;
+    }
+    return inner ? ` <span class="field-controls">${inner}</span>` : '';
+  },
+
+  // Build the edit-mode cell (editable value + action controls) for a tracked field.
+  _editCell(fieldName, entry) {
+    return this._editableValue(fieldName, entry) + this._fieldControls(fieldName, entry);
   },
 
   // Shared content builder
@@ -66,27 +112,32 @@ const Detail = {
 
     // Provenance-tracked fields
     if (entry.publisher || App.state.editMode) {
-      const val = entry.publisher ? esc(entry.publisher) : '<span class="missing-value">not extracted</span>';
-      rows.push(this.row('Publisher', this._editableValue('publisher', val, entry), 'publisher', entry));
+      let cell;
+      if (App.state.editMode) {
+        cell = this._editCell('publisher', entry);
+      } else {
+        cell = entry.publisher ? esc(entry.publisher) : '<span class="missing-value">not extracted</span>';
+      }
+      rows.push(this.row('Publisher', cell, 'publisher', entry));
     }
 
     if (entry.location || App.state.editMode) {
-      let locText = '';
-      if (entry.location) {
-        locText = esc(entry.location);
+      let cell;
+      if (App.state.editMode) {
+        // Only the primary location is editable; allLocations is a separate map facet.
+        cell = this._editCell('location', entry);
+      } else {
+        let locText = esc(entry.location);
         if (entry.allLocations && entry.allLocations.length > 1) {
           locText = entry.allLocations.map(l => esc(l)).join(', ');
         }
-      } else {
-        locText = '<span class="missing-value">not extracted</span>';
+        // Wikidata link for the primary location (klawiter:locationSameAs).
+        if (entry.location && entry.locationSameAs) {
+          locText += ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank" rel="noopener" title="View ${esc(entry.location)} on Wikidata">Wikidata</a>`;
+        }
+        cell = locText;
       }
-      let locValue = this._editableValue('location', locText, entry);
-      // Wikidata link for the primary location (klawiter:locationSameAs).
-      // Appended outside the editable wrapper so it never pollutes the raw edit value.
-      if (entry.location && entry.locationSameAs && !App.state.editMode) {
-        locValue += ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank" rel="noopener" title="View ${esc(entry.location)} on Wikidata">Wikidata</a>`;
-      }
-      rows.push(this.row('Location', locValue, 'location', entry));
+      rows.push(this.row('Location', cell, 'location', entry));
     }
 
     if (entry.language) {
@@ -95,13 +146,17 @@ const Detail = {
     }
 
     if (entry.pageCount || App.state.editMode) {
-      const val = entry.pageCount ? String(entry.pageCount) : '<span class="missing-value">not extracted</span>';
-      rows.push(this.row('Pages', this._editableValue('pageCount', val, entry), 'pageCount', entry));
+      const cell = App.state.editMode
+        ? this._editCell('pageCount', entry)
+        : (entry.pageCount ? String(entry.pageCount) : '<span class="missing-value">not extracted</span>');
+      rows.push(this.row('Pages', cell, 'pageCount', entry));
     }
 
     if (entry.translator || App.state.editMode) {
-      const val = entry.translator ? esc(entry.translator) : '<span class="missing-value">not extracted</span>';
-      rows.push(this.row('Translator', this._editableValue('translator', val, entry), 'translator', entry));
+      const cell = App.state.editMode
+        ? this._editCell('translator', entry)
+        : (entry.translator ? esc(entry.translator) : '<span class="missing-value">not extracted</span>');
+      rows.push(this.row('Translator', cell, 'translator', entry));
     }
 
     if (entry.categories && entry.categories.length) {
@@ -111,13 +166,17 @@ const Detail = {
       rows.push(this.row('Categories', catLinks.join(', ')));
     }
 
+    if (App.state.editMode) html = this._reviewChip(entry) + html;
     html += `<div class="meta-table">${rows.join('')}</div>`;
 
     // --- Full bibliographic entry (always visible as verification source) ---
+    // In edit mode this is the adjudication source: the editor checks each field
+    // against it. Per-field raw-wiki segmentation is a later increment.
     if (entry.fullBibliographicEntry) {
+      const evidence = App.state.editMode;
       html += `
-        <div class="detail-section">
-          <h3 class="detail-section-heading">Full Bibliographic Entry</h3>
+        <div class="detail-section${evidence ? ' detail-evidence' : ''}">
+          <h3 class="detail-section-heading">${evidence ? 'Source — verify each field against this' : 'Full Bibliographic Entry'}</h3>
           <div class="detail-bibentry">${esc(entry.fullBibliographicEntry)}</div>
         </div>
       `;

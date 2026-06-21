@@ -1955,6 +1955,82 @@ body.edit-mode .meta-table {
   border-color: var(--sz-gold);
 }
 
+/* Provenance "editor" (human-curated) — canonical name written by apply_patches.py.
+   Shares the blue styling that was previously keyed to the legacy "expert" class. */
+.prov-editor { background: #cce5ff; color: #004085; }
+
+/* Empty editable field shows a placeholder so typing is recorded as Add */
+.editable-empty:empty::before {
+  content: attr(data-placeholder);
+  color: var(--sz-text-light);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+/* Three-status review chip */
+.review-chip {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
+}
+.review-unreviewed { background: #f0f0f0; color: #777; border-color: #ddd; }
+.review-agent { background: #fff3cd; color: #856404; border-color: #f0e0a8; }
+.review-approved { background: #d4edda; color: #155724; border-color: #b8dcc0; }
+.review-pending {
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--sz-burgundy);
+}
+
+/* Per-field action controls (Accept / Undo) and the pending action tag */
+.field-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  vertical-align: middle;
+}
+.field-btn {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  border: 1px solid var(--sz-border);
+  background: var(--sz-cream);
+  color: var(--sz-text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.field-accept:hover { background: #d4edda; border-color: #b8dcc0; color: #155724; }
+.field-revert:hover { background: #f8d7da; border-color: #f0b8bd; color: #721c24; }
+.field-action {
+  font-family: var(--font-sans);
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+.field-action-accept { background: #d4edda; color: #155724; }
+.field-action-correct { background: #fff3cd; color: #856404; }
+.field-action-add { background: #cce5ff; color: #004085; }
+
+/* Evidence panel: the source the editor adjudicates each field against */
+.detail-evidence {
+  border-left: 3px solid var(--sz-gold);
+  padding-left: 0.9rem;
+  background: rgba(194, 163, 96, 0.05);
+}
+
 /* --- Verbund Bar --- */
 .verbund-bar {
   background: #f2f2f2;
