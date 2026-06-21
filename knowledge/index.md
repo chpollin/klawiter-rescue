@@ -32,7 +32,7 @@ Map of Content for the project documentation vault.
 
 ## Quality
 
-- [[testing]] — 437 tests, 7-category strategy, what we can and cannot guarantee
+- [[testing]] — 445 tests, 7-category strategy, what we can and cannot guarantee
 
 ## Process
 
