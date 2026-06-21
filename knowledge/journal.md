@@ -26,6 +26,7 @@ Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag
 
 - `knowledge/eil-editing.md`: Zielentwurf fuer den Ausbau von `edit.js`. Editierbereich auf alle adjudizierbaren Felder, drei getypte Aktionen Accept/Correct/Add (EQUALIS-Triade), Unsicherheits-Oberflaeche gespeist aus Provenance-Badges + verify.py-Flags + Census-Anomalien, Persistenz in drei Schichten (localStorage, Patch v2 mit Aktionstyp/Zeitstempel/Editor, apply_patches-Pipelineschritt mit neuem Provenance-Zustand `editor`), Nachvollziehbarkeit als EQUALIS-Messsubstrat. Fuenf Build-Inkremente, minimaler naechster Schritt = Inkrement 1.
 - DIA-XAI-Anbindung explizit gemacht: die Oberflaeche traegt Frontier- wie lokale Modelle ohne Aenderung, weil der Editor extrahierte Werte unabhaengig vom erzeugenden Modell adjudiziert und der Provenance-Zustand die Methode festhaelt.
+- Rueckschreib- und Audit-Schicht implementiert (`pipeline/apply_patches.py` plus 8 Unit-Tests, alle gruen): Overlay-Schritt nach `inject_provenance`, wendet Korrekturen aus dem versionierten Store `data/corrections/` an, setzt Provenance auf `editor`, baut Edit-History pro Feld (Maschinen-Original erhalten), hebt den Review-Status (approved/agent_verified). Idempotent, Store ist autoritativ, leerer Store ist byte-identisches No-Op. Das ist der browser- und gate-unabhaengige Teil von Inkrement 1/4; der Frontend-Code wartet auf Browser-Sichtung.
 
 **Entscheidungen**
 

@@ -29,9 +29,14 @@ Session 17 (Forschungsleitstelle-Lane klawiter-rescue, Portfolio-Runde 2026-06-2
 - Editor-Review von `data/output/unmatched_locations_review.md` (aus Session 16, unveraendert offen).
 - Kosmetik aus Session 16 unveraendert offen (Header-Kommentar explore-geography.js; Wikidata-Link-UX in Detail-View).
 
+## Bereits gebaut (entscheidungsunabhaengig, ohne Browser)
+
+- `knowledge/eil-editing.md` auf das szd-htr-Modell umgestellt (drei Status, Edit-History, kalibriertes Triage-Signal, lokaler Rueckschreibweg plus Git-Pruefpfad, gemeinsames Geruest dokumentiert, Modell-pluggable).
+- `pipeline/apply_patches.py` plus `tests/test_apply_patches.py` (8 Tests gruen) und `data/corrections/` (Store mit README): die Rueckschreib- und Audit-Schicht. Overlay nach `inject_provenance`, Provenance `editor`, Edit-History, Review-Status, idempotent, leerer Store = No-Op. Backend-Teil von Inkrement 1/4.
+
 ## Der eine naechste Schritt
 
-Operator-Klaerung beider Entscheidungen, dann entweder die 2979-Propagierung mit Full-Pipeline-Run oder Inkrement 1 des Editier-Tools.
+Operator-Klaerung der vier Gates (Reihenfolge, inhaltliche Stichprobe, 2979, Browser), dann der Frontend-Teil von Inkrement 1 (edit.js auf drei Status plus Accept/Correct/Add plus localStorage, Patch v2 wie von apply_patches erwartet) mit Browser-Sichtung, oder die 2979-Propagierung mit Full-Pipeline-Run.
 
 ## Geteilt / gehalten
 
