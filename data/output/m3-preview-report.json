@@ -1,0 +1,93 @@
+{
+  "before_ref": "HEAD",
+  "description": "Milestone-3 preview: end-to-end effect of the landed Strand-1 fixes on docs/data/klawiter.json, comparing the deployed build (git HEAD) to a fresh local pipeline run. Location and title only. Not published.",
+  "gemini_skipped_pageIds": [
+    "1684",
+    "1691",
+    "1694",
+    "1714",
+    "4197",
+    "4284",
+    "4336",
+    "4503",
+    "4566",
+    "4600",
+    "4601",
+    "4613",
+    "4726",
+    "4727",
+    "4728",
+    "4907",
+    "5029",
+    "5400",
+    "5694"
+  ],
+  "key_records": [
+    {
+      "location_after": "Taiyuan/Xi'an",
+      "location_before": "Weimar",
+      "pageId": 87,
+      "title_after": "Ciweige wenji",
+      "title_before": "Ciweige wenji"
+    },
+    {
+      "location_after": "Yerevan",
+      "location_before": "Weimar",
+      "pageId": 804,
+      "title_after": "Mardkut‘yan asteghayin zhamerě: Patmakan manrapatumner",
+      "title_before": "Mardkutâyan asteghayin zhamerÄ: Patmakan manrapatumner"
+    },
+    {
+      "location_after": null,
+      "location_before": null,
+      "pageId": 2979,
+      "title_after": "A unidade espiritual do mundo",
+      "title_before": ""
+    },
+    {
+      "location_after": "Frankfurt am Main",
+      "location_before": "Frankfurt am Main",
+      "pageId": 14,
+      "title_after": "Begegnungen mit Büchern. Aufsätze und Einleitungen aus den Jahren 1902-1939",
+      "title_before": "Begegnungen mit Büchern. Aufsätze und Einleitungen aus den Jahren 1902-1939"
+    }
+  ],
+  "location_lost_genuine_ids": [],
+  "notes": [
+    "Snapshot of one local build; not byte-reproducible by a script alone because it depends on a full pipeline run that is restored afterwards.",
+    "location_changed mixes two cases: a wrong location corrected (the Weimar class) and a regex value now preferred over a prior LLM gap-fill (source-derived over guessed). Both are confirmed by the operator sample, not asserted here.",
+    "The full run skipped the gemini_skipped entries at the LLM step because the Gemini API was unavailable. Those affect only the gap-fill fields (publisher, translator, page_count); location_lost is 0, so the outage touched no location or title."
+  ],
+  "records_compared": 5179,
+  "title_changed_sample": [
+    "195",
+    "197",
+    "198",
+    "200",
+    "212",
+    "227",
+    "328",
+    "353",
+    "357",
+    "378",
+    "382",
+    "384",
+    "388",
+    "392",
+    "394",
+    "428",
+    "429",
+    "431",
+    "433",
+    "434"
+  ],
+  "totals": {
+    "gemini_skipped": 19,
+    "location_changed": 608,
+    "location_gained": 111,
+    "location_lost": 0,
+    "location_lost_due_to_api_skip": 0,
+    "location_lost_genuine": 0,
+    "title_changed": 523
+  }
+}
