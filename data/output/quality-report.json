@@ -5,10 +5,9 @@
     "non_redirects_main": 4751,
     "non_redirects_all": 5179,
     "entries_with_issues": 442,
-    "total_issues": 446,
+    "total_issues": 442,
     "severity_counts": {
-      "info": 442,
-      "warning": 4
+      "info": 442
     }
   },
   "namespace_distribution": {
@@ -21,7 +20,7 @@
   },
   "field_coverage": {
     "name": {
-      "count": 4750,
+      "count": 4751,
       "percentage": 100.0
     },
     "datePublished": {
@@ -29,12 +28,12 @@
       "percentage": 93.2
     },
     "publisher": {
-      "count": 2479,
-      "percentage": 52.2
+      "count": 2483,
+      "percentage": 52.3
     },
     "locationCreated": {
-      "count": 4158,
-      "percentage": 87.5
+      "count": 4265,
+      "percentage": 89.8
     },
     "inLanguage": {
       "count": 4248,
@@ -49,8 +48,8 @@
       "percentage": 53.3
     },
     "translator": {
-      "count": 1990,
-      "percentage": 41.9
+      "count": 1920,
+      "percentage": 40.4
     },
     "categories": {
       "count": 4740,

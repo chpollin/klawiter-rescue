@@ -45,7 +45,9 @@ class TestEntryCounts:
         that resolve to actual entries. The map is a subset.
         """
         # Frozen reference in baseline known_issues — updated after title fix
-        # (section headers → page_titles): 430 → 1228 → 1210.
+        # (section headers → page_titles): 430 → 1228 → 1210, then 1224 after the
+        # M3 full-run (mojibake repair of transliterated titles resolves +14 more
+        # redirect titles; ns0 entry count unchanged, no record loss).
         expected = baseline["known_issues"]["redirect_map_size"]
         actual = len(redirects)
         assert actual == expected, (
@@ -96,15 +98,23 @@ class TestKnownGaps:
     """Document known missing entries explicitly so new gaps are detectable."""
 
     # page_id 2979: "A unidade espiritual do mundo" — text_id 18046 not in BLOBs.
-    # Present in frontend JSON as a stub (sourcePageId + entryType only, no title/content).
+    # Decision (2026-06-21): the blanked page is shown with its page-title fallback
+    # rather than hidden, so it carries a title but no extractable bibliographic
+    # content (no fullBibliographicEntry, publisher, location, year).
     KNOWN_STUB_PAGE_IDS = {2979}
 
-    def test_known_stub_has_no_content(self, all_entries):
-        """Page 2979 is a stub entry — present but without extractable content."""
+    def test_known_stub_has_fallback_title_but_no_content(self, all_entries):
+        """Page 2979 is a content stub: the page-title fallback gives it a title,
+        but no bibliographic content was recoverable from the BLOBs."""
         stubs = [e for e in all_entries if e["sourcePageId"] in self.KNOWN_STUB_PAGE_IDS]
+        assert stubs, "KNOWN_STUB_PAGE_IDS entries not present in dataset"
         for stub in stubs:
-            assert not stub.get("title") or stub["title"].strip() == "", (
-                f"Stub page {stub['sourcePageId']} now has a title '{stub.get('title')}' — "
+            assert (stub.get("title") or "").strip(), (
+                f"Stub page {stub['sourcePageId']} lost its page-title fallback; the "
+                f"show-with-title decision is not reflected in the data."
+            )
+            assert not (stub.get("fullBibliographicEntry") or "").strip(), (
+                f"Stub page {stub['sourcePageId']} now has bibliographic content — "
                 f"content may have been recovered. Update KNOWN_STUB_PAGE_IDS."
             )
     # Note: a former `test_no_new_gaps_in_ns0` (ns-0 count >= baseline) was a strict
@@ -146,19 +156,15 @@ class TestRequiredFields:
             f"{len(missing)} entries missing @id: {missing[:20]}"
         )
 
-    # page 2979 is a known stub — text not in BLOBs, no title extractable
-    KNOWN_TITLELESS = {2979}
-
     def test_every_ns0_entry_has_title(self, ns0_entries):
-        """Every ns-0 entry must have a title, except known stubs."""
+        """Every ns-0 entry must have a title. The blanked stub 2979 is shown with
+        its page-title fallback (decision 2026-06-21), so there are no exceptions."""
         missing = [
             e["sourcePageId"] for e in ns0_entries
-            if (not e.get("title") or str(e["title"]).strip() == "")
-            and e["sourcePageId"] not in self.KNOWN_TITLELESS
+            if not e.get("title") or str(e["title"]).strip() == ""
         ]
         assert len(missing) == 0, (
-            f"{len(missing)} ns-0 entries missing title (excluding known stubs): "
-            f"{missing[:20]}"
+            f"{len(missing)} ns-0 entries missing title: {missing[:20]}"
         )
 
 

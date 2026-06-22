@@ -58,13 +58,7 @@
       "14": 419
     },
     "displayed_ns0_entries": 4751,
-    "unnamed_displayed": [
-      {
-        "page_id": 2979,
-        "title_from_source": "A unidade espiritual do mundo",
-        "entry_type": "other"
-      }
-    ]
+    "unnamed_displayed": []
   },
   "reconciliation_checks": [
     {
@@ -88,9 +82,9 @@
       "detail": "6296 == 4751 + 1545"
     },
     {
-      "check": "every_empty_biblio_page_is_unnamed_and_vice_versa",
+      "check": "every_displayed_entry_is_named",
       "pass": true,
-      "detail": "empty_biblio=1 unnamed=1 symdiff=[]"
+      "detail": "empty_biblio=1 (blanked, shown with page-title fallback) unnamed_displayed=0 ids=[]"
     }
   ],
   "all_checks_pass": true

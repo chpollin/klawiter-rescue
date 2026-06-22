@@ -108,8 +108,10 @@ def main():
     displayed = [e for e in frontend
                  if e.get('pageNamespace') == BIBLIOGRAPHIC_NS and not is_redirect(e)]
     # An entry is "named" if it carries a display title. The frontend stores it
-    # under "title"; the JSON-LD under "name". The one expected gap is a
-    # source-blanked page: present, but with no title to show.
+    # under "title"; the JSON-LD under "name". Decision (2026-06-21): a source-
+    # blanked bibliographic page (e.g. 2979, BLOB text missing) is displayed with
+    # its page-title fallback rather than hidden, so it is named like any other
+    # entry. The invariant is therefore that no displayed entry is unnamed.
     def display_name(e):
         return (e.get('title') or e.get('name') or '').strip()
     unnamed_displayed = [e for e in displayed if not display_name(e)]
@@ -135,10 +137,10 @@ def main():
           source_ns[BIBLIOGRAPHIC_NS] == len(displayed) + ns0_redirects,
           f"{source_ns[BIBLIOGRAPHIC_NS]} == {len(displayed)} + {ns0_redirects}")
     unnamed_pids = {e.get('sourcePageId') for e in unnamed_displayed}
-    check('every_empty_biblio_page_is_unnamed_and_vice_versa',
-          set(empty_biblio) == unnamed_pids,
-          f"empty_biblio={len(empty_biblio)} unnamed={len(unnamed_pids)} "
-          f"symdiff={sorted(set(empty_biblio) ^ unnamed_pids)[:20]}")
+    check('every_displayed_entry_is_named',
+          unnamed_pids == set(),
+          f"empty_biblio={len(empty_biblio)} (blanked, shown with page-title fallback) "
+          f"unnamed_displayed={len(unnamed_pids)} ids={sorted(unnamed_pids)[:20]}")
 
     report = {
         'source': {
