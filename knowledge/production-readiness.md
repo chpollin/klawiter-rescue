@@ -56,7 +56,7 @@ Weil jede Accept-, Correct- und Add-Aktion mit Feld, Provenienz, Aktion und Eint
 
 Geordnet nach Abhängigkeit. Die Reihenfolge ist eine Empfehlung der Lane, kein Operator-Beschluss; die eingebetteten Gate-Fragen markieren, wo eine fachliche Entscheidung vor der Umsetzung nötig ist.
 
-1. **Multi-Edition-Dekomposition.** Die dominante systematische Feld-Fehlerklasse. Eine Wiki-Seite enthält mehrere Publikationen, die flache Extraktion zieht jedes Feld aus einem beliebigen Block. Regex ist am Limit, siehe [[pipeline#known-limitations--multi-edition-pages]]. Ansatz: LLM-gestützte Edition-Block-Segmentierung, die den Rohtext einer als mehrfach identifizierten Seite in separate Einträge dekomponiert. Zuerst, weil viele fehlende Publisher- und Location-Werte von diesen Seiten stammen und die Dekomposition den Editor-Korrekturaufwand an der Wurzel senkt.
+1. **Multi-Edition-Zielmodell, Segmentierung, Verifikation.** Die dominante systematische Feld-Fehlerklasse ist ein Ebenenfehler, kein Extraktionsfehler. Eine Wiki-Seite beschreibt ein Werk, die `'''[Jahr]:'''`-Blöcke beschreiben Ausgaben, der flache Datensatz vermischt beide Ebenen, und die flache Extraktion zieht jedes Feld aus einem beliebigen Block; Regex ist am Limit, siehe [[pipeline#known-limitations--multi-edition-pages]]. Das Arbeitspaket ist deshalb nicht nur Dekomposition, sondern drei zusammenhängende Teile: das Werk/Ausgabe-Zielmodell (`schema:CreativeWork` mit `workExample`, Ausgabe als `schema:Book` mit `exampleOfWork`, stabile quellableitbare Ausgaben-IDs als Vorbedingung), die LLM-gestützte Edition-Block-Segmentierung einer als mehrfach identifizierten Seite in Ausgaben-Knoten, und die Verifikation dieser Knoten (Web-Annotation-Evidenz je Ausgabe, PROV-Provenienz der Segmentierung, SHACL-Vertrag des gültigen Ausgaben-Knotens). Zielmodell, ID-Schema, Provenienz- und Prüfschichten und das Vorgehen mit Stichproben-Gate stehen ausgearbeitet in [[edition-model]]. Zuerst, weil viele fehlende Publisher- und Location-Werte von diesen Seiten stammen und weil die Handkorrektur je Feld erst nach der Ebenentrennung eindeutig wird.
 
 2. **Redirect-Auflösung.** Ein Teil der Redirects lässt sich nicht auflösen, weil der Target-Title nicht exakt auf einen bestehenden Eintrag passt, siehe [[architecture#4-redirects-as-map-instead-of-resolved-entries]]. Arbeitspaket: die nicht aufgelösten Redirects im Werkzeug zur Editor-Prüfung vorlegen, aufgelöste eintragen, verbleibende mit Begründung als unauflösbar markieren.
 
@@ -70,9 +70,9 @@ Geordnet nach Abhängigkeit. Die Reihenfolge ist eine Empfehlung der Lane, kein 
 
 ## Braucht den Operator
 
-Diese fachlichen Entscheidungen sind vor der jeweiligen Umsetzung nötig und werden hier nicht selbst getroffen.
+Diese fachlichen Entscheidungen sind vor der jeweiligen Umsetzung nötig und werden hier nicht selbst getroffen. Die Modellierungsrunde vom 2026-07-18 hat für die erste und ihre nachgelagerten Fragen die Entscheidungsgrundlage in [[edition-model]] ausgearbeitet, ohne die Fragen zu entscheiden. Sie liegen in einer verdeckten Reihenfolge: der Multi-Edition-Entscheid ist dem Reconciliation-Tiefe-Entscheid vorgelagert (die Reconciliation setzt die Ausgaben-Ebene voraus), und der Merge-Scope profitiert vom selben Modell (er benutzt dessen Provenienz-Schema mit).
 
-1. **Multi-Edition-Behandlung im Editor.** Die als mehrfach identifizierten Seiten im Werkzeug aktiv dekomponieren und kuratieren, oder markieren und zurückstellen? Diese Frage steht seit der Milestone-Runde offen (siehe [[HANDOFF]]) und entscheidet, ob Arbeitspaket 1 eine Pipeline- oder eine Editor-Aufgabe wird.
+1. **Multi-Edition-Behandlung im Editor.** Die als mehrfach identifizierten Seiten im Werkzeug aktiv dekomponieren und kuratieren, oder markieren und zurückstellen? Diese Frage steht seit der Milestone-Runde offen (siehe [[HANDOFF]]) und entscheidet, ob Arbeitspaket 1 eine Pipeline- oder eine Editor-Aufgabe wird. Die Modelloptionen, das ID-Schema als Vorbedingung und das Stichproben-Vorgehen für die Entscheidung stehen in [[edition-model]].
 
 2. **Reconciliation-Tiefe für die Produktionsreife.** Gehört die Normdaten-Reconciliation (Arbeitspaket 4) in den produktionsreifen Auslieferungsstand des Werkzeugs, oder bleibt sie als nachgelagerte Forschungsaufgabe außerhalb der Produktionsreife? Das entscheidet über den Umfang der Editier-Oberfläche.
 
@@ -82,6 +82,7 @@ Diese fachlichen Entscheidungen sind vor der jeweiligen Umsetzung nötig und wer
 
 ## Related
 
+- [[edition-model]] — Werk/Ausgabe-Zielmodell, ID-Schema, Provenienz- und Prüfschichten, Entscheidungsgrundlage für Gate 1
 - [[eil-editing]] — Zielarchitektur der Editierschicht, Lineage aus szd-htr, Build-Inkremente
 - [[about#dia-xai-connection]] — Evaluationsrahmung: Gold Standard messbar, Protokoll qualitativ
 - [[data#correction-protocol]] — Format des Korrektur-Protokolls

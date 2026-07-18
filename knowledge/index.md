@@ -23,6 +23,7 @@ Map of Content for the project documentation vault.
 ## Semantics
 
 - [[ontology]] — Schema.org + Dublin Core + klawiter: vocabulary blend, JSON-LD @context
+- [[edition-model]] — Work/edition split for multi-edition pages, edition IDs, PROV/OA/SHACL layers, the llmprov profile (decision basis for the multi-edition operator gate)
 
 ## Frontend
 
@@ -52,6 +53,6 @@ Map of Content for the project documentation vault.
 The current operational state, the next step, and the open operator decisions live in [[HANDOFF]], not here; the navigation index carries no volatile status counts. The work packages toward the production-ready curation tool are ordered and scoped in [[production-readiness]]. The technical findings each package builds on live in their function documents:
 
 - Field-level error classes and the Weimar location root cause in [[validation]]
-- Multi-edition page decomposition and other pipeline limits in [[pipeline#known-limitations--multi-edition-pages]]
+- Multi-edition page decomposition and other pipeline limits in [[pipeline#known-limitations--multi-edition-pages]]; the work/edition target model that resolves it in [[edition-model]]
 - Wikidata reconciliation state and the `locationSameAs` field in [[data#wikidata-reconciliation]]
 - Deployment and citability (routes, DOI, Verbund link) in [[production-readiness]] work package Deployment

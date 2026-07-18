@@ -12,6 +12,22 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-07-18 — Session 22: Modellierungsrunde Werk/Ausgabe mit dem Operator (Forschungsleitstelle-Lane)
+
+Rein konzeptuelle Runde mit dem Operator, keine Implementierung, kein Pipeline-Lauf. Gegenstand war die Modellierung der Multi-Edition-Seiten und der Provenienz-, Evidenz- und Prüfschichten, die sie tragen. Ergebnis als neues Wissensdokument [[edition-model]] eingearbeitet, mit Anschluss an [[ontology]] statt Konkurrenzdokument.
+
+**Kernbefund.** Multi-Edition ist ein Ebenenfehler, kein Extraktionsfehler. Eine Wiki-Seite beschreibt ein Werk, die `'''[Jahr]:'''`-Blöcke beschreiben Ausgaben; der flache Datensatz vermischt beide Ebenen, weshalb First-match-wins Verlag/Ort/Jahr systematisch unzuverlässig macht und Handkorrektur das nicht heilen kann. Die Bracket-Titel sind dasselbe Symptom. Das verschiebt Arbeitspaket 1 von reiner Dekomposition zu Zielmodell plus Segmentierung plus Verifikation.
+
+**Zielmodell.** Werk/Ausgabe-Trennung mit schema.org (`schema:CreativeWork` mit `workExample`, `schema:Book` mit `exampleOfWork`), konzeptuell FRBR/LRM und BIBFRAME, aber im vorhandenen JSON-LD-Stack ohne Ontologiewechsel. Beispiel am echten Datensatz Seite 4916 (Schachnovelle, im Frontend-Datenfile verifiziert). Vorbedingung jeder Segmentierung ist ein stabiles, quellableitbares ID-Schema (`klawiter:edition/{pageId}-{jahr}-{laufbuchstabe}`), an dem Editor-Patches, Korrektur-Protokoll und Zitierbarkeit hängen; eine Neusegmentierung darf IDs nicht verwürfeln.
+
+**Schichten.** Evidenz je Ausgabe als W3C Web Annotation (`oa:TextPositionSelector` auf die `sourceTextId`), Anschluss an die Increment-3-Quell-Evidenz. Provenienz als PROV-O-Graph als Sidecar/Named Graph, das `_provenance`-Feld bleibt als abgeleitete Kurzform fürs Frontend. Prüfschicht als SHACL-Vertrag des gültigen Ausgaben-Knotens, Ergebnisse als EARL-Assertions (automatic vs manual) oder aggregiert als DQV. Skizziert als schmales PROV-Erweiterungsprofil `llmprov` (nur Subklassen für Modell-Lauf, deterministischen Lauf, Prompt, Modell, Quelle, Verifikations-Episode), als publizierbares und in den anderen DIA-XAI-Werkzeugen wiederverwendbares Deliverable.
+
+**Vorgehen.** Stichproben-Gate an drei prominenten Seiten (Schachnovelle, Ungeduld des Herzens, Die Welt von Gestern) mit Editor-Sichtung vor Vollauf; Messgröße Anteil korrekt abgegrenzter Blöcke gegen eine Handzerlegung; Triage nur auf mehrfach identifizierte Seiten; Frontend-Werk-Karte mit aufklappbarer Ausgabenliste; Gold Standard je Ebene getrennt gezählt. Einordnung: erst die Ausgaben-Ebene macht Reconciliation sinnvoll (Wikidata/GND trennen genauso), der Wiki-Druck-Merge nutzt dasselbe Provenienz-Schema.
+
+**Eingearbeitet.** Neues [[edition-model]]; [[production-readiness]] Arbeitspaket 1 auf Zielmodell plus Segmentierung plus Verifikation umformuliert und der Gate-Abschnitt um Entscheidungsgrundlage und verdeckte Gate-Reihenfolge ergänzt; [[ontology]] um einen Verweis-Abschnitt Work/Edition Extension; [[index]] registriert das neue Dokument. Keine der Aussagen gelöscht, nur präzisiert.
+
+**Offen.** Die vier Gate-Fragen aus [[production-readiness#braucht-den-operator]] bleiben unverändert offen; dieses Dokument ist ihre Entscheidungsgrundlage, keine Entscheidung. Der Multi-Edition-Entscheid (Gate 1) ist Gate 2 und 3 vorgelagert. Innerhalb des Modells offen und der Editorin vorzulegen: Auflagen-Unterzeilen als eigene Knoten oder strukturierte Beschreibung, Sammelband-Vorkommen über `schema:isPartOf`. Die Nachbarschaftsprüfung des `llmprov`-Profils (W3C ML Schema u.a.) steht vor einer Prägung noch aus.
+
 ## 2026-07-18 — Session 21: EIL-Editor Increments 2 und 3 gebaut und im Browser verifiziert (Forschungsleitstelle-Lane)
 
 Umsetzungsrunde nach Operator-Freigabe (Push freigegeben 18.07.). Gebaut wurden die Increments 2 (Prüfhinweise je Eintrag) und 3 (Quell-Evidenz je Feld) aus [[eil-editing]]; die vier Gate-Fragen aus [[production-readiness#braucht-den-operator]] sind unberührt, umgesetzt ist nur, was an keiner hängt.

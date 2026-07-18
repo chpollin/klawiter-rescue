@@ -186,6 +186,12 @@ In the frontend JSON the same key (`locationSameAs`) is used; the detail view re
 
 ---
 
+## Work/Edition Extension
+
+The flat entry model above holds one object per wiki page. For multi-edition pages (see [[pipeline#known-limitations--multi-edition-pages]]) that conflates two levels: the page describes a *work*, the `'''[year]:'''` blocks describe *editions*. A planned extension splits them, the work as `schema:CreativeWork` with `schema:workExample`, each edition as `schema:Book` with `schema:exampleOfWork`, so publisher, location, year, and page count move onto the edition where they belong. This stays within the Schema.org + klawiter: stack, no vocabulary switch. The same design adds three layers around the split: source evidence per edition as a W3C Web Annotation (`oa:TextPositionSelector` on the `sourceTextId`), full provenance as a PROV-O graph beside the frontend JSON (with the existing `_provenance` field kept as its derived short form), and a SHACL contract for what a valid edition node is, with EARL/DQV check results. The full model, the edition ID scheme, the `llmprov` PROV extension profile, and the sampling approach live in [[edition-model]]; it is the single maintenance point for that extension, this section only points to it so the two do not drift.
+
+The conceptual Work/Manifestation split is FRBR/LRM and the Work/Instance split is BIBFRAME; the rationale below rejects BIBFRAME as a *serialization* (no official JSON-LD context), not the split itself, which is realized here through `workExample`/`exampleOfWork`.
+
 ## Design Rationale
 
 ### Why Schema.org + klawiter: (not BIBFRAME or CIDOC-CRM)?
