@@ -20,12 +20,12 @@ Two entry counts appear throughout: **6,296** = bibliography pages in MediaWiki 
 ## Project Structure
 
 ```
-pipeline/               Python pipeline (8 steps, no external dependencies)
+pipeline/               Python pipeline (8 steps, standard library; optional LLM step needs extras)
 docs/                   Frontend (GitHub Pages) — static HTML/JS/CSS
-  js/                   14 JS modules (app, home, facets, detail, explore-*, export, pages, edit, …)
+  js/                   JS modules (app, home, facets, detail, explore-*, export, pages, edit, …)
   css/styles.css        Custom CSS (Stefan Zweig Digital design language)
 data/
-  raw/                  MediaWiki SQL dump + 8 BLOB files (363 MB)
+  raw/                  MediaWiki SQL dump + 8 BLOB files
   intermediate/         Pipeline intermediate steps (CSV, gitignored)
   output/               JSON-LD full dataset + individual files
 knowledge/              Project documentation (Obsidian vault)
@@ -61,7 +61,7 @@ python pipeline/run_pipeline.py 2 4
 ### Requirements
 
 - Python 3.10+
-- No external dependencies (standard library only)
+- Standard library only for the core steps; the optional step 03b needs `google-genai` and `pydantic`
 - Source files in `data/raw/` (zt_00–07, zweig_part_01.sql)
 - Optional: `GEMINI_API_KEY` in `.env` for step 03b
 

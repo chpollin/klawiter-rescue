@@ -1,14 +1,31 @@
 ---
 title: Frontend
-aliases: [design, ui-design, user-stories, frontend design]
+aliases: [design, ui-design, user-stories, frontend design, exploration, eil-editing]
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+status: complete
+language: en
+version: 0.3
 tags: [frontend, design, ui]
 created: 2026-03-29
-updated: 2026-06-12
+updated: 2026-07-18
+authors: [Christopher Pollin]
+related: [about, data, pipeline, production-readiness]
 ---
 
 # Frontend
 
-Design specification, user stories, and implementation for the Klawiter Bibliography frontend. Part of the Zweig Forschungsverbund design family — see [[about#stefan-zweig-digital-and-the-forschungsverbund]].
+Design specification, user stories, and implementation for the Klawiter Bibliography frontend, its interactive exploration interface, and the Expert-in-the-Loop editing surface. Part of the Zweig Forschungsverbund design family — see [[about#stefan-zweig-digital-and-the-forschungsverbund]].
+
+---
+
+## Decision: Vanilla JS Without Framework
+
+HTML + custom CSS (SZD design) + vanilla JS. No React, Vue, Svelte, or Astro. The dataset is small enough for full client-side rendering, so no build step is needed and the site deploys directly on GitHub Pages without CI/CD configuration. FlexSearch and D3.js v7 cover search and visualization. Trade-off: the entire JSON must be loaded at once (no lazy loading), there is no SSR/SSG and therefore no per-entry SEO, and state management is manual.
 
 ---
 
@@ -33,6 +50,26 @@ Aligned to Stefan Zweig Digital on GAMS (the reference design):
 | `--sz-border-light` | `#EDE8DF` | Subtle separators |
 
 No blue anywhere. Burgundy for interactive elements, gold for accents. The Klawiter site is "gold-forward" (gold section headings), while SZD GitHub is "burgundy-forward" (burgundy section headings).
+
+#### Exploration Stream Colors
+
+The exploration views extend the SZD palette with a per-language stream palette:
+
+| Use | Color | Hex |
+|-----|-------|-----|
+| German (primary stream) | Burgundy | #7A1B2D |
+| Chinese | Gold | #B8963E |
+| French | Olive | #6B7A3A |
+| English | Slate | #5B5040 |
+| Spanish | Terracotta | #8B5C3A |
+| Arabic | Purple | #5B3A7A |
+| Bulgarian | Teal | #3A5B6B |
+| Albanian | Sienna | #7A4A1B |
+| Russian | Navy | #3A3A5B |
+| Croatian | Dusty Rose | #6B3A4A |
+| Other | Light Gray | #9E9585 |
+| Zweig lifetime band | Gold (20% opacity) | #C2A360 |
+| Grid lines | Warm gray | #EDE8DF |
 
 ### Typography
 
@@ -301,30 +338,112 @@ Cross-references: `seeAlso` entries link to other detail views. Category links a
 
 ---
 
-## EIL Curation Interface
+## Exploration Interface
 
-Expert-in-the-Loop curation for manual validation and correction. See [[about#eil-curation-interface]] for the conceptual overview.
+The `#stats` view is an interactive exploration tool with three purpose-built modes sharing a common state and detail panel. The implementation lives in `explore.js`, `explore-timeline.js`, `explore-geography.js`, and `explore-network.js`; the visual techniques and D3 mechanics are carried by that code, not restated here.
 
-- **edit.js**: Localhost-only edit mode (`location.hostname === 'localhost'`)
-- **Provenance badges**: Visual indicators (regex/llm/missing) on publisher, location, translator, pageCount
-- **JSON patch export**: Edits collected as patches, not written directly to the dataset
-- **GitHub Actions validation**: `.github/workflows/validate-patch.yml`
+### Research Questions
+
+The bibliography documents Stefan Zweig's global reception across roughly two centuries, 41 languages, and hundreds of publication locations. The exploration interface is built to answer:
+
+1. **Temporal**: How did publication volume evolve, and when were the major waves of reception?
+2. **Linguistic**: Which languages dominated in which era, and how did Zweig spread from German into Chinese, French, Arabic?
+3. **Geographic**: Where was Zweig published, and how did publication centers shift over time?
+4. **Typological**: What types of works dominate, and how does the ratio of primary works to secondary literature change?
+5. **Relational**: How are entries connected, and which works were most reprinted, translated, or referenced?
+
+### Design Rationale
+
+A standard dashboard (separate charts in a grid) fails for exploratory research because the charts are isolated with no visual connection between dimensions, offer no progressive drill-down, and support no serendipitous discovery. Instead, three purpose-built modes each match a different research question to a different visual encoding, sharing one state and one detail panel.
+
+| Mode | Research focus | Encoding |
+|------|---------------|----------|
+| **Timeline** | Temporal + linguistic/typological | Stacked bars (Bars), small multiples (Sparklines), bump chart (Ranks) |
+| **Geography** | Spatial + temporal | Bubble map with brushed linking from the Timeline |
+| **Connections** | Relational | Force-directed cross-reference network + a translation-flow Sankey |
+
+The Timeline offers three chart modes because a single encoding cannot serve all its questions. Stacked bars answer volume-over-time but cannot answer "which language dominated in which era", since non-adjacent layers share neither a common baseline nor a common top (Cleveland & McGill 1984); Sparklines give each language its own baseline; Ranks show rank transitions as crossing points. A streamgraph (`d3.stackOffsetWiggle`) was tested and removed for smoothing discrete data and removing the baseline without analytical gain.
+
+Connections uses two levels because a flat force-directed layout of the connected nodes is unreadable at this scale. A community overview aggregates connected components into meta-nodes, and clicking one drills into a standard force layout of its members, the same semantic-zoom principle Geography applies to countries and cities. The translation view is a three-column Sankey (Entry Type → Language → Translator) rather than force-directed bubbles, because link width encodes count directly, a period filter exposes temporal shifts, and the left-to-right reading is immediately legible (SankeyNetwork 2025, doi:10.1016/j.mex.2025.103230).
+
+Geography couples to the Timeline through brushed linking, the core cross-view feature: a brush on the Timeline resizes Geography bubbles in real time via `explore:filterChange` events, so the spatial migration of Zweig reception reads as a continuous animation rather than a static snapshot. Coverage transparency is a design commitment throughout, the network states plainly what share of entries carry cross-references so a data gap reads as scope, not as a bug.
+
+Progressive disclosure governs the whole interface: Timeline is the default (the most familiar chart, answering the broadest question), Geography and Connections sit behind mode tabs, and the detail panel appears only on selection to maximize chart space.
+
+### Information-Seeking Mantra Assessment
+
+The design follows Shneiderman's Visual Information Seeking Mantra (overview first, zoom and filter, details on demand), extended to seven tasks. Overview, Zoom, Filter, Details, and Relate are covered in all three modes; History (undo/redo of exploration state) is absent in all three, and Extract is limited to JSON-LD download. The former Overview mode of linked small multiples was dropped to concentrate on three strong modes rather than four moderate ones; "Overview first" in the mantra refers to the task, not to that removed mode.
 
 ---
 
-## Zweig Forschungsverbund
+## EIL Curation Interface
 
-Three sites form a visual family, all using the GAMS reference palette:
+Expert-in-the-Loop curation for manual validation and correction, gated to localhost (`App.state.isLocal && App.state.editMode`) in `edit.js`. The conceptual frame (two EIL roles, the DIA-XAI deliverable, the protocol-not-instrumentation stance) is in [[about#eil-curation-interface]]; the build increments and their open items are tracked in [[production-readiness#eil-editing-increments]]. This section specifies the durable UI contract.
 
-| Site | Role | Primary Accent | URL |
-|------|------|---------------|-----|
-| SZD GAMS | Edition (reference) | Burgundy `#631a34` + Gold `#C2A360` | stefanzweig.digital |
-| Klawiter | Bibliography (gold-forward) | Gold for section headings | chpollin.github.io/klawiter-rescue |
-| SZD GitHub | Ontology (burgundy-forward) | Burgundy for section headings | chpollin.github.io/SZD |
+### Three-status review
 
-**Shared elements**: Verbund navigation bar at top connecting all three sites. Source Serif 4 + Source Sans 3 fonts. Identical color tokens.
+Each entry carries a review status surfaced as a per-entry chip:
 
-**Constraints**: GitHub Pages = static files only. No shared authentication. Different domain (github.io vs university hosting). Must work standalone if SZD is unavailable.
+| Status (display) | `review.status` | Meaning for a record |
+|---|---|---|
+| **Mensch-geprüft** | `approved` | The editor read the entry's fields against the raw wiki source and confirmed or corrected them. Counts as verified and, in aggregate, as the gold standard against which extraction quality per field is described. |
+| **Agent-geprüft** | `agent_verified` | An automatic agent compared each extracted field against the raw wiki text and confirmed it. Likely correct, does not replace human review. |
+| **Ungeprüft** | no `review` block | Pipeline extraction only. Field-level provenance (regex / llm / missing) still describes how each value was produced. |
+
+`needs_review` is a triage hint within `Ungeprüft` ("check this first"), not a fourth status.
+
+### The three actions
+
+Every editor interaction on the four provenance-tracked fields (publisher, location, translator, pageCount) is typed as one of three and recorded in the edit history:
+
+- **Accept** confirms a present value is correct. Changes no value; promotes the field, and when all fields are confirmed the entry, toward `approved`.
+- **Correct** replaces a present but wrong value.
+- **Add** supplies a value for a field the source contains but the pipeline left empty (a `missing` field). Kept distinct from Correct because it records a different correction episode, a value the pipeline never produced rather than one it produced wrong.
+
+### Edit history and provenance
+
+Each action writes an edit-history record on the field:
+
+```json
+"edit_history": [{
+  "field": "publisher",
+  "action": "correct",
+  "originalValue": "Leipzig",
+  "newValue": "Insel-Verlag",
+  "previousProvenance": "llm",
+  "edited_by": "Editor (SZD)",
+  "edited_at": "2026-06-21T...",
+  "source": "human"
+}]
+```
+
+The machine original is preserved and shown as a before/after diff. After an Accept or Correct, the field's provenance moves to `editor`, so the badge tells the reader not just how the machine produced a value but that a human verified it. `edited_by` records the role, not the personal name, per the project's data-privacy convention.
+
+### Patch v2 contract
+
+Pending edits persist in `localStorage` across reloads. Save downloads a `patchVersion: 2` document that `pipeline/apply_patches.py` consumes directly, applying corrections as an overlay, setting the corrected field's provenance to `editor`, preserving the machine original, and raising the review status. The frontend/backend patch contract is pinned by `tests/test_patch_contract.py`; `.github/workflows/validate-patch.yml` validates patches on pull requests. Edits are collected as patches, never written directly to the dataset, so corrections flow through review in line with the [[about#data-integrity-principle|Data Integrity Principle]].
+
+### The uncertainty surface
+
+The interface ranks and marks what needs attention rather than leaving the editor to hunt blindly, driven by signals already present. `pipeline/build_triage.py` reduces the committed `verification-report.json` and `census-report.json` to `docs/data/triage.json` (flag shapes pinned by `tests/test_triage.py`), and `edit.js` folds those flags together with the entry's provenance layers into an ordered hint list, shown as a Prüfhinweise block per entry, a compact chip per result card, a per-field marker, and an edit-mode-only "Prüfbedarf zuerst" sort. The ranking runs from the strongest signal to the weakest:
+
+1. census anomaly (the reconciliation isolates the record)
+2. value not found in the raw text (verify.py false positive)
+3. value detectable in the raw text but not extracted (verify.py false negative)
+4. `llm`-produced value
+5. `missing` field
+
+Nothing numeric is displayed or derived, in line with the protocol-not-instrumentation frame. The signal ordering is the one specified in [[production-readiness#provenienz-schichten-als-verifikationsgrundlage]].
+
+### Source evidence per field
+
+Beside each tracked field the interface shows the passage of the entry source holding the machine value, or the verify.py-detected raw value for a `missing` field. The match is whitespace-tolerant and case-insensitive, highlighted, and carries a multi-occurrence count that surfaces multi-edition ambiguity. Where no field-precise span is derivable, the field falls back to the collapsible full source, the honest variant. The matching and ordering logic is pinned by `tests/evidence_triage.test.js` (run via `tests/test_frontend_logic.py`).
+
+---
+
+## Zweig Forschungsverbund UI
+
+The site's place in the three-site Verbund and the shared institutional identity are described in [[about#stefan-zweig-digital-and-the-forschungsverbund]]. On the UI side the family is realized as a Verbund navigation bar at the top connecting all three sites, the shared Source Serif 4 + Source Sans 3 fonts, and identical color tokens. Klawiter is the "gold-forward" member (gold section headings) against SZD GitHub's "burgundy-forward" headings. Constraints from the GitHub Pages hosting shape these choices: static files only, no shared authentication, a different domain than the university hosting, and the requirement that the site works standalone when SZD is unavailable.
 
 ---
 
@@ -379,5 +498,15 @@ Minimum target: WCAG 2.1 AA.
 
 - **Landing page**: Category portal (wiki-style), not search-first
 - **SZD design**: Fully implemented via custom CSS — burgundy/gold/cream palette, serif/sans-serif typography. No SZD CSS assets needed.
-- **Exploration**: D3.js v7 interactive visualization with 3 modes (Timeline, Geography, Connections). See [[exploration]] for design concept.
+- **Exploration**: D3.js v7 interactive visualization with 3 modes (Timeline, Geography, Connections). Design concept in [[#exploration-interface]].
 - **Authority data display**: Wikidata-linked locations are shown in the Geography mode (reconciled Q-IDs). Inventing bibliographic *values* not present in the source stays out of scope — see [[about#data-integrity-principle]].
+
+---
+
+## References
+
+- Shneiderman, B. (1996). "The Eyes Have It: A Task by Data Type Taxonomy for Information Visualizations." IEEE Symposium on Visual Languages.
+- Cleveland, W. S. & McGill, R. (1984). "Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods." Journal of the American Statistical Association.
+- Moretti, F. (2005). *Graphs, Maps, Trees: Abstract Models for Literary History.* Verso.
+- Jaenicke, S. et al. (2015). "On Close and Distant Reading in Digital Humanities." Eurographics Conference on Visualization.
+- SankeyNetwork (2025). doi:10.1016/j.mex.2025.103230 — Sankey diagrams for bibliometric flow visualization.

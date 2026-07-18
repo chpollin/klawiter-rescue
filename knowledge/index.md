@@ -1,58 +1,53 @@
 ---
 title: Klawiter Bibliography
 aliases: [MOC, map of content, index]
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+template:
+  name: Vorlage Index
+  version: 0.1
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/index
+  alias: https://dhcraft.org/Promptotyping/#promptotyping-document-index
+status: complete
+language: en
+version: 0.3
 tags: [index]
 created: 2026-04-12
 updated: 2026-07-18
+authors: [Christopher Pollin]
+related: [about, data, pipeline, frontend, production-readiness, testing, journal]
 ---
 
 # Klawiter Bibliography Knowledge Base
 
-Map of Content for the project documentation vault.
+Navigation node for the project knowledge base and the reading heuristic for its documents. This vault documents the data rescue of the Klawiter bibliography, addressed to a reviewer, a fresh coding agent, and the project maintainer returning after weeks. The current operational state and the open operator decisions live in the most recent entry of [[journal]], the volatile measured figures in their sources of truth (`data/output/quality-report.json`, `docs/data/klawiter.json` `_meta`, `.github/baseline-metrics.json`, and the pytest suite), never here.
 
-## Project Context
+## Documents
 
-- [[about]] — Project provenance, Data Integrity Principle, Forschungsverbund, EIL curation
+Each document carries one function. The function, not the file name, tells you which document to open for a given question.
 
-## Data & Pipeline
+| Document | Function | Reading it answers |
+|---|---|---|
+| [[about]] | Identity | What is this project, its provenance, the Data Integrity Principle, the Forschungsverbund and DIA-XAI frame |
+| [[data]] | Material + model | The dataset: model, vocabulary blend, 16 entity types, entity fields, known quality issues, record census |
+| [[pipeline]] | Bauweise + decisions | The extraction pipeline: source tables, 8 stages, extraction decisions, encoding fix, regex patterns, data flow |
+| [[frontend]] | Gestalt + tool specification | Design system, personas, user stories, views, the exploration interface, and the EIL editing surface |
+| [[production-readiness]] | Plan + gates + decision basis | The path to the production-ready curation tool: two loops, provenance layers, gold standard, work packages, operator gates, the work/edition decision basis |
+| [[testing]] | Quality assurance | Test strategy in seven categories, field-level fidelity findings, what the suite can and cannot guarantee |
+| [[journal]] | Genese | Work diary, one entry per session, holding the current operational state |
 
-- [[data]] — Data model, 16 entity types, field coverage, known quality issues
-- [[pipeline]] — 8-step extraction, encoding fix, regex patterns, data flow diagram
-- [[architecture]] — 6 key technical decisions with rationale
+## Reading paths
 
-## Semantics
+- Onboarding a new contributor: [[about]] → [[data]] → [[pipeline]].
+- Reproducing a data export: [[pipeline]] → [[data]] → [[journal]].
+- Understanding the curation tool and its open decisions: [[frontend#eil-curation-interface]] → [[production-readiness]].
+- Judging extraction quality: [[testing]] → [[data#record-census]].
+- Resuming work: [[journal]] → [[production-readiness]].
 
-- [[ontology]] — Schema.org + Dublin Core + klawiter: vocabulary blend, JSON-LD @context
-- [[edition-model]] — Work/edition split for multi-edition pages, edition IDs, PROV/OA/SHACL layers, the llmprov profile (decision basis for the multi-edition operator gate)
+## Convention
 
-## Frontend
-
-- [[frontend]] — Design system, personas, user stories, views, components, routing
-- [[exploration]] — D3.js interactive visualization: Timeline, Geography, Connections
-- [[eil-editing]] — In-tool expert editing design: Accept/Correct/Add, persistence, traceability (DIA-XAI EIL-Tool 1)
-- [[production-readiness]] — Concept for the production-ready EIL curation tool: two loops, provenance layers, gold standard, work packages, operator gates
-
-## Quality
-
-- [[testing]] — Test strategy in seven categories, what the suite can and cannot guarantee
-- [[validation]] — Field-level fidelity check against source (M3.8): four error classes, Weimar root cause, provenance distribution
-
-## Process
-
-- [[journal]] — Work diary, one entry per session (from 2026-03-29)
-- [[HANDOFF]] — Transient re-entry note for a fresh instance; overwritten each handoff
-
-## Reference
-
-- [[references]] — Academic literature, standards, tools
-
----
-
-## Where the open work lives
-
-The current operational state, the next step, and the open operator decisions live in [[HANDOFF]], not here; the navigation index carries no volatile status counts. The work packages toward the production-ready curation tool are ordered and scoped in [[production-readiness]]. The technical findings each package builds on live in their function documents:
-
-- Field-level error classes and the Weimar location root cause in [[validation]]
-- Multi-edition page decomposition and other pipeline limits in [[pipeline#known-limitations--multi-edition-pages]]; the work/edition target model that resolves it in [[edition-model]]
-- Wikidata reconciliation state and the `locationSameAs` field in [[data#wikidata-reconciliation]]
-- Deployment and citability (routes, DOI, Verbund link) in [[production-readiness]] work package Deployment
+This knowledge base follows the convention for Promptotyping Documents. It regulates the frontmatter schema, the reading heuristic, and the structural principles against which every document is legible. See [[Konvention Promptotyping Documents]] in the vault.

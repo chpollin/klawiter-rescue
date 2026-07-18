@@ -1,6 +1,14 @@
 ---
 title: Journal
 aliases: [work diary, sessions]
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+status: complete
+version: 0.3
 tags: [journal]
 created: 2026-03-29
 updated: 2026-07-18
@@ -8,9 +16,18 @@ updated: 2026-07-18
 
 # Journal
 
-Work diary for the Klawiter Bibliography project. Each session documents what we did, what we learned, what ideas came up, and what's still open.
+Work diary for the Klawiter Bibliography project. One compact entry per substantive session with the fields Runde (what kind of round), Geändert (what changed), Entschieden (what was decided), Offen (what stays open).
 
 ---
+
+## 2026-07-18 — Session 23: Review-Fixes, knowledge-Konsolidierung, Gate-Entscheide, Stichproben-Gate (Forschungsleitstelle-Lane)
+
+**Runde.** Umsetzungs- und Entscheidungsrunde mit dem Operator, orchestriert mit Subagents.
+**Geändert.** Pipeline-Review-Fixes gelandet (Provenienz-Diff gegen Regex-Output statt Cache-Präsenz, atomare JSON-Writes, sichtbare SQL-Skips, Mojibake-Guard, plus Unit-Tests); Baseline auf den Juni-Datenstand nachgezogen; `klawiter:`-Vokabular maschinenlesbar publiziert (Turtle + JSON-LD); knowledge-Ordner von 16 auf 8 Dokumente konsolidiert (Ontologie in data, ADRs in pipeline/frontend, Exploration- und EIL-Spezifikation in frontend, Edition-Modell in production-readiness, Fehlerklassen in testing; HANDOFF, references, validation aufgelöst); CLAUDE.md und README von volatilen Quantitäten befreit; Gate-1-Stichproben-Gate ausgeführt (`pipeline/segment_editions.py`, 76 Ausgaben-Drafts, Blockabgrenzung 76/76 adversarial verifiziert, `data/output/edition-samples/REVIEW.md`).
+**Entschieden.** Alle vier Operator-Gates (siehe [[production-readiness#operator-entscheide-2026-07-18]]): Gate 1 dekomponieren, Gate 2 Reconciliation voll in die Produktionsreife, Gate 3 Druck-Merge spätere Ausbaustufe, Gate 4 Patch-Export kanonisch mit Write-Back als späterer Komfortschicht. Journal künftig im Kompaktformat.
+**Offen.** Editorin-Sichtung der Segmentierungs-Drafts samt Tiefenentscheidungen vor dem Vollauf; PROV-Schicht für `klawiter.jsonld`; llmprov-Nachbarschaftsprüfung; drei Kopfzeilen-Reinigungsfälle aus der Verifikation.
+
+**Der eine nächste Schritt.** Sichtung von `data/output/edition-samples/REVIEW.md` durch die Editorin; bei Freigabe Vollauf der Segmentierung über alle als mehrfach identifizierten Seiten.
 
 ## 2026-07-18 — Session 22: Modellierungsrunde Werk/Ausgabe mit dem Operator (Forschungsleitstelle-Lane)
 
@@ -27,6 +44,8 @@ Rein konzeptuelle Runde mit dem Operator, keine Implementierung, kein Pipeline-L
 **Eingearbeitet.** Neues [[edition-model]]; [[production-readiness]] Arbeitspaket 1 auf Zielmodell plus Segmentierung plus Verifikation umformuliert und der Gate-Abschnitt um Entscheidungsgrundlage und verdeckte Gate-Reihenfolge ergänzt; [[ontology]] um einen Verweis-Abschnitt Work/Edition Extension; [[index]] registriert das neue Dokument. Keine der Aussagen gelöscht, nur präzisiert.
 
 **Offen.** Die vier Gate-Fragen aus [[production-readiness#braucht-den-operator]] bleiben unverändert offen; dieses Dokument ist ihre Entscheidungsgrundlage, keine Entscheidung. Der Multi-Edition-Entscheid (Gate 1) ist Gate 2 und 3 vorgelagert. Innerhalb des Modells offen und der Editorin vorzulegen: Auflagen-Unterzeilen als eigene Knoten oder strukturierte Beschreibung, Sammelband-Vorkommen über `schema:isPartOf`. Die Nachbarschaftsprüfung des `llmprov`-Profils (W3C ML Schema u.a.) steht vor einer Prägung noch aus.
+
+**Der eine nächste Schritt.** Operator-Entscheid zu Gate 1 (Multi-Edition) einholen; bei "dekomponieren" startet das Stichproben-Gate aus [[production-readiness#vorgehen]]. Unabhängig davon anschlussfähig: die stratifizierte Feld-Stichprobe (Rest von M3.8, [[testing#field-level-fidelity]]) als Kalibrierungs-Input für die Triage-Klassenordnung, oder der M3-Daten-Publish (lokal verifiziert, wartet auf den Publish-Push).
 
 ## 2026-07-18 — Session 21: EIL-Editor Increments 2 und 3 gebaut und im Browser verifiziert (Forschungsleitstelle-Lane)
 

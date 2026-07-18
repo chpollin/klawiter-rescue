@@ -1,16 +1,27 @@
 ---
 title: About
 aliases: [project context, klawiter, provenance]
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+status: complete
+language: en
+version: 0.3
 tags: [project, context]
 created: 2026-03-29
 updated: 2026-07-18
+authors: [Christopher Pollin]
+related: [data, pipeline, frontend, testing, production-readiness]
 ---
 
 # About
 
 ## The Klawiter Bibliography
 
-The bibliography was compiled by **Dr. Randolph J. Klawiter** (University of Notre Dame) over decades. It covers Stefan Zweig's global literary reception: 6,296 entries spanning first editions, translations, secondary literature, film adaptations, correspondence, and more — in over 40 languages, from 395 publication locations, across 200 years (1815-2020).
+The bibliography was compiled by Dr. Randolph J. Klawiter (University of Notre Dame) over decades. It covers Stefan Zweig's global literary reception: 6,296 entries in namespace 0 spanning first editions, translations, secondary literature, film adaptations, correspondence, and more, in over 40 languages, from hundreds of publication locations, across roughly two centuries (1815-2020).
 
 The bibliography was originally hosted as a MediaWiki instance. When the wiki was decommissioned, the underlying database (SQL dumps and 8 binary BLOB files, 363 MB total) was preserved but the structured access was lost.
 
@@ -22,7 +33,7 @@ This project extracts and structures the raw database into [[pipeline|JSON-LD]],
 2. Fix encoding damage (UTF-8 interpreted as Latin-1 during the original dump)
 3. Extract structured fields from wiki markup via regex and LLM-assisted extraction
 4. Classify entries into 16 types and 5 time periods
-5. Output as JSON-LD with a Schema.org + Dublin Core + klawiter: [[ontology|vocabulary blend]]
+5. Output as JSON-LD with a Schema.org + Dublin Core + klawiter: [[data#data-model|vocabulary blend]]
 6. Serve via a static [[frontend]] on GitHub Pages
 
 ## Data Integrity Principle
@@ -64,7 +75,7 @@ The EIL approach supports the Data Integrity Principle: corrections go through a
 
 The workflow distinguishes two complementary feedback loops that operate at different levels:
 
-**Developer-in-the-Loop.** The DH developer works at pipeline level: reading test results and aggregated data diagnostics, identifying systematic errors (e.g. 1,368 section-header titles), implementing code fixes, re-running the pipeline. Feedback signal: tests and data visualisations. Output: systematic improvements affecting thousands of entries at once.
+**Developer-in-the-Loop.** The DH developer works at pipeline level, reading test results and aggregated data diagnostics, identifying systematic errors (a whole class of section-header titles, for instance), implementing code fixes, re-running the pipeline. Feedback signal: tests and data visualisations. Output: systematic improvements affecting thousands of entries at once.
 
 **Editor-in-the-Loop.** Domain experts at the archive work at data level: checking individual entries against raw text, correcting or adding field values, validating reconciliation proposals. Feedback signal: domain knowledge about Zweig's oeuvre and publication history. Output: individual corrections that, in aggregate, form the gold standard.
 

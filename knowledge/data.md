@@ -1,18 +1,48 @@
 ---
 title: Data
 aliases: [data model, entity types]
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+template:
+  name: Vorlage Datengrundlage
+  version: 0.1
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/data
+  alias: https://dhcraft.org/Promptotyping/#promptotyping-document-data
+status: complete
+language: en
+version: 0.3
 tags: [data, quality]
 created: 2026-03-29
 updated: 2026-07-18
+authors: [Christopher Pollin]
+topics: ["[[Data Modelling]]", "[[Normdata]]", "[[Controlled Vocabularies]]"]
+knowledge-sources:
+  institutions:
+    Stefan Zweig Centre Salzburg: https://www.stefanzweig.digital/
+  standards:
+    Schema.org: https://schema.org/
+    Dublin Core Metadata Terms: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+    Wikidata: https://www.wikidata.org/
+  vocabularies:
+    klawiter namespace: https://chpollin.github.io/klawiter-rescue/vocab/
+related: [about, pipeline, testing, production-readiness]
 ---
 
 # Data
 
-The Klawiter bibliography dataset: its model, entity types, field coverage, and known quality issues.
+The Klawiter bibliography dataset: its model, entity types, field coverage, and known quality issues. Live coverage figures, distribution counts, and per-field provenance totals are reported in `data/output/quality-report.json`, the `_meta` block of `docs/data/klawiter.json`, and `.github/baseline-metrics.json`, which are the sources of truth this document does not duplicate.
 
 ## Data Model
 
-Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://chpollin.github.io/klawiter-rescue/vocab/`). See [[architecture]] for the rationale behind a custom namespace vs Schema.org. See [[ontology]] for the planned mapping to established vocabularies.
+Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://chpollin.github.io/klawiter-rescue/vocab/`), documented at `docs/vocab/index.html`.
+
+### Vocabulary blend
+
+The model blends Schema.org (standard bibliographic fields such as name, datePublished, publisher), Dublin Core (`bibliographicCitation` for the original entry text), and a custom `klawiter:` namespace for the entity types and fields without a Schema.org equivalent (for example "Dramatic Reading", "Symposium"). Each entry gets a `@type` array combining a Schema.org type with a `klawiter:` type, for example `["schema:Book", "klawiter:FictionEntry"]`. BIBFRAME (FRBR-based Work/Instance/Item) would be correct but overengineered for this dataset as a serialization, since it carries no official JSON-LD context; the conceptual Work/Edition split it expresses is realized where needed through `schema:workExample`/`exampleOfWork`, see [[production-readiness#zielmodell-werkausgabe-trennung]]. The trade-off of the blend is that the output is not directly machine-readable for library systems. The vocabulary is implemented in `pipeline/lib/vocabulary.py`.
 
 ### Example Entry
 
@@ -100,7 +130,7 @@ Redirects are stored as a map in the frontend: `{ "Old Page Name": target_page_i
 
 ## Entity Types
 
-16 classified types, derived from MediaWiki categories. See [[ontology]] for Schema.org mapping.
+16 classified types, derived from MediaWiki categories. Each maps to a Schema.org type paired with its `klawiter:` type, see [[#vocabulary-blend]].
 
 ### Distribution
 
@@ -123,7 +153,7 @@ Redirects are stored as a map in the frontend: `{ "Old Page Name": target_page_i
 | `other` | 4 | 0.1% | Unclassifiable |
 | `newspaper` | 1 | 0.0% | Newspaper article |
 
-Counts above are `entry_type` classifications (from `.github/baseline-metrics.json`). The 1,545 `redirect` type count differs by one from the 1,546 records carrying the `isRedirect` flag (one redirect page is classified under another type); of those 1,546 redirects, 1,210 resolve to an existing entry in the frontend map (see [[architecture]]).
+Counts above are `entry_type` classifications (from `.github/baseline-metrics.json`). The 1,545 `redirect` type count differs by one from the 1,546 records carrying the `isRedirect` flag (one redirect page is classified under another type); of those 1,546 redirects, 1,210 resolve to an existing entry in the frontend map (see [[pipeline#redirects-as-map-instead-of-resolved-entries]]).
 
 ### Classification Logic
 
@@ -207,7 +237,7 @@ Fields added per location: `wikidataId` (Q-number), `wikidataLabel` (English nam
 
 22 locations unmatched (encoding variants, composite slash-locations, obscure villages). 3 low-score matches flagged for manual review.
 
-**Per-entry linking (`locationSameAs`)**: Step 05 maps each entry's primary location to its Wikidata URI and writes it as `klawiter:locationSameAs` (`@type: @id`) into both the JSON-LD and frontend JSON — see [[ontology#location-linking]]. Coverage: 4,013 of 4,162 located non-redirect entries (~96%); the gap is locations without a reconciled Q-ID. Only the primary `location` is linked, not `allLocations`.
+**Per-entry linking (`locationSameAs`)**: Step 05 maps each entry's primary location to its Wikidata URI and writes it as `klawiter:locationSameAs` (`@type: @id`) into both the JSON-LD and frontend JSON. Coverage: 4,013 of 4,162 located non-redirect entries (~96%); the gap is locations without a reconciled Q-ID. Only the primary `location` is linked, not `allLocations`.
 
 **Bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. Originally 33 without page_title fallback, reduced to ~15 after `remove_wiki_markup()` improvements (section header stripping, unpaired bold marker removal, magic word removal).
 
@@ -234,7 +264,7 @@ Where `verify.py` checks field *values* (false positives/negatives) and the qual
 - **Source ns0 reconciles**: 6,296 = 4,751 displayed entries + 1,545 ns0 redirects.
 - **Empty-content pages are isolated and explained**: 4 source pages have no BLOB text row, of which exactly 1 is bibliographic (ns0 page 2979, the blanked stub above); the other 3 are non-bibliographic system pages (a `MediaWiki:Print.css`, an empty Armenian category, an image-description page). The census asserts that the set of empty bibliographic pages equals the set of unnamed displayed entries — currently the single page 2979.
 
-The census is the systematic proof behind the headline "every entry safely and correctly from SQL into the frontend": the path is lossless and invention-free, and the only anomaly is one source-blanked page, fully characterized. The "unverifiable" surface that the [[eil-editing|EIL editing interface]] targets is exactly what `verify.py` and the provenance metadata flag; the census guarantees the editor is working over a complete record set, not a leaky one.
+The census is the systematic proof behind the headline "every entry safely and correctly from SQL into the frontend": the path is lossless and invention-free, and the only anomaly is one source-blanked page, fully characterized. The "unverifiable" surface that the [[frontend#eil-curation-interface|EIL editing interface]] targets is exactly what `verify.py` and the provenance metadata flag; the census guarantees the editor is working over a complete record set, not a leaky one.
 
 ### Quality Report
 

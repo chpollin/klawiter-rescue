@@ -1,14 +1,45 @@
 ---
 title: Pipeline
 aliases: [extraction pipeline, data flow]
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+status: complete
+language: en
+version: 0.3
 tags: [pipeline, extraction]
 created: 2026-03-29
-updated: 2026-06-12
+updated: 2026-07-18
+authors: [Christopher Pollin]
+related: [data, testing, frontend, production-readiness]
 ---
 
 # Pipeline
 
-The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify, reconcile, census, and apply-patches helpers), requires no MySQL, and is idempotent. See [[architecture]] for key technical decisions.
+The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify, reconcile, census, and apply-patches helpers), requires no MySQL, and is idempotent. The key extraction decisions are recorded in [[#decisions]].
+
+## Decisions
+
+Extraction decisions with rationale and trade-offs. The vocabulary-blend decision is recorded with the data model in [[data]]; the frontend framework decision in [[frontend#decision-vanilla-js-without-framework]].
+
+### Direct File Extraction Instead of MySQL
+
+Parse the SQL dump and binary files directly in Python, without a MySQL installation. This eliminates the largest external dependency and keeps the pipeline portable (runs anywhere with Python 3.10+). The 4-table join (page → revision → slots → content) is parsed directly from INSERT statements. Trade-off: the SQL parser is more fragile than native MySQL queries, but it works deterministically and reaches near-complete extraction.
+
+### Redirects as Map Instead of Resolved Entries
+
+Redirects are not integrated into main entries but stored as a `{ "Title" → page_id }` map in the frontend. Redirects are aliases, not standalone content; the map enables URL resolution (`#title=Old+Name` → `#entry=123`) and keeps the main data confined to real entries. Trade-off: a portion of redirect targets do not exactly match an existing entry title and therefore do not resolve.
+
+### Encoding Fix Before Parsing
+
+Mojibake is repaired in stage 02, before stage 03 parses fields. Regex patterns for title, publisher, location and the rest only work on correct UTF-8. "Insel-Verlag" is recognized, "Insel-VÃ©rlag" is not. See [[#encoding-fix]].
+
+### page_title as Title Fallback
+
+When title extraction from wiki markup yields a `[year]: Publisher` pattern, the MediaWiki page name is used instead. For collected-works entries the publication info appears in the bold line (`'''[1922]: Insel-Verlag'''`), not the work title, while page_title always carries the correct work name. This cut bracket titles from a third of entries to a residual handful.
 
 ## Source Data
 
@@ -212,7 +243,7 @@ Run: `python pipeline/census.py` → `data/output/census-report.json`
 
 ### apply_patches.py — Editor Corrections Overlay
 
-Write-back and audit step of the EIL editing interface ([[eil-editing]]), run after inject_provenance.py. Applies approved corrections from the git-tracked store `data/corrections/`, setting the corrected field's provenance to `editor`, appending an edit-history record that preserves the machine original, and raising the entry's review status. The store is authoritative, so the step is idempotent and a re-run of the base pipeline never silently overwrites editor values. An empty store is a byte-identical no-op.
+Write-back and audit step of the EIL editing interface ([[frontend#eil-curation-interface]]), run after inject_provenance.py. Applies approved corrections from the git-tracked store `data/corrections/`, setting the corrected field's provenance to `editor`, appending an edit-history record that preserves the machine original, and raising the entry's review status. The store is authoritative, so the step is idempotent and a re-run of the base pipeline never silently overwrites editor values. An empty store is a byte-identical no-op.
 
 Run: `python pipeline/apply_patches.py` → updates `docs/data/klawiter.json` (only if corrections exist) + `data/output/corrections-report.json`
 
@@ -220,7 +251,7 @@ Run: `python pipeline/apply_patches.py` → updates `docs/data/klawiter.json` (o
 
 ## Data Flow Diagram
 
-Visual overview of the complete pipeline from raw source to final outputs. See [[data]] for the data model and [[ontology]] for the vocabulary blend.
+Visual overview of the complete pipeline from raw source to final outputs. See [[data]] for the data model and [[data#vocabulary-blend]] for the vocabulary blend.
 
 ```mermaid
 flowchart TD
@@ -354,11 +385,11 @@ The `schema:sameAs` property is used for Stefan Zweig's Wikidata ID (Q78491) as 
 **Impact by field:**
 - **Title**: Solved — page_title fallback provides the correct title from MediaWiki metadata (Session 14). 345 page_titles have encoding artifacts from Arabic/Cyrillic transliterations.
 - **Publisher/PageCount/Year**: First-match-wins. On a page with 10 editions across 5 publishers, the pipeline extracts whichever publisher pattern matches first in the text. Further regex fixes shift which edition is matched rather than solving the problem.
-- **Location**: `allLocations` correctly aggregates all locations. The primary `location` field uses the first match. The same whole-page search also pulls locations out of chapter titles on single-edition pages (the "Weimar" class, 48 records), characterized with a measured scoped fix in [[validation#error-class-1-location-from-chapter-titles-weimar]].
+- **Location**: `allLocations` correctly aggregates all locations. The primary `location` field uses the first match. The same whole-page search also pulls locations out of chapter titles on single-edition pages (the "Weimar" class, 48 records), characterized with a measured scoped fix in [[testing#error-class-1-location-from-chapter-titles-weimar]].
 
 **Why not fixable with regex**: The editions on a page are separated by `'''[year]: Publisher, Location'''` headers, but the pipeline's field extraction functions search the entire page content, not individual edition blocks. Isolating edition blocks would require structural parsing (recognizing `'''[year]:'''` as a section delimiter), which is a different architecture than the current flat regex extraction.
 
-**Future approach**: Edition-block segmentation (split multi-edition pages at `'''[year]:'''` boundaries, extract each block separately) or LLM-based section recognition. This would be a separate project. A scoped first application exists for the location field alone: constraining location extraction to the publication-line header instead of the whole page. It is designed and diffed across all records (fixes 30 of 48 "Weimar" cases, recovers 508 previously-missing non-Western locations), not yet landed, see [[validation#scoped-fix-designed-and-measured-not-yet-landed]].
+**Future approach**: Edition-block segmentation (split multi-edition pages at `'''[year]:'''` boundaries, extract each block separately) or LLM-based section recognition. This would be a separate project. A scoped first application exists for the location field alone, constraining location extraction to the publication-line header instead of the whole page. It is landed and measured against a committed artifact for the location field; see [[testing#error-class-1-location-from-chapter-titles-weimar]].
 
 ---
 
