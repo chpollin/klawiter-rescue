@@ -3,7 +3,7 @@ title: Journal
 aliases: [work diary, sessions]
 tags: [journal]
 created: 2026-03-29
-updated: 2026-06-12
+updated: 2026-07-18
 ---
 
 # Journal
@@ -12,9 +12,21 @@ Work diary for the Klawiter Bibliography project. Each session documents what we
 
 ---
 
+## 2026-07-18 — Session 20: Konzeptuelle Runde, EQUALIS-Entfernung, knowledge-Refactor (Forschungsleitstelle-Lane klawiter-rescue)
+
+Rein konzeptuelle Runde nach Operator-Entscheid vom 17.07., keine Implementierung, keine Pipeline-Läufe. Drei Stränge.
+
+**EQUALIS restlos aus dem knowledge-Bestand entfernt.** EQUALIS ist seit dem DIA-XAI-Kick-off als benanntes Evaluationsframework überholt; die Bewertung ist jetzt hermeneutisch-qualitativ, messbarer Baustein ist allein der im Werkzeug verifizierte Gold Standard. Der Bezug wird deshalb überall auf diese Rahmung umgestellt statt umbenannt, die Git-History bleibt das Gedächtnis für den früheren Stand. Betroffen `about.md`, `data.md`, `eil-editing.md`, `journal.md`. Mit der Umbenennung ging die inhaltliche Korrektur einher: die frühere Ratio-als-Erfolgsbeleg-Formulierung („If 80% Accept: pipeline is solid", Ratio-Shift je Iteration als Learning-Maß) verstieß gegen den Operator-Entscheid und ist durch die Protokoll-Rahmung ersetzt. Die Metrik-Sektion in `data.md` heißt jetzt Correction Protocol und ist Dokumentationsgrundlage, kein Messinstrument; die Metrics-fall-out-Sektion in `eil-editing.md` entsprechend.
+
+**knowledge-Ordner nach der Promptotyping-Konvention refactoriert.** `index.md` selbsttragend und aktuell gemacht: volatile Statuszahlen (Test-Anzahl, Session-Zählung, Coverage-Zahlen in den Open Items) entfernt, `HANDOFF` und `eil-editing`/`production-readiness` korrekt in die Navigation aufgenommen, die operative Open-Items-Liste durch positive Verweise auf die Funktionsträger (`HANDOFF`, `validation`, `pipeline`, `data`, `production-readiness`) ersetzt, da der operative Stand nach Konvention in `HANDOFF` lebt und ein Navigations-Dokument keine Steuerungslast trägt. Der Bestand deckt alle Konventions-Funktionen ab; kein Dokument gelöscht oder zusammengeführt, weil keine echte Redundanz vorliegt.
+
+**Konzeptdokument `production-readiness.md` angelegt.** Arbeitet die Produktionsreife des EIL-Kurationswerkzeugs aus: Ist-Stand Frontend und Datenbasis, die zwei ineinandergreifenden Loops, die Provenienz-Schichten regex/llm/missing als Verifikationsgrundlage, den Gold-Standard-Aufbau als messbaren Baustein, das Korrektur-Protokoll als Dokumentationsgrundlage, sechs geordnete Arbeitspakete (Multi-Edition-Dekomposition, Redirect-Auflösung, Kategorie-Seiten, Reconciliation-Vorbereitung, Wiki-Druck-Merge, Deployment mit Zitierbarkeit) und vier Operator-Gate-Fragen statt eigener fachlicher Entscheidung.
+
+**Offen für den Operator.** Die vier Gate-Fragen in `production-readiness.md#braucht-den-operator`: Multi-Edition im Editor kuratieren oder zurückstellen (steht seit der Milestone-Runde offen), Reconciliation-Tiefe im Produktionsscope, Wiki-Druck-Merge im Scope, Modellweg im Auslieferungsstand. Zusätzlich zur Klärung: ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern (`project`, `method`, `status`) geliftet werden soll; der Bestand führt durchgängig den Vault-nahen `title/aliases/tags`-Stil, ein Lift wäre ein invasiver Eingriff über alle Dateien und ist in dieser konzeptuellen Runde bewusst nicht angefasst.
+
 ## 2026-06-21 — Session 19: EIL-Editor Increment 1 gebaut und im Browser verifiziert (Forschungsleitstelle-Lane)
 
-Operator-Richtungsentscheidung in dieser Runde: nicht die Datentreue weiter haerten, sondern Strang 2 vorantreiben, also die Experten-Editierschicht. Gebaut wurde Increment 1 aus [[eil-editing]], der niedrigschwellige, frontend-lokale Kern, der die EQUALIS-Triade freischaltet.
+Operator-Richtungsentscheidung in dieser Runde: nicht die Datentreue weiter haerten, sondern Strang 2 vorantreiben, also die Experten-Editierschicht. Gebaut wurde Increment 1 aus [[eil-editing]], der niedrigschwellige, frontend-lokale Kern, der die Accept/Correct/Add-Triade freischaltet.
 
 **Was implementiert ist.** `docs/js/edit.js` ist von der duennen v1-Demo (nur implizites Change-Tracking, `patchVersion: 1`) auf das volle Increment-1-Modell gehoben. Jede Feldinteraktion ist jetzt als eine der drei Aktionen typisiert: Accept bestaetigt einen vorhandenen Wert ohne ihn zu aendern, Correct ersetzt einen vorhandenen falschen Wert, Add fuellt ein leeres (`missing`) Feld. Die Unterscheidung Add gegen Correct laeuft ueber Provenance und Ausgangswert (leer oder `missing` ergibt Add). Jede Aktion traegt die vollstaendige v2-Edit-History-Form (`action`, `oldValue`, `newValue`, `previousProvenance`, `edited_by` als Rolle "Editor (SZD)", `edited_at`, `source: human`). Der Drei-Status-Review (Ungeprueft, Agent-geprueft, Mensch-geprueft) ist je Eintrag als Chip sichtbar und wird durch anstehende menschliche Edits auf Mensch-geprueft (ungespeichert) gehoben. Pending Edits liegen in `localStorage` und ueberleben ein Reload (`App.init` ruft `Edit.restore`). Save exportiert ein `patchVersion: 2`-Dokument, das `pipeline/apply_patches.py` direkt liest.
 
@@ -82,7 +94,7 @@ Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag
 
 **EIL-Editier-Design (Strang 2)**
 
-- `knowledge/eil-editing.md`: Zielentwurf fuer den Ausbau von `edit.js`. Editierbereich auf alle adjudizierbaren Felder, drei getypte Aktionen Accept/Correct/Add (EQUALIS-Triade), Unsicherheits-Oberflaeche gespeist aus Provenance-Badges + verify.py-Flags + Census-Anomalien, Persistenz in drei Schichten (localStorage, Patch v2 mit Aktionstyp/Zeitstempel/Editor, apply_patches-Pipelineschritt mit neuem Provenance-Zustand `editor`), Nachvollziehbarkeit als EQUALIS-Messsubstrat. Fuenf Build-Inkremente, minimaler naechster Schritt = Inkrement 1.
+- `knowledge/eil-editing.md`: Zielentwurf fuer den Ausbau von `edit.js`. Editierbereich auf alle adjudizierbaren Felder, drei getypte Aktionen Accept/Correct/Add, Unsicherheits-Oberflaeche gespeist aus Provenance-Badges + verify.py-Flags + Census-Anomalien, Persistenz in drei Schichten (localStorage, Patch v2 mit Aktionstyp/Zeitstempel/Editor, apply_patches-Pipelineschritt mit neuem Provenance-Zustand `editor`), Nachvollziehbarkeit als Korrektur-Protokoll. Fuenf Build-Inkremente, minimaler naechster Schritt = Inkrement 1.
 - DIA-XAI-Anbindung explizit gemacht: die Oberflaeche traegt Frontier- wie lokale Modelle ohne Aenderung, weil der Editor extrahierte Werte unabhaengig vom erzeugenden Modell adjudiziert und der Provenance-Zustand die Methode festhaelt.
 - Rueckschreib- und Audit-Schicht implementiert (`pipeline/apply_patches.py` plus 8 Unit-Tests, alle gruen): Overlay-Schritt nach `inject_provenance`, wendet Korrekturen aus dem versionierten Store `data/corrections/` an, setzt Provenance auf `editor`, baut Edit-History pro Feld (Maschinen-Original erhalten), hebt den Review-Status (approved/agent_verified). Idempotent, Store ist autoritativ, leerer Store ist byte-identisches No-Op. Das ist der browser- und gate-unabhaengige Teil von Inkrement 1/4; der Frontend-Code wartet auf Browser-Sichtung.
 
