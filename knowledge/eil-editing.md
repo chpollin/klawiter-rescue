@@ -3,12 +3,12 @@ title: EIL Editing Interface
 aliases: [eil-editing, in-tool editing, expert-in-the-loop editing, curation layer, three-status review]
 tags: [design, eil, dia-xai]
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-07-18
 ---
 
 # EIL Editing Interface
 
-Design for extending the in-tool editing capability so a domain expert can confirm, correct, or complete every field the pipeline cannot verify on its own, with the result saved as a durable, auditable record. This is the build-out path for EIL-Tool 1 of the DIA-XAI project. The design is modeled on the sibling tool `szd-htr` (SZD OCR/HTR pipeline), which already runs the mature version of this correction workflow; this document adapts its proven model to bibliographic records and names the shared spine the two tools have in common.
+Design for extending the in-tool editing capability so a domain expert can confirm, correct, or complete every field the pipeline cannot verify on its own, with the result saved as a durable, auditable record. This is the build-out path for EIL-Tool 1 of the DIA-XAI project; its evaluation frame is [[about#dia-xai-connection]]. The design is modeled on the sibling tool `szd-htr` (SZD OCR/HTR pipeline), which already runs the mature version of this correction workflow; this document adapts its proven model to bibliographic records and names the shared spine the two tools have in common.
 
 ## Summary
 
@@ -38,7 +38,7 @@ Each entry carries a review status, the same three levels as szd-htr, adapted to
 
 | Status (display) | `review.status` | Meaning for a bibliographic record |
 |---|---|---|
-| **Mensch-geprüft** | `approved` | The editor read the entry's fields against the raw wiki source and confirmed or corrected them. Counts as verified and as gold for the EQUALIS measurement. |
+| **Mensch-geprüft** | `approved` | The editor read the entry's fields against the raw wiki source and confirmed or corrected them. Counts as verified and, in aggregate, as the gold standard against which extraction quality per field is described. |
 | **Agent-geprüft** | `agent_verified` | An automatic agent compared each extracted field against the raw wiki text and confirmed it. Likely correct, does not replace human review. |
 | **Ungeprüft** | no `review` block | Pipeline extraction only. Field-level provenance (regex / llm / missing) still describes how each value was produced. |
 
@@ -46,11 +46,11 @@ Each entry carries a review status, the same three levels as szd-htr, adapted to
 
 ### The three actions
 
-Editor interactions are typed as one of three, the EQUALIS triad, and each is recorded in the edit history:
+Editor interactions are typed as one of three, and each is recorded in the edit history:
 
 - **Accept** confirms a present value is correct. Changes no value; promotes the field (and, when all fields are confirmed, the entry) toward `approved`.
 - **Correct** replaces a present but wrong value.
-- **Add** supplies a value for a field the source contains but the pipeline left empty (a `missing` field). Kept distinct from Correct because it measures recall recovery, not precision repair.
+- **Add** supplies a value for a field the source contains but the pipeline left empty (a `missing` field). Kept distinct from Correct because it records a different correction episode, a value the pipeline never produced rather than one it produced wrong.
 
 ### Edit history and provenance
 
@@ -89,9 +89,9 @@ Three layers, volatile to durable, following szd-htr:
 2. **Write-back**: a local helper (a small `serve.py`-style endpoint, or the existing patch-export as the portable fallback) applies confirmed edits into the dataset and into a new pipeline step (`apply_patches.py`) that sets the field provenance to `editor`. Re-running the extraction pipeline never overwrites an `editor` value silently; conflicts surface for review. This preserves the [[about#data-integrity-principle|Data Integrity Principle]]: corrections flow through review, not direct edits.
 3. **Audit trail**: the git history of the dataset is the full record of who changed what, when, from which provenance, under which action. A workspace panel in the frontend can show the git state, as szd-htr's does.
 
-### Metrics fall out
+### Correction episodes are logged, not instrumented
 
-Because every Accept, Correct, and Add is logged with field, provenance, action, and entry type, the EQUALIS-I metrics (see [[data#equalis-metrics-planned]]) are a byproduct of curation, no separate experiment: Accept/Correct/Add ratio overall and by provenance, correction rate per extraction method, correction distribution by entry type and field, and ratio shift across iterations. This is the same relationship szd-htr has between human approvals and its CER baseline: the human verdicts are the gold that measures the machine.
+Because every Accept, Correct, and Add is logged with field, provenance, action, and entry type, curation leaves a protocol of correction episodes behind as a byproduct, no separate experiment. That protocol records what an editor corrected, on which field, from which provenance (regex / llm / missing), and when. It is documentation input for the qualitative evaluation described in [[data#correction-protocol]], not a metric: it feeds workshop findings about where the pipeline is reliable and where systematic correction patterns point the developer at a pipeline fix. The measurable part of the evaluation is separate and lives elsewhere, the verified gold standard against which extraction quality per field is described. Following the DIA-XAI evaluation frame, the tool protocols; it does not score its own workflow. This is the same relationship szd-htr has between human approvals and its CER baseline, the human verdicts are the fachlich verified reference against which the machine output is described.
 
 ## Shared curation spine
 
@@ -101,15 +101,15 @@ That common spine is the DIA-XAI epistemic-infrastructure thesis made concrete: 
 
 ## Model-pluggable extraction
 
-The extraction and the automatic `agent_verified` check are written behind a model-agnostic boundary so a model can be swapped without touching the curation layer. The cloud frontier model (currently Gemini, step 03b) stays the default path; a locally run model is a plug-in option, built only where it adds clear value. The curation layer is indifferent to which model produced a value: the editor adjudicates the extracted value, the provenance state records the method, and the Accept/Correct ratio by provenance is exactly the measurement that would compare a frontier-cloud extraction against a local-model one on identical data. This is what lets the project carry frontier and local models on the same surface, as a demonstrable capability rather than a headline.
+The extraction and the automatic `agent_verified` check are written behind a model-agnostic boundary so a model can be swapped without touching the curation layer. The cloud frontier model (currently Gemini, step 03b) stays the default path; a locally run model is a plug-in option, built only where it adds clear value. The curation layer is indifferent to which model produced a value: the editor adjudicates the extracted value, and the provenance state records the method. Running the same records once through a frontier-cloud extraction and once through a local model, both adjudicated against the same expert-verified gold standard, is what would let the project describe the two extraction paths qualitatively on identical data. This is what lets the project carry frontier and local models on the same surface, as a demonstrable capability rather than a headline.
 
 ## Build increments
 
-1. **Review status + action typing + session durability** (done, Session 19): the three-status review is surfaced per entry, each interaction is typed Accept/Correct/Add with a v2 edit-history record, pending edits persist in `localStorage`, and Save exports a `patchVersion: 2` document that `apply_patches.py` consumes. Verified in the browser on localhost and pinned by `tests/test_patch_contract.py`. This unlocks the EQUALIS triad.
+1. **Review status + action typing + session durability** (done, Session 19): the three-status review is surfaced per entry, each interaction is typed Accept/Correct/Add with a v2 edit-history record, pending edits persist in `localStorage`, and Save exports a `patchVersion: 2` document that `apply_patches.py` consumes. Verified in the browser on localhost and pinned by `tests/test_patch_contract.py`. This unlocks the Accept/Correct/Add typing that produces the correction protocol.
 2. **Uncertainty surface**: wire provenance classes and verify.py flags into a per-entry attention ranking and field badges, calibrated by the content spot-check.
 3. **Editing scope**: extend inline editing to all adjudicable fields with the raw wiki source shown alongside for evidence.
 4. **Write-back + apply step**: `apply_patches.py` (the dataset overlay, `editor` provenance, edit history, idempotent re-application from the git-tracked store) is implemented and unit-tested; what remains is the live local endpoint that lets the frontend write corrections without a manual file step.
-5. **Metric read-out**: derive the EQUALIS-I ratios directly from the accumulated edit history.
+5. **Protocol read-out**: derive the correction protocol (episodes with field, action, provenance) directly from the accumulated edit history, as documentation input for the qualitative evaluation.
 
 Increments 1 to 3 are frontend-local and need browser verification; 4 and 5 touch the pipeline and the provenance model. The minimal next step is increment 1.
 
@@ -118,6 +118,6 @@ Increments 1 to 3 are frontend-local and need browser verification; 4 and 5 touc
 - [[about#dia-xai-connection]] — EIL-Tool 1, the mandatory deliverable this design serves
 - [[about#two-eil-roles]] — developer-in-the-loop and editor-in-the-loop
 - [[data#record-census]] — the completeness proof the editing surface relies on
-- [[data#equalis-metrics-planned]] — the metrics the edit history produces
+- [[data#correction-protocol]] — the correction protocol the edit history produces
 - [[frontend]] — the static site the editing mode extends
 - szd-htr `verification-concept.md` — the three-status model, edit history, and triage signal this design adapts

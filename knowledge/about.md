@@ -3,7 +3,7 @@ title: About
 aliases: [project context, klawiter, provenance]
 tags: [project, context]
 created: 2026-03-29
-updated: 2026-06-12
+updated: 2026-07-18
 ---
 
 # About
@@ -72,4 +72,6 @@ The two loops interlock: when the editor systematically corrects the same error 
 
 ## DIA-XAI Connection
 
-This project is EIL-Tool 1 in the DIA-XAI project (PLUS Early Career Grant 2025). The Klawiter verification workflow with provenance badges, confidence ranking, and Accept/Correct/Add actions is a mandatory deliverable. EQUALIS evaluation metrics (see [[data#equalis-metrics]]) measure the editor loop: Accept/Correct/Add ratio by provenance (regex/llm/missing), correction distribution by entity type and field, ratio shift across EIL iterations. No time-based metrics — ratios are measured as a byproduct of editor actions, not in controlled experiments.
+This project is EIL-Tool 1 in the DIA-XAI project (PLUS Early Career Grant 2025). The Klawiter verification workflow with provenance badges, confidence ranking, and Accept/Correct/Add actions is a mandatory deliverable.
+
+The evaluation is hermeneutic and qualitative, not a metric framework. Its measurable building block is the expert-verified gold standard built inside the tool, against which extraction quality per field is described. The tool protocols rather than instruments: every editor action is logged as a correction episode with field, provenance, and entry type (see [[data#correction-protocol]]), and that protocol is documentation input for the qualitative evaluation, systematic correction patterns are workshop findings that point the developer at pipeline fixes. No effectiveness metric of the workflow is derived from it, no per-iteration score and no interaction ratio read as success. The tool owns no evaluation framework; it contributes the verified gold standard and the correction protocol as input, and the evaluation itself runs on the project side.
