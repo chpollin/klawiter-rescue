@@ -3,7 +3,7 @@ title: Testing
 aliases: [test strategy, quality assurance]
 tags: [testing, quality]
 created: 2026-04-12
-updated: 2026-06-12
+updated: 2026-07-18
 ---
 
 # Testing Strategy
@@ -91,7 +91,7 @@ Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 | pageCount from pp.-ranges | Verification | High | Negative lookahead `(?!\s*[-–—]\s*\d)` in Pattern 2 | 81.6% → 79.2% (136 false extractions removed) |
 | page 2979 documented as "missing" | test_census | Low | Updated to "stub" in all docs | Documentation corrected |
 
-## Current State (468 tests across 18 files, 2026-06-21)
+## Current State (475 tests across 20 files, 2026-07-18)
 
 ```
 test_real_entries.py        160  — 20 hand-labeled entries (parametrized)
@@ -107,11 +107,13 @@ test_census.py               13  — Completeness (all entries present)
 test_apply_patches.py         8  — Editor corrections overlay (write-back, edit history, idempotency; Session 17)
 test_consistency.py           6  — Cross-field plausibility
 test_wikidata_locations.py    6  — Wikidata reconciliation quality
+test_triage.py                6  — Triage artifact contract (build_triage.py flag shapes vs edit.js; Session 21)
 test_normalization.py         5  — Normalization data-quality assertions (Session 15)
 test_heuristic.py             5  — Semantic heuristics (all entries)
 test_llm_judge.py             4  — LLM quality judgment
 test_patch_contract.py        4  — Frontend/backend v2 patch contract (edit.js export vs apply_patches; Session 19)
 test_parse_entries.py         3  — Blanked-stub title (2979 show-with-title; Session 18)
+test_frontend_logic.py        1  — Runs evidence_triage.test.js (Node VM over edit.js: evidence spans, hint ordering; Session 21; skips without node)
 ```
 
 Two normalization test files complement each other: `test_normalize_unit.py` unit-tests the mapping rules in `pipeline/data/` (location variants, publisher reject patterns, translator suffix stripping, pageCount outliers), while `test_normalization.py` asserts the resulting data-quality properties on the output JSON.

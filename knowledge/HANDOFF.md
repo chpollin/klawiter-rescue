@@ -4,38 +4,39 @@ tags: [process, transient]
 updated: 2026-07-18
 ---
 
-# Handoff-Notiz (Stand 2026-07-18, Konzeptuelle Runde Session 20)
+# Handoff-Notiz (Stand 2026-07-18, Umsetzungsrunde Session 21)
 
 Transiente Prozessnotiz fuer den Wiedereinstieg einer frischen Instanz. Wird beim naechsten Handoff ueberschrieben. Projektdoku liegt in den uebrigen knowledge/-Dokumenten, Verlauf im [[journal]], Quervergleich der Lane in `reports/synthese-klawiter-rescue.md` (Forschungsleitstelle-Repo).
 
 ## Aktueller Stand
 
-Rein konzeptuelle Runde vom 2026-07-18, keine Implementierung, kein Pipeline-Lauf. Drei Stränge abgeschlossen.
+Umsetzungsrunde vom 2026-07-18 nach Operator-Freigabe (Push freigegeben 18.07.). Die Editierschicht implementiert jetzt die Increments 1 bis 3 aus [[eil-editing]]; Details und Verifikation in [[journal]] Session 21.
 
-**EQUALIS restlos entfernt.** EQUALIS ist durch das Evaluationskonzept DIA-XAI im Obsidian-Vault abgeloest. Die Bewertung ist hermeneutisch-qualitativ; messbarer Baustein ist der im Werkzeug verifizierte Gold Standard. Alle Stellen in `about.md`, `data.md`, `eil-editing.md` und `journal.md` sind auf diese Rahmung umgestellt; die Git-History haelt den frueheren Stand.
+**Increment 2 gebaut.** `pipeline/build_triage.py` erzeugt `docs/data/triage.json` aus den committeten verify.py- und Census-Reports; `edit.js` buendelt die Flags mit den Provenienz-Schichten zu geordneten Pruefhinweisen je Eintrag (Detail-Block, Karten-Chip, Feld-Marker, Sortierung "Pruefbedarf zuerst", nur im Edit-Modus). Kein Score, keine Metrik-Ableitung; Hinweise erloeschen mit der Adjudikation des Felds.
 
-**knowledge-Ordner nach Promptotyping-Konvention refactoriert.** `index.md` ist selbsttragend und aktuell gemacht: volatile Statuszahlen entfernt, `HANDOFF` und `eil-editing`/`production-readiness` korrekt in der Navigation aufgenommen, operative Open-Items durch positive Verweise auf die Funktionstraeger ersetzt.
+**Increment 3 gebaut.** Quell-Evidenz neben jedem der vier getrackten Felder: feldgenauer Ausschnitt mit markiertem Treffer und Fundstellenzaehler, fuer missing-Felder der verify.py-detektierte Rohwert, sonst der ganze Quelltext einklappbar als ehrlicher Fallback.
 
-**Konzeptdokument `production-readiness.md` angelegt.** Arbeitet die Produktionsreife des EIL-Kurationswerkzeugs aus: Ist-Stand Frontend und Datenbasis, die zwei ineinandergreifenden Loops (Developer-in-the-Loop auf Pipeline-Ebene, Editor-in-the-Loop auf Datenebene), Provenienz-Schichten als Verifikationsgrundlage, Gold Standard als messbarer Baustein, Korrektur-Protokoll als Dokumentationsgrundlage sowie sechs geordnete Arbeitspakete (Multi-Edition-Dekomposition, Redirect-Aufloesung, Kategorie-Seiten, Reconciliation-Vorbereitung, Wiki-Druck-Merge, Deployment mit Zitierbarkeit).
+**Kontrakte gepinnt.** Patch-v2-Kontrakt unveraendert und gruen (`tests/test_patch_contract.py`). Neu gepinnt: Triage-Artefakt-Schema (`tests/test_triage.py`), Evidenz- und Hinweis-Logik (`tests/evidence_triage.test.js` via `tests/test_frontend_logic.py`, braucht Node, skippt sonst). Browser-Verifikation auf localhost durchgefuehrt (Playwright, manuell-aequivalent), kein neuer Request auf dem oeffentlichen Pfad, Frontend bleibt autark.
 
-Technischer Vorlaufstand ist die Milestone-Runde (Session 18/19): Increment 1 der Editierschicht gebaut und browser-verifiziert, alle drei Strang-1-Fixes gelandet (Location, Mojibake, 2979), M3-Vorschau lokal gefahren und zurueckgesetzt, Publish-Push wartet auf Operator-Freigabe.
+**Regenerierungs-Hinweis.** `triage.json` haengt an den committeten Reports; nach jedem Pipeline-Lauf `python pipeline/build_triage.py` mitlaufen lassen (in `pipeline/README.md` eingetragen).
 
 ## Offene Operator-Punkte
 
-Die vier Gate-Fragen stehen in [[production-readiness#braucht-den-operator]]:
+Die vier Gate-Fragen stehen unveraendert in [[production-readiness#braucht-den-operator]]:
 
 1. Multi-Edition-Behandlung im Editor: dekomponieren und kuratieren oder markieren und zurueckstellen? (steht seit der Milestone-Runde offen)
 2. Reconciliation-Tiefe fuer die Produktionsreife.
 3. Wiki-Druck-Merge im Scope der ersten Produktionsreife.
-4. Modellweg im Auslieferungsstand (Cloud plus Patch-Datei-Export als Fallback, oder auch lokaler Write-Back-Endpunkt).
+4. Modellweg im Auslieferungsstand (Cloud plus Patch-Datei-Export als Fallback, oder auch lokaler Write-Back-Endpunkt). Daran haengt Increment 4.
 
-Zusaetzlich zur Klaerung: ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern (`project`, `method`, `status`) geliftet werden soll (bewusst nicht in der konzeptuellen Runde angefasst, waere ein invasiver Eingriff ueber alle Dateien).
+Zusaetzlich zur Klaerung: ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern (`project`, `method`, `status`) geliftet werden soll (bewusst nicht angefasst, waere ein invasiver Eingriff ueber alle Dateien).
 
 ## Der eine naechste Schritt
 
-Operator-Entscheid zu den Gate-Fragen in [[production-readiness#braucht-den-operator]] abwarten. Danach Arbeitspaket 1 (Multi-Edition-Dekomposition) oder M3-Daten-Publish aufgreifen, je nach Operator-Entscheid. M3 ist lokal verifiziert und wartet nur auf den Publish-Push.
+Operator-Entscheid zu den Gate-Fragen abwarten. Unabhaengig davon anschlussfaehig: die stratifizierte Feld-Stichprobe (Rest von M3.8, [[validation#method-and-limits]]) als Kalibrierungs-Input fuer die Triage-Klassenordnung, oder der M3-Daten-Publish (lokal verifiziert, wartet auf den Publish-Push).
 
 ## Geteilt / gehalten
 
 - Keine parallelen Lanes in diesem Repo. Alle Aenderungen sind eigene Arbeit, eigene Pfade committet.
-- Census, Spezifikation, Mess-Artefakte und das neue Konzeptdokument sind additive Artefakte; klawiter.jsonld, frontend-JSON und Pipeline-Code inhaltlich unveraendert.
+- `docs/data/triage.json` ist ein additives Artefakt; `klawiter.json`, `klawiter.jsonld` und Pipeline-Code inhaltlich unveraendert. Die Editierschicht bleibt localhost-gated und fuer Besucher inert.
+- Bekannte Vorbefunde der Testsuite (Multi-Edition-Ground-Truth in `test_semantic`, LLM-Judge ohne Key, fehlende Intermediates fuer `test_real_entries`/`test_llm_judge`) bestehen unveraendert, auf sauberem Baum identisch reproduziert.

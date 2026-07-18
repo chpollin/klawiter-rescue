@@ -14,6 +14,7 @@ Extracts bibliographic metadata from raw MediaWiki dumps into structured JSON-LD
 | 05 | `05_to_jsonld.py` | Convert to JSON-LD + frontend JSON |
 | 06 | `06_validate.py` | Quality report |
 | — | `verify.py` | Round-trip verification (output vs. raw content) |
+| — | `build_triage.py` | Reduce verify + census reports to `docs/data/triage.json` (EIL attention hints) |
 
 ## Usage
 
@@ -21,6 +22,7 @@ Extracts bibliographic metadata from raw MediaWiki dumps into structured JSON-LD
 python run_pipeline.py          # all steps
 python run_pipeline.py 3 6      # steps 3–6
 python verify.py                # verification report
+python build_triage.py          # regenerate docs/data/triage.json after verify/census
 ```
 
 ## Step 03b: LLM Enrichment
