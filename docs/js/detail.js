@@ -87,9 +87,59 @@ const Detail = {
     return inner ? ` <span class="field-controls">${inner}</span>` : '';
   },
 
-  // Build the edit-mode cell (editable value + action controls) for a tracked field.
+  // Marker on a field a verify.py flag points at (rank 0-2 triage hint).
+  // Provenance-class hints carry no extra marker: the provenance badge
+  // already says llm / missing on the same row.
+  _triageFlag(fieldName, entry) {
+    const hint = Edit.triageHints(entry).find(h => h.field === fieldName && h.rank <= 2);
+    if (!hint) return '';
+    const detail = hint.detail ? `: ${String(hint.detail).replace(/\s+/g, ' ')}` : '';
+    return ` <span class="triage-flag" title="${esc(hint.label + detail)}">!</span>`;
+  },
+
+  // Source evidence beside a tracked field (increment 3): the passage of the
+  // entry source holding the value, or \u2014 when no field-precise span is
+  // derivable \u2014 the whole source text, collapsible. The fallback is the
+  // honest variant: it does not pretend to a segmentation it cannot derive.
+  _fieldEvidence(fieldName, entry) {
+    const ev = Edit.evidence(entry, fieldName);
+    if (ev) {
+      const multi = ev.count > 1
+        ? ` <span class="evidence-count" title="Der Wert kommt mehrfach im Quelltext vor; bei Multi-Edition-Seiten kann der Ausschnitt aus einem anderen Editionsblock stammen.">${ev.count} Fundstellen</span>`
+        : '';
+      return `<div class="field-evidence">${esc(ev.before)}<mark>${esc(ev.match)}</mark>${esc(ev.after)}${multi}</div>`;
+    }
+    if (!entry.fullBibliographicEntry) return '';
+    return `<details class="field-evidence-fallback">
+      <summary>Kein feldgenauer Ausschnitt ableitbar \u2014 ganzer Quelltext</summary>
+      <div class="field-evidence-full">${esc(entry.fullBibliographicEntry)}</div>
+    </details>`;
+  },
+
+  // Build the edit-mode cell (editable value + controls + source evidence).
   _editCell(fieldName, entry) {
-    return this._editableValue(fieldName, entry) + this._fieldControls(fieldName, entry);
+    return this._editableValue(fieldName, entry)
+      + this._triageFlag(fieldName, entry)
+      + this._fieldControls(fieldName, entry)
+      + this._fieldEvidence(fieldName, entry);
+  },
+
+  // Ordered attention hints for the entry (edit mode): where checking is most
+  // urgent, by data signal. A priority aid, not a quality or workflow score.
+  _triageBlock(entry) {
+    const hints = Edit.triageHints(entry);
+    if (!hints.length) return '';
+    const items = hints.map(h => {
+      const field = h.field ? `<strong>${esc(Edit.FIELD_LABELS[h.field] || h.field)}</strong> \u2014 ` : '';
+      const detail = h.detail
+        ? `: <span class="triage-detail">${esc(String(h.detail).replace(/\s+/g, ' ').slice(0, 80))}</span>`
+        : '';
+      return `<li class="triage-rank-${h.rank}">${field}${esc(h.label)}${detail}</li>`;
+    });
+    return `<div class="triage-hints">
+      <div class="triage-hints-head" title="Priorit\u00e4tshilfe aus vorhandenen Datensignalen (Provenienz-Schicht, Verifikations-Flags, Census). Kein Qualit\u00e4ts- oder Wirksamkeitsma\u00df.">Pr\u00fcfhinweise</div>
+      <ul>${items.join('')}</ul>
+    </div>`;
   },
 
   // Shared content builder
@@ -166,7 +216,7 @@ const Detail = {
       rows.push(this.row('Categories', catLinks.join(', ')));
     }
 
-    if (App.state.editMode) html = this._reviewChip(entry) + html;
+    if (App.state.editMode) html = this._reviewChip(entry) + this._triageBlock(entry) + html;
     html += `<div class="meta-table">${rows.join('')}</div>`;
 
     // --- Full bibliographic entry (always visible as verification source) ---

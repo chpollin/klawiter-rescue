@@ -2031,6 +2031,115 @@ body.edit-mode .meta-table {
   background: rgba(194, 163, 96, 0.05);
 }
 
+/* --- Triage hints (edit mode) --- */
+/* Attention aid from data signals (provenance, verify flags, census); the
+   rank classes color by signal class, no score is displayed anywhere. */
+.triage-hints {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  border: 1px solid var(--sz-border);
+  border-left: 3px solid var(--sz-burgundy);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  background: rgba(122, 27, 44, 0.03);
+}
+.triage-hints-head {
+  font-weight: 700;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sz-burgundy);
+  margin-bottom: 0.3rem;
+  cursor: help;
+}
+.triage-hints ul { margin: 0; padding-left: 1.1rem; }
+.triage-hints li { margin: 0.15rem 0; }
+.triage-hints li.triage-rank-0 { color: var(--sz-burgundy); font-weight: 600; }
+.triage-hints li.triage-rank-1 { color: #721c24; }
+.triage-hints li.triage-rank-2 { color: #004085; }
+.triage-hints li.triage-rank-3 { color: #856404; }
+.triage-hints li.triage-rank-4 { color: var(--sz-text-light); }
+.triage-detail { font-style: italic; }
+
+/* Per-field marker for verify-flag hints (value not in source / detectable) */
+.triage-flag {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 50%;
+  background: #f8d7da;
+  color: #721c24;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+  cursor: help;
+}
+
+/* Compact hint chip on result cards in edit mode */
+.triage-chip {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid var(--sz-border);
+  background: var(--sz-cream);
+  color: var(--sz-text);
+  vertical-align: middle;
+}
+.triage-chip.triage-rank-0 { border-color: var(--sz-burgundy); color: var(--sz-burgundy); }
+.triage-chip.triage-rank-1 { border-color: #f0b8bd; color: #721c24; background: #fdf3f4; }
+.triage-chip.triage-rank-2 { border-color: #b8d4f0; color: #004085; background: #f3f8fd; }
+.triage-chip.triage-rank-3 { border-color: #f0e0a8; color: #856404; background: #fffaf0; }
+.triage-chip.triage-rank-4 { color: var(--sz-text-light); }
+.triage-more { font-weight: 700; opacity: 0.7; }
+
+/* --- Per-field source evidence (edit mode) --- */
+.field-evidence {
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+  border-left: 2px solid var(--sz-gold);
+  padding-left: 0.55rem;
+  margin-top: 0.3rem;
+  white-space: normal;
+}
+.field-evidence mark {
+  background: rgba(194, 163, 96, 0.35);
+  color: var(--sz-text);
+  padding: 0 0.1rem;
+}
+.evidence-count {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #856404;
+  cursor: help;
+}
+.field-evidence-fallback {
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+  margin-top: 0.3rem;
+}
+.field-evidence-fallback summary {
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+}
+.field-evidence-full {
+  white-space: pre-wrap;
+  border-left: 2px solid var(--sz-border);
+  padding-left: 0.55rem;
+  margin-top: 0.3rem;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
 /* --- Verbund Bar --- */
 .verbund-bar {
   background: #f2f2f2;

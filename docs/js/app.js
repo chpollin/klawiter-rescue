@@ -274,6 +274,11 @@ const App = {
       this.filtered.sort((a, b) => (b.year ?? -Infinity) - (a.year ?? -Infinity));
     } else if (s === 'title') {
       this.filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+    } else if (s === 'triage') {
+      // Edit-mode only: most urgent data signal first (census, verify flags,
+      // llm, missing). Attention ordering, not a quality ranking; ties keep
+      // their previous order (Array.prototype.sort is stable).
+      this.filtered.sort((a, b) => Edit.triageRank(a.sourcePageId) - Edit.triageRank(b.sourcePageId));
     }
   },
 
@@ -388,10 +393,11 @@ const App = {
     const secondary = parts.length ? `<div class="card-secondary">${parts.join(' · ')}</div>` : '';
 
     const snippet = esc((e.fullBibliographicEntry || '').slice(0, 180));
+    const triage = this.state.editMode ? Edit.cardHint(e.sourcePageId) : '';
 
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
       <div class="card-header" tabindex="0" role="button">
-        <div class="card-meta">${badge} ${year} ${lang} ${loc}</div>
+        <div class="card-meta">${badge} ${year} ${lang} ${loc} ${triage}</div>
         <div class="card-title">${title}</div>
         ${secondary}
         <div class="card-snippet">${snippet}</div>
@@ -609,17 +615,47 @@ const App = {
         ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Editing'
         : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
     }
-    // Re-render current detail if open
-    const expandedCard = document.querySelector('.entry-card.card-expanded');
-    if (expandedCard) {
-      const pid = parseInt(expandedCard.id.replace('card-', ''));
-      const detail = expandedCard.querySelector('.card-detail');
-      const entry = this.entryMap.get(pid);
-      if (detail && entry) {
-        detail.innerHTML = Detail.renderInline(entry);
-      }
+    this._setTriageSortOption(this.state.editMode);
+    if (this.state.editMode) {
+      // Triage hints need the artifact; refresh once it is in (cards render
+      // their hint chips only from a full pass, so redraw the results list).
+      Edit.loadTriage().then(() => this._refreshAfterEditToggle());
+    } else {
+      this._refreshAfterEditToggle();
     }
-    // Re-render the standalone detail view too (direct #entry= fallback path)
+  },
+
+  // The "Prüfbedarf" sort exists only while edit mode is on.
+  _setTriageSortOption(on) {
+    const sel = document.getElementById('sort-select');
+    if (!sel) return;
+    let opt = sel.querySelector('option[value="triage"]');
+    if (on && !opt) {
+      opt = document.createElement('option');
+      opt.value = 'triage';
+      opt.textContent = 'Prüfbedarf zuerst';
+      sel.appendChild(opt);
+    } else if (!on && opt) {
+      if (this.state.sort === 'triage') {
+        this.state.sort = 'relevance';
+        sel.value = 'relevance';
+        this.sortEntries();
+      }
+      opt.remove();
+    }
+  },
+
+  // Redraw whatever is on screen after an edit-mode change: results list
+  // (keeping the expanded card open), or the standalone detail view.
+  _refreshAfterEditToggle() {
+    if (this.state.view === 'results') {
+      const expanded = document.querySelector('.entry-card.card-expanded');
+      const expandedPid = expanded ? parseInt(expanded.dataset.pid) : null;
+      if (this.state.sort === 'triage') this.sortEntries();
+      this.renderResults();
+      if (expandedPid != null && this.entryMap.has(expandedPid)) this.toggleCard(expandedPid);
+      return;
+    }
     if (this.state.view === 'detail' && this.state.entryId != null) {
       Detail.render(this.entryMap.get(this.state.entryId));
     }
