@@ -16,6 +16,7 @@ import json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import setup_logging, load_csv, write_csv, STEP_02_OUTPUT, STEP_03_OUTPUT, PARSED_FIELDS
 from lib.wiki_parser import extract_structured_data, is_redirect, remove_wiki_markup
+from lib.encoding import has_mojibake
 from lib.patterns import (
     extract_year, extract_all_years, extract_publisher,
     extract_location, extract_all_locations, extract_page_count,
@@ -110,8 +111,11 @@ def process_entry(row):
 
     # Guard: if page_title has encoding artifacts AND the extracted title was
     # only rejected for length (not for being a section header), keep the
-    # long extracted title — it's better than a mojibake page_title
-    if rejected_for_length and page_title and re.search(r'[\x80-\x9f]', page_title):
+    # long extracted title — it's better than a mojibake page_title.
+    # has_mojibake covers the common UTF-8-as-Latin-1 case; the C1 range
+    # check covers raw control characters the repair cannot touch.
+    if rejected_for_length and page_title and (
+            has_mojibake(page_title) or re.search(r'[\x80-\x9f]', page_title)):
         extracted_title = remove_wiki_markup(parsed.get('title', ''))
 
     result['title'] = extracted_title or page_title

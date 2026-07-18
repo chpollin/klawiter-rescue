@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    setup_logging, load_csv, csv_bool, STEP_04_OUTPUT,
+    setup_logging, load_csv, csv_bool, write_json, STEP_04_OUTPUT,
     OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON, LOCATIONS_JSON,
 )
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP
@@ -280,8 +280,7 @@ def main():
         "entries": entries,
     }
 
-    with open(OUTPUT_JSONLD, 'w', encoding='utf-8') as f:
-        json.dump(dataset, f, ensure_ascii=False, indent=2)
+    write_json(OUTPUT_JSONLD, dataset, indent=2)
     log.info(f"Complete dataset written to {OUTPUT_JSONLD}")
 
     # Write individual entry files
@@ -370,8 +369,7 @@ def main():
         "redirects": redirect_map,
     }
 
-    with open(OUTPUT_FRONTEND_JSON, 'w', encoding='utf-8') as f:
-        json.dump(frontend_data, f, ensure_ascii=False, separators=(',', ':'))
+    write_json(OUTPUT_FRONTEND_JSON, frontend_data, separators=(',', ':'))
 
     size_mb = os.path.getsize(OUTPUT_FRONTEND_JSON) / 1024 / 1024
     log.info(f"Frontend JSON written to {OUTPUT_FRONTEND_JSON} ({size_mb:.1f} MB)")

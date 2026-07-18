@@ -181,7 +181,12 @@ def load_cache(cache_path):
 
 
 def save_cache(cache_path, cache):
-    """Save LLM results cache."""
+    """Save LLM results cache atomically — a crash during the periodic save
+    must not destroy the cache that resume depends on."""
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
-    with open(cache_path, 'w', encoding='utf-8') as f:
+    tmp_path = cache_path + '.tmp'
+    with open(tmp_path, 'w', encoding='utf-8') as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
+    if os.path.exists(cache_path):
+        os.remove(cache_path)
+    os.rename(tmp_path, cache_path)

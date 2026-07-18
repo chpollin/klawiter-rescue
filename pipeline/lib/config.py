@@ -4,6 +4,7 @@ All paths, limits, and shared setup in one place.
 """
 
 import csv
+import json
 import os
 import sys
 import logging
@@ -143,6 +144,18 @@ def write_csv(path, rows, fieldnames):
         writer.writeheader()
         writer.writerows(rows)
     # Atomic rename (on Windows, need to remove target first if exists)
+    if os.path.exists(path):
+        os.remove(path)
+    os.rename(tmp_path, path)
+
+
+def write_json(path, data, **dump_kwargs):
+    """Write JSON atomically (write to .tmp, then rename), like write_csv.
+    An interrupted run must never leave a truncated dataset behind."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp_path = path + '.tmp'
+    with open(tmp_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, **dump_kwargs)
     if os.path.exists(path):
         os.remove(path)
     os.rename(tmp_path, path)

@@ -140,7 +140,7 @@ def main():
                     validated = validate_extraction(ext)
                     pid = str(validated['page_id'])
                     cache[pid] = validated
-                    processed += len(batch)
+                processed += len(extractions)
             else:
                 api_errors += 1
 

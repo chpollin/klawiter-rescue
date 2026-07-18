@@ -122,6 +122,7 @@ def load_page_table(sql_text):
     """Parse zweig_page table. Returns dict: page_id -> {title, namespace, page_latest}."""
     log.info("Parsing zweig_page...")
     pages = {}
+    skipped = 0
     for values_str in parse_sql_inserts(sql_text, 'zweig_page'):
         for t in parse_value_tuples(values_str):
             vals = parse_tuple_values(t)
@@ -139,6 +140,10 @@ def load_page_table(sql_text):
                     'namespace': namespace,
                     'page_latest': page_latest,
                 }
+            else:
+                skipped += 1
+    if skipped:
+        log.warning(f"  Skipped {skipped} malformed zweig_page tuples (fewer than 10 columns)")
     log.info(f"  Parsed {len(pages)} pages")
     # Log namespace distribution
     ns_counts = {}
@@ -154,6 +159,7 @@ def load_slots_table(sql_text):
     """Parse zweig_slots. Returns dict: rev_id -> content_id."""
     log.info("Parsing zweig_slots...")
     slots = {}
+    skipped = 0
     for values_str in parse_sql_inserts(sql_text, 'zweig_slots'):
         for t in parse_value_tuples(values_str):
             vals = parse_tuple_values(t)
@@ -161,6 +167,10 @@ def load_slots_table(sql_text):
                 rev_id = int(vals[0])
                 content_id = int(vals[2])
                 slots[rev_id] = content_id
+            else:
+                skipped += 1
+    if skipped:
+        log.warning(f"  Skipped {skipped} malformed zweig_slots tuples (fewer than 4 columns)")
     log.info(f"  Parsed {len(slots)} slots")
     return slots
 
@@ -169,6 +179,8 @@ def load_content_table(sql_text):
     """Parse zweig_content. Returns dict: content_id -> text_id (from 'tt:XXXX')."""
     log.info("Parsing zweig_content...")
     contents = {}
+    skipped = 0
+    bad_addr = 0
     for values_str in parse_sql_inserts(sql_text, 'zweig_content'):
         for t in parse_value_tuples(values_str):
             vals = parse_tuple_values(t)
@@ -180,7 +192,13 @@ def load_content_table(sql_text):
                         text_id = int(addr_raw.split('tt:')[1])
                         contents[content_id] = text_id
                     except (ValueError, IndexError):
-                        pass
+                        bad_addr += 1
+            else:
+                skipped += 1
+    if skipped:
+        log.warning(f"  Skipped {skipped} malformed zweig_content tuples (fewer than 5 columns)")
+    if bad_addr:
+        log.warning(f"  Skipped {bad_addr} content rows with unparseable tt: address")
     log.info(f"  Parsed {len(contents)} content addresses")
     return contents
 
@@ -261,7 +279,7 @@ def main():
     for blob_path in BLOB_FILES:
         if os.path.exists(blob_path):
             blob_index = load_blob_index(blob_path)
-            blob_id = int(os.path.basename(blob_path).replace('zt_0', ''))
+            blob_id = int(re.search(r'(\d+)$', os.path.basename(blob_path)).group(1))
             for text_id, data in blob_index.items():
                 data['blob_id'] = blob_id
                 text_index[text_id] = data
