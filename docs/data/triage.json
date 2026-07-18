@@ -1,0 +1,2326 @@
+{
+ "_meta": {
+  "generated": "2026-07-18T07:47:46+00:00",
+  "sources": [
+   "verification-report.json",
+   "census-report.json"
+  ],
+  "note": "Per-entry attention hints from existing data signals; not a quality or workflow metric."
+ },
+ "entries": {
+  "52": {
+   "detectable": {
+    "publisher": "p.\n \nS. Fischer Verlag"
+   }
+  },
+  "92": {
+   "detectable": {
+    "publisher": "p. 1968. 2nd edition"
+   }
+  },
+  "103": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "122": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "152": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "174": {
+   "detectable": {
+    "publisher": "Amalthea-Veralg"
+   }
+  },
+  "230": {
+   "detectable": {
+    "publisher": "Sonnabend"
+   }
+  },
+  "250": {
+   "detectable": {
+    "publisher": "p.  Licensed edition"
+   }
+  },
+  "268": {
+   "detectable": {
+    "publisher": "p.  Reprinted 1962. Licensed edition"
+   }
+  },
+  "271": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "275": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "297": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "320": {
+   "notInSource": [
+    "pageCount"
+   ]
+  },
+  "336": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "350": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "353": {
+   "detectable": {
+    "publisher": "p. 1st edition"
+   }
+  },
+  "354": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "376": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "388": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "405": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "410": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "418": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "446": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "448": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "449": {
+   "detectable": {
+    "publisher": "p. 1968. 2nd edition"
+   }
+  },
+  "468": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "474": {
+   "detectable": {
+    "publisher": "2nd edition. 168p. 1960. 3rd edition"
+   }
+  },
+  "477": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "500": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "530": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "544": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "562": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "564": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "565": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "726": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "732": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "736": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "742": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "756": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "758": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "780": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "781": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "787": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "789": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "802": {
+   "detectable": {
+    "publisher": "p. The Rusian language edition"
+   }
+  },
+  "805": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "806": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "837": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "844": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "846": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "854": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "884": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "890": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "899": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "900": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "904": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "926": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "936": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "969": {
+   "detectable": {
+    "publisher": "Fredonia"
+   }
+  },
+  "971": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "977": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "997": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1001": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1002": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1100": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1388": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1451": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "1452": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1527": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "1563": {
+   "detectable": {
+    "publisher": "NY. No date indicated. Willey Hance"
+   }
+  },
+  "1628": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "1683": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1687": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "1691": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "1692": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "1694": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "1704": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "1714": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "1734": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "1740": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1752": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1754": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1772": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1777": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1779": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1780": {
+   "detectable": {
+    "publisher": "p. 2nd edition"
+   }
+  },
+  "1781": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1786": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1789": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1792": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1810": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1821": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1823": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1824": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1829": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1836": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1838": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1840": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "1841": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1842": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1843": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "1844": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1845": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "1846": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "1851": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1855": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1857": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1869": {
+   "detectable": {
+    "publisher": "Sonnabend"
+   }
+  },
+  "1872": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1875": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1876": {
+   "detectable": {
+    "publisher": "Sonnabend"
+   }
+  },
+  "1885": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1891": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1896": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1901": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1903": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1904": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1908": {
+   "detectable": {
+    "publisher": "p. 2nd edition"
+   }
+  },
+  "1918": {
+   "detectable": {
+    "publisher": "Sonnabend"
+   }
+  },
+  "1919": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "1941": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "1965": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2026": {
+   "detectable": {
+    "publisher": "NY 10021. The collection also contains Amann"
+   }
+  },
+  "2034": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2060": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2103": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "2260": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "2275": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "2294": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2299": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2306": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "2341": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2343": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2349": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "2360": {
+   "detectable": {
+    "publisher": "Publications de la Sorbonne"
+   }
+  },
+  "2362": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2367": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2382": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2383": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2401": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2423": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2502": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2528": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "2529": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2558": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2559": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2564": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2566": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2568": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2572": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2587": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2589": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2591": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2601": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2637": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2641": {
+   "detectable": {
+    "publisher": "p.  Licensed edition"
+   }
+  },
+  "2648": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "2685": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2686": {
+   "detectable": {
+    "publisher": "D. C. Heath & Co"
+   }
+  },
+  "2722": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2723": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "2787": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2793": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "2795": {
+   "detectable": {
+    "publisher": "P. S. King & Sons"
+   }
+  },
+  "2863": {
+   "detectable": {
+    "publisher": "Revue Littéraire des Primaires"
+   }
+  },
+  "2893": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "2944": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2960": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "2987": {
+   "detectable": {
+    "publisher": "company"
+   }
+  },
+  "3006": {
+   "detectable": {
+    "publisher": "3rd edition"
+   }
+  },
+  "3017": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3042": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "3046": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3052": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3084": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "3113": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3137": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3160": {
+   "detectable": {
+    "publisher": "2nd edition 2007. 4th edition. 99p. 2011. 6th edition"
+   }
+  },
+  "3180": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3181": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3195": {
+   "detectable": {
+    "publisher": "Argentina and Brazil"
+   }
+  },
+  "3223": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3265": {
+   "detectable": {
+    "publisher": "Calmann Lévy"
+   }
+  },
+  "3279": {
+   "detectable": {
+    "publisher": "Mercure de France"
+   }
+  },
+  "3284": {
+   "detectable": {
+    "publisher": "Bibliothèque-Charpentier"
+   }
+  },
+  "3313": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3317": {
+   "detectable": {
+    "publisher": "Peter Davies"
+   }
+  },
+  "3323": {
+   "detectable": {
+    "publisher": "April 1940"
+   }
+  },
+  "3328": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3368": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3369": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3370": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3375": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3377": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3395": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "3422": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3426": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3430": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3431": {
+   "detectable": {
+    "publisher": "3rd edition"
+   }
+  },
+  "3442": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3462": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "3466": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3472": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "3492": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "3498": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3504": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3505": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3507": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3508": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3549": {
+   "detectable": {
+    "publisher": "3rd edition"
+   }
+  },
+  "3563": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3570": {
+   "detectable": {
+    "publisher": "p. 2nd edition"
+   }
+  },
+  "3604": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3607": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3628": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3641": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "3647": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3656": {
+   "notInSource": [
+    "publisher",
+    "location",
+    "translator"
+   ]
+  },
+  "3663": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3666": {
+   "detectable": {
+    "publisher": "p. 1st edition"
+   }
+  },
+  "3667": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3668": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "3670": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3749": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3860": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3863": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3866": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3871": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "3927": {
+   "detectable": {
+    "publisher": "Salzburg"
+   }
+  },
+  "3987": {
+   "detectable": {
+    "publisher": "Librairie Simon Kra"
+   }
+  },
+  "3993": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "3996": {
+   "detectable": {
+    "publisher": "p. 4 unnumbered pages of facsimiles. Limited edition"
+   }
+  },
+  "4019": {
+   "detectable": {
+    "publisher": "Fredonia\n\nReprinted in"
+   }
+  },
+  "4021": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4022": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4079": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4098": {
+   "detectable": {
+    "publisher": "p. Licensed edition"
+   }
+  },
+  "4113": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "4118": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4138": {
+   "notInSource": [
+    "translator"
+   ],
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4163": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4165": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4171": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4194": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4215": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4225": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4229": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4231": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4247": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4251": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "4267": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4284": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "4290": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4292": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4294": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4302": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4312": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4317": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4327": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4329": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4333": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4335": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4336": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4381": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "4383": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4384": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4392": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4399": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4402": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4404": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4426": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "4439": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4452": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4472": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4473": {
+   "detectable": {
+    "translator": "Cepický\nRuntime"
+   }
+  },
+  "4477": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4478": {
+   "detectable": {
+    "translator": "Ilyich Tchaikovsky"
+   }
+  },
+  "4482": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4515": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4516": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "4518": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4539": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4540": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4544": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4546": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4552": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4562": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4563": {
+   "notInSource": [
+    "publisher",
+    "location"
+   ]
+  },
+  "4564": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4573": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4575": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4589": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4593": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4606": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4613": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "4617": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4619": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4637": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4647": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4648": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4649": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4651": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4677": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "4678": {
+   "notInSource": [
+    "publisher",
+    "location"
+   ]
+  },
+  "4679": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "4681": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4682": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4683": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "4689": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4695": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4697": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4704": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4705": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4712": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4717": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4742": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4743": {
+   "notInSource": [
+    "location"
+   ],
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4748": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4755": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4765": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4811": {
+   "detectable": {
+    "publisher": "Daniel Cande"
+   }
+  },
+  "4812": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4825": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4826": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4828": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4829": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4830": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4831": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4841": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4847": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4848": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "4871": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4880": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "4897": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "4908": {
+   "notInSource": [
+    "publisher",
+    "translator"
+   ]
+  },
+  "4945": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4957": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4958": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "4970": {
+   "detectable": {
+    "publisher": "3rd edition"
+   }
+  },
+  "4980": {
+   "detectable": {
+    "publisher": "p. 199\n\nThis is a review of the first German edition"
+   }
+  },
+  "4985": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4992": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5004": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5049": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5055": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5058": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5093": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5094": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5095": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5097": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5108": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5109": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "5121": {
+   "detectable": {
+    "publisher": "2nd edition"
+   }
+  },
+  "5133": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "5144": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "5150": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "5158": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "5166": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "5169": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "5173": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "5180": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "5190": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "5191": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "5198": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5247": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5254": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5255": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5256": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5281": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5282": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5301": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5308": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5415": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5416": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5449": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5466": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5467": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5468": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5469": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5470": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5504": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "5585": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "5603": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "5606": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "5658": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "5659": {
+   "notInSource": [
+    "translator"
+   ]
+  },
+  "5663": {
+   "detectable": {
+    "publisher": "house"
+   }
+  },
+  "5733": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5755": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5834": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5896": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "5897": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5899": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5906": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5907": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5912": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5913": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5914": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5920": {
+   "detectable": {
+    "publisher": "& Distribution"
+   }
+  },
+  "5950": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5951": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5955": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5956": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "5960": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5961": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5962": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5963": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5964": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5965": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5966": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5967": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5968": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5969": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5970": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5971": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5972": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5973": {
+   "detectable": {
+    "publisher": "German"
+   }
+  },
+  "5981": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "5982": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "6044": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6048": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
+  },
+  "6056": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6136": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "6184": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6319": {
+   "detectable": {
+    "publisher": "April 9"
+   }
+  },
+  "6341": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6423": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
+  "6452": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6507": {
+   "detectable": {
+    "publisher": "and Distribution"
+   }
+  },
+  "6533": {
+   "detectable": {
+    "publisher": "1st edition"
+   }
+  },
+  "6537": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6539": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6559": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "6725": {
+   "notInSource": [
+    "location"
+   ],
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "6782": {
+   "detectable": {
+    "publisher": "Fredonia\n\nCategory"
+   }
+  },
+  "6784": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6788": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6794": {
+   "detectable": {
+    "publisher": "Fredonia"
+   }
+  },
+  "6795": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6807": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6815": {
+   "detectable": {
+    "publisher": "p. VII. Written by Stefan Zweig for this edition"
+   }
+  },
+  "6864": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6887": {
+   "detectable": {
+    "publisher": "Fredonia\n\nReprinted in"
+   }
+  },
+  "6900": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "6911": {
+   "detectable": {
+    "publisher": "Fredonia NY and in the Deutsches Literaturarchiv Marbach"
+   }
+  },
+  "6918": {
+   "detectable": {
+    "publisher": "Fredonia NY\n\nSee"
+   }
+  },
+  "6930": {
+   "detectable": {
+    "publisher": "P. S. King & Son"
+   }
+  },
+  "6953": {
+   "detectable": {
+    "publisher": "Geistige Strömungen um 1900"
+   }
+  },
+  "6964": {
+   "detectable": {
+    "publisher": "Fredonia"
+   }
+  },
+  "6995": {
+   "detectable": {
+    "publisher": "Fredonia\n\nFrench translation"
+   }
+  },
+  "7227": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "7369": {
+   "detectable": {
+    "publisher": "November 1904"
+   }
+  },
+  "7393": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "7399": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "7425": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "7470": {
+   "notInSource": [
+    "location"
+   ]
+  },
+  "7527": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "2979": {
+   "census": "Quellseitig geleerte Seite (Census-Anomalie)"
+  }
+ }
+}
