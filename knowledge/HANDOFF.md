@@ -4,39 +4,37 @@ tags: [process, transient]
 updated: 2026-07-18
 ---
 
-# Handoff-Notiz (Stand 2026-07-18, Umsetzungsrunde Session 21)
+# Handoff-Notiz (Stand 2026-07-18, Modellierungsrunde Session 22)
 
 Transiente Prozessnotiz fuer den Wiedereinstieg einer frischen Instanz. Wird beim naechsten Handoff ueberschrieben. Projektdoku liegt in den uebrigen knowledge/-Dokumenten, Verlauf im [[journal]], Quervergleich der Lane in `reports/synthese-klawiter-rescue.md` (Forschungsleitstelle-Repo).
 
 ## Aktueller Stand
 
-Umsetzungsrunde vom 2026-07-18 nach Operator-Freigabe (Push freigegeben 18.07.). Die Editierschicht implementiert jetzt die Increments 1 bis 3 aus [[eil-editing]]; Details und Verifikation in [[journal]] Session 21.
+Zwei Runden am 2026-07-18, beide gepusht, Baum sauber, main synchron mit origin.
 
-**Increment 2 gebaut.** `pipeline/build_triage.py` erzeugt `docs/data/triage.json` aus den committeten verify.py- und Census-Reports; `edit.js` buendelt die Flags mit den Provenienz-Schichten zu geordneten Pruefhinweisen je Eintrag (Detail-Block, Karten-Chip, Feld-Marker, Sortierung "Pruefbedarf zuerst", nur im Edit-Modus). Kein Score, keine Metrik-Ableitung; Hinweise erloeschen mit der Adjudikation des Felds.
+**Session 21, Umsetzungsrunde.** Die Editierschicht implementiert die Increments 1 bis 3 aus [[eil-editing]]: Pruefhinweise je Eintrag aus `docs/data/triage.json` (`pipeline/build_triage.py`, kein Score, Hinweise erloeschen mit der Adjudikation) und Quell-Evidenz je Feld mit ehrlichem Volltext-Fallback. Kontrakte gepinnt (`tests/test_patch_contract.py`, `tests/test_triage.py`, `tests/evidence_triage.test.js` via `tests/test_frontend_logic.py`, braucht Node, skippt sonst), Browser-Verifikation auf localhost bestanden. Nach jedem Pipeline-Lauf `python pipeline/build_triage.py` mitlaufen lassen (in `pipeline/README.md` eingetragen).
 
-**Increment 3 gebaut.** Quell-Evidenz neben jedem der vier getrackten Felder: feldgenauer Ausschnitt mit markiertem Treffer und Fundstellenzaehler, fuer missing-Felder der verify.py-detektierte Rohwert, sonst der ganze Quelltext einklappbar als ehrlicher Fallback.
-
-**Kontrakte gepinnt.** Patch-v2-Kontrakt unveraendert und gruen (`tests/test_patch_contract.py`). Neu gepinnt: Triage-Artefakt-Schema (`tests/test_triage.py`), Evidenz- und Hinweis-Logik (`tests/evidence_triage.test.js` via `tests/test_frontend_logic.py`, braucht Node, skippt sonst). Browser-Verifikation auf localhost durchgefuehrt (Playwright, manuell-aequivalent), kein neuer Request auf dem oeffentlichen Pfad, Frontend bleibt autark.
-
-**Regenerierungs-Hinweis.** `triage.json` haengt an den committeten Reports; nach jedem Pipeline-Lauf `python pipeline/build_triage.py` mitlaufen lassen (in `pipeline/README.md` eingetragen).
+**Session 22, Modellierungsrunde (rein konzeptuell, kein Code).** Neues [[edition-model]] als Entscheidungsgrundlage fuer die Multi-Edition-Gate-Frage: Multi-Edition ist ein Ebenenfehler (Seite = Werk, `'''[Jahr]:'''`-Bloecke = Ausgaben), Zielmodell ist die Werk/Ausgabe-Trennung in schema.org (`workExample`/`exampleOfWork`) im vorhandenen JSON-LD-Stack, Vorbedingung ein stabiles ID-Schema `klawiter:edition/{pageId}-{jahr}-{laufbuchstabe}`. Dazu Evidenz als Web Annotation, Provenienz als PROV-O-Sidecar (das `_provenance`-Feld bleibt abgeleitete Frontend-Kurzform), Pruefschicht SHACL/EARL/DQV, skizziert als schmales PROV-Profil `llmprov`. [[production-readiness]] Arbeitspaket 1 entsprechend umformuliert, [[ontology]] um den Verweis-Abschnitt Work/Edition Extension ergaenzt, [[index]] registriert das Dokument. Details in [[journal]] Session 22.
 
 ## Offene Operator-Punkte
 
-Die vier Gate-Fragen stehen unveraendert in [[production-readiness#braucht-den-operator]]:
+Die vier Gate-Fragen stehen unveraendert in [[production-readiness#braucht-den-operator]]; die Entscheidungsgrundlage fuer Gate 1 liegt seit Session 22 in [[edition-model]], und Gate 1 ist Gate 2 und 3 vorgelagert (erst die Ausgaben-Ebene macht Reconciliation-Tiefe und Wiki-Druck-Merge sauber entscheidbar):
 
-1. Multi-Edition-Behandlung im Editor: dekomponieren und kuratieren oder markieren und zurueckstellen? (steht seit der Milestone-Runde offen)
+1. Multi-Edition-Behandlung: dekomponieren und kuratieren oder markieren und zurueckstellen? (Entscheidungsgrundlage [[edition-model]], Stichproben-Gate an drei Seiten vor jedem Vollauf)
 2. Reconciliation-Tiefe fuer die Produktionsreife.
-3. Wiki-Druck-Merge im Scope der ersten Produktionsreife.
+3. Wiki-Druck-Merge im Scope der ersten Produktionsreife (nutzt dasselbe Provenienz-Schema).
 4. Modellweg im Auslieferungsstand (Cloud plus Patch-Datei-Export als Fallback, oder auch lokaler Write-Back-Endpunkt). Daran haengt Increment 4.
 
 Zusaetzlich zur Klaerung: ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern (`project`, `method`, `status`) geliftet werden soll (bewusst nicht angefasst, waere ein invasiver Eingriff ueber alle Dateien).
 
+Innerhalb des Zielmodells offen und der Editorin vorzulegen: Auflagen-Unterzeilen als eigene Knoten oder strukturierte Beschreibung; Sammelband-Vorkommen ueber `schema:isPartOf`. Vor einer Praegung des `llmprov`-Profils steht die Nachbarschaftspruefung (W3C ML Schema u.a.) aus.
+
 ## Der eine naechste Schritt
 
-Operator-Entscheid zu den Gate-Fragen abwarten. Unabhaengig davon anschlussfaehig: die stratifizierte Feld-Stichprobe (Rest von M3.8, [[validation#method-and-limits]]) als Kalibrierungs-Input fuer die Triage-Klassenordnung, oder der M3-Daten-Publish (lokal verifiziert, wartet auf den Publish-Push).
+Operator-Entscheid zu Gate 1 (Multi-Edition) einholen; bei "dekomponieren" startet das Stichproben-Gate aus [[edition-model#vorgehen]]. Unabhaengig davon anschlussfaehig: die stratifizierte Feld-Stichprobe (Rest von M3.8, [[validation#method-and-limits]]) als Kalibrierungs-Input fuer die Triage-Klassenordnung, oder der M3-Daten-Publish (lokal verifiziert, wartet auf den Publish-Push).
 
 ## Geteilt / gehalten
 
 - Keine parallelen Lanes in diesem Repo. Alle Aenderungen sind eigene Arbeit, eigene Pfade committet.
-- `docs/data/triage.json` ist ein additives Artefakt; `klawiter.json`, `klawiter.jsonld` und Pipeline-Code inhaltlich unveraendert. Die Editierschicht bleibt localhost-gated und fuer Besucher inert.
+- Session 22 hat keine Daten- oder Code-Dateien angefasst; `klawiter.json`, `klawiter.jsonld`, Pipeline und Editierschicht sind unveraendert auf Stand Session 21. Die Editierschicht bleibt localhost-gated und fuer Besucher inert.
 - Bekannte Vorbefunde der Testsuite (Multi-Edition-Ground-Truth in `test_semantic`, LLM-Judge ohne Key, fehlende Intermediates fuer `test_real_entries`/`test_llm_judge`) bestehen unveraendert, auf sauberem Baum identisch reproduziert.
