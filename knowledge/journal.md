@@ -29,848 +29,197 @@ Work diary for the Klawiter Bibliography project. One compact entry per substant
 
 **Der eine nächste Schritt.** Sichtung von `data/output/edition-samples/REVIEW.md` durch die Editorin; bei Freigabe Vollauf der Segmentierung über alle als mehrfach identifizierten Seiten.
 
-## 2026-07-18 — Session 22: Modellierungsrunde Werk/Ausgabe mit dem Operator (Forschungsleitstelle-Lane)
+## 2026-07-18 — Session 22: Modellierungsrunde Werk/Ausgabe
 
-Rein konzeptuelle Runde mit dem Operator, keine Implementierung, kein Pipeline-Lauf. Gegenstand war die Modellierung der Multi-Edition-Seiten und der Provenienz-, Evidenz- und Prüfschichten, die sie tragen. Ergebnis als neues Wissensdokument [[edition-model]] eingearbeitet, mit Anschluss an [[ontology]] statt Konkurrenzdokument.
+**Runde.** Rein konzeptuelle Modellierungsrunde mit dem Operator, keine Implementierung, kein Pipeline-Lauf.
+**Geändert.** Werk/Ausgabe-Modell der Multi-Edition-Seiten als Wissensdokument eingearbeitet, [[production-readiness#work-edition-extension]] Arbeitspaket 1 auf Zielmodell plus Segmentierung plus Verifikation umformuliert, Gate-Abschnitt um Entscheidungsgrundlage und Gate-Reihenfolge ergänzt, [[data#work-edition-extension]] um einen Verweisabschnitt erweitert.
+**Entschieden.** Multi-Edition ist ein Ebenenfehler, kein Extraktionsfehler; die Wiki-Seite beschreibt ein Werk, die `'''[Jahr]:'''`-Blöcke Ausgaben, First-match-wins macht Verlag/Ort/Jahr systematisch unzuverlässig und Handkorrektur heilt das nicht (Bracket-Titel sind dasselbe Symptom). Zielmodell Werk/Ausgabe mit schema.org (`workExample`/`exampleOfWork`), FRBR/LRM und BIBFRAME konzeptuell, kein Ontologiewechsel; Evidenz je Ausgabe als W3C Web Annotation, Provenienz als PROV-O-Sidecar mit `_provenance` als abgeleiteter Frontend-Kurzform, Prüfschicht als SHACL plus EARL/DQV, publizierbares PROV-Profil `llmprov`; stabiles quellableitbares ID-Schema `klawiter:edition/{pageId}-{jahr}-{buchstabe}` als Vorbedingung, damit Neusegmentierung Editor-Patches und Zitierbarkeit nicht verwürfelt. Vorgehen über ein Editor-gesichtetes Stichproben-Gate vor Vollauf.
+**Offen.** Die vier Operator-Gate-Fragen bleiben unverändert, Gate 1 ist Gate 2 und 3 vorgelagert; der Editorin vorzulegen sind Auflagen-Unterzeilen als eigene Knoten oder strukturierte Beschreibung und Sammelband-Vorkommen über `schema:isPartOf`; die Nachbarschaftsprüfung des `llmprov`-Profils steht aus.
 
-**Kernbefund.** Multi-Edition ist ein Ebenenfehler, kein Extraktionsfehler. Eine Wiki-Seite beschreibt ein Werk, die `'''[Jahr]:'''`-Blöcke beschreiben Ausgaben; der flache Datensatz vermischt beide Ebenen, weshalb First-match-wins Verlag/Ort/Jahr systematisch unzuverlässig macht und Handkorrektur das nicht heilen kann. Die Bracket-Titel sind dasselbe Symptom. Das verschiebt Arbeitspaket 1 von reiner Dekomposition zu Zielmodell plus Segmentierung plus Verifikation.
+## 2026-07-18 — Session 21: EIL-Editor Increments 2 und 3
 
-**Zielmodell.** Werk/Ausgabe-Trennung mit schema.org (`schema:CreativeWork` mit `workExample`, `schema:Book` mit `exampleOfWork`), konzeptuell FRBR/LRM und BIBFRAME, aber im vorhandenen JSON-LD-Stack ohne Ontologiewechsel. Beispiel am echten Datensatz Seite 4916 (Schachnovelle, im Frontend-Datenfile verifiziert). Vorbedingung jeder Segmentierung ist ein stabiles, quellableitbares ID-Schema (`klawiter:edition/{pageId}-{jahr}-{laufbuchstabe}`), an dem Editor-Patches, Korrektur-Protokoll und Zitierbarkeit hängen; eine Neusegmentierung darf IDs nicht verwürfeln.
+**Runde.** Umsetzungsrunde nach Operator-Freigabe, gebaut wurde nur, was an keiner Gate-Frage hängt.
+**Geändert.** Increment 2 Prüfhinweise je Eintrag, neuer Schritt `pipeline/build_triage.py` reduziert die committeten verify- und census-Reports auf `docs/data/triage.json` (`notInSource`, `detectable` mit Add-Kandidat, `census` für 2979), `edit.js` bündelt sie zu einer nach Signalklasse geordneten Hinweisliste mit Chip, Feldmarker und Edit-Sortierung. Increment 3 Quell-Evidenz je Feld, im Edit-Modus steht neben jedem der vier getrackten Felder der wertetragende Quelltextausschnitt whitespace-tolerant markiert, Mehrfachtreffer werden gezählt (macht Multi-Edition-Ambiguität am Feld sichtbar), Fallback auf den ganzen Quelltext. Verifikation dreischichtig (Python-Triage-Pin, JS-Logik-Pin, Browser auf localhost).
+**Entschieden.** Bewusst keine Metrik, kein Score, ein Hinweis erlischt sobald das Feld adjudiziert ist; bis zur Kalibrierung ist die Klassenordnung die dokumentierte Prüfpriorität, kein empirisches Signal; `triage.json` wird aus committeten Reports gebaut und nach jedem Pipeline-Lauf regeneriert.
+**Offen.** Increment 4 lokaler Write-Back und editierbarer Titel hängen an den Gate-Fragen; die Triage-Kalibrierung wartet auf die stratifizierte Feld-Stichprobe.
 
-**Schichten.** Evidenz je Ausgabe als W3C Web Annotation (`oa:TextPositionSelector` auf die `sourceTextId`), Anschluss an die Increment-3-Quell-Evidenz. Provenienz als PROV-O-Graph als Sidecar/Named Graph, das `_provenance`-Feld bleibt als abgeleitete Kurzform fürs Frontend. Prüfschicht als SHACL-Vertrag des gültigen Ausgaben-Knotens, Ergebnisse als EARL-Assertions (automatic vs manual) oder aggregiert als DQV. Skizziert als schmales PROV-Erweiterungsprofil `llmprov` (nur Subklassen für Modell-Lauf, deterministischen Lauf, Prompt, Modell, Quelle, Verifikations-Episode), als publizierbares und in den anderen DIA-XAI-Werkzeugen wiederverwendbares Deliverable.
+## 2026-07-18 — Session 20: Konzeptrunde, EQUALIS-Entfernung, knowledge-Refactor
 
-**Vorgehen.** Stichproben-Gate an drei prominenten Seiten (Schachnovelle, Ungeduld des Herzens, Die Welt von Gestern) mit Editor-Sichtung vor Vollauf; Messgröße Anteil korrekt abgegrenzter Blöcke gegen eine Handzerlegung; Triage nur auf mehrfach identifizierte Seiten; Frontend-Werk-Karte mit aufklappbarer Ausgabenliste; Gold Standard je Ebene getrennt gezählt. Einordnung: erst die Ausgaben-Ebene macht Reconciliation sinnvoll (Wikidata/GND trennen genauso), der Wiki-Druck-Merge nutzt dasselbe Provenienz-Schema.
+**Runde.** Rein konzeptuelle Runde nach Operator-Entscheid, keine Implementierung, keine Pipeline-Läufe.
+**Geändert.** EQUALIS als Evaluationsframework restlos aus dem knowledge-Bestand entfernt und überall auf die hermeneutisch-qualitative Rahmung umgestellt, die frühere Ratio-als-Erfolgsbeleg-Formulierung durch die Protokoll-Rahmung ersetzt (Metrik-Sektion in [[data#correction-protocol]] heißt jetzt Correction Protocol, Dokumentationsgrundlage statt Messinstrument); knowledge-Ordner nach der Promptotyping-Konvention refactoriert, `index.md` von volatilen Statuszahlen befreit und selbsttragend gemacht; Konzeptdokument `production-readiness.md` angelegt mit Ist-Stand, den zwei Loops, den Provenienz-Schichten regex/llm/missing als Verifikationsgrundlage, dem Gold-Standard als messbarem Baustein, sechs geordneten Arbeitspaketen und vier Operator-Gate-Fragen.
+**Entschieden.** Bewertung ist hermeneutisch-qualitativ, messbarer Baustein allein der im Werkzeug verifizierte Gold Standard, die Ratio ist kein Erfolgsbeleg; kein knowledge-Dokument gelöscht oder zusammengeführt, weil keine echte Redundanz vorliegt; operativer Stand lebt nach Konvention außerhalb des Navigationsdokuments.
+**Offen.** Die vier Gate-Fragen (Multi-Edition kuratieren oder zurückstellen, Reconciliation-Tiefe, Wiki-Druck-Merge im Scope, Modellweg im Auslieferungsstand); zusätzlich ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern geliftet wird, in dieser Runde bewusst nicht angefasst.
 
-**Eingearbeitet.** Neues [[edition-model]]; [[production-readiness]] Arbeitspaket 1 auf Zielmodell plus Segmentierung plus Verifikation umformuliert und der Gate-Abschnitt um Entscheidungsgrundlage und verdeckte Gate-Reihenfolge ergänzt; [[ontology]] um einen Verweis-Abschnitt Work/Edition Extension; [[index]] registriert das neue Dokument. Keine der Aussagen gelöscht, nur präzisiert.
+## 2026-06-21 — Session 19: EIL-Editor Increment 1
 
-**Offen.** Die vier Gate-Fragen aus [[production-readiness#braucht-den-operator]] bleiben unverändert offen; dieses Dokument ist ihre Entscheidungsgrundlage, keine Entscheidung. Der Multi-Edition-Entscheid (Gate 1) ist Gate 2 und 3 vorgelagert. Innerhalb des Modells offen und der Editorin vorzulegen: Auflagen-Unterzeilen als eigene Knoten oder strukturierte Beschreibung, Sammelband-Vorkommen über `schema:isPartOf`. Die Nachbarschaftsprüfung des `llmprov`-Profils (W3C ML Schema u.a.) steht vor einer Prägung noch aus.
-
-**Der eine nächste Schritt.** Operator-Entscheid zu Gate 1 (Multi-Edition) einholen; bei "dekomponieren" startet das Stichproben-Gate aus [[production-readiness#vorgehen]]. Unabhängig davon anschlussfähig: die stratifizierte Feld-Stichprobe (Rest von M3.8, [[testing#field-level-fidelity]]) als Kalibrierungs-Input für die Triage-Klassenordnung, oder der M3-Daten-Publish (lokal verifiziert, wartet auf den Publish-Push).
-
-## 2026-07-18 — Session 21: EIL-Editor Increments 2 und 3 gebaut und im Browser verifiziert (Forschungsleitstelle-Lane)
-
-Umsetzungsrunde nach Operator-Freigabe (Push freigegeben 18.07.). Gebaut wurden die Increments 2 (Prüfhinweise je Eintrag) und 3 (Quell-Evidenz je Feld) aus [[eil-editing]]; die vier Gate-Fragen aus [[production-readiness#braucht-den-operator]] sind unberührt, umgesetzt ist nur, was an keiner hängt.
-
-**Increment 2, Prüfhinweise.** Neuer Pipeline-Schritt `pipeline/build_triage.py` reduziert die committeten Artefakte `verification-report.json` und `census-report.json` auf `docs/data/triage.json`: je geflaggtem Eintrag `notInSource` (extrahierter Wert nicht im Rohtext gefunden), `detectable` (Wert im Rohtext erkennbar, aber nicht extrahiert, mit dem detektierten Rohwert als Add-Kandidat) und `census` (die geblankte Seite 2979). Die Provenienz-Schichten werden nicht dupliziert, das Frontend trägt sie schon je Eintrag. `edit.js` bündelt beides in `triageHints`: eine geordnete Hinweisliste nach Signalklasse (Census, nicht im Rohtext, erkennbar-nicht-extrahiert, llm, missing), die Reihenfolge folgt der Prüfpriorität der Provenienz-Schichten aus [[production-readiness#provenienz-schichten-als-verifikationsgrundlage]]. Sichtbar als Prüfhinweise-Block im Detail, kompakter Chip auf der Ergebniskarte, Marker am Feld und Edit-Modus-Sortierung "Prüfbedarf zuerst". Bewusst keine Metrik: kein Score wird angezeigt oder abgeleitet, ein Hinweis erlischt, sobald das Feld adjudiziert ist (pending Aktion oder `editor`-Provenienz), ein `approved`-Eintrag trägt keine Hinweise. Die Kalibrierung gegen die stratifizierte Feld-Stichprobe (Rest von M3.8) steht noch aus; bis dahin ist die Klassenordnung die dokumentierte Prüfpriorität, kein empirisch justiertes Signal.
-
-**Increment 3, Quell-Evidenz je Feld.** Im Edit-Modus steht neben jedem der vier getrackten Felder der Ausschnitt des Eintragsquelltexts, der den Maschinenwert trägt: whitespace-tolerant und case-insensitiv gesucht, Treffer markiert, bei Mehrfachvorkommen wird die Fundstellenzahl angezeigt (das macht die Multi-Edition-Ambiguität am Feld sichtbar statt sie zu verstecken). pageCount akzeptiert wie `verify.py` das ziffern-begrenzte Literal, die `N/(M)p.`-Summation und `pp. X-Y`-Spannen. Für ein `missing`-Feld mit `detectable`-Flag wird der detektierte Rohwert lokalisiert, als Evidenz für ein Add. Ist kein feldgenauer Ausschnitt ableitbar, fällt das Feld ehrlich auf den ganzen Quelltext einklappbar zurück.
-
-**Verifikation.** Drei Ebenen. Erstens Python: `tests/test_triage.py` (6 Tests) pinnt das Triage-Artefakt (Flag-Schlüssel, Frontend-Feldnamen wie `pageCount`, saubere Einträge fehlen ganz). Zweitens JS: `tests/evidence_triage.test.js` (20 Checks, per Node-VM über das echte `edit.js`, in pytest eingebunden via `tests/test_frontend_logic.py`) pinnt Span-Matching, Snippet-Fenster, Hinweis-Ordnung und die Unterdrückungsregeln. Drittens Browser auf localhost (Playwright, manuell-äquivalent): Triage-Artefakt lädt nur im Edit-Modus (kein Request auf dem öffentlichen Pfad, kein externer Request beim Laden), Census-Hinweis auf 2979, Evidenz-Snippets mit Markierung auf Eintrag 3, Fundstellenzähler, Fallback am missing-Translator, llm-Hinweis erlischt nach Accept, Sortieroption erscheint und verschwindet mit dem Edit-Modus, keine Konsolenfehler. Patch-v2-Kontrakt unverändert und grün; die bekannten Vorbefunde der Suite (Multi-Edition-Ground-Truth, LLM-Judge ohne Key, fehlende Intermediates) sind unberührt, auf sauberem Baum identisch reproduziert.
-
-**Offen.** Increment 4 (lokaler Write-Back-Endpunkt) hängt an der Modellweg-Gate-Frage. Die Triage-Kalibrierung wartet auf die stratifizierte Stichprobe. Titel bleibt nicht editierbar (Strang-2-Milestone, an der Multi-Edition-Gate-Frage). `triage.json` wird aus den committeten Reports gebaut und muss nach jedem Pipeline-Lauf mit `build_triage.py` regeneriert werden; der Schritt ist in `pipeline/README.md` eingetragen.
-
-## 2026-07-18 — Session 20: Konzeptuelle Runde, EQUALIS-Entfernung, knowledge-Refactor (Forschungsleitstelle-Lane klawiter-rescue)
-
-Rein konzeptuelle Runde nach Operator-Entscheid vom 17.07., keine Implementierung, keine Pipeline-Läufe. Drei Stränge.
-
-**EQUALIS restlos aus dem knowledge-Bestand entfernt.** EQUALIS ist seit dem DIA-XAI-Kick-off als benanntes Evaluationsframework überholt; die Bewertung ist jetzt hermeneutisch-qualitativ, messbarer Baustein ist allein der im Werkzeug verifizierte Gold Standard. Der Bezug wird deshalb überall auf diese Rahmung umgestellt statt umbenannt, die Git-History bleibt das Gedächtnis für den früheren Stand. Betroffen `about.md`, `data.md`, `eil-editing.md`, `journal.md`. Mit der Umbenennung ging die inhaltliche Korrektur einher: die frühere Ratio-als-Erfolgsbeleg-Formulierung („If 80% Accept: pipeline is solid", Ratio-Shift je Iteration als Learning-Maß) verstieß gegen den Operator-Entscheid und ist durch die Protokoll-Rahmung ersetzt. Die Metrik-Sektion in `data.md` heißt jetzt Correction Protocol und ist Dokumentationsgrundlage, kein Messinstrument; die Metrics-fall-out-Sektion in `eil-editing.md` entsprechend.
-
-**knowledge-Ordner nach der Promptotyping-Konvention refactoriert.** `index.md` selbsttragend und aktuell gemacht: volatile Statuszahlen (Test-Anzahl, Session-Zählung, Coverage-Zahlen in den Open Items) entfernt, `HANDOFF` und `eil-editing`/`production-readiness` korrekt in die Navigation aufgenommen, die operative Open-Items-Liste durch positive Verweise auf die Funktionsträger (`HANDOFF`, `validation`, `pipeline`, `data`, `production-readiness`) ersetzt, da der operative Stand nach Konvention in `HANDOFF` lebt und ein Navigations-Dokument keine Steuerungslast trägt. Der Bestand deckt alle Konventions-Funktionen ab; kein Dokument gelöscht oder zusammengeführt, weil keine echte Redundanz vorliegt.
-
-**Konzeptdokument `production-readiness.md` angelegt.** Arbeitet die Produktionsreife des EIL-Kurationswerkzeugs aus: Ist-Stand Frontend und Datenbasis, die zwei ineinandergreifenden Loops, die Provenienz-Schichten regex/llm/missing als Verifikationsgrundlage, den Gold-Standard-Aufbau als messbaren Baustein, das Korrektur-Protokoll als Dokumentationsgrundlage, sechs geordnete Arbeitspakete (Multi-Edition-Dekomposition, Redirect-Auflösung, Kategorie-Seiten, Reconciliation-Vorbereitung, Wiki-Druck-Merge, Deployment mit Zitierbarkeit) und vier Operator-Gate-Fragen statt eigener fachlicher Entscheidung.
-
-**Offen für den Operator.** Die vier Gate-Fragen in `production-readiness.md#braucht-den-operator`: Multi-Edition im Editor kuratieren oder zurückstellen (steht seit der Milestone-Runde offen), Reconciliation-Tiefe im Produktionsscope, Wiki-Druck-Merge im Scope, Modellweg im Auslieferungsstand. Zusätzlich zur Klärung: ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern (`project`, `method`, `status`) geliftet werden soll; der Bestand führt durchgängig den Vault-nahen `title/aliases/tags`-Stil, ein Lift wäre ein invasiver Eingriff über alle Dateien und ist in dieser konzeptuellen Runde bewusst nicht angefasst.
-
-## 2026-06-21 — Session 19: EIL-Editor Increment 1 gebaut und im Browser verifiziert (Forschungsleitstelle-Lane)
-
-Operator-Richtungsentscheidung in dieser Runde: nicht die Datentreue weiter haerten, sondern Strang 2 vorantreiben, also die Experten-Editierschicht. Gebaut wurde Increment 1 aus [[eil-editing]], der niedrigschwellige, frontend-lokale Kern, der die Accept/Correct/Add-Triade freischaltet.
-
-**Was implementiert ist.** `docs/js/edit.js` ist von der duennen v1-Demo (nur implizites Change-Tracking, `patchVersion: 1`) auf das volle Increment-1-Modell gehoben. Jede Feldinteraktion ist jetzt als eine der drei Aktionen typisiert: Accept bestaetigt einen vorhandenen Wert ohne ihn zu aendern, Correct ersetzt einen vorhandenen falschen Wert, Add fuellt ein leeres (`missing`) Feld. Die Unterscheidung Add gegen Correct laeuft ueber Provenance und Ausgangswert (leer oder `missing` ergibt Add). Jede Aktion traegt die vollstaendige v2-Edit-History-Form (`action`, `oldValue`, `newValue`, `previousProvenance`, `edited_by` als Rolle "Editor (SZD)", `edited_at`, `source: human`). Der Drei-Status-Review (Ungeprueft, Agent-geprueft, Mensch-geprueft) ist je Eintrag als Chip sichtbar und wird durch anstehende menschliche Edits auf Mensch-geprueft (ungespeichert) gehoben. Pending Edits liegen in `localStorage` und ueberleben ein Reload (`App.init` ruft `Edit.restore`). Save exportiert ein `patchVersion: 2`-Dokument, das `pipeline/apply_patches.py` direkt liest.
-
-`docs/js/detail.js` rendert im Edit-Modus pro provenance-getragenem Feld die editierbare Zelle plus Aktions-Controls (Accept-Haken auf einem vorhandenen Wert, Undo auf einem anstehenden), den Review-Chip oben und den vollen bibliographischen Quelltext als Beleg-Panel ("Source, verify each field against this") mit Goldrand. Ein leeres Feld rendert als Platzhalter mit `data-original=""`, damit Tippen als Add und nicht als Correct gezaehlt wird. Beim Provenance-Badge ist die Altbezeichnung `expert` auf den kanonischen Namen `editor` vereinheitlicht (den `apply_patches.py` schreibt); ein anstehender Edit ueberschreibt das Badge sofort auf `editor`, sichtbar bevor gespeichert wird.
-
-**Konsistenzbefund.** Das Backend schrieb Provenance `editor`, das Frontend kannte nur `expert` (Label, Titel, CSS-Klasse). Das war eine stille Divergenz zwischen `apply_patches.py` und `detail.js`. Jetzt rendert das Frontend `editor` (mit `expert` als Alias auf dieselbe blaue Darstellung), CSS-Klasse `.prov-editor` ergaenzt.
-
-**Verifikation.** Zwei Ebenen. Erstens deterministisch und CI-zitierbar: `tests/test_patch_contract.py` (4 Tests) pinnt das exakte v2-Patch-Objekt, das `edit.js` exportiert, gegen `apply_patches.validate_patch` und `apply_patches.apply_patches`, damit die JS-Export-Form und die Python-Apply-Form nicht stillschweigend auseinanderlaufen. Volle Suite gruen bis auf die bekannten Vorbefunde (15 `test_semantic` Multi-Edition-Ground-Truth, 4 `test_llm_judge` Gemini-Ausfall), die meine Frontend- und Kontrakt-Aenderungen nicht beruehren. Zweitens im echten Browser auf localhost (das Design verlangt fuer Increment 1 eine Browser-Sichtung): Edit-Modus an, Review-Chip Ungeprueft, Beleg-Panel da; Accept auf Eintrag 87 Location laesst "Weimar" unveraendert mit Herkunft regex; Correct auf Publisher ersetzt mit Herkunft llm und hebt das Badge auf editor; Add auf einem echten `missing`-Publisher-Eintrag (52) fuellt mit Herkunft missing; Zaehler 3, Save-Badge im Header, localStorage spiegelt den State exakt; der v2-Export traegt genau die neun Schluessel des Kontrakts mit Rolle "Editor (SZD)" und `source: human`; Review-Chip wechselt auf Mensch-geprueft (ungespeichert); Undo raeumt ab. Seite und localStorage danach sauber zurueckgesetzt.
-
-**Gate.** `docs/` ist die Pages-Quelle, ein Push dorthin deployt live. Der Editor-Code ist localhost-only (`App.state.isLocal`) und fuer Besucher inert, aendert also kein sichtbares Verhalten am veroeffentlichten Frontend; die korrigierten Daten (`klawiter.json`) sind unberuehrt. Trotzdem bleibt der deployende Push das Operator-Gate, gebuendelt mit dem M3-Daten-Publish. Lokal committet, Spur (Tests gruen, Browser-Sichtung, Screenshot) liegt vor.
-
-Offen: Increment 2 (kalibriertes Triage-Signal), Increment 3 (Roh-Wiki je Feld segmentiert neben dem Eingabefeld; der volle Quelltext ist bereits als Beleg-Panel da), Increment 4 (lokaler Write-back-Endpunkt statt manuellem Patch-File). [[eil-editing]] auf den gelandeten Stand gebracht.
+**Runde.** Umsetzungsrunde nach Operator-Richtungsentscheid, Strang 2 (Experten-Editierschicht) statt weiterer Datentreue-Härtung.
+**Geändert.** `docs/js/edit.js` von der dünnen v1-Demo auf das volle Increment-1-Modell gehoben, jede Feldinteraktion als Accept/Correct/Add typisiert (Unterscheidung über Provenance und Ausgangswert), jede Aktion trägt die volle v2-Edit-History-Form, Drei-Status-Review je Eintrag als Chip, Pending Edits in localStorage reload-fest, Save exportiert ein `patchVersion: 2`-Dokument für `apply_patches.py`; `detail.js` rendert editierbare Zelle, Aktions-Controls, Review-Chip und den vollen Quelltext als Beleg-Panel. Verifikation über einen Patch-Kontrakt-Pin (JS-Export gegen Python-Apply) und eine Browser-Sichtung auf localhost.
+**Entschieden.** Stille Divergenz behoben, das Backend schrieb Provenance `editor`, das Frontend kannte nur `expert`, jetzt kanonisch `editor` mit `expert` als Alias; der deployende Push bleibt Operator-Gate, gebündelt mit dem M3-Daten-Publish, der Editor-Code ist localhost-only und für Besucher inert.
+**Offen.** Increment 2 (kalibriertes Triage-Signal), Increment 3 (Roh-Wiki je Feld), Increment 4 (lokaler Write-back-Endpunkt).
 
 ---
 
-## 2026-06-21 — Session 18: Milestone-Runde, Location-Fix gelandet (Forschungsleitstelle-Lane)
+## 2026-06-21 — Session 18: Location-Fix und Mojibake-Reparatur gelandet
 
-Milestone-Runde der Forschungsleitstelle. Auftrag: aus der Projekt-Fachlichkeit die naechsten zwei Milestones bestimmen, bauen, verifizieren, nach main sichern; den dritten scopen. Aus der Strang-1-Prioritaet (alle Daten quellentreu vom SQL ins Frontend) folgen Milestone 1 Location-Fix landen, Milestone 2 Mojibake-Reparatur der Transliterationen.
+**Runde.** Milestone-Runde, zwei Fixes gebaut, getestet, nach main gesichert, Milestone 3 gescopt und lokal als Vorschau verifiziert.
+**Geändert.** Location-Fix in `extract_location` gelandet und über `measure_location_fix.py` deterministisch vermessen (443 geändert, 795 neu gewonnen, 0 verloren; 43 der 48 Weimar-Fälle auf den echten Quellort, 5 kopflos oder nicht gelistete Transliteration); Punkt-Trenner-Nachtrag verhinderte, dass ein Header-Fallback einen Verlagsnamen als Ort griff. Mojibake-Reparatur des Transliterations-Blocks neu als lauf-weises Redecode statt Zeilendekodierung, selbstvalidierend und idempotent (62.351 Läufe repariert, 0 selbst-abgelehnt, 0 Rest); der Empty-Content-Zweig zeigt Seite 2979 jetzt mit `page_title` "A unidade espiritual do mundo". Alle drei durch Unit-Tests gesichert, keine neue Roteinfärbung.
+**Entschieden.** Nicht halbfertig committen, der Location-Fix koppelt an den Mojibake-Repair, weil Rest-Mojibake den Ort bei Klasse-3-Einträgen erreicht; kein Block-Whitelist-Guard für Mojibake, weil er 5 legitime Nicht-Latein-Reparaturen verworfen hätte; M3-Full-Run ist entkoppelt und rein ausführend, muss aber den committeten LLM-Cache wiederverwenden, weil die Gemini-API in der Umgebung ausfällt.
+**Offen.** M3 ist lokal verifiziert (`m3-preview-report.json`, end-zu-end 0 Orte und 0 Titel verloren), aber unveröffentlicht; der Publish-Push wartet auf Operator-Freigabe, weil er live deployt.
 
-**Milestone 1: Location-Fix im Pipeline-Code gelandet, getestet, vermessen**
+## 2026-06-21 — Session 17: Record Census und EIL-Editing-Design
 
-Der in Session 17 entworfene Fix ist jetzt im Code (`pipeline/lib/patterns.py`: `extract_location` plus Helfer `_clean_location`, `_location_from_header`) und durch Unit-Tests gesichert (`tests/test_patterns.py`, `TestExtractLocation`, acht neue Faelle: Header-Ort, verhinderter Kapiteltitel-Leak, nicht-westliche Stadt als Literal-Tail, US-Staatskuerzel-Ruecksprung, Bracket-Known vor Bracket-Reprint, kopfloser Fallback, Header-ohne-Ort-Durchfall). Volle Suite: keine neue Roteinfaerbung durch die Aenderung (die 15 roten `test_semantic`-Faelle und die 4 `test_llm_judge`-Fehler bestehen identisch auf sauberem HEAD 2a8e73d, sind also vorbestehende Feldfehler-Klassen beziehungsweise Gemini-API-Ausfaelle).
-
-Die in Session 17 berichteten Prototyp-Zahlen (4.035/202/6/508, 30 korrigiert) waren ein frueher Stand. Der Fix wurde danach verfeinert (Bracket-Known vor Bracket-Reprint, US-Staatskuerzel-Ruecksprung, Literal-Tail-Erhalt, verlustfreier Fallback-Pfad). Die gueltigen Zahlen stehen jetzt in einem committeten, reproduzierbaren Artefakt: `pipeline/measure_location_fix.py` laeuft den Extraktor erneut ueber `03_parsed.csv` (Encoding konstant gehalten) und schreibt deterministisch `data/output/location-fix-report.json`. Befund ueber 4.751 ns0-Datensaetze: 3.513 unveraendert, 443 geaendert, 795 neu gewonnen, 0 verloren (kein Ort wird je geleert). Von den 48 Weimar-Faellen wechseln 43 auf den echten Quellort, 5 bleiben "Weimar" (page_ids 1505, 1902, 4042, 5893, 5904). Vier davon sind kopflos (Weimar im Kapitel- oder Werktitel, kein Header, kein Bracket-Ort; 5893 und 5904 sind See-Querverweise auf "Lotte in Weimar"), der fuenfte (1902) hat einen Header, dessen Ort "Moskva" eine nicht gelistete Transliteration ist, ueber Schraegstriche statt Komma getrennt. Keiner ist eine Regression.
-
-Nachtrag bei der URL-Vorbereitung: beim Heraussuchen von Verifikationsbeispielen fiel im Artefakt ein einziger Verlagsname als Ort auf (page 14: alt "Frankfurt am Main", neu "Fischer Taschenbuch"). Ursache war nicht die Header-Logik selbst, sondern dass `extract_location` den Header nur mit Doppelpunkt-Trenner suchte; einige Header trennen das Jahr aber mit Punkt (`'''[1983]. Verlag, Stadt'''`), fielen durch und ein Fallback griff den Verlag. `PUBLICATION_LINE_RE` akzeptiert jetzt Doppelpunkt oder Punkt (`[:.]`, garantiertes Superset, kann die 1.688 Doppelpunkt-Header nicht aendern). Danach: page 14 liefert wieder "Frankfurt am Main", kein einziger geaenderter oder gewonnener Wert ist mehr ein Verlagsname, die Restfaelle bleiben unveraendert. Neuer Test `test_period_separator_header_read_like_colon`. Zahlen oben sind der Stand nach diesem Nachtrag.
-
-Zwei der drei Bereinigungs-Teilprobleme aus Session 17 sind im gelandeten Code behandelt (US-Staatskuerzel, Bracket-Alternativen). Das dritte bleibt der Kopplungsgrund: Rest-Mojibake erreicht den Ort bei den Klasse-3-Eintraegen ("AthÄna" fuer Athína) und verschwindet erst mit der Mojibake-Reparatur. Deshalb wartet der Pipeline-Neulauf auf Milestone 2; der gelandete Code aendert das veroeffentlichte Frontend nicht, das regeneriert erst im Full-Run. [[validation]] Fehlerklasse 1 auf den gelandeten Stand und die Artefakt-Zahlen gebracht.
-
-**Milestone 2: Mojibake-Reparatur des Transliterations-Blocks**
-
-Die alte `fix_mojibake` (pipeline/lib/encoding.py) loeste nur bei den Ã/Â-Lead-Bytes (C2/C3) aus, deshalb blieben die Latin-Extended-A- und Extended-Additional-Diakritika der transliterierten Titel (ā, ī, ş, ḥ, ṭ aus romanisiertem Arabisch, Griechisch, Vietnamesisch, Slawisch) und die doppelt kodierten typografischen Anfuehrungszeichen unrepariert. Das ist Fehlerklasse 3 in [[validation]] (rund 345 Titel).
-
-Neuer Ansatz: jede Mojibake-Sequenz einzeln reparieren statt ganze Zeilen neu zu dekodieren. `_MOJIBAKE_RE` erfasst jetzt einen Lauf aus einem Lead-Zeichen (U+00C2 bis U+00F4) plus Folge-Zeichen (U+0080 bis U+00BF); `_redecode_run` kodiert den Lauf als Latin-1 zurueck und dekodiert als UTF-8, was 2-, 3- und 4-Byte-Sequenzen in einem Durchlauf abdeckt. Selbstvalidierend: ist der Lauf nach dem Zurueckkodieren kein gueltiges UTF-8, bleibt er unveraendert. Das schuetzt sauberen Text, etwa ein akzentuiertes Zeichen vor einem Latin-1-Guillemet (katalanisch "nació»", Byte F3 BB, ein 4-Byte-Lead mit nur einem Folge-Byte, also ungueltig). Die Reparatur pro Lauf ist zudem idempotent (ein repariertes Zeichen liegt nicht mehr im Lead-Bereich) und erhaelt saubere Teile gemischter Zeilen. `has_mojibake` meldet jetzt nur noch reparierbare Laeufe, damit 06_validate den katalanischen Fall nicht falsch als Mojibake flaggt.
-
-Vermessen ueber alle ns0-Datensaetze von `01_extracted.csv` mit `pipeline/measure_mojibake_repair.py`, committetes deterministisches Artefakt `data/output/mojibake-repair-report.json`. Von 62.351 erkannten Laeufen werden alle 62.351 repariert, 0 selbst-abgelehnt, die Reparatur ist idempotent, nach der Reparatur traegt 0 Datensatz einen reparierbaren Rest. Die vollstaendige Liste der Reparaturen mit Ausgabe ausserhalb der gaengigen Latein-/Griechisch-/Kyrillisch-/Hebraeisch-/Arabisch-Bloecke steht im Report: genau 5 Eintraege, alle legitim (vier polytonische griechische Buchstaben, ein Bullet). Das belegt, dass die breite Signatur keinen sauberen Text zerstoert, und zeigt zugleich, dass ein Block-Whitelist-Guard falsch gewesen waere, weil er diese 5 legitimen Reparaturen verworfen haette. Gesichert durch acht neue Tests (`tests/test_encoding.py`, `TestMojibakeTransliteration`), darunter Sauber-Deutsch-Guard, Guillemet-Schutz, Idempotenz, gemischte Zeile. Volle Suite: keine neue Roteinfaerbung. [[validation]] Fehlerklasse 3 auf den gebauten Stand gebracht.
-
-**Dritte entschiedene Code-Aenderung (2979 zeigen-mit-Titel)**: der Empty-Content-Zweig in `03_parse_entries.py` faellt jetzt auf den bereinigten `page_title` zurueck, statt den Titel zu leeren; damit erscheint die geblankte Quellseite 2979 mit "A unidade espiritual do mundo" statt namenlos. Gesichert durch `tests/test_parse_entries.py` (drei Faelle). Die Census-Identitaet bleibt unberuehrt (2979 bleibt ein angezeigter Eintrag, nur betitelt). [[data]] de-staled. Wie die anderen beiden greift es erst im Full-Run.
-
-**Stand Milestone 1 und 2**: beide auf main gesichert, kein Pipeline-Neulauf, das veroeffentlichte Frontend unveraendert. Alle drei entschiedenen Strang-1-Code-Aenderungen (Location-Fix, Mojibake-Repair, 2979) liegen jetzt als getesteter Code vor. Der naechste Full-Run ist damit entkoppelt und rein ausfuehrend: er regeneriert die Outputs aus allen drei Aenderungen (Milestone 3, oeffentlich, operator-gated).
-
-**Milestone 3 gescopt (gebaut wird er noch nicht): gemeinsamer Full-Run und Frontend-Regeneration**
-
-Ergebnis-Artefakt: regenerierte `data/intermediate/02..04`, `data/output/klawiter.jsonld`, `docs/data/klawiter.json` und `docs/data/locations.json`, die alle drei gelandeten Fixes tragen; dazu ein committeter Re-Run-Diff und eine Operator-Stichprobe (Eintrags-IDs mit alt zu neu fuer Ort und Titel plus Quellzeile); dazu eine Chrome-Screenshot-Spur des frisch gebauten Frontends mit korrigierten Eintraegen (87 zu Taiyuan/Xi'an, 804 zu Yerevan, ein mojibake-bereinigter transliterierter Titel, 2979 betitelt).
-
-Verifikation mit konkretem Gruen-Kriterium: `census.py` PASS (Record-Identitaeten halten, 2979 bleibt genau ein angezeigter Eintrag, jetzt betitelt); `06_validate.py` schemavalide und Mojibake-Feldzahl gegen 0; `verify.py` Wert-im-Rohtext haelt; Regressions-Baselines geprueft und die ort-/mojibake-bezogenen `test_semantic`-Faelle nachgesehen (einige sollten gruen kippen); die committeten Messzahlen aus `location-fix-report.json` und `mojibake-repair-report.json` im Output gespiegelt.
-
-Ausfuehrungs-Bedingung: der Full-Run ruft `03b_llm_enrich.py` (Gemini) auf. Der Re-Run muss den committeten LLM-Cache (`data/intermediate/03b_llm_cache.json`) wiederverwenden, damit er deterministisch bleibt und keine neuen API-Aufrufe noetig sind; das ist relevant, weil die Gemini-API in der aktuellen Umgebung ausfaellt (sichtbar an den vier `test_llm_judge`-Fehlern). Oeffentlich: das Pushen der regenerierten `docs/data` nach main deployt GitHub Pages, also live. Nach Betriebsmodell gebe ich das nicht selbst live, sondern lege Diff und Screenshot-Spur vor und warte auf Freigabe. Darum ist M3 prepariert, nicht gebaut.
-
-**Milestone 3 als Vorschau lokal gebaut (nicht veroeffentlicht)**
-
-Auf Operator-Aufforderung, autonom voranzugehen, habe ich den Full-Run lokal gefahren, um die vier gelandeten Commits end-zu-end zu verifizieren, ohne zu deployen. Ablauf abgesichert: `data/intermediate/` vorher gesichert (Pruefsummen) und nachher wiederhergestellt, damit die M1/M2-Messartefakte byte-identisch reproduzierbar bleiben; die drei vom Lauf beruehrten Deploy-Dateien (`docs/data/klawiter.json`, `data/output/klawiter.jsonld`, `quality-report.json`) nach der Messung per `git checkout` zurueckgesetzt. Der Lauf brauchte kein Gemini fuer die Fixes (alle Kandidaten im Cache); 19 Eintraege ohne Cache-Eintrag liefen in den API-Ausfall und blieben ohne Gap-Fill, das betrifft nur publisher/translator/page_count, nicht Ort oder Titel.
-
-Ergebnis (committet als `data/output/m3-preview-report.json`, Skript `pipeline/measure_m3_preview.py`): end-zu-end im Frontend-Datenfile 608 Orte geaendert, 111 gewonnen, 0 verloren, 523 Titel geaendert. Die vier Schluesseldatensaetze verhalten sich wie vorhergesagt: 87 Weimar zu Taiyuan/Xi'an, 804 Weimar zu Yerevan und der transliterierte Titel mojibake-bereinigt, 2979 von leer zu "A unidade espiritual do mundo", 14 bleibt korrekt Frankfurt am Main (der Punkt-Trenner-Nachtrag haelt). `location_lost = 0` ist die Treuegarantie: kein Ort und kein Titel ging end-zu-end verloren. Der Bericht ist ein Snapshot dieses Builds (vor HEAD-Ref), nicht per Skript allein reproduzierbar, weil er einen Full-Run voraussetzt, der danach zurueckgesetzt wird. M3 bleibt damit verifiziert, aber unveroeffentlicht; der Publish-Push wartet auf Operator-Freigabe.
-
-## 2026-06-21 — Session 17: Record Census + EIL Editing Design (Forschungsleitstelle-Lane)
-
-Portfolio-Runde der Forschungsleitstelle, Lane klawiter-rescue. Operator-Auftrag mit zwei Straengen: die Datenintegritaet vom SQL-Quelldump bis ins Frontend verifizieren, und parallel den Ausbau des In-Tool-Editierens fuer die Expert-in-the-Loop-Kontrolle entwerfen.
-
-**Datenintegritaet (Strang 1)**
-
-- `pipeline/census.py` gebaut: reproduzierbare Record-Rekonziliation ueber drei Schichten (`01_extracted.csv` -> `klawiter.jsonld` -> `klawiter.json`), Report nach `data/output/census-report.json`. Fuenf Identitaeten, alle PASS: JSON-LD 1:1 mit Quelle (6.725/6.725, kein Verlust, kein erfundener Datensatz, keine Dublette); Frontend = JSON-LD minus 1.546 Redirects = 5.179; ns0 6.296 = 4.751 angezeigt + 1.545 Redirects; genau 1 leere bibliografische Seite == genau 1 namenloser angezeigter Eintrag.
-- Die offene Frage aus Session 1 ("The 1 missing entry") abschliessend geklaert. page_id 2979 ("A unidade espiritual do mundo"): Revisionsgeschichte-Trace zeigt drei Revisionen, die letzte (rev 18324, page_latest) mit `rev_len = 0` — die Seite wurde drei Minuten nach Anlage geblankt. Nur zwei Kategorie-Stub-Revisionen ueberleben in den BLOBs. Kein Pipeline-Fehler, sondern quellseitiger Verlust; bibliografischer Inhalt wurde nie im Dump erhalten. Der Titel steht in der `zweig_page`-Tabelle.
-- Die anderen drei leeren Seiten sind nicht-bibliografisch (CSS-Systemseite, leere armenische Kategorie, Bildbeschreibung), also irrelevant fuer die Bibliografie.
-
-**EIL-Editier-Design (Strang 2)**
-
-- `knowledge/eil-editing.md`: Zielentwurf fuer den Ausbau von `edit.js`. Editierbereich auf alle adjudizierbaren Felder, drei getypte Aktionen Accept/Correct/Add, Unsicherheits-Oberflaeche gespeist aus Provenance-Badges + verify.py-Flags + Census-Anomalien, Persistenz in drei Schichten (localStorage, Patch v2 mit Aktionstyp/Zeitstempel/Editor, apply_patches-Pipelineschritt mit neuem Provenance-Zustand `editor`), Nachvollziehbarkeit als Korrektur-Protokoll. Fuenf Build-Inkremente, minimaler naechster Schritt = Inkrement 1.
-- DIA-XAI-Anbindung explizit gemacht: die Oberflaeche traegt Frontier- wie lokale Modelle ohne Aenderung, weil der Editor extrahierte Werte unabhaengig vom erzeugenden Modell adjudiziert und der Provenance-Zustand die Methode festhaelt.
-- Rueckschreib- und Audit-Schicht implementiert (`pipeline/apply_patches.py` plus 8 Unit-Tests, alle gruen): Overlay-Schritt nach `inject_provenance`, wendet Korrekturen aus dem versionierten Store `data/corrections/` an, setzt Provenance auf `editor`, baut Edit-History pro Feld (Maschinen-Original erhalten), hebt den Review-Status (approved/agent_verified). Idempotent, Store ist autoritativ, leerer Store ist byte-identisches No-Op. Das ist der browser- und gate-unabhaengige Teil von Inkrement 1/4; der Frontend-Code wartet auf Browser-Sichtung.
-
-**Entscheidungen**
-
-- Census als drittes Verifikationswerkzeug neben verify.py (Wert-Korrektheit) und 06_validate.py (Qualitaet); es deckt die bisher unbewiesene Achse Record-Vollstaendigkeit ab.
-- 2979 nicht eigenmaechtig gefixt: zeigen-mit-Titel versus ausschliessen ist eine editorische Entscheidung, dem Operator vorgelegt.
-- Kein Pipeline-Neulauf in dieser Runde; Output-Regeneration gehoert in einen dedizierten Full-Run-Commit mit der 2979-Entscheidung.
-
-**Offen**: Operator-Entscheidungen zu 2979 und zum Bau der Editier-Inkremente (siehe [[HANDOFF]]).
-
-**Addendum: Frontend-Validierung und Autarkie**
-
-Sichtung des laufenden Frontends gegen die Quelle, Befunde in [[validation]]. Vier Feldfehler-Klassen bestaetigt, darunter ein systematischer Location-Fehler ("Weimar" aus Kapiteltiteln, 48 Faelle, Ursache lokalisiert). Dabei trat ein Infrastruktur-Problem zutage: das Frontend lud vier JS-Bibliotheken (flexsearch, d3, topojson-client, d3-sankey) und die Schriftarten von externen CDNs. Bei mehreren gleichzeitig laufenden localhost-Apps verunreinigt der geteilte Browser-Cache die CORS-Header, und Suche wie Explore brechen. Ein Datenrettungswerkzeug darf nicht von externer Erreichbarkeit abhaengen. Alle Abhaengigkeiten lokal ins Repo vendoriert (docs/vendor/, docs/fonts/ mit 26 woff2 und umgeschriebener fonts.css, favicon.svg), index.html auf lokale Pfade umgestellt (Commit ad270b1). Verifiziert: voller Reload macht 26 Requests, alle localhost, kein externer; Konsole fehlerfrei; d3 7.9.0, flexsearch, topojson, d3-sankey geladen. Das Frontend ist jetzt offline- und cache-robust.
-
-**Addendum: Weimar-Fix entworfen und vermessen (noch nicht gelandet)**
-
-Der erste Strang-1-Korrektur-Milestone offline entworfen und ueber alle 4.751 ns0-Datensaetze vermessen, ohne Pipeline-Aenderung zu committen. Befund: `extract_location` (pipeline/lib/patterns.py) sucht den Ort im gesamten Eintragstext, deshalb gewinnt "Weimar" aus dem Kapiteltitel "Goethe zwischen Karlsbad und Weimar". Datenfluss verifiziert: der LLM-Schritt (03b merge_result) fuellt nur Luecken, ueberschreibt also den Regex-Ort nie, deshalb bestimmt der Regex-Fix den Endwert direkt. Prototyp: Extraktion auf die fette Publikationszeile `'''[Jahr]: Verlag, Ort'''` begrenzen, Ort = Segment nach dem letzten Komma, gegen die Known-City-Liste normalisiert. Diff gegen den aktuellen Output: 4.035 unveraendert, 202 geaendert, 6 geleert, 508 neu gewonnen. Von den 48 Weimar-Faellen wechseln 30 auf den echten Quellort (Taiyuan/Xi'an, Yerevan, Moskva, Sofija, Tbilisi, Hanoi und andere), 1 wird geleert, 17 bleiben "Weimar" (mindestens 8 davon sind kopflose Exzerpt-/Rezensionseintraege mit Ort im `[Stadt, Jahr]`-Bracket statt Zitierkopf). Der grosse Gewinn sind die 508 neu gewonnenen Orte, fast durchweg nicht-westliche Staedte, die die Known-Liste nie hatte: der Quellort stand die ganze Zeit in der Publikationszeile.
-
-Drei Bereinigungs-Teilprobleme, die der Prototyp aufdeckt und die beim Landen zu behandeln sind: US-Staatskuerzel als Ort bei "Verlag, Stadt, ST" (Eintrag 889 "Riverside, CA" -> "CA"), Bracket-Alternativen ("Kyiv [Kiev]" -> Primaerform vor " ["), und Rest-Mojibake im Ort bei genau den Eintraegen aus Fehlerklasse 3 (Eintrag 3431 "AthÄna" fuer Athína), was den Fix an den Mojibake-Repair koppelt. Volle Charakterisierung in [[validation]] (Fehlerklasse 1). Entscheidung: nicht halbfertig committen; der Fix landet erst, wenn die drei Teilprobleme behandelt sind und gemeinsam mit der Titel-/Mojibake-Reparatur.
-
-**Leitstelle-Sync**: Reports auf Delta 6 nachgezogen (Autarkie-Fix gemeldet, Operator-Bedarf unveraendert), nach der Weimar-Analyse auf Delta 7 (Fix entworfen und vermessen, kein neuer Operator-Bedarf).
+**Runde.** Portfolio-Runde mit zwei Strängen, Datenintegrität vom SQL bis ins Frontend verifizieren und die In-Tool-Editierschicht entwerfen.
+**Geändert.** `pipeline/census.py` gebaut, reproduzierbare Record-Rekonziliation über drei Schichten, fünf Identitäten alle PASS (JSON-LD 1:1 mit Quelle, kein Verlust, keine Dublette, kein erfundener Datensatz); Editier-Design als Wissensdokument (drei getypte Aktionen, Unsicherheits-Oberfläche aus Provenance/verify/Census, Persistenz in drei Schichten, Korrektur-Protokoll, fünf Inkremente) mit expliziter DIA-XAI-Anbindung; Rückschreib- und Audit-Schicht `apply_patches.py` implementiert (Overlay nach inject_provenance, Provenance `editor`, Edit-History je Feld, idempotent, leerer Store ist No-Op). Addenda in der Runde: Frontend-Validierung mit vier bestätigten Feldfehler-Klassen; alle externen JS- und Font-Abhängigkeiten lokal ins Repo vendoriert; Weimar-Fix entworfen und vermessen.
+**Entschieden.** Die 2979-Frage aus Session 1 abschließend geklärt, quellseitiger Verlust durch Blanking drei Minuten nach Anlage, kein Pipeline-Fehler; Census als drittes Verifikationswerkzeug neben verify.py und 06_validate.py für die Achse Record-Vollständigkeit; 2979 nicht eigenmächtig gefixt, zeigen-mit-Titel versus ausschließen ist editorisch; ein Datenrettungswerkzeug darf nicht von externer CDN-Erreichbarkeit abhängen (geteilter Browser-Cache verunreinigte die CORS-Header); der Weimar-Fix landet erst mit seinen drei Bereinigungs-Teilproblemen und der Mojibake-Reparatur gemeinsam.
+**Offen.** Operator-Entscheidungen zu 2979 und zum Bau der Editier-Inkremente.
 
 ## 2026-06-12 — Session 16: Full-Codebase Refactoring (Multi-Agent)
 
-### What we did
-
-1. **Four-lane analysis** (parallel Opus agents: pipeline, frontend, tests, docs) producing verified findings with file:line evidence, then two implementation waves on disjoint areas.
-2. **Frontend cleanup**: deleted dead `explore-overview.js` (orphaned since Session 14f, would crash on missing `CHART_DIMS.overview`; uncommitted rework discarded, saved as patch in `c:\tmp`), removed its CSS blocks and two unreachable methods (`Explore._renderDetailSummary`, `ExploreTimeline.toggleProvenance`), deleted empty `v2/`. New `utils.topN()` replaces the count-sort-slice pattern at the 4 semantically identical call sites; network filter listener unified with the geography pattern (named handler, removeEventListener, re-entrancy guard).
-3. **Pipeline cleanup (behavior-neutral)**: `03c_normalize.py` aligned with the step pattern (config constants, atomic `write_csv`, named thresholds); created missing `publisher_normalize.json` (the publisher variant path was silently a no-op); removed 7 dead imports in `verify.py` and unused proximity parameters in `reconcile_locations.py`; centralized `EXTRACTED_FIELDS` in config.
-4. **Test refactoring**: new `tests/test_normalize_unit.py` (26 unit tests for all six 03c functions, written *before* touching 03c). Activated two always-skipping regression tests (`entry_type_distribution` added to baseline; `year_range_sane` now checks the real key). Centralized scattered `KNOWN_*` constants into `known_issues` in `baseline-metrics.json`; tests now load the normalization mapping tables instead of duplicating them. Removed two redundant/obsolete tests. Ratcheted `broken_see_also_refs` 727→622 (real data improvement).
-5. **Documentation refactoring**: unified stale numbers everywhere (tests 326/328/397→437, 7→8 steps, Overview→Geography, locations 402→395 = pre-normalization value); resolved the "Wikidata/GND/VIAF out of scope" vs. implemented-reconciliation contradiction (canonical line: LOD linking allowed and implemented, inventing values forbidden); removed the duplicated test taxonomy from pipeline.md (single source: testing.md); README gained Citation and Data Model sections plus entry-count disambiguation; index.md Open Items synced with journal.
-
-### What we learned
-
-- **Numbers drift because they are hardcoded in 2–4 places.** Every stale count (tests, coverage, locations) had a single correct source (baseline-metrics.json, pytest collection, the data itself). The docs now follow a responsibility matrix: numbers live in one file, others link.
-- **Always-skipping tests are worse than no tests** — two regression tests suggested coverage that never executed (missing baseline key, wrong report key). Activating them cost three lines each.
-- **Deliberately not done**: mojibake regex consolidation, language-list dedup, SQL parser unification — not provably behavior-neutral without a pipeline re-run; documented in the analysis reports instead.
-
-### Numbers
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Tests collected | 413 (docs said 397) | 437 |
-| Dead JS module | 373 LOC | 0 |
-| 03c unit coverage | 0 direct tests | 26 |
-| Always-skipping regression tests | 2 | 0 |
-| broken seeAlso refs baseline | 727 | 622 |
-| Test result (non-LLM) | — | 408 passed, 15 pre-existing semantic failures, 10 skipped |
-
-### Follow-up (same day)
-
-6. **Browser smoke test (Playwright)**: all three explore modes render, cross-view filtering works (Leipzig bubble → chip → filtered network community view), 18× rapid tab switching and a filter-toggle storm produced 0 errors (the rebuilt listener holds), deep link + back/forward restore the mode, dead module returns 404. One expected console warning (stub page_id 2979).
-7. **`locationSameAs` implemented** (Session 15 follow-up): step 05 loads `locations.json` and emits `klawiter:locationSameAs` (`@type: @id`, Wikidata entity URI) for the primary location — 4,013 of 4,162 located non-redirect entries (~96%). Pipeline re-run 05→06→inject_provenance, diff-verified: no other changes. Detail view renders a discreet Wikidata link; vocab page and ontology.md document the property.
-8. **22 unmatched locations triaged** into `data/output/unmatched_locations_review.md` (editor review template): 17 match candidates (e.g. T'aipei→Q1867, Lannuon→Q207581), 3 ambiguous two-place strings, 1 mojibake (RĀ«ga→Riga via location_normalize.json), 1 genuinely ambiguous (Saint-Aignan). Noted: apostrophe encoding differs between klawiter.json (U+2019) and locations.json (U+0027) — relevant for any mapping work.
-
-### What's next
-
-- EIL verification workflow (DIA-XAI deliverable) as the next major work package
-- Editor review of `unmatched_locations_review.md` (Accept/Correct decisions are domain calls)
-- Fill `publisher_normalize.json` with real variant mappings via the editor loop
+**Runde.** Vier-Lane-Analyse mit parallelen Agents, dann zwei Implementierungswellen auf disjunkten Bereichen.
+**Geändert.** Frontend entrümpelt (totes `explore-overview.js` und zwei unerreichbare Methoden entfernt, `utils.topN()` ersetzt vier identische Call-Sites, Netzwerk-Filter-Listener vereinheitlicht); verhaltensneutrale Pipeline-Bereinigung (`03c_normalize.py` an das Schrittmuster angeglichen, fehlende `publisher_normalize.json` angelegt, tote Importe entfernt, `EXTRACTED_FIELDS` zentralisiert); Tests refactoriert (`test_normalize_unit.py` vor der Berührung von 03c geschrieben, zwei stets-übersprungene Regressionstests aktiviert, `KNOWN_*` in `baseline-metrics.json` zentralisiert, `broken_see_also_refs` 727 auf 622 als echte Datenverbesserung geratcht); veraltete Zahlen dokumentweit vereinheitlicht und der Reconciliation-Widerspruch aufgelöst (LOD-Verlinkung erlaubt und implementiert, Werte erfinden verboten). Browser-Smoke-Test grün; `locationSameAs` als Wikidata-URI je Primärort emittiert; 22 nicht gematchte Orte in ein Review-Template triagiert.
+**Entschieden.** Zahlen driften, weil sie in mehreren Stellen hartkodiert sind, daher eine Verantwortungsmatrix mit je einer Quelle; stets-übersprungene Tests sind schlechter als keine; bewusst nicht getan wurden Mojibake-Regex-Konsolidierung, Sprachlisten-Dedup und SQL-Parser-Vereinheitlichung, weil ohne Pipeline-Neulauf nicht beweisbar verhaltensneutral.
+**Offen.** EIL-Verifikations-Workflow als nächstes Arbeitspaket; Editor-Review der nicht gematchten Orte; `publisher_normalize.json` über den Editor-Loop mit echten Varianten füllen.
 
 ---
 
-## 2026-04-12 — Session 15: Geography, Timeline Modes, Normalization, Wikidata
+## 2026-04-12 — Session 15: Geography, Timeline-Modi, Normalisierung, Wikidata
 
-### What we did
-
-1. **Geography view (L2, 816 LOC)**: Orthographic globe (`d3.geoOrthographic`) with flat map toggle (`d3.geoNaturalEarth1`), drag-to-rotate, scroll-to-zoom. Semantic zoom at 2× base scale: ~82 country-aggregated bubbles (zoom-out) → ~366 city bubbles (zoom-in). Click dims non-selected to 0.35 opacity with filter chip + cross-view event. Interactive legend, animated decade playback, city labels at zoom, improved ocean/land contrast.
-2. **Wikidata reconciliation**: `reconcile_locations.py` (293 LOC). Two-phase: Reconciliation API (en + de endpoints) → SPARQL metadata enrichment. 360/382 locations matched (94.2%). `locations.json` enriched with `wikidataId`, `wikidataLabel`, `wikidataScore`, `countryQid`. 22 unmatched logged in `locations_reconciliation_log.json`. 6 tests against 20-entry ground truth.
-3. **Timeline modes (L1)**: Three visualization modes: Bars (default, decade-aggregated when >50-year extent), Sparklines (small multiples per language/type with individual Y-scales), Ranks (bump chart showing language rank per decade). Stream mode removed — `curveBasis` smooths discrete data, `stackOffsetWiggle` removes baseline, no analytical value (Cleveland & McGill 1984).
-4. **URL state persistence**: Hash-based state encoding: `#stats/timeline?years=1920-1940&chart=sparklines&language=German`. `replaceState` for brush updates, `pushState` for tab switches, `popstate` listener for back/forward. `_lastHash` guard prevents double-processing.
-5. **Global provenance toggle**: `Explore.filters.showProvenance` checkbox in filter chips, persists across tab switches via URL state.
-6. **Pipeline 03c normalization** (187 LOC): Auditable normalization via external mapping tables. Location variants (7 mappings, 45 entries), publisher garbage rejection (regex patterns, 160 entries), translator cleanup (mojibake + suffix stripping, 193 entries), pageCount outlier rejection (>2000 and year-like, 12 entries). 5 regression tests.
-7. **Systematic field profiling**: All 8 data fields profiled for normalization candidates.
-
-### What we learned
-
-- **Country codes were missing entirely** — semantic zoom in geography was an empty shell until all 382 locations were geocoded with ISO Alpha-2 country codes. Wikidata reconciliation solved this and provided LOD-linkable Q-IDs as a bonus.
-- **Stream visualization was analytically weak** — curveBasis interpolation smooths discrete yearly counts into false continuity, stackOffsetWiggle removes the meaningful zero baseline. Bars + Sparklines + Ranks serve the three research questions better: total comparison (Bars), individual trends (Sparklines), relative dominance shifts (Ranks).
-- **Normalization must be a separate pipeline step** — mixing extraction and cleanup in 03_parse_entries.py made both harder to test. Step 03c with external config files (JSON) is auditable and doesn't violate the Data Integrity Principle.
-- **Publisher coverage drops are correct** — 55.5% → 52.2% because garbage (edition numbers, metadata strings) was removed, not because valid publishers were lost.
-
-### Numbers
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Timeline LOC | 288 | 746 |
-| Geography LOC | 0 | 816 |
-| explore.js LOC | 484 | 567 |
-| Pipeline steps | 7 (01–06 + verify) | 8 (+ 03c normalize) |
-| Wikidata matches | 0/382 | 360/382 (94.2%) |
-| Publisher coverage | 55.5% | 52.2% (garbage removed) |
-| Translator cleaned | — | 193 entries |
-| Tests | 317 | 328 |
-
-### What's next
-
-- Browser-test all new features (Sparklines, Ranks, Globe/Flat toggle, semantic zoom)
-- 22 unmatched locations: manual review
-- `locationSameAs` field with Wikidata URIs in JSON-LD output
-- L3 Connections: status update needed
-- Multi-edition decomposition (LLM-based, separate project)
+**Runde.** Umsetzungsrunde Exploration und Datenqualität (fasst die zwei Session-15-Einträge des Tages zusammen).
+**Geändert.** Geography-View mit orthographischem Globus und Flachkarten-Toggle plus semantischem Zoom (Länder- zu Städte-Bubbles); Wikidata-Reconciliation über `reconcile_locations.py` (360/382 gematcht, `locations.json` um Q-IDs und Ländercodes angereichert); drei Timeline-Modi Bars/Sparklines/Ranks statt Stream, globaler Provenance-Toggle, hash-basierte URL-State-Persistenz; Pipeline-Schritt 03c Normalisierung mit auditierbaren externen Mapping-Tabellen (Ortsvarianten, Verlags-Müllabweisung, Übersetzer-Bereinigung, pageCount-Ausreißer); alle 8 Felder auf Normalisierungskandidaten profiliert, Publisher als größtes Restproblem identifiziert (1.316 Singletons erfordern Handreview).
+**Entschieden.** Ländercodes fehlten ganz und machten den semantischen Zoom zur leeren Hülle, Reconciliation löste das und lieferte LOD-Q-IDs als Bonus; Stream visuell schwach, weil curveBasis diskrete Daten glättet und stackOffsetWiggle die Nulllinie entfernt, Bars/Sparklines/Ranks bedienen die drei Forschungsfragen besser; Normalisierung als eigener Schritt hält Extraktion und Bereinigung trennbar und verletzt das Data-Integrity-Prinzip nicht; Publisher-Coverage-Rückgang 55,5 auf 52,2 Prozent ist korrekt, Müll entfernt statt valider Verlage.
+**Offen.** Neue Features im Browser testen (Sparklines, Ranks, Globus, semantischer Zoom); Publisher-Clustering per Handreview; Sprache für Film/Symposium/Translation; seeAlso-Auflösung; `locationSameAs` in den JSON-LD-Output; Multi-Edition-Dekomposition.
 
 ---
 
-## 2026-04-12 — Session 14f: Timeline Redesign
+## 2026-04-12 — Session 14f: Timeline-Redesign
 
-### What we did
-
-1. **Timeline rewrite**: Stacked area → stacked bars. Discrete bibliographic data represented as bars per year, not interpolated curves. Full-width layout (detail panel only on selection).
-2. **Layer toggle**: "by Language" (default) or "by Type" showing 16 entry types as stacked bar layers.
-3. **Provenance overlay**: Toggle shows per-year ratio of regex/LLM/missing provenance as semi-transparent layer.
-4. **Semantic zoom**: X-axis adapts to brush extent: decades (>80 years) → 5-year ticks (30–80) → individual years (<30). Data aggregation: decade bars (>50 years) → year bars (<50 years).
-5. **5 annotations**: Born 1881, WWI 1914, Exile 1933, WWII 1939, Death 1942. Collision avoidance for overlapping labels.
-6. **Brush cross-view events**: `explore:filterChange` custom event on `document`, consumed by Geography and Connections views.
-7. **Overview mode removed**: Tab, panel, script tag, setMode handler, CHART_DIMS constant — all deleted. Three modes remain: Timeline, Geography, Connections.
-8. **Dead code cleanup**: Removed `_drawLegend()`, duplicate filter chip.
-
-### What we learned
-
-- **Stacked area was wrong for this data** — bibliographic entries are discrete counts per year, not continuous flows. Bars represent the data honestly.
-- **Overview was redundant** — the Timeline with layer toggle + semantic zoom covers what Overview's small multiples showed, with better interaction (brush, cross-view events).
-- **Provenance overlay works as Developer-in-the-Loop tool** — shows immediately where data quality varies over time (pre-1900 entries have more missing fields).
-
-### Numbers
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Timeline LOC | 288 | 496 |
-| Explore.js LOC | 484 | 567 |
-| Visualization modes | 4 (Timeline, Overview, Geography, Connections) | 3 (Timeline, Geography, Connections) |
-| Annotations | 3 (Born, Exile, Death) | 5 (+ WWI, WWII) |
-
-### What's next
-
-- Add more visualization modes (Sparklines, Ranks) → Session 15
-- Browser-test layer toggle and provenance overlay
+**Runde.** Umsetzungsrunde Timeline-Neubau.
+**Geändert.** Stacked Area zu Stacked Bars (diskrete bibliografische Zählungen je Jahr statt interpolierter Kurven), Layer-Toggle nach Sprache oder Typ, Provenance-Overlay je Jahr, semantischer Zoom über die Brush-Extent, fünf biografische Annotationen mit Kollisionsvermeidung, Brush-Cross-View-Events für Geography und Connections; Overview-Modus samt totem Code entfernt, drei Modi verbleiben.
+**Entschieden.** Stacked Area war falsch für diskrete Zähldaten, Bars stellen sie ehrlich dar; Overview war redundant, die Timeline mit Layer-Toggle und Zoom deckt es mit besserer Interaktion ab; das Provenance-Overlay wirkt als Developer-in-the-Loop-Werkzeug, weil es zeigt, wo die Datenqualität über die Zeit variiert.
+**Offen.** Weitere Modi Sparklines und Ranks; Layer-Toggle und Provenance-Overlay im Browser testen.
 
 ---
 
-## 2026-04-12 — Session 14: Semantic Testing, Extraction Fixes, Pipeline Limits
+## 2026-04-12 — Session 14: Semantic Testing, Extraktionsfixes, Pipeline-Grenze
 
-### What we did
-
-1. **Frontend data verification**: Added `_meta` block to `klawiter.json` (pipeline-generated baseline), replaced verbose `logDataSummary()` with compact `verifyData()` in app.js, injected `_provenance` data (43.1% regex, 11.8% LLM, 45.3% missing).
-2. **10-entry wiki verification**: Compared 10 strategically selected entries against the live wiki at klawiter.stefanzweig.digital. Found 23% of fields wrong, 12% problematic. Root cause: multi-edition wiki pages.
-3. **Semantic testing layer**: Created `test_semantic.py` (70 tests, 10 entries x 7 fields) and `test_heuristic.py` (6 pattern-based validators on all 4,751 entries). Ground truth in `tests/wiki_ground_truth.json`.
-4. **5 extraction fixes**: Title fallback to page_title (1,368 section headers → 0), PageCount `N/(M)p.` pattern + parenthesized lookahead fix, Publisher markup cleanup + metadata rejection.
-5. **Encoding guard**: If page_title has encoding artifacts AND extracted title was only rejected for length (not section header), keep the extracted title.
-6. **Documentation**: Updated all knowledge docs, added multi-edition limitation to pipeline.md.
-
-### What we learned
-
-- The pipeline is at the **natural limit of regex-based extraction**. Further regex fixes shift problems (wrong value A → wrong value B) rather than solving them.
-- **427 multi-edition pages** (6.8%) cause systematic extraction errors. The pipeline treats each page as one flat entry, but Klawiter's bibliography uses pages as containers for multiple publications.
-- **page_title** (MediaWiki metadata) is more reliable than extracted titles. The fallback was the highest-impact fix.
-- **Semantic tests** are the most valuable addition — they quantify what's wrong and prevent regressions.
-
-### Numbers
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Section-header titles | 1,368 | 0 |
-| Markup in titles | 7 | 0 |
-| Publisher markup | 20 | 0 |
-| Publisher metadata | 10 | 0 |
-| Year-as-pageCount | 27 | 11 |
-| Redirects resolved | 430 | 1,210 |
-| Broken seeAlso | 1,140 | 727 |
-| Tests | 326 | 392 |
-| Semantic accuracy | n/a | 53/70 (76%) |
-
-### What's next
-
-- Expand ground truth from 10 to 30+ entries (stratified by type/language)
-- Browse the frontend systematically to find remaining issues
-- Consider LLM-based edition-block segmentation for multi-edition pages (separate project)
-- WCAG 2.1 AA audit, performance measurement
+**Runde.** Umsetzungs- und Analyserunde Datentreue.
+**Geändert.** `_provenance`-Block und kompakte Datenverifikation ins Frontend gebracht; 10 Einträge gegen das Live-Wiki verglichen (23 Prozent der Felder falsch); Semantic-Testing-Schicht angelegt (`test_semantic.py`, `test_heuristic.py`, Ground Truth); fünf Extraktionsfixes, der Titel-Fallback auf `page_title` mit der höchsten Wirkung (1.368 Section-Header auf 0), plus pageCount- und Publisher-Bereinigung und ein Encoding-Guard.
+**Entschieden.** Die Pipeline ist an der natürlichen Grenze der Regex-Extraktion, weitere Fixes verschieben Fehler (Wert A zu Wert B) statt sie zu lösen; die 427 Multi-Edition-Seiten (6,8 Prozent) verursachen systematische Fehler, weil die Seite als Container mehrerer Publikationen als ein flacher Eintrag behandelt wird; `page_title` ist zuverlässiger als extrahierte Titel; Semantic-Tests sind die wertvollste Ergänzung, weil sie das Falsche quantifizieren und Regressionen verhindern.
+**Offen.** Ground Truth von 10 auf 30+ stratifiziert erweitern; Frontend systematisch durchsehen; LLM-basierte Edition-Block-Segmentierung erwägen; WCAG-2.1-AA-Audit und Performance-Messung.
 
 ---
 
-## 2026-04-12 — Session 15: Timeline Modes, Pipeline Normalization, Data Analysis
+## 2026-04-12 — Session 12: JSON-LD-Validierung, Playground, Projekt-Audit
 
-### What we did
-
-1. **Timeline visualization overhaul**: Replaced Bars/Stream toggle with three analytically grounded modes: Bars (decade-aggregated at full extent), Sparklines (small multiples per language — addresses Forschungsfrage 2 via individual baselines, Cleveland & McGill 1984), Ranks (bump chart showing language rank per decade). Stream mode removed (curveBasis smoothed discrete data, stackOffsetWiggle removed baseline, no analytical advantage).
-2. **Global provenance toggle**: Moved from Timeline-local to `Explore.filters.showProvenance`. Checkbox in shared filter chips area, persists across tab switches.
-3. **URL hash state persistence**: Full explore state encoded in URL (`#stats/timeline?years=1920-1940&chart=sparklines`). replaceState for brush, pushState for tab switches, popstate listener for back/forward, _lastHash guard against double-processing.
-4. **Pipeline step 03c (normalization)**: New step with auditable mapping tables in `pipeline/data/`. Location variant mapping (7 rules, 45 entries), publisher garbage rejection (8 patterns, 160 entries), translator mojibake fix + afterword/foreword suffix stripping (193 entries), pageCount outlier rejection (12 entries).
-5. **Systematic data profiling**: Analyzed all 8 fields for normalization issues. Found publisher critically broken (1,616 variants, 81% singletons, 245 garbage), translator has 3 distinct problems (mojibake, multi-person, non-person content), location has 5 fixable variant groups.
-6. **5 normalization tests** with bounded thresholds.
-
-### What we learned
-
-- **Stacked charts cannot answer language comparison questions** — non-adjacent layers share neither baseline nor top. Small multiples and bump charts are structurally better encodings for this data.
-- **Decade aggregation** at full extent (21 bars instead of 140) is the single most impactful readability improvement.
-- **Publisher normalization is the largest remaining data quality problem** — but clustering 1,316 singletons requires manual review, not automation.
-- **Normalization as a separate pipeline step** (03c) keeps extraction and standardization as distinct responsibilities with auditable mapping tables.
-
-### Numbers
-
-| Metric | Before | After |
-|--------|--------|-------|
-| Timeline modes | Bars + Stream | Bars + Sparklines + Ranks |
-| Publisher coverage | 55.5% | 52.2% (160 garbage removed) |
-| PageCount coverage | 53.5% | 53.3% (12 outliers removed) |
-| Locations normalized | — | 45 (7 variant mappings) |
-| Translators cleaned | — | 193 (mojibake + suffixes) |
-| Tests | 392 | 397 |
-
-### What's next
-
-- Browser-test Sparklines and Ranks modes (only Bars confirmed via screenshot)
-- Publisher clustering (1,316 singletons → ~300 canonical forms, requires manual review)
-- Language detection for Film/Symposium/Translation entries (0% coverage)
-- seeAlso resolution (155 broken references)
+**Runde.** Umsetzungs- und Audit-Runde JSON-LD und Codebasis.
+**Geändert.** Data-Integrity-Prinzip in CLAUDE.md dokumentiert (LLM-Audit bestätigt 0 halluzinierte Werte über fünf Anti-Halluzinations-Schichten); JSON-LD-@context in fünf Punkten korrigiert und mit PyLD validiert (Expansion, Kompaktion, N-Quads bestehen); JSON-LD-Playground-Frontend gebaut; Projekt-Audit fand drei Bugs und mehrere Doku-Inkonsistenzen. Bugs behoben, darunter der kritische Falsch-Key in `06_validate.py`/`verify.py`, der still 0 Einträge verarbeitete, sowie vier verschiedene Jahres-Caps und drei divergierende `ABOUT_ZWEIG_TYPES`-Definitionen.
+**Entschieden.** Stille Validierungsfehler sind die schlimmsten Bugs, weil der Fallback `[]` keinen Fehler meldet, Eingaben immer auf Nicht-Leere prüfen; mehrfach definierte Konstanten driften, die Pipeline ist die Quelle und das Frontend spiegelt; Dokumentation verfällt schneller als Code, automatisierte Grep-Checks auf bekannte Zahlen fingen das ab.
+**Offen.** Nichts über die laufenden Datenqualitäts-Stränge hinaus benannt.
 
 ---
 
-## 2026-04-12 — Session 12: JSON-LD Validation, Playground, Project Audit
+## 2026-04-12 — Session 11: Testing-Strategie überarbeitet
 
-### What we did
-
-- **Data Integrity Principle** documented in CLAUDE.md: pipeline extracts only, never invents data. LLM audit confirmed 0 hallucinated values across 5 anti-hallucination layers.
-- **JSON-LD @context fixed** (5 issues): removed incorrect `author @type:@id` coercion, typed `datePublished` as `xsd:gYear`, added `@version: 1.1`, mapped dataset-level properties as short aliases, added `@container:@list` for entries array.
-- **JSON-LD validated with PyLD**: expansion, compaction, and N-Quads generation all pass. 53 triples per entry, author objects expand correctly.
-- **JSON-LD Playground frontend** (`#jsonld`): interactive compact/expanded/triples view with entry search, random selection, syntax highlighting, vocabulary reference table.
-- **Full project audit**: found 3 bugs (2 critical), 8 documentation inconsistencies, 4 refactoring opportunities.
-- **Bugs fixed**: `06_validate.py`/`verify.py` read wrong key (`klawiter:entries` instead of `entries` — validation silently processed 0 entries); year validation had 4 different caps (unified to `config.MIN/MAX_VALID_YEAR`); `ABOUT_ZWEIG_TYPES` inconsistent across 3 files (aligned to pipeline as source of truth).
-- **Refactoring**: `Export.jsonld()` now uses full @context via `JsonldPlayground._toCompactJsonld()`; removed duplicate `escapeHtml`; `PERIOD_RANGES` imported from `vocabulary.py` instead of duplicated; Windows encoding fix deduplicated.
-- **Documentation corrected**: test count 311→326 in 5 files, architecture.md (Tailwind→CSS, Chart.js→D3, 4MB→9MB), ontology.md @context block, data.md quality report (32→442 info issues), testing.md seeAlso clarification, journal Session 12.
-
-### What we found
-
-| Finding | Severity | Fix |
-|---------|----------|-----|
-| `06_validate.py` reads 0 entries (wrong key) | Critical | `'klawiter:entries'` → `'entries'` |
-| `ABOUT_ZWEIG_TYPES` 3 different definitions | Critical | Aligned to pipeline logic |
-| Year caps: 2025/2030/2035/dynamic | High | Unified to `config.MIN/MAX_VALID_YEAR` |
-| Test count wrong in 5 docs | Medium | All updated to 326 |
-| architecture.md: Tailwind, Chart.js, 4 MB | Medium | Updated to CSS, D3.js, 9 MB |
-| data.md quality report: 32 info → 442 | Medium | Corrected |
-| ontology.md @context outdated | Medium | Mirrors current vocabulary.py |
-
-### Learnings
-
-1. **Silent validation failures are the worst bugs**: `06_validate.py` processed 0 entries and reported no errors because the fallback was `[]`. Always validate that inputs are non-empty.
-2. **Constants defined in multiple places will drift**: `ABOUT_ZWEIG_TYPES` had 3 different definitions. The pipeline is the source of truth; frontend must mirror it.
-3. **Documentation decays faster than code**: 8 inconsistencies accumulated over 3 sessions. Automated checks (grep for known numbers) would catch these.
+**Runde.** Umsetzungsrunde Teststrategie nach kritischem Audit der bestehenden 280 Tests.
+**Geändert.** `knowledge/testing.md` mit ehrlicher Taxonomie angelegt; drei neue Datentest-Dateien über alle Einträge (`test_census.py` Vollständigkeit, `test_schema.py` Schema, `test_consistency.py` Kreuzfeld-Plausibilität); Regressions- und Real-Entry-Tests überarbeitet (kaputtes `test_year_range_sane` gefixt, Schwellen geschärft, stille Skip-Logik entfernt). Befunde als gebundene Bekannt-Fehler eingezogen (14 `__TOC__`-Titel, 6 Markup-Titel, 111 deutsche Übersetzer-FPs, 717 kaputte seeAlso-Refs, 10 Filme mit pageCount, Seite 2979 als Stub, die die Doku fälschlich als "missing" führte).
+**Entschieden.** Funktionen testen ist nicht Daten testen, die 280 Unit-Tests bewiesen die Regex an Rosinenstrings, keiner fragte nach Vollständigkeit oder Feldwerten; Form-Korrektheit ist nicht Inhalts-Korrektheit, nur Kreuzfeld-Tests flaggen implausible Kombinationen; stille Test-Passes sind schlechter als keine Tests; die größte Lücke bleibt die semantische Genauigkeit, weil nur ein Bruchteil der Einträge auf Korrektheit geprüft wird.
+**Offen.** Die 20 Markup-Titel in der Pipeline fixen; die 111 deutschen Übersetzer-FPs untersuchen; Real-Entry-Sample von 20 auf 50 erweitern; seeAlso-Matching verbessern.
 
 ---
 
-## 2026-04-12 — Session 11: Testing Strategy Overhaul
+## 2026-03-31 — Session 10: Frontend-Cleanup, Datenqualität, Regressionstests
 
-### What we did
-
-- **Critical audit of existing 280 tests**: Identified structural weaknesses — unit tests against handcrafted fixtures, silent skip-logic in real-entry tests, broken regression test (`test_year_range_sane` didn't check year ranges), 100-entry spot-check on 5,179 entries.
-- **Web research**: Data pipeline testing best practices (OpenCitations bibliographic validation, golden file testing, Pandera schema contracts, Hypothesis fuzzing, risk-based threshold calibration).
-- **New knowledge document**: `knowledge/testing.md` — 5-category test taxonomy with honest assessment of what each category can and cannot detect.
-- **New test_census.py** (14 tests): Completeness verification — exact entry counts, no duplicates, known stubs, required fields on every entry, frontend JSON structure.
-- **New test_schema.py** (14 tests): Schema validation over all 5,179 entries — entry types, year ranges, language codes, page counts, wiki markup residue, mojibake, empty strings, JSON-LD type consistency.
-- **New test_consistency.py** (6 tests): Cross-field plausibility — German+translator bounded (111 FPs), film+pageCount bounded (10), publisher≠location, year/timePeriod consistency, seeAlso referential integrity (717 broken refs bounded), no self-references.
-- **Overhauled test_regression.py**: Fixed broken `test_year_range_sane`, sharpened thresholds (2pp→1pp, 1%→0.5%), extended spot-check to all entries, added entry type distribution stability test.
-- **Overhauled test_real_entries.py**: Removed silent skip-logic, LLM-only fields as xfail instead of pass-by-doing-nothing.
-- **Updated CLAUDE.md, plan.md**: 314→ tests, 5-category strategy, page 2979 as stub, 20 markup titles documented.
-
-### What we found
-
-| Finding | Count | Detected by |
-|---------|-------|-------------|
-| Titles = `__TOC__` (title extraction failure) | 14 | test_schema |
-| Titles with `]]`/`[[` markup | 6 | test_schema |
-| German entries with translator (regex FP) | 111 | test_consistency |
-| Broken seeAlso cross-references | 717 / 1,213 | test_consistency |
-| Films with pageCount | 10 | test_consistency |
-| Publisher == Location | 1 | test_consistency |
-| Page 2979 exists as stub (docs said "missing") | 1 | test_census |
-
-### What we learned
-
-1. **Testing the functions ≠ testing the data.** 280 unit/pattern tests proved the regex works on cherry-picked strings. Zero tests asked whether the actual output contained all entries or had correct field values.
-2. **Shape correctness ≠ content correctness.** A publisher field containing a city name passes all schema checks. Only cross-field consistency tests can flag implausible combinations.
-3. **Silent test passes are worse than no tests.** The old `test_real_entries.py` had 160 tests, many of which asserted nothing due to skip-logic. This gave false confidence.
-4. **The biggest gap is semantic accuracy.** We test 20 of 4,751 entries (0.4%) for correctness. Completeness and structure are fully automated; accuracy requires judgment.
-
-### Next steps
-
-- Fix the 20 markup titles in the pipeline (title extraction bug)
-- Investigate 111 German translator false positives (regex improvement)
-- Expand real-entry sample from 20 to 50 entries
-- Improve seeAlso matching (717 broken refs partly a suffix-matching problem)
+**Runde.** Umsetzungs- und Analyserunde Frontend und Datenqualität.
+**Geändert.** Frontend über 12 Dateien refactoriert (`COLORS` als einzige Farbquelle gegen den CSS/JS-Mismatch, ungenutzte Helfer verdrahtet, `esc()` per Regex ~10x schneller, SRI-Hashes, Event-Delegation, ARIA-Labels); Datenqualität in drei Untersuchungen vertieft (Titel-Präzision, Publisher-Lücke, fehlende System-Checks); Regressionstest-Infrastruktur angelegt (`baseline-metrics.json`, 18 Tests, CI-Erweiterung); Titel-Extraktion verbessert (`correct_fallback`-Status, zweiter Bold-Block vor page_title-Fallback, `__TOC__`-Entfernung).
+**Entschieden.** Verifikation muss der Extraktionsmethodik entsprechen, verify.py prüfte blind "Wert im Rohtext" ohne den page_title-Fallback zu kennen und erzeugte 880 Phantom-FPs; nicht jede Coverage-Lücke ist ein Bug, die 44 Prozent Publisher-Lücke sind überwiegend strukturell (Anthologie-Gedichte, Zeitschriftenartikel ohne eigenständigen Verlag); Unit-Tests sind keine Regressionssicherheit, System-Baseline-Vergleich ist für Daten-Pipelines essenziell; Farbwerte driften ohne Build-Schritt, eine geteilte Konstantendatei ist die einfachste Abhilfe.
+**Offen.** Pipeline mit den Titel-Verbesserungen neu laufen und Wirkung messen; M3.8 manuelle Validierung von 50+ Einträgen im Live-Frontend.
 
 ---
 
-## 2026-03-31 — Session 10: Frontend Cleanup, Data Quality Analysis & Regression Testing
+## 2026-03-29 — Session 9: Interaktive Explorationsschnittstelle und Refactoring
 
-### What we did
-
-- **Frontend refactoring** (12 files, 6 phases):
-  - Unified color palette: `COLORS` constant in constants.js as single source of truth (fixed CSS `#631a34` vs JS `#7A1B2D` mismatch)
-  - Deduplicated code: wired up unused `countByField()` at 6 call sites, eliminated redundant titleMap in ExploreNetwork, reused `downloadBlob()` in Edit module
-  - Performance: replaced DOM-based `esc()` with regex (~10x faster), fixed asymmetric sort fallbacks (`?? Infinity`)
-  - Security: added SRI hashes to FlexSearch and D3 CDN scripts
-  - Replaced inline `onclick` handlers with event delegation on results list and filter chips
-  - Removed ~50 lines dead CSS, added ARIA labels to all 6 D3 SVGs, added `og:url` meta tag
-  - Extracted `CHART_DIMS` constant for magic numbers in explore modules
-
-- **Data quality deep-dive** (3 parallel investigations):
-  - **Title precision**: 880 "false positives" in verify.py were a methodology issue, not extraction errors. page_title fallbacks are metadata — they correctly don't appear in raw content. Real precision ~95%+
-  - **Publisher gap**: 44% missing = 15-20% legitimately absent (anthology poems, journal articles) + 80-85% structural (implicit `[[Collection]] [City, Year]` format, only 1.7% contain publisher keywords)
-  - **Regression testing**: zero system-level checks existed before this session
-
-- **Regression testing infrastructure** (3 new files):
-  - `.github/baseline-metrics.json`: frozen coverage snapshot for comparison
-  - `tests/test_regression.py`: 18 tests (entry counts, field coverage thresholds, severity bounds, frontend integrity)
-  - Extended `.github/workflows/validate-patch.yml` with regression checks and quality report comparison
-
-- **Title extraction improvements**:
-  - `verify.py`: new `correct_fallback` status for page_title-sourced titles (fixes misleading 81.5% precision)
-  - `03_parse_entries.py`: when `[year]:` pattern detected, search for second bold block as real title before falling back to page_title
-  - `wiki_parser.py`: added removal of `__TOC__`, `__NOTOC__`, `__FORCETOC__`, `{{DEFAULTSORT:...}}`
-  - 10 new tests (wiki parser + regression), total: 270 → 280
-
-### What we learned
-
-1. **Verification must match extraction methodology**: verify.py did a blind "value in raw text?" check without knowing the pipeline uses page_title fallback. This produced 880 phantom false positives. Always ensure verification tools understand the extraction strategy.
-2. **Not every coverage gap is a bug**: The 44% publisher gap is mostly structural — anthology poems and journal articles genuinely lack standalone publishers. Distinguishing "not extracted" from "not present" requires entry-type-aware analysis.
-3. **Unit tests ≠ regression safety**: 270 extraction tests caught individual pattern bugs but couldn't detect if overall coverage silently degraded. System-level baseline comparison is essential for data pipelines.
-4. **CSS/JS color sync in vanilla projects**: Without CSS-in-JS or a build step, color values drift. A shared constants file (`COLORS`) is the simplest workaround.
-
-### What's next
-
-- **Re-run pipeline**: Apply title extraction improvements to actual data, measure impact
-- **M3.8**: Manual validation — browse 50+ entries in live frontend
+**Runde.** Umsetzungsrunde Exploration.
+**Geändert.** Generisches Chart.js-Dashboard durch eine D3-v7-Exploration mit drei Modi ersetzt (Timeline mit Stacked Area und biografischen Annotationen, Overview mit vier verknüpften Small Multiples, Connections als Force-Graph der seeAlso-Referenzen mit ~496 aufgelösten Kanten) plus geteiltem Detail-Panel; UX- und Explorationsfixes; fünf Refactorings (BibTeX-Dedup, O(1)-titleMap, `countByField()`, generischer Wiki-Section-Extractor, Encoding-Utilities verschoben); Exploration-Design als Wissensdokument mit Forschungsfragen und DH-Referenzen.
+**Entschieden.** Generische Dashboards bedienen akademische Forschung nicht, Forscher brauchen zweckgebaute Werkzeuge mit konkreten Forschungsfragen; D3 per CDN trägt statische Seiten gut und die Timeline erzählt sofort die Zweig-Rezeptionsgeschichte; seeAlso-Netze sind dünner als erwartet wegen unaufgelöster Titel-Referenzen; die ~500 "Unknown"-Sprach-Einträge dominierten die Timeline und wurden zu "Other" gefaltet.
+**Offen.** M3.8 manuelle Validierung; Explore-Verfeinerung (echter Streamgraph-Offset, mobile Erfahrung).
 
 ---
 
-## 2026-03-29 — Session 9: Interactive Exploration Interface & Refactoring
+## 2026-03-29 — Session 8: Deployment-Vorbereitung und Namespace-Fix
 
-### What we did
-
-- **D3.js exploration interface**: Replaced the generic Chart.js dashboard with a 3-mode interactive visualization built on D3.js v7:
-  - **Timeline**: Stacked area chart (year × language) with brushing, biographical annotations (born/exile/death), lifetime gold band
-  - **Overview**: 4 linked small multiples (decade histogram, type treemap, language bars, location lollipop) with cross-filtering
-  - **Connections**: Force-directed graph of seeAlso cross-references (~469 nodes, ~496 edges) with drag, zoom, neighbor highlighting
-  - Shared detail panel showing selected entries across all modes
-- **UX improvements**: Replaced "(Klawiter)" subtitle with "Digital Edition", hid duplicate header search on home, renamed explore link, added Zotero guide to Help page
-- **Exploration fixes**: Fixed network overflow, detail panel state persistence, "Unknown" language in timeline, legend/annotation overlap, force bounds
-- **Refactoring** (5 changes):
-  - Deduplicated BibTeX field-building in export.js
-  - Replaced O(n) title search with O(1) titleMap in detail.js
-  - Added countByField() utility to utils.js
-  - Unified 3 wiki section extractors into one generic function in wiki_parser.py
-  - Moved encoding comparison utilities from verify.py to lib/encoding.py
-- **Documentation**: Created `knowledge/exploration.md` with full design concept, research questions, visualization rationale, and DH references
-
-### What we learned
-
-- Generic dashboard visualizations don't serve academic research — researchers need purpose-built exploration tools with specific research questions in mind
-- D3.js via CDN works well for static sites; the stacked area chart immediately tells the Zweig reception story (German dominance → global spread → Chinese boom)
-- Network graphs from seeAlso data are sparser than expected (~496 resolved edges from 1,213 references) due to unresolved title references
-- "Unknown" language entries (~500) dominated the timeline visualization and needed to be folded into "Other"
-
-### What's next
-
-- **M3.8**: Manual validation (browse 50+ entries in live frontend)
-- **Explore refinement**: Consider adding a true streamgraph offset, improving mobile experience
+**Runde.** Umsetzungsrunde Deployment.
+**Geändert.** Namespace-URI über 10 Dateien von `klawiter-rescue.github.io` auf `chpollin.github.io/klawiter-rescue` korrigiert, GitHub-Footer-Link von einem Fremd-User auf `chpollin` korrigiert, LICENSE als Dual-License und CITATION.cff angelegt, README um Live-URL und Lizenz ergänzt, JSON-LD und Frontend-JSON per Schritt 05/06 neu erzeugt; Tests grün.
+**Entschieden.** Die URI war fälschlich als Organisations-Page gesetzt, das reale Deployment ist eine Projekt-Page unter dem Personen-Account, was @context-Auflösung und alle hartkodierten URLs betraf; der Footer-Link zeigte auf einen früheren Beitragenden.
+**Offen.** M3.8 manuelle Validierung mit Wiki-Abgleich; M7-Rest Live-Deployment-Test, Zenodo-DOI, Ankündigung.
 
 ---
 
-## 2026-03-29 — Session 8: Deployment Preparation & Namespace Fix
+## 2026-03-29 — Session 7: Design-Alignment, Verbund-Navigation, EIL-Kurationsschnittstelle
 
-### What we did
-
-- **Namespace URI fix**: Changed all references from `klawiter-rescue.github.io` to `chpollin.github.io/klawiter-rescue` across 10 files (vocabulary.py, export.js, pages.js, vocab/index.html, data.md, ontology.md, CLAUDE.md)
-- **GitHub link fix**: Footer link corrected from `chrstncrrnd/klawiter-rescue` to `chpollin/klawiter-rescue`
-- **LICENSE file**: Created dual-license (MIT for code, CC BY 4.0 for data)
-- **CITATION.cff**: Created for academic citation (Klawiter + Pollin as authors)
-- **README.md**: Added live URL and updated license section (was "To be clarified")
-- **Pipeline regeneration**: Steps 05+06 re-run to produce JSON-LD and frontend JSON with corrected namespace
-- **Documentation update**: Updated CLAUDE.md (test count 260→270, 9→10 JS modules, live URL), plan.md (M7 tasks checked), IMPLEMENTATION-PLAN.md (Phase 8 added)
-- **Tests verified**: 264 passed, 6 skipped, 0 failed
-
-### What we learned
-
-- The namespace URI had been set to `klawiter-rescue.github.io` (as if the repo were deployed as an organization page), but the actual deployment is at `chpollin.github.io/klawiter-rescue/` (project page under personal account). This affected JSON-LD @context resolution and all hardcoded URLs in content pages.
-- The GitHub footer link pointed to a different user (`chrstncrrnd`) — likely a leftover from an earlier contributor.
-
-### What's next
-
-- **M3.8**: Manual validation — browse 50+ entries in live frontend, spot-check against wiki source
-- **M7 remaining**: Live deployment testing, Zenodo DOI, announcement
+**Runde.** Umsetzungsrunde Design und Kuration.
+**Geändert.** GAMS-Farbpalette und Source-Serif/Sans-Typografie über die Verbund-Sites übernommen, geteilte Verbund-Navigationsleiste über drei Sites, SZD-Frontend ins Englische übersetzt und Dashboard CIDOC-CRM-orientiert umgebaut, Klawiter-Landing auf aufklappbare Kategoriegruppen mit Browse- und Explore-Pfaden; EIL-Kuration gebaut (`inject_provenance.py` difft Regex gegen LLM-Cache zu `_provenance` regex/llm/missing, `edit.js` als localhost-only Edit-Modus mit JSON-Patch-Export, Provenance-Badges, Validierungs-Workflow auf PRs).
+**Entschieden.** Provenance-Tracking schafft Vertrauen, indem es die Extraktionsquelle sichtbar macht und "missing" die Aufmerksamkeit lenkt; localhost-only Editieren ist ein pragmatisches Sicherheitsmodell für eine statische Seite ohne Auth; geteilte Navigation über drei Pages-Deployments verlangt stabile URL-Struktur.
+**Offen.** Nichts über die laufenden Stränge hinaus benannt.
 
 ---
 
-## 2026-03-29 — Session 7: Design Alignment, Verbund Navigation & EIL Curation Interface
+## 2026-03-29 — Session 6: Knowledge-Base-Audit und Doku-Refactoring
 
-### What we did
-
-**Design alignment**: Adopted GAMS institutional color palette across all Verbund sites. Switched typography to Source Serif 4 (headings) + Source Sans 3 (body) for consistency with the broader Stefan Zweig Digital ecosystem.
-
-**Verbund navigation bar**: Implemented a shared top navigation bar connecting three sites (SZD, Klawiter Bibliography, planned Nachlass portal). Provides unified cross-site navigation for the Zweig Forschungsverbund.
-
-**SZD site updates**: Translated the SZD frontend to English. Refactored the visualization module. Redesigned the dashboard with an ontology-focused layout emphasizing CIDOC-CRM relationships.
-
-**Klawiter landing page redesign**: Replaced the flat category list with expandable category groups. Added "Browse Catalogue" and "Explore" navigation paths for different user workflows.
-
-**EIL curation interface**:
-- `pipeline/inject_provenance.py`: Diffs regex output (03_parsed.csv) against LLM cache (03b_llm_cache.json) to generate per-field provenance metadata (`_provenance` object with values regex/llm/missing for publisher, location, translator, pageCount). Injects into `docs/data/klawiter.json`.
-- `docs/js/edit.js`: Localhost-only edit mode for inline field editing with provenance awareness. Edits are collected as JSON patches, not written directly to the dataset.
-- Provenance badges: Visual indicators showing extraction source (regex/llm/missing) on metadata fields.
-- JSON patch export: Curators review and export edits as structured patches.
-- `.github/workflows/validate.yml`: GitHub Actions workflow running pipeline validation on PRs to ensure data integrity.
-
-### Learnings
-
-- **Provenance tracking enables trust**: Showing users whether a field was extracted by regex (high confidence) or LLM (needs review) makes the curation workflow transparent. The "missing" label directs attention to entries that need manual enrichment.
-- **Localhost-only editing is a pragmatic security model**: No authentication needed for a static site — the edit interface simply doesn't load on the public deployment.
-- **Shared navigation requires coordination**: The Verbund nav bar links to three separate GitHub Pages deployments. URL structure must be stable across all sites.
+**Runde.** Audit-Runde Dokumentation.
+**Geändert.** Alle Vault-Dateien, README, CLAUDE.md und den Implementierungsplan gegen Code und Datenoutput geprüft, 18 sachliche Ungenauigkeiten gefunden und über alle Dateien behoben (Ontologie fälschlich "pending", 15 statt 16 Entry-Types, 6 statt 7 Stufen, 4 statt 9 MB, fehlende Sessions 4–5, SZD-Institution falsch), Plan-Konsolidierung mit korrigiertem Abhängigkeitsdiagramm.
+**Entschieden.** Doku-Schuld akkumuliert schnell, drei Features shippten am selben Anlagetag ohne Doku-Update, die Docs waren intern konsistent aber kollektiv veraltet; Cross-Referenzierung zählt, isolierte Vault-Dateien ohne Wikilinks sind im Wissensgraphen unsichtbar; zwei Planungsdateien stiften Verwirrung und verlangen Disziplin.
+**Offen.** Nichts benannt.
 
 ---
 
-## 2026-03-29 — Session 6: Knowledge Base Audit & Documentation Refactoring
+## 2026-03-29 — Session 5: Frontend-Inhaltsseiten und Datenqualitätsfixes
 
-### What we did
-
-**Knowledge base audit**: Systematically reviewed all 11 Obsidian vault files, README.md, CLAUDE.md, and IMPLEMENTATION-PLAN.md against the actual code and data output.
-
-**Found 18 factual inaccuracies** across all docs:
-- M4 (Ontology) marked as "pending" — was fully implemented
-- "15 entry types" in multiple files — correct count is 16 (incl. redirect)
-- "6 pipeline stages" in pipeline.md — correct is 7
-- "~4 MB JSON" in ui-design.md — actual is ~9 MB
-- "Vocabulary blend planned" in CLAUDE.md, architecture.md — is implemented
-- "8 JS modules" — now 9 (pages.js added)
-- 5 content pages (About, Methodology, Help, Data, Imprint) undocumented
-- Journal missing Sessions 4–5
-- SZD attributed to "University of Graz" in vocab doc — correct is University of Salzburg
-
-**Fixed all files**: README.md, CLAUDE.md, IMPLEMENTATION-PLAN.md, pipeline.md, architecture.md, ui-design.md, data.md, ontology.md, plan.md, design.md, dataflow.md, journal.md.
-
-**Plan consolidation**: M4 marked as ✅ in both plan.md and IMPLEMENTATION-PLAN.md. Dependency diagram updated to show actual completion order.
-
-### Learnings
-
-- **Documentation debt accumulates fast**: All docs were written on the same day, but 3 major features (ontology implementation, frontend redesign, content pages) shipped without updating them. The docs were internally consistent but collectively outdated.
-- **Cross-referencing matters**: Isolated vault files (journal.md, dataflow.md) had no wikilinks and were effectively invisible within the knowledge graph. Adding `[[links]]` integrates them.
-- **Two plan files create confusion**: `IMPLEMENTATION-PLAN.md` (task-oriented, phased) and `knowledge/plan.md` (milestone-oriented, M1–M7) described the same work differently. Keeping them aligned requires discipline.
+**Runde.** Umsetzungsrunde Inhaltsseiten und Datenqualität.
+**Geändert.** Fünf Inhaltsseiten (About, Methodology, Help, Data Access, Imprint) mit Navigation und Footer-Spalte; Vokabular gegen den echten `@context` geprüft; Pipeline-Fixes (bare Jahre als Originaltitel abgewiesen 272 auf 0, Section-Header und ungepaarte Bold-Marker aus Titeln entfernt, `@container: @set` ergänzt); automatisierte Validierung aller ns0-Einträge fand und behob Übersetzer-Regex-Leck über Zeilenumbrüche (34 auf 0); Pipeline neu gelaufen, Tests grün.
+**Entschieden.** Vokabular-Docs müssen gegen Code verifiziert werden, die Seite behauptete `sameAs` als genutzt, obwohl kein Eintrag es trug; Schema.org ist vollständiger als angenommen, `Play` und `Collection` existieren; Markup in Titeln hat einen langen Schwanz; `\s` in Regex-Zeichenklassen matcht Zeilenumbrüche, `[ \t]` beschränkt korrekt auf horizontalen Whitespace.
+**Offen.** Nichts benannt.
 
 ---
 
-## 2026-03-29 — Session 5: Frontend Content Pages & Data Quality Fixes
+## 2026-03-29 — Session 4: Frontend-Redesign und Schema.org-Vokabular
 
-### What we did
-
-**5 content pages** built for the frontend (`docs/js/pages.js`):
-- **About** (`#about`): Klawiter's biography, the original wiki, the rescue project, connection to SZD
-- **Methodology** (`#methodology`): Pipeline steps, encoding repair, LLM enrichment with coverage table, quality assurance, known limitations
-- **Help** (`#help`): Search, filtering, sorting, entry details, export formats, FAQ
-- **Data Access** (`#data`): Dataset download button, field table, vocabulary docs, license, citation
-- **Imprint** (`#imprint`): Credits, citation recommendation, license, contact, technical info
-
-**Navigation**: Added "About" link + "More" dropdown (Methodology, Help, Data, Imprint) to header. Footer gets new "Information" column with all 5 page links. Mobile: accessible via footer.
-
-**Vocabulary/data quality review**: Compared `docs/vocab/index.html` against actual `@context` in `pipeline/lib/vocabulary.py` and JSON-LD output.
-
-**Pipeline fixes**:
-- `extract_original_title()`: Rejected bare years as original titles (272 false positives → 0)
-- `remove_wiki_markup()`: Added section header stripping (`==text==` → `text`) and unpaired bold marker removal (28 titles with markup → 1)
-- `vocabulary.py`: Added `@container: @set` for `allYears` and `allLocations`
-
-**Vocab doc corrections**: `sameAs` marked as "planned", `schema:Message` annotated, SZD → University of Salzburg, range types corrected.
-
-**Automated validation**: Systematic validation of all 4,751 ns0 entries + stratified sample of 84 entries across 20 types. Found and fixed translator regex leaking across newlines (34 entries with markup in translator field → 0). München encoding verified correct (terminal display artifact).
-
-**Pipeline re-run**: Steps 3–6, 10.5s, all data regenerated. 260 tests pass, 0 fail.
-
-### Learnings
-
-- **Vocab docs must be verified against code**: The vocab page claimed `sameAs` was "used" but no entry had it. The only way to catch this is automated checks against the actual output.
-- **Schema.org is more complete than expected**: Both `schema:Play` and `schema:Collection` exist — initial assumptions that they were missing were wrong. Always verify before changing type mappings.
-- **Wiki markup in titles has a long tail**: The `remove_wiki_markup()` function handled paired `'''bold'''` but not section headers (`==text==`) or unpaired markers. Edge cases accumulate.
-- **`\s` in regex character classes matches newlines**: The translator patterns used `\s` which includes `\n`, causing matches to span across line breaks into subsequent sections. Using `[ \t]` instead restricts to horizontal whitespace.
-
-### Files created/modified
-- `docs/js/pages.js` — NEW: 5 content page renderers
-- `docs/index.html` — view container, navigation, footer, script tag
-- `docs/js/app.js` — page routing, view toggling, dropdown logic
-- `docs/css/styles.css` — page content typography, nav dropdown, table styles
-- `pipeline/lib/wiki_parser.py` — `extract_original_title()` + `remove_wiki_markup()` fixes
-- `pipeline/lib/vocabulary.py` — `@container` for allYears/allLocations
-- `docs/vocab/index.html` — 4 documentation corrections
+**Runde.** Umsetzungsrunde Frontend und Vokabular.
+**Geändert.** Frontend an die SZD-Bildsprache angeglichen (eigenes CSS mit SZD-Palette, Serif/Sans-System, Vier-View-Architektur, acht aus dem Monolithen extrahierte JS-Module, aufklappbare Ergebniskarten, klickbare Charts, BibTeX/RIS-Export mit korrekter Autorenlogik, responsiv); Schema.org-plus-Dublin-Core-Vokabular in `vocabulary.py` implementiert (16 Entry-Types auf Schema.org-Typen, Standardfelder via Schema.org, `dcterms:bibliographicCitation`, `klawiter:`-Namespace, Stefan Zweig als `schema:Person` mit Wikidata-Link), `05_to_jsonld.py` darauf umgeschrieben, Vokabular-Namespace-Seite angelegt.
+**Entschieden.** Der Kategorie-Portal-Ansatz trägt, MediaWiki-vertraute Nutzer navigieren per Kacheln wie erwartet, die Landing ist Orientierung kein Dashboard; aufklappbare Karten schlagen separate Detailseiten, weil sie Kontext halten; Dual-Type-Arrays sind elegant, `@type` mit Schema.org- und klawiter-Typ gibt Interoperabilität ohne Informationsverlust.
+**Offen.** Nichts benannt.
 
 ---
 
-## 2026-03-29 — Session 4: Frontend Redesign & Schema.org Vocabulary
+## 2026-03-29 — Session 3: Test-Suite und LLM-as-a-Judge
 
-### What we did
-
-**Frontend redesign** to match Stefan Zweig Digital visual language:
-- Custom CSS (1,000+ lines) with SZD palette: burgundy #7A1B2D, gold #B8963E, cream #FAF8F3
-- Serif/sans-serif typography system (Georgia + system sans-serif)
-- 4-view architecture: Overview (category portal), Browse (faceted search), Detail (expandable cards), Statistics
-- 8 JS modules extracted from monolithic app.js: constants, utils, export, app, home, facets, detail, charts
-- Category tiles grouped by Works / Reception & Impact / Editions
-- Expandable result cards with inline detail rendering
-- Interactive Chart.js charts with click-to-filter
-- BibTeX + RIS export with correct author logic (Stefan Zweig for primary, omitted for secondary)
-- Responsive design: mobile filter panel, sticky header, skip-link
-
-**Schema.org + Dublin Core vocabulary blend** implemented in `pipeline/lib/vocabulary.py`:
-- 16 entry types mapped to Schema.org types (`schema:Book`, `schema:Article`, `schema:Play`, etc.)
-- Standard fields via Schema.org (name, datePublished, publisher, inLanguage, numberOfPages, translator, locationCreated)
-- `dcterms:bibliographicCitation` for full original text
-- `klawiter:` namespace for domain-specific fields (entryType, timePeriod, categories, contentItems, etc.)
-- Stefan Zweig as `schema:Person` with Wikidata `sameAs` link (Q78491)
-- `05_to_jsonld.py` rewritten to use the new vocabulary
-
-**Namespace documentation**: Created `docs/vocab/index.html` with complete vocabulary reference.
-
-### Learnings
-
-- **The category portal approach works**: Users familiar with the original MediaWiki navigate by category tiles exactly as expected. The landing page is an orientation tool, not a dashboard.
-- **Expandable cards are better than separate detail pages**: Inline expansion keeps context (the user sees where they are in the results list). This matches how users actually browse bibliographies.
-- **Dual-type arrays are elegant**: `@type: ["schema:Book", "klawiter:FictionEntry"]` gives standard interoperability while preserving domain specificity. No information is lost.
-
-### Files created/modified
-- `docs/index.html` — complete restructure (4 views, semantic HTML)
-- `docs/css/styles.css` — NEW: 1,000+ lines custom CSS
-- `docs/js/app.js` — state management, routing, search, expandable cards
-- `docs/js/home.js` — category portal
-- `docs/js/charts.js` — statistics charts
-- `docs/js/detail.js` — metadata table, conditional sections
-- `docs/js/facets.js` — faceted navigation
-- `docs/js/export.js` — BibTeX, RIS, JSON-LD, permalink
-- `docs/js/utils.js` — esc(), hl(), downloadBlob()
-- `docs/js/constants.js` — shared labels, groupings
-- `pipeline/lib/vocabulary.py` — rewritten with Schema.org blend
-- `pipeline/05_to_jsonld.py` — rewritten for new vocabulary
-- `docs/vocab/index.html` — NEW: vocabulary namespace page
+**Runde.** Umsetzungsrunde Tests.
+**Geändert.** Initiale Suite von 171 Tests gebaut, dann kritisch getrimmt (redundante Guard-Clause- und Whitelist-Tests entfernt, geschwächte Titel-Tests auf den echten Pipeline-Fluss gefixt); Real-Data-Tests über 20 handgelabelte Einträge mit fünf Extraktoren; LLM-as-a-Judge (`test_llm_judge.py`) mit Gemini und strukturiertem Pydantic-Output, das eine Baseline bekannter Grenzen etabliert (10 wrong, 13 missed); Pytest-Marker zur Trennung von schnellen und API-Tests.
+**Entschieden.** Redundante Tests schaffen falsches Vertrauen, 171 Tests klangen viel, die Real-Data-Tests fanden mehr als alle Guard-Clause-Tests zusammen; LLM-as-a-Judge ist wirksam und fängt semantische Fehler, die Pattern-Tests nicht sehen; Fixture-Text-Trunkierung erzeugte sechs falsche Fehlschläge; LLM-Nondeterminismus wird über ein Known-Wrong-Set gehandhabt, das bei Neuem rot wird.
+**Offen.** Nichts benannt.
 
 ---
 
-## 2026-03-29 — Session 3: Test Suite & LLM-as-a-Judge
+## 2026-03-29 — Session 2: Pipeline-Qualitätssicherung und LLM-Enrichment
 
-### What we did
-
-**Phase 3: Test suite** (from IMPLEMENTATION-PLAN.md)
-- Built initial test suite: 171 tests across 3 files (test_patterns.py, test_wiki_parser.py, test_encoding.py)
-- Critically reviewed all tests — identified ~40-50 as trivial or redundant (guard-clause tests for every function, dictionary lookups tested individually, language whitelist tested 8×)
-
-**Test refactoring**
-- Trimmed redundant tests: test_encoding.py 36→13, test_patterns.py 58→48
-- Fixed weakened title tests to test actual pipeline flow (categories stripped before title extraction)
-- **Result**: leaner, more focused unit tests
-
-**Real-data tests** (`tests/test_real_entries.py`)
-- Parametrized over 20 hand-labeled entries from `test_sample_20.json`
-- Tests 5 extractors per entry: location, publisher, translator, page_count, language
-- Plus structural tests: not-redirect, has-clean-content, categories-extracted
-- 6 skips for fixture/text mismatches (truncated text doesn't contain expected data)
-
-**LLM-as-a-Judge** (`tests/test_llm_judge.py`)
-- Gemini 3.1 Flash Lite evaluates extraction quality on 10 diverse entries
-- Structured output via Pydantic: each field judged as correct/wrong/missed/not_applicable
-- Findings establish a baseline of known limitations:
-  - 10 "wrong": title from `'''[year]: Publisher'''` headers (6×), mojibake truncation (2×), page-range-as-count (2×)
-  - 13 "missed": publisher/location from headers, `N/(M)p.` format, languages without `[[Category:]]`
-- Tests assert: no *unexpected* wrong extractions, ≥60% correct/not_applicable
-
-**Infrastructure**
-- Created `pytest.ini` with `llm` marker and PYTHONPATH config
-- Tests runnable separately: `pytest -m "not llm"` (fast) vs `pytest -m llm` (API call)
-
-### Learnings
-
-- **Redundant tests create false confidence**: 171 tests sounded impressive, but many tested `if not x: return None` eight times. The real-data tests found more issues than all guard-clause tests combined.
-- **LLM-as-a-Judge is surprisingly effective**: For ~$0.001, Gemini identified 10 concrete extraction errors and 13 coverage gaps. It catches semantic issues (wrong publisher name, truncated translator) that pattern-based tests can't.
-- **Fixture text truncation matters**: The `test_sample_20.json` entries have truncated text that doesn't always contain the same information the full pipeline had. This caused 6 false test failures that needed skips.
-- **LLM non-determinism in testing**: The judge produces slightly different verdicts on repeated runs. The `_KNOWN_WRONG` set handles this — if the LLM finds something new, the test fails and forces investigation. If it misses a known issue, a warning fires.
-
-### Files created/modified
-- `pytest.ini` — test configuration
-- `tests/conftest.py` — fixtures (real-data loader, Gemini client, wiki content samples)
-- `tests/test_patterns.py` — trimmed unit tests (48)
-- `tests/test_wiki_parser.py` — fixed + trimmed unit tests (80)
-- `tests/test_encoding.py` — trimmed unit tests (13)
-- `tests/test_real_entries.py` — parametrized real-data tests (100)
-- `tests/test_llm_judge.py` — LLM-as-a-Judge validation (4)
+**Runde.** Umsetzungsrunde Verifikation und LLM.
+**Geändert.** `verify.py` als Round-Trip-Verifikation gebaut (jedes Feld gegen Roh-Wiki, FP- und FN-Erkennung, breitere Patterns für Publisher und Übersetzer), Ergebnisse je Feld mit Coverage und Präzision berichtet; Schritt 03b `03b_llm_enrich.py` mit Gemini als Gap-Filler entworfen und gebaut (Pydantic-Schema, Merge-Regel füllt nur leere Felder und überschreibt Regex nie, Cache-Resume, Validierung); über ein 20-Einträge-Stratum getestet, 13/13 korrekt, 0 Halluzinationen, alle Negativtests bestanden.
+**Entschieden.** Verifikations-Zirkularität, dieselben Regex-Patterns zur FN-Erkennung finden nichts, dafür braucht es breitere Heuristik oder LLM; das LLM ist per Prompt konservativ und liefert null für See-Referenzen, Filme und deutsche Originale; Encoding-Artefakte gehen unangetastet durch, weil Mojibake-Reparatur Schritt 02s Aufgabe ist.
+**Offen.** Nichts benannt.
 
 ---
 
-## 2026-03-29 — Session 2: Pipeline Quality Assurance & LLM Enrichment
+## 2026-03-29 — Session 1b: Rohdaten-Verifikation
 
-### What we did
-
-**Phase 1: Verification script** (`pipeline/verify.py`)
-- Built round-trip verification: loads final JSON-LD, compares each extracted field against raw wiki content from step 02
-- Detects false positives (extracted but not in raw) and false negatives (in raw but not extracted)
-- Added broader pattern detection beyond existing regex for publisher (`City: Publisher` pattern) and translator (abbreviations like `Übers.`, `trad.`)
-
-**Verification results** (4,751 bibliography entries):
-| Field | Coverage | Precision | FP | FN |
-|---|---|---|---|---|
-| title | 100% | 81.4%* | 885 | 0 |
-| year | 93.2% | 100% | 0 | 0 |
-| publisher | 34.5% | 100% | 0 | 86 |
-| location | 67.8% | 100% | 0 | 0 |
-| translator | 35.1% | 100% | 0 | 2 |
-| page_count | 78.4% | 100% | 0 | 0 |
-
-*Title 81.4%: not real FPs — titles come from `page_title` fallback, not from content.
-
-**Phase 2: LLM enrichment step** (`pipeline/03b_llm_enrich.py`)
-- Designed and built Step 03b using Gemini 3.1 Flash Lite for gap-filling
-- Pydantic schema for structured JSON output (publisher, location, translator, page_count)
-- Merge rule: LLM only fills empty fields, never overwrites regex results
-- Cache-based resume support, rate limiting, validation layer
-
-**Testing**:
-- 5-entry quick test: all correct
-- 20-entry stratified sample covering: isolated missing fields, 7 languages (EN/FR/RU/ZH/JA/AR/ES), standard/non-standard formats, short texts, German negative tests
-- Result: 13/13 correct extractions, 0 hallucinations, all negative tests passed
-
-### Learnings
-
-- **Verification circularity**: Using the same regex patterns to detect false negatives finds nothing — the patterns already extracted what they can. Broader heuristics or LLM needed for true FN detection.
-- **LLM conservative by design**: The prompt "Extract ONLY what is explicitly stated / Do NOT guess" produces zero hallucinations across all tests. The model correctly returns null for See-references, film entries, and German originals.
-- **Encoding artifacts pass through**: LLM faithfully extracts text with Mojibake (e.g. "KavkazskiÄ­ Krai") — it doesn't fix encoding, which is correct since that's step 02's job.
-
-### Files created/modified
-- `pipeline/verify.py` — verification script
-- `pipeline/03b_llm_enrich.py` — LLM enrichment step
-- `pipeline/lib/llm_extract.py` — Gemini client, schema, prompt, batch logic
-- `pipeline/lib/config.py` — added `STEP_03B_OUTPUT`
-- `pipeline/04_classify.py` — reads from 03b with fallback to 03
-- `pipeline/run_pipeline.py` — added step 03b
-- `.env` — Gemini API key (gitignored)
-- `.gitignore` — added `.env`
+**Runde.** Analyserunde, zwei parallele Agents verifizieren Rohquelle gegen Extraktionslogik.
+**Geändert.** Nur Analyse, kein Code; BLOB-Dateigrößen in pipeline.md korrigiert.
+**Entschieden.** Die Pipeline ist korrekt, alle 6.296 ns0-Seiten werden verarbeitet, 6.295 finden ihren Inhalt in den BLOBs; der eine fehlende Eintrag ist page_id 2979 (text_id 18046, portugiesische Ausgabe), ein Quelldatenproblem, weil der text_id in keinem BLOB liegt; die 429 Nicht-ns0-Seiten sind per Design ausgeschlossen, darunter 420 Kategorieseiten; die SQL-Dumps 02 und 03 werden korrekt ignoriert (leeres Schema, Systemmetadaten); nur die jeweils letzte Revision je Seite wird extrahiert.
+**Offen.** Ob die 420 Kategorieseiten für reichere Beschreibungen extrahiert werden; ob die verworfenen historischen Revisionen je gebraucht werden; ob der fehlende portugiesische Eintrag über die Titelsuche im BLOB statt über den text_id recovert werden kann.
 
 ---
 
-## 2026-03-29 — Session 1b: Raw Data Verification
+## 2026-03-29 — Session 1: Repository-Restrukturierung und Planung
 
-### What we did
-
-Ran two parallel analysis agents to cross-verify raw source data against pipeline extraction logic:
-- Agent 1: Analyzed all files in `data/raw/` — file sizes, SQL structure, BLOB format, text ID counts
-- Agent 2: Analyzed `pipeline/01_extract.py` — extraction logic, namespace filtering, BLOB parsing, coverage
-
-### Learnings
-
-- **Pipeline is verified correct**: All 6,296 namespace-0 pages are processed. 6,295 find their content in BLOBs (99.98%).
-- **The missing entry is identified**: page_id 2979, text_id 18046, "A unidade espiritual do mundo" (Portuguese edition). The text_id exists in the database mapping but is absent from all 8 BLOB files — this is a source data issue, not a pipeline bug.
-- **429 non-namespace-0 pages are excluded by design**: Most notably **420 Category pages** (namespace 14). These contain category descriptions and hierarchies that could be valuable metadata but are not bibliography entries.
-- **SQL dump files 02 and 03 are correctly ignored**: `zweig_part_02.sql` is just the empty `zweig_text` table schema. `zweig_part_03.sql` contains system metadata (4 user accounts, 47 update log entries, 48 watchlist records) — none relevant to bibliography.
-- **BLOBs contain 53,016 text entries** across all 8 files, covering all historical revisions. Pipeline correctly extracts only the latest revision per page (via `page_latest`).
-- **BLOB file sizes were wrong in documentation**: Previously listed as 28–44 MB, actual sizes are 27–49 MB. Updated in pipeline.md.
-
-### Ideas & open threads
-
-- **420 Category pages**: Should we extract these? They could provide richer category descriptions for the frontend (currently categories are just labels). Would need a separate extraction step or expanding namespace filter.
-- **Historical revisions**: 45,650 earlier versions are discarded. Could be interesting for a "history of the bibliography" analysis, but not needed for the current project scope.
-- **The missing Portuguese entry**: Could try to recover by searching the BLOB files for the page title string rather than the text_id. Might be a text_id mismatch from a re-import.
-
----
-
-## 2026-03-29 — Session 1: Repository Restructuring & Planning
-
-### What we did
-
-**Phase 1: Analysis**
-- Explored the entire repository — v1 root-level files (5 Python scripts, 6 output directories, 2 old web UI attempts, 4 markdown docs, 1 log) and v2/ (pipeline, frontend, knowledge base, data outputs)
-- Identified that v2 is the current, production-ready system; everything at root level is legacy
-- Assessed what's still useful: raw source data (working/), the rest is superseded
-
-**Phase 2: Repository restructuring**
-- Promoted v2/ contents to root level:
-  - `v2/pipeline/` → `pipeline/`
-  - `v2/frontend/` → `docs/` (for GitHub Pages deployment)
-  - `v2/data/` → `data/`
-  - `working/` → `data/raw/`
-  - `v2/knowledge/` → `knowledge/`
-- Updated path references in all 7 pipeline scripts:
-  - `WORKING_DIR` → `RAW_DIR` pointing to `data/raw/`
-  - `BASE_DIR` → `PROJECT_ROOT` (consistent naming)
-  - Frontend output path → `docs/data/klawiter.json`
-- Deleted all legacy files: 5 old Python scripts, analysis_output/, analysis_results/, bibliography_analysis/, bibliography_cleaned/, rebuild-wiki/, rebuild-wiki-o3/, old markdown docs, log file
-- Removed REPORT.md (redundant with README + knowledge docs)
-- Created new .gitignore (intermediate data, entry files, __pycache__, .obsidian/)
-
-**Phase 3: Knowledge base refactoring (M1)**
-- Consolidated 10 German documentation files into 6 focused English documents:
-  - `data.md` ← Datenmodell + Datenqualitaet + Entitaetstypen (data model, entity types, field coverage, quality issues)
-  - `pipeline.md` ← Pipeline + MediaWiki-Datenbank + Encoding-Problem + Regex-Patterns (source structure, 6 pipeline stages, encoding fix details, all regex patterns with coverage stats)
-  - `architecture.md` ← Architekturentscheidungen (6 decisions with rationale and trade-offs)
-  - `ontology.md` ← NEW (current klawiter: namespace, Schema.org mapping table, target @context design, namespace resolution plan)
-  - `reconciliation.md` ← NEW (Wikidata/GND/VIAF/GeoNames strategy, entities to reconcile, tooling options, data model integration)
-  - `ui-design.md` ← Frontend expanded (current tech stack, views, Stefan Zweig Digital integration goals, stable URIs, performance, accessibility)
-- Verified all Obsidian wikilinks between files resolve correctly
-- Removed Klawiter-Projekt.md (redundant with README.md)
-
-**Phase 4: Project planning**
-- Created `plan.md` with 7 milestones, 80+ tasks with checkboxes
-- Defined dependency chain: M1 → M2 → M3 → M4 → M5 → M6 → M7
-- Discussed project goals: data rescue, structured JSON-LD, semantic enrichment, static frontend matching Stefan Zweig Digital
-
-**Commit**: `9640dde` — 119 files changed, 51,631 deletions, 1,225 additions
-
-### Learnings
-
-- **Duplicate path definitions**: Each pipeline script defined its own BASE_DIR/WORKING_DIR instead of importing from config.py. This made the restructuring harder than necessary. Partially fixed (renamed to PROJECT_ROOT), full consolidation to config.py imports is planned for M3.2.
-- **The honesty check pattern**: The project's first encoding fix claimed "0% Mojibake" but only checked 7 common patterns — 9.1% actually remained. The revised fix and its verification use the same regex. Lesson: the verification must always be broader than the repair. This is documented in pipeline.md as a cautionary tale.
-- **CLAUDE.md drift**: The CLAUDE.md was entirely about the v1 system (MySQL-based extraction, old scripts). It had become actively misleading. Lesson: documentation that falls out of sync with code is worse than no documentation.
-- **Windows case-insensitivity**: git mv from `Pipeline.md` to `pipeline.md` doesn't work on Windows because the filesystem treats them as the same file. Had to delete first, then create new.
-- **IDE file locks**: VS Code held `v2/frontend/` open, preventing deletion. Not critical — empty directories aren't tracked by git.
-- **README umlaut problem**: When writing the README.md, all German umlauts were lost (Einträge → Eintrage, etc.). Systematic issue that needs fixing in M2.
-
-### Ideas & open threads
-
-- **Data validation against source**: Nobody has manually checked whether extracted content actually matches the original wiki. 50-entry spot check is in the plan (M3.5) but should happen early — if systematic errors exist, everything downstream is affected.
-- **The 1 missing entry**: 1 of 6,296 pages couldn't be found in any BLOB. Worth investigating — is it a page with no content? A namespace issue? A BLOB parsing edge case?
-- **Publisher extraction at 34.5%**: This is the weakest field. Three approaches: (a) more regex patterns, (b) NER, (c) use structured position in wiki markup — publisher often appears on a specific line within the `<lst>` block. Option (c) hasn't been explored and might be the most reliable.
-- **Translator false-positive trade-off**: Old extraction had 69% coverage / 46% false positives. Current has 35% / 0%. Could there be a middle ground — e.g. a confidence score per extraction?
-- **JSON-LD namespace**: `klawiter-rescue.github.io/vocab/` doesn't resolve. Blocker for proper Linked Data. Needs a vocab document at `docs/vocab/index.html`.
-- **Stefan Zweig Digital integration**: We want the frontend to visually match their design but haven't analyzed the site yet. Prerequisite for M6. Need to coordinate with the project team.
-- **License**: Unclear who holds rights to the bibliography data. Dr. Klawiter compiled it, Notre Dame hosted it. Need to clarify before publishing.
-- **Performance**: 4.2 MB JSON → ~800 KB gzipped. Probably fine, but needs real measurement on mobile.
-- **GitHub Pages limitations**: No server-side content negotiation for JSON-LD namespace. May need a redirect hack for vocab URL.
-- **FAIR principles**: Currently missing: persistent identifier (F), standard vocabulary (I), license (R). All addressable in M4+M7.
-- **Obsidian as documentation tool**: The knowledge/ folder works well as an Obsidian vault with wikilinks between docs. Could also serve as a pattern for other DH projects.
+**Runde.** Milestone-Runde, Gründung der aktuellen Projektstruktur.
+**Geändert.** Repository restrukturiert (v2-Inhalte auf Root-Ebene promotet, `frontend` zu `docs` für Pages, `working` zu `data/raw`, Pfadreferenzen in allen sieben Skripten angepasst, alle Legacy-Dateien gelöscht, neue .gitignore); Knowledge-Base refactoriert (10 deutsche Dokumente in fokussierte englische konsolidiert, neue Ontologie- und Reconciliation-Dokumente, Wikilinks verifiziert); `plan.md` mit sieben Milestones und Abhängigkeitskette angelegt.
+**Entschieden.** Duplizierte Pfaddefinitionen erschwerten die Restrukturierung, volle Konsolidierung zu config.py-Importen geplant; die Verifikation muss immer breiter sein als die Reparatur, der erste Encoding-Fix behauptete 0 Prozent Mojibake, prüfte aber nur sieben Muster, 9,1 Prozent blieben; veraltete CLAUDE.md ist schlechter als keine, weil aktiv irreführend; Windows-Case-Insensitivity und IDE-Filelocks als Fallstricke.
+**Offen.** Manuelle Validierung gegen die Quelle (50-Einträge-Stichprobe, sollte früh geschehen); der eine fehlende Eintrag; Publisher-Extraktion bei 34,5 Prozent als schwächstes Feld mit drei Ansätzen; Übersetzer-FP-Trade-off und mögliche Confidence-Scores; nicht auflösende JSON-LD-Namespace-URI; SZD-Integration und Design-Abgleich; ungeklärte Datenlizenz; Performance-Messung auf Mobil; fehlende Content Negotiation auf Pages; fehlende FAIR-Bausteine (PID, Standardvokabular, Lizenz).
