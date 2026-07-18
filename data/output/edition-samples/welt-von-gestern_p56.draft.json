@@ -1,0 +1,344 @@
+{
+  "work": {
+    "id": "klawiter:work/56",
+    "type": "schema:CreativeWork",
+    "name": "Die Welt von Gestern. Erinnerungen eines Europäers",
+    "sourcePageId": 56
+  },
+  "editions": [
+    {
+      "id": "klawiter:edition/56-1942-a",
+      "year": 1942,
+      "yearRaw": "1942",
+      "publisher": "Bermann-Fischer Verlag",
+      "location": "Stockholm",
+      "pageCount": 493,
+      "headerLine": "'''[1942]: Bermann-Fischer Verlag, Stockholm'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 0,
+        "end": 475
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1947-a",
+      "year": 1947,
+      "yearRaw": "1947",
+      "publisher": "Suhrkamp Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 499,
+      "headerLine": "'''[1947]: Suhrkamp Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 475,
+        "end": 671
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1952-a",
+      "year": 1952,
+      "yearRaw": "1952",
+      "publisher": "S. Fischer Verlag. Frankfurt am Main''' [S. Fischer Bibliothek]",
+      "location": null,
+      "pageCount": 394,
+      "headerLine": "'''[1952]: S. Fischer Verlag. Frankfurt am Main''' [S. Fischer Bibliothek]",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 671,
+        "end": 1002
+      },
+      "reviewFlags": [
+        "ohne-ort"
+      ]
+    },
+    {
+      "id": "klawiter:edition/56-1952-b",
+      "year": 1952,
+      "yearRaw": "1952",
+      "publisher": "Büchergilde Gutenberg",
+      "location": "Wien",
+      "pageCount": 394,
+      "headerLine": "'''[1952]: Büchergilde Gutenberg, Wien'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 1002,
+        "end": 1221
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1953-a",
+      "year": 1953,
+      "yearRaw": "1953",
+      "publisher": "G. B. Fischer Verlag",
+      "location": "Frankfurt am Main/Hamburg",
+      "pageCount": 394,
+      "headerLine": "'''[1953]: G. B. Fischer Verlag, Frankfurt am Main/Hamburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 1221,
+        "end": 1434
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1959-a",
+      "year": 1959,
+      "yearRaw": "1959",
+      "publisher": "Ex Libris Verlag",
+      "location": "Zürich",
+      "pageCount": 431,
+      "headerLine": "'''[1959]: Ex Libris Verlag, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 1434,
+        "end": 1624
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1960-a",
+      "year": 1960,
+      "yearRaw": "1960",
+      "publisher": "Bertelsmann Verlag",
+      "location": "Gütersloh",
+      "pageCount": 474,
+      "headerLine": "'''[1960]: Bertelsmann Verlag, Gütersloh'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 1624,
+        "end": 1761
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1962-a",
+      "year": 1962,
+      "yearRaw": "1962",
+      "publisher": "G. B. Fischer Verlag",
+      "location": "Frankfurt am Main/Hamburg",
+      "pageCount": 394,
+      "headerLine": "'''[1962]: G. B. Fischer Verlag, Frankfurt am Main/Hamburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 1761,
+        "end": 2050
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1964-a",
+      "year": 1964,
+      "yearRaw": "1964",
+      "publisher": "Deutscher Bücherbund",
+      "location": "Stuttgart/Hamburg",
+      "pageCount": 504,
+      "headerLine": "'''[1964]: Deutscher Bücherbund, Stuttgart/Hamburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 2050,
+        "end": 2236
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1968-a",
+      "year": 1968,
+      "yearRaw": "1968",
+      "publisher": "Büchergilde Gutenberg",
+      "location": "Frankfurt am Main/Wien/Zürich",
+      "pageCount": 504,
+      "headerLine": "'''[1968]: Büchergilde Gutenberg, Frankfurt am Main/Wien/Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 2236,
+        "end": 2436
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1970-a",
+      "year": 1970,
+      "yearRaw": "1970",
+      "publisher": "Fischer Bücherei",
+      "location": "Frankfurt am Main/Hamburg",
+      "pageCount": 317,
+      "headerLine": "'''[1970]: Fischer Bücherei, Frankfurt am Main/Hamburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 2436,
+        "end": 2789
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1978-a",
+      "year": 1978,
+      "yearRaw": "1978",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main''' Special edition",
+      "pageCount": 394,
+      "headerLine": "'''[1978]: S. Fischer Verlag, Frankfurt am Main''' Special edition",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 2789,
+        "end": 2960
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1981-a",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "Deutscher Bücherbund",
+      "location": "Stuttgart/Hamburg/ München",
+      "pageCount": 495,
+      "headerLine": "'''[1981]: Deutscher Bücherbund, Stuttgart/Hamburg/ München'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 2960,
+        "end": 3151
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1981-b",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main [Gesammelte Werke in Einzelbänden]",
+      "pageCount": 494,
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 3151,
+        "end": 3514
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1981-c",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 494,
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 3514,
+        "end": 3785
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1981-d",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "Aufbau Verlag",
+      "location": "Berlin/Weimar",
+      "pageCount": 509,
+      "headerLine": "'''[1981]: Aufbau Verlag, Berlin/Weimar",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 3919,
+        "end": 4151
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-1982-a",
+      "year": 1982,
+      "yearRaw": "1982",
+      "publisher": "Ex Libris Verlag",
+      "location": "Zürich",
+      "pageCount": 496,
+      "headerLine": "'''[1982]: Ex Libris Verlag, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 4151,
+        "end": 4335
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-2010-a",
+      "year": 2010,
+      "yearRaw": "2010",
+      "publisher": "Fischer Taschenbuch Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": null,
+      "headerLine": "'''[2010]. Fischer Taschenbuch Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 4335,
+        "end": 4585
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-2013-a",
+      "year": 2013,
+      "yearRaw": "2013",
+      "publisher": "Suhrkamp-Insel Verlag",
+      "location": "Berlin",
+      "pageCount": 500,
+      "headerLine": "'''[2013]: Suhrkamp-Insel Verlag, Berlin'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 4764,
+        "end": 4903
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/56-2017-a",
+      "year": 2017,
+      "yearRaw": "2017",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 700,
+      "headerLine": "'''[2017]: S. Fischer Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/56",
+        "start": 4903,
+        "end": 5272
+      },
+      "reviewFlags": []
+    }
+  ],
+  "unsegmentedSections": [
+    {
+      "heading": "Contents",
+      "start": 3785,
+      "end": 3919
+    },
+    {
+      "heading": "Contents",
+      "start": 4585,
+      "end": 4764
+    },
+    {
+      "heading": "Contents",
+      "start": 5272,
+      "end": 6449
+    },
+    {
+      "heading": "Anhang",
+      "start": 6449,
+      "end": 7237
+    },
+    {
+      "heading": "Original Manuscripts",
+      "start": 7237,
+      "end": 8021
+    },
+    {
+      "heading": "Excerpts",
+      "start": 8021,
+      "end": 31676
+    }
+  ]
+}

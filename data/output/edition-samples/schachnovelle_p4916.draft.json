@@ -1,0 +1,427 @@
+{
+  "work": {
+    "id": "klawiter:work/4916",
+    "type": "schema:CreativeWork",
+    "name": "Schachnovelle",
+    "sourcePageId": 4916
+  },
+  "editions": [
+    {
+      "id": "klawiter:edition/4916-1942-a",
+      "year": 1942,
+      "yearRaw": "1942",
+      "publisher": "Verlag Pigmalión",
+      "location": "Buénos Aires",
+      "pageCount": 97,
+      "headerLine": "'''[1942]: Verlag Pigmalión, Buénos Aires'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 0,
+        "end": 141
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1942-b",
+      "year": 1942,
+      "yearRaw": "1942",
+      "publisher": "Verlag János Peter Kramer",
+      "location": "Buenos Aires",
+      "pageCount": 97,
+      "headerLine": "'''[1942]: Verlag János Peter Kramer, Buenos Aires'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 141,
+        "end": 265
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1943-a",
+      "year": 1943,
+      "yearRaw": "1943",
+      "publisher": "Bermann-Fischer Verlag",
+      "location": "Stockholm",
+      "pageCount": 117,
+      "headerLine": "'''[1943]: Bermann-Fischer Verlag, Stockholm'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 265,
+        "end": 708
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1950-a",
+      "year": 1950,
+      "yearRaw": "1950",
+      "publisher": "Hirschsprung Forlag",
+      "location": "København/Copenhagen",
+      "pageCount": 76,
+      "headerLine": "'''[1950]: Hirschsprung Forlag, København/Copenhagen'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 708,
+        "end": 898
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1950-b",
+      "year": 1950,
+      "yearRaw": "1950",
+      "publisher": "Uitgeverij J. M. Meulenhoff",
+      "location": "Amsterdam",
+      "pageCount": 94,
+      "headerLine": "'''[1950]: Uitgeverij J. M. Meulenhoff, Amsterdam'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 898,
+        "end": 1233
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1951-a",
+      "year": 1951,
+      "yearRaw": "1951",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 94,
+      "headerLine": "'''[1951]: S. Fischer Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 1233,
+        "end": 1769
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1951-b",
+      "year": 1951,
+      "yearRaw": "1951",
+      "publisher": "H. Aschehoug & Co. (W. Nygaard)",
+      "location": "Oslo",
+      "pageCount": 61,
+      "headerLine": "'''[1951]: H. Aschehoug & Co. (W. Nygaard), Oslo'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 1769,
+        "end": 1965
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1960-a",
+      "year": 1960,
+      "yearRaw": "1960",
+      "publisher": "W. W. Norton & Company, Inc.",
+      "location": "New York",
+      "pageCount": 82,
+      "headerLine": "'''[1960]: W. W. Norton & Company, Inc., New York'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 1965,
+        "end": 2182
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1962-a",
+      "year": 1962,
+      "yearRaw": "1962",
+      "publisher": "Methuen Publishing Ltd",
+      "location": "London",
+      "pageCount": 82,
+      "headerLine": "'''[1962]: Methuen Publishing Ltd, London'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 2182,
+        "end": 2364
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1966-a",
+      "year": 1966,
+      "yearRaw": "1966",
+      "publisher": "C(arl) Bertelsmann Verlag, Gütersloh / Europäischer Buch- und Phonoklub, Stuttgart / Buchgemeinschaft Donauland",
+      "location": "Wien",
+      "pageCount": null,
+      "headerLine": "'''[1966]: C(arl) Bertelsmann Verlag, Gütersloh / Europäischer Buch- und Phonoklub, Stuttgart / Buchgemeinschaft Donauland, Wien'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 2364,
+        "end": 2681
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1968-a",
+      "year": 1968,
+      "yearRaw": "1968",
+      "publisher": "Éditions Payot",
+      "location": "Lausanne",
+      "pageCount": 78,
+      "headerLine": "'''[1968]: Éditions Payot, Lausanne'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 2681,
+        "end": 2875
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1969-a",
+      "year": 1969,
+      "yearRaw": "1969",
+      "publisher": "C(arl) Bertelsmann Verlag",
+      "location": "Gütersloh",
+      "pageCount": 124,
+      "headerLine": "'''[1969]: C(arl) Bertelsmann Verlag, Gütersloh'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 2875,
+        "end": 2973
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1974-a",
+      "year": 1974,
+      "yearRaw": "1974",
+      "publisher": "Fischer Taschenbuch Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 94,
+      "headerLine": "'''[1974]: Fischer Taschenbuch Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 2973,
+        "end": 4459
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1976-a",
+      "year": 1976,
+      "yearRaw": "1976",
+      "publisher": "Európa Könyvkiadó",
+      "location": "Budapest",
+      "pageCount": 169,
+      "headerLine": "'''[1976]: Európa Könyvkiadó, Budapest'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 4459,
+        "end": 4700
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1979-a",
+      "year": 1979,
+      "yearRaw": "1979",
+      "publisher": "Fischer Taschenbuch Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 126,
+      "headerLine": "'''[1979]: Fischer Taschenbuch Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 4700,
+        "end": 5244
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1992-a",
+      "year": 1992,
+      "yearRaw": "1992",
+      "publisher": "Fischer Taschenbuch Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 109,
+      "headerLine": "'''[1992]: Fischer Taschenbuch Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 5244,
+        "end": 5521
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1995-a",
+      "year": 1995,
+      "yearRaw": "1995",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": null,
+      "headerLine": "'''[1995]: S. Fischer Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 5521,
+        "end": 5791
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-1995-b",
+      "year": 1995,
+      "yearRaw": "1995",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 109,
+      "headerLine": "'''[1995]: S. Fischer Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 5791,
+        "end": 5926
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2003-a",
+      "year": 2003,
+      "yearRaw": "2003",
+      "publisher": "RM Buch und Medien Vertrieb + Der Club Bertelsmann, Gütersloh / Buchgemeinschaft Donauland",
+      "location": "Wien",
+      "pageCount": 109,
+      "headerLine": "'''[2003]: RM Buch und Medien Vertrieb + Der Club Bertelsmann, Gütersloh / Buchgemeinschaft Donauland, Wien'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 5926,
+        "end": 6170
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2003-b",
+      "year": 2003,
+      "yearRaw": "2003",
+      "publisher": "K. G. Saur Verlag GmbH",
+      "location": "München",
+      "pageCount": 100,
+      "headerLine": "'''[2003]: K. G. Saur Verlag GmbH, München'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 6170,
+        "end": 6319
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2015-a",
+      "year": 2015,
+      "yearRaw": "2015",
+      "publisher": "Alfred Kröner Verlag",
+      "location": "Stuttgart",
+      "pageCount": 163,
+      "headerLine": "'''[2015]: Alfred Kröner Verlag, Stuttgart'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 6319,
+        "end": 6476
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2016-a",
+      "year": 2016,
+      "yearRaw": "2016",
+      "publisher": "Aionas Verlag",
+      "location": "Weimar",
+      "pageCount": 52,
+      "headerLine": "'''[2016]: Aionas Verlag, Weimar'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 6736,
+        "end": 6866
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2016-b",
+      "year": 2016,
+      "yearRaw": "2016",
+      "publisher": "Knesebeck GmbH & Co. Verlag",
+      "location": "München",
+      "pageCount": 120,
+      "headerLine": "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 6866,
+        "end": 7104
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2016-c",
+      "year": 2016,
+      "yearRaw": "2016",
+      "publisher": "Philipp Reclam jun. GmbH & Co. KG",
+      "location": "Stuttgart",
+      "pageCount": 107,
+      "headerLine": "'''[2016]: Philipp Reclam jun. GmbH & Co. KG, Stuttgart'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 7104,
+        "end": 7375
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/4916-2019-a",
+      "year": 2019,
+      "yearRaw": "2019",
+      "publisher": "Nikol Verlag",
+      "location": "Hamburg",
+      "pageCount": 76,
+      "headerLine": "'''[2019]: Nikol Verlag, Hamburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/4916",
+        "start": 8941,
+        "end": 9098
+      },
+      "reviewFlags": []
+    }
+  ],
+  "unsegmentedSections": [
+    {
+      "heading": "Contents",
+      "start": 6476,
+      "end": 6554
+    },
+    {
+      "heading": "Anhang",
+      "start": 6554,
+      "end": 6736
+    },
+    {
+      "heading": "Contents",
+      "start": 7375,
+      "end": 7503
+    },
+    {
+      "heading": "Anhang",
+      "start": 7503,
+      "end": 8197
+    },
+    {
+      "heading": "Photographs",
+      "start": 8197,
+      "end": 8941
+    },
+    {
+      "heading": "Some excerpts",
+      "start": 9098,
+      "end": 10027
+    },
+    {
+      "heading": "Related topics",
+      "start": 10027,
+      "end": 10687
+    },
+    {
+      "heading": "Translations",
+      "start": 10687,
+      "end": 11965
+    }
+  ]
+}

@@ -1,0 +1,525 @@
+{
+  "work": {
+    "id": "klawiter:work/54",
+    "type": "schema:CreativeWork",
+    "name": "Ungeduld des Herzens. Roman",
+    "sourcePageId": 54
+  },
+  "editions": [
+    {
+      "id": "klawiter:edition/54-1939-a",
+      "year": 1939,
+      "yearRaw": "1939",
+      "publisher": "Gottfried Bermann-Fischer Verlag, Stockholm / Uitgeverij Allert de Lange, Amsterdam  / Longmans, Green and Company",
+      "location": "New York/Toronto",
+      "pageCount": 443,
+      "headerLine": "'''[1939]: Gottfried Bermann-Fischer Verlag, Stockholm / Uitgeverij Allert de Lange, Amsterdam  / Longmans, Green and Company, New York/Toronto'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 0,
+        "end": 562
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1952-a",
+      "year": 1952,
+      "yearRaw": "1952",
+      "publisher": "Bertelsmann Verlag",
+      "location": "Gütersloh",
+      "pageCount": 383,
+      "headerLine": "'''[1952]: Bertelsmann Verlag, Gütersloh'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 562,
+        "end": 739
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1953-a",
+      "year": 1953,
+      "yearRaw": "1953",
+      "publisher": "Büchergilde Gutenberg",
+      "location": "Wien",
+      "pageCount": 373,
+      "headerLine": "'''[1953]: Büchergilde Gutenberg, Wien'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 739,
+        "end": 889
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1954-a",
+      "year": 1954,
+      "yearRaw": "1954",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 386,
+      "headerLine": "'''[1954]: S. Fischer Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 889,
+        "end": 1104
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1956-a",
+      "year": 1956,
+      "yearRaw": "1956",
+      "publisher": "Deutsche Buch-Gemeinschaft",
+      "location": "Berlin/Darmstadt",
+      "pageCount": 436,
+      "headerLine": "'''[1956]: Deutsche Buch-Gemeinschaft, Berlin/Darmstadt'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1104,
+        "end": 1266
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1957-a",
+      "year": 1957,
+      "yearRaw": "1957",
+      "publisher": "Ex Libris Verlag",
+      "location": "Zũrich",
+      "pageCount": 404,
+      "headerLine": "'''[1957]: Ex Libris Verlag, Zũrich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1266,
+        "end": 1371
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1960-a",
+      "year": 1960,
+      "yearRaw": "1960",
+      "publisher": "Deutscher Bücherbund",
+      "location": "Düsseldorf",
+      "pageCount": null,
+      "headerLine": "'''[1960]: Deutscher Bücherbund, Düsseldorf / [1964]: Ex Libris Verlag, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1371,
+        "end": 1543
+      },
+      "reviewFlags": [
+        "mehrdeutiger-header"
+      ]
+    },
+    {
+      "id": "klawiter:edition/54-1964-a",
+      "year": 1964,
+      "yearRaw": "1964",
+      "publisher": "Ex Libris Verlag",
+      "location": "Zürich",
+      "pageCount": null,
+      "headerLine": "'''[1960]: Deutscher Bücherbund, Düsseldorf / [1964]: Ex Libris Verlag, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1371,
+        "end": 1543
+      },
+      "reviewFlags": [
+        "mehrdeutiger-header"
+      ]
+    },
+    {
+      "id": "klawiter:edition/54-1961-a",
+      "year": 1961,
+      "yearRaw": "1961",
+      "publisher": "Deutscher Bücherbund",
+      "location": "Stuttgart/Hamburg",
+      "pageCount": 453,
+      "headerLine": "'''[1961]:  Deutscher Bücherbund, Stuttgart/Hamburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1543,
+        "end": 1661
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1963-a",
+      "year": 1963,
+      "yearRaw": "1963",
+      "publisher": "Buchgemeinschaft Donauland",
+      "location": "Wien",
+      "pageCount": 386,
+      "headerLine": "'''[1963]: Buchgemeinschaft Donauland, Wien'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1661,
+        "end": 1794
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1963-b",
+      "year": 1963,
+      "yearRaw": "1963",
+      "publisher": "G. B. Fischer Verlag",
+      "location": "Berlin/Frankfurt am Main",
+      "pageCount": 365,
+      "headerLine": "'''[1963]: G. B. Fischer Verlag, Berlin/Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1794,
+        "end": 1933
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1965-a",
+      "year": 1965,
+      "yearRaw": "ca. 1965",
+      "publisher": "Deutscher Bücherklub",
+      "location": "Bochum",
+      "pageCount": 463,
+      "headerLine": "'''[ca. 1965]: Deutscher Bücherklub, Bochum'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 1933,
+        "end": 2043
+      },
+      "reviewFlags": [
+        "jahr-unsicher"
+      ]
+    },
+    {
+      "id": "klawiter:edition/54-1965-b",
+      "year": 1965,
+      "yearRaw": "ca. 1965",
+      "publisher": "Europäischer Buchklub",
+      "location": "Stuttgart/Zürich/Salzburg",
+      "pageCount": 453,
+      "headerLine": "'''[ca. 1965]: Europäischer Buchklub, Stuttgart/Zürich/Salzburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 2043,
+        "end": 2173
+      },
+      "reviewFlags": [
+        "jahr-unsicher"
+      ]
+    },
+    {
+      "id": "klawiter:edition/54-1968-a",
+      "year": 1968,
+      "yearRaw": "1968",
+      "publisher": "Büchergilde Gutenberg",
+      "location": "Frankfurt am Main/Wien/Zürich",
+      "pageCount": 411,
+      "headerLine": "'''[1968]: Büchergilde Gutenberg, Frankfurt am Main/Wien/Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 2173,
+        "end": 2307
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1968-b",
+      "year": 1968,
+      "yearRaw": "1968",
+      "publisher": "Neue Schweizer Bibliothek",
+      "location": "Zürich",
+      "pageCount": 363,
+      "headerLine": "'''[1968]: Neue Schweizer Bibliothek, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 2307,
+        "end": 2418
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1971-a",
+      "year": 1971,
+      "yearRaw": "1971",
+      "publisher": "Aufbau Verlag",
+      "location": "Berlin/Weimar",
+      "pageCount": 379,
+      "headerLine": "'''[1971]:   Aufbau Verlag, Berlin/Weimar'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 2418,
+        "end": 2536
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1972-a",
+      "year": 1972,
+      "yearRaw": "1972",
+      "publisher": "Fackelverlag",
+      "location": "Brugg/Stuttgart/Salzburg",
+      "pageCount": 391,
+      "headerLine": "'''[1972]: Fackelverlag, Brugg/Stuttgart/Salzburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 2536,
+        "end": 2645
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1976-a",
+      "year": 1976,
+      "yearRaw": "1976",
+      "publisher": "Fischer Taschenbuch Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 455,
+      "headerLine": "'''[1976]: Fischer Taschenbuch Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 2645,
+        "end": 2983
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1977-a",
+      "year": 1977,
+      "yearRaw": "1977",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main",
+      "pageCount": 396,
+      "headerLine": "'''[1977]: S. Fischer Verlag, Frankfurt am Main'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 4092,
+        "end": 4216
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1978-a",
+      "year": 1978,
+      "yearRaw": "1978",
+      "publisher": "Deutscher Bücherbund",
+      "location": "Stuttgart/Hamburg/München",
+      "pageCount": 396,
+      "headerLine": "'''[1978]: Deutscher Bücherbund, Stuttgart/Hamburg/München'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 4216,
+        "end": 4365
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1981-a",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "Buch- und Schallplattenfreunde, Zug",
+      "location": "Switzerland",
+      "pageCount": 382,
+      "headerLine": "'''[1981]: Buch- und Schallplattenfreunde, Zug, Switzerland'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 4365,
+        "end": 4491
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1981-b",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "Europäische Bildungsgemeinschaft",
+      "location": "Stuttgart",
+      "pageCount": 382,
+      "headerLine": "'''[1981]: Europäische Bildungsgemeinschaft, Stuttgart'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 4491,
+        "end": 4612
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1981-c",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main [Gesammelte Werke in Einzelbänden]",
+      "pageCount": 445,
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 4612,
+        "end": 4907
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1981-d",
+      "year": 1981,
+      "yearRaw": "1981",
+      "publisher": "S. Fischer Verlag",
+      "location": "Frankfurt am Main]]]",
+      "pageCount": null,
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main]]]",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 4907,
+        "end": 5161
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1982-a",
+      "year": 1982,
+      "yearRaw": "1982",
+      "publisher": "Ex Libris Verlag",
+      "location": "Zürich",
+      "pageCount": null,
+      "headerLine": "'''[1982]: Ex Libris Verlag, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 5161,
+        "end": 5320
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-1995-a",
+      "year": 1995,
+      "yearRaw": "1995",
+      "publisher": "Weltbild Verlag",
+      "location": "Augsburg",
+      "pageCount": 455,
+      "headerLine": "'''[1995]: Weltbild Verlag, Augsburg'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 5320,
+        "end": 5439
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-2006-a",
+      "year": 2006,
+      "yearRaw": "2006",
+      "publisher": "Der Club Bertelsmann",
+      "location": "Berlin",
+      "pageCount": 381,
+      "headerLine": "'''[2006]: Der Club Bertelsmann, Berlin'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 5439,
+        "end": 5792
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-2013-a",
+      "year": 2013,
+      "yearRaw": "2013",
+      "publisher": "Diogenes Verlag",
+      "location": "Zürich",
+      "pageCount": 513,
+      "headerLine": "'''[2013]: Diogenes Verlag, Zürich '''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 5792,
+        "end": 6095
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-2013-b",
+      "year": 2013,
+      "yearRaw": "2013",
+      "publisher": "Insel-Verlag",
+      "location": "Berlin",
+      "pageCount": 460,
+      "headerLine": "'''[2013]: Insel-Verlag, Berlin",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 6095,
+        "end": 6225
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-2015-a",
+      "year": 2015,
+      "yearRaw": "2015",
+      "publisher": "Manesse Verlag",
+      "location": "Zürich",
+      "pageCount": 696,
+      "headerLine": "'''[2015]: Manesse Verlag, Zürich'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 6225,
+        "end": 6391
+      },
+      "reviewFlags": []
+    },
+    {
+      "id": "klawiter:edition/54-2020-a",
+      "year": 2020,
+      "yearRaw": "2020",
+      "publisher": "Paul Zsolnay Verlag",
+      "location": "Wien",
+      "pageCount": null,
+      "headerLine": "'''[2020]: Paul Zsolnay Verlag, Wien'''",
+      "evidence": {
+        "sourceText": "klawiter:sourceText/54",
+        "start": 6391,
+        "end": 6597
+      },
+      "reviewFlags": []
+    }
+  ],
+  "unsegmentedSections": [
+    {
+      "heading": "New edition",
+      "start": 2983,
+      "end": 4092
+    },
+    {
+      "heading": "Page Proofs",
+      "start": 6597,
+      "end": 7235
+    },
+    {
+      "heading": "Excerpts",
+      "start": 7235,
+      "end": 8481
+    },
+    {
+      "heading": "Radio drama",
+      "start": 8481,
+      "end": 9034
+    },
+    {
+      "heading": "Roles",
+      "start": 9034,
+      "end": 9428
+    },
+    {
+      "heading": "Film script",
+      "start": 9428,
+      "end": 11466
+    },
+    {
+      "heading": "Translations",
+      "start": 11466,
+      "end": 21914
+    },
+    {
+      "heading": "Secondary Literature",
+      "start": 21914,
+      "end": 23251
+    }
+  ]
+}
