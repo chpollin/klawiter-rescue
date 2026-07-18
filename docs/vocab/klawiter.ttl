@@ -1,0 +1,271 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix schema:  <https://schema.org/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix klawiter: <https://chpollin.github.io/klawiter-rescue/vocab/> .
+
+#################################################################
+#    Ontology
+#################################################################
+
+<https://chpollin.github.io/klawiter-rescue/vocab/>
+    a owl:Ontology ;
+    dcterms:title "Klawiter Bibliography Vocabulary"@en ;
+    dcterms:description "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, and MediaWiki source metadata. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core, terms without an equivalent in existing vocabularies are defined here."@en ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionInfo "2.0 (Schema.org blend)" ;
+    rdfs:seeAlso <https://chpollin.github.io/klawiter-rescue/vocab/index.html> .
+
+#################################################################
+#    Entry type classes
+#################################################################
+
+klawiter:FictionEntry
+    a rdfs:Class ;
+    rdfs:label "Fiction Entry"@en ;
+    rdfs:comment "Novels, novellas, short stories by Stefan Zweig."@en ;
+    rdfs:subClassOf schema:Book ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:EssayEntry
+    a rdfs:Class ;
+    rdfs:label "Essay Entry"@en ;
+    rdfs:comment "Essays, articles, reviews."@en ;
+    rdfs:subClassOf schema:Article ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:PoetryEntry
+    a rdfs:Class ;
+    rdfs:label "Poetry Entry"@en ;
+    rdfs:comment "Individual poems and poetry collections."@en ;
+    rdfs:subClassOf schema:CreativeWork ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:DramaEntry
+    a rdfs:Class ;
+    rdfs:label "Drama Entry"@en ;
+    rdfs:comment "Plays, libretti, dramatic works."@en ;
+    rdfs:subClassOf schema:Play ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:FilmEntry
+    a rdfs:Class ;
+    rdfs:label "Film Entry"@en ;
+    rdfs:comment "Film adaptations, operas, multimedia."@en ;
+    rdfs:subClassOf schema:Movie ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:CorrespondenceEntry
+    a rdfs:Class ;
+    rdfs:label "Correspondence Entry"@en ;
+    rdfs:comment "Letters and correspondence. schema:Message is the closest Schema.org type, no dedicated letter type exists."@en ;
+    skos:closeMatch schema:Message ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:CollectedWorksEntry
+    a rdfs:Class ;
+    rdfs:label "Collected Works Entry"@en ;
+    rdfs:comment "Anthologies, selected and collected works."@en ;
+    rdfs:subClassOf schema:Collection ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:SecondaryLiteratureEntry
+    a rdfs:Class ;
+    rdfs:label "Secondary Literature Entry"@en ;
+    rdfs:comment "Scholarship about Stefan Zweig."@en ;
+    rdfs:subClassOf schema:ScholarlyArticle ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:HistoricalStudyEntry
+    a rdfs:Class ;
+    rdfs:label "Historical Study Entry"@en ;
+    rdfs:comment "Monographs, dissertations, academic studies."@en ;
+    rdfs:subClassOf schema:ScholarlyArticle ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:TranslationEntry
+    a rdfs:Class ;
+    rdfs:label "Translation Entry"@en ;
+    rdfs:comment "Translations by Zweig of other authors' works."@en ;
+    rdfs:subClassOf schema:Book ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:ForewordEntry
+    a rdfs:Class ;
+    rdfs:label "Foreword Entry"@en ;
+    rdfs:comment "Forewords, afterwords, editorial contributions."@en ;
+    rdfs:subClassOf schema:CreativeWork ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:SymposiumEntry
+    a rdfs:Class ;
+    rdfs:label "Symposium Entry"@en ;
+    rdfs:comment "Symposia, exhibitions, conferences about Zweig."@en ;
+    rdfs:subClassOf schema:Event ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:DramaticReadingEntry
+    a rdfs:Class ;
+    rdfs:label "Dramatic Reading Entry"@en ;
+    rdfs:comment "Dramatic readings and staged performances."@en ;
+    rdfs:subClassOf schema:CreativeWork ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:NewspaperEntry
+    a rdfs:Class ;
+    rdfs:label "Newspaper Entry"@en ;
+    rdfs:comment "Newspaper articles."@en ;
+    rdfs:subClassOf schema:NewsArticle ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:RedirectEntry
+    a rdfs:Class ;
+    rdfs:label "Redirect Entry"@en ;
+    rdfs:comment "Alias pointing to another entry, from MediaWiki. No Schema.org equivalent is mapped."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:OtherEntry
+    a rdfs:Class ;
+    rdfs:label "Other Entry"@en ;
+    rdfs:comment "Unclassifiable entries."@en ;
+    rdfs:subClassOf schema:CreativeWork ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Domain-specific properties
+#################################################################
+
+klawiter:entryType
+    a rdf:Property ;
+    rdfs:label "entry type"@en ;
+    rdfs:comment "Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:timePeriod
+    a rdf:Property ;
+    rdfs:label "time period"@en ;
+    rdfs:comment "Historical period: pre-zweig (before 1881), lifetime (1881-1942), post-wwii (1943-1980), late-20c (1981-2000), contemporary (2001 onward)."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:totalEntries
+    a rdf:Property ;
+    rdfs:label "total entries"@en ;
+    rdfs:comment "Number of entries in a collection object."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:entries
+    a rdf:Property ;
+    rdfs:label "entries"@en ;
+    rdfs:comment "Ordered list of bibliographic entries in the top-level collection."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:categories
+    a rdf:Property ;
+    rdfs:label "categories"@en ;
+    rdfs:comment "MediaWiki categories from the original bibliography wiki."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:contentItems
+    a rdf:Property ;
+    rdfs:label "content items"@en ;
+    rdfs:comment "Table of contents for collected works, ordered."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:mainCategory
+    a rdf:Property ;
+    rdfs:label "main category"@en ;
+    rdfs:comment "Primary category used for entry type classification."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:originalTitle
+    a rdf:Property ;
+    rdfs:label "original title"@en ;
+    rdfs:comment "Original-language title, when the entry title differs, for example for translations."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:languageCode
+    a rdf:Property ;
+    rdfs:label "language code"@en ;
+    rdfs:comment "ISO 639-1 language code, for example de, en, fr, zh."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:allYears
+    a rdf:Property ;
+    rdfs:label "all years"@en ;
+    rdfs:comment "All years mentioned in the entry, when multiple editions or reprints are listed."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:allLocations
+    a rdf:Property ;
+    rdfs:label "all locations"@en ;
+    rdfs:comment "All publication locations when multiple are mentioned."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:locationSameAs
+    a rdf:Property ;
+    rdfs:label "location same as"@en ;
+    rdfs:comment "Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. The place is taken from the source and reconciled against Wikidata. A dedicated property, not schema:sameAs, which would conflate the work with the place."@en ;
+    rdfs:range rdfs:Resource ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reprints
+    a rdf:Property ;
+    rdfs:label "reprints"@en ;
+    rdfs:comment "References to reprint editions."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourcePageId
+    a rdf:Property ;
+    rdfs:label "source page ID"@en ;
+    rdfs:comment "Original MediaWiki page ID (provenance)."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceTextId
+    a rdf:Property ;
+    rdfs:label "source text ID"@en ;
+    rdfs:comment "MediaWiki text revision ID (provenance)."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceBlobId
+    a rdf:Property ;
+    rdfs:label "source BLOB ID"@en ;
+    rdfs:comment "BLOB file number (0-7) containing the source text."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:pageNamespace
+    a rdf:Property ;
+    rdfs:label "page namespace"@en ;
+    rdfs:comment "MediaWiki namespace, for example 0 for main, 14 for category."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:isRedirect
+    a rdf:Property ;
+    rdfs:label "is redirect"@en ;
+    rdfs:comment "True if the entry is a redirect alias."@en ;
+    rdfs:range xsd:boolean ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:redirectTarget
+    a rdf:Property ;
+    rdfs:label "redirect target"@en ;
+    rdfs:comment "Title of the target entry for redirects."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .

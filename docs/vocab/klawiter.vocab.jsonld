@@ -1,0 +1,314 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "schema": "https://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
+    "label": {"@id": "rdfs:label", "@language": "en"},
+    "comment": {"@id": "rdfs:comment", "@language": "en"},
+    "subClassOf": {"@id": "rdfs:subClassOf", "@type": "@id"},
+    "closeMatch": {"@id": "skos:closeMatch", "@type": "@id"},
+    "range": {"@id": "rdfs:range", "@type": "@id"},
+    "isDefinedBy": {"@id": "rdfs:isDefinedBy", "@type": "@id"},
+    "seeAlso": {"@id": "rdfs:seeAlso", "@type": "@id"},
+    "title": {"@id": "dcterms:title", "@language": "en"},
+    "description": {"@id": "dcterms:description", "@language": "en"},
+    "license": {"@id": "dcterms:license", "@type": "@id"},
+    "versionInfo": "owl:versionInfo"
+  },
+  "@graph": [
+    {
+      "@id": "klawiter:",
+      "@type": "owl:Ontology",
+      "title": "Klawiter Bibliography Vocabulary",
+      "description": "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, and MediaWiki source metadata. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core, terms without an equivalent in existing vocabularies are defined here.",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "versionInfo": "2.0 (Schema.org blend)",
+      "seeAlso": "https://chpollin.github.io/klawiter-rescue/vocab/index.html"
+    },
+
+    {
+      "@id": "klawiter:FictionEntry",
+      "@type": "rdfs:Class",
+      "label": "Fiction Entry",
+      "comment": "Novels, novellas, short stories by Stefan Zweig.",
+      "subClassOf": "schema:Book",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:EssayEntry",
+      "@type": "rdfs:Class",
+      "label": "Essay Entry",
+      "comment": "Essays, articles, reviews.",
+      "subClassOf": "schema:Article",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:PoetryEntry",
+      "@type": "rdfs:Class",
+      "label": "Poetry Entry",
+      "comment": "Individual poems and poetry collections.",
+      "subClassOf": "schema:CreativeWork",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:DramaEntry",
+      "@type": "rdfs:Class",
+      "label": "Drama Entry",
+      "comment": "Plays, libretti, dramatic works.",
+      "subClassOf": "schema:Play",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:FilmEntry",
+      "@type": "rdfs:Class",
+      "label": "Film Entry",
+      "comment": "Film adaptations, operas, multimedia.",
+      "subClassOf": "schema:Movie",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:CorrespondenceEntry",
+      "@type": "rdfs:Class",
+      "label": "Correspondence Entry",
+      "comment": "Letters and correspondence. schema:Message is the closest Schema.org type, no dedicated letter type exists.",
+      "closeMatch": "schema:Message",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:CollectedWorksEntry",
+      "@type": "rdfs:Class",
+      "label": "Collected Works Entry",
+      "comment": "Anthologies, selected and collected works.",
+      "subClassOf": "schema:Collection",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:SecondaryLiteratureEntry",
+      "@type": "rdfs:Class",
+      "label": "Secondary Literature Entry",
+      "comment": "Scholarship about Stefan Zweig.",
+      "subClassOf": "schema:ScholarlyArticle",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:HistoricalStudyEntry",
+      "@type": "rdfs:Class",
+      "label": "Historical Study Entry",
+      "comment": "Monographs, dissertations, academic studies.",
+      "subClassOf": "schema:ScholarlyArticle",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:TranslationEntry",
+      "@type": "rdfs:Class",
+      "label": "Translation Entry",
+      "comment": "Translations by Zweig of other authors' works.",
+      "subClassOf": "schema:Book",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:ForewordEntry",
+      "@type": "rdfs:Class",
+      "label": "Foreword Entry",
+      "comment": "Forewords, afterwords, editorial contributions.",
+      "subClassOf": "schema:CreativeWork",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:SymposiumEntry",
+      "@type": "rdfs:Class",
+      "label": "Symposium Entry",
+      "comment": "Symposia, exhibitions, conferences about Zweig.",
+      "subClassOf": "schema:Event",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:DramaticReadingEntry",
+      "@type": "rdfs:Class",
+      "label": "Dramatic Reading Entry",
+      "comment": "Dramatic readings and staged performances.",
+      "subClassOf": "schema:CreativeWork",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:NewspaperEntry",
+      "@type": "rdfs:Class",
+      "label": "Newspaper Entry",
+      "comment": "Newspaper articles.",
+      "subClassOf": "schema:NewsArticle",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:RedirectEntry",
+      "@type": "rdfs:Class",
+      "label": "Redirect Entry",
+      "comment": "Alias pointing to another entry, from MediaWiki. No Schema.org equivalent is mapped.",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:OtherEntry",
+      "@type": "rdfs:Class",
+      "label": "Other Entry",
+      "comment": "Unclassifiable entries.",
+      "subClassOf": "schema:CreativeWork",
+      "isDefinedBy": "klawiter:"
+    },
+
+    {
+      "@id": "klawiter:entryType",
+      "@type": "rdf:Property",
+      "label": "entry type",
+      "comment": "Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:timePeriod",
+      "@type": "rdf:Property",
+      "label": "time period",
+      "comment": "Historical period: pre-zweig (before 1881), lifetime (1881-1942), post-wwii (1943-1980), late-20c (1981-2000), contemporary (2001 onward).",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:totalEntries",
+      "@type": "rdf:Property",
+      "label": "total entries",
+      "comment": "Number of entries in a collection object.",
+      "range": "xsd:integer",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:entries",
+      "@type": "rdf:Property",
+      "label": "entries",
+      "comment": "Ordered list of bibliographic entries in the top-level collection.",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:categories",
+      "@type": "rdf:Property",
+      "label": "categories",
+      "comment": "MediaWiki categories from the original bibliography wiki.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:contentItems",
+      "@type": "rdf:Property",
+      "label": "content items",
+      "comment": "Table of contents for collected works, ordered.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:mainCategory",
+      "@type": "rdf:Property",
+      "label": "main category",
+      "comment": "Primary category used for entry type classification.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:originalTitle",
+      "@type": "rdf:Property",
+      "label": "original title",
+      "comment": "Original-language title, when the entry title differs, for example for translations.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:languageCode",
+      "@type": "rdf:Property",
+      "label": "language code",
+      "comment": "ISO 639-1 language code, for example de, en, fr, zh.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:allYears",
+      "@type": "rdf:Property",
+      "label": "all years",
+      "comment": "All years mentioned in the entry, when multiple editions or reprints are listed.",
+      "range": "xsd:integer",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:allLocations",
+      "@type": "rdf:Property",
+      "label": "all locations",
+      "comment": "All publication locations when multiple are mentioned.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:locationSameAs",
+      "@type": "rdf:Property",
+      "label": "location same as",
+      "comment": "Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. The place is taken from the source and reconciled against Wikidata. A dedicated property, not schema:sameAs, which would conflate the work with the place.",
+      "range": "rdfs:Resource",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:reprints",
+      "@type": "rdf:Property",
+      "label": "reprints",
+      "comment": "References to reprint editions.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:sourcePageId",
+      "@type": "rdf:Property",
+      "label": "source page ID",
+      "comment": "Original MediaWiki page ID (provenance).",
+      "range": "xsd:integer",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:sourceTextId",
+      "@type": "rdf:Property",
+      "label": "source text ID",
+      "comment": "MediaWiki text revision ID (provenance).",
+      "range": "xsd:integer",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:sourceBlobId",
+      "@type": "rdf:Property",
+      "label": "source BLOB ID",
+      "comment": "BLOB file number (0-7) containing the source text.",
+      "range": "xsd:integer",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:pageNamespace",
+      "@type": "rdf:Property",
+      "label": "page namespace",
+      "comment": "MediaWiki namespace, for example 0 for main, 14 for category.",
+      "range": "xsd:integer",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:isRedirect",
+      "@type": "rdf:Property",
+      "label": "is redirect",
+      "comment": "True if the entry is a redirect alias.",
+      "range": "xsd:boolean",
+      "isDefinedBy": "klawiter:"
+    },
+    {
+      "@id": "klawiter:redirectTarget",
+      "@type": "rdf:Property",
+      "label": "redirect target",
+      "comment": "Title of the target entry for redirects.",
+      "range": "xsd:string",
+      "isDefinedBy": "klawiter:"
+    }
+  ]
+}
