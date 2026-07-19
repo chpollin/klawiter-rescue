@@ -11,6 +11,11 @@ import warnings
 from typing import Literal, Optional
 
 import pytest
+
+# CI runs without the LLM stack installed; skip collection instead of erroring.
+pytest.importorskip("pydantic", reason="pydantic not installed — LLM stack absent")
+pytest.importorskip("google.genai", reason="google-genai not installed — LLM stack absent")
+
 from pydantic import BaseModel
 
 from lib.patterns import (

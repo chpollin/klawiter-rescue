@@ -33,7 +33,7 @@ import sys
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, PROJECT_ROOT, OUTPUT_FRONTEND_JSON, OUTPUT_DIR
+from lib.config import setup_logging, write_json, PROJECT_ROOT, OUTPUT_FRONTEND_JSON, OUTPUT_DIR
 
 log = setup_logging(__name__)
 
@@ -42,6 +42,10 @@ REPORT_PATH = os.path.join(OUTPUT_DIR, 'corrections-report.json')
 
 VALID_ACTIONS = {'accept', 'correct', 'add'}
 VALID_SOURCES = {'human', 'agent'}
+# Mirrors Edit.TRACKED_FIELDS in docs/js/edit.js. A typo'd field name must not
+# silently create a new key on the entry; extend this when the editor grows
+# (title editing is planned as EIL Increment 4).
+EDITABLE_FIELDS = {'publisher', 'location', 'translator', 'pageCount'}
 REQUIRED_KEYS = ('pageId', 'field', 'action', 'edited_by', 'edited_at', 'source')
 
 
@@ -55,6 +59,8 @@ def validate_patch(patch):
         problems.append(f"action '{patch.get('action')}' not in {sorted(VALID_ACTIONS)}")
     if patch.get('source') not in VALID_SOURCES:
         problems.append(f"source '{patch.get('source')}' not in {sorted(VALID_SOURCES)}")
+    if 'field' in patch and patch['field'] not in EDITABLE_FIELDS:
+        problems.append(f"field '{patch['field']}' not in {sorted(EDITABLE_FIELDS)}")
     if patch.get('action') == 'add' and (patch.get('oldValue') or '').strip():
         problems.append("action 'add' but oldValue is non-empty")
     if patch.get('action') == 'correct' and patch.get('newValue') in (None, '', patch.get('oldValue')):
@@ -101,6 +107,7 @@ def apply_patches(entries, patches):
 
     by_action = {'accept': 0, 'correct': 0, 'add': 0}
     touched = 0
+    mismatches = []
     for pid, plist in by_page.items():
         plist.sort(key=lambda p: p['edited_at'])  # chronological; last wins
         entry = index[pid]
@@ -109,6 +116,16 @@ def apply_patches(entries, patches):
         sources = []
         for p in plist:
             field, action = p['field'], p['action']
+            # The editor saw oldValue when deciding; if the freshly built base
+            # value differs, the patch overwrites something the editor never
+            # reviewed. Applied anyway (the store is authoritative) but
+            # surfaced in the report. Matching newValue means the patch is
+            # already applied (idempotent re-run), not a drift.
+            current = _norm(entry.get(field))
+            if current not in (_norm(p.get('oldValue')), _norm(p.get('newValue'))):
+                mismatches.append({'pageId': pid, 'field': field,
+                                   'patchOldValue': p.get('oldValue'),
+                                   'currentValue': entry.get(field)})
             if action in ('correct', 'add'):
                 entry[field] = p.get('newValue')
             # 'accept' confirms the existing value without changing it
@@ -131,8 +148,14 @@ def apply_patches(entries, patches):
         'patches_applied': sum(by_action.values()),
         'by_action': by_action,
         'not_found': not_found,
+        'old_value_mismatch': mismatches,
         'invalid': [{'patch': p, 'problems': probs} for p, probs in invalid],
     }
+
+
+def _norm(value):
+    """Compare field values across None/''/int representations."""
+    return '' if value is None else str(value)
 
 
 def load_corrections(corrections_dir=CORRECTIONS_DIR):
@@ -165,6 +188,9 @@ def main():
         log.warning(f"  patches for unknown pageId: {len(report['not_found'])}")
     if report['invalid']:
         log.warning(f"  invalid patches skipped: {len(report['invalid'])}")
+    if report['old_value_mismatch']:
+        log.warning(f"  patches whose oldValue no longer matches the base data: "
+                    f"{len(report['old_value_mismatch'])} (see report)")
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     with open(REPORT_PATH, 'w', encoding='utf-8') as f:
@@ -173,8 +199,7 @@ def main():
     # Only rewrite the dataset when something actually changed, so an empty
     # corrections store is a true no-op and leaves the file byte-identical.
     if report['entries_touched']:
-        with open(OUTPUT_FRONTEND_JSON, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
+        write_json(OUTPUT_FRONTEND_JSON, data, separators=(',', ':'))
         log.info(f"Updated {OUTPUT_FRONTEND_JSON}")
     else:
         log.info("No corrections to apply; dataset unchanged.")

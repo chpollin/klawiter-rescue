@@ -3,7 +3,7 @@ name: Validate Curation Patch
 on:
   pull_request:
     paths:
-      - 'patches/**'
+      - 'data/corrections/**'
       - 'docs/data/klawiter.json'
 
 jobs:
@@ -17,55 +17,59 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install jsonschema
+        run: pip install -r requirements-dev.txt
 
-      - name: Validate patch format
+      # Reuses pipeline/apply_patches.validate_patch so CI and the overlay
+      # step can never drift apart on what a valid patch is.
+      - name: Validate correction patches
         run: |
-          python -c "
-          import json, glob, sys
+          python - <<'EOF'
+          import glob, json, sys
+          sys.path.insert(0, 'pipeline')
+          from apply_patches import validate_patch
           errors = []
-          for f in glob.glob('patches/*.json'):
-              try:
-                  with open(f) as fh:
-                      patch = json.load(fh)
-                  assert 'patchVersion' in patch, 'Missing patchVersion'
-                  assert 'patches' in patch, 'Missing patches array'
-                  for p in patch['patches']:
-                      assert 'pageId' in p, 'Missing pageId in patch entry'
-                      assert 'field' in p, 'Missing field in patch entry'
-                      assert 'newValue' in p, 'Missing newValue in patch entry'
-                  print(f'{f}: OK ({len(patch[\"patches\"])} changes)')
-              except Exception as e:
-                  errors.append(f'{f}: {e}')
-                  print(f'{f}: FAIL - {e}')
+          files = sorted(glob.glob('data/corrections/*.json'))
+          if not files:
+              print('No correction files — empty store is valid')
+          for path in files:
+              with open(path, encoding='utf-8') as fh:
+                  doc = json.load(fh)
+              if doc.get('patchVersion') != 2:
+                  errors.append(f"{path}: patchVersion is {doc.get('patchVersion')!r}, expected 2")
+              patches = doc.get('patches', [])
+              for p in patches:
+                  for problem in validate_patch(p):
+                      errors.append(f'{path}: {problem}')
+              print(f'{path}: {len(patches)} patch(es) checked')
           if errors:
+              print('\n'.join('FAIL: ' + e for e in errors))
               sys.exit(1)
-          "
+          EOF
 
       - name: Validate frontend JSON integrity
         run: |
-          python -c "
+          python - <<'EOF'
           import json
           with open('docs/data/klawiter.json') as f:
               data = json.load(f)
           entries = data.get('entries', [])
+          assert entries, 'No entries in frontend JSON'
           print(f'Entries: {len(entries)}')
-          # Check all entries have required fields
           for e in entries:
-              assert 'sourcePageId' in e, f'Missing sourcePageId'
-              assert 'entryType' in e, f'Missing entryType in {e.get(\"sourcePageId\")}'
+              assert 'sourcePageId' in e, 'Missing sourcePageId'
+              assert 'entryType' in e, f"Missing entryType in {e.get('sourcePageId')}"
           print('All entries valid')
-          "
+          EOF
 
+      # The regression suite compares against .github/baseline-metrics.json;
+      # thresholds live there and in the tests, not duplicated here.
       - name: Run regression tests
         if: hashFiles('data/output/quality-report.json') != ''
-        run: |
-          pip install pytest
-          python -m pytest tests/test_regression.py -v
+        run: python -m pytest tests/test_regression.py -v
 
       - name: Report coverage changes
         run: |
-          python -c "
+          python - <<'EOF'
           import json
           with open('docs/data/klawiter.json') as f:
               data = json.load(f)
@@ -78,41 +82,4 @@ jobs:
                   p = (e.get('_provenance') or {}).get(field, 'unknown')
                   prov[p] = prov.get(p, 0) + 1
               print(f'{field}: {count}/{total} ({100*count/total:.1f}%) — {prov}')
-          "
-
-      - name: Check quality report regression
-        if: hashFiles('data/output/quality-report.json') != ''
-        run: |
-          python -c "
-          import json, sys
-          with open('.github/baseline-metrics.json') as f:
-              baseline = json.load(f)
-          with open('data/output/quality-report.json') as f:
-              current = json.load(f)
-
-          fails = []
-          # Entry count check
-          b_total = baseline['summary']['total_entries']
-          c_total = current['summary']['total_entries']
-          if c_total < b_total * 0.99:
-              fails.append(f'Entry count dropped >1%: {b_total} -> {c_total}')
-
-          # Critical field coverage
-          for field in ['name', 'datePublished', 'bibliographicCitation']:
-              b_pct = baseline['field_coverage'][field]['percentage']
-              c_pct = current['field_coverage'][field]['percentage']
-              if b_pct - c_pct > 1.0:
-                  fails.append(f'{field} coverage dropped {b_pct - c_pct:.1f}pp: {b_pct}% -> {c_pct}%')
-
-          # Error severity
-          errors = current['summary']['severity_counts'].get('error', 0)
-          if errors > 0:
-              fails.append(f'{errors} error-severity issues found')
-
-          if fails:
-              for f in fails:
-                  print(f'FAIL: {f}')
-              sys.exit(1)
-          else:
-              print('All regression checks passed')
-          "
+          EOF

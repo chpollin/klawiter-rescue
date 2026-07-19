@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Node runs the frontend-logic bridge (tests/test_frontend_logic.py
+      # executes tests/evidence_triage.test.js); without it those tests
+      # skip silently.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      # All suite inputs are committed (frontend JSON, quality report,
+      # baseline), so no pipeline run is needed. LLM tests are deselected
+      # via pytest.ini addopts.
+      - name: Run test suite
+        run: python -m pytest -q

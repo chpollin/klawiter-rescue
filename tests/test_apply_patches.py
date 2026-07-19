@@ -115,3 +115,32 @@ def test_invalid_patch_is_skipped_and_reported():
     assert report['entries_touched'] == 0
     assert len(report['invalid']) == 1
     assert any('action' in p for p in report['invalid'][0]['problems'])
+
+
+def test_unknown_field_is_rejected_not_applied():
+    entries = make_entries()
+    report = ap.apply_patches(entries, [
+        patch(1, 'publsher', 'correct', old='Leipzig', new='Insel-Verlag'),  # typo
+    ])
+    assert report['entries_touched'] == 0
+    assert 'publsher' not in entries[0]
+    assert any('field' in prob for prob in report['invalid'][0]['problems'])
+
+
+def test_old_value_mismatch_is_reported_but_applied():
+    entries = make_entries()
+    report = ap.apply_patches(entries, [
+        patch(1, 'publisher', 'correct', old='Vienna', new='Insel-Verlag'),
+    ])
+    assert entries[0]['publisher'] == 'Insel-Verlag'   # store is authoritative
+    assert report['old_value_mismatch'] == [{
+        'pageId': 1, 'field': 'publisher',
+        'patchOldValue': 'Vienna', 'currentValue': 'Leipzig'}]
+
+
+def test_rerun_on_patched_data_is_not_a_mismatch():
+    entries = make_entries()
+    patches = [patch(1, 'publisher', 'correct', old='Leipzig', new='Insel-Verlag')]
+    ap.apply_patches(entries, patches)
+    report = ap.apply_patches(entries, patches)   # current equals newValue
+    assert report['old_value_mismatch'] == []

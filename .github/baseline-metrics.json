@@ -121,6 +121,7 @@
     "long_titles": 43,
     "encoding_artifact_titles": 345,
     "publisher_wiki_markup": 0,
-    "publisher_metadata": 0
+    "publisher_metadata": 0,
+    "semantic_field_mismatches": 17
   }
 }

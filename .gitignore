@@ -1,4 +1,6 @@
-# Regenerable intermediate data (re-run pipeline to recreate)
+# Regenerable intermediate CSVs (re-run pipeline to recreate).
+# Hand-labeled files are NOT regenerable and must live committed in tests/
+# — the original test_sample_20.json was lost to this ignore rule.
 data/intermediate/
 
 # Individual entry files (6.296 files, regenerable)

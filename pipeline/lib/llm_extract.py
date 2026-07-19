@@ -187,6 +187,4 @@ def save_cache(cache_path, cache):
     tmp_path = cache_path + '.tmp'
     with open(tmp_path, 'w', encoding='utf-8') as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
-    if os.path.exists(cache_path):
-        os.remove(cache_path)
-    os.rename(tmp_path, cache_path)
+    os.replace(tmp_path, cache_path)

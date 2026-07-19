@@ -14,7 +14,16 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "pipeline"))
 
 PROJECT_ROOT = Path(__file__).parent.parent
-TEST_SAMPLE_PATH = PROJECT_ROOT / "data" / "intermediate" / "test_sample_20.json"
+# Hand-labeled ground truth: not regenerable, belongs committed in tests/.
+# The original lived uncommitted in data/intermediate/ and was lost; the
+# legacy path stays as a fallback in case a backup copy is restored there.
+_TEST_SAMPLE_CANDIDATES = (
+    PROJECT_ROOT / "tests" / "test_sample_20.json",
+    PROJECT_ROOT / "data" / "intermediate" / "test_sample_20.json",
+)
+TEST_SAMPLE_PATH = next(
+    (p for p in _TEST_SAMPLE_CANDIDATES if p.exists()), _TEST_SAMPLE_CANDIDATES[0]
+)
 WIKI_GROUND_TRUTH = PROJECT_ROOT / "tests" / "wiki_ground_truth.json"
 FRONTEND_JSON = PROJECT_ROOT / "docs" / "data" / "klawiter.json"
 BASELINE_PATH = PROJECT_ROOT / ".github" / "baseline-metrics.json"
@@ -91,6 +100,9 @@ def _load_test_sample():
 @pytest.fixture(scope="session")
 def real_entries():
     """All 20 hand-labeled test entries."""
+    if not TEST_SAMPLE_PATH.exists():
+        pytest.skip("test_sample_20.json not found — hand-labeled sample, "
+                    "not regenerable (see knowledge/testing.md)")
     return _load_test_sample()
 
 
@@ -105,9 +117,14 @@ def _load_wiki_ground_truth():
 def pytest_generate_tests(metafunc):
     """Parametrize tests that request 'real_entry' or 'wiki_entry' fixture."""
     if "real_entry" in metafunc.fixturenames:
-        entries = _load_test_sample()
-        ids = [f"page_{e['page_id']}_{e['label']}" for e in entries]
-        metafunc.parametrize("real_entry", entries, ids=ids)
+        if TEST_SAMPLE_PATH.exists():
+            entries = _load_test_sample()
+            ids = [f"page_{e['page_id']}_{e['label']}" for e in entries]
+            metafunc.parametrize("real_entry", entries, ids=ids)
+        else:
+            metafunc.parametrize("real_entry", [pytest.param(None, marks=pytest.mark.skip(
+                reason="test_sample_20.json not found — hand-labeled sample, "
+                       "not regenerable (see knowledge/testing.md)"))])
     if "wiki_entry" in metafunc.fixturenames:
         entries = _load_wiki_ground_truth()
         if not entries:
@@ -122,8 +139,10 @@ def pytest_generate_tests(metafunc):
 def gemini_client():
     """Create Gemini client, loading API key from .env if needed."""
     from lib.config import load_env
-    from lib.llm_extract import create_client
     load_env()
+    if not os.environ.get("GEMINI_API_KEY"):
+        pytest.skip("GEMINI_API_KEY not set — LLM tests need it in .env")
+    from lib.llm_extract import create_client
     return create_client()
 
 

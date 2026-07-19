@@ -2,7 +2,8 @@
 Real-data round-trip tests for the Klawiter extraction pipeline.
 
 Each test runs extraction functions on hand-labeled entries from
-data/intermediate/test_sample_20.json and checks against known values.
+tests/test_sample_20.json and checks against known values. The sample is
+hand-labeled and not regenerable; if the file is absent these tests skip.
 
 Strategy: Every field has an explicit expected value in the fixture
 (including None for legitimately missing fields). No silent skipping.

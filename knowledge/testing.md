@@ -91,6 +91,8 @@ Catches: regressions in specific functions, encoding edge cases.
 
 Cannot catch: problems in the 4,731 entries not in the sample (0.4% coverage).
 
+**Lost ground truth**: the hand-labeled sample `test_sample_20.json` lived uncommitted in the gitignored `data/intermediate/` and was lost; no script regenerates it because the labels were manual. The real-entry tests and the LLM judge skip visibly until it is restored from a backup or relabeled. Its canonical location is now `tests/test_sample_20.json`, committed next to `wiki_ground_truth.json` (conftest still accepts the legacy path as fallback).
+
 **Verified**: 3 entries traced end-to-end through the pipeline steps. Pipeline logic correct for clean entries (page 3). pageCount bug confirmed (page 7140: `pp. 111-118` → extracted 111 as start page). LLM enrichment verified (page 4868: translator correctly filled by Gemini).
 
 ## Bugs Found and Fixed
@@ -141,7 +143,7 @@ Bounded-count tests (German+translator FPs, film+pageCount, broken seeAlso refs,
 
 Two layers:
 
-1. **Ground truth** (`test_semantic.py`): 10 entries verified against the live wiki at klawiter.stefanzweig.digital. Each entry checked for 7 fields (title, year, publisher, location, language, translator, pageCount). Current result: 53 passed, 17 failed. Ground truth file: `tests/wiki_ground_truth.json`.
+1. **Ground truth** (`test_semantic.py`): 10 entries verified against the live wiki at klawiter.stefanzweig.digital. Each entry checked for 7 fields (title, year, publisher, location, language, translator, pageCount). Current result: 53 passed, 17 failed. Ground truth file: `tests/wiki_ground_truth.json`. The per-field tests are red by design (the documented fidelity gap) and deselected by default via `pytest.ini`; run them with `pytest -m semantic`. What runs in the default suite is `test_ground_truth_mismatches_bounded`, which freezes the mismatch count in `known_issues.semantic_field_mismatches` so a semantically worse dataset fails while the known gap stays green.
 
 2. **Heuristics** (`test_heuristic.py`): 5 pattern-based validators on all 4,751 entries. Each test bounds the violation count against the `known_issues` thresholds in `.github/baseline-metrics.json`:
    - 0 section-header titles (was 1,368 — fixed with page_title fallback)

@@ -143,10 +143,9 @@ def write_csv(path, rows, fieldnames):
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction='ignore')
         writer.writeheader()
         writer.writerows(rows)
-    # Atomic rename (on Windows, need to remove target first if exists)
-    if os.path.exists(path):
-        os.remove(path)
-    os.rename(tmp_path, path)
+    # os.replace is atomic on Windows too; remove+rename would open a crash
+    # window in which neither old nor new file exists.
+    os.replace(tmp_path, path)
 
 
 def write_json(path, data, **dump_kwargs):
@@ -156,6 +155,4 @@ def write_json(path, data, **dump_kwargs):
     tmp_path = path + '.tmp'
     with open(tmp_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, **dump_kwargs)
-    if os.path.exists(path):
-        os.remove(path)
-    os.rename(tmp_path, path)
+    os.replace(tmp_path, path)
