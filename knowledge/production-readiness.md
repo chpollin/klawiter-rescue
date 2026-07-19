@@ -9,10 +9,10 @@ method:
   url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
 language: de
-version: 0.3
+version: 0.4
 tags: [eil, dia-xai, plan, concept]
 created: 2026-07-18
-updated: 2026-07-18
+updated: 2026-07-19
 authors: [Christopher Pollin]
 related: [about, data, pipeline, testing, frontend]
 ---
@@ -83,7 +83,7 @@ Geordnet nach Abhängigkeit. Die Reihenfolge ist eine Empfehlung der Lane, kein 
 
 Diese fachlichen Entscheidungen sind vor der jeweiligen Umsetzung nötig. Sie liegen in einer verdeckten Reihenfolge: der Multi-Edition-Entscheid (Gate 1) ist dem Reconciliation-Tiefe-Entscheid (Gate 2) vorgelagert (die Reconciliation setzt die Ausgaben-Ebene voraus), und der Merge-Scope (Gate 3) profitiert vom selben Modell (er benutzt dessen Provenienz-Schema mit). Die Entscheidungsgrundlage für Gate 1 steht in [[#entscheidungsgrundlage-gate-1-werkausgabe-modell]].
 
-**Stand 2026-07-18: Operator-Entscheide gefallen, Details am Sektionsende.**
+**Stand 2026-07-18: Entscheide getroffen, Details am Sektionsende. Vom Operator ratifiziert 2026-07-19. Gate 1 mit der Modellpräzisierung, dass die schema.org-Zwei-Ebenen-Trennung Werk/Ausgabe jetzt gilt und die Textfassungs-Ebene (Übersetzung) als dritte Tiefenentscheidung über `schema:translationOfWork` geführt wird.**
 
 1. **Multi-Edition-Behandlung im Editor.** Die als mehrfach identifizierten Seiten im Werkzeug aktiv dekomponieren und kuratieren, oder markieren und zurückstellen? Diese Frage entscheidet, ob Arbeitspaket 1 eine Pipeline- oder eine Editor-Aufgabe wird. Die Modelloptionen, das ID-Schema als Vorbedingung und das Stichproben-Vorgehen für die Entscheidung stehen in [[#entscheidungsgrundlage-gate-1-werkausgabe-modell]].
 
@@ -95,7 +95,7 @@ Diese fachlichen Entscheidungen sind vor der jeweiligen Umsetzung nötig. Sie li
 
 ### Operator-Entscheide (2026-07-18)
 
-1. **Gate 1, dekomponieren.** Werk/Ausgabe-Trennung nach dem Zielmodell dieser Sektion. Das Stichproben-Gate ist ausgeführt, `pipeline/segment_editions.py` zerlegt die drei prominenten Seiten (Ungeduld des Herzens, Schachnovelle/Volume, Die Welt von Gestern) deterministisch in Ausgaben-Knoten mit stabilen IDs und Offset-Evidenz; Blockabgrenzung gegen die Handzerlegung vollständig korrekt, Befunde und Restfehler der Kopfzeilen-Reinigung in `data/output/edition-samples/REVIEW.md`. Vor dem Vollauf steht die Sichtung durch die Editorin samt der Tiefenentscheidungen (Auflagen-Unterzeilen, Sammelband-Vorkommen über `schema:isPartOf`, dort auch der Befund, dass VIST-Seiten Vorkommens-Listen und keine Ausgaben-Seiten sind).
+1. **Gate 1, dekomponieren.** Werk/Ausgabe-Trennung nach dem Zielmodell dieser Sektion. Das Stichproben-Gate ist ausgeführt, `pipeline/segment_editions.py` zerlegt die drei prominenten Seiten (Ungeduld des Herzens, Schachnovelle/Volume, Die Welt von Gestern) deterministisch in Ausgaben-Knoten mit stabilen IDs und Offset-Evidenz; Blockabgrenzung gegen die Handzerlegung vollständig korrekt, Befunde und Restfehler der Kopfzeilen-Reinigung in `data/output/edition-samples/REVIEW.md`. Vor dem Vollauf steht die Sichtung durch die Editorin samt der Tiefenentscheidungen (Auflagen-Unterzeilen, Sammelband-Vorkommen über `schema:isPartOf`, dort auch der Befund, dass VIST-Seiten Vorkommens-Listen und keine Ausgaben-Seiten sind). Das Modell bleibt vorerst auf den zwei schema.org-Ebenen Werk und Ausgabe, die die dominante Feld-Fehlerklasse lösen; die Textfassungs-Ebene (Übersetzung) wird als Tiefenentscheidung geführt, nicht jetzt gebaut, siehe die Tiefenentscheidungen am Ende dieser Sektion.
 2. **Gate 2, Reconciliation voll in die Produktionsreife.** Arbeitspaket 4 wird vom Vorbereitungs- zum vollen Umsetzungspaket; die Verknüpfungs-Validierung wird vollwertiger Teil der Editier-Oberfläche. Sauber wird sie erst auf der Ausgaben-Ebene aus Gate 1, daran bleibt die Reihenfolge gebunden.
 3. **Gate 3, spätere Ausbaustufe.** Der Wiki-Druck-Merge (Arbeitspaket 5) bleibt außerhalb der ersten Produktionsreife; das Provenienz-Schema des Zielmodells hält ihm den Platz als dritte Evidenzquelle frei.
 4. **Gate 4, Patch-Export als Auslieferungsstand.** Der Export-Kontrakt (Patch-v2-Datei, `apply_patches.py`) bleibt der kanonische Weg, weil er ohne laufende Infrastruktur auskommt und jede Korrektur als sichtbares, versionierbares Artefakt trägt. Increment 4 folgt später als Komfortschicht, deren lokaler Endpunkt dieselben Patch-v2-Dateien nach `data/corrections/` schreibt statt sie als Download zu erzeugen.
@@ -294,10 +294,11 @@ kl:verify/4916-1942-a
 
 ### Tiefenentscheidungen (zu benennen, nicht zu entscheiden)
 
-Zwei Modellierungsfragen liegen unterhalb der Werk/Ausgabe-Trennung und sind der Editorin vorzulegen, sobald die Segmentierung steht:
+Drei Modellierungsfragen liegen unterhalb der Werk/Ausgabe-Trennung. Die ersten zwei sind der Editorin vorzulegen, sobald die Segmentierung steht; die dritte ist an die Reconciliation gekoppelt und wird dort ausgelöst.
 
 - Auflagen-Unterzeilen. Ein Ausgaben-Block trägt oft Auflagen-Angaben (`*1st edition ... copies`). Diese als eigene Knoten mit `schema:bookEdition` modellieren, oder zunächst als strukturierte `schema:description` an der Ausgabe halten und die Feingranularität später ziehen.
 - Sammelband-Vorkommen. Erscheint ein Werk innerhalb eines Sammelbands, ist das über `schema:isPartOf` von der Ausgabe auf den Sammelband auszudrücken; offen ist, wie weit die Sammelband-Knoten selbst ausmodelliert werden.
+- Textfassungs-Ebene (Expression, insbesondere Übersetzung). Werk und Ausgabe lassen die Textfassung offen. Das Zwei-Ebenen-Modell drückt Übersetzer und Sprache auf die Ausgabe; dann tragen mehrere Ausgaben derselben Übersetzung ihre Fassung doppelt, und nichts weist sie als dieselbe Übersetzung aus. Das entspricht der Expression-Ebene aus FRBR/LRM, die das Zwei-Ebenen-Modell (Work/Manifestation) überspringt. Realisierung bleibt im schema.org-Stack über `schema:translationOfWork` und `schema:workTranslation`: die Übersetzung als eigenes `CreativeWork` ans Werk gehängt, ihre Drucke als `schema:Book` über `workExample`. Das ergibt drei wirksame Ebenen (Werk, Übersetzung, Ausgabe) ohne Vokabularwechsel. FRBR/LRM erst, falls das unzureichend wird; sie brächten die Expression als eigene Klasse, aber ohne sauberen offiziellen JSON-LD-Kontext, dieselbe Serialisierungshürde, die den BIBFRAME-Verzicht in [[data#data-model]] begründet. Auslöser für die Umsetzung ist die Reconciliation gegen GND und Wikidata (Gate 2), die Werk, Ausgabe und Übersetzung trennen, oder der erste belegte Fall mehrerer Ausgaben, die sich eine Übersetzung teilen. Bis dahin Übersetzer und Sprache nicht irreversibel auf die Ausgabe flachdrücken und die Ausgaben-IDs stabil halten, damit ein Expression-Knoten ohne Neu-Prägung eingezogen werden kann.
 
 ### Vorgehen
 
