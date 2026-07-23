@@ -105,9 +105,10 @@ This project is connected to [Stefan Zweig Digital](https://stefanzweig.digital/
 
 If you use this dataset or software, please cite it. Machine-readable citation metadata is provided in [`CITATION.cff`](CITATION.cff) (GitHub renders a "Cite this repository" button in the sidebar). It credits Dr. Randolph J. Klawiter (University of Notre Dame) as the bibliography's compiler and Christopher Pollin (University of Graz) for the digital edition, and links the repository and live site.
 
-## License
+## Licence
 
-- **Code** (pipeline, frontend): [MIT License](LICENSE)
-- **Data** (bibliographic dataset): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- **Code** (pipeline, frontend): [MIT](LICENSE).
+- **Documentation, knowledge documents, and the structured digital edition (JSON-LD dataset)**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- **Underlying bibliography**: the source bibliography was compiled at the University of Notre Dame; when reusing the data, credit the source compilation as described under Credits and Citation above.
 
-See [LICENSE](LICENSE) for details.
+See [LICENSE](LICENSE) for the code licence.

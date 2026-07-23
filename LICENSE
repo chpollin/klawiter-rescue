@@ -1,10 +1,6 @@
-# License
+MIT License
 
-This project contains two components with separate licenses:
-
-## Code (MIT License)
-
-Copyright (c) 2026 Christopher Pollin
+Copyright (c) 2026 Christopher Pollin, Digital Humanities Craft OG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-## Data (Creative Commons Attribution 4.0 International)
-
-The bibliographic data in `data/` and `docs/data/` is licensed under
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-
-The bibliography was compiled by Dr. Randolph J. Klawiter (University of
-Notre Dame). When using this data, please credit:
-
-> Klawiter, Randolph J.: *Stefan Zweig — An International Bibliography.*
-> Digital edition by Christopher Pollin, 2026.
-> https://chpollin.github.io/klawiter-rescue/
