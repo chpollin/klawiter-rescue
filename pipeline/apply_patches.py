@@ -3,7 +3,8 @@
 Apply approved editor corrections onto the frontend dataset as a final overlay.
 
 This is the write-back and audit step of the EIL editing interface (design:
-knowledge/eil-editing.md). It runs after inject_provenance.py. Approved
+knowledge/frontend.md, section "EIL Curation Interface"). It runs after
+inject_provenance.py. Approved
 corrections live as patch files under data/corrections/; the git history of
 that folder, together with this overlay, is the audit trail.
 

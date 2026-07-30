@@ -3,8 +3,9 @@
 Measure the effect of the publication-line location fix in lib/patterns.py.
 
 The fix constrains extract_location to read the bold '''[YEAR]: Publisher,
-Location''' header first, so a city inside a chapter title (the "Weimar" class
-in knowledge/validation.md) is no longer mistaken for the place of publication.
+Location''' header first, so a city inside a chapter title (the "Weimar" class,
+error class 1 in knowledge/testing.md) is no longer mistaken for the place of
+publication.
 
 This script isolates the regex change from everything else: it re-runs the
 current extract_location over the same input the pipeline used (the raw_content

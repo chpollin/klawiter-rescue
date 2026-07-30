@@ -12,14 +12,14 @@ language: en
 version: 0.3
 tags: [pipeline, extraction]
 created: 2026-03-29
-updated: 2026-07-18
+updated: 2026-07-30
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
 
 # Pipeline
 
-The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify, reconcile, census, and apply-patches helpers), requires no MySQL, and is idempotent. The key extraction decisions are recorded in [[#decisions]].
+The extraction pipeline converts raw data from the MediaWiki database into [[data|JSON-LD]]. It runs in 8 stages (01, 02, 03, 03b, 03c, 04, 05, 06 plus the verify, reconcile, census, provenance, triage, and apply-patches helpers), requires no MySQL, and is idempotent. The key extraction decisions are recorded in [[#decisions]].
 
 ## Decisions
 
@@ -169,7 +169,7 @@ Extracts structured fields from wiki markup:
 - Categories, see-also references, reprints, translations, content items
 - Language (from category names, e.g. "Poetry / Individual Poems (German)")
 
-**Output**: `03_parsed.csv` — 24 columns including JSON-serialized lists
+**Output**: `03_parsed.csv` — 27 columns including JSON-serialized lists
 
 ### 03b_llm_enrich.py — LLM Metadata Enrichment
 
@@ -187,7 +187,7 @@ Applies auditable normalization rules via external mapping tables in `pipeline/d
 
 **Normalization rules (Session 15):**
 - **Location**: 7 variant mappings (`pipeline/data/location_normalize.json`): Vienna→Wien, Munich→München, Moscow/Moskau→Moskva, Prague/Prag→Praha, Warsaw→Warszawa. Principle: original-language form as canonical. 45 entries affected.
-- **Publisher**: Regex reject patterns (`pipeline/data/publisher_reject_patterns.json`): edition numbers ("1st edition"), generic words ("Company"), metadata bleed ("cataloging website"), page references, structural markers. 160 entries rejected (set to empty). Publisher coverage drops from 55.5% to 52.2% — the removed values were never publishers.
+- **Publisher**: Regex reject patterns (`pipeline/data/publisher_reject_patterns.json`): edition numbers ("1st edition"), generic words ("Company"), metadata bleed ("cataloging website"), page references, structural markers. Publisher coverage drops from 55.5% to 52.3%; the removed values were never publishers.
 - **Translator**: Mojibake fix via `fix_encoding()` from `lib/encoding.py` + suffix stripping for afterword/foreword/introduction content (`TRANSLATOR_SUFFIX_RE`). 193 entries cleaned.
 - **PageCount**: Outlier rejection — values >2000 or year-like (1800–2030) set to empty. 12 entries affected.
 
@@ -210,7 +210,7 @@ Assigns each entry one of 16 [[data#entity-types|entity types]] (primarily categ
 ### 05_to_jsonld.py — JSON-LD Conversion
 
 Converts classified entries to the [[data#data-model|data model]]:
-- `klawiter.jsonld` — complete dataset (6,296 entries)
+- `klawiter.jsonld` — complete dataset (6,725 entries across all namespaces)
 - `entries/*.jsonld` — individual files per entry
 - `klawiter.json` — frontend-optimized (no redirects, shorter keys)
 
@@ -220,7 +220,7 @@ Checks JSON-LD structure, field coverage, residual Mojibake. Generates `quality-
 
 ### inject_provenance.py (optional post-processing)
 
-Generates per-field provenance metadata (`_provenance` object) by diffing regex output (03_parsed.csv) against LLM cache (03b_llm_cache.json). Injects into `docs/data/klawiter.json`. Fields tracked: publisher, location, translator, pageCount. Values: `regex` (extracted by patterns.py), `llm` (filled by Gemini), `missing` (not extracted). Run manually: `python pipeline/inject_provenance.py`
+Generates per-field provenance metadata (`_provenance` object) by diffing regex output (03_parsed.csv) against LLM cache (03b_llm_cache.json). Injects into `docs/data/klawiter.json`. Fields tracked: publisher, location, translator, pageCount. Values: `regex` (extracted by patterns.py), `llm` (filled by Gemini), `missing` (not extracted); `apply_patches.py` adds the fourth value `editor` where a person has verified the field. Locked by `tests/test_inject_provenance.py`. Run manually: `python pipeline/inject_provenance.py`
 
 ### verify.py — Round-trip Verification
 
@@ -277,7 +277,7 @@ flowchart TD
 
     ENC --> CSV2["02_encoding_fixed.csv\n6,725 rows × 7 cols\ncontent + page_title cleaned"]
 
-    CSV2 --> PARSE["03_parse_entries.py\nWiki markup → structured fields\n26 columns"]
+    CSV2 --> PARSE["03_parse_entries.py\nWiki markup → structured fields\n27 columns"]
 
     subgraph PARSE_DETAIL["Parsing (per entry)"]
         direction LR
@@ -288,11 +288,11 @@ flowchart TD
     end
 
     PARSE --> PARSE_DETAIL
-    PARSE_DETAIL --> CSV3["03_parsed.csv\n6,725 rows × 26 cols"]
+    PARSE_DETAIL --> CSV3["03_parsed.csv\n6,725 rows × 27 cols"]
 
     CSV3 --> CLASS["04_classify.py\nCategory → entry_type (16 types)\nYear → time_period (5 periods)\nNamespace → system types"]
 
-    CLASS --> CSV4["04_classified.csv\n6,725 rows × 28 cols\n+ entry_type, time_period"]
+    CLASS --> CSV4["04_classified.csv\n6,725 rows × 29 cols\n+ entry_type, time_period"]
 
     CSV4 --> JSONLD["05_to_jsonld.py"]
 
@@ -323,7 +323,7 @@ flowchart TD
 
 **Step 2: Fix Encoding** — content field: 57.3% Mojibake -> 0%. page_title: some Mojibake -> 0%. Risk point: line-wise repair could theoretically fail on mixed-encoding lines.
 
-**Step 3: Parse** — Wiki markup to structured fields. Main loss points (regex-only, before LLM enrichment and normalization): publisher (34.5%), translator (35.1%), location (67.8%). Final coverage after steps 03b/03c is higher — see [[data#field-coverage]].
+**Step 3: Parse** — Wiki markup to structured fields. Main loss points (regex-only, before LLM enrichment and normalization): publisher (34.4%), translator (33.6%), location (84.6%). Final coverage after steps 03b/03c is higher, see [[data#field-coverage]].
 
 | Raw content pattern | Extracted field | Method |
 |---------------------|----------------|--------|
@@ -363,7 +363,7 @@ docs/data/klawiter.json
 |   +-- fullBibliographicEntry
 |   +-- sourcePageId, sourceTextId, sourceBlobId
 |   +-- pageNamespace
-+-- redirects{}: { "title" -> page_id } map (1,210 of 1,546 redirects resolved)
++-- redirects{}: { "title" -> page_id } map (1,224 of 1,546 redirects resolved)
 ```
 
 ---
@@ -445,17 +445,17 @@ Defined in `pipeline/lib/patterns.py` and `pipeline/lib/wiki_parser.py`. All per
 ### Year
 Matches 1700–2039, takes first match. **Limitation**: No range detection ("1952-1978"), page numbers like "1234" can cause false positives.
 
-### Publisher (3 families, 34.5% regex-only coverage)
-Recognizes `Verlag|Publisher|Press` labels, `published by` phrases, and publisher-ending names. **Weakest field** — misses most international publishers. Final coverage after LLM + normalization: 52.2%.
+### Publisher (3 families, 34.4% regex-only coverage)
+Recognizes `Verlag|Publisher|Press` labels, `published by` phrases, and publisher-ending names. **Weakest field**, missing most international publishers. Final coverage after LLM + normalization: 52.3%.
 
-### Location (67.8% regex-only coverage)
-Matched against ~100 known cities, sorted by length (longest first). Final coverage after LLM: 87.5%.
+### Location (84.6% regex-only coverage)
+Matched against ~100 known cities, sorted by length (longest first), constrained to the publication-line header since the Session 18 fix. Final coverage after LLM: 89.8%.
 
-### Page Count (51.0% regex-only coverage)
-Recognizes `432 p.`, `pp. 9-86`, `293 Seiten` and variants. Final coverage after LLM + outlier rejection: 53.3% (the earlier 78.4%/81.6% figures counted `pp. N-M` page ranges as false page counts — corrected in Sessions 11 and 15).
+### Page Count (52.8% regex-only coverage)
+Recognizes `432 p.`, `pp. 9-86`, `293 Seiten` and variants. Final coverage after LLM + outlier rejection: 53.3% (the earlier 78.4%/81.6% figures counted `pp. N-M` page ranges as false page counts, corrected in Sessions 11 and 15).
 
-### Translator (8 patterns, 35.1% regex-only coverage, 0% false positives)
-8 patterns for 5 languages (EN, DE, FR, ES, IT). Name must start uppercase. Trade-off: old extraction had 69% coverage but 46% false positives. Final coverage after LLM: 41.9%.
+### Translator (8 patterns, 33.6% regex-only coverage, 0% false positives)
+8 patterns for 5 languages (EN, DE, FR, ES, IT). Name must start uppercase. Trade-off: old extraction had 69% coverage but 46% false positives. Final coverage after LLM: 40.4%.
 
 ### Language (89.4% coverage)
 Category name parsing: extracts e.g. "German" from `Poetry / Individual Poems (German)`.
@@ -474,15 +474,15 @@ Category name parsing: extracts e.g. "German" from `Poetry / Individual Poems (G
 
 ## Testing
 
-Test suite in `tests/` using pytest. Configured via `pytest.ini` (sets PYTHONPATH to `pipeline/`, registers `llm` marker).
+Test suite in `tests/` using pytest. Configured via `pytest.ini` (sets PYTHONPATH to `pipeline/`, registers the `llm` and `semantic` markers, and deselects both by default so a bare run costs no API calls and stays green).
 
 ```bash
-pytest tests/ -m "not llm" -v   # fast tests, no API key needed (~1s)
-pytest tests/ -m llm -v         # LLM-as-a-Judge, requires GEMINI_API_KEY (~10s)
-pytest tests/ -v                # everything
+pytest                          # default gate: no API calls, no red-by-design tests (~5s)
+pytest -m llm                   # LLM-as-a-Judge, requires GEMINI_API_KEY (~10s)
+pytest -m semantic              # wiki ground-truth field diagnosis, red by design
 ```
 
-The suite has **445 tests across 16 test files**, organized in a 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization). The full per-file breakdown and the rationale for each category live in [[testing]] (single source of truth) — this page does not duplicate the table.
+The suite is organized in a 7-category strategy (census, schema, consistency, distribution, extraction, semantic, normalization); `pytest --collect-only -q` reports the live test and file count. The full per-file breakdown and the rationale for each category live in [[testing]] (single source of truth), so this page does not duplicate the table.
 
 **Regression testing**: `test_regression.py` compares `data/output/quality-report.json` against `.github/baseline-metrics.json`. Catches: entry count drops (>0.5%), field coverage regressions (>1pp), type distribution drift (>2pp), error-severity increases. Baseline must be updated after intentional improvements.
 

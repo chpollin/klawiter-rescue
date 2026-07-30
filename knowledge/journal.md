@@ -11,7 +11,7 @@ status: complete
 version: 0.3
 tags: [journal]
 created: 2026-03-29
-updated: 2026-07-18
+updated: 2026-07-30
 ---
 
 # Journal
@@ -19,6 +19,15 @@ updated: 2026-07-18
 Work diary for the Klawiter Bibliography project. One compact entry per substantive session with the fields Runde (what kind of round), Geändert (what changed), Entschieden (what was decided), Offen (what stays open).
 
 ---
+
+## 2026-07-30 — Session 24: Wartungsrunde, Drift-Abgleich knowledge gegen Artefakte, antrag-eval-Hooks
+
+**Runde.** Wartungs- und Verifikationsrunde ohne Subagents, ausgelöst aus dem Antrags-Workspace, weil das Repository als Vorarbeit von Reviewern geöffnet wird.
+**Geändert.** Testlauf verifiziert (403 grün, 10 skips, 74 abgewählt; `-m semantic` weiter 17 rot by design, deckungsgleich mit der dokumentierten Schranke). Drift zwischen knowledge und den committeten Artefakten bereinigt: Redirect-Auflösung 1.210 auf 1.224, gebrochene seeAlso-Referenzen 727 auf 619, Deutsch-plus-Übersetzer 111 auf 110, Feld-Coverage-Tabelle und Regex-Only-Spalte auf den Stand des ausgelieferten Laufs, Provenienz-Verteilung aus `klawiter.json` neu gerechnet, Sprachverteilung aus dem Quality-Report übernommen, `klawiter.jsonld` als 6.725 statt 6.296 Einträge, CSV-Spaltenzahlen (27/29), Regressions-Schwelle kritischer Felder 1pp statt 0,5pp, Testdatei-Tabelle um `test_inject_provenance.py` ergänzt und Zählungen nachgezogen, pytest-Aufrufe an die tatsächlichen `addopts` angepasst. Zwei Aussagen als überholt widerlegt und korrigiert: Location-Fix und Mojibake-Reparatur sind im ausgelieferten Datensatz enthalten (kein Datensatz trägt noch den Vor-Fix-Wert, Eintrag 804 ist repariert), und der geblankte Stub 2979 trägt seinen Titel bereits. Frontend-Dokument sagte CDN für FlexSearch, D3 und Google Fonts, tatsächlich ist alles unter `docs/vendor/` und `docs/fonts/` vendoriert. README um einen Abschnitt Provenance and Curation erweitert (Produktions-Provenienz je Feld, Verifikations-Provenienz mit `editor`-Label und Review-Block, Patch-v2-Korrekturhistorie als Audit-Trail). Tote Dokumentzeiger im Code auf die konsolidierten Dokumente umgebogen (`eil-editing.md`, `validation.md` in vier Skripten und `edit.js`). Drei Issue-Templates unter `.github/ISSUE_TEMPLATE/` für die geplanten Evaluations-Hooks angelegt (Vier-Tupel-Protokollexport, Provenienz-Export, Gold-Standard-Hook), Label `antrag-eval` im Remote angelegt.
+**Entschieden.** Volatile Zahlen bleiben in den Wissensdokumenten stehen, wo sie einen Befund tragen, werden aber gegen die committeten Artefakte geführt; die Regex-Only-Spalte wird als Stufenwert des gleichen Laufs markiert, weil `data/intermediate/` gitignoriert und für Reviewer nicht nachrechenbar ist.
+**Offen.** Bracket-Titel-Restzahl (33 gegen ~15 im selben Dokument) nicht auflösbar ohne Neulauf; `corrections-report.json` liegt in einer älteren Fassung ohne `old_value_mismatch`-Schlüssel und ist nicht git-getrackt; die Evaluations-Hooks sind als Templates beschrieben, nicht gebaut.
+
+**Der eine nächste Schritt.** Unverändert die Sichtung von `data/output/edition-samples/REVIEW.md` durch die Editorin.
 
 ## 2026-07-18 — Session 23: Review-Fixes, knowledge-Konsolidierung, Gate-Entscheide, Stichproben-Gate (Forschungsleitstelle-Lane)
 

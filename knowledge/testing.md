@@ -12,7 +12,7 @@ language: en
 version: 0.3
 tags: [testing, quality]
 created: 2026-04-12
-updated: 2026-07-18
+updated: 2026-07-30
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
@@ -61,19 +61,19 @@ Cannot catch: structurally valid but semantically wrong values (e.g. `publisher:
 
 **File**: `test_consistency.py` (6 tests)
 
-Tests cross-field relationships: German + translator bounded (111 FPs), film + pageCount bounded (10), publisher != location, year/timePeriod consistency, seeAlso referential integrity (bounded at 1,140), no self-references.
+Tests cross-field relationships: German + translator bounded (110 FPs), film + pageCount bounded (10), publisher != location, year/timePeriod consistency, seeAlso referential integrity (bounded at 619), no self-references.
 
 Catches: implausible field combinations, referential integrity violations.
 
 Cannot catch: subtle semantic errors where combinations are plausible but wrong.
 
-**Verified**: German+translator FPs traced to raw content — many are Sammelwerk entries with sub-translations (e.g. `Translated by Stefan Zweig` in a collected works entry where Zweig translated Verhaeren). The 111 count is a mix of true FPs and legitimate-but-misleading extractions. Broken seeAlso refs are caused by: format suffixes ("/ Spanish"), cross-language title mismatches, and person names stored as references.
+**Verified**: German+translator FPs traced to raw content — many are Sammelwerk entries with sub-translations (e.g. `Translated by Stefan Zweig` in a collected works entry where Zweig translated Verhaeren). The bounded count is a mix of true FPs and legitimate-but-misleading extractions. Broken seeAlso refs are caused by: format suffixes ("/ Spanish"), cross-language title mismatches, and person names stored as references.
 
 ### D: Distribution — "Has the data shape changed?"
 
 **File**: `test_regression.py` (19 tests)
 
-Compares quality-report.json against frozen baseline: entry counts (±0.5%), critical field coverage (≤0.5pp drop), tracked field coverage (≤1pp drop), entry type distribution (±2%), year range bounds, issue severity.
+Compares quality-report.json against frozen baseline: entry counts (±0.5%), critical field coverage (≤1pp drop), tracked field coverage (≤1pp drop), entry type distribution (±2%), year range bounds, issue severity.
 
 Catches: coverage regressions, classification drift.
 
@@ -83,7 +83,7 @@ Cannot catch: offsetting errors (50 publishers lost, 50 wrong added = same cover
 
 ### E: Extraction — "Do the functions work?"
 
-**Files**: `test_patterns.py` (36), `test_encoding.py` (13), `test_wiki_parser.py` (41), `test_vocabulary.py` (19), `test_real_entries.py` (160), `test_llm_judge.py` (4) — 273 total
+**Files**: `test_patterns.py` (45), `test_encoding.py` (20), `test_wiki_parser.py` (41), `test_vocabulary.py` (19), `test_real_entries.py` (160), `test_llm_judge.py` (4)
 
 Unit tests for extraction functions + 20 hand-labeled real entries + LLM judge on 10 entries.
 
@@ -110,7 +110,7 @@ The suite spans the test files below; the live test and file counts are whatever
 
 ```
 test_real_entries.py        160  — 20 hand-labeled entries (parametrized)
-test_semantic.py             70  — Wiki-verified ground truth (10 entries x 7 fields)
+test_semantic.py             71  — Wiki-verified ground truth (10 entries x 7 fields) + bounded-mismatch gate
 test_patterns.py             45  — Regex extraction functions (incl. location publication-header fix, Session 18)
 test_wiki_parser.py          41  — Wiki parser functions
 test_normalize_unit.py       26  — Normalization rules unit tests (Session 15)
@@ -119,7 +119,8 @@ test_vocabulary.py           19  — Classification mappings
 test_regression.py           19  — Distribution stability vs baseline
 test_schema.py               14  — Structural validity (every entry)
 test_census.py               13  — Completeness (all entries present)
-test_apply_patches.py         8  — Editor corrections overlay (write-back, edit history, idempotency; Session 17)
+test_apply_patches.py        11  — Editor corrections overlay (write-back, edit history, idempotency, oldValue mismatch; Sessions 17 and 23)
+test_inject_provenance.py     8  — Per-field provenance labels (regex/llm/missing merge diff)
 test_consistency.py           6  — Cross-field plausibility
 test_wikidata_locations.py    6  — Wikidata reconciliation quality
 test_triage.py                6  — Triage artifact contract (build_triage.py flag shapes vs edit.js; Session 21)
@@ -139,7 +140,7 @@ Bounded-count tests (German+translator FPs, film+pageCount, broken seeAlso refs,
 
 ### F: Semantic — "Is the value correct?"
 
-**Files**: `test_semantic.py` (70 tests), `test_heuristic.py` (5 tests)
+**Files**: `test_semantic.py` (70 field tests + 1 bounded-mismatch gate), `test_heuristic.py` (5 tests)
 
 Two layers:
 
@@ -166,7 +167,7 @@ Record-level completeness is proven separately (no entry lost or invented, see [
 
 ### Error class 1: location from chapter titles ("Weimar")
 
-The location extractor matched a city name anywhere in the entry text, including inside a chapter title. Records for non-German editions of "Sternstunden der Menschheit" carried location "Weimar" because the chapter "Die Marienbader Elegie. Goethe zwischen Karlsbad und Weimar" appears in every translation, and the error propagated into the Wikidata reconciliation. **Fixed**: location extraction is now constrained to the publication-line header (`'''[YEAR]: Publisher, Location'''`), accepting both colon and period separators, with headerless fallbacks that preserve a location rather than lose it. The change is in `pipeline/lib/patterns.py` (`extract_location`, `_clean_location`, `_location_from_header`) and locked by `tests/test_patterns.py` (`TestExtractLocation`). Measured by `pipeline/measure_location_fix.py` against the committed `data/output/location-fix-report.json`, deterministic over all namespace-0 records: no record's location is ever emptied, no changed or gained value is a publisher name, and the fix recovers hundreds of true non-Western locations (Sofia, Athens, Moskva, Tirana, Istanbul, Baku, Tbilisi, Tehran, Hanoi, Seoul) that the static city list never held. A residual handful of headerless "Weimar" cases and Latin-transliteration headers absent from the city list remain as later milestones. The fix is landed in code but not yet in the published frontend, which regenerates only on the next full pipeline run, held until the mojibake repair lands so the header location carries no surviving encoding artifacts.
+The location extractor matched a city name anywhere in the entry text, including inside a chapter title. Records for non-German editions of "Sternstunden der Menschheit" carried location "Weimar" because the chapter "Die Marienbader Elegie. Goethe zwischen Karlsbad und Weimar" appears in every translation, and the error propagated into the Wikidata reconciliation. **Fixed**: location extraction is now constrained to the publication-line header (`'''[YEAR]: Publisher, Location'''`), accepting both colon and period separators, with headerless fallbacks that preserve a location rather than lose it. The change is in `pipeline/lib/patterns.py` (`extract_location`, `_clean_location`, `_location_from_header`) and locked by `tests/test_patterns.py` (`TestExtractLocation`). Measured by `pipeline/measure_location_fix.py` against the committed `data/output/location-fix-report.json`, deterministic over all namespace-0 records: no record's location is ever emptied, no changed or gained value is a publisher name, and the fix recovers hundreds of true non-Western locations (Sofia, Athens, Moskva, Tirana, Istanbul, Baku, Tbilisi, Tehran, Hanoi, Seoul) that the static city list never held. A residual handful of headerless "Weimar" cases and Latin-transliteration headers absent from the city list remain as later milestones. The fix is landed in code and in the published dataset: the corrected records carry their header location in `docs/data/klawiter.json`, and no record still carries the pre-fix value.
 
 ### Error class 2: multi-edition flattening (open)
 
@@ -174,7 +175,7 @@ A wiki page can contain several publications, and the flat extraction draws each
 
 ### Error class 3: surviving title mojibake
 
-The earlier repair removed gross field-level mojibake, but transliterated titles still carried double-encoded artifacts (entry 804: "Mardkutâyan asteghayin zhamerÄ"), because `fix_mojibake` only triggered on the C2/C3 lead bytes and never reached the Latin Extended diacritics of romanized Arabic, Greek, Vietnamese and Slavic titles. **Fixed**: `fix_mojibake` (`pipeline/lib/encoding.py`) now repairs each mojibake run independently and self-validates, so a clean accented letter before a Latin-1 guillemet is left untouched. Locked by `tests/test_encoding.py` (`TestMojibakeTransliteration`), including a clean-German guard and an idempotency check. Measured by `pipeline/measure_mojibake_repair.py` against the committed `data/output/mojibake-repair-report.json`, deterministic over all namespace-0 records: every detected run is repaired, none self-rejected, the repair is idempotent, and no repairable residual remains. Landed in code, not yet in the published frontend, and the title is still not an editable field (a separate editing milestone).
+The earlier repair removed gross field-level mojibake, but transliterated titles still carried double-encoded artifacts (entry 804: "Mardkutâyan asteghayin zhamerÄ"), because `fix_mojibake` only triggered on the C2/C3 lead bytes and never reached the Latin Extended diacritics of romanized Arabic, Greek, Vietnamese and Slavic titles. **Fixed**: `fix_mojibake` (`pipeline/lib/encoding.py`) now repairs each mojibake run independently and self-validates, so a clean accented letter before a Latin-1 guillemet is left untouched. Locked by `tests/test_encoding.py` (`TestMojibakeTransliteration`), including a clean-German guard and an idempotency check. Measured by `pipeline/measure_mojibake_repair.py` against the committed `data/output/mojibake-repair-report.json`, deterministic over all namespace-0 records: every detected run is repaired, none self-rejected, the repair is idempotent, and no repairable residual remains. Landed in code and in the published dataset (entry 804 now reads "Mardkut‘yan asteghayin zhamerě"). The title remains outside the editable fields, a separate editing milestone.
 
 ### Error class 4: the blanked stub (2979)
 
@@ -211,8 +212,8 @@ The four currently editable fields (publisher, location, translator, pageCount) 
 - 43 titles >200 chars (encoding-guard cases — long but correct)
 - 11 pageCount values that may be years
 - 427 multi-edition pages (6.8%) where publisher/pageCount/year may come from wrong edition
-- 111 German entries with translator (complex: sub-translations in collected works)
-- seeAlso broken references bounded at 727 (was 1,140; reduced by title fix resolving more redirects)
+- 110 German entries with translator (complex: sub-translations in collected works)
+- seeAlso broken references bounded at 619 (was 1,140; reduced by title fix resolving more redirects)
 - Pipeline reached diminishing returns on regex extraction (see [[pipeline#known-limitations--multi-edition-pages]])
 
 ## Key Principles

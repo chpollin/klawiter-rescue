@@ -5,7 +5,7 @@ Measure the broadened mojibake repair in lib/encoding.py.
 The earlier repair only triggered on the Ã/Â (C2/C3) lead bytes, so the Latin
 Extended-A and Extended-Additional diacritics of transliterated titles (the ā,
 ī, ş, ḥ, ṭ of Arabic, Greek, Vietnamese and Slavic romanizations, error class 3
-in knowledge/validation.md) and the double-encoded smart quotes were left
+in knowledge/testing.md) and the double-encoded smart quotes were left
 uncorrected. fix_mojibake now repairs each mojibake run independently by
 re-encoding it as Latin-1 and decoding as UTF-8, validating the result.
 

@@ -1,7 +1,8 @@
 /**
  * Edit module — Expert-in-the-Loop curation for Klawiter Bibliography.
  *
- * Increments 1-3 of the EIL editing interface (design: knowledge/eil-editing.md):
+ * Increments 1-3 of the EIL editing interface (design: knowledge/frontend.md,
+ * section "EIL Curation Interface"):
  * the three typed actions (Accept / Correct / Add), edit-history records, the
  * three-status review surfaced per entry, session durability via localStorage,
  * a version-2 patch export that pipeline/apply_patches.py consumes directly,

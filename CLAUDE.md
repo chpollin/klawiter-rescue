@@ -29,7 +29,7 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Coverage gaps are only bugs if the value **is present in the raw text** but the pipeline fails to extract it (regex miss or LLM miss)
 - **Linked Data enrichment is allowed**: Matching extracted entities (locations, persons) against authority files (Wikidata, GND) to add persistent IDs and derived metadata (coordinates, country codes) is a core project goal — not data invention. The entity comes from the source; the link adds LOD interoperability
 - The LLM enrichment step (03b) is constrained to extract **only explicitly stated** values. It has 5 anti-hallucination layers: prompt constraint, gap-fill-only merge, structured output schema, post-extraction validation, and mojibake re-validation. Verified: 0 hallucinated values found in full audit
-- Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing` — making the extraction source transparent and auditable
+- Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing`, and as `editor` once a person has verified it (set by `apply_patches.py` from the correction store)
 
 ## Key Technical Decisions
 
@@ -52,7 +52,7 @@ All pipeline scripts resolve paths relative to `pipeline/lib/config.py`:
 - Frontend displays ns 0 entries only; category/system pages are included in JSON-LD but filtered in the UI
 - Only `zweig_part_01.sql` is used; `_02` (empty schema) and `_03` (system metadata) are correctly ignored
 - BLOBs contain 53,016 text entries (all revisions); pipeline uses only the latest revision per page
-- 1 stub entry: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB; present in output as stub without title/content
+- 1 stub entry: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB; present in output as a stub with the page_title as title and no bibliographic content
 
 ## Known Limitations
 

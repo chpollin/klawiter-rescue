@@ -8,7 +8,7 @@ Extraction and structuring of the Stefan Zweig Bibliography (Dr. Randolph J. Kla
 
 | Metric | Value |
 |--------|-------|
-| Extracted entries | 6,295 / 6,296 (99.99%) |
+| Extracted entries | 6,295 / 6,296 (99.98%) |
 | Mojibake fixed | 61.1% → 0% |
 | Entity types | 16 classified (incl. redirect), 0.1% "other" |
 | Field coverage (title) | 100% |
@@ -78,6 +78,16 @@ python pipeline/run_pipeline.py 2 4
 
 Output is **JSON-LD** using a vocabulary blend of [Schema.org](https://schema.org/), [Dublin Core](https://www.dublincore.org/), and a domain-specific `klawiter:` namespace for types and provenance that the standard vocabularies do not cover (e.g. `dramatic-reading`, `symposium`, MediaWiki source IDs). Each of the 16 entry types maps to a Schema.org type (`Book`, `Article`, `Play`, `Movie`, …). The `klawiter:` namespace is documented at [`docs/vocab/`](docs/vocab/index.html) (live: [chpollin.github.io/klawiter-rescue/vocab/](https://chpollin.github.io/klawiter-rescue/vocab/)), and the `@context` plus an interactive compact/expanded/triples view are available in the JSON-LD Playground on the live site.
 
+## Provenance and Curation
+
+Every tracked field carries where its value came from, and the record keeps the trail from machine extraction through human verification.
+
+**Production provenance.** Each entry in `docs/data/klawiter.json` has a `_provenance` object labelling publisher, location, translator and pageCount as `regex` (rule-based extraction), `llm` (Gemini gap-fill under anti-hallucination constraints) or `missing` (no value extracted). The labels come from `pipeline/inject_provenance.py`, which diffs the regex output against the LLM cache, so a cached value that the gap-fill merge never used is not counted as LLM-produced.
+
+**Verification provenance.** The Expert-in-the-Loop editor (`docs/js/edit.js`, localhost-gated) types every interaction as Accept, Correct or Add. After an Accept or Correct the field's provenance moves to `editor` and the entry gains a `review` block (`approved` for human review, `agent_verified` for an automatic check), so the label says both how the machine produced the value and that a person confirmed it. `pipeline/build_triage.py` condenses the committed `verify.py` and `census.py` reports into `docs/data/triage.json`, which ranks the per-entry checking hints from the census anomaly down to the empty field.
+
+**Correction history.** Edits leave the editor as a `patchVersion: 2` JSON patch document; nothing is written into the dataset from the browser. Approved patches live under `data/corrections/`, where the git history of the folder is the audit trail. `pipeline/apply_patches.py` replays them as the final overlay, moving the field's provenance to `editor` and preserving the machine original in an `edit_history` record. The store is authoritative, so the overlay is idempotent and a fresh pipeline run never silently overwrites an editor value. `.github/workflows/validate-patch.yml` checks patch files on pull requests with the same validator the overlay uses.
+
 ## Frontend
 
 Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Digital:
@@ -87,8 +97,8 @@ Static site under `docs/` (GitHub Pages), visually aligned with Stefan Zweig Dig
 - **Detail**: Expandable cards with SZD-style metadata table, conditional sections
 - **Explore**: Interactive D3.js visualization with 3 modes — Timeline (Bars/Sparklines/Ranks by language), Geography (interactive globe/flat map with Wikidata-linked locations), Connections (force-directed graph of cross-references)
 - **Export**: BibTeX, RIS, JSON-LD per entry + full dataset download
-- **Content Pages**: About, Methodology, Help, Data Access, Imprint
-- No framework, no build step
+- **Content Pages**: About, Methodology, Help, Data Access, JSON-LD Playground, Imprint
+- No framework, no build step; search, visualization libraries and fonts are vendored under `docs/vendor/` and `docs/fonts/`, so the page loads without an external request
 
 ## Documentation
 

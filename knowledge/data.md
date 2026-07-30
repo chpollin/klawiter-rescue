@@ -17,7 +17,7 @@ language: en
 version: 0.3
 tags: [data, quality]
 created: 2026-03-29
-updated: 2026-07-18
+updated: 2026-07-30
 authors: [Christopher Pollin]
 topics: ["[[Data Modelling]]", "[[Normdata]]", "[[Controlled Vocabularies]]"]
 knowledge-sources:
@@ -120,7 +120,9 @@ Per-field extraction source tracking, injected by `inject_provenance.py`:
 - `translator`: "regex" | "llm" | "missing"
 - `pageCount`: "regex" | "llm" | "missing"
 
-Coverage: 49.6% regex, 11.7% LLM, 38.8% missing (across 4 fields x 5,179 entries)
+After a human Accept or Correct the field's label moves to `editor`, see [[production-readiness#provenienz-schichten-als-verifikationsgrundlage]].
+
+Distribution in the committed frontend JSON: 42.3% regex, 11.8% LLM, 45.9% missing (across 4 fields x 5,179 entries).
 
 ### Redirects
 
@@ -153,7 +155,7 @@ Redirects are stored as a map in the frontend: `{ "Old Page Name": target_page_i
 | `other` | 4 | 0.1% | Unclassifiable |
 | `newspaper` | 1 | 0.0% | Newspaper article |
 
-Counts above are `entry_type` classifications (from `.github/baseline-metrics.json`). The 1,545 `redirect` type count differs by one from the 1,546 records carrying the `isRedirect` flag (one redirect page is classified under another type); of those 1,546 redirects, 1,210 resolve to an existing entry in the frontend map (see [[pipeline#redirects-as-map-instead-of-resolved-entries]]).
+Counts above are `entry_type` classifications (from `.github/baseline-metrics.json`). The 1,545 `redirect` type count differs by one from the 1,546 records carrying the `isRedirect` flag (one redirect page is classified under another type); of those 1,546 redirects, 1,224 resolve to an existing entry in the frontend map (see [[pipeline#redirects-as-map-instead-of-resolved-entries]]).
 
 ### Classification Logic
 
@@ -176,18 +178,20 @@ Each dated entry receives a time period:
 
 ### Language Distribution (Top 10)
 
+Counts from `data/output/quality-report.json` (`language_distribution`), which is the source of truth for the full list of 41 languages.
+
 | Language | Entries |
 |----------|---------|
-| German | ~1,050 |
-| Chinese | ~510 |
-| French | ~350 |
-| English | ~270 |
-| Spanish | ~260 |
-| Arabic | ~210 |
-| Russian | ~80 |
-| Portuguese | ~70 |
-| Italian | ~60 |
-| Hindi | ~40 |
+| German | 1,339 |
+| Chinese | 545 |
+| French | 396 |
+| English | 317 |
+| Spanish | 283 |
+| Arabic | 238 |
+| Bulgarian | 106 |
+| Albanian | 105 |
+| Russian | 99 |
+| Croatian | 77 |
 
 ---
 
@@ -197,7 +201,7 @@ All numbers refer to non-redirect entries (n=4,751) unless stated otherwise.
 
 ### Field Coverage
 
-After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Lite):
+Final coverage is the committed `quality-report.json`. The regex-only column is the same run's step-03 stage (`data/intermediate/03_parsed.csv`, gitignored, so reproducible only by re-running the pipeline).
 
 | Field | Coverage | Regex only | Improvement | Notes |
 |-------|----------|------------|-------------|-------|
@@ -206,10 +210,10 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 | fullBibliographicEntry | 99.3% | 99.3% | — | 32 entries with only category tag, no content |
 | year | 93.2% | 93.2% | — | First match only, no range detection |
 | language | 89.4% | 89.4% | — | Derived from category names (e.g. "(German)") |
-| location | 87.5% | 67.8% | **+19.7pp** | LLM reads non-standard city names |
-| pageCount | 53.3% | 51.0% | +2.3pp | Previously 81.6%, corrected after `pp. N-M` FPs (Session 11) + 12 outlier rejections (Session 15) |
-| publisher | 52.2% | 34.5% | **+17.7pp** | LLM reads publishers; Session 15 normalization rejected 160 garbage entries |
-| translator | 41.9% | 35.1% | +6.8pp | LLM reads abbreviations and non-English patterns |
+| location | 89.8% | 84.6% | +5.2pp | LLM reads non-standard city names; the Session 18 header fix already lifted the regex stage |
+| pageCount | 53.3% | 52.8% | +0.5pp | Previously 81.6%, corrected after `pp. N-M` FPs (Session 11) + 12 outlier rejections (Session 15) |
+| publisher | 52.3% | 34.4% | **+17.9pp** | LLM lifts it to 55.5%, Session 15 normalization then rejects garbage values |
+| translator | 40.4% | 33.6% | +6.8pp | LLM reads abbreviations and non-English patterns |
 
 **Precision**: All fields ≥99% real precision. Regex extractions have 100% precision. LLM extractions have 0 hallucinations (verified on 20-entry stratified sample + full-run FP analysis).
 
@@ -223,9 +227,9 @@ After regex extraction (step 03) + LLM enrichment (step 03b, Gemini 3.1 Flash Li
 
 ### Known Problems
 
-**Publisher extraction (52.2%)**: Regex covers 34.5% (3 pattern families), LLM adds +17.7pp net; Session 15 normalization then rejected 160 garbage values (raw regex+LLM coverage was 55.6%). The ~48% gap breaks down: 15-20% (~350 entries) legitimately missing (anthology poems, journal articles, see-also references — no publisher in source text). 80-85% (~1,750 entries) structural extraction failures (publisher present in implicit formats like `[[Collection]] [City, Year]` that regex doesn't match). Only 1.7% of entries without publisher contain publisher keywords. Poetry/Individual Poems: 80.7% gap — anthology entries structurally lack standalone publishers.
+**Publisher extraction (52.3%)**: Regex covers 34.4% (3 pattern families), LLM lifts it to 55.5%; Session 15 normalization then rejected the garbage values, leaving 52.3%. The ~48% gap breaks down: 15-20% (~350 entries) legitimately missing (anthology poems, journal articles, see-also references — no publisher in source text). 80-85% (~1,750 entries) structural extraction failures (publisher present in implicit formats like `[[Collection]] [City, Year]` that regex doesn't match). Only 1.7% of entries without publisher contain publisher keywords. Poetry/Individual Poems: 80.7% gap — anthology entries structurally lack standalone publishers.
 
-**Translator extraction (41.9%)**: Regex covers 35.1% with 0% false positives. LLM adds +6.8pp. Remaining ~58% are mostly German originals (no translator) or entries that don't name the translator. A newline-leaking bug in the translator regex (`\s` matching `\n`) was fixed — 34 translator fields previously contained trailing wiki markup from subsequent sections.
+**Translator extraction (40.4%)**: Regex covers 33.6% with 0% false positives. LLM adds +6.8pp. Remaining ~60% are mostly German originals (no translator) or entries that don't name the translator. A newline-leaking bug in the translator regex (`\s` matching `\n`) was fixed — 34 translator fields previously contained trailing wiki markup from subsequent sections.
 
 **Title precision**: verify.py previously reported 81.5% precision (880 false positives). Investigation showed these are page_title fallbacks — titles sourced from wiki metadata, correctly absent from raw content. verify.py now classifies these as `correct_fallback`. Actual title precision is ~95%+. Title extraction improved: `[year]:` patterns now search for second bold block as real title before falling back to page_title.
 
@@ -243,15 +247,15 @@ Fields added per location: `wikidataId` (Q-number), `wikidataLabel` (English nam
 
 **originalTitle false positives (fixed)**: The `extract_original_title()` regex previously matched bare years in brackets (e.g. `[1931]`) as original titles, producing 272 false positives. Fixed by rejecting candidates that match `^\d{4}$`.
 
-**1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as stub (sourcePageId + entryType only, no title/content). Root cause established by revision-history trace: the page has exactly three revisions (2014-06-24), and the latest one (rev 18324, the one `page_latest` points to) has `rev_len = 0` — the page was **blanked** three minutes after creation. The only non-empty revisions (18322, 18323) carry just a category tag (`[[Category:Essays / Individual Essays (Portuguese)]]`). No bibliographic content for this entry was ever preserved in the dump; this is source-side loss, not a pipeline parsing miss. The title "A unidade espiritual do mundo" survives in the `zweig_page` table. The editor decided (Forschungsleitstelle order 2026-06-21) to show it with the title rather than as a nameless stub. The fix is now in `03_parse_entries.py` (the empty-content early-return branch falls back to the cleaned `page_title`) and is locked by `tests/test_parse_entries.py`; it becomes visible in the output on the next full pipeline run, where it is regenerated together with the location and mojibake fixes. The census identity is unaffected: 2979 stays one displayed entry, now titled rather than nameless. See [[#record-census]].
+**1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as a stub carrying the title from `page_title`, with no bibliographic content. Root cause established by revision-history trace: the page has exactly three revisions (2014-06-24), and the latest one (rev 18324, the one `page_latest` points to) has `rev_len = 0` — the page was **blanked** three minutes after creation. The only non-empty revisions (18322, 18323) carry just a category tag (`[[Category:Essays / Individual Essays (Portuguese)]]`). No bibliographic content for this entry was ever preserved in the dump; this is source-side loss, not a pipeline parsing miss. The title "A unidade espiritual do mundo" survives in the `zweig_page` table. The editor decided (Forschungsleitstelle order 2026-06-21) to show it with the title rather than as a nameless stub. The fix is in `03_parse_entries.py` (the empty-content early-return branch falls back to the cleaned `page_title`), locked by `tests/test_parse_entries.py`, and visible in the published dataset, where the entry carries its title and no other field. The census identity is unaffected: 2979 stays one displayed entry, now titled rather than nameless. See [[#record-census]].
 
 **0 titles with markup residue** (Session 14): Fixed — orphaned `]]`/`[[`/`'''` cleanup in `remove_wiki_markup()`. 14 `__TOC__` titles fixed in Session 11.
 
 **0 section-header titles** (Session 14): Fixed — "Contents:", "Volumes:", "German:", "See:", "Note:" etc. rejected with page_title fallback. Was 1,368 entries. 345 titles have encoding artifacts in page_title (Arabic/Cyrillic transliterations where the page_title has mojibake). 43 titles are >200 chars (encoding-guard cases — long extracted title preferred over mojibake page_title).
 
-**111 German entries with translator** (found by test_consistency.py, Session 11): Regex false positives where author names, editors, or location text was extracted as translator (e.g. `translator: "Stefan Zweig. Leipzig"`).
+**110 German entries with translator** (found by test_consistency.py, Session 11): Regex false positives where author names, editors, or location text was extracted as translator (e.g. `translator: "Stefan Zweig. Leipzig"`).
 
-**727 broken seeAlso references** (Session 14, was 1,140 in Session 11): Reduced because title fix resolved 1,210 redirects (was 430). Remaining 727 broken due to language suffixes like "/ Spanish" or formatting mismatches.
+**619 broken seeAlso references** (was 1,140 in Session 11): Reduced because the title fix resolved 1,224 redirects (was 430). The remainder is broken by language suffixes like "/ Spanish" or formatting mismatches.
 
 **427 multi-edition pages** (Session 14): 6.8% of wiki pages contain multiple publications. Publisher, pageCount, year extracted from first match — may come from wrong edition. See [[pipeline#known-limitations--multi-edition-pages]].
 

@@ -12,7 +12,7 @@ language: en
 version: 0.3
 tags: [project, context]
 created: 2026-03-29
-updated: 2026-07-18
+updated: 2026-07-30
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, testing, production-readiness]
 ---
@@ -43,7 +43,7 @@ This project extracts and structures the raw database into [[pipeline|JSON-LD]],
 - Fields left empty because the source text doesn't contain them are **correct** (e.g., anthology poems without a standalone publisher, German originals without a translator)
 - Coverage gaps are only bugs if the value **is present in the raw text** but the pipeline fails to extract it (regex miss or LLM miss)
 - The LLM enrichment step (03b) is constrained to extract **only explicitly stated** values. It has 5 anti-hallucination layers: prompt constraint, gap-fill-only merge, structured output schema, post-extraction validation, and mojibake re-validation. Verified: 0 hallucinated values found in full audit
-- Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing` — making the extraction source transparent and auditable
+- Provenance tracking (`_provenance` metadata) marks each field as `regex`, `llm`, or `missing`, and as `editor` once a person has verified it, so the extraction source stays transparent and auditable
 - Linked Data enrichment — matching extracted entities against authority files (e.g. Wikidata) to add persistent IDs — is allowed and implemented for locations; inventing bibliographic *values* not present in the source remains out of scope. See [[pipeline#reconciliation--linked-data-enrichment]]
 
 ## Stefan Zweig Digital and the Forschungsverbund
