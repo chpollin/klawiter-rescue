@@ -199,6 +199,39 @@ def main():
             f"  {display_name}: {info['percentage']}% ({info['count']}/{non_redirect_count})"
         )
 
+    _check_rdf_expansion()
+
+
+# Floors sit far below the measured expansions (flat layer ~175k, edition
+# graph ~47k triples). A drop below them means @context terms were silently
+# dropped and JSON-LD discarded whole subtrees, the defect class that once
+# collapsed the edition graph to 6 triples while SHACL reported conformance.
+RDF_TRIPLE_FLOORS = {
+    OUTPUT_JSONLD: 150_000,
+    "data/output/editions/work-editions.jsonld": 45_000,
+}
+
+
+def _check_rdf_expansion():
+    """Fail hard when either published graph expands below its triple floor."""
+    from rdflib import Graph
+
+    for path, floor in RDF_TRIPLE_FLOORS.items():
+        if not os.path.exists(path):
+            log.error(f"RDF expansion check: graph is missing: {path}")
+            sys.exit(1)
+        graph = Graph()
+        graph.parse(path, format="json-ld")
+        count = len(graph)
+        log.info(f"RDF expansion: {path} -> {count} triples (floor {floor})")
+        if count < floor:
+            log.error(
+                f"RDF expansion collapsed: {path} expands to {count} triples, "
+                f"floor is {floor}. An undefined @context term is silently "
+                "dropping data."
+            )
+            sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
