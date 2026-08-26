@@ -24,19 +24,23 @@ CONTEXT = {
         "translator": "schema:translator",
         "locationCreated": "schema:locationCreated",
         "sameAs": {"@id": "schema:sameAs", "@type": "@id"},
-        "isRelatedTo": {"@id": "schema:isRelatedTo", "@container": "@set"},
         "workTranslation": {"@id": "schema:workTranslation", "@container": "@set"},
-        "hasPart": {"@id": "schema:hasPart", "@container": "@list"},
+        "hasPart": {"@id": "schema:hasPart", "@container": "@set"},
         "author": "schema:author",
         # --- Dublin Core mappings ---
         "bibliographicCitation": "dcterms:bibliographicCitation",
+        "relation": {"@id": "dcterms:relation", "@container": "@set"},
+        "license": {"@id": "dcterms:license", "@type": "@id"},
         # --- Domain-specific (klawiter:) ---
         "entryType": "klawiter:entryType",
         "timePeriod": "klawiter:timePeriod",
         "totalEntries": {"@id": "klawiter:totalEntries", "@type": "xsd:integer"},
-        "entries": {"@id": "klawiter:entries", "@container": "@list"},
+        "entries": {"@id": "klawiter:entries", "@container": "@set"},
         "categories": {"@id": "klawiter:categories", "@container": "@set"},
-        "contentItems": {"@id": "klawiter:contentItems", "@container": "@list"},
+        "contentItems": {"@id": "klawiter:contentItems", "@container": "@set"},
+        "languageName": "klawiter:languageName",
+        "seeAlsoText": {"@id": "klawiter:seeAlsoText", "@container": "@set"},
+        "decomposedAsWork": {"@id": "klawiter:decomposedAsWork", "@type": "@id"},
         "mainCategory": "klawiter:mainCategory",
         "originalTitle": "klawiter:originalTitle",
         "languageCode": "klawiter:languageCode",
@@ -61,7 +65,10 @@ SCHEMA_TYPE_MAP = {
     "poetry": ["schema:CreativeWork", "klawiter:PoetryEntry"],
     "drama": ["schema:Play", "klawiter:DramaEntry"],
     "film": ["schema:Movie", "klawiter:FilmEntry"],
-    "correspondence": ["schema:Message", "klawiter:CorrespondenceEntry"],
+    # The vocabulary deliberately records only skos:closeMatch to
+    # schema:Message: the record describes correspondence, it is not the
+    # message itself. The emitted type follows that decision.
+    "correspondence": ["schema:CreativeWork", "klawiter:CorrespondenceEntry"],
     "collected-works": ["schema:Collection", "klawiter:CollectedWorksEntry"],
     "secondary-literature": [
         "schema:ScholarlyArticle",
@@ -70,11 +77,22 @@ SCHEMA_TYPE_MAP = {
     "historical-study": ["schema:ScholarlyArticle", "klawiter:HistoricalStudyEntry"],
     "translation": ["schema:Book", "klawiter:TranslationEntry"],
     "foreword": ["schema:CreativeWork", "klawiter:ForewordEntry"],
-    "symposium": ["schema:Event", "klawiter:SymposiumEntry"],
+    # A symposium record is the bibliographic description of the event,
+    # not the event; schema:Event would put work properties (datePublished,
+    # numberOfPages) on an Event node.
+    "symposium": ["schema:CreativeWork", "klawiter:SymposiumEntry"],
     "dramatic-reading": ["schema:CreativeWork", "klawiter:DramaticReadingEntry"],
     "newspaper": ["schema:NewsArticle", "klawiter:NewspaperEntry"],
     "redirect": ["klawiter:RedirectEntry"],
     "other": ["schema:CreativeWork", "klawiter:OtherEntry"],
+    # Wiki infrastructure pages (category, template, help, file, mediawiki
+    # namespaces) are preserved as source structure, typed as their own
+    # class and never as bibliographic works.
+    "category": ["klawiter:WikiInfrastructurePage"],
+    "mediawiki": ["klawiter:WikiInfrastructurePage"],
+    "template": ["klawiter:WikiInfrastructurePage"],
+    "help": ["klawiter:WikiInfrastructurePage"],
+    "file": ["klawiter:WikiInfrastructurePage"],
 }
 
 # Entry types derived from actual data
@@ -177,6 +195,65 @@ LANGUAGE_MAP = {
     "Esperanto": "eo",
     "Latin": "la",
 }
+
+
+def resource_iri(kind, name):
+    """Stable instance IRI for an agent or place named in the source.
+
+    Percent-encoding keeps names with spaces or non-ASCII letters valid
+    as IRIs while staying deterministic and reversible.
+    """
+    from urllib.parse import quote
+
+    return f"klawiter:{kind}/{quote(name, safe='')}"
+
+
+def plain_value(value):
+    """Flatten an RDF-shaped value (language-tagged literal or resource
+    node) back to its display string; plain values pass through."""
+    if isinstance(value, dict):
+        return value.get("@value") or value.get("name") or ""
+    return value
+
+
+def to_rdf_entry(entry):
+    """Serialize the internal flat entry to its published RDF shape.
+
+    The pipeline works on flat display values throughout; only the written
+    JSON-LD carries language-tagged titles and resource nodes for agents
+    and places. Everything downstream of the written dataset reads through
+    plain_value.
+    """
+    rdf = dict(entry)
+    code = rdf.get("inLanguage")
+    if code and rdf.get("name"):
+        rdf["name"] = {"@value": rdf["name"], "@language": code}
+    publisher = rdf.get("publisher")
+    if publisher:
+        rdf["publisher"] = {
+            "@id": resource_iri("publisher", publisher),
+            "@type": "schema:Organization",
+            "name": publisher,
+        }
+    translator = rdf.get("translator")
+    if translator:
+        rdf["translator"] = {
+            "@id": resource_iri("person", translator),
+            "@type": "schema:Person",
+            "name": translator,
+        }
+    location = rdf.get("locationCreated")
+    if location:
+        place = {
+            "@id": resource_iri("place", location),
+            "@type": "schema:Place",
+            "name": location,
+        }
+        same_as = rdf.pop("locationSameAs", None)
+        if same_as:
+            place["sameAs"] = same_as
+        rdf["locationCreated"] = place
+    return rdf
 
 
 def classify_time_period(year):

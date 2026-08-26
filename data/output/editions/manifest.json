@@ -1,13 +1,23 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "earl.jsonld": "b178079df1397447857c4a1c80ad14674f7a550ededda3ff30798902b40c6a07",
-    "provenance.jsonld": "f050d306dbc856184fde3ae84bfecea385552199107937d53ed57e06d843e465",
+    "earl.jsonld": "140070e5556592b09531b1b30bcd9bcd3d1ba5b5e1ff23a55627dd06e3b195b6",
+    "provenance.jsonld": "c857aa9b0c46f2cce2c987d5faf254f7e3ad4e21074fa28d9cea697f23eb470d",
     "review-queue.json": "6a615f4aff822128b507aed9ea76455923f3b484a4fb2d118b34bbb6b0a193c2",
-    "validation-report.json": "a09b5766c920eb628adda8b4bcdc22dfbe478b666cfdbe656134aaf2b004f364",
-    "work-editions.jsonld": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a"
+    "validation-report.json": "11e550bc8bb3e6ce744b25a48efc6c9aac307784f19442a5305d676e4a65e113",
+    "work-editions.jsonld": "0cc45fc4d046d84e8ca0810e615869ebac4646462dcce415088d4108018da15a"
   },
-  "codeSha256": "acf6b76f0e20140b07b542ab6b4bf64192ab94a02ba73f706f6f32493c75e51f",
+  "authorityEvidence": {
+    "szdWorkIndex": {
+      "path": "data/provenance/szd-work-index.xml",
+      "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf"
+    },
+    "workDecisions": {
+      "path": "data/reconciliation/work-decisions.json",
+      "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
+    }
+  },
+  "codeSha256": "388a74f0edb20555b6005d0ec8bd1c840c7e6afb156be3dfcc61dc9c696c563c",
   "counts": {
     "annotations": 1886,
     "candidateWorks": 1,
@@ -19,7 +29,7 @@
     "reviewCases": 317,
     "works": 443
   },
-  "generatedAt": "2026-08-26T17:29:55.218971+00:00",
+  "generatedAt": "2026-08-26T17:46:31.551783+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

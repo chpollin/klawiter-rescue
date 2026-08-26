@@ -12,7 +12,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Tyresö Municipality",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q113730"
+          "@id": "http://www.wikidata.org/entity/Q113730"
         },
         "status": "contested"
       },
@@ -22,7 +22,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Tyresö district",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q21667397"
+          "@id": "http://www.wikidata.org/entity/Q21667397"
         },
         "status": "contested"
       },
@@ -102,7 +102,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Sofia",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q472"
+          "@id": "http://www.wikidata.org/entity/Q472"
         },
         "status": "contested"
       },
@@ -112,7 +112,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Varna",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q6506"
+          "@id": "http://www.wikidata.org/entity/Q6506"
         },
         "status": "contested"
       },
@@ -269,7 +269,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Mont-Saint-Aignan",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q1055925"
+          "@id": "http://www.wikidata.org/entity/Q1055925"
         },
         "status": "contested"
       },
@@ -327,7 +327,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Bloemfontein",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q37701"
+          "@id": "http://www.wikidata.org/entity/Q37701"
         },
         "status": "contested"
       },
@@ -337,7 +337,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Cape Town",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q5465"
+          "@id": "http://www.wikidata.org/entity/Q5465"
         },
         "status": "contested"
       },
@@ -406,7 +406,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Varna",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q6506"
+          "@id": "http://www.wikidata.org/entity/Q6506"
         },
         "status": "contested"
       },
@@ -416,7 +416,7 @@
         "candidateSource": "independent-review-proposal",
         "label": "Sofia",
         "proposedObject": {
-          "@id": "https://www.wikidata.org/entity/Q472"
+          "@id": "http://www.wikidata.org/entity/Q472"
         },
         "status": "contested"
       },

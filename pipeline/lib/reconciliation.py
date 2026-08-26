@@ -11,7 +11,9 @@ import xml.etree.ElementTree as ET
 from difflib import SequenceMatcher
 from pathlib import Path
 
-WIKIDATA_URI = "https://www.wikidata.org/entity/"
+# Canonical Wikidata RDF entity IRI: the http form is what Wikidata's own
+# RDF uses; the https form never joins against external triples.
+WIKIDATA_URI = "http://www.wikidata.org/entity/"
 SZD_WORK_URI = "https://gams.uni-graz.at/o:szd.werkindex#"
 TEI_NS = {"tei": "http://www.tei-c.org/ns/1.0"}
 XML_ID = "{http://www.w3.org/XML/1998/namespace}id"

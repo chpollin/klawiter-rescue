@@ -33,6 +33,7 @@ from lib.patterns import (
     extract_publisher,
     extract_translator,
 )
+from lib.vocabulary import plain_value
 from lib.wiki_parser import remove_wiki_markup
 
 log = setup_logging(__name__)
@@ -150,7 +151,7 @@ def verify_entry(entry, raw_content, page_title=""):
     """
     result = {
         "page_id": entry.get("sourcePageId"),
-        "title": entry.get("name", ""),
+        "title": plain_value(entry.get("name", "")),
         "fields": {},
     }
 
@@ -166,7 +167,7 @@ def verify_entry(entry, raw_content, page_title=""):
     # [year]: pattern (metadata, not a real title). page_title is wiki page name
     # metadata and will never appear in raw_content — that's expected, not a
     # false positive. We detect this case and classify it separately.
-    title = entry.get("name", "")
+    title = plain_value(entry.get("name", ""))
     if title:
         found = value_in_content(title, raw_content) or value_in_content(
             title, raw_clean
@@ -213,7 +214,7 @@ def verify_entry(entry, raw_content, page_title=""):
         result["fields"]["year_false_negatives"] = missed_years
 
     # --- Publisher verification ---
-    publisher = entry.get("publisher", "")
+    publisher = plain_value(entry.get("publisher", ""))
     if publisher:
         found = value_in_content(publisher, raw_content)
         result["fields"]["publisher"] = {
@@ -234,7 +235,7 @@ def verify_entry(entry, raw_content, page_title=""):
             }
 
     # --- Location verification ---
-    location = entry.get("locationCreated", "")
+    location = plain_value(entry.get("locationCreated", ""))
     if location:
         found = value_in_content(location, raw_content)
         result["fields"]["location"] = {
@@ -253,7 +254,7 @@ def verify_entry(entry, raw_content, page_title=""):
             }
 
     # --- Translator verification ---
-    translator = entry.get("translator", "")
+    translator = plain_value(entry.get("translator", ""))
     if translator:
         found = value_in_content(translator, raw_content)
         result["fields"]["translator"] = {

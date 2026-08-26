@@ -16,6 +16,7 @@
       "@container": "@set",
       "@id": "klawiter:contestedClaims"
     },
+    "dcterms": "http://purl.org/dc/terms/",
     "editions": {
       "@container": "@set",
       "@id": "klawiter:editions"
@@ -34160,6 +34161,9 @@
       ]
     }
   ],
+  "dcterms:license": {
+    "@id": "https://creativecommons.org/licenses/by/4.0/"
+  },
   "editions": [
     {
       "@id": "klawiter:edition/3-1922-a",
@@ -68443,6 +68447,10 @@
     }
   ],
   "klawiter:algorithmVersion": "1.2",
+  "klawiter:authorityNote": "This Work/Edition graph is the canonical dataset for pages with multiple editions; the flat dataset klawiter.jsonld is a derived convenience projection.",
+  "klawiter:derivedProjection": {
+    "@id": "klawiter:klawiter-bibliography"
+  },
   "klawiter:reviewContract": "Agentic sample decisions are confirmed only within their exact selectors; all other editions remain proposals and contested bindings remain explicit claims with open decisions.",
   "klawiter:reviewEvidenceSha256": "388ade9b6a8ff93949c366472a2c5311cccd5749dc0ee5ad4f164db5c487f0cf",
   "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header",
@@ -72342,6 +72350,14 @@
       "@type": "schema:CreativeWork",
       "klawiter:sourcePageId": 54,
       "schema:name": "Ungeduld des Herzens (VIST)",
+      "schema:sameAs": [
+        {
+          "@id": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.133"
+        },
+        {
+          "@id": "http://d-nb.info/gnd/4447444-1"
+        }
+      ],
       "schema:workExample": [
         {
           "@id": "klawiter:edition/54-1939-a"
@@ -72443,6 +72459,14 @@
       "@type": "schema:CreativeWork",
       "klawiter:sourcePageId": 56,
       "schema:name": "Die Welt von Gestern. Erinnerungen eines Europäers",
+      "schema:sameAs": [
+        {
+          "@id": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.5"
+        },
+        {
+          "@id": "http://d-nb.info/gnd/4436762-4"
+        }
+      ],
       "schema:workExample": [
         {
           "@id": "klawiter:edition/56-1942-a"
@@ -79612,6 +79636,14 @@
       "@type": "schema:CreativeWork",
       "klawiter:sourcePageId": 4916,
       "schema:name": "Schachnovelle / Volume",
+      "schema:sameAs": [
+        {
+          "@id": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.39"
+        },
+        {
+          "@id": "http://d-nb.info/gnd/4255212-6"
+        }
+      ],
       "schema:workExample": [
         {
           "@id": "klawiter:edition/4916-1942-a"

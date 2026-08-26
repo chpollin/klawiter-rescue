@@ -52,8 +52,13 @@ def _check_public_projection(publishable: dict, dataset: dict) -> list[str]:
     links = publishable["locations"]
     errors = []
     for entry in dataset["entries"]:
-        location = entry.get("locationCreated")
-        actual = entry.get("locationSameAs")
+        place = entry.get("locationCreated")
+        if isinstance(place, dict):
+            location = place.get("name")
+            actual = place.get("sameAs")
+        else:
+            location = place
+            actual = entry.get("locationSameAs")
         expected = links.get(location, {}).get("uri")
         if actual != expected:
             errors.append(

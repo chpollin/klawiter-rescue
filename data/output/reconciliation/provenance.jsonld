@@ -9,7 +9,7 @@
     {
       "@id": "klawiter:run/gate2-reconciliation",
       "@type": "prov:Activity",
-      "prov:generatedAtTime": "2026-08-26T17:30:21.178500+00:00",
+      "prov:generatedAtTime": "2026-08-26T17:47:00.385843+00:00",
       "prov:qualifiedAssociation": {
         "@type": "prov:Association",
         "prov:agent": {
@@ -61,7 +61,7 @@
       "@id": "klawiter:plan/gate2-v1",
       "@type": "prov:Plan",
       "klawiter:algorithmVersion": "1.1",
-      "klawiter:sourceCodeSha256": "d44f31bcfac5f4eeef7f3d6543f97411800800d89d690d0efe8b870d6988d2ef"
+      "klawiter:sourceCodeSha256": "5d9066ad78566c815db0285ca71c75349bbf63280b7e293c3d5c4e0ecbf80703"
     },
     {
       "@id": "klawiter:gate2-input/classified-source",
@@ -78,7 +78,7 @@
     {
       "@id": "klawiter:gate2-input/editions",
       "@type": "prov:Entity",
-      "klawiter:sha256": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a",
+      "klawiter:sha256": "0cc45fc4d046d84e8ca0810e615869ebac4646462dcce415088d4108018da15a",
       "prov:atLocation": "data/output/editions/work-editions.jsonld"
     },
     {

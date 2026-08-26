@@ -46,6 +46,7 @@ from lib.config import (
     setup_logging,
     write_json,
 )
+from lib.vocabulary import plain_value  # noqa: E402
 
 log = setup_logging(__name__)
 
@@ -128,7 +129,7 @@ def main():
     # its page-title fallback rather than hidden, so it is named like any other
     # entry. The invariant is therefore that no displayed entry is unnamed.
     def display_name(e):
-        return (e.get("title") or e.get("name") or "").strip()
+        return (e.get("title") or plain_value(e.get("name")) or "").strip()
 
     unnamed_displayed = [e for e in displayed if not display_name(e)]
 

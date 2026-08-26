@@ -1,16 +1,16 @@
 {
   "algorithmVersion": "1.1",
   "artifacts": {
-    "candidates.json": "adf45fedbf74da63ea398ed12803e18ff5822e135ff20938ef1c1d606e499273",
-    "contested-claims.json": "d3016cef54b4e956b3fb1e30a199b63c3571e9ba78e9859b19e221f3c52c455e",
+    "candidates.json": "97756fc651610cc1849ad564e07fffa33c93c51dde5220a0caa1b00ccf5c2ff9",
+    "contested-claims.json": "73d26a9a75c0145945f15810a2a4a2bdae49b12323373a5bd4eb41a778c93bf3",
     "decisions.json": "5c5d8999cbaa072874444470d8bb9b7c807faa2a6e047c4efdd5f8200d645a57",
-    "earl.jsonld": "ccbf8c2d5217fcdad76f501e1c982dc9085c500b50acf824197746b454f87df0",
-    "provenance.jsonld": "ffec111f7a002e944e388cddd00f6badcaaa6213d1ed20457c4e66a492e07e07",
-    "publishable-links.json": "6ae562617aeb02089613b2c27594b16ecb483ac19ca4d17f623421787a7346fb",
-    "review-queue.json": "51077417247f87fd13c4d56ee2a5a538438cf21f2e3bf6c2269590b4bf0ee930",
-    "validation-report.json": "48b26bb06feea0766f989f24bba814fd77cf7b940632d169c8d4ef7ca9b498af"
+    "earl.jsonld": "d7d3a50a78e012e7b6b6b3a884b1d1cd455321703b0a7842ae5faadfdf83a320",
+    "provenance.jsonld": "d3d9f60025f9505ccc6c0e59c60186a863ef1a8731acd3c1e4442646b5bf35b6",
+    "publishable-links.json": "ee23ee97a8c35da5f218186e75fd80184ad32faa3bfb9b52ea4b51014ff2c6bc",
+    "review-queue.json": "fc69233328144542b5ea003ae2fef7fc5e16b9a9a7ee67f9e3aeacf191eb821c",
+    "validation-report.json": "616f1a1ffe9b833afa64ff6b24c0f634117fbb2c1de0c97fa3fa3ba7caa7b3b0"
   },
-  "codeSha256": "d44f31bcfac5f4eeef7f3d6543f97411800800d89d690d0efe8b870d6988d2ef",
+  "codeSha256": "5d9066ad78566c815db0285ca71c75349bbf63280b7e293c3d5c4e0ecbf80703",
   "counts": {
     "contestedAuthorityClaims": 5,
     "contestedEditionClaims": 1,
@@ -26,9 +26,9 @@
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "2134d8e0e5b6ee8a3f153589c8a46b3ddbc221efbcf9320d537d3afb303824ca"
+    "sha256": "a6262241283177dea992798f36713b4772fb9dbc9206a1df71242f77557a7888"
   },
-  "generatedAt": "2026-08-26T17:30:21.178500+00:00",
+  "generatedAt": "2026-08-26T17:47:00.385843+00:00",
   "inputs": {
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
@@ -40,7 +40,7 @@
     },
     "editions": {
       "path": "data/output/editions/work-editions.jsonld",
-      "sha256": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a"
+      "sha256": "0cc45fc4d046d84e8ca0810e615869ebac4646462dcce415088d4108018da15a"
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",

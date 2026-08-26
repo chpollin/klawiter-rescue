@@ -527,6 +527,7 @@ def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
             "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
             "oa": "http://www.w3.org/ns/oa#",
             "prov": "http://www.w3.org/ns/prov#",
+            "dcterms": "http://purl.org/dc/terms/",
             "xsd": "http://www.w3.org/2001/XMLSchema#",
             "schema:datePublished": {"@type": "xsd:gYear"},
             # Every top-level array key must be a defined term: JSON-LD drops
@@ -551,6 +552,16 @@ def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
         },
         "@id": "klawiter:dataset/work-editions",
         "@type": "schema:Dataset",
+        "dcterms:license": {"@id": "https://creativecommons.org/licenses/by/4.0/"},
+        # This graph is the canonical dataset for pages with multiple
+        # editions (operator decision 2026-08-26); the flat dataset is its
+        # derived convenience projection.
+        "klawiter:derivedProjection": {"@id": "klawiter:klawiter-bibliography"},
+        "klawiter:authorityNote": (
+            "This Work/Edition graph is the canonical dataset for pages "
+            "with multiple editions; the flat dataset klawiter.jsonld is a "
+            "derived convenience projection."
+        ),
         "klawiter:algorithmVersion": ALGORITHM_VERSION,
         "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header",
         "klawiter:sourceCorpusSha256": source_hasher.hexdigest(),
@@ -559,3 +570,30 @@ def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
         "annotations": annotations,
         "pageSummaries": page_summaries,
     }
+
+
+def apply_confirmed_work_links(dataset, work_decisions, szd_authorities):
+    """Attach confirmed SZD/GND identities as schema:sameAs on work nodes.
+
+    The edition graph is the canonical dataset (operator decision
+    2026-08-26); the human-confirmed work identities must live here, not
+    only in a reconciliation side file. Only confirmed or corrected
+    decisions produce links; everything else stays a candidate.
+    """
+    by_szd = {authority["szdId"]: authority for authority in szd_authorities}
+    links = {}
+    for decision in work_decisions.get("decisions", []):
+        if decision.get("action") not in {"confirm", "correct"}:
+            continue
+        authority = by_szd.get(decision.get("szdId"))
+        if not authority:
+            continue
+        uris = [authority["szdUri"]]
+        if authority.get("gndUri"):
+            uris.append(authority["gndUri"])
+        links[decision["subjectId"]] = uris
+    for work in dataset["works"]:
+        uris = links.get(work["@id"])
+        if uris:
+            work["schema:sameAs"] = [{"@id": uri} for uri in uris]
+    return len(links)

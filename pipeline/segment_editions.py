@@ -26,15 +26,19 @@ from lib.config import (  # noqa: E402
     EDITION_SAMPLE_RECONCILIATION,
     OUTPUT_EDITIONS_DIR,
     STEP_02_OUTPUT,
+    SZD_WORK_INDEX,
+    WORK_DECISIONS,
     load_csv,
     setup_logging,
     write_json,
 )
 from lib.editions import (  # noqa: E402
     ALGORITHM_VERSION,
+    apply_confirmed_work_links,
     apply_review_reconciliation,
     build_corpus,
 )
+from lib.reconciliation import parse_szd_work_index  # noqa: E402
 
 log = setup_logging(__name__)
 
@@ -235,6 +239,10 @@ def main() -> None:
     dataset = apply_review_reconciliation(
         build_corpus(rows), reconciliation, modeling_decisions
     )
+    work_decisions = json.loads(Path(WORK_DECISIONS).read_text(encoding="utf-8"))
+    szd_authorities = parse_szd_work_index(Path(SZD_WORK_INDEX))
+    linked = apply_confirmed_work_links(dataset, work_decisions, szd_authorities)
+    log.info(f"Confirmed work identities linked as sameAs: {linked}")
     generated_at = datetime.now(timezone.utc).isoformat()
     code_hash = _code_hash()
 
@@ -277,6 +285,16 @@ def main() -> None:
             "modelingDecisions": {
                 "path": "data/reconciliation/edition-modeling-decisions.json",
                 "sha256": modeling_hash,
+            },
+        },
+        "authorityEvidence": {
+            "workDecisions": {
+                "path": "data/reconciliation/work-decisions.json",
+                "sha256": _sha256(Path(WORK_DECISIONS)),
+            },
+            "szdWorkIndex": {
+                "path": "data/provenance/szd-work-index.xml",
+                "sha256": _sha256(Path(SZD_WORK_INDEX)),
             },
         },
         "codeSha256": code_hash,

@@ -123,7 +123,7 @@ def main():
         ("categories", "categories"),
         ("mainCategory", "mainCategory"),
         ("bibliographicCitation", "bibliographicCitation"),
-        ("isRelatedTo", "isRelatedTo"),
+        ("relation", "relation"),
         ("reprints", "reprints"),
         ("workTranslation", "workTranslation"),
         ("hasPart", "hasPart"),

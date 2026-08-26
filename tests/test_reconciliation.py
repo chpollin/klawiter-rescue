@@ -110,7 +110,7 @@ def test_stage_05_reads_only_publishable_links() -> None:
     stage_05 = importlib.import_module("05_to_jsonld")
     links = stage_05.load_location_wikidata()
     assert len(links) == 26
-    assert links["Yanji"] == "https://www.wikidata.org/entity/Q713362"
+    assert links["Yanji"] == "http://www.wikidata.org/entity/Q713362"
     assert "Girona" not in links
 
 

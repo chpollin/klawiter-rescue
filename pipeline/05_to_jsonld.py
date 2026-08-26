@@ -19,6 +19,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
+    OUTPUT_EDITIONS_DIR,
     OUTPUT_ENTRIES_DIR,
     OUTPUT_FRONTEND_JSON,
     OUTPUT_JSONLD,
@@ -30,15 +31,17 @@ from lib.config import (
     setup_logging,
     write_json,
 )
-from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP
+from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP, to_rdf_entry
 
 log = setup_logging(__name__)
 
-# Stefan Zweig as linked data author reference
+# Stefan Zweig as one referenceable entity: the @id makes every author
+# reference resolve to a single node (canonical Wikidata RDF IRI, http form)
+# instead of thousands of blank nodes.
 STEFAN_ZWEIG = {
+    "@id": "http://www.wikidata.org/entity/Q78491",
     "@type": "schema:Person",
     "name": "Stefan Zweig",
-    "sameAs": "https://www.wikidata.org/entity/Q78491",
 }
 
 
@@ -70,7 +73,45 @@ def safe_json_parse(value):
         return None
 
 
-def row_to_jsonld(row, location_uris=None):
+def build_reference_targets(rows):
+    """Map every resolvable reference name (parsed title, wiki page title,
+    redirect name) to the page id of the entry it finally lands on."""
+    direct = {}
+    for row in rows:
+        if csv_bool(row.get("is_redirect")):
+            continue
+        pid = int(row["page_id"])
+        for key in ("title", "page_title"):
+            value = row.get(key, "")
+            if value:
+                direct.setdefault(value, pid)
+    targets = dict(direct)
+    for row in rows:
+        if not csv_bool(row.get("is_redirect")):
+            continue
+        target = row.get("redirect_target", "") or row.get("title", "")
+        pid = direct.get(target)
+        if pid:
+            for key in ("page_title", "title"):
+                value = row.get(key, "")
+                if value:
+                    targets.setdefault(value, pid)
+    return targets
+
+
+def load_work_pages():
+    """Page ids that the canonical Work/Edition graph decomposes."""
+    path = os.path.join(OUTPUT_EDITIONS_DIR, "work-editions.jsonld")
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            f"Work/Edition graph is missing: {path}. Run Gate 1 before stage 05."
+        )
+    with open(path, encoding="utf-8") as handle:
+        works = json.load(handle)["works"]
+    return {int(work["@id"].rsplit("/", 1)[1]) for work in works}
+
+
+def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=None):
     """Convert a CSV row to a JSON-LD entry using Schema.org + DC + klawiter: blend."""
     location_uris = location_uris or {}
     page_id = row["page_id"]
@@ -158,13 +199,14 @@ def row_to_jsonld(row, location_uris=None):
     if all_locations and len(all_locations) > 1:
         entry["allLocations"] = all_locations
 
-    # Language → schema:inLanguage + klawiter:languageCode
+    # Language: schema:inLanguage carries the code (Schema.org expects a
+    # BCP-47 code); the human-readable name lives in klawiter:languageName.
     language = row.get("language", "")
     language_iso = row.get("language_iso", "")
-    if language:
-        entry["inLanguage"] = language
     if language_iso:
-        entry["languageCode"] = language_iso
+        entry["inLanguage"] = language_iso
+    if language:
+        entry["languageName"] = language
 
     # Page count → schema:numberOfPages
     page_count = row.get("page_count", "")
@@ -188,10 +230,27 @@ def row_to_jsonld(row, location_uris=None):
     if main_category:
         entry["mainCategory"] = main_category
 
-    # Cross-references
+    # Cross-references: resolved See-references become dcterms:relation
+    # with entry IRIs; genuinely dead references (red links in the source
+    # wiki) stay preserved as plain text.
     see_also = safe_json_parse(row.get("see_also", ""))
     if see_also:
-        entry["isRelatedTo"] = see_also
+        resolved = []
+        unresolved = []
+        for ref in see_also:
+            target_pid = (reference_targets or {}).get(ref)
+            if target_pid and target_pid != int(page_id):
+                resolved.append({"@id": f"klawiter:entry/{target_pid}", "name": ref})
+            else:
+                unresolved.append(ref)
+        if resolved:
+            entry["relation"] = resolved
+        if unresolved:
+            entry["seeAlsoText"] = unresolved
+
+    # Coupling to the canonical Work/Edition graph
+    if work_pages and int(page_id) in work_pages:
+        entry["decomposedAsWork"] = f"klawiter:work/{page_id}"
 
     reprints = safe_json_parse(row.get("reprints", ""))
     if reprints:
@@ -226,13 +285,16 @@ _FRONTEND_KEY_MAP = {
     "name": "title",
     "datePublished": "year",
     "locationCreated": "location",
-    "inLanguage": "language",
+    "inLanguage": "languageCode",
+    "languageName": "language",
     "numberOfPages": "pageCount",
     "bibliographicCitation": "fullBibliographicEntry",
-    "isRelatedTo": "seeAlso",
     "workTranslation": "translations",
     "hasPart": "contentItems",
 }
+
+# RDF-only structure the UI does not render
+_FRONTEND_SKIPPED_KEYS = {"author", "relation", "seeAlsoText", "decomposedAsWork"}
 
 
 def make_frontend_entry(jsonld_entry):
@@ -240,11 +302,19 @@ def make_frontend_entry(jsonld_entry):
 
     Maps semantic property names back to short keys the frontend expects.
     Converts datePublished (string) back to integer year for the frontend.
+    Resolved and unresolved cross-references merge back into one flat
+    seeAlso list of display titles.
     """
     e = {}
+    see_also = [item["name"] for item in jsonld_entry.get("relation", [])]
+    see_also += jsonld_entry.get("seeAlsoText", [])
+    if see_also:
+        e["seeAlso"] = see_also
     for key, val in jsonld_entry.items():
         if key.startswith("@"):
             e[key] = val
+            continue
+        if key in _FRONTEND_SKIPPED_KEYS:
             continue
         # Map to frontend key name, or keep as-is
         frontend_key = _FRONTEND_KEY_MAP.get(key, key)
@@ -254,9 +324,6 @@ def make_frontend_entry(jsonld_entry):
                 val = int(val)
             except (ValueError, TypeError):
                 pass
-        # Skip author object (frontend doesn't use it)
-        if key == "author":
-            continue
         e[frontend_key] = val
     return e
 
@@ -337,13 +404,18 @@ def main():
 
     repair_see_references(rows)
     location_uris = load_location_wikidata()
+    reference_targets = build_reference_targets(rows)
+    work_pages = load_work_pages()
+    log.info(f"Work/Edition coupling targets: {len(work_pages)} pages")
 
     entries = []
     for row in rows:
-        entry = row_to_jsonld(row, location_uris)
+        entry = row_to_jsonld(row, location_uris, reference_targets, work_pages)
         entries.append(entry)
 
-    # Write complete dataset
+    # Write complete dataset. The published RDF shape (language-tagged
+    # titles, agent and place resources) exists only at this write
+    # boundary; the in-memory entries stay flat for every downstream step.
     os.makedirs(os.path.dirname(OUTPUT_JSONLD), exist_ok=True)
     dataset = {
         **CONTEXT,
@@ -351,10 +423,28 @@ def main():
         "@id": "klawiter:klawiter-bibliography",
         "name": "Stefan Zweig Bibliography (Klawiter)",
         "description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
-        "creator": "Dr. Randolph J. Klawiter",
-        "sourceOrganization": "University of Notre Dame",
+        "creator": {
+            "@id": "klawiter:person/Randolph%20J.%20Klawiter",
+            "@type": "schema:Person",
+            "name": "Dr. Randolph J. Klawiter",
+        },
+        "sourceOrganization": {
+            "@id": "klawiter:organization/University%20of%20Notre%20Dame",
+            "@type": "schema:Organization",
+            "name": "University of Notre Dame",
+        },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        # The Work/Edition graph is the canonical dataset for pages with
+        # multiple editions; this flat dataset is its derived convenience
+        # projection (operator decision 2026-08-26).
+        "klawiter:canonicalDataset": {"@id": "klawiter:dataset/work-editions"},
+        "klawiter:authorityNote": (
+            "For pages with multiple editions the Work/Edition graph "
+            "(data/output/editions/work-editions.jsonld) is the canonical "
+            "dataset; this flat dataset is a derived convenience projection."
+        ),
         "totalEntries": len(entries),
-        "entries": entries,
+        "entries": [to_rdf_entry(entry) for entry in entries],
     }
 
     write_json(OUTPUT_JSONLD, dataset, indent=2)
@@ -365,7 +455,7 @@ def main():
     for entry in entries:
         entry_id = entry.get("@id", "").split("/")[-1]
         if entry_id:
-            entry_file = {**CONTEXT, **entry}
+            entry_file = {**CONTEXT, **to_rdf_entry(entry)}
             path = os.path.join(OUTPUT_ENTRIES_DIR, f"{entry_id}.jsonld")
             write_json(path, entry_file, indent=2)
 

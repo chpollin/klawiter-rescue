@@ -29,11 +29,18 @@ from lib.config import (  # noqa: E402
     OUTPUT_EDITIONS_DIR,
     PROJECT_ROOT,
     STEP_02_OUTPUT,
+    SZD_WORK_INDEX,
+    WORK_DECISIONS,
     load_csv,
     setup_logging,
     write_json,
 )
-from lib.editions import apply_review_reconciliation, build_corpus  # noqa: E402
+from lib.editions import (  # noqa: E402
+    apply_confirmed_work_links,
+    apply_review_reconciliation,
+    build_corpus,
+)
+from lib.reconciliation import parse_szd_work_index  # noqa: E402
 
 log = setup_logging(__name__)
 
@@ -253,6 +260,11 @@ def main() -> None:
     modeling_decisions = json.loads(modeling_path.read_text(encoding="utf-8"))
     rebuilt = apply_review_reconciliation(
         build_corpus(rows), reconciliation, modeling_decisions
+    )
+    apply_confirmed_work_links(
+        rebuilt,
+        json.loads(Path(WORK_DECISIONS).read_text(encoding="utf-8")),
+        parse_szd_work_index(Path(SZD_WORK_INDEX)),
     )
     deterministic = rebuilt == dataset
     checks = {
