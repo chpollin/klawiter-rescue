@@ -13,6 +13,8 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (  # noqa: E402
+    AGENT_DECISIONS,
+    AGENT_RECONCILIATION,
     CORRECTIONS_DIR,
     LOCATION_DECISIONS,
     LOCATION_RECONCILIATION_LOG,
@@ -72,17 +74,19 @@ def _check_decisions(result: dict) -> list[str]:
     errors = []
     decision_ids = {
         decision["decisionId"]
-        for key in ("locationDecisions", "workDecisions")
+        for key in ("locationDecisions", "workDecisions", "agentDecisions")
         for decision in result["decisions"][key]
         if decision["action"] in {"confirm", "correct"}
     }
-    for entity_type in ("locations", "works"):
+    for entity_type in ("locations", "works", "agents"):
         for subject, link in result["publishable"][entity_type].items():
             if link["decisionId"] not in decision_ids:
                 errors.append(
                     f"{entity_type}/{subject}: public link lacks an accepted decision"
                 )
-            if entity_type == "locations" and not re.fullmatch(r"Q\d+", link["qid"]):
+            if entity_type in ("locations", "agents") and not re.fullmatch(
+                r"Q\d+", link["qid"]
+            ):
                 errors.append(f"locations/{subject}: invalid Q-ID {link['qid']}")
     return errors
 
@@ -145,6 +149,8 @@ def main() -> None:
         "work_decisions": Path(WORK_DECISIONS),
         "szd_index": Path(SZD_WORK_INDEX),
         "classified_source": Path(STEP_04_OUTPUT),
+        "agent_reconciliation": Path(AGENT_RECONCILIATION),
+        "agent_decisions": Path(AGENT_DECISIONS),
         "candidates": output_dir / "candidates.json",
         "decisions": output_dir / "decisions.json",
         "publishable": output_dir / "publishable-links.json",
@@ -183,6 +189,8 @@ def main() -> None:
         work_decisions,
         parse_szd_work_index(paths["szd_index"]),
         load_csv(STEP_04_OUTPUT),
+        _read_json(paths["agent_reconciliation"]),
+        _read_json(paths["agent_decisions"]),
     )
     actual = {
         "candidates": _read_json(paths["candidates"]),
@@ -244,6 +252,8 @@ def main() -> None:
         "work-decisions": paths["work_decisions"],
         "szd-work-index": paths["szd_index"],
         "classified-source": paths["classified_source"],
+        "agent-reconciliation": paths["agent_reconciliation"],
+        "agent-decisions": paths["agent_decisions"],
     }
     for path in decision_patches["files"]:
         input_map[f"curation-patch-{path.name}"] = path

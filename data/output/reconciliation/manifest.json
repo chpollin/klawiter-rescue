@@ -1,35 +1,46 @@
 {
   "algorithmVersion": "1.1",
   "artifacts": {
-    "candidates.json": "a0cbfed7e204a2486f61c0227f9566906cb0af854e5c28f5f262160749d75565",
+    "candidates.json": "198b6f79ac5276ec91f330d9aef3a3f2c32420e9ee600742b8e4e4cdbe6fb16a",
     "contested-claims.json": "10a38f79efd563fdbacc1cf59e6221dd292904c51e721f6651fcaff194d59b3e",
-    "decisions.json": "5c5d8999cbaa072874444470d8bb9b7c807faa2a6e047c4efdd5f8200d645a57",
-    "earl.jsonld": "cc5d7b5cbb0c8c1da27562e30060e5e1557fd50a6bbaacad95ce3f662b0570eb",
-    "provenance.jsonld": "189565752d2dba2db312366ae702b21c7bbbc69cf90f6a9f580422086444547a",
-    "publishable-links.json": "ee23ee97a8c35da5f218186e75fd80184ad32faa3bfb9b52ea4b51014ff2c6bc",
-    "review-queue.json": "7f94b52b7359b554129f74c960ef668867266609fc7d74407aafb23a1377accc",
-    "validation-report.json": "fc68d6170b70490b3ef1d68db333a76ca44f38013bd2b1787a73f44785e4758a"
+    "decisions.json": "bde3864bc41507a0e96c018e02ae44667ce54cf1133932f47c80d0b35118c78f",
+    "earl.jsonld": "d41f74465404cb38173432213431ec9676650e837b92a1bd67484f6fb74d4f4f",
+    "provenance.jsonld": "c48262f6f38eff49a2fb0627c04ab570cb05107ef538d68ad390ff08fbe5cf00",
+    "publishable-links.json": "49d645b6d689e1c23e8f2088d22f98e4b5f0e32c04d4c28c19c694d7a1b6577b",
+    "review-queue.json": "d35cb49e637fdc18cc9df5f2c618c2f5a06d0f101b12a47dd26003ada6e4c969",
+    "validation-report.json": "a1b849b3c5e442689b57ee8d44b1e77b23e5dd222279f05d852ab78ba8f3e552"
   },
-  "codeSha256": "819267ac9c8a3047f81c85c649f99357c684207e13a4eea540a250d51826c008",
+  "codeSha256": "970b901749cb68cd2bfeb640fbb4ef3b601fad94e0b2c4b4774e87234de45516",
   "counts": {
+    "agentDecisions": 0,
+    "agentSubjects": 101,
     "contestedAuthorityClaims": 5,
     "contestedEditionClaims": 1,
     "locationCandidates": 392,
     "locationDecisions": 31,
     "locationSubjects": 382,
+    "publishableAgentLinks": 0,
     "publishableLocationLinks": 26,
     "publishableWorkLinks": 3,
-    "reviewCases": 796,
+    "reviewCases": 897,
     "workCandidates": 841,
     "workDecisions": 3,
     "workSubjects": 443
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "b1d1c77e9aa78dd0b9ba567aa9e96607d5dc51b75c9eb66435666977e84e120e"
+    "sha256": "f43c1208222151751f1206ea4ed7a58d468cde4090e515eeba24e448f7fea1b5"
   },
-  "generatedAt": "2026-08-26T18:21:21.776116+00:00",
+  "generatedAt": "2026-08-26T18:39:30.196720+00:00",
   "inputs": {
+    "agent-decisions": {
+      "path": "data/reconciliation/agent-decisions.json",
+      "sha256": "789f96bc12e201947e17209f540d014f7b71a7ec7e6372ee174e565ae09d445b"
+    },
+    "agent-reconciliation": {
+      "path": "data/provenance/agent-reconciliation.json",
+      "sha256": "c7d222f44a3161249fcdd378bcd3a1e2842abf2361e5bf6f24abc6a3d39fb7f8"
+    },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
       "sha256": "621b70c5226f24c29790217606c4b9126dfb40bfece8cef95dd124ba8b440ea9"

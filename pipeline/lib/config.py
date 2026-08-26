@@ -81,6 +81,15 @@ OUTPUT_RECONCILIATION_FRONTEND = os.path.join(
 )
 OUTPUT_FRONTEND_JSON = os.path.join(PROJECT_ROOT, "docs", "data", "klawiter.json")
 
+# Frozen Wikidata candidates for translators and publishers
+# (produced by the gated refreezing tool reconcile_agents.py)
+AGENT_RECONCILIATION = os.path.join(
+    PROJECT_ROOT, "data", "provenance", "agent-reconciliation.json"
+)
+AGENT_DECISIONS = os.path.join(
+    PROJECT_ROOT, "data", "reconciliation", "agent-decisions.json"
+)
+
 # Wikidata-reconciled locations (produced by reconcile_locations.py)
 LOCATIONS_JSON = os.path.join(PROJECT_ROOT, "docs", "data", "locations.json")
 

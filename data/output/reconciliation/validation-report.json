@@ -10,14 +10,17 @@
     "shacl": true
   },
   "counts": {
+    "agentDecisions": 0,
+    "agentSubjects": 101,
     "contestedAuthorityClaims": 5,
     "contestedEditionClaims": 1,
     "locationCandidates": 392,
     "locationDecisions": 31,
     "locationSubjects": 382,
+    "publishableAgentLinks": 0,
     "publishableLocationLinks": 26,
     "publishableWorkLinks": 3,
-    "reviewCases": 796,
+    "reviewCases": 897,
     "workCandidates": 841,
     "workDecisions": 3,
     "workSubjects": 443
@@ -31,5 +34,5 @@
     "jsonldProjection": [],
     "shacl": []
   },
-  "generatedAt": "2026-08-26T18:31:10.867575+00:00"
+  "generatedAt": "2026-08-26T18:40:13.209519+00:00"
 }

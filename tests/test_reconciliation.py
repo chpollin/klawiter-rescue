@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 from lib.config import (
+    AGENT_DECISIONS,
+    AGENT_RECONCILIATION,
     LOCATION_DECISIONS,
     LOCATION_RECONCILIATION_LOG,
     LOCATION_REVIEW_EVIDENCE,
@@ -40,6 +42,8 @@ def reconciliation(required_intermediates) -> dict:
         read(WORK_DECISIONS),
         parse_szd_work_index(Path(SZD_WORK_INDEX)),
         load_csv(STEP_04_OUTPUT),
+        read(AGENT_RECONCILIATION),
+        read(AGENT_DECISIONS),
     )
 
 
@@ -75,11 +79,27 @@ def test_wrong_legacy_qids_are_replaced_fail_closed(reconciliation: dict) -> Non
     assert "Q26085641" not in serialized
 
 
+def test_agent_candidates_are_fail_closed(reconciliation: dict) -> None:
+    """101 frozen agent subjects join the review pool; without a single
+    decision nothing publishes and every subject queues."""
+    agents = reconciliation["candidates"]["agents"]
+    assert len(agents) == 101
+    assert all(subject["decision"] is None for subject in agents)
+    assert reconciliation["publishable"]["agents"] == {}
+    queued = {
+        (case["entityType"], case["subject"])
+        for case in reconciliation["queue"]["cases"]
+    }
+    assert all(
+        (subject["entityType"], subject["sourceName"]) in queued for subject in agents
+    )
+
+
 def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
     reconciliation: dict,
 ) -> None:
     queue = reconciliation["queue"]
-    assert queue["caseCount"] == 796
+    assert queue["caseCount"] == 796 + 101
     queued = {(item["entityType"], item["subject"]): item for item in queue["cases"]}
     assert queued[("location", "Saint-Aignan")]["status"] == "unresolved"
     assert queued[("location", "Tyresö")]["status"] == "unresolved"

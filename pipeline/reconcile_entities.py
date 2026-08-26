@@ -12,6 +12,8 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (  # noqa: E402
+    AGENT_DECISIONS,
+    AGENT_RECONCILIATION,
     CORRECTIONS_DIR,
     EDITION_MODELING_DECISIONS,
     LOCATION_DECISIONS,
@@ -237,6 +239,19 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
         },
         "locations": location_items,
         "works": result["candidates"]["works"],
+        "agents": {
+            f"{subject['entityType']}/{subject['sourceName']}": {
+                "kind": subject["entityType"],
+                "name": subject["sourceName"],
+                "occurrences": subject["occurrences"],
+                "candidates": subject["candidates"],
+                "decision": subject.get("decision"),
+                "publishable": result["publishable"]["agents"].get(
+                    f"{subject['entityType']}/{subject['sourceName']}"
+                ),
+            }
+            for subject in result["candidates"]["agents"]
+        },
         "contestedClaims": _frontend_authority_claims(result["contestedClaims"]),
         "editionClaims": edition_claims,
     }
@@ -254,6 +269,8 @@ def main() -> None:
         "szd-work-index": Path(SZD_WORK_INDEX),
         "edition-modeling-decisions": Path(EDITION_MODELING_DECISIONS),
         "classified-source": Path(STEP_04_OUTPUT),
+        "agent-reconciliation": Path(AGENT_RECONCILIATION),
+        "agent-decisions": Path(AGENT_DECISIONS),
     }
     for description, path in input_paths.items():
         if not path.exists():
@@ -291,6 +308,8 @@ def main() -> None:
         work_decisions,
         authorities,
         load_csv(STEP_04_OUTPUT),
+        _read_json(input_paths["agent-reconciliation"]),
+        _read_json(input_paths["agent-decisions"]),
     )
     generated_at = datetime.now(timezone.utc).isoformat()
     # LF-normalize so the recorded provenance hash is independent of the
@@ -342,6 +361,9 @@ def main() -> None:
             ),
             "workDecisions": len(result["decisions"]["workDecisions"]),
             "publishableWorkLinks": len(result["publishable"]["works"]),
+            "agentSubjects": len(result["candidates"]["agents"]),
+            "agentDecisions": len(result["decisions"]["agentDecisions"]),
+            "publishableAgentLinks": len(result["publishable"]["agents"]),
             "reviewCases": result["queue"]["caseCount"],
             "contestedAuthorityClaims": len(result["contestedClaims"]),
             "contestedEditionClaims": len(edition_dataset["contestedClaims"]),

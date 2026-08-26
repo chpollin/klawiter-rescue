@@ -309,6 +309,91 @@ def _location_source_occurrences(
     return occurrences
 
 
+def build_agent_candidates(agent_reconciliation: dict) -> list[dict]:
+    """Rank frozen Wikidata candidates for translator and publisher names.
+
+    Proposals only: like locations and works, an agent name publishes an
+    authority link exclusively through a confirmed decision.
+    """
+    subjects = []
+    for item in agent_reconciliation.get("agents", []):
+        kind, name = item["kind"], item["name"]
+        candidates = [
+            {
+                "candidateId": f"agent/{kind}/{quote(name, safe='')}/{hit['qid']}",
+                "qid": hit["qid"],
+                "label": hit["label"],
+                "score": hit["score"],
+                "matchExact": hit["matchExact"],
+                "uri": WIKIDATA_URI + hit["qid"],
+                "candidateSource": "wikidata-reconciliation-frozen",
+            }
+            for hit in item.get("candidates", [])
+        ]
+        subjects.append(
+            {
+                "entityType": kind,
+                "subjectId": f"klawiter:{kind}/{quote(name, safe='')}",
+                "sourceName": name,
+                "occurrences": item["occurrences"],
+                "candidates": candidates,
+                "decision": None,
+            }
+        )
+    subjects.sort(key=lambda subject: (subject["entityType"], subject["sourceName"]))
+    return subjects
+
+
+def apply_agent_decisions(subjects: list[dict], decisions: list[dict]) -> list[dict]:
+    """Attach reviewed agent decisions with the same guarantees locations
+    and works enjoy: unique subjects, evidence required, confirmed targets
+    must be candidates, corrections enter as marked candidates."""
+    by_key = {
+        (subject["entityType"], subject["sourceName"]): subject for subject in subjects
+    }
+    seen: set[tuple[str, str]] = set()
+    for decision in decisions:
+        key = (decision["entityType"], decision["subject"])
+        if key in seen:
+            raise ValueError(f"Duplicate agent decision for {key}")
+        seen.add(key)
+        subject = by_key.get(key)
+        if subject is None:
+            raise ValueError(f"Decision references absent agent: {key}")
+        action = decision["action"]
+        if action not in {"confirm", "correct", "reject", "unresolved"}:
+            raise ValueError(f"Unsupported decision action: {action}")
+        if not decision.get("evidence"):
+            raise ValueError(f"Decision lacks evidence: {decision['decisionId']}")
+        if action == "unresolved":
+            raise ValueError(
+                "Unresolved agent decisions need source-occurrence evidence, "
+                "which the pipeline does not collect for agents yet; keep "
+                f"{key} pending instead"
+            )
+        target = decision.get("qid")
+        candidate_targets = {candidate["qid"] for candidate in subject["candidates"]}
+        if action == "confirm" and target not in candidate_targets:
+            raise ValueError(f"Confirmed target is not a candidate for {key}: {target}")
+        if action == "correct" and target and target not in candidate_targets:
+            subject["candidates"].append(
+                {
+                    "candidateId": (
+                        f"agent/{decision['entityType']}/"
+                        f"{quote(decision['subject'], safe='')}/{target}"
+                    ),
+                    "qid": target,
+                    "label": decision.get("label") or decision["subject"],
+                    "score": None,
+                    "matchExact": False,
+                    "uri": WIKIDATA_URI + target,
+                    "candidateSource": "independent-review-correction",
+                }
+            )
+        subject["decision"] = decision
+    return subjects
+
+
 def _decision_subject(decision: dict, entity_type: str) -> str:
     return decision["subject"] if entity_type == "location" else decision["subjectId"]
 
@@ -371,7 +456,7 @@ def _priority(subject: dict, entity_type: str) -> str:
     candidates = subject["candidates"]
     if not candidates:
         return "P0"
-    if entity_type == "location":
+    if entity_type in ("location", "person", "publisher"):
         score = candidates[0].get("score")
         if score is None or score < 90:
             return "P1"
@@ -381,32 +466,43 @@ def _priority(subject: dict, entity_type: str) -> str:
     return "P2"
 
 
-def _review_queue(locations: list[dict], works: list[dict]) -> dict:
+def _queue_subject_groups(
+    locations: list[dict], works: list[dict], agents: list[dict]
+) -> list[tuple[str, dict]]:
+    groups = [("location", subject) for subject in locations]
+    groups += [("work", subject) for subject in works]
+    groups += [(subject["entityType"], subject) for subject in agents]
+    return groups
+
+
+def _queue_display(subject: dict, entity_type: str) -> str:
+    if entity_type == "location":
+        return subject["sourceLocation"]
+    if entity_type in ("person", "publisher"):
+        return subject["sourceName"]
+    return subject["subjectId"]
+
+
+def _review_queue(locations: list[dict], works: list[dict], agents: list[dict]) -> dict:
     cases = []
-    for entity_type, subjects in (("location", locations), ("work", works)):
-        for subject in subjects:
-            decision = subject.get("decision")
-            if decision and decision["action"] not in {"unresolved"}:
-                continue
-            subject_id = (
-                subject["sourceLocation"]
-                if entity_type == "location"
-                else subject["subjectId"]
-            )
-            cases.append(
-                {
-                    "entityType": entity_type,
-                    "subject": subject_id,
-                    "priority": _priority(subject, entity_type),
-                    "status": decision["action"] if decision else "proposed",
-                    "candidates": subject["candidates"],
-                    "evidence": {
-                        key: value
-                        for key, value in subject.items()
-                        if key not in {"candidates", "decision"}
-                    },
-                }
-            )
+    for entity_type, subject in _queue_subject_groups(locations, works, agents):
+        decision = subject.get("decision")
+        if decision and decision["action"] not in {"unresolved"}:
+            continue
+        cases.append(
+            {
+                "entityType": entity_type,
+                "subject": _queue_display(subject, entity_type),
+                "priority": _priority(subject, entity_type),
+                "status": decision["action"] if decision else "proposed",
+                "candidates": subject["candidates"],
+                "evidence": {
+                    key: value
+                    for key, value in subject.items()
+                    if key not in {"candidates", "decision"}
+                },
+            }
+        )
     order = {"P0": 0, "P1": 1, "P2": 2}
     cases.sort(
         key=lambda case: (
@@ -423,6 +519,25 @@ def _review_queue(locations: list[dict], works: list[dict]) -> dict:
         "caseCount": len(cases),
         "cases": cases,
     }
+
+
+def _publishable_agent_links(agents: list[dict]) -> dict:
+    links: dict = {}
+    for subject in agents:
+        decision = subject.get("decision")
+        if not decision or decision["action"] not in {"confirm", "correct"}:
+            continue
+        qid = decision["qid"]
+        candidate = next(item for item in subject["candidates"] if item["qid"] == qid)
+        links[f"{subject['entityType']}/{subject['sourceName']}"] = {
+            "kind": subject["entityType"],
+            "name": subject["sourceName"],
+            "qid": qid,
+            "label": candidate["label"],
+            "uri": WIKIDATA_URI + qid,
+            "decisionId": decision["decisionId"],
+        }
+    return links
 
 
 def _publishable_links(locations: list[dict], works: list[dict]) -> dict:
@@ -465,6 +580,7 @@ def _publishable_links(locations: list[dict], works: list[dict]) -> dict:
         ),
         "locations": location_links,
         "works": work_links,
+        "agents": {},
     }
 
 
@@ -580,6 +696,8 @@ def build_reconciliation(
     work_decisions: dict,
     szd_authorities: list[dict],
     source_rows: list[dict[str, str]] | None = None,
+    agent_reconciliation: dict | None = None,
+    agent_decisions: dict | None = None,
 ) -> dict:
     """Build all deterministic Gate-2 layers from frozen inputs."""
     location_subjects = apply_decisions(
@@ -594,18 +712,25 @@ def build_reconciliation(
         work_decisions["decisions"],
         "work",
     )
+    agent_subjects = apply_agent_decisions(
+        build_agent_candidates(agent_reconciliation or {}),
+        (agent_decisions or {}).get("decisions", []),
+    )
     decisions = {
         "contract": "Decisions remain separate from generated candidates and public links.",
         "locationDecisions": location_decisions["decisions"],
         "workDecisions": work_decisions["decisions"],
+        "agentDecisions": (agent_decisions or {}).get("decisions", []),
     }
     candidates = {
         "algorithmVersion": ALGORITHM_VERSION,
         "locations": location_subjects,
         "works": work_subjects,
+        "agents": agent_subjects,
     }
     publishable = _publishable_links(location_subjects, work_subjects)
-    queue = _review_queue(location_subjects, work_subjects)
+    publishable["agents"] = _publishable_agent_links(agent_subjects)
+    queue = _review_queue(location_subjects, work_subjects, agent_subjects)
     contested_claims = _contested_claims(location_subjects, work_subjects)
     return {
         "candidates": candidates,

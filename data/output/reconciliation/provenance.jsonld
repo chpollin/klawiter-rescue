@@ -13,7 +13,7 @@
     {
       "@id": "klawiter:run/gate2-reconciliation",
       "@type": "prov:Activity",
-      "prov:generatedAtTime": "2026-08-26T18:21:21.776116+00:00",
+      "prov:generatedAtTime": "2026-08-26T18:39:30.196720+00:00",
       "prov:qualifiedAssociation": {
         "@type": "prov:Association",
         "prov:agent": {
@@ -24,6 +24,12 @@
         }
       },
       "prov:used": [
+        {
+          "@id": "klawiter:gate2-input/agent-decisions"
+        },
+        {
+          "@id": "klawiter:gate2-input/agent-reconciliation"
+        },
         {
           "@id": "klawiter:gate2-input/classified-source"
         },
@@ -65,7 +71,19 @@
       "@id": "klawiter:plan/gate2-v1",
       "@type": "prov:Plan",
       "klawiter:algorithmVersion": "1.1",
-      "klawiter:sourceCodeSha256": "819267ac9c8a3047f81c85c649f99357c684207e13a4eea540a250d51826c008"
+      "klawiter:sourceCodeSha256": "970b901749cb68cd2bfeb640fbb4ef3b601fad94e0b2c4b4774e87234de45516"
+    },
+    {
+      "@id": "klawiter:gate2-input/agent-decisions",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "789f96bc12e201947e17209f540d014f7b71a7ec7e6372ee174e565ae09d445b",
+      "prov:atLocation": "data/reconciliation/agent-decisions.json"
+    },
+    {
+      "@id": "klawiter:gate2-input/agent-reconciliation",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "c7d222f44a3161249fcdd378bcd3a1e2842abf2361e5bf6f24abc6a3d39fb7f8",
+      "prov:atLocation": "data/provenance/agent-reconciliation.json"
     },
     {
       "@id": "klawiter:gate2-input/classified-source",

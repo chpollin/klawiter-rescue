@@ -1,4 +1,5 @@
 {
+  "agents": {},
   "locations": {
     "Amsterdam": {
       "decisionId": "location/Amsterdam/Q727",

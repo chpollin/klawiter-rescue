@@ -131,21 +131,30 @@ def test_missing_normalization_table_fails_fast(
         normalize.load_json("location_normalize.json")
 
 
-def test_refreezing_tool_refuses_without_explicit_switch() -> None:
-    """reconcile_locations overwrites frozen, hash-bound Gate-2 inputs from
-    the network; without the explicit switch it must refuse before any
+@pytest.mark.parametrize(
+    ("script", "frozen_target"),
+    [
+        ("reconcile_locations.py", "docs/data/locations.json"),
+        ("reconcile_agents.py", "data/provenance/agent-reconciliation.json"),
+    ],
+)
+def test_refreezing_tool_refuses_without_explicit_switch(
+    script: str, frozen_target: str
+) -> None:
+    """Refreezing tools overwrite frozen, hash-bound Gate-2 inputs from the
+    network; without the explicit switch they must refuse before any
     network call or write."""
     import hashlib
     import subprocess
 
-    locations = Path("docs/data/locations.json")
-    before = hashlib.sha256(locations.read_bytes()).hexdigest()
+    target = Path(frozen_target)
+    before = hashlib.sha256(target.read_bytes()).hexdigest()
     result = subprocess.run(
-        [sys.executable, str(Path("pipeline") / "reconcile_locations.py")],
+        [sys.executable, str(Path("pipeline") / script)],
         capture_output=True,
         text=True,
         check=False,
     )
     assert result.returncode == 2
     assert "REFUSED" in result.stderr
-    assert hashlib.sha256(locations.read_bytes()).hexdigest() == before
+    assert hashlib.sha256(target.read_bytes()).hexdigest() == before

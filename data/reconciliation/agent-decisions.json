@@ -1,0 +1,5 @@
+{
+  "schemaVersion": "1.0",
+  "decisionScope": "Human decisions linking translator (person) and publisher names to Wikidata authorities. Candidates come from the frozen data/provenance/agent-reconciliation.json; nothing publishes without a confirmed decision here (fail-closed). An unresolved decision additionally requires source-occurrence evidence, which the pipeline does not collect for agents yet; keep such cases pending instead.",
+  "decisions": []
+}

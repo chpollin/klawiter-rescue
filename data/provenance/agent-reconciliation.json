@@ -1,0 +1,1543 @@
+{
+  "agents": [
+    {
+      "candidates": [
+        {
+          "label": "Ahmet Arpad",
+          "matchExact": true,
+          "qid": "Q6082346",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Ahmet Arpad",
+      "occurrences": 15
+    },
+    {
+      "candidates": [
+        {
+          "label": "Alfredo Cahn",
+          "matchExact": true,
+          "qid": "Q94791017",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Alfredo Cahn",
+      "occurrences": 40
+    },
+    {
+      "candidates": [
+        {
+          "label": "Alzir Hella",
+          "matchExact": true,
+          "qid": "Q2840696",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Alzir Hella",
+      "occurrences": 36
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Alzir Hella and Olivier Bournac",
+      "occurrences": 16
+    },
+    {
+      "candidates": [
+        {
+          "label": "Anthea Bell",
+          "matchExact": true,
+          "qid": "Q4771483",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Anthea Bell",
+      "occurrences": 16
+    },
+    {
+      "candidates": [
+        {
+          "label": "Aristidh Ristani",
+          "matchExact": true,
+          "qid": "Q95312683",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Aristidh Ristani",
+      "occurrences": 13
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Brigitte Vergne-Cain and Gérard Rudent",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Carme Gala i Fernández",
+          "matchExact": false,
+          "qid": "Q85955783",
+          "score": 62
+        }
+      ],
+      "kind": "person",
+      "name": "Carme Gala",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Carme Gala i Fernández",
+          "matchExact": false,
+          "qid": "Q85955783",
+          "score": 95
+        }
+      ],
+      "kind": "person",
+      "name": "Carme Gala Fernández",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Changshan Shu",
+          "matchExact": true,
+          "qid": "Q137150724",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Changshan Shu",
+      "occurrences": 6
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Claudio Gancho",
+      "occurrences": 24
+    },
+    {
+      "candidates": [
+        {
+          "label": "Dimitri Yu. Bardin",
+          "matchExact": false,
+          "qid": "Q113634336",
+          "score": 56
+        },
+        {
+          "label": "Dimitre Tsontchev",
+          "matchExact": false,
+          "qid": "Q59528149",
+          "score": 53
+        },
+        {
+          "label": "Dimitra Kardassi",
+          "matchExact": false,
+          "qid": "Q105877221",
+          "score": 48
+        },
+        {
+          "label": "Dimitri Bourilkov",
+          "matchExact": false,
+          "qid": "Q57402391",
+          "score": 48
+        }
+      ],
+      "kind": "person",
+      "name": "Dimit",
+      "occurrences": 35
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Eden and Cedar Paul",
+      "occurrences": 12
+    },
+    {
+      "candidates": [
+        {
+          "label": "Eugen Relgis",
+          "matchExact": true,
+          "qid": "Q2904922",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Eugen Relgis",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Hugo Hultenberg",
+          "matchExact": true,
+          "qid": "Q5816517",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Hugo Hultenberg",
+      "occurrences": 14
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Hugo Moss",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Hélène Denis",
+          "matchExact": true,
+          "qid": "Q114795918",
+          "score": 100
+        },
+        {
+          "label": "Hélène Devès",
+          "matchExact": false,
+          "qid": "Q131845298",
+          "score": 83
+        },
+        {
+          "label": "Hélène Saint Denis",
+          "matchExact": false,
+          "qid": "Q97068675",
+          "score": 80
+        }
+      ],
+      "kind": "person",
+      "name": "Hélène Denis",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Jacques Le Rider",
+          "matchExact": true,
+          "qid": "Q820139",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Jacques Le Rider",
+      "occurrences": 12
+    },
+    {
+      "candidates": [
+        {
+          "label": "Joan Fontcuberta i Gel",
+          "matchExact": false,
+          "qid": "Q16976740",
+          "score": 100
+        },
+        {
+          "label": "Joan Fontcuberta",
+          "matchExact": false,
+          "qid": "Q3088175",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Joan Fontcuberta",
+      "occurrences": 10
+    },
+    {
+      "candidates": [
+        {
+          "label": "Joaquín Verdaguer Travessí",
+          "matchExact": true,
+          "qid": "Q63871165",
+          "score": 100
+        },
+        {
+          "label": "Joaquim Verdaguer i Caballé",
+          "matchExact": false,
+          "qid": "Q93387017",
+          "score": 81
+        },
+        {
+          "label": "Joaquim Salarich i Verdaguer",
+          "matchExact": false,
+          "qid": "Q22337933",
+          "score": 71
+        }
+      ],
+      "kind": "person",
+      "name": "Joaquín Verdaguer",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Jorgji Doksani",
+          "matchExact": true,
+          "qid": "Q115541760",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Jorgji Doksani",
+      "occurrences": 9
+    },
+    {
+      "candidates": [
+        {
+          "label": "José Fernández Serrano",
+          "matchExact": false,
+          "qid": "Q12260817",
+          "score": 100
+        },
+        {
+          "label": "José Fernández",
+          "matchExact": false,
+          "qid": "Q2052820",
+          "score": 100
+        },
+        {
+          "label": "José Fernández",
+          "matchExact": false,
+          "qid": "Q705656",
+          "score": 100
+        },
+        {
+          "label": "Tomatito",
+          "matchExact": false,
+          "qid": "Q729964",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "José Fernández",
+      "occurrences": 8
+    },
+    {
+      "candidates": [
+        {
+          "label": "Josep Lleonart i Nart",
+          "matchExact": false,
+          "qid": "Q11928624",
+          "score": 84
+        }
+      ],
+      "kind": "person",
+      "name": "José Lleonart",
+      "occurrences": 11
+    },
+    {
+      "candidates": [
+        {
+          "label": "Kristina Michahelles",
+          "matchExact": true,
+          "qid": "Q132807635",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Kristina Michahelles",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Liliana Scalero",
+          "matchExact": true,
+          "qid": "Q93251270",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Liliana Scalero",
+      "occurrences": 7
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Ljuba and Rudolf Pellarovi",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Marc Jiménez Buzzi",
+          "matchExact": true,
+          "qid": "Q133518623",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Marc Jiménez Buzzi",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Màrius Verdaguer Travesi",
+          "matchExact": true,
+          "qid": "Q11938192",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Mario Verdaguer",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Mattia Mantovani",
+          "matchExact": false,
+          "qid": "Q113753538",
+          "score": 100
+        },
+        {
+          "label": "Mattia Mantovani",
+          "matchExact": false,
+          "qid": "Q130764939",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Mattia Mantovani",
+      "occurrences": 13
+    },
+    {
+      "candidates": [
+        {
+          "label": "Narkiz Bunin",
+          "matchExact": true,
+          "qid": "Q46566291",
+          "score": 100
+        },
+        {
+          "label": "Vjačeslav N. Bunin",
+          "matchExact": false,
+          "qid": "Q112370502",
+          "score": 58
+        }
+      ],
+      "kind": "person",
+      "name": "N. Bunin",
+      "occurrences": 13
+    },
+    {
+      "candidates": [
+        {
+          "label": "Nicolás Gelormini",
+          "matchExact": true,
+          "qid": "Q132701773",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Nicolás Gelormini",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Nikola",
+          "matchExact": true,
+          "qid": "Q108463146",
+          "score": 100
+        },
+        {
+          "label": "Nikolaus von Myra",
+          "matchExact": false,
+          "qid": "Q44269",
+          "score": 92
+        },
+        {
+          "label": "Nikola Žigić",
+          "matchExact": false,
+          "qid": "Q201373",
+          "score": 67
+        },
+        {
+          "label": "Nikola Tesla",
+          "matchExact": false,
+          "qid": "Q9036",
+          "score": 67
+        }
+      ],
+      "kind": "person",
+      "name": "Nikola",
+      "occurrences": 8
+    },
+    {
+      "candidates": [
+        {
+          "label": "Robert Gallo",
+          "matchExact": false,
+          "qid": "Q469904",
+          "score": 83
+        },
+        {
+          "label": "Rudolf Galis",
+          "matchExact": false,
+          "qid": "Q58926550",
+          "score": 83
+        },
+        {
+          "label": "Romano Galeffi",
+          "matchExact": false,
+          "qid": "Q3940668",
+          "score": 71
+        },
+        {
+          "label": "Rachael V. Gallagher",
+          "matchExact": false,
+          "qid": "Q62558788",
+          "score": 62
+        }
+      ],
+      "kind": "person",
+      "name": "R. Gal",
+      "occurrences": 9
+    },
+    {
+      "candidates": [
+        {
+          "label": "Reinier Pauw",
+          "matchExact": false,
+          "qid": "Q2141639",
+          "score": 86
+        },
+        {
+          "label": "Reinier Pauw",
+          "matchExact": false,
+          "qid": "Q2141641",
+          "score": 86
+        },
+        {
+          "label": "Reinier Pauw",
+          "matchExact": false,
+          "qid": "Q4026388",
+          "score": 86
+        },
+        {
+          "label": "Reinier Piëete",
+          "matchExact": false,
+          "qid": "Q96989009",
+          "score": 78
+        },
+        {
+          "label": "Reinier Pletting",
+          "matchExact": false,
+          "qid": "Q114198808",
+          "score": 72
+        },
+        {
+          "label": "Reinier Peersman",
+          "matchExact": false,
+          "qid": "Q130863410",
+          "score": 72
+        }
+      ],
+      "kind": "person",
+      "name": "Reinier P",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Semyon Fridlyand",
+          "matchExact": false,
+          "qid": "Q4492732",
+          "score": 91
+        }
+      ],
+      "kind": "person",
+      "name": "S. Fridliand",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Sigisfredo Krebs",
+          "matchExact": true,
+          "qid": "Q111050300",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Sigfrido Krebs",
+      "occurrences": 16
+    },
+    {
+      "candidates": [
+        {
+          "label": "Stanko Jarc",
+          "matchExact": true,
+          "qid": "Q55681621",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Stanko Jarc",
+      "occurrences": 15
+    },
+    {
+      "candidates": [
+        {
+          "label": "Stefan Peno",
+          "matchExact": false,
+          "qid": "Q18719871",
+          "score": 90
+        },
+        {
+          "label": "Ștefan Petică",
+          "matchExact": false,
+          "qid": "Q397146",
+          "score": 82
+        },
+        {
+          "label": "Stefan Pejtschew",
+          "matchExact": false,
+          "qid": "Q12295266",
+          "score": 78
+        },
+        {
+          "label": "Stefan Persson",
+          "matchExact": false,
+          "qid": "Q732202",
+          "score": 78
+        },
+        {
+          "label": "Stefan Petzner",
+          "matchExact": false,
+          "qid": "Q93772",
+          "score": 78
+        }
+      ],
+      "kind": "person",
+      "name": "Stefan Pe",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Stefan Zweig",
+          "matchExact": false,
+          "qid": "Q78491",
+          "score": 100
+        },
+        {
+          "label": "Stefan Zweigle",
+          "matchExact": false,
+          "qid": "Q112376695",
+          "score": 92
+        }
+      ],
+      "kind": "person",
+      "name": "Stefan Zweig",
+      "occurrences": 12
+    },
+    {
+      "candidates": [
+        {
+          "label": "Tristán La Rosa",
+          "matchExact": true,
+          "qid": "Q93430925",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Tristán La Rosa",
+      "occurrences": 21
+    },
+    {
+      "candidates": [
+        {
+          "label": "Vladislav Roslyakov",
+          "matchExact": false,
+          "qid": "Q58860743",
+          "score": 100
+        },
+        {
+          "label": "Stephen Vladislav II of Syrmia",
+          "matchExact": false,
+          "qid": "Q661663",
+          "score": 100
+        },
+        {
+          "label": "Vladislav Šimák",
+          "matchExact": false,
+          "qid": "Q75562869",
+          "score": 75
+        },
+        {
+          "label": "Vladislav Balagura",
+          "matchExact": false,
+          "qid": "Q64857493",
+          "score": 67
+        }
+      ],
+      "kind": "person",
+      "name": "Vladislav",
+      "occurrences": 28
+    },
+    {
+      "candidates": [],
+      "kind": "person",
+      "name": "Věra Houbová and Karel Houba",
+      "occurrences": 8
+    },
+    {
+      "candidates": [
+        {
+          "label": "Will Stone",
+          "matchExact": false,
+          "qid": "Q117212151",
+          "score": 100
+        },
+        {
+          "label": "Will Stone",
+          "matchExact": false,
+          "qid": "Q126852621",
+          "score": 100
+        },
+        {
+          "label": "Will Stone",
+          "matchExact": false,
+          "qid": "Q84532639",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Will Stone",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Yan Zhu",
+          "matchExact": false,
+          "qid": "Q34781863",
+          "score": 100
+        },
+        {
+          "label": "Yan Zhu",
+          "matchExact": false,
+          "qid": "Q43073575",
+          "score": 100
+        },
+        {
+          "label": "Yan Zhu",
+          "matchExact": false,
+          "qid": "Q45532384",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Yan Zhu",
+      "occurrences": 133
+    },
+    {
+      "candidates": [
+        {
+          "label": "Zhang Yushu",
+          "matchExact": false,
+          "qid": "Q11068801",
+          "score": 100
+        },
+        {
+          "label": "Zhang Yushu",
+          "matchExact": false,
+          "qid": "Q45682109",
+          "score": 100
+        },
+        {
+          "label": "Yushu Zhang",
+          "matchExact": false,
+          "qid": "Q91939709",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Yushu Zhang",
+      "occurrences": 14
+    },
+    {
+      "candidates": [
+        {
+          "label": "Zhongfu Gao",
+          "matchExact": false,
+          "qid": "Q136566959",
+          "score": 100
+        },
+        {
+          "label": "Gao Zhongfu",
+          "matchExact": false,
+          "qid": "Q45691182",
+          "score": 100
+        },
+        {
+          "label": "Gao Zhongfu",
+          "matchExact": false,
+          "qid": "Q65893373",
+          "score": 100
+        }
+      ],
+      "kind": "person",
+      "name": "Zhongfu Gao",
+      "occurrences": 5
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "1984 edition",
+      "occurrences": 10
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "223p. 1st edition",
+      "occurrences": 5
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "A bilingual edition",
+      "occurrences": 5
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Acantilado / Quaderns Crema",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Éditions Albin Michel",
+          "matchExact": true,
+          "qid": "Q2190366",
+          "score": 100
+        },
+        {
+          "label": "Librairie Albin Michel",
+          "matchExact": false,
+          "qid": "Q109356043",
+          "score": 71
+        }
+      ],
+      "kind": "publisher",
+      "name": "Albin Michel",
+      "occurrences": 5
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Ariadne Press",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Armando Dadò Editore",
+          "matchExact": true,
+          "qid": "Q678274",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Armando Dadò Editore",
+      "occurrences": 16
+    },
+    {
+      "candidates": [
+        {
+          "label": "Aufbau-Verlag",
+          "matchExact": true,
+          "qid": "Q316922",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Aufbau-Verlag",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Belfonds",
+          "matchExact": false,
+          "qid": "Q1095353",
+          "score": 100
+        },
+        {
+          "label": "Belfond",
+          "matchExact": false,
+          "qid": "Q109571755",
+          "score": 100
+        },
+        {
+          "label": "Belfond",
+          "matchExact": false,
+          "qid": "Q3579243",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Belfond",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Bermann-Fischer Verlag",
+          "matchExact": true,
+          "qid": "Q16854946",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Bermann-Fischer Verlag",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Éditions Grasset",
+          "matchExact": false,
+          "qid": "Q621534",
+          "score": 77
+        }
+      ],
+      "kind": "publisher",
+      "name": "Bernard Grasset",
+      "occurrences": 17
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Casa Stefan Zweig / Memória Brasil",
+      "occurrences": 14
+    },
+    {
+      "candidates": [
+        {
+          "label": "Claridad",
+          "matchExact": true,
+          "qid": "Q5489986",
+          "score": 100
+        },
+        {
+          "label": "Editorial Claridad",
+          "matchExact": false,
+          "qid": "Q19434164",
+          "score": 64
+        }
+      ],
+      "kind": "publisher",
+      "name": "Claridad",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Company Flow",
+          "matchExact": false,
+          "qid": "Q449083",
+          "score": 86
+        },
+        {
+          "label": "F. A. Davis Company",
+          "matchExact": false,
+          "qid": "Q5423798",
+          "score": 69
+        },
+        {
+          "label": "F. E. Compton & Company",
+          "matchExact": false,
+          "qid": "Q111474953",
+          "score": 64
+        },
+        {
+          "label": "F. W. Woolworth Company",
+          "matchExact": false,
+          "qid": "Q642212",
+          "score": 60
+        }
+      ],
+      "kind": "publisher",
+      "name": "Company F",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Diogenes Verlag",
+          "matchExact": true,
+          "qid": "Q1226810",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Diogenes Verlag",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Edition Roesner",
+          "matchExact": true,
+          "qid": "Q138884058",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Edition Roesner",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Eesti Raamat",
+          "matchExact": false,
+          "qid": "Q16413178",
+          "score": 100
+        },
+        {
+          "label": "Eesti Raamat",
+          "matchExact": false,
+          "qid": "Q61401934",
+          "score": 100
+        },
+        {
+          "label": "Estonian Librarians Association",
+          "matchExact": false,
+          "qid": "Q16410457",
+          "score": 56
+        }
+      ],
+      "kind": "publisher",
+      "name": "Eesti Raamat",
+      "occurrences": 6
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Ekdoseis Roes",
+      "occurrences": 7
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Evening edition",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "S. Fischer Verlag",
+          "matchExact": true,
+          "qid": "Q481576",
+          "score": 100
+        },
+        {
+          "label": "Fischer-Taschenbuch-Verlag",
+          "matchExact": false,
+          "qid": "Q20088183",
+          "score": 84
+        }
+      ],
+      "kind": "publisher",
+      "name": "Fischer Taschenbuch",
+      "occurrences": 16
+    },
+    {
+      "candidates": [
+        {
+          "label": "Fischer-Taschenbuch-Verlag",
+          "matchExact": true,
+          "qid": "Q20088183",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Fischer Taschenbuch Verlag",
+      "occurrences": 22
+    },
+    {
+      "candidates": [
+        {
+          "label": "Flammarion",
+          "matchExact": true,
+          "qid": "Q3117417",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Flammarion",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Éditions Gallimard",
+          "matchExact": true,
+          "qid": "Q273819",
+          "score": 100
+        },
+        {
+          "label": "Gallimard Loisirs",
+          "matchExact": false,
+          "qid": "Q96779774",
+          "score": 69
+        },
+        {
+          "label": "Gallimard Jeunesse",
+          "matchExact": false,
+          "qid": "Q2522678",
+          "score": 67
+        }
+      ],
+      "kind": "publisher",
+      "name": "Gallimard",
+      "occurrences": 11
+    },
+    {
+      "candidates": [
+        {
+          "label": "SPV GmbH",
+          "matchExact": false,
+          "qid": "Q694052",
+          "score": 67
+        },
+        {
+          "label": "Robert Bosch",
+          "matchExact": false,
+          "qid": "Q234021",
+          "score": 50
+        },
+        {
+          "label": "Red Bull GmbH",
+          "matchExact": false,
+          "qid": "Q698639",
+          "score": 50
+        }
+      ],
+      "kind": "publisher",
+      "name": "GmbH",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Guanabara",
+          "matchExact": true,
+          "qid": "Q1155409",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Guanabara",
+      "occurrences": 10
+    },
+    {
+      "candidates": [
+        {
+          "label": "Verlag Herbert Reichner",
+          "matchExact": true,
+          "qid": "Q122922233",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Herbert Reichner Verlag",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Huaxia chubanshe",
+          "matchExact": true,
+          "qid": "Q1354419",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Huaxia Chubanshe",
+      "occurrences": 8
+    },
+    {
+      "candidates": [
+        {
+          "label": "Insel Verlag",
+          "matchExact": true,
+          "qid": "Q316015",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Insel Verlag",
+      "occurrences": 13
+    },
+    {
+      "candidates": [
+        {
+          "label": "Insel Verlag",
+          "matchExact": true,
+          "qid": "Q316015",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Insel-Verlag",
+      "occurrences": 46
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Izdatel'stvo \"AST\"",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Isla de la Juventud",
+          "matchExact": false,
+          "qid": "Q115027",
+          "score": 100
+        },
+        {
+          "label": "Juventud de Las Piedras",
+          "matchExact": false,
+          "qid": "Q217644",
+          "score": 100
+        },
+        {
+          "label": "EC Juventude",
+          "matchExact": false,
+          "qid": "Q910453",
+          "score": 94
+        },
+        {
+          "label": "Juventud Antoniana",
+          "matchExact": false,
+          "qid": "Q2706716",
+          "score": 62
+        }
+      ],
+      "kind": "publisher",
+      "name": "Juventud",
+      "occurrences": 73
+    },
+    {
+      "candidates": [
+        {
+          "label": "Kindler Verlag",
+          "matchExact": true,
+          "qid": "Q1741966",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Kindler Verlag",
+      "occurrences": 6
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Königshausen & Neumann GmbH",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Königshausen & Neumann",
+          "matchExact": false,
+          "qid": "Q830655",
+          "score": 85
+        }
+      ],
+      "kind": "publisher",
+      "name": "Königshausen & Neumann Verlag",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Le Livre de poche",
+          "matchExact": true,
+          "qid": "Q141016224",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Le Livre de Poche",
+      "occurrences": 8
+    },
+    {
+      "candidates": [
+        {
+          "label": "Moritz Perles",
+          "matchExact": false,
+          "qid": "Q1948025",
+          "score": 79
+        }
+      ],
+      "kind": "publisher",
+      "name": "Moritz Perles Verlag",
+      "occurrences": 5
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "National Publication & Printing House",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "New Edition",
+          "matchExact": true,
+          "qid": "Q1370588",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "New edition",
+      "occurrences": 6
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Otokar Keršovani",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Paul Zsolnay Verlag",
+          "matchExact": true,
+          "qid": "Q176169",
+          "score": 100
+        },
+        {
+          "label": "Deuticke Verlag",
+          "matchExact": false,
+          "qid": "Q994470",
+          "score": 47
+        }
+      ],
+      "kind": "publisher",
+      "name": "Paul Zsolnay Verlag",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Payot & Rivages",
+          "matchExact": true,
+          "qid": "Q3373262",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Payot & Rivages",
+      "occurrences": 6
+    },
+    {
+      "candidates": [
+        {
+          "label": "Peter Lang",
+          "matchExact": true,
+          "qid": "Q669937",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Peter Lang Verlag",
+      "occurrences": 11
+    },
+    {
+      "candidates": [
+        {
+          "label": "Reclam",
+          "matchExact": false,
+          "qid": "Q558781",
+          "score": 91
+        }
+      ],
+      "kind": "publisher",
+      "name": "Philipp Reclam jun. Verlag",
+      "occurrences": 7
+    },
+    {
+      "candidates": [
+        {
+          "label": "Pushkin Press",
+          "matchExact": true,
+          "qid": "Q18161302",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Pushkin Press",
+      "occurrences": 26
+    },
+    {
+      "candidates": [
+        {
+          "label": "S. Fischer Verlag",
+          "matchExact": true,
+          "qid": "Q481576",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "S. Fischer Verlag",
+      "occurrences": 59
+    },
+    {
+      "candidates": [
+        {
+          "label": "Schuster & Loeffler",
+          "matchExact": false,
+          "qid": "Q109497803",
+          "score": 83
+        }
+      ],
+      "kind": "publisher",
+      "name": "Schuster & Loeffler Verlag",
+      "occurrences": 9
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "Shanxi Renmin Chubanshe",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Skoglunds bokförlag",
+          "matchExact": true,
+          "qid": "Q10670302",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Skoglunds Bokförlag",
+      "occurrences": 8
+    },
+    {
+      "candidates": [
+        {
+          "label": "Stock",
+          "matchExact": true,
+          "qid": "Q3579517",
+          "score": 100
+        },
+        {
+          "label": "Stockholms universitet",
+          "matchExact": false,
+          "qid": "Q221645",
+          "score": 71
+        },
+        {
+          "label": "Stockholm Municipality",
+          "matchExact": false,
+          "qid": "Q506250",
+          "score": 71
+        },
+        {
+          "label": "Tokioter Börse",
+          "matchExact": false,
+          "qid": "Q217475",
+          "score": 53
+        }
+      ],
+      "kind": "publisher",
+      "name": "Stock",
+      "occurrences": 12
+    },
+    {
+      "candidates": [
+        {
+          "label": "Suhrkamp Verlag",
+          "matchExact": true,
+          "qid": "Q301609",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "Suhrkamp Verlag",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "Viking Press",
+          "matchExact": true,
+          "qid": "Q921536",
+          "score": 100
+        }
+      ],
+      "kind": "publisher",
+      "name": "The Viking Press",
+      "occurrences": 11
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "der Internationalen Stefan-Zweig-Gesellschaft",
+      "occurrences": 5
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "eBooks of Life Writing",
+      "occurrences": 5
+    },
+    {
+      "candidates": [
+        {
+          "label": "L'Harmattan",
+          "matchExact": false,
+          "qid": "Q3579383",
+          "score": 52
+        },
+        {
+          "label": "Edition of Contemporary Music",
+          "matchExact": false,
+          "qid": "Q311439",
+          "score": 39
+        }
+      ],
+      "kind": "publisher",
+      "name": "edition",
+      "occurrences": 6
+    },
+    {
+      "candidates": [],
+      "kind": "publisher",
+      "name": "von Philipp Reclam jun",
+      "occurrences": 5
+    }
+  ],
+  "contract": "Frozen Wikidata reconciliation candidates for translators and publishers. Proposals only: nothing publishes without a confirmed decision in data/reconciliation/agent-decisions.json.",
+  "parameters": {
+    "batchSize": 20,
+    "candidateLimitPerLanguage": 3,
+    "languages": [
+      "en",
+      "de"
+    ],
+    "minOccurrences": 5,
+    "types": {
+      "person": "Q5",
+      "publisher": "Q43229"
+    }
+  },
+  "schemaVersion": "1.0"
+}

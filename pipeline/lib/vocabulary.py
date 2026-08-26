@@ -216,32 +216,42 @@ def plain_value(value):
     return value
 
 
-def to_rdf_entry(entry):
+def to_rdf_entry(entry, agent_links=None):
     """Serialize the internal flat entry to its published RDF shape.
 
     The pipeline works on flat display values throughout; only the written
     JSON-LD carries language-tagged titles and resource nodes for agents
     and places. Everything downstream of the written dataset reads through
-    plain_value.
+    plain_value. agent_links maps (kind, name) to a reviewed Wikidata URI
+    (fail-closed: only confirmed decisions reach this map).
     """
+    agent_links = agent_links or {}
     rdf = dict(entry)
     code = rdf.get("inLanguage")
     if code and rdf.get("name"):
         rdf["name"] = {"@value": rdf["name"], "@language": code}
     publisher = rdf.get("publisher")
     if publisher:
-        rdf["publisher"] = {
+        node = {
             "@id": resource_iri("publisher", publisher),
             "@type": "schema:Organization",
             "name": publisher,
         }
+        link = agent_links.get(("publisher", publisher))
+        if link:
+            node["sameAs"] = link
+        rdf["publisher"] = node
     translator = rdf.get("translator")
     if translator:
-        rdf["translator"] = {
+        node = {
             "@id": resource_iri("person", translator),
             "@type": "schema:Person",
             "name": translator,
         }
+        link = agent_links.get(("person", translator))
+        if link:
+            node["sameAs"] = link
+        rdf["translator"] = node
     location = rdf.get("locationCreated")
     if location:
         place = {

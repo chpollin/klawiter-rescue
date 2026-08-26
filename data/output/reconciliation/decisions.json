@@ -1,4 +1,5 @@
 {
+  "agentDecisions": [],
   "contract": "Decisions remain separate from generated candidates and public links.",
   "locationDecisions": [
     {

@@ -62,6 +62,18 @@ def load_location_wikidata():
     return uri_map
 
 
+def load_agent_wikidata():
+    """Load only reviewed and publishable agent links from Gate 2."""
+    with open(OUTPUT_PUBLISHABLE_LINKS, "r", encoding="utf-8") as handle:
+        document = json.load(handle)
+    links = {
+        (link["kind"], link["name"]): link["uri"]
+        for link in document.get("agents", {}).values()
+    }
+    log.info("Loaded %d reviewed Wikidata agent links", len(links))
+    return links
+
+
 def safe_json_parse(value):
     """Parse a JSON string, returning empty list/None on failure."""
     if not value:
@@ -404,6 +416,7 @@ def main():
 
     repair_see_references(rows)
     location_uris = load_location_wikidata()
+    agent_links = load_agent_wikidata()
     reference_targets = build_reference_targets(rows)
     work_pages = load_work_pages()
     log.info(f"Work/Edition coupling targets: {len(work_pages)} pages")
@@ -444,7 +457,7 @@ def main():
             "dataset; this flat dataset is a derived convenience projection."
         ),
         "totalEntries": len(entries),
-        "entries": [to_rdf_entry(entry) for entry in entries],
+        "entries": [to_rdf_entry(entry, agent_links) for entry in entries],
     }
 
     write_json(OUTPUT_JSONLD, dataset, indent=2)
@@ -455,7 +468,7 @@ def main():
     for entry in entries:
         entry_id = entry.get("@id", "").split("/")[-1]
         if entry_id:
-            entry_file = {**CONTEXT, **to_rdf_entry(entry)}
+            entry_file = {**CONTEXT, **to_rdf_entry(entry, agent_links)}
             path = os.path.join(OUTPUT_ENTRIES_DIR, f"{entry_id}.jsonld")
             write_json(path, entry_file, indent=2)
 
