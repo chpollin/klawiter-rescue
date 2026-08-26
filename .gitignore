@@ -9,6 +9,12 @@ data/output/entries/
 # Regenerable No-Op overlay report (empty corrections store, byte-identical re-run)
 data/output/corrections-report.json
 
+# Bulk regenerable Gate-2 review material (internal sighting data, ~26 MB).
+# The Gate-2 manifest commits their SHA-256 and counts; the CI reproduce job
+# regenerates and verifies them. Never committed to the public repository.
+data/output/reconciliation/candidates.json
+data/output/reconciliation/review-queue.json
+
 # Environment / secrets
 .env
 pipeline/.env
@@ -16,6 +22,7 @@ pipeline/.env
 # Python cache
 __pycache__/
 *.pyc
+.venv/
 
 # Obsidian (user-specific workspace state)
 knowledge/.obsidian/

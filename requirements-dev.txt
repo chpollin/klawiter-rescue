@@ -1,4 +1,0 @@
-# Dependencies for running the test suite. LLM tests are deselected by
-# default (pytest.ini addopts); running them needs pydantic, google-genai
-# and GEMINI_API_KEY in addition. The frontend-logic bridge needs Node.
-pytest

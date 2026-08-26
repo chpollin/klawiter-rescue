@@ -1,0 +1,4 @@
+# Normalize all text to LF so read_bytes()-based provenance hashes
+# (segment_editions._code_hash, gate manifests) are platform-independent.
+* text=auto eol=lf
+data/raw/** binary
