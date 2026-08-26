@@ -4,50 +4,40 @@ aliases: [MOC, map of content, index]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
-method:
-  name: Promptotyping
-  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
-template:
-  name: Vorlage Index
-  version: 0.1
-  url: https://dhcraft.org/Promptotyping/promptotyping-document/index
-  alias: https://dhcraft.org/Promptotyping/#promptotyping-document-index
 status: complete
-language: en
-version: 0.3
+language: de
+version: 1.0
 tags: [index]
 created: 2026-04-12
-updated: 2026-07-18
+updated: 2026-08-21
 authors: [Christopher Pollin]
 related: [about, data, pipeline, frontend, production-readiness, testing, journal]
 ---
 
-# Klawiter Bibliography Knowledge Base
+# Klawiter Bibliography – Projektwissen
 
-Navigation node for the project knowledge base and the reading heuristic for its documents. This vault documents the data rescue of the Klawiter bibliography, addressed to a reviewer, a fresh coding agent, and the project maintainer returning after weeks. The current operational state and the open operator decisions live in the most recent entry of [[journal]], the volatile measured figures in their sources of truth (`data/output/quality-report.json`, `docs/data/klawiter.json` `_meta`, `.github/baseline-metrics.json`, and the pytest suite), never here.
+Diese Datei ist der Einstieg in das kanonische Projektwissen. Das Repository beschreibt hier langlebige Entscheidungen und den belegten Produktionsstand. Laufende Kennzahlen stammen aus `data/output/quality-report.json`, den Gate-Manifests, `.github/baseline-metrics.json` und der Testsuite.
 
-## Documents
+## Dokumente
 
-Each document carries one function. The function, not the file name, tells you which document to open for a given question.
+| Dokument | Zuständigkeit |
+|---|---|
+| [[about]] | Gegenstand, Herkunft, Verantwortlichkeiten und Publikationsrahmen |
+| [[data]] | Datenebenen, Modell, Provenienz, Reconciliation und Grenzen |
+| [[pipeline]] | ausführbare Transformation, Eingaben, Stufen und Wiederholbarkeit |
+| [[frontend]] | statische Rechercheoberfläche und Expert-in-the-Loop-Kuration |
+| [[production-readiness]] | ratifizierter Produktionsvertrag, Gate-Ergebnisse und Operator Point |
+| [[testing]] | Testschichten, Qualitätsnachweise und Aussagegrenzen |
+| [[journal]] | chronologische Entscheidungen und abgeschlossene Arbeitssitzungen |
 
-| Document | Function | Reading it answers |
-|---|---|---|
-| [[about]] | Identity | What is this project, its provenance, the Data Integrity Principle, the Forschungsverbund and DIA-XAI frame |
-| [[data]] | Material + model | The dataset: model, vocabulary blend, 16 entity types, entity fields, known quality issues, record census |
-| [[pipeline]] | Bauweise + decisions | The extraction pipeline: source tables, 8 stages, extraction decisions, encoding fix, regex patterns, data flow |
-| [[frontend]] | Gestalt + tool specification | Design system, personas, user stories, views, the exploration interface, and the EIL editing surface |
-| [[production-readiness]] | Plan + gates + decision basis | The path to the production-ready curation tool: two loops, provenance layers, gold standard, work packages, operator gates, the work/edition decision basis |
-| [[testing]] | Quality assurance | Test strategy in seven categories, field-level fidelity findings, what the suite can and cannot guarantee |
-| [[journal]] | Genese | Work diary, one entry per session, holding the current operational state |
+## Lesestrecken
 
-## Reading paths
+- Wiedereinstieg: [[journal]] → [[production-readiness]] → `git status -sb`.
+- Produktionslauf: [[pipeline]] → [[testing]] → [[data]].
+- Datenmodell und strittige Aussagen: [[data]] → [[production-readiness]].
+- Oberfläche und Kuration: [[frontend]] → [[data#Korrekturprotokoll]].
+- Projektkontext: [[about]] → [[production-readiness]].
 
-- Onboarding a new contributor: [[about]] → [[data]] → [[pipeline]].
-- Reproducing a data export: [[pipeline]] → [[data]] → [[journal]].
-- Understanding the curation tool and its open decisions: [[frontend#eil-curation-interface]] → [[production-readiness]].
-- Judging extraction quality: [[testing]] → [[data#record-census]].
-- Resuming work: [[journal]] → [[production-readiness]].
+## Autorität und Pflege
 
-## Convention
-
-This knowledge base follows the convention for Promptotyping Documents. It regulates the frontmatter schema, the reading heuristic, and the structural principles against which every document is legible. See [[Konvention Promptotyping Documents]] in the vault.
+`README.md` ist das ausführbare Benutzerhandbuch. `CLAUDE.md` ist die einzige repository-spezifische Agentenanweisung. Bei Widersprüchen haben Code, versionierte Entscheidungseingaben und erzeugte Prüfberichte Vorrang vor beschreibender Dokumentation. Historische Aussagen im [[journal]] bleiben als Verlauf erhalten und gelten nicht automatisch als aktueller Stand.

@@ -8,17 +8,27 @@ method:
   name: Promptotyping
   url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
-version: 0.3
+language: de
+version: 0.4
 tags: [journal]
 created: 2026-03-29
-updated: 2026-07-30
+updated: 2026-08-21
 ---
 
 # Journal
 
-Work diary for the Klawiter Bibliography project. One compact entry per substantive session with the fields Runde (what kind of round), Geändert (what changed), Entschieden (what was decided), Offen (what stays open).
+Arbeitsjournal der Klawiter Bibliography. Jede substantielle Sitzung dokumentiert Runde, Änderungen, Entscheidungen, offene Punkte und den nächsten belastbaren Wiedereinstieg.
 
 ---
+
+## 2026-08-21 — Session 25: Publikationslinien in kanonisches Projektwissen integriert
+
+**Runde.** Wissenskonsolidierung nach der Entscheidung, das extern als „Paper 2 Klawiter“ geführte Vorhaben und den Klawiter-Blogpost als eigenständige Publikationslinien zu schließen.
+**Geändert.** Die fachliche Substanz ist auf ihre dauerhaften Kontexte verteilt. `about.md` hält Beitrag, Publikationsstatus und DIA-XAI-Rolle fest; `pipeline.md` präzisiert die Methode und korrigiert die überholte Auslagerung von Werk/Ausgabe-Segmentierung und Reconciliation in separate Projekte; `frontend.md` benennt die Grenze zwischen öffentlicher Ressource und lokaler, auditierbarer Kuration; `testing.md` trennt Artefaktprüfung und qualitative DIA-XAI-Auswertung; `data.md` unterscheidet die bereits erfassten Korrektur-Episoden vom noch offenen aggregierten Protocol Read-out; `production-readiness.md` bindet die Erkenntnisse an die Ressource und das DIA-XAI-Werkzeug. Index, README und Repository-Anweisung weisen auf den kanonischen Publikationsstatus. Zwei verbliebene Verweise auf die konsolidierten Dateien `edition-model.md` und `eil-editing.md` zeigen jetzt auf `production-readiness.md` und `frontend.md`. Die Suche im aktuellen Arbeitsbaum und in der Git-Historie fand keine expliziten Repo-Verweise auf „Paper 2“ oder den Blogpost, die zusätzlich zu entfernen gewesen wären.
+**Entschieden.** Eigenständiges Klawiter-Paper und Klawiter-Blogpost erzeugen keine Publikations- oder Textaufgaben mehr. Methode, Zwei-Loop-Architektur, Gold Standard, Korrektur-Protokoll, Werk/Ausgabe-Modell und Provenienzschichten bleiben als Projektwissen und als Beitrag zur projektweiten DIA-XAI-Synthese erhalten. Die digitale Bibliographie, der Datensatz, die Software und das Vokabular bleiben zitierbare Veröffentlichungsartefakte.
+**Offen.** Die fachlichen Produktaufgaben bleiben unverändert. Dazu gehören die Editorinnen-Sichtung der Segmentierungs-Drafts, der Vollauf nach dieser Sichtung, die Reconciliation auf der Ausgaben-Ebene und die noch offenen EIL-Inkremente. Aus den geschlossenen Publikationslinien bleibt kein offener Punkt.
+
+**Der eine nächste Schritt.** Sichtung von `data/output/edition-samples/REVIEW.md` durch die Editorin; bei Freigabe Vollauf der Segmentierung über alle als mehrfach identifizierten Seiten.
 
 ## 2026-07-30 — Session 24: Wartungsrunde, Drift-Abgleich knowledge gegen Artefakte, antrag-eval-Hooks
 
@@ -33,7 +43,7 @@ Work diary for the Klawiter Bibliography project. One compact entry per substant
 
 **Runde.** Umsetzungs- und Entscheidungsrunde mit dem Operator, orchestriert mit Subagents.
 **Geändert.** Pipeline-Review-Fixes gelandet (Provenienz-Diff gegen Regex-Output statt Cache-Präsenz, atomare JSON-Writes, sichtbare SQL-Skips, Mojibake-Guard, plus Unit-Tests); Baseline auf den Juni-Datenstand nachgezogen; `klawiter:`-Vokabular maschinenlesbar publiziert (Turtle + JSON-LD); knowledge-Ordner von 16 auf 8 Dokumente konsolidiert (Ontologie in data, ADRs in pipeline/frontend, Exploration- und EIL-Spezifikation in frontend, Edition-Modell in production-readiness, Fehlerklassen in testing; HANDOFF, references, validation aufgelöst); CLAUDE.md und README von volatilen Quantitäten befreit; Gate-1-Stichproben-Gate ausgeführt (`pipeline/segment_editions.py`, 76 Ausgaben-Drafts, Blockabgrenzung 76/76 adversarial verifiziert, `data/output/edition-samples/REVIEW.md`).
-**Entschieden.** Alle vier Operator-Gates (siehe [[production-readiness#operator-entscheide-2026-07-18]]): Gate 1 dekomponieren, Gate 2 Reconciliation voll in die Produktionsreife, Gate 3 Druck-Merge spätere Ausbaustufe, Gate 4 Patch-Export kanonisch mit Write-Back als späterer Komfortschicht. Journal künftig im Kompaktformat.
+**Entschieden.** Alle vier Operator-Gates (siehe [[production-readiness#Operator-Entscheide (2026-07-18)]]): Gate 1 dekomponieren, Gate 2 Reconciliation voll in die Produktionsreife, Gate 3 Druck-Merge spätere Ausbaustufe, Gate 4 Patch-Export kanonisch mit Write-Back als späterer Komfortschicht. Journal künftig im Kompaktformat.
 **Offen.** Editorin-Sichtung der Segmentierungs-Drafts samt Tiefenentscheidungen vor dem Vollauf; PROV-Schicht für `klawiter.jsonld`; llmprov-Nachbarschaftsprüfung; drei Kopfzeilen-Reinigungsfälle aus der Verifikation.
 
 **Der eine nächste Schritt.** Sichtung von `data/output/edition-samples/REVIEW.md` durch die Editorin; bei Freigabe Vollauf der Segmentierung über alle als mehrfach identifizierten Seiten.
@@ -41,7 +51,7 @@ Work diary for the Klawiter Bibliography project. One compact entry per substant
 ## 2026-07-18 — Session 22: Modellierungsrunde Werk/Ausgabe
 
 **Runde.** Rein konzeptuelle Modellierungsrunde mit dem Operator, keine Implementierung, kein Pipeline-Lauf.
-**Geändert.** Werk/Ausgabe-Modell der Multi-Edition-Seiten als Wissensdokument eingearbeitet, [[production-readiness#work-edition-extension]] Arbeitspaket 1 auf Zielmodell plus Segmentierung plus Verifikation umformuliert, Gate-Abschnitt um Entscheidungsgrundlage und Gate-Reihenfolge ergänzt, [[data#work-edition-extension]] um einen Verweisabschnitt erweitert.
+**Geändert.** Werk/Ausgabe-Modell der Multi-Edition-Seiten als Wissensdokument eingearbeitet, [[production-readiness#Gate 1: Werk-/Ausgabe-Modell]] Arbeitspaket 1 auf Zielmodell plus Segmentierung plus Verifikation umformuliert, Gate-Abschnitt um Entscheidungsgrundlage und Gate-Reihenfolge ergänzt, [[data#Werk-/Ausgabe-Modell]] um einen Verweisabschnitt erweitert.
 **Entschieden.** Multi-Edition ist ein Ebenenfehler, kein Extraktionsfehler; die Wiki-Seite beschreibt ein Werk, die `'''[Jahr]:'''`-Blöcke Ausgaben, First-match-wins macht Verlag/Ort/Jahr systematisch unzuverlässig und Handkorrektur heilt das nicht (Bracket-Titel sind dasselbe Symptom). Zielmodell Werk/Ausgabe mit schema.org (`workExample`/`exampleOfWork`), FRBR/LRM und BIBFRAME konzeptuell, kein Ontologiewechsel; Evidenz je Ausgabe als W3C Web Annotation, Provenienz als PROV-O-Sidecar mit `_provenance` als abgeleiteter Frontend-Kurzform, Prüfschicht als SHACL plus EARL/DQV, publizierbares PROV-Profil `llmprov`; stabiles quellableitbares ID-Schema `klawiter:edition/{pageId}-{jahr}-{buchstabe}` als Vorbedingung, damit Neusegmentierung Editor-Patches und Zitierbarkeit nicht verwürfelt. Vorgehen über ein Editor-gesichtetes Stichproben-Gate vor Vollauf.
 **Offen.** Die vier Operator-Gate-Fragen bleiben unverändert, Gate 1 ist Gate 2 und 3 vorgelagert; der Editorin vorzulegen sind Auflagen-Unterzeilen als eigene Knoten oder strukturierte Beschreibung und Sammelband-Vorkommen über `schema:isPartOf`; die Nachbarschaftsprüfung des `llmprov`-Profils steht aus.
 
@@ -55,7 +65,7 @@ Work diary for the Klawiter Bibliography project. One compact entry per substant
 ## 2026-07-18 — Session 20: Konzeptrunde, EQUALIS-Entfernung, knowledge-Refactor
 
 **Runde.** Rein konzeptuelle Runde nach Operator-Entscheid, keine Implementierung, keine Pipeline-Läufe.
-**Geändert.** EQUALIS als Evaluationsframework restlos aus dem knowledge-Bestand entfernt und überall auf die hermeneutisch-qualitative Rahmung umgestellt, die frühere Ratio-als-Erfolgsbeleg-Formulierung durch die Protokoll-Rahmung ersetzt (Metrik-Sektion in [[data#correction-protocol]] heißt jetzt Correction Protocol, Dokumentationsgrundlage statt Messinstrument); knowledge-Ordner nach der Promptotyping-Konvention refactoriert, `index.md` von volatilen Statuszahlen befreit und selbsttragend gemacht; Konzeptdokument `production-readiness.md` angelegt mit Ist-Stand, den zwei Loops, den Provenienz-Schichten regex/llm/missing als Verifikationsgrundlage, dem Gold-Standard als messbarem Baustein, sechs geordneten Arbeitspaketen und vier Operator-Gate-Fragen.
+**Geändert.** EQUALIS als Evaluationsframework restlos aus dem knowledge-Bestand entfernt und überall auf die hermeneutisch-qualitative Rahmung umgestellt, die frühere Ratio-als-Erfolgsbeleg-Formulierung durch die Protokoll-Rahmung ersetzt (Metrik-Sektion in [[data#Korrekturprotokoll]] heißt jetzt Correction Protocol, Dokumentationsgrundlage statt Messinstrument); knowledge-Ordner nach der Promptotyping-Konvention refactoriert, `index.md` von volatilen Statuszahlen befreit und selbsttragend gemacht; Konzeptdokument `production-readiness.md` angelegt mit Ist-Stand, den zwei Loops, den Provenienz-Schichten regex/llm/missing als Verifikationsgrundlage, dem Gold-Standard als messbarem Baustein, sechs geordneten Arbeitspaketen und vier Operator-Gate-Fragen.
 **Entschieden.** Bewertung ist hermeneutisch-qualitativ, messbarer Baustein allein der im Werkzeug verifizierte Gold Standard, die Ratio ist kein Erfolgsbeleg; kein knowledge-Dokument gelöscht oder zusammengeführt, weil keine echte Redundanz vorliegt; operativer Stand lebt nach Konvention außerhalb des Navigationsdokuments.
 **Offen.** Die vier Gate-Fragen (Multi-Edition kuratieren oder zurückstellen, Reconciliation-Tiefe, Wiki-Druck-Merge im Scope, Modellweg im Auslieferungsstand); zusätzlich ob der knowledge-Frontmatter repo-weit auf den Promptotyping-Pflichtkern geliftet wird, in dieser Runde bewusst nicht angefasst.
 

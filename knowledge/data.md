@@ -1,288 +1,116 @@
 ---
-title: Data
-aliases: [data model, entity types]
+title: Daten und Modell
+aliases: [data, dataset, data model, JSON-LD, work-edition extension]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
-method:
-  name: Promptotyping
-  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
-template:
-  name: Vorlage Datengrundlage
-  version: 0.1
-  url: https://dhcraft.org/Promptotyping/promptotyping-document/data
-  alias: https://dhcraft.org/Promptotyping/#promptotyping-document-data
 status: complete
-language: en
-version: 0.3
-tags: [data, quality]
+language: de
+version: 1.0
+tags: [data, model, provenance, reconciliation]
 created: 2026-03-29
-updated: 2026-07-30
+updated: 2026-08-21
 authors: [Christopher Pollin]
-topics: ["[[Data Modelling]]", "[[Normdata]]", "[[Controlled Vocabularies]]"]
-knowledge-sources:
-  institutions:
-    Stefan Zweig Centre Salzburg: https://www.stefanzweig.digital/
-  standards:
-    Schema.org: https://schema.org/
-    Dublin Core Metadata Terms: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
-    Wikidata: https://www.wikidata.org/
-  vocabularies:
-    klawiter namespace: https://chpollin.github.io/klawiter-rescue/vocab/
-related: [about, pipeline, testing, production-readiness]
+related: [about, pipeline, frontend, testing, production-readiness]
 ---
 
-# Data
-
-The Klawiter bibliography dataset: its model, entity types, field coverage, and known quality issues. Live coverage figures, distribution counts, and per-field provenance totals are reported in `data/output/quality-report.json`, the `_meta` block of `docs/data/klawiter.json`, and `.github/baseline-metrics.json`, which are the sources of truth this document does not duplicate.
-
-## Data Model
-
-Domain-specific JSON-LD vocabulary under the `klawiter:` namespace (`https://chpollin.github.io/klawiter-rescue/vocab/`), documented at `docs/vocab/index.html`.
-
-### Vocabulary blend
-
-The model blends Schema.org (standard bibliographic fields such as name, datePublished, publisher), Dublin Core (`bibliographicCitation` for the original entry text), and a custom `klawiter:` namespace for the entity types and fields without a Schema.org equivalent (for example "Dramatic Reading", "Symposium"). Each entry gets a `@type` array combining a Schema.org type with a `klawiter:` type, for example `["schema:Book", "klawiter:FictionEntry"]`. BIBFRAME (FRBR-based Work/Instance/Item) would be correct but overengineered for this dataset as a serialization, since it carries no official JSON-LD context; the conceptual Work/Edition split it expresses is realized where needed through `schema:workExample`/`exampleOfWork`, see [[production-readiness#zielmodell-werkausgabe-trennung]]. The trade-off of the blend is that the output is not directly machine-readable for library systems. The vocabulary is implemented in `pipeline/lib/vocabulary.py`.
-
-### Example Entry
-
-```json
-{
-  "@context": { "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/" },
-  "@type": "klawiter:FictionEntry",
-  "@id": "klawiter:entry/3",
-  "klawiter:title": "Amok. Novellen einer Leidenschaft",
-  "klawiter:entryType": "fiction",
-  "klawiter:year": 1922,
-  "klawiter:timePeriod": "lifetime",
-  "klawiter:publisher": "Insel-Verlag",
-  "klawiter:location": "Leipzig",
-  "klawiter:language": "German",
-  "klawiter:languageCode": "de",
-  "klawiter:categories": ["Collected and Selected Works", "Fiction / Volumes (German)"],
-  "klawiter:mainCategory": "Collected and Selected Works",
-  "klawiter:contentItems": ["Der Amokläufer, pp. (9)-86", "..."],
-  "klawiter:fullBibliographicEntry": "...",
-  "klawiter:sourcePageId": 3,
-  "klawiter:sourceTextId": 835,
-  "klawiter:sourceBlobId": 0
-}
-```
-
-### Fields
-
-#### Core
-| Field | Type | Description |
-|-------|------|-------------|
-| `title` | string | Work title (cleaned) |
-| `originalTitle` | string | Original title for translations |
-| `entryType` | enum | One of 16 entity types (see below) |
-| `year` | integer | Publication year |
-| `timePeriod` | enum | `pre-zweig`, `lifetime`, `post-wwii`, `late-20c`, `contemporary` |
-
-#### Publication
-| Field | Type | Description |
-|-------|------|-------------|
-| `publisher` | string | Publisher name |
-| `location` | string | Publication location |
-| `locationSameAs` | IRI | Wikidata URI of the primary location (e.g. `http://www.wikidata.org/entity/Q90`); present when the location is reconciled |
-| `language` | string | Language (English name, e.g. "German") |
-| `languageCode` | string | ISO 639-1 (e.g. "de") |
-| `pageCount` | integer | Page count |
-| `translator` | string | Translator name |
-
-#### Classification
-| Field | Type | Description |
-|-------|------|-------------|
-| `categories` | string[] | MediaWiki categories |
-| `mainCategory` | string | Primary category |
-
-#### Relationships
-| Field | Type | Description |
-|-------|------|-------------|
-| `seeAlso` | string[] | Cross-references |
-| `reprints` | string[] | Reprint entries |
-| `translations` | string[] | Translation entries |
-| `contentItems` | string[] | Table of contents (for collected works) |
-
-#### Provenance
-| Field | Type | Description |
-|-------|------|-------------|
-| `sourcePageId` | integer | MediaWiki page_id |
-| `sourceTextId` | integer | Text ID in BLOB |
-| `sourceBlobId` | integer | BLOB file (0–7) |
-
-### Provenance Metadata (`_provenance`)
-
-Per-field extraction source tracking, injected by `inject_provenance.py`:
-- `publisher`: "regex" | "llm" | "missing"
-- `location`: "regex" | "llm" | "missing"
-- `translator`: "regex" | "llm" | "missing"
-- `pageCount`: "regex" | "llm" | "missing"
-
-After a human Accept or Correct the field's label moves to `editor`, see [[production-readiness#provenienz-schichten-als-verifikationsgrundlage]].
-
-Distribution in the committed frontend JSON: 42.3% regex, 11.8% LLM, 45.9% missing (across 4 fields x 5,179 entries).
-
-### Redirects
-
-Redirects are stored as a map in the frontend: `{ "Old Page Name": target_page_id }`. In the full JSON-LD dataset, redirects have `klawiter:isRedirect: true` and `klawiter:redirectTarget`.
-
----
-
-## Entity Types
-
-16 classified types, derived from MediaWiki categories. Each maps to a Schema.org type paired with its `klawiter:` type, see [[#vocabulary-blend]].
+# Daten und Modell
 
-### Distribution
+## Datenebenen
 
-| Type | Count | Share | Description |
-|------|-------|-------|-------------|
-| `redirect` | 1,545 | 24.5% | Redirect to another entry |
-| `secondary-literature` | 1,406 | 22.3% | Criticism, studies, biographies about Zweig |
-| `fiction` | 1,118 | 17.8% | Novels, novellas, short stories |
-| `essay` | 905 | 14.4% | Essays, articles, reviews |
-| `historical-study` | 535 | 8.5% | Dissertations, monographs |
-| `poetry` | 275 | 4.4% | Individual poems, collections |
-| `collected-works` | 114 | 1.8% | Collected/selected works, anthologies |
-| `correspondence` | 109 | 1.7% | Letters, postcards |
-| `film` | 92 | 1.5% | Film adaptations, operas, performances |
-| `translation` | 56 | 0.9% | Zweig's translations of other authors |
-| `drama` | 43 | 0.7% | Plays, libretti |
-| `symposium` | 39 | 0.6% | Conferences, exhibitions |
-| `foreword` | 36 | 0.6% | Forewords, afterwords, editorial contributions |
-| `dramatic-reading` | 18 | 0.3% | Dramatic readings |
-| `other` | 4 | 0.1% | Unclassifiable |
-| `newspaper` | 1 | 0.0% | Newspaper article |
+Das Repository bewahrt vier klar getrennte Ebenen:
 
-Counts above are `entry_type` classifications (from `.github/baseline-metrics.json`). The 1,545 `redirect` type count differs by one from the 1,546 records carrying the `isRedirect` flag (one redirect page is classified under another type); of those 1,546 redirects, 1,224 resolve to an existing entry in the frontend map (see [[pipeline#redirects-as-map-instead-of-resolved-entries]]).
+1. `data/raw/` enthält den unveränderten MediaWiki-SQL-Dump und acht Textspeicher.
+2. `data/intermediate/` enthält regenerierbare tabellarische Stufen und wird nicht versioniert.
+3. `data/output/klawiter.jsonld` und `docs/data/klawiter.json` bilden die flache Kompatibilitätsschicht.
+4. `data/output/editions/` und `data/output/reconciliation/` enthalten das strukturierte Editionsmodell, Reconciliation und Prüfartefakte.
 
-### Classification Logic
+Entscheidungseingaben liegen unter `data/reconciliation/`. Eingefrorene externe und modellgestützte Eingaben liegen unter `data/provenance/`. Diese Verzeichnisse sind Quellen des Produktionslaufs und keine temporären Ausgaben.
 
-1. **Redirects**: Entry begins with `#REDIRECT` → `redirect`
-2. **Category mapping**: `main_category` → type (e.g. "Fiction" → `fiction`, "Secondary Literature" → `secondary-literature`)
-3. **Content fallback**: Keywords in content (e.g. "novel" → `fiction`, "essay" → `essay`)
-4. **Default**: `other`
+## Record Census
 
-### Time Periods
+Der Census gleicht die gesamte Record-Kette ab:
 
-Each dated entry receives a time period:
+| Ebene | Anzahl |
+|---|---:|
+| MediaWiki-Seiten | 6.725 |
+| JSON-LD-Einträge | 6.725 |
+| Weiterleitungen | 1.546 |
+| Frontend-Einträge | 5.179 |
+| Hauptnamensraum ohne Weiterleitungen | 4.751 |
 
-| Period | Range | Count |
-|--------|-------|-------|
-| `pre-zweig` | before 1881 | 61 |
-| `lifetime` | 1881–1942 | 1,124 |
-| `post-wwii` | 1943–1980 | 867 |
-| `late-20c` | 1981–2000 | 1,050 |
-| `contemporary` | 2001+ | 1,327 |
+Alle fünf Census-Invarianten bestehen. JSON-LD ist 1:1 zur Quelle, das Frontend entspricht JSON-LD abzüglich Weiterleitungen, und jeder sichtbare Eintrag besitzt einen Titel. Vier Seiten haben keinen gelieferten BLOB-Text; nur `page_id 2979` ist bibliographisch. Dieser quellenbedingt leere Datensatz bleibt als benannter Stub erhalten.
 
-### Language Distribution (Top 10)
+## Flaches Kompatibilitätsmodell
 
-Counts from `data/output/quality-report.json` (`language_distribution`), which is the source of truth for the full list of 41 languages.
+Die flache Schicht bewahrt die historische MediaWiki-Seite als Datensatz. Sie verwendet Schema.org, Dublin Core und das projektspezifische Präfix `klawiter:`. Typische Felder sind Titel, Jahr, Verlag, Publikationsort, Sprache, Übersetzer, Seitenzahl, Kategorien, Querverweise, Quellkennungen und Feldprovenienz.
 
-| Language | Entries |
-|----------|---------|
-| German | 1,339 |
-| Chinese | 545 |
-| French | 396 |
-| English | 317 |
-| Spanish | 283 |
-| Arabic | 238 |
-| Bulgarian | 106 |
-| Albanian | 105 |
-| Russian | 99 |
-| Croatian | 77 |
+Diese Darstellung bleibt für Suche, Zitation und bestehende Exporte erhalten. Bei Seiten mit mehreren Publikationsblöcken können Einzelwerte aus unterschiedlichen Ausgaben stammen. Das Editionsmodell ist für diese Seiten die strukturell präzisere Quelle.
 
----
+## Werk-/Ausgabe-Modell
 
-## Data Quality
+Gate 1 erfasst jede Hauptnamensraumseite mit mindestens zwei ratifizierten Ausgabe-Headern. Der aktuelle Bestand umfasst 443 Werke, 1.886 Ausgaben, 1.886 Web Annotations und sechs belegte Träger-Vorkommen.
 
-All numbers refer to non-redirect entries (n=4,751) unless stated otherwise.
+- `schema:CreativeWork` bezeichnet das Werk der Quellseite.
+- `schema:Book` bezeichnet den segmentierten Publikationsblock.
+- `oa:Annotation` verbindet die Ausgabe mit dem exakten Quellausschnitt.
+- `oa:TextPositionSelector` speichert Start, Ende und SHA-256 des Ausschnitts.
+- `schema:PublicationVolume` bezeichnet ausschließlich ein quellenbelegtes Träger-Vorkommen.
 
-### Field Coverage
+Die Identifikatoren werden aus Quellseite, Jahr und stabiler Reihenfolge abgeleitet. Gleiche Eingaben erzeugen gleiche IDs, Selektoren und Graphknoten.
 
-Final coverage is the committed `quality-report.json`. The regex-only column is the same run's step-03 stage (`data/intermediate/03_parsed.csv`, gitignored, so reproducible only by re-running the pipeline).
+## Aussagezustände
 
-| Field | Coverage | Regex only | Improvement | Notes |
-|-------|----------|------------|-------------|-------|
-| title | 100.0% | 100.0% | — | 33 remaining bracket titles without page_title fallback |
-| categories | 99.8% | 99.8% | — | 11 entries without category |
-| fullBibliographicEntry | 99.3% | 99.3% | — | 32 entries with only category tag, no content |
-| year | 93.2% | 93.2% | — | First match only, no range detection |
-| language | 89.4% | 89.4% | — | Derived from category names (e.g. "(German)") |
-| location | 89.8% | 84.6% | +5.2pp | LLM reads non-standard city names; the Session 18 header fix already lifted the regex stage |
-| pageCount | 53.3% | 52.8% | +0.5pp | Previously 81.6%, corrected after `pp. N-M` FPs (Session 11) + 12 outlier rejections (Session 15) |
-| publisher | 52.3% | 34.4% | **+17.9pp** | LLM lifts it to 55.5%, Session 15 normalization then rejects garbage values |
-| translator | 40.4% | 33.6% | +6.8pp | LLM reads abbreviations and non-English patterns |
+Fachliche Beziehungen besitzen einen expliziten Status:
 
-**Precision**: All fields ≥99% real precision. Regex extractions have 100% precision. LLM extractions have 0 hallucinations (verified on 20-entry stratified sample + full-run FP analysis).
+- `proposed`: deterministisch erzeugt und noch ungeprüft;
+- `confirmed`: quellengebunden geprüft und bestätigt;
+- `contested`: geprüft, weiterhin offen und mit konkurrierenden Deutungen erhalten.
 
-### Encoding
+Ein `klawiter:ContestedClaim` trägt eine stabile Claim-ID, Subjekt und Prädikat, exakte Quellenbelege, mindestens zwei Interpretationen, Review-Aktionen sowie `claimStatus = contested` und `decisionStatus = open`. Der Claim gehört zum finalen Datensatz. Sein Prädikat wird nicht zugleich als bestätigte Beziehung emittiert.
 
-**Before**: 61.1% of entries had Mojibake — UTF-8 bytes misinterpreted as Latin-1. See [[pipeline#encoding-fix]] for details.
+Der offene Adaptionsfall `klawiter:claim/work-binding/4916-2016-b` bewahrt die Deutung als Ausgabe der „Schachnovelle“ und die Deutung als eigenständiges Graphic-Novel-Adaptionswerk. Die Ausgabe selbst bleibt vollständig enthalten.
 
-**After**: 0% known Mojibake — no entries match the `Ã[\x80-\xbf]|Â[\xa0-\xff]` detection regex. This verifies that the specific UTF-8-as-Latin-1 pattern is fully resolved. It does **not** guarantee all encoding is correct: other corruption types (double encoding, truncated multibyte chars, non-Mojibake misinterpretation, fix destroying intentional characters) are not checked.
+## Reconciliation
 
-**Honesty check**: The first encoding fix claimed "0%" but only tested 7 common patterns. Actually 9.1% (574 entries, 21 patterns) were still affected. The revised fix uses line-wise `encode('latin-1').decode('utf-8')` and is complete for the known Mojibake pattern.
+Gate 2 trennt Kandidaten, Entscheidungen, strittige Claims und publizierbare Links. Kandidaten entstehen für 382 Orts- und 443 Werk-Subjekte. Belegte Entscheidungen veröffentlichen 26 Ortslinks und drei SZD-Werklinks. Fünf Ortsentscheidungen bleiben als offene Claims erhalten.
 
-### Known Problems
+`pipeline/05_to_jsonld.py` liest ausschließlich `publishable-links.json`. Kandidaten und offene Claims können in Oberfläche und Export sichtbar sein, erscheinen aber nicht als `schema:sameAs`. Die priorisierte Gate-2-Prüfliste enthält 796 Fälle.
 
-**Publisher extraction (52.3%)**: Regex covers 34.4% (3 pattern families), LLM lifts it to 55.5%; Session 15 normalization then rejected the garbage values, leaving 52.3%. The ~48% gap breaks down: 15-20% (~350 entries) legitimately missing (anthology poems, journal articles, see-also references — no publisher in source text). 80-85% (~1,750 entries) structural extraction failures (publisher present in implicit formats like `[[Collection]] [City, Year]` that regex doesn't match). Only 1.7% of entries without publisher contain publisher keywords. Poetry/Individual Poems: 80.7% gap — anthology entries structurally lack standalone publishers.
+## Provenienz
 
-**Translator extraction (40.4%)**: Regex covers 33.6% with 0% false positives. LLM adds +6.8pp. Remaining ~60% are mostly German originals (no translator) or entries that don't name the translator. A newline-leaking bug in the translator regex (`\s` matching `\n`) was fixed — 34 translator fields previously contained trailing wiki markup from subsequent sections.
+Feldwerte in der flachen Frontend-Schicht tragen `regex`, `llm`, `missing` oder nach einer bestätigten Korrektur `editor`. Der Standardlauf verwendet den versionierten Cache `data/provenance/llm-enrichment-cache.json`; ein lokaler Arbeitscache beeinflusst den Produktionslauf nicht.
 
-**Title precision**: verify.py previously reported 81.5% precision (880 false positives). Investigation showed these are page_title fallbacks — titles sourced from wiki metadata, correctly absent from raw content. verify.py now classifies these as `correct_fallback`. Actual title precision is ~95%+. Title extraction improved: `[year]:` patterns now search for second bold block as real title before falling back to page_title.
+Gate 1 und Gate 2 speichern Eingabehashes, Codehashes, PROV-O-Aktivitäten, SHACL- beziehungsweise Vertragsprüfungen und EARL-Ergebnisse. Agentische Reviews benennen Eingabe, Reviewer, Ergebnis und Reconciliation. Unsichere Fälle bleiben in der Queue und werden nicht zu sicheren Aussagen geglättet.
 
-### Wikidata Reconciliation
+## Korrekturprotokoll
 
-382 geocoded locations in `docs/data/locations.json` are reconciled against Wikidata via the Reconciliation API (en + de endpoints) + SPARQL metadata. Coverage: 360/382 (94.2%) with Q-IDs. Script: `pipeline/reconcile_locations.py`. Log: `docs/data/locations_reconciliation_log.json`.
+Die Oberfläche exportiert ein versioniertes Kurationsdokument. Feldkorrekturen bewahren den vorherigen Maschinenwert im `edit_history`; Reconciliation-Entscheidungen bewahren ersetzte Entscheidungen in einer `supersedes`-Kette. Der Browser schreibt nicht direkt in das Repository.
 
-Fields added per location: `wikidataId` (Q-number), `wikidataLabel` (English name), `wikidataScore` (match confidence), `countryQid` (country Q-number from Wikidata). Ground truth fixture: `tests/wikidata_ground_truth.json` (20 entries). 6 deterministic tests in `tests/test_wikidata_locations.py`.
+Freigegebene Patches liegen unter `data/corrections/` und werden bei jedem Lauf erneut angewendet. `confirm` und `correct` erzeugen publizierbare Beziehungen. `reject` verwirft den geprüften Kandidaten. `unresolved` erzeugt oder aktualisiert einen offenen Claim.
 
-22 locations unmatched (encoding variants, composite slash-locations, obscure villages). 3 low-score matches flagged for manual review.
+## Qualitätsgrenzen
 
-**Per-entry linking (`locationSameAs`)**: Step 05 maps each entry's primary location to its Wikidata URI and writes it as `klawiter:locationSameAs` (`@type: @id`) into both the JSON-LD and frontend JSON. Coverage: 4,013 of 4,162 located non-redirect entries (~96%); the gap is locations without a reconciled Q-ID. Only the primary `location` is linked, not `allLocations`.
+Die aktuellen Feldabdeckungen stehen ausschließlich in `data/output/quality-report.json`. Die wichtigsten bekannten Grenzen sind:
 
-**Bracket titles**: Collected-works entries with format `'''[1922]: Insel-Verlag, Leipzig'''` as bold line. Originally 33 without page_title fallback, reduced to ~15 after `remove_wiki_markup()` improvements (section header stripping, unpaired bold marker removal, magic word removal).
+- 1.810 Editionssegmente bleiben Vorschläge; 75 Segmente sind agentisch bestätigt und eine Bindung ist strittig.
+- 585 `seeAlso`-Referenzen sind nicht auflösbar; 1.310 Weiterleitungsnamen werden aufgelöst.
+- Die flache Schicht kann auf 443 Mehrfachausgabenseiten Werte verschiedener Ausgaben kombinieren.
+- Fehlende bibliographische Werte können quellenbedingt sein und werden nicht erfunden.
+- Der semantische Ground-Truth-Satz ist klein und misst keine corpusweite Fehlerrate.
 
-**originalTitle false positives (fixed)**: The `extract_original_title()` regex previously matched bare years in brackets (e.g. `[1931]`) as original titles, producing 272 false positives. Fixed by rejecting candidates that match `^\d{4}$`.
+Die genaue Testreichweite und alle bekannten Grenzwerte stehen in [[testing]].
 
-**1 stub entry**: page_id 2979 ("A unidade espiritual do mundo") — text_id 18046 not in any BLOB. Present in output as a stub carrying the title from `page_title`, with no bibliographic content. Root cause established by revision-history trace: the page has exactly three revisions (2014-06-24), and the latest one (rev 18324, the one `page_latest` points to) has `rev_len = 0` — the page was **blanked** three minutes after creation. The only non-empty revisions (18322, 18323) carry just a category tag (`[[Category:Essays / Individual Essays (Portuguese)]]`). No bibliographic content for this entry was ever preserved in the dump; this is source-side loss, not a pipeline parsing miss. The title "A unidade espiritual do mundo" survives in the `zweig_page` table. The editor decided (Forschungsleitstelle order 2026-06-21) to show it with the title rather than as a nameless stub. The fix is in `03_parse_entries.py` (the empty-content early-return branch falls back to the cleaned `page_title`), locked by `tests/test_parse_entries.py`, and visible in the published dataset, where the entry carries its title and no other field. The census identity is unaffected: 2979 stays one displayed entry, now titled rather than nameless. See [[#record-census]].
+## Kanonische Artefakte
 
-**0 titles with markup residue** (Session 14): Fixed — orphaned `]]`/`[[`/`'''` cleanup in `remove_wiki_markup()`. 14 `__TOC__` titles fixed in Session 11.
-
-**0 section-header titles** (Session 14): Fixed — "Contents:", "Volumes:", "German:", "See:", "Note:" etc. rejected with page_title fallback. Was 1,368 entries. 345 titles have encoding artifacts in page_title (Arabic/Cyrillic transliterations where the page_title has mojibake). 43 titles are >200 chars (encoding-guard cases — long extracted title preferred over mojibake page_title).
-
-**110 German entries with translator** (found by test_consistency.py, Session 11): Regex false positives where author names, editors, or location text was extracted as translator (e.g. `translator: "Stefan Zweig. Leipzig"`).
-
-**619 broken seeAlso references** (was 1,140 in Session 11): Reduced because the title fix resolved 1,224 redirects (was 430). The remainder is broken by language suffixes like "/ Spanish" or formatting mismatches.
-
-**427 multi-edition pages** (Session 14): 6.8% of wiki pages contain multiple publications. Publisher, pageCount, year extracted from first match — may come from wrong edition. See [[pipeline#known-limitations--multi-edition-pages]].
-
-### Record Census
-
-Where `verify.py` checks field *values* (false positives/negatives) and the quality report measures dataset completeness, `census.py` answers the completeness-of-records question the data rescue rests on: does every record reach the frontend from the SQL source, with nothing silently lost and nothing invented? It reconciles three layers — `01_extracted.csv` (source), `klawiter.jsonld` (Linked Data), `klawiter.json` (frontend) — and asserts the identities below (output: `data/output/census-report.json`, all five currently pass):
-
-- **JSON-LD is 1:1 with the source**: 6,725 source pages, 6,725 JSON-LD entries, every `sourcePageId` present exactly once. No record lost, none invented, no duplicates.
-- **Frontend = JSON-LD minus redirects**: 5,179 = 6,725 − 1,546. Redirects are correctly excluded from the frontend; 0 redirects leak into it.
-- **Source ns0 reconciles**: 6,296 = 4,751 displayed entries + 1,545 ns0 redirects.
-- **Empty-content pages are isolated and explained**: 4 source pages have no BLOB text row, of which exactly 1 is bibliographic (ns0 page 2979, the blanked stub above); the other 3 are non-bibliographic system pages (a `MediaWiki:Print.css`, an empty Armenian category, an image-description page). The census asserts that the set of empty bibliographic pages equals the set of unnamed displayed entries — currently the single page 2979.
-
-The census is the systematic proof behind the headline "every entry safely and correctly from SQL into the frontend": the path is lossless and invention-free, and the only anomaly is one source-blanked page, fully characterized. The "unverifiable" surface that the [[frontend#eil-curation-interface|EIL editing interface]] targets is exactly what `verify.py` and the provenance metadata flag; the census guarantees the editor is working over a complete record set, not a leaky one.
-
-### Quality Report
-
-Automatically generated by `06_validate.py` → `data/output/quality-report.json`:
-- 442 entries with info-level issues (missing fullBibliographicEntry)
-- 4 warnings (residual encoding suspects)
-- 0 errors
-
-### Correction Protocol (Planned)
-
-The EIL interface logs every editor action as a correction episode; the accumulated log is the correction protocol. It is documentation input for the qualitative DIA-XAI evaluation, not a metric. The measurable part of that evaluation is separate, the expert-verified gold standard against which extraction quality per field is described. Each logged episode records:
-
-- **Action, field, provenance** — an Accept, Correct, or Add on a named field, tagged with the provenance the value carried before the edit (regex / llm / missing).
-- **Entry type** — the record type the correction happened on (fiction, secondary literature, symposium, and so on).
-- **Machine original and new value** — the pre-edit value and what the editor put in its place, preserved as a before/after pair.
-
-The protocol supports two documentation uses. Qualitatively, systematic correction patterns are workshop findings, when editors repeatedly correct the same field on the same entry type, that is a signal to the developer that the pipeline has a fixable weakness there. As reference-building, the human-confirmed entries accumulate into the gold standard against which extraction quality per field is described. The protocol falls out as a byproduct of curation, every Accept/Correct/Add is logged with field, provenance, and entry type; no controlled experiment or time tracking is involved, and the log is not read as an effectiveness metric of the workflow. See [[about#dia-xai-connection]] for the evaluation frame.
+| Artefakt | Funktion |
+|---|---|
+| `data/output/klawiter.jsonld` | vollständige flache JSON-LD-Schicht |
+| `docs/data/klawiter.json` | Frontend-Daten mit Feldprovenienz |
+| `data/output/editions/work-editions.jsonld` | Werk-/Ausgabe-Graph und Editionsclaims |
+| `data/output/editions/review-queue.json` | priorisierte Editionsprüfung |
+| `data/output/reconciliation/candidates.json` | Normdatenkandidaten |
+| `data/output/reconciliation/decisions.json` | belegte Reconciliation-Entscheidungen |
+| `data/output/reconciliation/contested-claims.json` | offene Normdatenclaims |
+| `data/output/reconciliation/publishable-links.json` | bestätigte öffentliche Beziehungen |
+| `docs/data/reconciliation.json` | deterministische UI-Projektion |
