@@ -29,7 +29,7 @@ import os
 import subprocess
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 FRONTEND = os.path.join(ROOT, "docs", "data", "klawiter.json")
 CACHE = os.path.join(ROOT, "data", "intermediate", "03b_llm_cache.json")
 OUT = os.path.join(ROOT, "data", "output", "m3-preview-report.json")

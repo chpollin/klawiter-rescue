@@ -30,7 +30,7 @@ import sys
 import unicodedata
 from collections import Counter
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lib.config import OUTPUT_DIR, STEP_01_OUTPUT
 from lib.encoding import _MOJIBAKE_RE, _redecode_run, fix_mojibake, has_mojibake
 

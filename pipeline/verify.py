@@ -21,6 +21,7 @@ from lib.config import (
     STEP_02_OUTPUT,
     load_csv,
     setup_logging,
+    write_json,
 )
 from lib.encoding import normalize_text as normalize
 from lib.encoding import strip_encoding_artifacts as strip_encoding
@@ -433,8 +434,7 @@ def main():
 
     # Write report
     os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
-    with open(REPORT_PATH, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
+    write_json(REPORT_PATH, report, indent=2)
     log.info(f"\nReport written to {REPORT_PATH}")
 
 

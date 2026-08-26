@@ -295,8 +295,7 @@ def main():
         if entry_id:
             entry_file = {**CONTEXT, **entry}
             path = os.path.join(OUTPUT_ENTRIES_DIR, f"{entry_id}.jsonld")
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump(entry_file, f, ensure_ascii=False, indent=2)
+            write_json(path, entry_file, indent=2)
 
     log.info(
         f"Individual entries written to {OUTPUT_ENTRIES_DIR}/ ({len(entries)} files)"

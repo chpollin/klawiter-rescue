@@ -4,10 +4,11 @@ Step 4: Classify entry types and resolve relationships.
 Maps categories to entry types, assigns time periods, resolves redirects.
 Handles all namespaces: ns 0 = bibliography, ns 14 = category pages, etc.
 
-Input:  data/intermediate/03_parsed.csv
+Input:  data/intermediate/03c_normalized.csv (explicit via --input)
 Output: data/intermediate/04_classified.csv
 """
 
+import argparse
 import os
 import sys
 
@@ -88,14 +89,32 @@ def build_redirect_map(rows):
     return title_to_page
 
 
+def _parse_args():
+    parser = argparse.ArgumentParser(
+        description="Classify entry types and periods from an explicit input."
+    )
+    parser.add_argument(
+        "--input",
+        choices=("03", "03b", "03c"),
+        default="03c",
+        help="Select the classification input explicitly; stale intermediates are never auto-selected.",
+    )
+    return parser.parse_args()
+
+
+def _input_path(choice):
+    """Map the explicit input choice to its stage output; a missing file is a
+    hard error in load_csv instead of a silent fallback to a stale stage."""
+    return {
+        "03": STEP_03_OUTPUT,
+        "03b": STEP_03B_OUTPUT,
+        "03c": STEP_03C_OUTPUT,
+    }[choice]
+
+
 def main():
-    # Prefer normalized > LLM-enriched > parsed
-    if os.path.exists(STEP_03C_OUTPUT):
-        input_path = STEP_03C_OUTPUT
-    elif os.path.exists(STEP_03B_OUTPUT):
-        input_path = STEP_03B_OUTPUT
-    else:
-        input_path = STEP_03_OUTPUT
+    args = _parse_args()
+    input_path = _input_path(args.input)
     rows = load_csv(input_path)
     log.info(f"Loaded {len(rows)} entries, classifying...")
 

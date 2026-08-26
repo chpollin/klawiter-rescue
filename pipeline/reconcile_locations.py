@@ -2,6 +2,12 @@
 """
 Reconcile locations from locations.json against Wikidata.
 
+REFREEZING TOOL, NOT A PIPELINE STAGE. It calls live Wikidata services and
+OVERWRITES docs/data/locations.json, a frozen, hash-bound Gate-2 input whose
+SHA-256 is recorded in the Gate-2 manifest. Running it replaces that frozen
+evidence; Gate 2 must be rebuilt and revalidated afterwards. It therefore
+refuses to run without the explicit --i-am-refreezing switch.
+
 Two-phase approach:
 1. Wikidata Reconciliation API (fuzzy matching, multi-language)
 2. SPARQL endpoint (structured metadata for matched Q-IDs)
@@ -9,10 +15,12 @@ Two-phase approach:
 Output: Updated locations.json with wikidataId, wikidataLabel, wikidataScore, countryQid.
 Also writes locations_reconciliation_log.json for manual review.
 
-Usage: python pipeline/reconcile_locations.py
+Usage: python pipeline/reconcile_locations.py --i-am-refreezing
 """
 
+import argparse
 import json
+import os
 import re
 import sys
 import time
@@ -21,12 +29,18 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.config import (  # noqa: E402
+    LOCATION_RECONCILIATION_LOG,
+    LOCATIONS_JSON,
+    write_json,
+)
+
 # Fix Windows console encoding
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-PROJECT_ROOT = Path(__file__).parent.parent
-LOCATIONS_PATH = PROJECT_ROOT / "docs" / "data" / "locations.json"
-LOG_PATH = PROJECT_ROOT / "docs" / "data" / "locations_reconciliation_log.json"
+LOCATIONS_PATH = Path(LOCATIONS_JSON)
+LOG_PATH = Path(LOCATION_RECONCILIATION_LOG)
 USER_AGENT = (
     "KlawitterBibliography/1.0 (https://github.com/chpollin/klawiter-rescue; research)"
 )
@@ -153,8 +167,29 @@ def pick_best_match(hits_by_lang: dict) -> dict | None:
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--i-am-refreezing",
+        action="store_true",
+        help=(
+            "Confirm that you intend to overwrite the frozen, hash-bound "
+            "Gate-2 input docs/data/locations.json with live Wikidata results."
+        ),
+    )
+    args = parser.parse_args()
+    if not args.i_am_refreezing:
+        print(
+            "REFUSED: this tool overwrites docs/data/locations.json, a frozen "
+            "Gate-2 input whose SHA-256 is recorded in the Gate-2 manifest.\n"
+            "Run again with --i-am-refreezing only if you intend to replace "
+            "that frozen evidence, then rebuild and revalidate Gate 2.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
     locations = json.loads(LOCATIONS_PATH.read_text("utf-8"))
     print(f"Loaded {len(locations)} locations.")
+    batch_failures = 0
 
     # Phase 1: Reconciliation API (multi-language)
     name_to_key = defaultdict(list)  # search_name → [original_keys]
@@ -189,6 +224,7 @@ def main():
                     all_results[name][lang] = hits
             except Exception as e:
                 print(f"ERROR: {e}")
+                batch_failures += 1
                 if "429" in str(e):
                     print("  Rate limited, waiting 10s...")
                     time.sleep(10)
@@ -281,11 +317,19 @@ def main():
                 loc["lng"] = wd_coord["lng"]
                 coord_updates += 1
 
-    # Write results
-    LOCATIONS_PATH.write_text(
-        json.dumps(locations, indent=2, ensure_ascii=False), "utf-8"
-    )
-    LOG_PATH.write_text(json.dumps(log, indent=2, ensure_ascii=False), "utf-8")
+    # Write results (atomic, LF-canonical bytes; these files are hash-bound
+    # Gate-2 inputs).
+    write_json(str(LOCATIONS_PATH), locations, indent=2)
+    write_json(str(LOG_PATH), log, indent=2)
+
+    if batch_failures:
+        print(
+            f"\nWARNING: {batch_failures} reconciliation batch(es) failed; "
+            "the refrozen data is incomplete. Inspect the log before "
+            "rebuilding Gate 2.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     print("\nDone.")
     print(f"  Matched: {matched_count}/{total} ({matched_count / total * 100:.1f}%)")

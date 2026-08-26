@@ -38,7 +38,12 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 def load_json(filename):
     path = os.path.join(DATA_DIR, filename)
     if not os.path.exists(path):
-        return None
+        # Fail fast: a missing table would silently no-op the normalization
+        # of a data-integrity step. The tables are versioned in pipeline/data/.
+        raise FileNotFoundError(
+            f"Required normalization table is missing: {path}. "
+            "Restore it from the repository instead of running without it."
+        )
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -149,11 +154,11 @@ def main() -> None:
     rows = load_csv(input_path)
     log.info(f"Loaded {len(rows)} entries from {os.path.basename(input_path)}")
 
-    # Load mapping tables
-    loc_map = load_json("location_normalize.json") or {}
-    pub_reject = load_json("publisher_reject_patterns.json") or {}
+    # Load mapping tables (load_json fails fast when one is missing)
+    loc_map = load_json("location_normalize.json")
+    pub_reject = load_json("publisher_reject_patterns.json")
     reject_patterns = pub_reject.get("patterns", [])
-    pub_map = load_json("publisher_normalize.json") or {}
+    pub_map = load_json("publisher_normalize.json")
 
     # Counters
     stats = {

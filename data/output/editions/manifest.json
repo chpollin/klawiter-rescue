@@ -1,13 +1,13 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "earl.jsonld": "086d06f90cf5d825ff0a6dff375acfee1cc95bfb7b029c0c6740e78b26a8d425",
-    "provenance.jsonld": "8079b7f59fd1c885e1e053723f2bef954940ea600992408482edf7e69894a280",
+    "earl.jsonld": "9dd6e02e077150b5a6d8e90b47b7fd869ebdba9f17c664049735ec67ce17d193",
+    "provenance.jsonld": "91d17bef8092f894b93c0cb4fb782ee2d1832949dbd7b04df4085e5810ff1d4e",
     "review-queue.json": "6a615f4aff822128b507aed9ea76455923f3b484a4fb2d118b34bbb6b0a193c2",
-    "validation-report.json": "af30e76f3a4da0adb92c748d87def65ff434ec58ed9fdfdfa46278608d133e7e",
+    "validation-report.json": "189a3f1e1a24dba5abdc4d377d54665e3d30cf6c77c089846ec092b500ad39e3",
     "work-editions.jsonld": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a"
   },
-  "codeSha256": "bca73564abc50610726bc633204a9b79442c2fcfb4a49ac2d95002156aef813c",
+  "codeSha256": "acf6b76f0e20140b07b542ab6b4bf64192ab94a02ba73f706f6f32493c75e51f",
   "counts": {
     "annotations": 1886,
     "candidateWorks": 1,
@@ -19,7 +19,7 @@
     "reviewCases": 317,
     "works": 443
   },
-  "generatedAt": "2026-08-26T09:53:55.906069+00:00",
+  "generatedAt": "2026-08-26T14:26:43.542143+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

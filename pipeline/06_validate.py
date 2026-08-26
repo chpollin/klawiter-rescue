@@ -18,6 +18,7 @@ from lib.config import (
     OUTPUT_JSONLD,
     OUTPUT_QUALITY_REPORT,
     setup_logging,
+    write_json,
 )
 from lib.encoding import has_mojibake
 
@@ -180,8 +181,7 @@ def main():
     }
 
     os.makedirs(os.path.dirname(OUTPUT_QUALITY_REPORT), exist_ok=True)
-    with open(OUTPUT_QUALITY_REPORT, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
+    write_json(OUTPUT_QUALITY_REPORT, report, indent=2)
 
     log.info(f"Quality report written to {OUTPUT_QUALITY_REPORT}")
     log.info("Summary:")

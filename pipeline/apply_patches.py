@@ -230,8 +230,7 @@ def main():
         )
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(REPORT_PATH, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
+    write_json(REPORT_PATH, report, indent=2)
 
     # Only rewrite the dataset when something actually changed, so an empty
     # corrections store is a true no-op and leaves the file byte-identical.

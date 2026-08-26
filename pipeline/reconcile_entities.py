@@ -221,9 +221,13 @@ def main() -> None:
         load_csv(STEP_04_OUTPUT),
     )
     generated_at = datetime.now(timezone.utc).isoformat()
+    # LF-normalize so the recorded provenance hash is independent of the
+    # git eol settings that produced the working copy.
     code_hash = hashlib.sha256(
-        Path(__file__).read_bytes()
-        + (Path(__file__).parent / "lib" / "reconciliation.py").read_bytes()
+        Path(__file__).read_bytes().replace(b"\r\n", b"\n")
+        + (Path(__file__).parent / "lib" / "reconciliation.py")
+        .read_bytes()
+        .replace(b"\r\n", b"\n")
     ).hexdigest()
 
     artifacts = {

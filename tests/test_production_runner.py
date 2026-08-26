@@ -97,3 +97,47 @@ def test_gate_sequence_precedes_public_projection() -> None:
     assert stages.index("gate1v") < stages.index("gate2")
     assert stages.index("gate2") < stages.index("05")
     assert runner.POSTPROCESSORS[-1].stage == "gate2v"
+
+
+def test_classification_input_is_explicit() -> None:
+    step = next(step for step in runner.STEPS if step.stage == "04")
+    command = runner._command(step, Path("pipeline"), "frozen")
+    assert command[-2:] == ["--input", "03c"]
+
+
+def test_classification_has_no_existence_fallback() -> None:
+    classify = importlib.import_module("04_classify")
+    from lib.config import STEP_03_OUTPUT, STEP_03B_OUTPUT, STEP_03C_OUTPUT
+
+    assert classify._input_path("03") == STEP_03_OUTPUT
+    assert classify._input_path("03b") == STEP_03B_OUTPUT
+    assert classify._input_path("03c") == STEP_03C_OUTPUT
+
+
+def test_missing_normalization_table_fails_fast(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    normalize = importlib.import_module("03c_normalize")
+    monkeypatch.setattr(normalize, "DATA_DIR", str(tmp_path))
+    with pytest.raises(FileNotFoundError, match="normalization table"):
+        normalize.load_json("location_normalize.json")
+
+
+def test_refreezing_tool_refuses_without_explicit_switch() -> None:
+    """reconcile_locations overwrites frozen, hash-bound Gate-2 inputs from
+    the network; without the explicit switch it must refuse before any
+    network call or write."""
+    import hashlib
+    import subprocess
+
+    locations = Path("docs/data/locations.json")
+    before = hashlib.sha256(locations.read_bytes()).hexdigest()
+    result = subprocess.run(
+        [sys.executable, str(Path("pipeline") / "reconcile_locations.py")],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 2
+    assert "REFUSED" in result.stderr
+    assert hashlib.sha256(locations.read_bytes()).hexdigest() == before

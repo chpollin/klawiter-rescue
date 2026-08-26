@@ -41,6 +41,7 @@ from lib.config import (
     OUTPUT_JSONLD,
     STEP_01_OUTPUT,
     setup_logging,
+    write_json,
 )
 
 log = setup_logging(__name__)
@@ -215,8 +216,7 @@ def main():
     }
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(REPORT_PATH, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
+    write_json(REPORT_PATH, report, indent=2)
 
     # --- Console summary --------------------------------------------------
     log.info("=" * 64)

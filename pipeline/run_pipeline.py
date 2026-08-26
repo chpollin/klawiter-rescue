@@ -108,6 +108,8 @@ def _command(step: Step, pipeline_dir: Path, llm_mode: str) -> list[str]:
         command.extend(("--mode", llm_mode))
     elif step.stage == "03c":
         command.extend(("--input", "03" if llm_mode == "off" else "03b"))
+    elif step.stage == "04":
+        command.extend(("--input", "03c"))
     elif step.stage == "provenance":
         command.extend(("--llm-mode", llm_mode))
     return command

@@ -25,7 +25,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import OUTPUT_DIR, PROJECT_ROOT, setup_logging
+from lib.config import OUTPUT_DIR, PROJECT_ROOT, setup_logging, write_json
 
 log = setup_logging(__name__)
 
@@ -114,8 +114,7 @@ def main():
     }
 
     os.makedirs(os.path.dirname(TRIAGE_PATH), exist_ok=True)
-    with open(TRIAGE_PATH, "w", encoding="utf-8") as f:
-        json.dump(doc, f, ensure_ascii=False, indent=1)
+    write_json(TRIAGE_PATH, doc, indent=1)
     log.info(f"Wrote {len(triage)} flagged entries to {TRIAGE_PATH}")
     return 0
 

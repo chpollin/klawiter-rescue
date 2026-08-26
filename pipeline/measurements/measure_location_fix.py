@@ -26,7 +26,7 @@ import json
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lib.config import OUTPUT_DIR, STEP_03_OUTPUT
 from lib.patterns import extract_location
 
