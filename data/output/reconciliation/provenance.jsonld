@@ -3,13 +3,17 @@
     "earl": "http://www.w3.org/ns/earl#",
     "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
     "prov": "http://www.w3.org/ns/prov#",
-    "schema": "https://schema.org/"
+    "prov:generatedAtTime": {
+      "@type": "xsd:dateTime"
+    },
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "@graph": [
     {
       "@id": "klawiter:run/gate2-reconciliation",
       "@type": "prov:Activity",
-      "prov:generatedAtTime": "2026-08-26T17:47:00.385843+00:00",
+      "prov:generatedAtTime": "2026-08-26T18:21:21.776116+00:00",
       "prov:qualifiedAssociation": {
         "@type": "prov:Association",
         "prov:agent": {
@@ -61,7 +65,7 @@
       "@id": "klawiter:plan/gate2-v1",
       "@type": "prov:Plan",
       "klawiter:algorithmVersion": "1.1",
-      "klawiter:sourceCodeSha256": "5d9066ad78566c815db0285ca71c75349bbf63280b7e293c3d5c4e0ecbf80703"
+      "klawiter:sourceCodeSha256": "819267ac9c8a3047f81c85c649f99357c684207e13a4eea540a250d51826c008"
     },
     {
       "@id": "klawiter:gate2-input/classified-source",

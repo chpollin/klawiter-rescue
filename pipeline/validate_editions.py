@@ -320,6 +320,8 @@ def main() -> None:
             "dc": "http://purl.org/dc/terms/",
             "earl": "http://www.w3.org/ns/earl#",
             "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "dc:date": {"@type": "xsd:dateTime"},
         },
         "@graph": [
             _earl_assertion(test, passed, generated_at)

@@ -6,7 +6,8 @@
     "deterministicRebuild": true,
     "frontendProjection": true,
     "inputHashes": true,
-    "jsonldProjection": true
+    "jsonldProjection": true,
+    "shacl": true
   },
   "counts": {
     "contestedAuthorityClaims": 5,
@@ -27,7 +28,8 @@
     "deterministicRebuild": [],
     "frontendProjection": [],
     "inputHashes": [],
-    "jsonldProjection": []
+    "jsonldProjection": [],
+    "shacl": []
   },
-  "generatedAt": "2026-08-26T17:47:39.721806+00:00"
+  "generatedAt": "2026-08-26T18:22:03.538772+00:00"
 }

@@ -23,6 +23,7 @@ from lib.config import (  # noqa: E402
     OUTPUT_JSONLD,
     OUTPUT_RECONCILIATION_DIR,
     OUTPUT_RECONCILIATION_FRONTEND,
+    PROJECT_ROOT,
     STEP_04_OUTPUT,
     SZD_WORK_INDEX,
     WORK_DECISIONS,
@@ -100,15 +101,18 @@ def _check_contested_claims(result: dict) -> list[str]:
         )
     for claim in claims:
         claim_id = claim["@id"]
-        if claim["claimStatus"] != "contested" or claim["decisionStatus"] != "open":
+        if (
+            claim["klawiter:claimStatus"] != "contested"
+            or claim["klawiter:decisionStatus"] != "open"
+        ):
             errors.append(f"{claim_id}: claim status is not contested/open")
-        if len(claim["interpretations"]) < 2:
+        if len(claim["klawiter:interpretation"]) < 2:
             errors.append(f"{claim_id}: competing interpretations are missing")
-        if not claim["sourceEvidence"]:
+        if not claim["klawiter:sourceEvidence"]:
             errors.append(f"{claim_id}: exact source evidence is missing")
-        if not claim["reviewHistory"]:
+        if not claim["klawiter:reviewAction"]:
             errors.append(f"{claim_id}: review history is missing")
-        for evidence in claim["sourceEvidence"]:
+        for evidence in claim["klawiter:sourceEvidence"]:
             source_hash = evidence.get("sourceTextSha256")
             if source_hash and not re.fullmatch(r"[0-9a-f]{64}", source_hash):
                 errors.append(f"{claim_id}: invalid source evidence hash")
@@ -185,11 +189,34 @@ def main() -> None:
         "decisions": _read_json(paths["decisions"]),
         "publishable": _read_json(paths["publishable"]),
         "queue": _read_json(paths["queue"]),
-        "contestedClaims": _read_json(paths["contested_claims"]),
+        "contestedClaims": _read_json(paths["contested_claims"])["@graph"],
     }
     deterministic = expected == actual
     decision_errors = _check_decisions(actual)
     contested_errors = _check_contested_claims(actual)
+
+    # SHACL over the standalone contested-claims artifact: the unified
+    # claim model must satisfy the same shapes the edition graph obeys.
+    from pyshacl import validate as shacl_validate
+    from rdflib import Graph
+
+    shapes_path = Path(PROJECT_ROOT) / "data" / "schema" / "work-edition-shapes.ttl"
+    shapes_graph = Graph().parse(shapes_path, format="turtle")
+    contested_graph = Graph().parse(str(paths["contested_claims"]), format="json-ld")
+    shacl_conforms, _, shacl_text = shacl_validate(
+        contested_graph,
+        shacl_graph=shapes_graph,
+        inference="none",
+        abort_on_first=False,
+        allow_infos=False,
+        allow_warnings=False,
+    )
+    if len(contested_graph) < 100:
+        shacl_conforms = False
+        shacl_text = (
+            f"contested-claims graph expands to only {len(contested_graph)} "
+            "triples; an undefined @context term is dropping data"
+        )
     public_errors = _check_public_projection(
         actual["publishable"], _read_json(paths["jsonld"])
     )
@@ -228,6 +255,7 @@ def main() -> None:
         "deterministicRebuild": deterministic,
         "decisionSeparation": not decision_errors,
         "contestedClaims": not contested_errors,
+        "shacl": bool(shacl_conforms),
         "inputHashes": not input_hash_errors,
         "jsonldProjection": not public_errors,
         "frontendProjection": not frontend_errors,
@@ -238,6 +266,7 @@ def main() -> None:
         else ["Rebuilding from frozen inputs changed a Gate 2 layer"],
         "decisionSeparation": decision_errors,
         "contestedClaims": contested_errors,
+        "shacl": [] if shacl_conforms else [str(shacl_text)],
         "inputHashes": input_hash_errors,
         "jsonldProjection": public_errors,
         "frontendProjection": frontend_errors,
@@ -260,6 +289,8 @@ def main() -> None:
                 "dc": "http://purl.org/dc/terms/",
                 "earl": "http://www.w3.org/ns/earl#",
                 "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
+                "xsd": "http://www.w3.org/2001/XMLSchema#",
+                "dc:date": {"@type": "xsd:dateTime"},
             },
             "@graph": [
                 _earl(name, passed, generated_at) for name, passed in checks.items()

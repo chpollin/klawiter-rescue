@@ -22,7 +22,7 @@
           "@id": "klawiter:plan/segment-editions-v1"
         }
       },
-      "prov:startedAtTime": "2026-08-26T17:46:31.551783+00:00",
+      "prov:startedAtTime": "2026-08-26T18:20:53.877262+00:00",
       "prov:used": [
         {
           "@id": "klawiter:sourceCorpus/mediawiki"

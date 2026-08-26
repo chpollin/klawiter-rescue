@@ -1,8 +1,12 @@
 {
   "@context": {
     "dc": "http://purl.org/dc/terms/",
+    "dc:date": {
+      "@type": "xsd:dateTime"
+    },
     "earl": "http://www.w3.org/ns/earl#",
-    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/"
+    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "@graph": [
     {
@@ -15,7 +19,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-26T17:46:34.193274+00:00",
+        "dc:date": "2026-08-26T18:20:56.525678+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -37,7 +41,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-26T17:46:34.193274+00:00",
+        "dc:date": "2026-08-26T18:20:56.525678+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -59,7 +63,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-26T17:46:34.193274+00:00",
+        "dc:date": "2026-08-26T18:20:56.525678+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -81,7 +85,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-26T17:46:34.193274+00:00",
+        "dc:date": "2026-08-26T18:20:56.525678+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -103,7 +107,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-26T17:46:34.193274+00:00",
+        "dc:date": "2026-08-26T18:20:56.525678+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -125,7 +129,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-26T17:46:34.193274+00:00",
+        "dc:date": "2026-08-26T18:20:56.525678+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }

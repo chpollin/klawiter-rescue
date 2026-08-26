@@ -1,16 +1,16 @@
 {
   "algorithmVersion": "1.1",
   "artifacts": {
-    "candidates.json": "97756fc651610cc1849ad564e07fffa33c93c51dde5220a0caa1b00ccf5c2ff9",
-    "contested-claims.json": "73d26a9a75c0145945f15810a2a4a2bdae49b12323373a5bd4eb41a778c93bf3",
+    "candidates.json": "a0cbfed7e204a2486f61c0227f9566906cb0af854e5c28f5f262160749d75565",
+    "contested-claims.json": "10a38f79efd563fdbacc1cf59e6221dd292904c51e721f6651fcaff194d59b3e",
     "decisions.json": "5c5d8999cbaa072874444470d8bb9b7c807faa2a6e047c4efdd5f8200d645a57",
-    "earl.jsonld": "d7d3a50a78e012e7b6b6b3a884b1d1cd455321703b0a7842ae5faadfdf83a320",
-    "provenance.jsonld": "d3d9f60025f9505ccc6c0e59c60186a863ef1a8731acd3c1e4442646b5bf35b6",
+    "earl.jsonld": "25057930cd704597cb03b8e6e9f477ad1338cdc95902d89ecfd4db2297f33be0",
+    "provenance.jsonld": "189565752d2dba2db312366ae702b21c7bbbc69cf90f6a9f580422086444547a",
     "publishable-links.json": "ee23ee97a8c35da5f218186e75fd80184ad32faa3bfb9b52ea4b51014ff2c6bc",
-    "review-queue.json": "fc69233328144542b5ea003ae2fef7fc5e16b9a9a7ee67f9e3aeacf191eb821c",
-    "validation-report.json": "616f1a1ffe9b833afa64ff6b24c0f634117fbb2c1de0c97fa3fa3ba7caa7b3b0"
+    "review-queue.json": "7f94b52b7359b554129f74c960ef668867266609fc7d74407aafb23a1377accc",
+    "validation-report.json": "7e9b5c6a162d4bbc2f32c107a20b737cd84c351a6c5acbb645edc33109451b22"
   },
-  "codeSha256": "5d9066ad78566c815db0285ca71c75349bbf63280b7e293c3d5c4e0ecbf80703",
+  "codeSha256": "819267ac9c8a3047f81c85c649f99357c684207e13a4eea540a250d51826c008",
   "counts": {
     "contestedAuthorityClaims": 5,
     "contestedEditionClaims": 1,
@@ -26,9 +26,9 @@
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "a6262241283177dea992798f36713b4772fb9dbc9206a1df71242f77557a7888"
+    "sha256": "b1d1c77e9aa78dd0b9ba567aa9e96607d5dc51b75c9eb66435666977e84e120e"
   },
-  "generatedAt": "2026-08-26T17:47:00.385843+00:00",
+  "generatedAt": "2026-08-26T18:21:21.776116+00:00",
   "inputs": {
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
@@ -80,6 +80,7 @@
     "deterministicRebuild": true,
     "frontendProjection": true,
     "inputHashes": true,
-    "jsonldProjection": true
+    "jsonldProjection": true,
+    "shacl": true
   }
 }

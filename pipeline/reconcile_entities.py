@@ -97,9 +97,81 @@ def _provenance(generated_at: str, inputs: dict[str, dict], code_hash: str) -> d
             "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
             "prov": "http://www.w3.org/ns/prov#",
             "earl": "http://www.w3.org/ns/earl#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "prov:generatedAtTime": {"@type": "xsd:dateTime"},
         },
         "@graph": graph,
     }
+
+
+# Context for the standalone contested-claims artifact: every key is a
+# defined term, so the file expands to real RDF instead of silently
+# dropping subtrees.
+CONTESTED_CONTEXT = {
+    "@context": {
+        "schema": "https://schema.org/",
+        "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
+        "prov": "http://www.w3.org/ns/prov#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "klawiter:interpretation": {"@container": "@set"},
+        "klawiter:reviewAction": {"@container": "@set"},
+        "klawiter:sourceEvidence": {"@container": "@set"},
+        "klawiter:evidence": {"@container": "@set"},
+        "klawiter:decidedAt": {"@type": "xsd:dateTime"},
+        # Source-occurrence evidence keys
+        "sourcePageId": {"@id": "klawiter:sourcePageId", "@type": "xsd:integer"},
+        "sourceLine": {"@id": "klawiter:sourceLine", "@type": "xsd:integer"},
+        "sourceValue": "klawiter:sourceValue",
+        "sourceTextSha256": "klawiter:sourceTextSha256",
+        "sourcePath": "klawiter:sourcePath",
+        "sourceTitle": "klawiter:sourceTitle",
+        "sourceField": "klawiter:sourceField",
+    }
+}
+
+
+def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
+    """Project the unified contested-claim model onto the stable UI shape
+    the detail view renders; the data model may evolve independently."""
+    projected = []
+    for claim in claims:
+        projected.append(
+            {
+                "claimId": claim["@id"],
+                "entityType": claim["klawiter:identityScope"],
+                "subject": {
+                    "@id": claim["klawiter:claimSubject"]["@id"],
+                    "name": claim["klawiter:claimSubject"].get("schema:name"),
+                },
+                "predicate": {"@id": claim["klawiter:claimPredicate"]["@id"]},
+                "claimStatus": claim["klawiter:claimStatus"],
+                "decisionStatus": claim["klawiter:decisionStatus"],
+                "sourceEvidence": claim["klawiter:sourceEvidence"],
+                "interpretations": [
+                    {
+                        "interpretationId": item["@id"],
+                        "label": item["schema:name"],
+                        "proposedObject": item.get("klawiter:proposedObject"),
+                        "status": item["klawiter:interpretationStatus"],
+                        "candidateId": item.get("klawiter:candidateId"),
+                        "candidateSource": item.get("klawiter:candidateSource"),
+                    }
+                    for item in claim["klawiter:interpretation"]
+                ],
+                "reviewHistory": [
+                    {
+                        "reviewId": item["@id"],
+                        "decisionId": item["klawiter:decisionId"],
+                        "action": item["klawiter:reviewOutcome"],
+                        "decidedBy": item["prov:wasAssociatedWith"]["schema:name"],
+                        "decidedAt": item.get("klawiter:decidedAt"),
+                        "evidence": item["klawiter:evidence"],
+                    }
+                    for item in claim["klawiter:reviewAction"]
+                ],
+            }
+        )
+    return projected
 
 
 def _frontend(result: dict, edition_dataset: dict) -> dict:
@@ -165,7 +237,7 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
         },
         "locations": location_items,
         "works": result["candidates"]["works"],
-        "contestedClaims": result["contestedClaims"],
+        "contestedClaims": _frontend_authority_claims(result["contestedClaims"]),
         "editionClaims": edition_claims,
     }
 
@@ -235,7 +307,10 @@ def main() -> None:
         "decisions.json": result["decisions"],
         "publishable-links.json": result["publishable"],
         "review-queue.json": result["queue"],
-        "contested-claims.json": result["contestedClaims"],
+        "contested-claims.json": {
+            **CONTESTED_CONTEXT,
+            "@graph": result["contestedClaims"],
+        },
         "provenance.jsonld": _provenance(generated_at, inputs, code_hash),
     }
     for name, document in artifacts.items():

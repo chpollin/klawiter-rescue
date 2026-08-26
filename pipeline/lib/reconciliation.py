@@ -10,6 +10,7 @@ import unicodedata
 import xml.etree.ElementTree as ET
 from difflib import SequenceMatcher
 from pathlib import Path
+from urllib.parse import quote
 
 # Canonical Wikidata RDF entity IRI: the http form is what Wikidata's own
 # RDF uses; the https form never joins against external triples.
@@ -188,7 +189,7 @@ def build_location_candidates(
             )
         results.append(
             {
-                "subjectId": f"klawiter:location/{name}",
+                "subjectId": f"klawiter:location/{quote(name, safe='')}",
                 "sourceLocation": name,
                 "coordinates": {"lat": info["lat"], "lng": info["lng"]},
                 "country": info.get("country"),
@@ -468,22 +469,23 @@ def _publishable_links(locations: list[dict], works: list[dict]) -> dict:
 
 
 def _decision_history(decision: dict) -> list[dict]:
+    """Decision trail as klawiter:ReviewAction nodes, the same class the
+    edition graph uses for its review evidence."""
     history = []
     current: dict | None = decision
     while current:
-        history.append(
-            {
-                "@id": "klawiter:review/reconciliation/"
-                + hashlib.sha256(current["decisionId"].encode("utf-8")).hexdigest()[
-                    :16
-                ],
-                "decisionId": current["decisionId"],
-                "action": current["action"],
-                "decidedBy": current["decidedBy"],
-                "decidedAt": current.get("decidedAt"),
-                "evidence": current["evidence"],
-            }
-        )
+        action = {
+            "@id": "klawiter:review/reconciliation/"
+            + hashlib.sha256(current["decisionId"].encode("utf-8")).hexdigest()[:16],
+            "@type": "klawiter:ReviewAction",
+            "klawiter:decisionId": current["decisionId"],
+            "klawiter:reviewOutcome": current["action"],
+            "prov:wasAssociatedWith": {"schema:name": current["decidedBy"]},
+            "klawiter:evidence": current["evidence"],
+        }
+        if current.get("decidedAt"):
+            action["klawiter:decidedAt"] = current["decidedAt"]
+        history.append(action)
         current = current.get("supersedes")
     history.reverse()
     return history
@@ -517,22 +519,24 @@ def _contested_claims(locations: list[dict], works: list[dict]) -> list[dict]:
                 interpretations.append(
                     {
                         "@id": f"{claim_id}/interpretation/{target}",
-                        "status": "contested",
-                        "label": candidate["label"],
-                        "proposedObject": {"@id": target_uri},
-                        "candidateId": candidate["candidateId"],
-                        "candidateSource": candidate.get("candidateSource")
+                        "@type": "klawiter:ClaimInterpretation",
+                        "schema:name": candidate["label"],
+                        "klawiter:proposedObject": {"@id": target_uri},
+                        "klawiter:interpretationStatus": "contested",
+                        "klawiter:candidateId": candidate["candidateId"],
+                        "klawiter:candidateSource": candidate.get("candidateSource")
                         or candidate.get("matchMethod"),
                     }
                 )
             interpretations.append(
                 {
                     "@id": f"{claim_id}/interpretation/no-assignment",
-                    "status": "contested",
-                    "label": "No canonical authority assignment in the current evidence",
-                    "proposedObject": None,
-                    "candidateId": None,
-                    "candidateSource": "fail-closed-alternative",
+                    "@type": "klawiter:ClaimInterpretation",
+                    "schema:name": (
+                        "No canonical authority assignment in the current evidence"
+                    ),
+                    "klawiter:interpretationStatus": "contested",
+                    "klawiter:candidateSource": "fail-closed-alternative",
                 }
             )
             source_evidence = (
@@ -550,14 +554,17 @@ def _contested_claims(locations: list[dict], works: list[dict]) -> list[dict]:
                 {
                     "@id": claim_id,
                     "@type": "klawiter:ContestedClaim",
-                    "entityType": entity_type,
-                    "subject": {"@id": subject_id},
-                    "predicate": {"@id": "schema:sameAs"},
-                    "claimStatus": "contested",
-                    "decisionStatus": "open",
-                    "sourceEvidence": source_evidence,
-                    "interpretations": interpretations,
-                    "reviewHistory": _decision_history(decision),
+                    "klawiter:identityScope": entity_type,
+                    "klawiter:claimSubject": {
+                        "@id": subject_id,
+                        "schema:name": subject_key,
+                    },
+                    "klawiter:claimPredicate": {"@id": "schema:sameAs"},
+                    "klawiter:claimStatus": "contested",
+                    "klawiter:decisionStatus": "open",
+                    "klawiter:sourceEvidence": source_evidence,
+                    "klawiter:interpretation": interpretations,
+                    "klawiter:reviewAction": _decision_history(decision),
                 }
             )
     claims.sort(key=lambda item: item["@id"])

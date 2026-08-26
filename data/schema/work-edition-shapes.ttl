@@ -71,6 +71,10 @@ klawiter:EditionShape
         ]
     ) .
 
+# One claim class for both claim kinds (2026-08-26 unification): edition
+# work-binding claims carry offset-selector evidence, authority
+# reconciliation claims carry source-occurrence evidence. The shared core
+# is identical; the evidence kind alternates.
 klawiter:ContestedClaimShape
     a sh:NodeShape ;
     sh:targetClass klawiter:ContestedClaim ;
@@ -78,7 +82,7 @@ klawiter:ContestedClaimShape
         sh:path klawiter:claimSubject ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:class schema:Book ;
+        sh:nodeKind sh:IRI ;
     ] ;
     sh:property [
         sh:path klawiter:claimPredicate ;
@@ -105,22 +109,33 @@ klawiter:ContestedClaimShape
     ] ;
     sh:property [
         sh:path klawiter:reviewAction ;
-        sh:minCount 3 ;
+        sh:minCount 1 ;
         sh:class klawiter:ReviewAction ;
     ] ;
-    sh:property [
-        sh:path (oa:hasTarget oa:hasSelector) ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class oa:TextPositionSelector ;
-    ] .
+    sh:or (
+        [
+            sh:property [
+                sh:path (oa:hasTarget oa:hasSelector) ;
+                sh:minCount 1 ;
+                sh:maxCount 1 ;
+                sh:class oa:TextPositionSelector ;
+            ]
+        ]
+        [
+            sh:property [
+                sh:path klawiter:sourceEvidence ;
+                sh:minCount 1 ;
+            ]
+        ]
+    ) .
 
 klawiter:ClaimInterpretationShape
     a sh:NodeShape ;
     sh:targetClass klawiter:ClaimInterpretation ;
+    # The fail-closed no-assignment alternative deliberately proposes no
+    # object; when present, the proposal must be one IRI.
     sh:property [
         sh:path klawiter:proposedObject ;
-        sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:nodeKind sh:IRI ;
     ] ;
@@ -138,7 +153,7 @@ klawiter:ReviewActionShape
         sh:path prov:wasAssociatedWith ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:nodeKind sh:IRI ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
     ] ;
     sh:property [
         sh:path klawiter:reviewOutcome ;

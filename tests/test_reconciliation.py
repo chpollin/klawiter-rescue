@@ -91,18 +91,19 @@ def test_unresolved_decisions_are_explicit_contested_claims(
 ) -> None:
     claims = reconciliation["contestedClaims"]
     assert len(claims) == 5
-    assert all(claim["claimStatus"] == "contested" for claim in claims)
-    assert all(claim["decisionStatus"] == "open" for claim in claims)
-    assert all(len(claim["interpretations"]) >= 2 for claim in claims)
-    assert all(claim["sourceEvidence"] for claim in claims)
+    assert all(claim["klawiter:claimStatus"] == "contested" for claim in claims)
+    assert all(claim["klawiter:decisionStatus"] == "open" for claim in claims)
+    assert all(len(claim["klawiter:interpretation"]) >= 2 for claim in claims)
+    assert all(claim["klawiter:sourceEvidence"] for claim in claims)
     tyreso = next(
         claim
         for claim in claims
-        if claim["subject"]["@id"] == "klawiter:location/Tyresö"
+        if claim["klawiter:claimSubject"]["@id"] == "klawiter:location/Tyres%C3%B6"
     )
+    assert tyreso["klawiter:claimSubject"]["schema:name"] == "Tyresö"
     assert any(
         evidence["sourceValue"] == "Tyresö" and len(evidence["sourceTextSha256"]) == 64
-        for evidence in tyreso["sourceEvidence"]
+        for evidence in tyreso["klawiter:sourceEvidence"]
     )
 
 
