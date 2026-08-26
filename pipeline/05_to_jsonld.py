@@ -23,6 +23,7 @@ from lib.config import (
     OUTPUT_FRONTEND_JSON,
     OUTPUT_JSONLD,
     OUTPUT_PUBLISHABLE_LINKS,
+    STEP_01_PAGELINKS,
     STEP_04_OUTPUT,
     csv_bool,
     load_csv,
@@ -260,10 +261,81 @@ def make_frontend_entry(jsonld_entry):
     return e
 
 
+def _normalize_title(title):
+    """MediaWiki title normalization: underscores as spaces, collapsed
+    whitespace, first letter uppercased."""
+    flat = " ".join(title.replace("_", " ").split())
+    return flat[:1].upper() + flat[1:] if flat else flat
+
+
+def load_pagelink_resolver():
+    """Build page_id -> {normalized title -> canonical target title} from
+    MediaWiki's own resolved link graph (main namespace only)."""
+    if not os.path.exists(STEP_01_PAGELINKS):
+        raise FileNotFoundError(
+            f"Page-link table is missing: {STEP_01_PAGELINKS}. "
+            "Run pipeline stage 01 first."
+        )
+    resolver = {}
+    for row in load_csv(STEP_01_PAGELINKS):
+        if row["pl_namespace"] != "0":
+            continue
+        title = row["pl_title"]
+        resolver.setdefault(int(row["pl_from"]), {})[_normalize_title(title)] = title
+    return resolver
+
+
+def repair_see_references(rows):
+    """Repair See-references against the wiki's resolved link graph.
+
+    The regex extraction reproduces the reference text as written; where
+    that text differs from the canonical page title (case, whitespace,
+    dropped suffixes), the link stayed broken although MediaWiki had
+    resolved it at save time. zweig_pagelinks holds those resolutions, so
+    a broken reference is replaced by the canonical target title of the
+    same source page when that target is a live page. Genuinely dead
+    references (red links) stay untouched.
+    """
+    known = set()
+    for row in rows:
+        for key in ("page_title", "title"):
+            value = row.get(key, "")
+            if value:
+                known.add(value)
+    resolver = load_pagelink_resolver()
+    broken_before = repaired = broken_after = 0
+    for row in rows:
+        see_also = safe_json_parse(row.get("see_also", ""))
+        if not see_also:
+            continue
+        changed = False
+        result = []
+        for ref in see_also:
+            if ref in known:
+                result.append(ref)
+                continue
+            broken_before += 1
+            canonical = resolver.get(int(row["page_id"]), {}).get(_normalize_title(ref))
+            if canonical and canonical in known:
+                result.append(canonical)
+                repaired += 1
+                changed = True
+            else:
+                result.append(ref)
+                broken_after += 1
+        if changed:
+            row["see_also"] = json.dumps(result, ensure_ascii=False)
+    log.info(
+        f"See-reference repair: {broken_before} unresolved, "
+        f"{repaired} repaired via pagelinks, {broken_after} remain (red links)"
+    )
+
+
 def main():
     rows = load_csv(STEP_04_OUTPUT)
     log.info(f"Loaded {len(rows)} entries, converting to JSON-LD...")
 
+    repair_see_references(rows)
     location_uris = load_location_wikidata()
 
     entries = []
@@ -326,6 +398,23 @@ def main():
                 redirect_map[target_title] = target_pid
                 if source_title != target_title:
                     redirect_map[source_title] = target_pid
+
+    # Wiki page titles are the keys the source's See-references and its
+    # resolved link graph use. Where a page title differs from the parsed
+    # display title, reference resolution would break although the page
+    # exists; the page title therefore joins the redirect map as an alias
+    # of its own entry. Real redirects keep precedence.
+    alias_count = 0
+    for row, e in zip(rows, entries, strict=True):
+        if e.get("isRedirect"):
+            continue
+        pid = e.get("sourcePageId")
+        page_title = row.get("page_title", "")
+        if pid and page_title and page_title != e.get("name", ""):
+            if page_title not in redirect_map and page_title not in title_to_pid:
+                redirect_map[page_title] = pid
+                alias_count += 1
+    log.info(f"Page-title aliases added to the redirect map: {alias_count}")
 
     # Compute _meta for frontend data verification
     ns0 = [e for e in non_redirect_entries if e.get("pageNamespace") == 0]

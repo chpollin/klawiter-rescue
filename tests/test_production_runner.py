@@ -21,6 +21,7 @@ def test_llm_off_removes_only_optional_stage() -> None:
     selected = runner._selected_steps("01", "06", "off")
     assert [step.stage for step in selected] == [
         "01",
+        "01v",
         "02",
         "03",
         "03c",
@@ -97,6 +98,13 @@ def test_gate_sequence_precedes_public_projection() -> None:
     assert stages.index("gate1v") < stages.index("gate2")
     assert stages.index("gate2") < stages.index("05")
     assert runner.POSTPROCESSORS[-1].stage == "gate2v"
+
+
+def test_stage01_census_is_a_hard_pipeline_step() -> None:
+    step = next(step for step in runner.STEPS if step.stage == "01v")
+    assert step.script == "census.py"
+    command = runner._command(step, Path("pipeline"), "frozen")
+    assert command[-2:] == ["--stage", "01"]
 
 
 def test_classification_input_is_explicit() -> None:

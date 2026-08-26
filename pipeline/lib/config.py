@@ -32,6 +32,7 @@ BLOB_FILES = [os.path.join(RAW_DIR, f"zt_0{i}") for i in range(8)]
 INTERMEDIATE_DIR = os.path.join(PROJECT_ROOT, "data", "intermediate")
 CORRECTIONS_DIR = os.path.join(PROJECT_ROOT, "data", "corrections")
 STEP_01_OUTPUT = os.path.join(INTERMEDIATE_DIR, "01_extracted.csv")
+STEP_01_PAGELINKS = os.path.join(INTERMEDIATE_DIR, "01_pagelinks.csv")
 STEP_02_OUTPUT = os.path.join(INTERMEDIATE_DIR, "02_encoding_fixed.csv")
 STEP_03_OUTPUT = os.path.join(INTERMEDIATE_DIR, "03_parsed.csv")
 STEP_03B_OUTPUT = os.path.join(INTERMEDIATE_DIR, "03b_llm_enriched.csv")

@@ -20,10 +20,18 @@ def is_redirect(content):
 
 
 def extract_categories(content):
-    """Extract all [[Category:...]] tags and return (categories_list, content_without_categories)."""
+    """Extract all [[Category:...]] tags and return (categories_list, content_without_categories).
+
+    A category link may carry a sort key after a pipe
+    ([[Category:Fiction| 1 German]]); the sort key orders the category
+    listing and is not part of the name. MediaWiki also collapses internal
+    whitespace in titles, so the names match zweig_categorylinks exactly.
+    """
     cats = re.findall(r"\[\[Category:([^\]]+)\]\]", content)
     cleaned = re.sub(r"\[\[Category:[^\]]+\]\]\s*", "", content)
-    return [c.strip() for c in cats], cleaned.strip()
+    names = (" ".join(c.split("|", 1)[0].split()) for c in cats)
+    # MediaWiki uppercases the first letter of every title.
+    return [n[:1].upper() + n[1:] for n in names if n], cleaned.strip()
 
 
 def extract_defaultsortkey(content):

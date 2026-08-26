@@ -28,7 +28,9 @@ Output: data/output/census-report.json + a console summary with PASS/FAIL.
 Read-only over the data; writes only the report.
 """
 
+import argparse
 import csv
+import importlib
 import json
 import os
 import sys
@@ -39,6 +41,7 @@ from lib.config import (
     OUTPUT_DIR,
     OUTPUT_FRONTEND_JSON,
     OUTPUT_JSONLD,
+    SQL_DUMP_PATH,
     STEP_01_OUTPUT,
     setup_logging,
     write_json,
@@ -251,5 +254,80 @@ def main():
     return 0 if report["all_checks_pass"] else 1
 
 
+def stage01_census():
+    """Row-for-row identity between zweig_page in the dump and the extract.
+
+    This anchors the verification chain at the source itself: every page
+    tuple in the dump must be parseable (a skipped tuple is a hard failure,
+    never a log line) and must appear in 01_extracted.csv with the same
+    namespace and title. Content is covered by the downstream census; this
+    stage proves nothing was lost between the dump and stage 01.
+    """
+    extract = importlib.import_module("01_extract")
+    log.info(f"Stage-01 census: parsing zweig_page from {SQL_DUMP_PATH}")
+    with open(SQL_DUMP_PATH, "rb") as f:
+        sql_text = f.read().decode("latin-1")
+
+    dump_pages = {}
+    for values_str in extract.parse_sql_inserts(sql_text, "zweig_page"):
+        for tuple_str in extract.parse_value_tuples(values_str):
+            vals = extract.parse_tuple_values(tuple_str)
+            if len(vals) < 10:
+                log.error(
+                    f"  FAIL: unparseable zweig_page tuple "
+                    f"({len(vals)} columns): {tuple_str[:120]}"
+                )
+                return 1
+            page_id = int(vals[0])
+            dump_pages[page_id] = {
+                "namespace": int(vals[1]),
+                "title": extract.clean_binary_value(vals[2]).replace("_", " "),
+            }
+
+    extracted = load_source_pages()
+    failures = 0
+    only_dump = set(dump_pages) - set(extracted)
+    only_extract = set(extracted) - set(dump_pages)
+    if only_dump:
+        failures += len(only_dump)
+        log.error(
+            f"  FAIL: {len(only_dump)} pages missing from the extract: "
+            f"{sorted(only_dump)[:10]}"
+        )
+    if only_extract:
+        failures += len(only_extract)
+        log.error(
+            f"  FAIL: {len(only_extract)} extract rows without dump page: "
+            f"{sorted(only_extract)[:10]}"
+        )
+    for pid in set(dump_pages) & set(extracted):
+        dump_page = dump_pages[pid]
+        row = extracted[pid]
+        if (dump_page["namespace"], dump_page["title"]) != (
+            row["namespace"],
+            row["title"],
+        ):
+            failures += 1
+            if failures <= 10:
+                log.error(f"  FAIL: page {pid} differs: dump={dump_page} csv={row}")
+
+    log.info(
+        f"Stage-01 census: {len(dump_pages)} dump pages, "
+        f"{len(extracted)} extract rows, {failures} failures"
+    )
+    if failures:
+        return 1
+    log.info("  [PASS] dump-to-extract identity")
+    return 0
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--stage",
+        choices=("01", "full"),
+        default="full",
+        help="01 verifies dump-to-extract identity; full reconciles source, JSON-LD, and frontend.",
+    )
+    args = parser.parse_args()
+    sys.exit(stage01_census() if args.stage == "01" else main())

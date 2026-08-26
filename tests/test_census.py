@@ -42,11 +42,14 @@ class TestEntryCounts:
         but the frontend JSON redirect map only stores redirect page titles
         that resolve to actual entries. The map is a subset.
         """
-        # The frozen reference is ratcheted after intentional title repairs.
+        # Direction-sensitive: the map must never shrink (lost resolution),
+        # but it may grow, since page-title aliases join it deliberately
+        # (2026-08-26). The frozen reference is ratcheted in the evidence
+        # freeze.
         expected = baseline["known_issues"]["redirect_map_size"]
         actual = len(redirects)
-        assert actual == expected, (
-            f"Expected {expected} redirect map entries, got {actual} "
+        assert actual >= expected, (
+            f"Expected at least {expected} redirect map entries, got {actual} "
             f"(delta: {actual - expected})"
         )
 

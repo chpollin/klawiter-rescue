@@ -1,10 +1,10 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "earl.jsonld": "9dd6e02e077150b5a6d8e90b47b7fd869ebdba9f17c664049735ec67ce17d193",
-    "provenance.jsonld": "91d17bef8092f894b93c0cb4fb782ee2d1832949dbd7b04df4085e5810ff1d4e",
+    "earl.jsonld": "b178079df1397447857c4a1c80ad14674f7a550ededda3ff30798902b40c6a07",
+    "provenance.jsonld": "f050d306dbc856184fde3ae84bfecea385552199107937d53ed57e06d843e465",
     "review-queue.json": "6a615f4aff822128b507aed9ea76455923f3b484a4fb2d118b34bbb6b0a193c2",
-    "validation-report.json": "189a3f1e1a24dba5abdc4d377d54665e3d30cf6c77c089846ec092b500ad39e3",
+    "validation-report.json": "a09b5766c920eb628adda8b4bcdc22dfbe478b666cfdbe656134aaf2b004f364",
     "work-editions.jsonld": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a"
   },
   "codeSha256": "acf6b76f0e20140b07b542ab6b4bf64192ab94a02ba73f706f6f32493c75e51f",
@@ -19,7 +19,7 @@
     "reviewCases": 317,
     "works": 443
   },
-  "generatedAt": "2026-08-26T14:26:43.542143+00:00",
+  "generatedAt": "2026-08-26T17:29:55.218971+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

@@ -18,9 +18,12 @@ from lib.config import (
     EXTRACTED_FIELDS,
     SQL_DUMP_PATH,
     STEP_01_OUTPUT,
+    STEP_01_PAGELINKS,
     setup_logging,
     write_csv,
 )
+
+PAGELINK_FIELDS = ["pl_from", "pl_namespace", "pl_title"]
 
 log = setup_logging(__name__)
 
@@ -244,6 +247,38 @@ def build_page_to_textid(pages, slots, contents):
     return mapping
 
 
+def load_pagelinks_table(sql_text):
+    """Parse zweig_pagelinks: MediaWiki's own resolved internal link graph.
+
+    The wiki resolved every [[...]] link at save time; this table is the
+    authoritative target list per source page and repairs See-references
+    whose regex-extracted title differs from the canonical page title.
+    Returns rows with display-form titles (underscores as spaces).
+    """
+    log.info("Parsing zweig_pagelinks...")
+    links = []
+    skipped = 0
+    for values_str in parse_sql_inserts(sql_text, "zweig_pagelinks"):
+        for t in parse_value_tuples(values_str):
+            vals = parse_tuple_values(t)
+            if len(vals) >= 3:
+                links.append(
+                    {
+                        "pl_from": int(vals[0]),
+                        "pl_namespace": int(vals[1]),
+                        "pl_title": clean_binary_value(vals[2]).replace("_", " "),
+                    }
+                )
+            else:
+                skipped += 1
+    if skipped:
+        log.warning(
+            f"  Skipped {skipped} malformed zweig_pagelinks tuples (fewer than 3 columns)"
+        )
+    log.info(f"  Parsed {len(links)} page links")
+    return links
+
+
 def load_blob_index(blob_path):
     """Parse a binary BLOB file and build text_id -> content lookup."""
     log.info(f"Indexing BLOB: {os.path.basename(blob_path)}...")
@@ -345,6 +380,10 @@ def main():
     # Write output
     write_csv(STEP_01_OUTPUT, results, EXTRACTED_FIELDS)
     log.info(f"Output written to {STEP_01_OUTPUT}")
+
+    pagelinks = load_pagelinks_table(sql_text)
+    write_csv(STEP_01_PAGELINKS, pagelinks, PAGELINK_FIELDS)
+    log.info(f"Page links written to {STEP_01_PAGELINKS}")
     log.info(
         f"Success rate: {found}/{found + not_found} ({100 * found / (found + not_found):.1f}%)"
     )

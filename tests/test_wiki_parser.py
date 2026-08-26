@@ -57,6 +57,16 @@ class TestExtractCategories:
         cats, cleaned = extract_categories(entry_standard_header)
         assert cats == ["Fiction / Volumes (Swedish)"]
 
+    def test_sort_key_is_not_part_of_the_name(self):
+        content = "[[Category:Collected and Selected Works in Translation| Chinese]]"
+        cats, _ = extract_categories(content)
+        assert cats == ["Collected and Selected Works in Translation"]
+
+    def test_internal_whitespace_is_collapsed(self):
+        content = "[[Category:Collected and Selected  Works]]"
+        cats, _ = extract_categories(content)
+        assert cats == ["Collected and Selected Works"]
+
 
 class TestExtractDefaultsortkey:
     def test_extracts_and_removes(self, entry_film):

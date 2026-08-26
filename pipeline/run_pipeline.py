@@ -33,6 +33,7 @@ class Step:
 
 STEPS = (
     Step("01", "01_extract.py", "Extract entries from SQL dump and BLOBs"),
+    Step("01v", "census.py", "Verify dump-to-extract identity (stage-01 census)"),
     Step("02", "02_fix_encoding.py", "Repair source encoding"),
     Step("03", "03_parse_entries.py", "Parse wiki markup into fields"),
     Step("03b", "03b_llm_enrich.py", "Apply frozen or live LLM enrichment"),
@@ -110,6 +111,8 @@ def _command(step: Step, pipeline_dir: Path, llm_mode: str) -> list[str]:
         command.extend(("--input", "03" if llm_mode == "off" else "03b"))
     elif step.stage == "04":
         command.extend(("--input", "03c"))
+    elif step.stage == "01v":
+        command.extend(("--stage", "01"))
     elif step.stage == "provenance":
         command.extend(("--llm-mode", llm_mode))
     return command
