@@ -4,6 +4,8 @@
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix schema:  <https://schema.org/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix oa:      <http://www.w3.org/ns/oa#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix klawiter: <https://chpollin.github.io/klawiter-rescue/vocab/> .
 
@@ -14,9 +16,9 @@
 <https://chpollin.github.io/klawiter-rescue/vocab/>
     a owl:Ontology ;
     dcterms:title "Klawiter Bibliography Vocabulary"@en ;
-    dcterms:description "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, and MediaWiki source metadata. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core, terms without an equivalent in existing vocabularies are defined here."@en ;
+    dcterms:description "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/<TermName>/."@en ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "2.0 (Schema.org blend)" ;
+    owl:versionInfo "3.0 (gate evidence terms, RDF resource modeling)" ;
     rdfs:seeAlso <https://chpollin.github.io/klawiter-rescue/vocab/index.html> .
 
 #################################################################
@@ -61,7 +63,8 @@ klawiter:FilmEntry
 klawiter:CorrespondenceEntry
     a rdfs:Class ;
     rdfs:label "Correspondence Entry"@en ;
-    rdfs:comment "Letters and correspondence. schema:Message is the closest Schema.org type, no dedicated letter type exists."@en ;
+    rdfs:comment "Bibliographic records describing letters and correspondence. schema:Message is the closest Schema.org type; the record describes correspondence, it is not the message itself, so only a close match is asserted and the emitted type is schema:CreativeWork."@en ;
+    rdfs:subClassOf schema:CreativeWork ;
     skos:closeMatch schema:Message ;
     rdfs:isDefinedBy klawiter: .
 
@@ -103,8 +106,9 @@ klawiter:ForewordEntry
 klawiter:SymposiumEntry
     a rdfs:Class ;
     rdfs:label "Symposium Entry"@en ;
-    rdfs:comment "Symposia, exhibitions, conferences about Zweig."@en ;
-    rdfs:subClassOf schema:Event ;
+    rdfs:comment "Bibliographic records describing symposia, exhibitions, and conferences about Zweig. The record is the description that carries publication properties; the event itself is only a close match, so schema:Event is not emitted as a direct type."@en ;
+    rdfs:subClassOf schema:CreativeWork ;
+    skos:closeMatch schema:Event ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:DramaticReadingEntry
@@ -134,14 +138,132 @@ klawiter:OtherEntry
     rdfs:subClassOf schema:CreativeWork ;
     rdfs:isDefinedBy klawiter: .
 
+klawiter:WikiInfrastructurePage
+    a rdfs:Class ;
+    rdfs:label "Wiki Infrastructure Page"@en ;
+    rdfs:comment "Non-bibliographic MediaWiki page preserved as source structure: category, template, help, file, and system pages. Never typed as a bibliographic work and never carries a bibliographic citation."@en ;
+    rdfs:isDefinedBy klawiter: .
+
 #################################################################
-#    Domain-specific properties
+#    Gate evidence classes
+#################################################################
+
+klawiter:ContestedClaim
+    a rdfs:Class ;
+    rdfs:label "Contested Claim"@en ;
+    rdfs:comment "A disputed identity assertion that stays part of the final dataset with its exact source evidence, all competing interpretations, the review trail, and an open decision status. Two evidence kinds exist: edition work-binding claims carry a Web Annotation offset selector, authority reconciliation claims carry source-occurrence evidence."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:ClaimInterpretation
+    a rdfs:Class ;
+    rdfs:label "Claim Interpretation"@en ;
+    rdfs:comment "One competing reading of a contested claim, optionally proposing an object. The fail-closed alternative proposes no object."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:ReviewAction
+    a rdfs:Class ;
+    rdfs:label "Review Action"@en ;
+    rdfs:comment "One step of the review trail on a claim or edition: who reviewed, on what basis, with what outcome."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:WorkIdentityCandidate
+    a rdfs:Class ;
+    rdfs:label "Work Identity Candidate"@en ;
+    rdfs:comment "A candidate independent work identity proposed by a contested work-binding claim, kept unresolved until an authorized decision."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Dataset structure properties
+#################################################################
+
+klawiter:entries
+    a rdf:Property ;
+    rdfs:label "entries"@en ;
+    rdfs:comment "Bibliographic entries of the flat dataset."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:totalEntries
+    a rdf:Property ;
+    rdfs:label "total entries"@en ;
+    rdfs:comment "Number of entries in a collection object."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:works
+    a rdf:Property ;
+    rdfs:label "works"@en ;
+    rdfs:comment "Work nodes of the Work/Edition graph."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:editions
+    a rdf:Property ;
+    rdfs:label "editions"@en ;
+    rdfs:comment "Edition nodes of the Work/Edition graph."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:annotations
+    a rdf:Property ;
+    rdfs:label "annotations"@en ;
+    rdfs:comment "Web Annotations binding each edition to its exact source block."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:carriers
+    a rdf:Property ;
+    rdfs:label "carriers"@en ;
+    rdfs:comment "Source-occurrence carrier volumes of the Work/Edition graph."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:contestedClaims
+    a rdf:Property ;
+    rdfs:label "contested claims"@en ;
+    rdfs:comment "Contested claims of a dataset."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:candidateWorks
+    a rdf:Property ;
+    rdfs:label "candidate works"@en ;
+    rdfs:comment "Unresolved candidate work identities of a dataset."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:pageSummaries
+    a rdf:Property ;
+    rdfs:label "page summaries"@en ;
+    rdfs:comment "Per-page segmentation summaries of the Work/Edition graph."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:canonicalDataset
+    a rdf:Property ;
+    rdfs:label "canonical dataset"@en ;
+    rdfs:comment "Points from a derived projection to the canonical dataset that is authoritative for the shared subject matter."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:derivedProjection
+    a rdf:Property ;
+    rdfs:label "derived projection"@en ;
+    rdfs:comment "Points from a canonical dataset to a derived convenience projection of it."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:authorityNote
+    a rdf:Property ;
+    rdfs:label "authority note"@en ;
+    rdfs:comment "Human-readable statement of which dataset is authoritative for which question."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:decomposedAsWork
+    a rdf:Property ;
+    rdfs:label "decomposed as work"@en ;
+    rdfs:comment "Links a flat multi-edition entry to its canonical work node in the Work/Edition graph."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Domain-specific entry properties
 #################################################################
 
 klawiter:entryType
     a rdf:Property ;
     rdfs:label "entry type"@en ;
-    rdfs:comment "Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other."@en ;
+    rdfs:comment "Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other, plus the wiki infrastructure namespaces category, mediawiki, template, help, file."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
@@ -152,30 +274,17 @@ klawiter:timePeriod
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
-klawiter:totalEntries
-    a rdf:Property ;
-    rdfs:label "total entries"@en ;
-    rdfs:comment "Number of entries in a collection object."@en ;
-    rdfs:range xsd:integer ;
-    rdfs:isDefinedBy klawiter: .
-
-klawiter:entries
-    a rdf:Property ;
-    rdfs:label "entries"@en ;
-    rdfs:comment "Ordered list of bibliographic entries in the top-level collection."@en ;
-    rdfs:isDefinedBy klawiter: .
-
 klawiter:categories
     a rdf:Property ;
     rdfs:label "categories"@en ;
-    rdfs:comment "MediaWiki categories from the original bibliography wiki."@en ;
+    rdfs:comment "MediaWiki categories from the original bibliography wiki, normalized like MediaWiki titles (sort keys stripped)."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:contentItems
     a rdf:Property ;
     rdfs:label "content items"@en ;
-    rdfs:comment "Table of contents for collected works, ordered."@en ;
+    rdfs:comment "Table of contents for collected works."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
@@ -193,11 +302,19 @@ klawiter:originalTitle
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
+klawiter:languageName
+    a rdf:Property ;
+    rdfs:label "language name"@en ;
+    rdfs:comment "Human-readable language name as the source states it, for example German, Chinese. The BCP-47 code lives in schema:inLanguage."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
 klawiter:languageCode
     a rdf:Property ;
     rdfs:label "language code"@en ;
-    rdfs:comment "ISO 639-1 language code, for example de, en, fr, zh."@en ;
+    rdfs:comment "ISO 639-1 language code. Superseded in the published datasets: schema:inLanguage now carries the code. Retained for older exports."@en ;
     rdfs:range xsd:string ;
+    owl:deprecated true ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:allYears
@@ -217,8 +334,15 @@ klawiter:allLocations
 klawiter:locationSameAs
     a rdf:Property ;
     rdfs:label "location same as"@en ;
-    rdfs:comment "Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. The place is taken from the source and reconciled against Wikidata. A dedicated property, not schema:sameAs, which would conflate the work with the place."@en ;
+    rdfs:comment "Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. In the published RDF the link sits as schema:sameAs on the Place node; this property remains for flat projections. A dedicated property, not schema:sameAs on the work, which would conflate the work with the place."@en ;
     rdfs:range rdfs:Resource ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:seeAlsoText
+    a rdf:Property ;
+    rdfs:label "see-also text"@en ;
+    rdfs:comment "Unresolvable See-reference preserved as written: the referenced bibliography page was never created (a red link in the source wiki). Resolved references use dcterms:relation with entry IRIs."@en ;
+    rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:reprints
@@ -227,6 +351,10 @@ klawiter:reprints
     rdfs:comment "References to reprint editions."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Source provenance properties
+#################################################################
 
 klawiter:sourcePageId
     a rdf:Property ;
@@ -267,5 +395,264 @@ klawiter:redirectTarget
     a rdf:Property ;
     rdfs:label "redirect target"@en ;
     rdfs:comment "Title of the target entry for redirects."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:headerLine
+    a rdf:Property ;
+    rdfs:label "header line"@en ;
+    rdfs:comment "The unmodified source header line an edition was segmented from."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:yearRaw
+    a rdf:Property ;
+    rdfs:label "year raw"@en ;
+    rdfs:comment "The year exactly as written in the source header, including ca. notation."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:pageCountRaw
+    a rdf:Property ;
+    rdfs:label "page count raw"@en ;
+    rdfs:comment "The page count exactly as written in the source, before notation normalization."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceSliceSha256
+    a rdf:Property ;
+    rdfs:label "source slice SHA-256"@en ;
+    rdfs:comment "SHA-256 of the exact source text slice the offset selector addresses."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceCorpusSha256
+    a rdf:Property ;
+    rdfs:label "source corpus SHA-256"@en ;
+    rdfs:comment "SHA-256 over the selected source corpus a dataset was built from."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceCodeSha256
+    a rdf:Property ;
+    rdfs:label "source code SHA-256"@en ;
+    rdfs:comment "SHA-256 over the LF-normalized generator code recorded in a PROV plan."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sha256
+    a rdf:Property ;
+    rdfs:label "SHA-256"@en ;
+    rdfs:comment "SHA-256 of a provenance input entity."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:algorithmVersion
+    a rdf:Property ;
+    rdfs:label "algorithm version"@en ;
+    rdfs:comment "Version of the deterministic algorithm that produced a dataset."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:selectionRule
+    a rdf:Property ;
+    rdfs:label "selection rule"@en ;
+    rdfs:comment "Human-readable statement of the deterministic corpus selection rule."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Review and claim properties
+#################################################################
+
+klawiter:reviewStatus
+    a rdf:Property ;
+    rdfs:label "review status"@en ;
+    rdfs:comment "Review state of an edition proposal: proposed, confirmed, rejected, or contested."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewFlags
+    a rdf:Property ;
+    rdfs:label "review flags"@en ;
+    rdfs:comment "Machine-raised flags that prioritize an edition for review."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:claimSubject
+    a rdf:Property ;
+    rdfs:label "claim subject"@en ;
+    rdfs:comment "The resource whose identity a contested claim disputes."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:claimPredicate
+    a rdf:Property ;
+    rdfs:label "claim predicate"@en ;
+    rdfs:comment "The relation the contested claim would assert if resolved, for example schema:sameAs or schema:exampleOfWork."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:claimStatus
+    a rdf:Property ;
+    rdfs:label "claim status"@en ;
+    rdfs:comment "State of the claim itself; contested claims stay contested until superseded."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:decisionStatus
+    a rdf:Property ;
+    rdfs:label "decision status"@en ;
+    rdfs:comment "State of the human decision on a claim; open until an authorized judgment."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:identityScope
+    a rdf:Property ;
+    rdfs:label "identity scope"@en ;
+    rdfs:comment "What kind of identity a claim or carrier concerns, for example location, work, or source-occurrence."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:identityStatus
+    a rdf:Property ;
+    rdfs:label "identity status"@en ;
+    rdfs:comment "State of a candidate work identity; contested until decided."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:interpretation
+    a rdf:Property ;
+    rdfs:label "interpretation"@en ;
+    rdfs:comment "A competing interpretation attached to a contested claim."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:interpretationStatus
+    a rdf:Property ;
+    rdfs:label "interpretation status"@en ;
+    rdfs:comment "State of one interpretation of a contested claim."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:proposedObject
+    a rdf:Property ;
+    rdfs:label "proposed object"@en ;
+    rdfs:comment "The object an interpretation proposes for the claim predicate. The fail-closed alternative omits it."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:candidateId
+    a rdf:Property ;
+    rdfs:label "candidate ID"@en ;
+    rdfs:comment "Identifier of the reconciliation candidate an interpretation is based on."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:candidateSource
+    a rdf:Property ;
+    rdfs:label "candidate source"@en ;
+    rdfs:comment "Where a reconciliation candidate came from, for example a legacy run, the frozen authority index, or the fail-closed alternative."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewAction
+    a rdf:Property ;
+    rdfs:label "review action"@en ;
+    rdfs:comment "A review-trail step attached to a claim."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewOutcome
+    a rdf:Property ;
+    rdfs:label "review outcome"@en ;
+    rdfs:comment "Outcome of one review action, for example match, mismatch, unresolved, confirm, correct."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewBasis
+    a rdf:Property ;
+    rdfs:label "review basis"@en ;
+    rdfs:comment "Stated basis of a review judgment."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:decisionId
+    a rdf:Property ;
+    rdfs:label "decision ID"@en ;
+    rdfs:comment "Stable identifier of a recorded decision in the decision files."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:decidedAt
+    a rdf:Property ;
+    rdfs:label "decided at"@en ;
+    rdfs:comment "Timestamp of a recorded decision."@en ;
+    rdfs:range xsd:dateTime ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:evidence
+    a rdf:Property ;
+    rdfs:label "evidence"@en ;
+    rdfs:comment "Evidence references supporting a review action."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:contestedClaim
+    a rdf:Property ;
+    rdfs:label "contested claim"@en ;
+    rdfs:comment "Links a contested edition to the claim that keeps its work binding open."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceEdition
+    a rdf:Property ;
+    rdfs:label "source edition"@en ;
+    rdfs:comment "The edition a source-occurrence carrier volume was observed on."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Source-occurrence evidence properties
+#################################################################
+
+klawiter:sourceEvidence
+    a rdf:Property ;
+    rdfs:label "source evidence"@en ;
+    rdfs:comment "Source-occurrence evidence attached to an authority reconciliation claim."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceLine
+    a rdf:Property ;
+    rdfs:label "source line"@en ;
+    rdfs:comment "Line number of an occurrence in the classified source."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceValue
+    a rdf:Property ;
+    rdfs:label "source value"@en ;
+    rdfs:comment "The value exactly as it occurs in the source."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceTextSha256
+    a rdf:Property ;
+    rdfs:label "source text SHA-256"@en ;
+    rdfs:comment "SHA-256 of the source line an occurrence was found on."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourcePath
+    a rdf:Property ;
+    rdfs:label "source path"@en ;
+    rdfs:comment "Repository-relative path of the file an occurrence was found in."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceTitle
+    a rdf:Property ;
+    rdfs:label "source title"@en ;
+    rdfs:comment "Title of the source page an occurrence belongs to."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceField
+    a rdf:Property ;
+    rdfs:label "source field"@en ;
+    rdfs:comment "The extracted field an occurrence was observed in."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .

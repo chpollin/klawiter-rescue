@@ -213,9 +213,12 @@ RDF_TRIPLE_FLOORS = {
 
 
 def _check_rdf_expansion():
-    """Fail hard when either published graph expands below its triple floor."""
+    """Fail hard when either published graph expands below its triple floor,
+    or when the flat graph violates its own SHACL contract."""
+    from pyshacl import validate as shacl_validate
     from rdflib import Graph
 
+    flat_graph = None
     for path, floor in RDF_TRIPLE_FLOORS.items():
         if not os.path.exists(path):
             log.error(f"RDF expansion check: graph is missing: {path}")
@@ -231,6 +234,23 @@ def _check_rdf_expansion():
                 "dropping data."
             )
             sys.exit(1)
+        if path == OUTPUT_JSONLD:
+            flat_graph = graph
+
+    shapes_path = os.path.join("data", "schema", "flat-shapes.ttl")
+    shapes_graph = Graph().parse(shapes_path, format="turtle")
+    conforms, _, text = shacl_validate(
+        flat_graph,
+        shacl_graph=shapes_graph,
+        inference="none",
+        abort_on_first=False,
+        allow_infos=False,
+        allow_warnings=False,
+    )
+    if not conforms:
+        log.error(f"Flat-layer SHACL violated:\n{text}")
+        sys.exit(1)
+    log.info("Flat-layer SHACL: conforms")
 
 
 if __name__ == "__main__":

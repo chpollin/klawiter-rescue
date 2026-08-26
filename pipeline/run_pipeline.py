@@ -59,6 +59,11 @@ POSTPROCESSORS = (
     Step("triage", "build_triage.py", "Build Expert-in-the-Loop review hints"),
     Step("patches", "apply_patches.py", "Apply reviewed correction patches"),
     Step(
+        "vocab",
+        "build_vocab_pages.py",
+        "Generate dereferenceable vocabulary term pages",
+    ),
+    Step(
         "gate2v", "validate_reconciliation.py", "Validate Gate 2 and public projections"
     ),
 )

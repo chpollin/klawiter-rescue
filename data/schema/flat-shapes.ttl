@@ -1,0 +1,100 @@
+@prefix klawiter: <https://chpollin.github.io/klawiter-rescue/vocab/> .
+@prefix schema: <https://schema.org/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Shapes for the flat dataset (klawiter.jsonld), the derived convenience
+# projection of the canonical Work/Edition graph. Kept separate from
+# work-edition-shapes.ttl so each layer is validated only against its own
+# contract.
+
+klawiter:FlatDatasetShape
+    a sh:NodeShape ;
+    sh:targetNode klawiter:klawiter-bibliography ;
+    sh:property [
+        sh:path dcterms:license ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path klawiter:canonicalDataset ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:creator ;
+        sh:minCount 1 ;
+        sh:class schema:Person ;
+    ] .
+
+# Every bibliographic entry (recognizable by its entry type) must carry
+# stable provenance and at most one display title.
+klawiter:FlatEntryShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf klawiter:entryType ;
+    sh:property [
+        sh:path klawiter:entryType ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path klawiter:sourcePageId ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+    ] ;
+    sh:property [
+        sh:path schema:name ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path schema:publisher ;
+        sh:maxCount 1 ;
+        sh:class schema:Organization ;
+    ] ;
+    sh:property [
+        sh:path schema:locationCreated ;
+        sh:maxCount 1 ;
+        sh:class schema:Place ;
+    ] ;
+    sh:property [
+        sh:path schema:translator ;
+        sh:maxCount 1 ;
+        sh:class schema:Person ;
+    ] .
+
+# Agent and place resources always carry exactly one name.
+klawiter:FlatPersonShape
+    a sh:NodeShape ;
+    sh:targetClass schema:Person ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] .
+
+klawiter:FlatOrganizationShape
+    a sh:NodeShape ;
+    sh:targetClass schema:Organization ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] .
+
+klawiter:FlatPlaceShape
+    a sh:NodeShape ;
+    sh:targetClass schema:Place ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path schema:sameAs ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] .

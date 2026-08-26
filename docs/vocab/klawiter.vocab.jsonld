@@ -1,314 +1,1039 @@
 {
   "@context": {
-    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "owl": "http://www.w3.org/2002/07/owl#",
-    "skos": "http://www.w3.org/2004/02/skos/core#",
     "schema": "https://schema.org/",
     "dcterms": "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
-    "label": {"@id": "rdfs:label", "@language": "en"},
-    "comment": {"@id": "rdfs:comment", "@language": "en"},
-    "subClassOf": {"@id": "rdfs:subClassOf", "@type": "@id"},
-    "closeMatch": {"@id": "skos:closeMatch", "@type": "@id"},
-    "range": {"@id": "rdfs:range", "@type": "@id"},
-    "isDefinedBy": {"@id": "rdfs:isDefinedBy", "@type": "@id"},
-    "seeAlso": {"@id": "rdfs:seeAlso", "@type": "@id"},
-    "title": {"@id": "dcterms:title", "@language": "en"},
-    "description": {"@id": "dcterms:description", "@language": "en"},
-    "license": {"@id": "dcterms:license", "@type": "@id"},
-    "versionInfo": "owl:versionInfo"
+    "prov": "http://www.w3.org/ns/prov#",
+    "oa": "http://www.w3.org/ns/oa#",
+    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/"
   },
   "@graph": [
     {
       "@id": "klawiter:",
-      "@type": "owl:Ontology",
-      "title": "Klawiter Bibliography Vocabulary",
-      "description": "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, and MediaWiki source metadata. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core, terms without an equivalent in existing vocabularies are defined here.",
-      "license": "https://creativecommons.org/licenses/by/4.0/",
-      "versionInfo": "2.0 (Schema.org blend)",
-      "seeAlso": "https://chpollin.github.io/klawiter-rescue/vocab/index.html"
-    },
-
-    {
-      "@id": "klawiter:FictionEntry",
-      "@type": "rdfs:Class",
-      "label": "Fiction Entry",
-      "comment": "Novels, novellas, short stories by Stefan Zweig.",
-      "subClassOf": "schema:Book",
-      "isDefinedBy": "klawiter:"
+      "@type": "http://www.w3.org/2002/07/owl#Ontology",
+      "dcterms:description": "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/<TermName>/.",
+      "dcterms:license": {
+        "@id": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "dcterms:title": "Klawiter Bibliography Vocabulary",
+      "http://www.w3.org/2002/07/owl#versionInfo": "3.0 (gate evidence terms, RDF resource modeling)",
+      "rdfs:seeAlso": {
+        "@id": "klawiter:index.html"
+      }
     },
     {
-      "@id": "klawiter:EssayEntry",
+      "@id": "klawiter:ClaimInterpretation",
       "@type": "rdfs:Class",
-      "label": "Essay Entry",
-      "comment": "Essays, articles, reviews.",
-      "subClassOf": "schema:Article",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:PoetryEntry",
-      "@type": "rdfs:Class",
-      "label": "Poetry Entry",
-      "comment": "Individual poems and poetry collections.",
-      "subClassOf": "schema:CreativeWork",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:DramaEntry",
-      "@type": "rdfs:Class",
-      "label": "Drama Entry",
-      "comment": "Plays, libretti, dramatic works.",
-      "subClassOf": "schema:Play",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:FilmEntry",
-      "@type": "rdfs:Class",
-      "label": "Film Entry",
-      "comment": "Film adaptations, operas, multimedia.",
-      "subClassOf": "schema:Movie",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:CorrespondenceEntry",
-      "@type": "rdfs:Class",
-      "label": "Correspondence Entry",
-      "comment": "Letters and correspondence. schema:Message is the closest Schema.org type, no dedicated letter type exists.",
-      "closeMatch": "schema:Message",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "One competing reading of a contested claim, optionally proposing an object. The fail-closed alternative proposes no object.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Claim Interpretation"
     },
     {
       "@id": "klawiter:CollectedWorksEntry",
       "@type": "rdfs:Class",
-      "label": "Collected Works Entry",
-      "comment": "Anthologies, selected and collected works.",
-      "subClassOf": "schema:Collection",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "Anthologies, selected and collected works.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Collected Works Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:Collection"
+      }
     },
     {
-      "@id": "klawiter:SecondaryLiteratureEntry",
+      "@id": "klawiter:ContestedClaim",
       "@type": "rdfs:Class",
-      "label": "Secondary Literature Entry",
-      "comment": "Scholarship about Stefan Zweig.",
-      "subClassOf": "schema:ScholarlyArticle",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "A disputed identity assertion that stays part of the final dataset with its exact source evidence, all competing interpretations, the review trail, and an open decision status. Two evidence kinds exist: edition work-binding claims carry a Web Annotation offset selector, authority reconciliation claims carry source-occurrence evidence.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Contested Claim"
     },
     {
-      "@id": "klawiter:HistoricalStudyEntry",
+      "@id": "klawiter:CorrespondenceEntry",
       "@type": "rdfs:Class",
-      "label": "Historical Study Entry",
-      "comment": "Monographs, dissertations, academic studies.",
-      "subClassOf": "schema:ScholarlyArticle",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "Bibliographic records describing letters and correspondence. schema:Message is the closest Schema.org type; the record describes correspondence, it is not the message itself, so only a close match is asserted and the emitted type is schema:CreativeWork.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Correspondence Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:CreativeWork"
+      },
+      "skos:closeMatch": {
+        "@id": "schema:Message"
+      }
     },
     {
-      "@id": "klawiter:TranslationEntry",
+      "@id": "klawiter:DramaEntry",
       "@type": "rdfs:Class",
-      "label": "Translation Entry",
-      "comment": "Translations by Zweig of other authors' works.",
-      "subClassOf": "schema:Book",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:ForewordEntry",
-      "@type": "rdfs:Class",
-      "label": "Foreword Entry",
-      "comment": "Forewords, afterwords, editorial contributions.",
-      "subClassOf": "schema:CreativeWork",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:SymposiumEntry",
-      "@type": "rdfs:Class",
-      "label": "Symposium Entry",
-      "comment": "Symposia, exhibitions, conferences about Zweig.",
-      "subClassOf": "schema:Event",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "Plays, libretti, dramatic works.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Drama Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:Play"
+      }
     },
     {
       "@id": "klawiter:DramaticReadingEntry",
       "@type": "rdfs:Class",
-      "label": "Dramatic Reading Entry",
-      "comment": "Dramatic readings and staged performances.",
-      "subClassOf": "schema:CreativeWork",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "Dramatic readings and staged performances.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Dramatic Reading Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:CreativeWork"
+      }
+    },
+    {
+      "@id": "klawiter:EssayEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Essays, articles, reviews.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Essay Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:Article"
+      }
+    },
+    {
+      "@id": "klawiter:FictionEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Novels, novellas, short stories by Stefan Zweig.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Fiction Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:Book"
+      }
+    },
+    {
+      "@id": "klawiter:FilmEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Film adaptations, operas, multimedia.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Film Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:Movie"
+      }
+    },
+    {
+      "@id": "klawiter:ForewordEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Forewords, afterwords, editorial contributions.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Foreword Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:CreativeWork"
+      }
+    },
+    {
+      "@id": "klawiter:HistoricalStudyEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Monographs, dissertations, academic studies.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Historical Study Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:ScholarlyArticle"
+      }
     },
     {
       "@id": "klawiter:NewspaperEntry",
       "@type": "rdfs:Class",
-      "label": "Newspaper Entry",
-      "comment": "Newspaper articles.",
-      "subClassOf": "schema:NewsArticle",
-      "isDefinedBy": "klawiter:"
-    },
-    {
-      "@id": "klawiter:RedirectEntry",
-      "@type": "rdfs:Class",
-      "label": "Redirect Entry",
-      "comment": "Alias pointing to another entry, from MediaWiki. No Schema.org equivalent is mapped.",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "Newspaper articles.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Newspaper Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:NewsArticle"
+      }
     },
     {
       "@id": "klawiter:OtherEntry",
       "@type": "rdfs:Class",
-      "label": "Other Entry",
-      "comment": "Unclassifiable entries.",
-      "subClassOf": "schema:CreativeWork",
-      "isDefinedBy": "klawiter:"
-    },
-
-    {
-      "@id": "klawiter:entryType",
-      "@type": "rdf:Property",
-      "label": "entry type",
-      "comment": "Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "rdfs:comment": "Unclassifiable entries.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Other Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:CreativeWork"
+      }
     },
     {
-      "@id": "klawiter:timePeriod",
-      "@type": "rdf:Property",
-      "label": "time period",
-      "comment": "Historical period: pre-zweig (before 1881), lifetime (1881-1942), post-wwii (1943-1980), late-20c (1981-2000), contemporary (2001 onward).",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:PoetryEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Individual poems and poetry collections.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Poetry Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:CreativeWork"
+      }
     },
     {
-      "@id": "klawiter:totalEntries",
-      "@type": "rdf:Property",
-      "label": "total entries",
-      "comment": "Number of entries in a collection object.",
-      "range": "xsd:integer",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:RedirectEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Alias pointing to another entry, from MediaWiki. No Schema.org equivalent is mapped.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Redirect Entry"
     },
     {
-      "@id": "klawiter:entries",
-      "@type": "rdf:Property",
-      "label": "entries",
-      "comment": "Ordered list of bibliographic entries in the top-level collection.",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:ReviewAction",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "One step of the review trail on a claim or edition: who reviewed, on what basis, with what outcome.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Review Action"
     },
     {
-      "@id": "klawiter:categories",
-      "@type": "rdf:Property",
-      "label": "categories",
-      "comment": "MediaWiki categories from the original bibliography wiki.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:SecondaryLiteratureEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Scholarship about Stefan Zweig.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Secondary Literature Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:ScholarlyArticle"
+      }
     },
     {
-      "@id": "klawiter:contentItems",
-      "@type": "rdf:Property",
-      "label": "content items",
-      "comment": "Table of contents for collected works, ordered.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:SymposiumEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Bibliographic records describing symposia, exhibitions, and conferences about Zweig. The record is the description that carries publication properties; the event itself is only a close match, so schema:Event is not emitted as a direct type.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Symposium Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:CreativeWork"
+      },
+      "skos:closeMatch": {
+        "@id": "schema:Event"
+      }
     },
     {
-      "@id": "klawiter:mainCategory",
-      "@type": "rdf:Property",
-      "label": "main category",
-      "comment": "Primary category used for entry type classification.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:TranslationEntry",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Translations by Zweig of other authors' works.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Translation Entry",
+      "rdfs:subClassOf": {
+        "@id": "schema:Book"
+      }
     },
     {
-      "@id": "klawiter:originalTitle",
-      "@type": "rdf:Property",
-      "label": "original title",
-      "comment": "Original-language title, when the entry title differs, for example for translations.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:WikiInfrastructurePage",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "Non-bibliographic MediaWiki page preserved as source structure: category, template, help, file, and system pages. Never typed as a bibliographic work and never carries a bibliographic citation.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Wiki Infrastructure Page"
     },
     {
-      "@id": "klawiter:languageCode",
-      "@type": "rdf:Property",
-      "label": "language code",
-      "comment": "ISO 639-1 language code, for example de, en, fr, zh.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:WorkIdentityCandidate",
+      "@type": "rdfs:Class",
+      "rdfs:comment": "A candidate independent work identity proposed by a contested work-binding claim, kept unresolved until an authorized decision.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "Work Identity Candidate"
     },
     {
-      "@id": "klawiter:allYears",
-      "@type": "rdf:Property",
-      "label": "all years",
-      "comment": "All years mentioned in the entry, when multiple editions or reprints are listed.",
-      "range": "xsd:integer",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:algorithmVersion",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Version of the deterministic algorithm that produced a dataset.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "algorithm version",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     },
     {
       "@id": "klawiter:allLocations",
-      "@type": "rdf:Property",
-      "label": "all locations",
-      "comment": "All publication locations when multiple are mentioned.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "All publication locations when multiple are mentioned.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "all locations",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     },
     {
-      "@id": "klawiter:locationSameAs",
-      "@type": "rdf:Property",
-      "label": "location same as",
-      "comment": "Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. The place is taken from the source and reconciled against Wikidata. A dedicated property, not schema:sameAs, which would conflate the work with the place.",
-      "range": "rdfs:Resource",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:allYears",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "All years mentioned in the entry, when multiple editions or reprints are listed.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "all years",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
     },
     {
-      "@id": "klawiter:reprints",
-      "@type": "rdf:Property",
-      "label": "reprints",
-      "comment": "References to reprint editions.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:annotations",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Web Annotations binding each edition to its exact source block.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "annotations"
     },
     {
-      "@id": "klawiter:sourcePageId",
-      "@type": "rdf:Property",
-      "label": "source page ID",
-      "comment": "Original MediaWiki page ID (provenance).",
-      "range": "xsd:integer",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:authorityNote",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Human-readable statement of which dataset is authoritative for which question.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "authority note",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     },
     {
-      "@id": "klawiter:sourceTextId",
-      "@type": "rdf:Property",
-      "label": "source text ID",
-      "comment": "MediaWiki text revision ID (provenance).",
-      "range": "xsd:integer",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:candidateId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Identifier of the reconciliation candidate an interpretation is based on.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "candidate ID",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     },
     {
-      "@id": "klawiter:sourceBlobId",
-      "@type": "rdf:Property",
-      "label": "source BLOB ID",
-      "comment": "BLOB file number (0-7) containing the source text.",
-      "range": "xsd:integer",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:candidateSource",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Where a reconciliation candidate came from, for example a legacy run, the frozen authority index, or the fail-closed alternative.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "candidate source",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     },
     {
-      "@id": "klawiter:pageNamespace",
-      "@type": "rdf:Property",
-      "label": "page namespace",
-      "comment": "MediaWiki namespace, for example 0 for main, 14 for category.",
-      "range": "xsd:integer",
-      "isDefinedBy": "klawiter:"
+      "@id": "klawiter:candidateWorks",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Unresolved candidate work identities of a dataset.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "candidate works"
+    },
+    {
+      "@id": "klawiter:canonicalDataset",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Points from a derived projection to the canonical dataset that is authoritative for the shared subject matter.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "canonical dataset"
+    },
+    {
+      "@id": "klawiter:carriers",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Source-occurrence carrier volumes of the Work/Edition graph.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "carriers"
+    },
+    {
+      "@id": "klawiter:categories",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "MediaWiki categories from the original bibliography wiki, normalized like MediaWiki titles (sort keys stripped).",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "categories",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:claimPredicate",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The relation the contested claim would assert if resolved, for example schema:sameAs or schema:exampleOfWork.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "claim predicate"
+    },
+    {
+      "@id": "klawiter:claimStatus",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "State of the claim itself; contested claims stay contested until superseded.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "claim status",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:claimSubject",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The resource whose identity a contested claim disputes.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "claim subject"
+    },
+    {
+      "@id": "klawiter:contentItems",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Table of contents for collected works.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "content items",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:contestedClaim",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Links a contested edition to the claim that keeps its work binding open.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "contested claim"
+    },
+    {
+      "@id": "klawiter:contestedClaims",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Contested claims of a dataset.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "contested claims"
+    },
+    {
+      "@id": "klawiter:decidedAt",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Timestamp of a recorded decision.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "decided at",
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
+      }
+    },
+    {
+      "@id": "klawiter:decisionId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Stable identifier of a recorded decision in the decision files.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "decision ID",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:decisionStatus",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "State of the human decision on a claim; open until an authorized judgment.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "decision status",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:decomposedAsWork",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Links a flat multi-edition entry to its canonical work node in the Work/Edition graph.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "decomposed as work"
+    },
+    {
+      "@id": "klawiter:derivedProjection",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Points from a canonical dataset to a derived convenience projection of it.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "derived projection"
+    },
+    {
+      "@id": "klawiter:editions",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Edition nodes of the Work/Edition graph.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "editions"
+    },
+    {
+      "@id": "klawiter:entries",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Bibliographic entries of the flat dataset.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "entries"
+    },
+    {
+      "@id": "klawiter:entryType",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other, plus the wiki infrastructure namespaces category, mediawiki, template, help, file.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "entry type",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:evidence",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Evidence references supporting a review action.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "evidence",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:headerLine",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The unmodified source header line an edition was segmented from.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "header line",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:identityScope",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "What kind of identity a claim or carrier concerns, for example location, work, or source-occurrence.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "identity scope",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:identityStatus",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "State of a candidate work identity; contested until decided.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "identity status",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:interpretation",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "A competing interpretation attached to a contested claim.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "interpretation"
+    },
+    {
+      "@id": "klawiter:interpretationStatus",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "State of one interpretation of a contested claim.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "interpretation status",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     },
     {
       "@id": "klawiter:isRedirect",
-      "@type": "rdf:Property",
-      "label": "is redirect",
-      "comment": "True if the entry is a redirect alias.",
-      "range": "xsd:boolean",
-      "isDefinedBy": "klawiter:"
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "True if the entry is a redirect alias.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "is redirect",
+      "rdfs:range": {
+        "@id": "xsd:boolean"
+      }
+    },
+    {
+      "@id": "klawiter:languageCode",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "http://www.w3.org/2002/07/owl#deprecated": "true",
+      "rdfs:comment": "ISO 639-1 language code. Superseded in the published datasets: schema:inLanguage now carries the code. Retained for older exports.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "language code",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:languageName",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Human-readable language name as the source states it, for example German, Chinese. The BCP-47 code lives in schema:inLanguage.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "language name",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:locationSameAs",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. In the published RDF the link sits as schema:sameAs on the Place node; this property remains for flat projections. A dedicated property, not schema:sameAs on the work, which would conflate the work with the place.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "location same as",
+      "rdfs:range": {
+        "@id": "rdfs:Resource"
+      }
+    },
+    {
+      "@id": "klawiter:mainCategory",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Primary category used for entry type classification.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "main category",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:originalTitle",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Original-language title, when the entry title differs, for example for translations.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "original title",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:pageCountRaw",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The page count exactly as written in the source, before notation normalization.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "page count raw",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:pageNamespace",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "MediaWiki namespace, for example 0 for main, 14 for category.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "page namespace",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:pageSummaries",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Per-page segmentation summaries of the Work/Edition graph.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "page summaries"
+    },
+    {
+      "@id": "klawiter:proposedObject",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The object an interpretation proposes for the claim predicate. The fail-closed alternative omits it.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "proposed object"
     },
     {
       "@id": "klawiter:redirectTarget",
-      "@type": "rdf:Property",
-      "label": "redirect target",
-      "comment": "Title of the target entry for redirects.",
-      "range": "xsd:string",
-      "isDefinedBy": "klawiter:"
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Title of the target entry for redirects.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "redirect target",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reprints",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "References to reprint editions.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "reprints",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewAction",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "A review-trail step attached to a claim.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review action"
+    },
+    {
+      "@id": "klawiter:reviewBasis",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Stated basis of a review judgment.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review basis",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewFlags",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Machine-raised flags that prioritize an edition for review.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review flags",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewOutcome",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Outcome of one review action, for example match, mismatch, unresolved, confirm, correct.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review outcome",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewStatus",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Review state of an edition proposal: proposed, confirmed, rejected, or contested.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review status",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:seeAlsoText",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Unresolvable See-reference preserved as written: the referenced bibliography page was never created (a red link in the source wiki). Resolved references use dcterms:relation with entry IRIs.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "see-also text",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:selectionRule",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Human-readable statement of the deterministic corpus selection rule.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "selection rule",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sha256",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "SHA-256 of a provenance input entity.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceBlobId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "BLOB file number (0-7) containing the source text.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source BLOB ID",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:sourceCodeSha256",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "SHA-256 over the LF-normalized generator code recorded in a PROV plan.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source code SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceCorpusSha256",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "SHA-256 over the selected source corpus a dataset was built from.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source corpus SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceEdition",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The edition a source-occurrence carrier volume was observed on.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source edition"
+    },
+    {
+      "@id": "klawiter:sourceEvidence",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Source-occurrence evidence attached to an authority reconciliation claim.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source evidence"
+    },
+    {
+      "@id": "klawiter:sourceField",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The extracted field an occurrence was observed in.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source field",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceLine",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Line number of an occurrence in the classified source.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source line",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:sourcePageId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Original MediaWiki page ID (provenance).",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source page ID",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:sourcePath",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Repository-relative path of the file an occurrence was found in.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source path",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceSliceSha256",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "SHA-256 of the exact source text slice the offset selector addresses.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source slice SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceTextId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "MediaWiki text revision ID (provenance).",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source text ID",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:sourceTextSha256",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "SHA-256 of the source line an occurrence was found on.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source text SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceTitle",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Title of the source page an occurrence belongs to.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source title",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceValue",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The value exactly as it occurs in the source.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source value",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:timePeriod",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Historical period: pre-zweig (before 1881), lifetime (1881-1942), post-wwii (1943-1980), late-20c (1981-2000), contemporary (2001 onward).",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "time period",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:totalEntries",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Number of entries in a collection object.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "total entries",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:works",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Work nodes of the Work/Edition graph.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "works"
+    },
+    {
+      "@id": "klawiter:yearRaw",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The year exactly as written in the source header, including ca. notation.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "year raw",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
     }
   ]
 }

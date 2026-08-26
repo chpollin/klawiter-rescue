@@ -253,6 +253,12 @@ def to_rdf_entry(entry):
         if same_as:
             place["sameAs"] = same_as
         rdf["locationCreated"] = place
+    # The as-written reference text is display data of the referencing
+    # entry; asserting it as a name of the TARGET would give target
+    # entries a second schema:name in the merged graph.
+    relation = rdf.get("relation")
+    if relation:
+        rdf["relation"] = [{"@id": item["@id"]} for item in relation]
     return rdf
 
 
