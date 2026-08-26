@@ -32,6 +32,7 @@ const App = {
       this.verifyData();
       this.buildIndex();
       this.bindEvents();
+      await Edit.loadReconciliation();
       if (this.state.isLocal) Edit.restore();   // recover pending edits from a prior session
       this._lastHash = null;
       this.handleRoute();
@@ -95,11 +96,10 @@ const App = {
     if (noTitle) warnings.push(`${noTitle} entries without title`);
 
     // Compact output
-    const gen = meta ? ` | generated ${meta.generated}` : '';
     const covLine = fields.map(f => `${f} ${cov[f].pct}%`).join(' | ');
 
     console.groupCollapsed(`Klawiter Data Verification — ${ns0} entries (ns0)`);
-    console.log(`${ns0} entries (ns0) | ${nonNs0} non-ns0 | ${redirects} redirects${gen}`);
+    console.log(`${ns0} entries (ns0) | ${nonNs0} non-ns0 | ${redirects} redirects`);
     console.log(covLine);
     console.log(`${typeCount} types | ${langs.size} languages | ${locs.size} locations | ${minYear}–${maxYear}`);
     if (provCount) console.log(`Provenance: ${provCount} entries with _provenance data`);
@@ -619,7 +619,8 @@ const App = {
     if (this.state.editMode) {
       // Triage hints need the artifact; refresh once it is in (cards render
       // their hint chips only from a full pass, so redraw the results list).
-      Edit.loadTriage().then(() => this._refreshAfterEditToggle());
+      Promise.all([Edit.loadTriage(), Edit.loadReconciliation()])
+        .then(() => this._refreshAfterEditToggle());
     } else {
       this._refreshAfterEditToggle();
     }

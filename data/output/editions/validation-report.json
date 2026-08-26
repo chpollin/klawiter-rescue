@@ -1,0 +1,30 @@
+{
+  "allChecksPass": true,
+  "checks": {
+    "contestedClaims": true,
+    "deterministicRebuild": true,
+    "reviewQueue": true,
+    "selectors": true,
+    "shacl": true,
+    "stableIdentifiers": true
+  },
+  "counts": {
+    "annotations": 1886,
+    "candidateWorks": 1,
+    "carriers": 6,
+    "confirmedEditions": 75,
+    "contestedClaims": 1,
+    "contestedEditions": 1,
+    "editions": 1886,
+    "reviewCases": 317,
+    "works": 443
+  },
+  "errors": {
+    "contestedClaims": [],
+    "reviewQueue": [],
+    "selectors": [],
+    "stableIdentifiers": []
+  },
+  "generatedAt": "2026-08-26T09:53:58.353148+00:00",
+  "shaclReport": "Validation Report\nConforms: True\n"
+}

@@ -8,25 +8,42 @@ offending entry's page_id for traceability.
 
 import re
 
-import pytest
-
-from lib.config import MIN_VALID_YEAR, MAX_VALID_YEAR
+from lib.config import MAX_VALID_YEAR, MIN_VALID_YEAR
 
 # --- Valid value sets ---
 
 VALID_NS0_ENTRY_TYPES = {
-    "collected-works", "correspondence", "drama", "dramatic-reading",
-    "essay", "fiction", "film", "foreword", "historical-study",
-    "newspaper", "other", "poetry", "secondary-literature",
-    "symposium", "translation",
+    "collected-works",
+    "correspondence",
+    "drama",
+    "dramatic-reading",
+    "essay",
+    "fiction",
+    "film",
+    "foreword",
+    "historical-study",
+    "newspaper",
+    "other",
+    "poetry",
+    "secondary-literature",
+    "symposium",
+    "translation",
 }
 
 VALID_ALL_ENTRY_TYPES = VALID_NS0_ENTRY_TYPES | {
-    "category", "template", "file", "mediawiki", "help",
+    "category",
+    "template",
+    "file",
+    "mediawiki",
+    "help",
 }
 
 VALID_TIME_PERIODS = {
-    "pre-zweig", "lifetime", "post-wwii", "late-20c", "contemporary",
+    "pre-zweig",
+    "lifetime",
+    "post-wwii",
+    "late-20c",
+    "contemporary",
 }
 
 # ISO 639-1 codes (2-letter) and common 3-letter codes in the dataset
@@ -36,11 +53,11 @@ VALID_LANGUAGE_CODE_PATTERN = re.compile(r"^[a-z]{2,3}$")
 
 # Wiki markup remnants
 WIKI_MARKUP_PATTERN = re.compile(
-    r"\[\["        # opening wiki link
-    r"|\]\]"       # closing wiki link
-    r"|<lst\b"     # lst tags
-    r"|<ref\b"     # ref tags
-    r"|__TOC__"    # table of contents magic word
+    r"\[\["  # opening wiki link
+    r"|\]\]"  # closing wiki link
+    r"|<lst\b"  # lst tags
+    r"|<ref\b"  # ref tags
+    r"|__TOC__"  # table of contents magic word
     r"|__NOTOC__"
     r"|__FORCETOC__"
     r"|__NOEDITSECTION__"
@@ -52,13 +69,13 @@ WIKI_MARKUP_PATTERN = re.compile(
 # Careful: must not match legitimate Vietnamese/Arabic/etc. diacritics.
 # These patterns are specific double-byte mojibake sequences.
 MOJIBAKE_PATTERN = re.compile(
-    r"Ã¤"   # ä
+    r"Ã¤"  # ä
     r"|Ã¶"  # ö
     r"|Ã¼"  # ü
     r"|Ã\x9f"  # ß
     r"|Ã©"  # é (only flag when preceded by uppercase Ã — not standalone é)
     r"|Ã¨"  # è
-    r"|Ã "   # à (with trailing space, avoids matching "Ã" in legitimate text)
+    r"|Ã "  # à (with trailing space, avoids matching "Ã" in legitimate text)
     r"|Â\xa0"  # non-breaking space mojibake
     r"|Â©"  # © mojibake
     r"|Â»"  # » mojibake
@@ -72,6 +89,7 @@ MOJIBAKE_PATTERN = re.compile(
 # ---------------------------------------------------------------------------
 # Entry type validation
 # ---------------------------------------------------------------------------
+
 
 class TestEntryTypes:
     """Every entry has a valid, recognized entry type."""
@@ -102,6 +120,7 @@ class TestEntryTypes:
 # ---------------------------------------------------------------------------
 # Year validation
 # ---------------------------------------------------------------------------
+
 
 class TestYearRange:
     """Publication years must be within historically plausible bounds."""
@@ -138,6 +157,7 @@ class TestYearRange:
 # Language code validation
 # ---------------------------------------------------------------------------
 
+
 class TestLanguageCodes:
     """Language codes must be valid ISO 639 codes."""
 
@@ -158,8 +178,7 @@ class TestLanguageCodes:
         invalid = [
             (e["sourcePageId"], e.get("timePeriod"))
             for e in ns0_entries
-            if e.get("timePeriod")
-            and e["timePeriod"] not in VALID_TIME_PERIODS
+            if e.get("timePeriod") and e["timePeriod"] not in VALID_TIME_PERIODS
         ]
         assert len(invalid) == 0, (
             f"{len(invalid)} entries with invalid timePeriod: {invalid[:20]}"
@@ -169,6 +188,7 @@ class TestLanguageCodes:
 # ---------------------------------------------------------------------------
 # Page count validation
 # ---------------------------------------------------------------------------
+
 
 class TestPageCount:
     """Page counts must be plausible positive integers."""
@@ -200,8 +220,7 @@ class TestPageCount:
         non_int = [
             (e["sourcePageId"], e.get("pageCount"), type(e.get("pageCount")).__name__)
             for e in ns0_entries
-            if e.get("pageCount") is not None
-            and not isinstance(e["pageCount"], int)
+            if e.get("pageCount") is not None and not isinstance(e["pageCount"], int)
         ]
         assert len(non_int) == 0, (
             f"{len(non_int)} entries with non-integer pageCount: {non_int[:20]}"
@@ -211,6 +230,7 @@ class TestPageCount:
 # ---------------------------------------------------------------------------
 # No wiki markup residue in cleaned fields
 # ---------------------------------------------------------------------------
+
 
 class TestNoMarkupResidue:
     """Cleaned text fields must not contain wiki markup fragments."""
@@ -247,10 +267,12 @@ class TestNoMarkupResidue:
         # Warn if count decreased (fixes applied — update known_issues.wiki_markup_in_fields)
         if violations and len(violations) < known:
             import warnings
+
             warnings.warn(
                 f"Markup violations decreased from {known} to "
                 f"{len(violations)} — update known_issues.wiki_markup_in_fields",
-                UserWarning, stacklevel=1,
+                UserWarning,
+                stacklevel=1,
             )
 
     def test_no_empty_string_fields(self, ns0_entries):
@@ -270,6 +292,7 @@ class TestNoMarkupResidue:
 # No mojibake in text fields
 # ---------------------------------------------------------------------------
 
+
 class TestNoMojibake:
     """Text fields must not contain mojibake byte sequences."""
 
@@ -282,14 +305,11 @@ class TestNoMojibake:
             for field in self.FIELDS_TO_CHECK:
                 value = entry.get(field)
                 if value and MOJIBAKE_PATTERN.search(str(value)):
-                    violations.append(
-                        (entry["sourcePageId"], field, str(value)[:80])
-                    )
+                    violations.append((entry["sourcePageId"], field, str(value)[:80]))
         assert len(violations) == 0, (
             f"{len(violations)} fields contain mojibake:\n"
             + "\n".join(
-                f"  page {pid}, {field}: '{val}'"
-                for pid, field, val in violations[:20]
+                f"  page {pid}, {field}: '{val}'" for pid, field, val in violations[:20]
             )
         )
 
@@ -297,6 +317,7 @@ class TestNoMojibake:
 # ---------------------------------------------------------------------------
 # @type array consistency
 # ---------------------------------------------------------------------------
+
 
 class TestLdTypeConsistency:
     """JSON-LD @type arrays must be consistent with entryType."""
@@ -327,7 +348,11 @@ class TestLdTypeConsistency:
 
         issues = []
         if missing_schema:
-            issues.append(f"{len(missing_schema)} missing schema: type: {missing_schema[:10]}")
+            issues.append(
+                f"{len(missing_schema)} missing schema: type: {missing_schema[:10]}"
+            )
         if missing_klawiter:
-            issues.append(f"{len(missing_klawiter)} missing klawiter: type: {missing_klawiter[:10]}")
+            issues.append(
+                f"{len(missing_klawiter)} missing klawiter: type: {missing_klawiter[:10]}"
+            )
         assert len(issues) == 0, "\n".join(issues)

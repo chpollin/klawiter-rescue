@@ -61,8 +61,51 @@ const Export = {
   jsonld(pageId) {
     const e = this._getEntry(pageId);
     if (!e) return;
-    const jsonld = JsonldPlayground._toCompactJsonld(e);
+    const jsonld = this._jsonldPayload(e);
     downloadBlob(JSON.stringify(jsonld, null, 2), `klawiter-${pageId}.jsonld`, 'application/ld+json');
+  },
+
+  _jsonldPayload(entry) {
+    const compact = JsonldPlayground._toCompactJsonld(entry);
+    const claims = Edit.editionClaimsFor(entry);
+    if (!claims.length) return compact;
+    const context = { ...compact['@context'], oa: 'http://www.w3.org/ns/oa#', prov: 'http://www.w3.org/ns/prov#' };
+    const entryNode = { ...compact };
+    delete entryNode['@context'];
+    const claimNodes = claims.map(claim => ({
+      '@id': claim.claimId,
+      '@type': 'klawiter:ContestedClaim',
+      'klawiter:claimStatus': claim.claimStatus,
+      'klawiter:decisionStatus': claim.decisionStatus,
+      'klawiter:claimSubject': { '@id': claim.subject },
+      'klawiter:claimPredicate': { '@id': claim.predicate },
+      'oa:hasTarget': {
+        '@type': 'oa:SpecificResource',
+        'oa:hasSource': { '@id': `klawiter:sourceText/${claim.source.sourcePageId}` },
+        'oa:hasSelector': {
+          '@type': 'oa:TextPositionSelector',
+          'oa:start': claim.source.selector[0],
+          'oa:end': claim.source.selector[1],
+        },
+      },
+      'klawiter:sourceSliceSha256': claim.source.sliceSha256,
+      'klawiter:interpretation': claim.interpretations.map(item => ({
+        '@id': item.interpretationId,
+        '@type': 'klawiter:ClaimInterpretation',
+        'schema:name': item.label,
+        'schema:description': item.basis,
+        'klawiter:proposedObject': { '@id': item.proposedObject },
+        'klawiter:interpretationStatus': item.status,
+      })),
+      'klawiter:reviewAction': claim.reviewHistory.map(item => ({
+        '@id': item.reviewId,
+        '@type': 'klawiter:ReviewAction',
+        'prov:wasAssociatedWith': { '@id': item.reviewer },
+        'klawiter:reviewOutcome': item.outcome,
+        ...(item.basis ? { 'klawiter:reviewBasis': item.basis } : {}),
+      })),
+    }));
+    return { '@context': context, '@graph': [entryNode, ...claimNodes] };
   },
 
   permalink(pageId) {
@@ -83,6 +126,11 @@ const Export = {
   },
 
   fullDataset() {
-    downloadBlob(JSON.stringify(App.data, null, 2), 'klawiter-bibliography.jsonld', 'application/ld+json');
+    const payload = {
+      ...App.data,
+      contestedEditionClaims: Object.values(Edit.editionClaims).flat(),
+      contestedAuthorityClaims: Edit.contestedAuthorityClaims,
+    };
+    downloadBlob(JSON.stringify(payload, null, 2), 'klawiter-bibliography.jsonld', 'application/ld+json');
   },
 };

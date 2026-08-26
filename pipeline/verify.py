@@ -11,21 +11,32 @@ Output: data/output/verification-report.json
 
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    setup_logging, load_csv, STEP_02_OUTPUT, OUTPUT_JSONLD, OUTPUT_DIR,
+    OUTPUT_DIR,
+    OUTPUT_JSONLD,
+    STEP_02_OUTPUT,
+    load_csv,
+    setup_logging,
 )
+from lib.encoding import normalize_text as normalize
+from lib.encoding import strip_encoding_artifacts as strip_encoding
 from lib.patterns import (
-    extract_all_years, extract_publisher, extract_location,
-    extract_translator, PARENS_PAGE_RE, PAGE_RANGE_RE,
+    PAGE_RANGE_RE,
+    PARENS_PAGE_RE,
+    extract_all_years,
+    extract_location,
+    extract_publisher,
+    extract_translator,
 )
 from lib.wiki_parser import remove_wiki_markup
 
 log = setup_logging(__name__)
 
-REPORT_PATH = os.path.join(OUTPUT_DIR, 'verification-report.json')
+REPORT_PATH = os.path.join(OUTPUT_DIR, "verification-report.json")
 
 
 def load_raw_content_map():
@@ -33,17 +44,13 @@ def load_raw_content_map():
     rows = load_csv(STEP_02_OUTPUT)
     content_map = {}
     for row in rows:
-        text_id = row.get('text_id', '')
+        text_id = row.get("text_id", "")
         if text_id:
             content_map[int(text_id)] = {
-                'content': row.get('content', ''),
-                'page_title': row.get('page_title', ''),
+                "content": row.get("content", ""),
+                "page_title": row.get("page_title", ""),
             }
     return content_map
-
-
-import re
-from lib.encoding import normalize_text as normalize, strip_encoding_artifacts as strip_encoding
 
 
 def value_in_content(value, content):
@@ -92,9 +99,12 @@ def has_publisher_indicator(text):
     if not text:
         return None
     # Pattern: "City: Something" or "City, Something, year"
-    m = re.search(r'(?:Wien|Berlin|Leipzig|London|New York|Paris|Zürich|Frankfurt|München|Hamburg|Stockholm)\s*[,:]\s*([A-Z][\w\s&.\'-]{2,60})', text)
+    m = re.search(
+        r"(?:Wien|Berlin|Leipzig|London|New York|Paris|Zürich|Frankfurt|München|Hamburg|Stockholm)\s*[,:]\s*([A-Z][\w\s&.\'-]{2,60})",
+        text,
+    )
     if m:
-        candidate = m.group(1).strip().rstrip('.,;:')
+        candidate = m.group(1).strip().rstrip(".,;:")
         if len(candidate) >= 3 and not candidate.isdigit():
             return candidate
     return None
@@ -109,35 +119,42 @@ def has_translator_indicator(text):
         return None
     indicators = [
         # German abbreviations
-        re.compile(r'[Üü]bers\.?\s+(?:v\.?\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
+        re.compile(
+            r"[Üü]bers\.?\s+(?:v\.?\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})", re.UNICODE
+        ),
         # French short
-        re.compile(r'trad\.?\s+(?:de\s+|par\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
+        re.compile(
+            r"trad\.?\s+(?:de\s+|par\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})", re.UNICODE
+        ),
         # English short
-        re.compile(r'tr\.?\s+(?:by\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})', re.UNICODE),
+        re.compile(r"tr\.?\s+(?:by\s+)?([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})", re.UNICODE),
         # Parenthetical translator
-        re.compile(r'\((?:translated|übersetzt|traduit|trad\.?)\s+(?:by|von|par)\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})\)', re.IGNORECASE | re.UNICODE),
+        re.compile(
+            r"\((?:translated|übersetzt|traduit|trad\.?)\s+(?:by|von|par)\s+([A-Z][a-zA-ZÀ-ÿ\s.\'-]{2,60})\)",
+            re.IGNORECASE | re.UNICODE,
+        ),
     ]
     for pat in indicators:
         m = pat.search(text)
         if m:
-            name = m.group(1).strip().rstrip('.,;:')
+            name = m.group(1).strip().rstrip(".,;:")
             if len(name) >= 3:
                 return name
     return None
 
 
-def verify_entry(entry, raw_content, page_title=''):
+def verify_entry(entry, raw_content, page_title=""):
     """Verify a single entry's extracted fields against raw content.
     Returns dict with per-field verification results.
     """
     result = {
-        'page_id': entry.get('sourcePageId'),
-        'title': entry.get('name', ''),
-        'fields': {},
+        "page_id": entry.get("sourcePageId"),
+        "title": entry.get("name", ""),
+        "fields": {},
     }
 
     if not raw_content:
-        result['error'] = 'no_raw_content'
+        result["error"] = "no_raw_content"
         return result
 
     # Clean version of raw content (wiki markup removed) for title comparison
@@ -148,115 +165,121 @@ def verify_entry(entry, raw_content, page_title=''):
     # [year]: pattern (metadata, not a real title). page_title is wiki page name
     # metadata and will never appear in raw_content — that's expected, not a
     # false positive. We detect this case and classify it separately.
-    title = entry.get('name', '')
+    title = entry.get("name", "")
     if title:
-        found = value_in_content(title, raw_content) or value_in_content(title, raw_clean)
+        found = value_in_content(title, raw_content) or value_in_content(
+            title, raw_clean
+        )
         if found:
-            status = 'correct'
-            title_source = 'wiki_extract'
+            status = "correct"
+            title_source = "wiki_extract"
         elif page_title and (
             normalize(title) == normalize(page_title)
             or normalize(title) == normalize(remove_wiki_markup(page_title))
         ):
             # Title came from page_title fallback — not in raw content by design
-            status = 'correct_fallback'
-            title_source = 'page_title_fallback'
+            status = "correct_fallback"
+            title_source = "page_title_fallback"
         else:
-            status = 'false_positive'
-            title_source = 'unknown'
-        result['fields']['title'] = {
-            'extracted': title,
-            'in_raw': found,
-            'status': status,
-            'title_source': title_source,
+            status = "false_positive"
+            title_source = "unknown"
+        result["fields"]["title"] = {
+            "extracted": title,
+            "in_raw": found,
+            "status": status,
+            "title_source": title_source,
         }
 
     # --- Year verification ---
-    date_published = entry.get('datePublished')
+    date_published = entry.get("datePublished")
     year = int(date_published) if date_published else None
     if year is not None:
         year_str = str(year)
         found = year_str in raw_content
-        result['fields']['year'] = {
-            'extracted': year,
-            'in_raw': found,
-            'status': 'correct' if found else 'false_positive',
+        result["fields"]["year"] = {
+            "extracted": year,
+            "in_raw": found,
+            "status": "correct" if found else "false_positive",
         }
 
     # Check for years in raw content not captured
     raw_years = extract_all_years(raw_content)
-    extracted_years = entry.get('allYears', [])
+    extracted_years = entry.get("allYears", [])
     if not extracted_years and year is not None:
         extracted_years = [year]
     missed_years = [y for y in raw_years if y not in extracted_years]
     if missed_years:
-        result['fields']['year_false_negatives'] = missed_years
+        result["fields"]["year_false_negatives"] = missed_years
 
     # --- Publisher verification ---
-    publisher = entry.get('publisher', '')
+    publisher = entry.get("publisher", "")
     if publisher:
         found = value_in_content(publisher, raw_content)
-        result['fields']['publisher'] = {
-            'extracted': publisher,
-            'in_raw': found,
-            'status': 'correct' if found else 'false_positive',
+        result["fields"]["publisher"] = {
+            "extracted": publisher,
+            "in_raw": found,
+            "status": "correct" if found else "false_positive",
         }
 
     # Check for publisher patterns in raw content not captured
     if not publisher:
-        raw_publisher = extract_publisher(raw_content) or has_publisher_indicator(raw_clean)
+        raw_publisher = extract_publisher(raw_content) or has_publisher_indicator(
+            raw_clean
+        )
         if raw_publisher:
-            result['fields']['publisher_false_negative'] = {
-                'detected_in_raw': raw_publisher,
-                'note': 'publisher found in raw but not in output',
+            result["fields"]["publisher_false_negative"] = {
+                "detected_in_raw": raw_publisher,
+                "note": "publisher found in raw but not in output",
             }
 
     # --- Location verification ---
-    location = entry.get('locationCreated', '')
+    location = entry.get("locationCreated", "")
     if location:
         found = value_in_content(location, raw_content)
-        result['fields']['location'] = {
-            'extracted': location,
-            'in_raw': found,
-            'status': 'correct' if found else 'false_positive',
+        result["fields"]["location"] = {
+            "extracted": location,
+            "in_raw": found,
+            "status": "correct" if found else "false_positive",
         }
 
     # Check for locations not captured
     if not location:
         raw_location = extract_location(raw_content)
         if raw_location:
-            result['fields']['location_false_negative'] = {
-                'detected_in_raw': raw_location,
-                'note': 'location found in raw but not in output',
+            result["fields"]["location_false_negative"] = {
+                "detected_in_raw": raw_location,
+                "note": "location found in raw but not in output",
             }
 
     # --- Translator verification ---
-    translator = entry.get('translator', '')
+    translator = entry.get("translator", "")
     if translator:
         found = value_in_content(translator, raw_content)
-        result['fields']['translator'] = {
-            'extracted': translator,
-            'in_raw': found,
-            'status': 'correct' if found else 'false_positive',
+        result["fields"]["translator"] = {
+            "extracted": translator,
+            "in_raw": found,
+            "status": "correct" if found else "false_positive",
         }
 
     # Check for translator patterns not captured
     if not translator:
-        raw_translator = extract_translator(raw_content) or has_translator_indicator(raw_clean)
+        raw_translator = extract_translator(raw_content) or has_translator_indicator(
+            raw_clean
+        )
         if raw_translator:
-            result['fields']['translator_false_negative'] = {
-                'detected_in_raw': raw_translator,
-                'note': 'translator found in raw but not in output',
+            result["fields"]["translator_false_negative"] = {
+                "detected_in_raw": raw_translator,
+                "note": "translator found in raw but not in output",
             }
 
     # --- Page count verification ---
-    page_count = entry.get('numberOfPages')
+    page_count = entry.get("numberOfPages")
     if page_count is not None:
         found = page_count_in_content(page_count, raw_content)
-        result['fields']['page_count'] = {
-            'extracted': page_count,
-            'in_raw': found,
-            'status': 'correct' if found else 'false_positive',
+        result["fields"]["page_count"] = {
+            "extracted": page_count,
+            "in_raw": found,
+            "status": "correct" if found else "false_positive",
         }
 
     return result
@@ -264,7 +287,7 @@ def verify_entry(entry, raw_content, page_title=''):
 
 def compute_summary(results):
     """Compute aggregate statistics from verification results."""
-    fields = ['title', 'year', 'publisher', 'location', 'translator', 'page_count']
+    fields = ["title", "year", "publisher", "location", "translator", "page_count"]
     summary = {}
 
     for field in fields:
@@ -275,18 +298,18 @@ def compute_summary(results):
         false_negative = 0
 
         for r in results:
-            f = r.get('fields', {})
+            f = r.get("fields", {})
             if field in f:
                 total_extracted += 1
-                status = f[field]['status']
-                if status == 'correct':
+                status = f[field]["status"]
+                if status == "correct":
                     correct += 1
-                elif status == 'correct_fallback':
+                elif status == "correct_fallback":
                     correct_fallback += 1
-                elif status == 'false_positive':
+                elif status == "false_positive":
                     false_positive += 1
 
-            fn_key = f'{field}_false_negative'
+            fn_key = f"{field}_false_negative"
             if fn_key in f:
                 false_negative += 1
 
@@ -297,14 +320,14 @@ def compute_summary(results):
         precision = total_correct / total_extracted if total_extracted else 0
 
         summary[field] = {
-            'total_entries': total_entries,
-            'extracted': total_extracted,
-            'correct': correct,
-            'correct_fallback': correct_fallback,
-            'false_positive': false_positive,
-            'false_negative': false_negative,
-            'coverage': round(coverage * 100, 1),
-            'precision': round(precision * 100, 1),
+            "total_entries": total_entries,
+            "extracted": total_extracted,
+            "correct": correct,
+            "correct_fallback": correct_fallback,
+            "false_positive": false_positive,
+            "false_negative": false_negative,
+            "coverage": round(coverage * 100, 1),
+            "precision": round(precision * 100, 1),
         }
 
     return summary
@@ -313,9 +336,9 @@ def compute_summary(results):
 def main():
     # Load JSON-LD
     log.info(f"Loading JSON-LD: {OUTPUT_JSONLD}")
-    with open(OUTPUT_JSONLD, 'r', encoding='utf-8') as f:
+    with open(OUTPUT_JSONLD, "r", encoding="utf-8") as f:
         dataset = json.load(f)
-    entries = dataset.get('entries', [])
+    entries = dataset.get("entries", [])
     log.info(f"  Loaded {len(entries)} entries")
 
     # Load raw content
@@ -325,9 +348,7 @@ def main():
 
     # Filter to namespace 0 non-redirect entries for verification
     bib_entries = [
-        e for e in entries
-        if e.get('pageNamespace', 0) == 0
-        and not e.get('isRedirect')
+        e for e in entries if e.get("pageNamespace", 0) == 0 and not e.get("isRedirect")
     ]
     log.info(f"  Bibliography entries (ns0, non-redirect): {len(bib_entries)}")
 
@@ -335,10 +356,14 @@ def main():
     results = []
     no_raw = 0
     for entry in bib_entries:
-        text_id = entry.get('sourceTextId')
+        text_id = entry.get("sourceTextId")
         raw_data = content_map.get(text_id, {}) if text_id else {}
-        raw_content = raw_data.get('content', '') if isinstance(raw_data, dict) else raw_data
-        page_title = raw_data.get('page_title', '') if isinstance(raw_data, dict) else ''
+        raw_content = (
+            raw_data.get("content", "") if isinstance(raw_data, dict) else raw_data
+        )
+        page_title = (
+            raw_data.get("page_title", "") if isinstance(raw_data, dict) else ""
+        )
         if not raw_content:
             no_raw += 1
 
@@ -355,32 +380,42 @@ def main():
     log.info("VERIFICATION SUMMARY")
     log.info("=" * 60)
     for field, stats in summary.items():
-        log.info(f"  {field:15s}: coverage={stats['coverage']:5.1f}%  "
-                 f"precision={stats['precision']:5.1f}%  "
-                 f"FP={stats['false_positive']:4d}  FN={stats['false_negative']:4d}  "
-                 f"extracted={stats['extracted']}/{stats['total_entries']}")
+        log.info(
+            f"  {field:15s}: coverage={stats['coverage']:5.1f}%  "
+            f"precision={stats['precision']:5.1f}%  "
+            f"FP={stats['false_positive']:4d}  FN={stats['false_negative']:4d}  "
+            f"extracted={stats['extracted']}/{stats['total_entries']}"
+        )
 
     # Collect examples of false positives and false negatives
     false_positive_examples = {}
     false_negative_examples = {}
-    for field in ['title', 'year', 'publisher', 'location', 'translator', 'page_count']:
+    for field in ["title", "year", "publisher", "location", "translator", "page_count"]:
         fp_list = []
         fn_list = []
         for r in results:
-            f = r.get('fields', {})
-            if field in f and f[field]['status'] == 'false_positive' and len(fp_list) < 10:
-                fp_list.append({
-                    'page_id': r['page_id'],
-                    'title': r['title'],
-                    'extracted_value': f[field]['extracted'],
-                })
-            fn_key = f'{field}_false_negative'
+            f = r.get("fields", {})
+            if (
+                field in f
+                and f[field]["status"] == "false_positive"
+                and len(fp_list) < 10
+            ):
+                fp_list.append(
+                    {
+                        "page_id": r["page_id"],
+                        "title": r["title"],
+                        "extracted_value": f[field]["extracted"],
+                    }
+                )
+            fn_key = f"{field}_false_negative"
             if fn_key in f and len(fn_list) < 10:
-                fn_list.append({
-                    'page_id': r['page_id'],
-                    'title': r['title'],
-                    'detected_in_raw': f[fn_key].get('detected_in_raw', f[fn_key]),
-                })
+                fn_list.append(
+                    {
+                        "page_id": r["page_id"],
+                        "title": r["title"],
+                        "detected_in_raw": f[fn_key].get("detected_in_raw", f[fn_key]),
+                    }
+                )
         if fp_list:
             false_positive_examples[field] = fp_list
         if fn_list:
@@ -388,20 +423,20 @@ def main():
 
     # Build report
     report = {
-        'summary': summary,
-        'false_positive_examples': false_positive_examples,
-        'false_negative_examples': false_negative_examples,
-        'total_bib_entries': len(bib_entries),
-        'entries_without_raw_content': no_raw,
-        'detailed_results': results,
+        "summary": summary,
+        "false_positive_examples": false_positive_examples,
+        "false_negative_examples": false_negative_examples,
+        "total_bib_entries": len(bib_entries),
+        "entries_without_raw_content": no_raw,
+        "detailed_results": results,
     }
 
     # Write report
     os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
-    with open(REPORT_PATH, 'w', encoding='utf-8') as f:
+    with open(REPORT_PATH, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     log.info(f"\nReport written to {REPORT_PATH}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

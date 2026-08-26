@@ -1,0 +1,205 @@
+{
+  "auditVersion": "1.0",
+  "recordedAt": "2026-08-21T21:42:00+02:00",
+  "scope": "Vollständiger produktiver Neuaufbau, Wiederholbarkeit, Modell-Gates, Tests und bekannte Grenzen",
+  "environment": {
+    "platform": "Windows",
+    "python": "3.11.9",
+    "node": "24.13.0",
+    "dependencyLock": {
+      "path": "uv.lock",
+      "sha256": "94093ccc1e68f462a670e58122a9c7af1f50ad5cb4ebfd5c8304d83033447f74"
+    }
+  },
+  "productionRuns": [
+    {
+      "command": "python -m uv run python pipeline/run_pipeline.py",
+      "llmMode": "frozen",
+      "durationSeconds": 85.9,
+      "exitCode": 0
+    },
+    {
+      "command": "python -m uv run python pipeline/run_pipeline.py",
+      "llmMode": "frozen",
+      "durationSeconds": 86.2,
+      "exitCode": 0
+    },
+    {
+      "command": "python -m uv run python pipeline/run_pipeline.py",
+      "llmMode": "frozen",
+      "durationSeconds": 86.1,
+      "exitCode": 0,
+      "note": "Abschließender Lauf nach Ruff-Formatierung; Inhaltsartefakte entsprechen bytegenau dem vorherigen Paar."
+    }
+  ],
+  "recordCensus": {
+    "sourcePages": 6725,
+    "jsonldEntries": 6725,
+    "redirects": 1546,
+    "frontendEntries": 5179,
+    "mainNamespaceDisplayed": 4751,
+    "allChecksPass": true
+  },
+  "gate1": {
+    "algorithmVersion": "1.2",
+    "works": 443,
+    "editions": 1886,
+    "annotations": 1886,
+    "carriers": 6,
+    "confirmedEditions": 75,
+    "proposedEditions": 1810,
+    "contestedEditions": 1,
+    "contestedClaims": 1,
+    "reviewCases": 317,
+    "validationExitCode": 0,
+    "validationReportSha256": "e2f1f4defa22186fe6372ca323d0cb77af5852fb41a42f8ac613bfb4a986c7a1"
+  },
+  "gate2": {
+    "algorithmVersion": "1.1",
+    "locationSubjects": 382,
+    "locationCandidates": 392,
+    "locationDecisions": 31,
+    "publishedLocationLinks": 26,
+    "workSubjects": 443,
+    "workCandidates": 841,
+    "workDecisions": 3,
+    "publishedWorkLinks": 3,
+    "contestedAuthorityClaims": 5,
+    "contestedEditionClaims": 1,
+    "reviewCases": 796,
+    "validationExitCode": 0,
+    "validationReportSha256": "29b2f667e31adf652119a641971c4a4d00ea20fe87e4446c816fa8ef1b86e7fe"
+  },
+  "deterministicCore": {
+    "comparison": "Zwei vollständige Läufe nach Entfernung nicht-fachlicher Laufzeitstempel; abschließender Vollauf nach Formatierung mit identischen Inhalts-Hashes",
+    "allComparedArtifactsIdentical": true,
+    "artifacts": [
+      {
+        "path": "data/output/editions/work-editions.jsonld",
+        "sha256": "837e5f3c80faf9e2171380ea8c8b69030725b1ee1039185759b214d3dbc9a198"
+      },
+      {
+        "path": "data/output/editions/review-queue.json",
+        "sha256": "fff54a27cc68dc3bcd1b8c34f45b056ef094a0eedf3c95142965c3f7128e4f78"
+      },
+      {
+        "path": "data/output/reconciliation/candidates.json",
+        "sha256": "9f5d325338fd33cd1c17914060ade29e377461d6e1282e6e5dd0d187447e22fc"
+      },
+      {
+        "path": "data/output/reconciliation/contested-claims.json",
+        "sha256": "b0ef7bdf87368a6110863684ef7f156bfa84ab3fcbd8088cf21109f85ee396e2"
+      },
+      {
+        "path": "data/output/reconciliation/decisions.json",
+        "sha256": "30a616650f89ce2f358b89fd9e6686c12f21f7a9d40ec83eca06dce63c922d29"
+      },
+      {
+        "path": "data/output/reconciliation/publishable-links.json",
+        "sha256": "7c0a3a5e7e39ee16799b88741451f76cd3ef25e73bf326dffa204efa5ecb1728"
+      },
+      {
+        "path": "data/output/reconciliation/review-queue.json",
+        "sha256": "0dce5c83aaa3744ddb4e00f6614934483dbf34695809f24a6fed4e89762ba53f"
+      },
+      {
+        "path": "data/output/klawiter.jsonld",
+        "sha256": "f52ed0c12987cad814698deba1efc4fd458bb9ef3ebfdd9fb149c1fc5786803d"
+      },
+      {
+        "path": "docs/data/reconciliation.json",
+        "sha256": "2134d8e0e5b6ee8a3f153589c8a46b3ddbc221efbcf9320d537d3afb303824ca"
+      },
+      {
+        "path": "docs/data/klawiter.json",
+        "sha256": "056c453dba7fd77b171516400edd74e0d5a8e1695afe037c46528f72aa11ab95"
+      },
+      {
+        "path": "docs/data/triage.json",
+        "sha256": "5f8897903de9d5a6cae610235b51d91d5a576469fbcb999b59a7040798caec14"
+      }
+    ],
+    "timeDependentArtifacts": [
+      "data/output/editions/manifest.json",
+      "data/output/editions/provenance.jsonld",
+      "data/output/editions/earl.jsonld",
+      "data/output/reconciliation/manifest.json",
+      "data/output/reconciliation/provenance.jsonld",
+      "data/output/reconciliation/earl.jsonld"
+    ]
+  },
+  "agenticEvidence": {
+    "editionSample": {
+      "cases": 76,
+      "reviewerA": {
+        "path": "data/output/edition-samples/reviews/reviewer-a.json",
+        "sha256": "a4b19e8d9b5958d0df416235eeca431a8d55c210a9b3baa46727826d32446487"
+      },
+      "reviewerB": {
+        "path": "data/output/edition-samples/reviews/reviewer-b.json",
+        "sha256": "446936000c0895e2528a96054a94455aabaf1ca54f845ab06f18f24317d3eb9e"
+      },
+      "reconciliation": {
+        "path": "data/output/edition-samples/reviews/reconciliation.json",
+        "sha256": "388ade9b6a8ff93949c366472a2c5311cccd5749dc0ee5ad4f164db5c487f0cf",
+        "confirmed": 75,
+        "unresolved": 1
+      }
+    },
+    "locationReview": {
+      "path": "data/output/reconciliation/location-low-score-review.json",
+      "sha256": "123b696a590cda99114f9e575efc885c677da69434a2d873de01317d490cb1e0",
+      "unresolved": 5
+    }
+  },
+  "tests": {
+    "default": {
+      "command": "python -m uv run pytest -q",
+      "result": "449 passed, 10 skipped, 74 deselected",
+      "exitCode": 0
+    },
+    "semanticDiagnostic": {
+      "command": "python -m uv run pytest -q -m semantic",
+      "result": "53 passed, 17 failed, 463 deselected",
+      "exitCode": 1,
+      "interpretation": "Die 17 bekannten Feldabweichungen bleiben sichtbar und entsprechen dem unveränderten Bound; sie blockieren den strukturell präziseren Editionsgraphen nicht."
+    },
+    "ruffCheck": {
+      "command": "python -m uv run ruff check pipeline tests",
+      "exitCode": 0
+    },
+    "ruffFormat": {
+      "command": "python -m uv run ruff format --check pipeline tests",
+      "exitCode": 0
+    },
+    "pythonCompile": {
+      "command": "python -m compileall -q pipeline tests",
+      "exitCode": 0
+    },
+    "nodeTests": {
+      "command": "node tests/contested_claims.test.js && node tests/evidence_triage.test.js",
+      "result": "beide Regression-Skripte bestanden",
+      "exitCode": 0
+    },
+    "javascriptSyntax": {
+      "command": "node --check for every file under docs/js",
+      "exitCode": 0
+    }
+  },
+  "qualityChanges": {
+    "resolvedRedirectNamesBefore": 1224,
+    "resolvedRedirectNamesAfter": 1310,
+    "brokenSeeAlsoBefore": 619,
+    "brokenSeeAlsoAfter": 585,
+    "basis": "Ausgabe-Header werden als Metadaten behandelt; der MediaWiki-Seitentitel bleibt Recordtitel."
+  },
+  "knownLimits": [
+    "Die flache Kompatibilitätsschicht kann auf 443 Mehrfachausgabenseiten Felder verschiedener Ausgaben kombinieren.",
+    "1.810 Ausgaben bleiben Vorschläge; Gate 1 priorisiert 317 markierte oder offene Fälle. Weitere 796 Gate-2-Reconciliation-Fälle bleiben expliziter Prüfbedarf.",
+    "Eine Editionsbindung und fünf Normdatenzuordnungen bleiben als offene Claims im finalen Datenmodell.",
+    "19 Einträge ohne Parserwert besitzen im eingefrorenen LLM-Cache kein Ergebnis.",
+    "Die semantische Zehn-Record-Stichprobe weist 17 bekannte Feldabweichungen aus und begründet keine corpusweite Genauigkeitsquote.",
+    "Die institutionelle Werkidentität der Graphic-Novel-Adaption bleibt ein Operator Point."
+  ],
+  "verdict": "PASS"
+}

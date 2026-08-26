@@ -1,0 +1,348 @@
+{
+  "contract": "Decisions remain separate from generated candidates and public links.",
+  "locationDecisions": [
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Amsterdam/Q727",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q727",
+      "subject": "Amsterdam"
+    },
+    {
+      "action": "correct",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Bambai/Q1156",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#location-bambai-q26085641"
+      ],
+      "label": "Mumbai",
+      "qid": "Q1156",
+      "rejectedQid": "Q26085641",
+      "subject": "Bambaī"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Barcelona/Q1492",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1492",
+      "subject": "Barcelona"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Beijing/Q956",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q956",
+      "subject": "Beijing"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Beirut/Q3820",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q3820",
+      "subject": "Beirut"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Berlin/Q64",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q64",
+      "subject": "Berlin"
+    },
+    {
+      "action": "unresolved",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Bloemfontein-Kaapstad/unresolved",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+      ],
+      "subject": "Bloemfontein, Kaapstad"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Boras-Sweden/Q26040",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#location-boras-q26040"
+      ],
+      "qid": "Q26040",
+      "subject": "Borås, Sweden"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Buenos-Aires/Q1486",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1486",
+      "subject": "Buenos Aires"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Cairo/Q85",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q85",
+      "subject": "Cairo"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Frankfurt-am-Main/Q1794",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1794",
+      "subject": "Frankfurt am Main"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Leipzig/Q2079",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q2079",
+      "subject": "Leipzig"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/London/Q84",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q84",
+      "subject": "London"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Luxembourg-City/Q1842",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#location-luxembourg-q1842"
+      ],
+      "qid": "Q1842",
+      "subject": "Luxembourg City, Luxembourg"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Muenchen/Q1726",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1726",
+      "subject": "München"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/New-York/Q60",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q60",
+      "subject": "New York"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Nicosia-Cyprus/Q3856",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#location-nicosia-q3856"
+      ],
+      "qid": "Q3856",
+      "subject": "Nicosia, Cyprus"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Paris/Q90",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q90",
+      "subject": "Paris"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Praha/Q1085",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1085",
+      "subject": "Praha"
+    },
+    {
+      "action": "correct",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Rio-de-Janiero/Q8678",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#location-rio-de-janiero-q2720540"
+      ],
+      "label": "Rio de Janeiro",
+      "qid": "Q8678",
+      "rejectedQid": "Q2720540",
+      "subject": "Rio de Janiero"
+    },
+    {
+      "action": "unresolved",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Saint-Aignan/unresolved",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+      ],
+      "subject": "Saint-Aignan"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Salzburg/Q34713",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q34713",
+      "subject": "Salzburg"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Sofija/Q472",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q472",
+      "subject": "Sofija"
+    },
+    {
+      "action": "unresolved",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Sofija-Varna/unresolved",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+      ],
+      "subject": "Sofija, Varna"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Stockholm/Q1754",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1754",
+      "subject": "Stockholm"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Stuttgart/Q1022",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1022",
+      "subject": "Stuttgart"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Tokyo/Q1490",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1490",
+      "subject": "Tokyo"
+    },
+    {
+      "action": "unresolved",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Tyreso/unresolved",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+      ],
+      "subject": "Tyresö"
+    },
+    {
+      "action": "unresolved",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Varna-Sofija/unresolved",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+      ],
+      "subject": "Varna, Sofija"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "repository-ground-truth-fixture",
+      "decisionId": "location/Wien/Q1741",
+      "evidence": [
+        "tests/wikidata_ground_truth.json"
+      ],
+      "qid": "Q1741",
+      "subject": "Wien"
+    },
+    {
+      "action": "correct",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "location/Yanji/Q713362",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#location-yanji-q956"
+      ],
+      "label": "Yanji",
+      "qid": "Q713362",
+      "rejectedQid": "Q956",
+      "subject": "Yanji"
+    }
+  ],
+  "workDecisions": [
+    {
+      "action": "confirm",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "work/4916/SZDWRK.39",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#work-page-4916-schachnovelle-volume"
+      ],
+      "subjectId": "klawiter:work/4916",
+      "szdId": "SZDWRK.39"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "work/54/SZDWRK.133",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#work-page-54-ungeduld-des-herzens"
+      ],
+      "subjectId": "klawiter:work/54",
+      "szdId": "SZDWRK.133"
+    },
+    {
+      "action": "confirm",
+      "decidedBy": "independent-verification-agent",
+      "decisionId": "work/56/SZDWRK.5",
+      "evidence": [
+        "data/output/reconciliation/location-low-score-review.json#work-page-56-die-welt-von-gestern"
+      ],
+      "subjectId": "klawiter:work/56",
+      "szdId": "SZDWRK.5"
+    }
+  ]
+}

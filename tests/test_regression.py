@@ -16,6 +16,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 # Entry count stability
 # ---------------------------------------------------------------------------
 
+
 class TestEntryCounts:
     def test_total_entries_above_minimum(self, quality_report, baseline):
         """Total entry count doesn't drop below threshold."""
@@ -46,11 +47,17 @@ class TestEntryCounts:
 # Field coverage — critical fields must not regress
 # ---------------------------------------------------------------------------
 
+
 class TestFieldCoverage:
     CRITICAL_FIELDS = ["name", "datePublished", "bibliographicCitation"]
     TRACKED_FIELDS = [
-        "name", "datePublished", "publisher", "locationCreated",
-        "inLanguage", "numberOfPages", "translator",
+        "name",
+        "datePublished",
+        "publisher",
+        "locationCreated",
+        "inLanguage",
+        "numberOfPages",
+        "translator",
     ]
 
     def test_critical_fields_no_regression(self, quality_report, baseline):
@@ -83,6 +90,7 @@ class TestFieldCoverage:
 # Issue severity — no new errors, warnings bounded
 # ---------------------------------------------------------------------------
 
+
 class TestIssueSeverity:
     def test_no_error_severity_issues(self, quality_report, baseline):
         """Zero error-severity issues (missing entryType etc.)."""
@@ -96,9 +104,7 @@ class TestIssueSeverity:
         """Mojibake warnings stay below threshold."""
         max_warnings = baseline["thresholds"]["mojibake_warnings_max"]
         actual = quality_report["summary"]["severity_counts"].get("warning", 0)
-        assert actual <= max_warnings, (
-            f"Found {actual} warnings (max: {max_warnings})"
-        )
+        assert actual <= max_warnings, f"Found {actual} warnings (max: {max_warnings})"
 
     def test_issues_not_doubled(self, quality_report, baseline):
         """Total issue count doesn't more than double from baseline."""
@@ -112,6 +118,7 @@ class TestIssueSeverity:
 # ---------------------------------------------------------------------------
 # Data integrity — structural checks
 # ---------------------------------------------------------------------------
+
 
 class TestDataIntegrity:
     def test_quality_report_structure(self, quality_report):
@@ -155,12 +162,11 @@ class TestDataIntegrity:
         current_total = sum(current_dist.values())
 
         vanished = [
-            t for t in baseline_dist
+            t
+            for t in baseline_dist
             if baseline_dist[t] > 0 and current_dist.get(t, 0) == 0
         ]
-        assert len(vanished) == 0, (
-            f"Entry types vanished entirely: {vanished}"
-        )
+        assert len(vanished) == 0, f"Entry types vanished entirely: {vanished}"
 
         drifted = []
         for entry_type, baseline_count in baseline_dist.items():
@@ -168,15 +174,17 @@ class TestDataIntegrity:
                 continue
             baseline_share = baseline_count / baseline_total * 100
             current_count = current_dist.get(entry_type, 0)
-            current_share = current_count / current_total * 100 if current_total > 0 else 0
+            current_share = (
+                current_count / current_total * 100 if current_total > 0 else 0
+            )
             drift = abs(current_share - baseline_share)
             if drift > 2.0:
                 drifted.append(
                     f"{entry_type}: {baseline_share:.1f}% → {current_share:.1f}% "
                     f"(drift {drift:.1f}pp)"
                 )
-        assert len(drifted) == 0, (
-            f"Entry type distribution drifted >2pp:\n" + "\n".join(f"  {d}" for d in drifted)
+        assert len(drifted) == 0, "Entry type distribution drifted >2pp:\n" + "\n".join(
+            f"  {d}" for d in drifted
         )
 
     def test_frontend_entries_have_required_fields(self):
@@ -191,11 +199,10 @@ class TestDataIntegrity:
         ]
         missing_type = [
             e.get("sourcePageId", f"index-{i}")
-            for i, e in enumerate(data["entries"]) if "entryType" not in e
+            for i, e in enumerate(data["entries"])
+            if "entryType" not in e
         ]
-        assert len(missing_pid) == 0, (
-            f"{len(missing_pid)} entries missing sourcePageId"
-        )
+        assert len(missing_pid) == 0, f"{len(missing_pid)} entries missing sourcePageId"
         assert len(missing_type) == 0, (
             f"{len(missing_type)} entries missing entryType: {missing_type[:10]}"
         )

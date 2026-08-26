@@ -1,0 +1,604 @@
+{
+  "auditVersion": "1.0",
+  "checkedAt": "2026-08-21T21:22:06.520+02:00",
+  "reviewer": {
+    "id": "independent-final-verification-agent",
+    "role": "Unabhängiger Verifikations-Agent für Datenmodell, Gates, Export und UI",
+    "agent": "OpenAI Codex; die genaue Laufzeitmodellkennung war dem Agenten nicht zugänglich",
+    "task": "/root/sample_reconciliation",
+    "independence": "Die Prüfung rekonstruierte beide Gates direkt aus den eingefrorenen Eingaben und verließ sich nicht allein auf vorhandene PASS-Berichte."
+  },
+  "scope": {
+    "repository": "C:/Users/Chrisi/Documents/GitHub/klawiter-rescue",
+    "gitHead": "c32ab03567fc4b2262021bd0cdd91a06040b3a67",
+    "branch": "main",
+    "worktree": "dirty; 96 Statuszeilen unmittelbar vor Abschluss der Prüfung",
+    "focus": [
+      "Gate-1-Werk-/Ausgabe-Modell und Reviewverlauf",
+      "Gate-2-Kandidaten, Entscheidungen, publizierbare Links und offene Claims",
+      "exakte Quellenbelege, stabile Kennungen und konkurrierende Deutungen",
+      "Export- und UI-Trennung bestätigter und strittiger Aussagen",
+      "deterministischer Neuaufbau aus eingefrorenen Eingaben"
+    ],
+    "writeBoundary": "Außer dieser Auditdatei wurden durch die Schlussprüfung keine Repository-Dateien verändert."
+  },
+  "checkedArtifacts": [
+    {
+      "path": "README.md",
+      "sha256": "36938560cdab8dee162266ea466fb95879f87bd7e0ad535724bfd436b2f8862b"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "e2dd70b6b99614275b5c91ad52de37119fc1133875fb23ab963397c0708aa886"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "d3dbe13ccc2b8c0ae61778afba60b2128ee89ca244e468a201dbb60f48c46fb3"
+    },
+    {
+      "path": "uv.lock",
+      "sha256": "94093ccc1e68f462a670e58122a9c7af1f50ad5cb4ebfd5c8304d83033447f74"
+    },
+    {
+      "path": "pipeline/run_pipeline.py",
+      "sha256": "19dd5e403447d01adf6ff2b9bc5d02c228e4d9b74b3ebdd7418a0d3cee2bca67"
+    },
+    {
+      "path": "pipeline/lib/editions.py",
+      "sha256": "b55880313203f81e9500d5c68b0fba0c957c40d080ab5cce449906b6cb4d5ba6"
+    },
+    {
+      "path": "pipeline/segment_editions.py",
+      "sha256": "6d702bd1ffe13bd1e0fa54dd309ae542cf8fd2d0356b3f0e2a98a0d2b0b5b815"
+    },
+    {
+      "path": "pipeline/validate_editions.py",
+      "sha256": "041fd8732c5f6a2d007159f78b4e3bcf5139252b00bd2fee8d92d21f1b51e8f4"
+    },
+    {
+      "path": "pipeline/lib/reconciliation.py",
+      "sha256": "601a9b5c250cc89c5cba03e3bc0718d3b59d099a4927169c0b61f4026a7567c1"
+    },
+    {
+      "path": "pipeline/reconcile_entities.py",
+      "sha256": "20969d8c4995eea4d7d81c1f2c4bf0cdc69384dc8a424bc794d48a2b24cdfb4a"
+    },
+    {
+      "path": "pipeline/validate_reconciliation.py",
+      "sha256": "73d3b692ef68bd63003c74421bcd2c6ab653a480027403abc46050fe3aac4534"
+    },
+    {
+      "path": "data/intermediate/02_encoding_fixed.csv",
+      "sha256": "da6ab867f8214ba40be1e419e925a3f76845044a0e6571ed4fc2d1627219bc46"
+    },
+    {
+      "path": "data/intermediate/04_classified.csv",
+      "sha256": "3a7f3a280a0df87550d562c1e74bb908bdf41de6d977d9836e27339c4a268329"
+    },
+    {
+      "path": "data/reconciliation/edition-modeling-decisions.json",
+      "sha256": "cf8d0d6bdce5c056d828b29df2d1506a6f103c5569f1d3efc10932c5562c3548"
+    },
+    {
+      "path": "data/reconciliation/location-decisions.json",
+      "sha256": "80c1697dc87da1da9a7c232f17ed9c92751f6e5705565764c8b8d2a8a24d0c9b"
+    },
+    {
+      "path": "data/reconciliation/work-decisions.json",
+      "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
+    },
+    {
+      "path": "data/provenance/szd-work-index.xml",
+      "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf"
+    },
+    {
+      "path": "data/output/edition-samples/reviews/reviewer-a.json",
+      "sha256": "a4b19e8d9b5958d0df416235eeca431a8d55c210a9b3baa46727826d32446487"
+    },
+    {
+      "path": "data/output/edition-samples/reviews/reviewer-b.json",
+      "sha256": "858b36799092cd0e688a388810633c8f287488d9c0703bbb7a6dd8b515212f8d"
+    },
+    {
+      "path": "data/output/edition-samples/reviews/reconciliation.json",
+      "sha256": "2ae2e6bd94b122767440e15262aee68102be8a1bcbe87c2c34856edbf5c77cb6"
+    },
+    {
+      "path": "data/output/reconciliation/location-low-score-review.json",
+      "sha256": "b9613f6faf85106fe446e0e60831c7efa9fa60fa22902c491fafd80866ab8511"
+    },
+    {
+      "path": "data/output/editions/work-editions.jsonld",
+      "sha256": "4773b352a2da4e87d0aecc154690bb28f9074554c526485db05c4275df9bccb7"
+    },
+    {
+      "path": "data/output/editions/review-queue.json",
+      "sha256": "fff54a27cc68dc3bcd1b8c34f45b056ef094a0eedf3c95142965c3f7128e4f78"
+    },
+    {
+      "path": "data/output/editions/manifest.json",
+      "sha256": "81a9eabe7f5204b86548e06d48a88d2ceae0cdbbe48872c0f0d4580f130a9e86"
+    },
+    {
+      "path": "data/output/editions/validation-report.json",
+      "sha256": "9e51610ed33c3462a7bee74cac090a1427216e52139d1fbd95a5a36eb2daea7f"
+    },
+    {
+      "path": "data/output/reconciliation/candidates.json",
+      "sha256": "9f5d325338fd33cd1c17914060ade29e377461d6e1282e6e5dd0d187447e22fc"
+    },
+    {
+      "path": "data/output/reconciliation/decisions.json",
+      "sha256": "30a616650f89ce2f358b89fd9e6686c12f21f7a9d40ec83eca06dce63c922d29"
+    },
+    {
+      "path": "data/output/reconciliation/publishable-links.json",
+      "sha256": "7c0a3a5e7e39ee16799b88741451f76cd3ef25e73bf326dffa204efa5ecb1728"
+    },
+    {
+      "path": "data/output/reconciliation/contested-claims.json",
+      "sha256": "b0ef7bdf87368a6110863684ef7f156bfa84ab3fcbd8088cf21109f85ee396e2"
+    },
+    {
+      "path": "data/output/reconciliation/review-queue.json",
+      "sha256": "0dce5c83aaa3744ddb4e00f6614934483dbf34695809f24a6fed4e89762ba53f"
+    },
+    {
+      "path": "data/output/reconciliation/manifest.json",
+      "sha256": "0e29c26311a5069d0117c7001a2138018ee5bacbe65e33fd893e7585dd15c4ac"
+    },
+    {
+      "path": "data/output/reconciliation/validation-report.json",
+      "sha256": "0ea6ca2cd99bb424486917fa03dd5541c11f45820a36353dbef57c95960e24b8"
+    },
+    {
+      "path": "data/output/klawiter.jsonld",
+      "sha256": "f52ed0c12987cad814698deba1efc4fd458bb9ef3ebfdd9fb149c1fc5786803d"
+    },
+    {
+      "path": "docs/data/klawiter.json",
+      "sha256": "5e279fba2418c3b15e0a1c00cfd8f933a3137d56c08f35ffb3d05418dff45a6d"
+    },
+    {
+      "path": "docs/data/reconciliation.json",
+      "sha256": "2134d8e0e5b6ee8a3f153589c8a46b3ddbc221efbcf9320d537d3afb303824ca"
+    },
+    {
+      "path": "docs/js/app.js",
+      "sha256": "369c6f9a608559eb4ec66e9c9cc37cd8cc2db9f2d61b2f516b1c2aba99c1d8d5"
+    },
+    {
+      "path": "docs/js/edit.js",
+      "sha256": "4e1fb53b97e853c72ff20cbd5d38ac750bef7c393cb4505324cb11b00ac9c497"
+    },
+    {
+      "path": "docs/js/detail.js",
+      "sha256": "674ffb9227e81c49550cd75b4d97b1a19424cba6bb7996416d5c02c4e59a74cc"
+    },
+    {
+      "path": "docs/js/export.js",
+      "sha256": "df2a9ae351993727de40d27089e298df30b016734dbea3ea0fe65a7d51ad484b"
+    },
+    {
+      "path": "tests/test_editions.py",
+      "sha256": "cdb579984f696dffae4ecb63da676add65a2354b8347a15f8d15213ffb4ec26d"
+    },
+    {
+      "path": "tests/test_reconciliation.py",
+      "sha256": "d4efe4b7585af9698e2fc92705ba5e9351658f903f4233f47b39e0f0bb08d6c5"
+    },
+    {
+      "path": "tests/contested_claims.test.js",
+      "sha256": "2a81690cb87a7d7d38feeeb93952f57d4da8f50fac5effa7ddd45192620d0c98"
+    },
+    {
+      "path": "tests/evidence_triage.test.js",
+      "sha256": "61ea5780941958fe5cb6aa3e8ba20f8df3f496dbc6224dda0b9a30578ee5f531"
+    },
+    {
+      "path": "data/output/audits/production-readiness-final.json",
+      "sha256": "042b437c1a6d086f70ea568aead81cad5dc3af7ed8fbf972e76de581a814b86a"
+    }
+  ],
+  "checks": [
+    {
+      "id": "IV-001",
+      "area": "Artefakt- und Eingabeintegrität",
+      "status": "PASS",
+      "method": "Alle in den Gate-Manifests und im Produktionsaudit referenzierten Dateien wurden erneut mit SHA-256 gehasht.",
+      "result": "40 von 40 Manifest-, Review-, Eingabe-, Frontend-, Lock- und Produktionshashes stimmen mit den aktuellen Dateien überein.",
+      "evidence": [
+        {
+          "path": "data/output/editions/manifest.json",
+          "jsonPaths": [
+            "/artifacts",
+            "/reviewEvidence",
+            "/source/sha256"
+          ]
+        },
+        {
+          "path": "data/output/reconciliation/manifest.json",
+          "jsonPaths": [
+            "/artifacts",
+            "/inputs",
+            "/frontendArtifact"
+          ]
+        },
+        {
+          "path": "data/output/audits/production-readiness-final.json",
+          "jsonPaths": [
+            "/deterministicCore/artifacts",
+            "/agenticEvidence",
+            "/environment/dependencyLock"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IV-002",
+      "area": "Gate 1 Datenmodell",
+      "status": "PASS",
+      "method": "Unabhängiger In-Memory-Neuaufbau aus Stage 02, Review-Reconciliation und Modellierungsentscheidungen; danach SHACL-, Selektor-, Kennungs-, Queue- und Claim-Prüfung mit den Validatorfunktionen.",
+      "result": "Der Neuaufbau ist strukturell identisch. SHACL konform. Null Selektorfehler, null Kennungsfehler, null Queuefehler und null Claimfehler. Der Graph enthält 443 Werke, 1.886 Ausgaben, 1.886 Annotationen, sechs Träger, 75 bestätigte Ausgaben, 1.810 Vorschläge und eine strittige Ausgabe.",
+      "evidence": [
+        {
+          "path": "data/output/editions/validation-report.json",
+          "jsonPaths": [
+            "/allChecksPass",
+            "/checks",
+            "/counts",
+            "/errors"
+          ]
+        },
+        {
+          "path": "data/output/editions/work-editions.jsonld",
+          "jsonPaths": [
+            "/works",
+            "/editions",
+            "/annotations",
+            "/contestedClaims/0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IV-003",
+      "area": "Gate 1 Review- und Evidenzkette",
+      "status": "PASS",
+      "method": "Vollständigkeit, Fallmengen, Eingabehashes und Reconciliation-Provenienz der beiden unabhängigen Reviews wurden geprüft. Der offene Claim wurde am exakten Source-Slice neu gehasht.",
+      "result": "Beide Reviews enthalten dieselben 76 eindeutigen Fälle. Die Reconciliation dokumentiert 14 Reviewer-Abweichungen, 75 technisch bestätigte Segmente und eine offene Werkidentität. Der Selector 6866 bis 7104 auf Seite 4916 reproduziert SHA-256 ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5.",
+      "evidence": [
+        {
+          "path": "data/output/edition-samples/reviews/reconciliation.json",
+          "jsonPaths": [
+            "/review_integrity",
+            "/reviewer_disposition_disagreements",
+            "/case_decisions",
+            "/unresolved_review_queue/0"
+          ]
+        },
+        {
+          "path": "data/output/editions/work-editions.jsonld",
+          "jsonPaths": [
+            "/contestedClaims/0/oa:hasTarget/oa:hasSelector",
+            "/contestedClaims/0/klawiter:sourceSliceSha256",
+            "/contestedClaims/0/klawiter:interpretation",
+            "/contestedClaims/0/klawiter:reviewAction"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IV-004",
+      "area": "Gate 2 Entscheidungsseparation",
+      "status": "PASS",
+      "method": "Unabhängiger In-Memory-Neuaufbau aus Gate 1, Ortsdaten, Entscheidungsdateien, Reviewevidenz, eingefrorenem SZD-Index und Stage 04. Anschließend Vergleich mit allen fünf erzeugten Gate-2-Schichten.",
+      "result": "Der Neuaufbau ist strukturell identisch. 31 Ortsentscheidungen umfassen 23 confirm, drei correct und fünf unresolved. Nur 26 Ortslinks und drei Werklinks sind publizierbar. Die früheren Fehlkandidaten Q2720540 und Q26085641 fehlen im finalen JSON-LD; Rio de Janiero, Yanji und Bambaī tragen die korrigierten Ziele Q8678, Q713362 und Q1156.",
+      "evidence": [
+        {
+          "path": "data/output/reconciliation/validation-report.json",
+          "jsonPaths": [
+            "/allChecksPass",
+            "/checks/deterministicRebuild",
+            "/checks/decisionSeparation",
+            "/checks/jsonldProjection",
+            "/checks/frontendProjection"
+          ]
+        },
+        {
+          "path": "data/output/reconciliation/decisions.json",
+          "jsonPaths": [
+            "/locationDecisions",
+            "/workDecisions"
+          ]
+        },
+        {
+          "path": "data/output/reconciliation/publishable-links.json",
+          "jsonPaths": [
+            "/locations",
+            "/works"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IV-005",
+      "area": "Gate 2 offene Normdatenclaims",
+      "status": "PASS",
+      "method": "Alle fünf Claims wurden auf eindeutige Kennung, offenen Status, konkurrierende Deutungen, Fail-closed-Alternative, Fundstellen und Reviewverlauf geprüft. Alle 26 sourceText-Fundstellen wurden erneut als UTF-8-Text gehasht.",
+      "result": "Fünf eindeutige Claims sind contested und open. Jeder Claim enthält mindestens zwei Deutungen, mindestens eine exakte Fundstelle und einen Revieweintrag. Alle 26 Fundstellenhashes stimmen. Kein offener Fall erzeugt schema:sameAs.",
+      "evidence": [
+        {
+          "path": "data/output/reconciliation/contested-claims.json",
+          "jsonPaths": [
+            "/0",
+            "/1",
+            "/2",
+            "/3",
+            "/4"
+          ]
+        },
+        {
+          "path": "data/output/reconciliation/validation-report.json",
+          "jsonPaths": [
+            "/checks/contestedClaims",
+            "/errors/contestedClaims"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IV-006",
+      "area": "Frontendprojektion und Export",
+      "status": "PASS",
+      "method": "Die Frontendprojektion wurde mit den kanonischen Gate-2-Schichten verglichen. Beide Exportpfade wurden statisch gegen die geladenen Claims geprüft.",
+      "result": "docs/data/reconciliation.json enthält fünf offene Normdatenclaims und den offenen Editionsclaim. Der Einzelexport bindet den Editionsclaim mit Selector, Deutungen und Reviews ein. Der Gesamtexport übernimmt Editions- und Normdatenclaims. Bestätigte locationSameAs-Werte stimmen mit den 26 publizierbaren Entscheidungen überein.",
+      "evidence": [
+        {
+          "path": "docs/data/reconciliation.json",
+          "jsonPaths": [
+            "/summary",
+            "/contestedClaims",
+            "/editionClaims/4916"
+          ]
+        },
+        {
+          "path": "docs/js/export.js",
+          "lines": [
+            68,
+            108,
+            128,
+            134
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IV-007",
+      "area": "UI-Trennung offener Normdatenclaims",
+      "status": "FAIL",
+      "method": "Statische Ablaufprüfung vom geladenen Claim über den Orts-Lookup bis zur Detailansicht; Abgleich aller Claim-Quellwerte mit den primären location-Werten der Frontendeinträge.",
+      "result": "Vier von fünf offenen Ortsclaims sind in keiner Detailansicht erreichbar. Der einzige erreichbare Fall zeigt weder Fundstellen noch Reviewverlauf. Damit erfüllt die Oberfläche den ratifizierten Claim-Vertrag nicht.",
+      "findingRefs": [
+        "F-001"
+      ]
+    },
+    {
+      "id": "IV-008",
+      "area": "Automatische UI-Regression",
+      "status": "FAIL",
+      "method": "Abgleich der Node-Tests mit den fünf realen offenen Normdatenclaims und ihren zusammengesetzten Quellwerten.",
+      "result": "Die Tests decken den Editionsclaim und einen generischen Ortskandidaten ab. Kein Test fordert die Anzeige eines offenen Normdatenclaims samt Fundstelle und Reviewverlauf. Die vier unerreichbaren Claims bleiben deshalb bei grüner Suite unentdeckt.",
+      "findingRefs": [
+        "F-002"
+      ]
+    },
+    {
+      "id": "IV-009",
+      "area": "Direkte Dokumentation der Gate-1-Queue",
+      "status": "FAIL",
+      "method": "Abgleich der konkreten Mengenangaben in README.md und CLAUDE.md mit Graph, Queue und Lane-Vertrag.",
+      "result": "Graph und Lane weisen 1.810 unbestätigte Vorschläge aus. Die priorisierte Queue enthält 317 markierte oder offene Fälle. README.md und CLAUDE.md setzen die 1.810 Vorschläge irrtümlich mit der Prüfliste gleich.",
+      "findingRefs": [
+        "F-003"
+      ]
+    },
+    {
+      "id": "IV-010",
+      "area": "Ausführbare Qualitätsnachweise",
+      "status": "PASS_WITH_DOCUMENTED_LIMIT",
+      "method": "Ausführung der gesperrten Standard-Suite, Ruff-Prüfungen und Node-Tests. Der semantische Diagnoselauf wurde separat ausgeführt.",
+      "result": "446 Tests bestanden, zehn wurden übersprungen und 74 semantische Tests wurden im Standardlauf abgewählt. Ruff check und Ruff format bestanden. Beide Node-Testdateien bestanden. Der getrennte semantische Lauf ergab die dokumentierten 53 bestandenen und 17 fehlgeschlagenen Prüfungen bei 460 abgewählten Tests.",
+      "commands": [
+        "python -m uv run --locked python -m pytest -q",
+        "python -m uv run --locked ruff check pipeline tests",
+        "python -m uv run --locked ruff format --check pipeline tests",
+        "node --test tests/*.test.js",
+        "python -m uv run --locked python -m pytest -q -m semantic"
+      ]
+    },
+    {
+      "id": "IV-011",
+      "area": "Worktree-Sicherheit",
+      "status": "PASS_WITH_LIMIT",
+      "method": "git status, git diff --stat, git diff --cached und git diff --check wurden gelesen.",
+      "result": "Keine Änderungen sind gestaged. git diff --check meldet keine inhaltlichen Whitespace-Fehler, jedoch erwartete LF-zu-CRLF-Hinweise. Der umfangreiche, vorbestehende Fremd-Diff wurde nicht umgeschrieben. Seine vollständige Urheberzuordnung ist aus dieser unabhängigen Prüfung nicht ableitbar."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "P1",
+      "status": "open",
+      "category": "UI und Claim-Vertrag",
+      "title": "Vier offene Ortsclaims sind in der Oberfläche unerreichbar; der fünfte verliert Evidenz und Reviewverlauf",
+      "finding": "Edit.locationReconciliation bindet ausschließlich entry.location an die nach dem vollständigen Quellwert indizierte Gate-2-Projektion. Die offenen Subjects Tyresö, Sofija, Varna, Bloemfontein, Kaapstad und Varna, Sofija kommen in keinem primären entry.location-Feld vor. Nur Saint-Aignan kommt einmal vor. Der Renderer liest selbst dort lediglich decision und candidates aus dem Ortsdatensatz. Die vollständigen contestedAuthorityClaims werden geladen, aber außerhalb des Gesamtexports nicht verwendet. SourceEvidence, alle Interpretationen und reviewHistory gelangen deshalb nicht in die Detailansicht.",
+      "evidence": [
+        {
+          "path": "docs/js/edit.js",
+          "lines": [
+            45,
+            55,
+            157,
+            160
+          ],
+          "observation": "Die Claim-Liste wird geladen; der Lookup verwendet allein den exakten Wert entry.location."
+        },
+        {
+          "path": "docs/js/detail.js",
+          "lines": [
+            157,
+            167,
+            241,
+            263
+          ],
+          "observation": "Die Normdatenanzeige hängt am Orts-Lookup und rendert nur Kandidatennamen sowie einen generischen Offen-Text."
+        },
+        {
+          "path": "docs/js/export.js",
+          "lines": [
+            128,
+            134
+          ],
+          "observation": "Die vollständigen Normdatenclaims werden ausschließlich im Gesamtexport verbraucht."
+        },
+        {
+          "path": "docs/data/reconciliation.json",
+          "jsonPaths": [
+            "/contestedClaims/0",
+            "/contestedClaims/1",
+            "/contestedClaims/2",
+            "/contestedClaims/3",
+            "/contestedClaims/4"
+          ],
+          "observation": "Alle fünf Claims tragen Fundstellen, konkurrierende Deutungen und Reviewverlauf."
+        },
+        {
+          "path": "docs/data/klawiter.json",
+          "jsonPath": "/entries",
+          "observation": "Exakte primary-location-Treffer je Claimwert: Tyresö 0; Sofija, Varna 0; Saint-Aignan 1; Bloemfontein, Kaapstad 0; Varna, Sofija 0."
+        },
+        {
+          "path": "C:/Users/Chrisi/Documents/GitHub/forschungsleitstelle/dashboard/lanes.md",
+          "lane": "klawiter · production-readiness",
+          "contractField": "Decision (beantwortet) / kriterium",
+          "observation": "Bestätigte und strittige Aussagen müssen in Datenabfragen und Oberfläche unterscheidbar bleiben."
+        }
+      ],
+      "impact": "Die finalen Daten bewahren die strittigen Aussagen korrekt, die öffentliche Oberfläche erfüllt den ratifizierten Sichtbarkeitsvertrag jedoch nicht. Vier Claims verschwinden visuell vollständig. Beim fünften ist die Expert-in-the-Loop-Evidenzkette nicht nachprüfbar.",
+      "requiredResolution": "Die UI braucht einen claim-zentrierten Lookup über sourceEvidence.sourcePageId oder eine explizite Claim-zu-Eintrag-Projektion. Die Detailansicht muss sourceValue, exakte Fundstellen, sämtliche Deutungen, reviewHistory und open-Status darstellen. Zusammengesetzte Quellenwerte dürfen nicht vom flachen primären location-Feld abhängen."
+    },
+    {
+      "id": "F-002",
+      "severity": "P1",
+      "status": "open",
+      "category": "Testabdeckung",
+      "title": "Die grüne Node-Suite prüft keinen realen offenen Normdatenclaim",
+      "finding": "tests/contested_claims.test.js modelliert nur den Editionsclaim 4916. tests/evidence_triage.test.js prüft lediglich, dass ein generischer Girona-Kandidat nicht publiziert wird. Weder die fünf realen offenen Ortsclaims noch zusammengesetzte Quellwerte, Fundstellen oder Reviewverläufe werden gerendert und geprüft.",
+      "evidence": [
+        {
+          "path": "tests/contested_claims.test.js",
+          "lines": [
+            8,
+            90
+          ]
+        },
+        {
+          "path": "tests/evidence_triage.test.js",
+          "lines": [
+            215,
+            226
+          ]
+        },
+        {
+          "path": "tests/test_frontend_logic.py",
+          "lines": [
+            30,
+            37
+          ]
+        }
+      ],
+      "impact": "Das UI-Problem aus F-001 bleibt in CI und im dokumentierten Node-Gate unsichtbar.",
+      "requiredResolution": "Mindestens ein Test muss jeden offenen Ortsclaim an seine Source-Page-Projektion binden. Für einen einfachen und einen zusammengesetzten Ortswert muss er open-Status, Fundstelle, alle Deutungen und Reviewverlauf in der gerenderten Ansicht nachweisen."
+    },
+    {
+      "id": "F-003",
+      "severity": "P2",
+      "status": "open",
+      "category": "Direkte Gate-Dokumentation",
+      "title": "README.md und CLAUDE.md überzeichnen die Gate-1-Prüfliste",
+      "finding": "Der Editionsgraph enthält 1.810 vorgeschlagene Ausgaben. Die priorisierte Gate-1-Queue enthält 317 Fälle und beansprucht nur jeden unbestätigten Fall mit Flag sowie jeden strittigen Claim. README.md und CLAUDE.md behaupten dagegen, alle 1.810 Vorschläge blieben in der Prüfliste.",
+      "evidence": [
+        {
+          "path": "README.md",
+          "line": 107
+        },
+        {
+          "path": "CLAUDE.md",
+          "line": 73
+        },
+        {
+          "path": "data/output/editions/review-queue.json",
+          "jsonPaths": [
+            "/caseCount",
+            "/contract"
+          ]
+        },
+        {
+          "path": "data/output/editions/work-editions.jsonld",
+          "jsonPath": "/editions",
+          "observation": "Statusverteilung: confirmed 75, contested 1, proposed 1810."
+        }
+      ],
+      "impact": "Die operative Dokumentation beschreibt den Umfang des priorisierten Prüfbestands falsch und verschleiert die Differenz zwischen sämtlichen Vorschlägen und priorisierten Risikofällen.",
+      "requiredResolution": "README.md und CLAUDE.md müssen 1.810 unbestätigte Vorschläge im Graphen von 317 markierten oder offenen Fällen in der priorisierten Gate-1-Queue unterscheiden."
+    }
+  ],
+  "residualLimits": [
+    {
+      "id": "L-001",
+      "statement": "1.810 Gate-1-Ausgaben bleiben unbestätigte Vorschläge. Die priorisierte Queue umfasst 317 markierte oder offene Fälle."
+    },
+    {
+      "id": "L-002",
+      "statement": "Die Werkbindung von klawiter:edition/4916-2016-b und fünf Ortszuordnungen bleiben fachlich offen. Die Daten behandeln sie fail-closed."
+    },
+    {
+      "id": "L-003",
+      "statement": "Die Gate-2-Queue enthält 796 Kandidaten- oder Konfliktfälle mit weiterem Prüfbedarf."
+    },
+    {
+      "id": "L-004",
+      "statement": "Der getrennte semantische Zehn-Record-Diagnoselauf enthält weiterhin 17 bekannte Feldabweichungen. Die Stichprobe begründet keine corpusweite Genauigkeitsquote."
+    },
+    {
+      "id": "L-005",
+      "statement": "19 Einträge ohne Parserwert besitzen im eingefrorenen LLM-Cache kein Ergebnis. Der reproduzierbare Lauf führt keine Netzaufrufe aus."
+    },
+    {
+      "id": "L-006",
+      "statement": "Diese read-only Schlussprüfung wiederholte den vollständigen, dateischreibenden Produktionslauf nicht. Sie verifizierte dessen gespeicherte Zwei-Lauf-Hashes und rekonstruierte Gate 1 und Gate 2 unabhängig im Speicher aus den eingefrorenen Eingaben."
+    },
+    {
+      "id": "L-007",
+      "statement": "Die UI-Prüfung erfolgte statisch entlang der tatsächlichen Daten- und Funktionspfade. Eine Browserdarstellung wurde nicht zusätzlich aufgezeichnet. Die vier fehlenden exakten Schlüssel machen die Nichterreichbarkeit deterministisch."
+    },
+    {
+      "id": "L-008",
+      "statement": "Der umfangreiche unkommittierte Bestand war vor dieser Prüfung vorhanden und wurde als parallele Arbeit behandelt. Die Hashliste bindet das geprüfte Artefaktset; eine vollständige Urheberzuordnung des übrigen Diffs ist nicht möglich."
+    },
+    {
+      "id": "L-009",
+      "statement": "Eine spätere externe Fachprüfung bleibt zusätzliche Validierung und kann fachliche Entscheidungen mit neuer Provenienz revidieren."
+    }
+  ],
+  "terminalVerdict": "FAIL",
+  "verdictBasis": {
+    "blockingFindings": [
+      "F-001",
+      "F-002"
+    ],
+    "nonblockingButRequiredFinding": "F-003",
+    "statement": "Gate-1- und Gate-2-Daten, Provenienz, Entscheidungsseparation, Hashkette und deterministischer Neuaufbau bestehen. Die Produktionsfreigabe scheitert an der vertraglich geforderten UI-Sichtbarkeit und an der fehlenden Regression für offene Normdatenclaims."
+  }
+}

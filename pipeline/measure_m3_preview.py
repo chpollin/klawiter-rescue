@@ -72,7 +72,10 @@ def main():
     ref = sys.argv[1] if len(sys.argv) > 1 else "HEAD"
     before_raw = subprocess.run(
         ["git", "show", f"{ref}:docs/data/klawiter.json"],
-        cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
     if before_raw.returncode != 0:
         print(f"could not read {ref}:docs/data/klawiter.json", file=sys.stderr)
@@ -109,8 +112,9 @@ def main():
     # Computed against the freshly built 03_parsed.csv, so this is a snapshot of
     # this build, not reproducible after the intermediates are restored.
     sys.path.insert(0, os.path.join(ROOT, "pipeline"))
-    from lib.config import load_csv, STEP_03_OUTPUT, csv_bool, MIN_CONTENT_LENGTH
+    from lib.config import MIN_CONTENT_LENGTH, STEP_03_OUTPUT, csv_bool, load_csv
     from lib.llm_extract import determine_needed_fields
+
     skipped = []
     for row in load_csv(STEP_03_OUTPUT):
         if row.get("page_namespace", "0") != "0":
@@ -130,13 +134,15 @@ def main():
     key = []
     for k in KEY_RECORDS:
         b, a = before.get(str(k)), after.get(str(k))
-        key.append({
-            "pageId": k,
-            "location_before": _loc(b) if b else None,
-            "location_after": _loc(a) if a else None,
-            "title_before": (_title(b) if b else "")[:80],
-            "title_after": (_title(a) if a else "")[:80],
-        })
+        key.append(
+            {
+                "pageId": k,
+                "location_before": _loc(b) if b else None,
+                "location_after": _loc(a) if a else None,
+                "title_before": (_title(b) if b else "")[:80],
+                "title_after": (_title(a) if a else "")[:80],
+            }
+        )
 
     report = {
         "description": (

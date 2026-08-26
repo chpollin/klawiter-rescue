@@ -1,0 +1,838 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "independent-location-reconciliation-review",
+  "created_at_utc": "2026-08-21T18:12:04.3086382Z",
+  "updated_at_utc": "2026-08-21T18:24:00Z",
+  "review_scope": {
+    "requested_cases": 6,
+    "requested_open_log_entries": 22,
+    "requested_work_index_comparisons": 3,
+    "write_scope": "evidence-only",
+    "mapping_changes_performed": false,
+    "note": "Die sechs benannten Fälle tragen im Log status=matched, matchExact=false und Scores unter 90. Die offene Log-Menge besteht aus 3 Fällen mit status=low_score und 19 Fällen mit status=unmatched."
+  },
+  "verifier_provenance": {
+    "role": "higher-capacity independent verification and reconciliation agent",
+    "task_name": "/root/sample_reconciliation",
+    "reviewer_model": "OpenAI Codex, GPT-5 family; the concrete runtime model identifier was not exposed to the agent",
+    "reviewed_at_utc": "2026-08-21T18:12:04.3086382Z",
+    "repository": ".",
+    "repository_head": "c32ab03567fc4b2262021bd0cdd91a06040b3a67",
+    "lane": "klawiter · production-readiness",
+    "lane_state": "run",
+    "external_evidence_provider": "Wikidata/Wikimedia",
+    "external_evidence_retrieved_on": "2026-08-21"
+  },
+  "inputs": [
+    {
+      "path": "docs/data/locations_reconciliation_log.json",
+      "sha256": "299f1dfb6fe8c6fbf5c69f952c3803f01227d6ecba9efe4c38a66b70c7c67afd",
+      "role": "Zuordnungsstatus, Kandidaten und Matcher-Scores",
+      "observed_records": 382
+    },
+    {
+      "path": "docs/data/klawiter.json",
+      "sha256": "d59490fc28ec9bff5f7d6bc7d175cf60d8af606b39ae9beb9cc20888592463bb",
+      "role": "lokale bibliographische Quellstrings und sourceTextId-Fundstellen",
+      "worktree_note": "Die Datei war beim Review bereits uncommitted verändert und wurde ausschließlich gelesen."
+    },
+    {
+      "path": "docs/data/locations.json",
+      "sha256": "c35990917d8186eb17239a4c97893e396b2ed905305270631c8ec9684a4c1ec1",
+      "role": "lokal vorhandene Koordinaten, Ländercodes und parallele Ortsvarianten"
+    },
+    {
+      "path": "data/provenance/szd-work-index.xml",
+      "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf",
+      "role": "lokaler read-only SZD-Werkindex mit Werk-IDs und GND-Referenzen",
+      "repository_modified": false
+    }
+  ],
+  "input_completeness": {
+    "locations_reconciliation_log": {
+      "total": 382,
+      "matched": 360,
+      "low_score": 3,
+      "unmatched": 19,
+      "counts_recomputed": true
+    },
+    "requested_cases_found": 6,
+    "open_entries_found": 22,
+    "complete": true
+  },
+  "method": [
+    "Jede bestehende QID wurde gegen den bezeichneten Wikidata-Entitätstyp, das Land und den lokalen bibliographischen Gebrauch geprüft.",
+    "Ein matcherbedingter falscher Entitätstreffer wird als technische Zuordnungsfrage behandelt. Schreib- und Transliterationsvarianten bleiben als bibliographische Quellstrings erhalten.",
+    "Zusammengesetzte Ortsstrings werden nicht still auf den ersten Ort reduziert. Sie erhalten getrennte Kandidaten und bleiben bis zur modellkonformen Aufspaltung offen.",
+    "Quellenkorrekturen und institutionell gebundene Normalisierungen bleiben unresolved, wenn lokale Evidenz nur eine plausible Hypothese trägt.",
+    "Die 22 offenen Log-Einträge werden als Kandidatenprüfung dokumentiert. Ein offensichtlicher Kandidat ist noch keine veröffentlichte oder institutionell bestätigte Verknüpfung."
+  ],
+  "case_decisions": [
+    {
+      "case_id": "location-nicosia-q3856",
+      "source_location": "Nicosia, Cyprus",
+      "log_record": {
+        "status": "matched",
+        "wikidata_id": "Q3856",
+        "wikidata_label": "Nicosia",
+        "wikidata_score": 70,
+        "match_exact": false
+      },
+      "disposition": "confirm",
+      "issue_class": "technical-match-boundary",
+      "rationale": "Der lokale String bezeichnet Nicosia ausdrücklich mit dem Land Cyprus. Q3856 bezeichnet die Hauptstadt Zyperns. Der niedrige Score erklärt sich durch den angehängten Länderqualifikator und begründet keine sachliche Abweichung.",
+      "local_evidence": {
+        "entry_id": "klawiter:entry/3902",
+        "source_text_id": 28301,
+        "source_slice": "\"Take your pick of plays in Nicosia\" in Cyprus Mail [Nicosia, Cyprus], 27 March 2017 ... Engomio Cultural Centre, Nicosia.",
+        "source_uri": "repo:docs/data/klawiter.json#sourceTextId=28301"
+      },
+      "external_evidence": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q3856",
+          "fact": "Nicosia, capital of Cyprus"
+        }
+      ],
+      "uncertainty": {
+        "level": "none",
+        "reason": null
+      },
+      "safe_for_technical_application": true
+    },
+    {
+      "case_id": "location-boras-q26040",
+      "source_location": "Borås, Sweden",
+      "log_record": {
+        "status": "matched",
+        "wikidata_id": "Q26040",
+        "wikidata_label": "Borås",
+        "wikidata_score": 73,
+        "match_exact": false
+      },
+      "disposition": "confirm",
+      "issue_class": "technical-match-boundary",
+      "rationale": "Die Fundstelle nennt Borås in Schweden als Aufführungsort. Q26040 bezeichnet das Stadtgebiet Borås in der gleichnamigen schwedischen Gemeinde. Ortsname, Land und fachlicher Gebrauch stimmen überein.",
+      "local_evidence": {
+        "entry_id": "klawiter:entry/4355",
+        "source_text_id": 31440,
+        "source_slice": "[1961]: Borås, Sweden ... Presented by the Borås Stadsteater, April 1961",
+        "source_uri": "repo:docs/data/klawiter.json#sourceTextId=31440"
+      },
+      "external_evidence": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q26040",
+          "fact": "Borås, urban area in Borås Municipality, Sweden"
+        }
+      ],
+      "uncertainty": {
+        "level": "none",
+        "reason": null
+      },
+      "safe_for_technical_application": true
+    },
+    {
+      "case_id": "location-luxembourg-q1842",
+      "source_location": "Luxembourg City, Luxembourg",
+      "log_record": {
+        "status": "matched",
+        "wikidata_id": "Q1842",
+        "wikidata_label": "Luxembourg",
+        "wikidata_score": 77,
+        "match_exact": false
+      },
+      "disposition": "confirm",
+      "issue_class": "bibliographic-label-versus-entity-label",
+      "rationale": "Der Quellstring disambiguiert ausdrücklich die Stadt Luxemburg gegenüber dem Staat. Q1842 führt Luxembourg City als Alias und bezeichnet die Hauptstadt sowie größte Stadt Luxemburgs. Die abweichende englische Anzeigeform ist kein Entitätskonflikt.",
+      "local_evidence": {
+        "entry_id": "klawiter:entry/4183",
+        "source_text_id": 31511,
+        "source_slice": "D'Unio'n [The Union] [Luxembourg City, Luxembourg], 3:155 [7 September 1946], p. 2.",
+        "source_uri": "repo:docs/data/klawiter.json#sourceTextId=31511"
+      },
+      "external_evidence": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q1842",
+          "fact": "Luxembourg, capital and largest city of Luxembourg; alias Luxembourg City"
+        }
+      ],
+      "uncertainty": {
+        "level": "none",
+        "reason": null
+      },
+      "safe_for_technical_application": true
+    },
+    {
+      "case_id": "location-rio-de-janiero-q2720540",
+      "source_location": "Rio de Janiero",
+      "log_record": {
+        "status": "matched",
+        "wikidata_id": "Q2720540",
+        "wikidata_label": "Greater Rio de Janeiro",
+        "wikidata_score": 79,
+        "match_exact": false
+      },
+      "disposition": "correct-candidate",
+      "issue_class": "technical-entity-type-error",
+      "rejected_candidate": {
+        "wikidata_id": "Q2720540",
+        "reason": "Die Entität bezeichnet Greater Rio de Janeiro und damit einen großräumigeren Siedlungs- beziehungsweise Metropolraum. Der bibliographische Verlagsort verlangt die Stadtentität."
+      },
+      "correct_candidate": {
+        "wikidata_id": "Q8678",
+        "wikidata_label": "Rio de Janeiro",
+        "url": "https://www.wikidata.org/wiki/Q8678"
+      },
+      "rationale": "Janiero ist eine wiederkehrende Schreibvariante beziehungsweise ein Tippfehler für Janeiro. Dieselbe lokale Großfundstelle führt unmittelbar danach die korrekte Form Rio de Janeiro; weitere Einträge verwenden Rio de Janiero für Verlagssitze. Q8678 bezeichnet die Stadt Rio de Janeiro, Q2720540 eine andere Modellierungstiefe.",
+      "local_evidence": {
+        "entry_id": "klawiter:entry/2755",
+        "source_text_id": 32285,
+        "source_slice": "[2011]: Gráfica Editora Stampa, Rio de Janiero",
+        "corroborating_entry_id": "klawiter:entry/774",
+        "corroborating_source_text_id": 61504,
+        "corroborating_slice": "Obras completas de Stefan Zweig, 1934-1950 [Rio de Janiero] ... Obras completas de Stefan Zweig, 1960 [Rio de Janeiro 1960]",
+        "source_uri": "repo:docs/data/klawiter.json#sourceTextId=32285"
+      },
+      "external_evidence": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q2720540",
+          "fact": "Greater Rio de Janeiro, großräumigere Entität"
+        },
+        {
+          "url": "https://www.wikidata.org/wiki/Q8678",
+          "fact": "Rio de Janeiro, city of Rio de Janeiro state, Brazil"
+        }
+      ],
+      "uncertainty": {
+        "level": "none",
+        "reason": null
+      },
+      "safe_for_technical_application": true
+    },
+    {
+      "case_id": "location-yanji-q956",
+      "source_location": "Yanji",
+      "log_record": {
+        "status": "matched",
+        "wikidata_id": "Q956",
+        "wikidata_label": "Beijing",
+        "wikidata_score": 83,
+        "match_exact": false
+      },
+      "disposition": "correct-candidate",
+      "issue_class": "technical-wrong-entity",
+      "rejected_candidate": {
+        "wikidata_id": "Q956",
+        "reason": "Q956 bezeichnet Beijing. Yanji ist weder Beijings Label noch ein für die Fundstellen plausibler Ortsalias."
+      },
+      "correct_candidate": {
+        "wikidata_id": "Q713362",
+        "wikidata_label": "Yanji",
+        "url": "https://www.wikidata.org/wiki/Q713362"
+      },
+      "rationale": "Der String Yanji erscheint in 39 lokalen bibliographischen Einträgen als Publikationsort, unter anderem in [Yanji, 2000]. Q713362 bezeichnet die gleichnamige chinesische Stadt. Die bestehende Beijing-Zuordnung ist ein technischer Matcherfehler.",
+      "local_evidence": {
+        "entry_id": "klawiter:entry/249",
+        "source_text_id": 61529,
+        "source_slice": "Ciweige jingdian xiaoshuo [Yanji, 2000], Vol. 2, No. 16, pp. 580-652.",
+        "matching_entry_count": 39,
+        "source_uri": "repo:docs/data/klawiter.json#sourceTextId=61529"
+      },
+      "external_evidence": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q956",
+          "fact": "Beijing, capital city of China"
+        },
+        {
+          "url": "https://www.wikidata.org/wiki/Q713362",
+          "fact": "Yanji, county-level city in China"
+        }
+      ],
+      "uncertainty": {
+        "level": "none",
+        "reason": null
+      },
+      "safe_for_technical_application": true
+    },
+    {
+      "case_id": "location-bambai-q26085641",
+      "source_location": "Bambaī",
+      "log_record": {
+        "status": "matched",
+        "wikidata_id": "Q26085641",
+        "wikidata_label": "Bambaira",
+        "wikidata_score": 86,
+        "match_exact": false
+      },
+      "disposition": "correct-candidate",
+      "issue_class": "technical-transliteration-match-error",
+      "rejected_candidate": {
+        "wikidata_id": "Q26085641",
+        "reason": "Q26085641 bezeichnet Bambaira, ein Dorf in West-Sulawesi, Indonesien. Das widerspricht dem lokalen Bombay-Beleg und dem indischen Verlagskontext."
+      },
+      "correct_candidate": {
+        "wikidata_id": "Q1156",
+        "wikidata_label": "Mumbai",
+        "url": "https://www.wikidata.org/wiki/Q1156"
+      },
+      "rationale": "Die lokale Parallelform [Bambaī/Bombay, 1949] identifiziert Bambaī ausdrücklich als Bombay. Q1156 bezeichnet Mumbai und führt Bombay als Alias. Der Treffer auf Bambaira beruht ausschließlich auf oberflächlicher Stringähnlichkeit.",
+      "local_evidence": {
+        "entry_id": "klawiter:entry/7460",
+        "source_text_id": 61558,
+        "source_slice": "Śatarañji kā khel [Bambaī/Bombay, 1949], No. 5, pp. (74)-116.",
+        "source_uri": "repo:docs/data/klawiter.json#sourceTextId=61558"
+      },
+      "external_evidence": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q26085641",
+          "fact": "Bambaira, village in Pasangkayu Regency, West Sulawesi, Indonesia"
+        },
+        {
+          "url": "https://www.wikidata.org/wiki/Q1156",
+          "fact": "Mumbai, capital city in Maharashtra, India; alias Bombay"
+        }
+      ],
+      "uncertainty": {
+        "level": "none",
+        "reason": null
+      },
+      "safe_for_technical_application": true
+    }
+  ],
+  "open_log_entry_assessment": {
+    "scope_note": "Diese Bewertungen identifizieren Kandidaten. Sie verändern keine Ortsdaten und veröffentlichen keine Verknüpfung.",
+    "entries": [
+      {
+        "location": "Lannuon",
+        "log_status": "low_score",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q207581",
+          "wikidata_label": "Lannion",
+          "url": "https://www.wikidata.org/wiki/Q207581"
+        },
+        "rationale": "Die lokale Fundstelle setzt Lannuon und Lannion in Klammern gleich. Der aktuelle Kandidat Q20584357 ist eine Kapelle; Q207581 ist die französische Gemeinde Lannion.",
+        "local_reference": "klawiter:entry/4212; sourceTextId=37909; [2013] ... Lannuon (Lannion)",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Scheveningen, Netherlands",
+        "log_status": "low_score",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q837211",
+          "wikidata_label": "Scheveningen",
+          "url": "https://www.wikidata.org/wiki/Q837211"
+        },
+        "rationale": "Die Fundstelle bezeichnet einen Aufführungsort in Scheveningen. Q837211 ist der Stadtteil von Den Haag; der aktuelle Kandidat Q2149259 bezeichnet Bloedpoort.",
+        "local_reference": "klawiter:entry/4990; sourceTextId=35418",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Kafr El Sheikh, Egypt",
+        "log_status": "low_score",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q328176",
+          "wikidata_label": "Kafr el-Sheikh",
+          "url": "https://www.wikidata.org/wiki/Q328176"
+        },
+        "rationale": "Der Quellenkontext ist ein Periodikum aus Kafr El Sheikh. Q328176 bezeichnet die ägyptische Stadt; der aktuelle Kandidat Q100701089 ist eine Universitätsfakultät.",
+        "local_reference": "klawiter:entry/5252; sourceTextId=37143",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Rio de Janiro",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q8678",
+          "wikidata_label": "Rio de Janeiro",
+          "url": "https://www.wikidata.org/wiki/Q8678"
+        },
+        "rationale": "Der einzelne lokale Beleg nennt Jorge Zahar Editor in Rio de Janiro. Der gleiche Verlag und die parallelen Varianten Rio de Janiero und Rio de Janeiro stützen die Tippfehlerauflösung.",
+        "local_reference": "klawiter:entry/3165; sourceTextId=20359",
+        "uncertainty": "none"
+      },
+      {
+        "location": "T'aipei",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q1867",
+          "wikidata_label": "Taipei",
+          "url": "https://www.wikidata.org/wiki/Q1867"
+        },
+        "rationale": "T'aipei ist eine verbreitete ältere Romanisierung von Taipei und erscheint in 92 lokalen Publikationsangaben. Q1867 bezeichnet die Hauptstadt Taiwans.",
+        "local_reference": "klawiter:entry/54; sourceTextId=61144; [T'aipei, 2001]",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Girona",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q7038",
+          "wikidata_label": "Girona",
+          "url": "https://www.wikidata.org/wiki/Q7038"
+        },
+        "rationale": "Zehn lokale katalanische Publikationsangaben nennen Girona. Q7038 bezeichnet die katalanische Gemeinde und Provinzhauptstadt.",
+        "local_reference": "klawiter:entry/303; sourceTextId=61369; [Girona, 2015]",
+        "uncertainty": "none"
+      },
+      {
+        "location": "RĀ«ga",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q1773",
+          "wikidata_label": "Riga",
+          "url": "https://www.wikidata.org/wiki/Q1773"
+        },
+        "rationale": "Der String ist Mojibake für Rīga. locations.json führt dieselben Riga-Koordinaten und parallele Schlüssel Riga sowie Rīga. Eine Quellfundstelle war im aktuell generierten klawiter.json nicht mehr auffindbar.",
+        "local_reference": "docs/data/locations.json; lat=56.9496; lng=24.1052; country=LV",
+        "uncertainty": "low; source slice unavailable in current generated dataset"
+      },
+      {
+        "location": "Varna, Sofija",
+        "log_status": "unmatched",
+        "assessment": "requires-split",
+        "candidates": [
+          {
+            "wikidata_id": "Q6506",
+            "wikidata_label": "Varna",
+            "url": "https://www.wikidata.org/wiki/Q6506"
+          },
+          {
+            "wikidata_id": "Q472",
+            "wikidata_label": "Sofia",
+            "url": "https://www.wikidata.org/wiki/Q472"
+          }
+        ],
+        "rationale": "Der String trägt zwei eigenständige bulgarische Städte. Eine Einzel-QID würde einen belegten Ort verlieren. Die Aufspaltung ist eine Modellierungsfrage.",
+        "local_reference": "docs/data/locations.json; first-location coordinates lat=43.2141, lng=27.9147",
+        "uncertainty": "split semantics unresolved"
+      },
+      {
+        "location": "Sofija, Varna",
+        "log_status": "unmatched",
+        "assessment": "requires-split",
+        "candidates": [
+          {
+            "wikidata_id": "Q472",
+            "wikidata_label": "Sofia",
+            "url": "https://www.wikidata.org/wiki/Q472"
+          },
+          {
+            "wikidata_id": "Q6506",
+            "wikidata_label": "Varna",
+            "url": "https://www.wikidata.org/wiki/Q6506"
+          }
+        ],
+        "rationale": "Der String trägt dieselben zwei Städte in umgekehrter Reihenfolge. Die Reihenfolge darf nicht durch eine Einzelverknüpfung semantisch überschrieben werden.",
+        "local_reference": "docs/data/locations.json; first-location coordinates lat=42.6977, lng=23.3219",
+        "uncertainty": "split semantics unresolved"
+      },
+      {
+        "location": "Soul T'ŭkpyŏlsi, Sŏul-si",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q8684",
+          "wikidata_label": "Seoul",
+          "url": "https://www.wikidata.org/wiki/Q8684"
+        },
+        "rationale": "Wikidata führt Sŏul T'ŭkpyŏlsi als Alias von Seoul. locations.json enthält die Seoul-Koordinaten. Eine Quellfundstelle war im aktuell generierten klawiter.json nicht mehr auffindbar.",
+        "local_reference": "docs/data/locations.json; lat=37.5665; lng=126.978; country=KR",
+        "uncertainty": "low; source slice unavailable in current generated dataset"
+      },
+      {
+        "location": "Soul-si [Seoul, South Korea]",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q8684",
+          "wikidata_label": "Seoul",
+          "url": "https://www.wikidata.org/wiki/Q8684"
+        },
+        "rationale": "Die Klammerauflösung nennt Seoul und Südkorea ausdrücklich.",
+        "local_reference": "klawiter:entry/3050; sourceTextId=19151; [1996] ... Soul-si [Seoul, South Korea]",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Longpont-sur-Orge",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q247627",
+          "wikidata_label": "Longpont-sur-Orge",
+          "url": "https://www.wikidata.org/wiki/Q247627"
+        },
+        "rationale": "Die bibliographische Angabe nennt die Bibliothèque Municipale in Longpont-sur-Orge. Q247627 bezeichnet die gleichnamige französische Gemeinde.",
+        "local_reference": "klawiter:entry/2410; sourceTextId=11914",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Montevideo, Uruguay",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q1335",
+          "wikidata_label": "Montevideo",
+          "url": "https://www.wikidata.org/wiki/Q1335"
+        },
+        "rationale": "Die Fundstelle nennt El Pais in Montevideo, Uruguay. Q1335 bezeichnet Montevideo.",
+        "local_reference": "klawiter:entry/3225; sourceTextId=21222",
+        "uncertainty": "none"
+      },
+      {
+        "location": "La Tour d'Aigues",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q625669",
+          "wikidata_label": "La Tour-d'Aigues",
+          "url": "https://www.wikidata.org/wiki/Q625669"
+        },
+        "rationale": "Die Abweichung betrifft nur den fehlenden Bindestrich. Koordinaten und Land in locations.json stimmen mit der französischen Gemeinde überein. Eine Quellfundstelle war im aktuellen klawiter.json nicht auffindbar.",
+        "local_reference": "docs/data/locations.json; lat=43.7289; lng=5.5553; country=FR",
+        "uncertainty": "low; source slice unavailable in current generated dataset"
+      },
+      {
+        "location": "Villeneuve d'Ascq",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q43295",
+          "wikidata_label": "Villeneuve-d'Ascq",
+          "url": "https://www.wikidata.org/wiki/Q43295"
+        },
+        "rationale": "Die Abweichung betrifft nur den fehlenden Bindestrich. Koordinaten und Land stimmen mit der französischen Gemeinde überein. Eine Quellfundstelle war im aktuellen klawiter.json nicht auffindbar.",
+        "local_reference": "docs/data/locations.json; lat=50.623; lng=3.1419; country=FR",
+        "uncertainty": "low; source slice unavailable in current generated dataset"
+      },
+      {
+        "location": "Bloemfontein, Kaapstad",
+        "log_status": "unmatched",
+        "assessment": "requires-split",
+        "candidates": [
+          {
+            "wikidata_id": "Q37701",
+            "wikidata_label": "Bloemfontein",
+            "url": "https://www.wikidata.org/wiki/Q37701"
+          },
+          {
+            "wikidata_id": "Q5465",
+            "wikidata_label": "Cape Town",
+            "url": "https://www.wikidata.org/wiki/Q5465"
+          }
+        ],
+        "rationale": "Die Quellangabe nennt zwei Verlagssitze und löst Kaapstad zusätzlich als Capetown auf. Beide Orte müssen erhalten bleiben.",
+        "local_reference": "klawiter:entry/4209; sourceTextId=42182; Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)",
+        "uncertainty": "split semantics unresolved"
+      },
+      {
+        "location": "Kuala Lampur",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q1865",
+          "wikidata_label": "Kuala Lumpur",
+          "url": "https://www.wikidata.org/wiki/Q1865"
+        },
+        "rationale": "Lampur ist ein Tippfehler für Lumpur. Der lokale Kontext nennt ein malaysisches Aufführungszentrum; Koordinaten und Land entsprechen Kuala Lumpur.",
+        "local_reference": "klawiter:entry/5365; sourceTextId=59104",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Saint-Aignan",
+        "log_status": "unmatched",
+        "assessment": "unresolved",
+        "candidate_hypothesis": {
+          "wikidata_id": "Q1055925",
+          "wikidata_label": "Mont-Saint-Aignan",
+          "url": "https://www.wikidata.org/wiki/Q1055925"
+        },
+        "rationale": "Die Quelle nennt l'Université de Rouen - Haute Normandie und Saint-Aignan. Der institutionelle Kontext spricht für Mont-Saint-Aignan, während der gedruckte String mehrere reale Gemeinden namens Saint-Aignan zulässt. Die Normalisierung würde eine bibliographische Quellenkorrektur vorwegnehmen.",
+        "local_reference": "klawiter:entry/4819; sourceTextId=34446",
+        "uncertainty": "high; bibliographic and institution-bound source correction required"
+      },
+      {
+        "location": "Nabeul",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q867615",
+          "wikidata_label": "Nabeul",
+          "url": "https://www.wikidata.org/wiki/Q867615"
+        },
+        "rationale": "Die lokale Fundstelle bezeichnet die Maison de la Culture in Nabeul. Q867615 ist die tunesische Stadt und Hauptstadt des Gouvernements Nabeul.",
+        "local_reference": "klawiter:entry/4165; sourceTextId=40786",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Vestmanna, Streymoy, Faeroe Islands",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q608352",
+          "wikidata_label": "Vestmanna",
+          "url": "https://www.wikidata.org/wiki/Q608352"
+        },
+        "rationale": "Q608352 bezeichnet die Siedlung Vestmanna auf Streymoy, Färöer. Alle Qualifikatoren des Quellstrings stimmen überein.",
+        "local_reference": "klawiter:entry/4806; sourceTextId=37692",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Étival-lès-Le Mans",
+        "log_status": "unmatched",
+        "assessment": "obvious-single-candidate",
+        "candidate": {
+          "wikidata_id": "Q1224451",
+          "wikidata_label": "Étival-lès-le-Mans",
+          "url": "https://www.wikidata.org/wiki/Q1224451"
+        },
+        "rationale": "Die Quelle nennt Étival-lès-Le Mans und den Départementzusatz Sarthe. Q1224451 bezeichnet die gleichnamige Gemeinde in Sarthe; die Abweichung betrifft nur die Großschreibung von le.",
+        "local_reference": "klawiter:entry/2621; sourceTextId=44632",
+        "uncertainty": "none"
+      },
+      {
+        "location": "Tyresö",
+        "log_status": "unmatched",
+        "assessment": "unresolved",
+        "candidate_hypotheses": [
+          {
+            "wikidata_id": "Q113730",
+            "wikidata_label": "Tyresö Municipality",
+            "url": "https://www.wikidata.org/wiki/Q113730",
+            "evidence": "Die lokalen Koordinaten liegen nahe der Wikidata-Koordinate der Gemeinde; Tyresö ist deren Kurzname."
+          },
+          {
+            "wikidata_id": "Q21667397",
+            "wikidata_label": "Tyresö district",
+            "url": "https://www.wikidata.org/wiki/Q21667397",
+            "evidence": "Wikidata führt außerdem einen gleichnamigen Registrierungsbezirk."
+          }
+        ],
+        "rationale": "Die bibliographischen Angaben nennen Inko, Tyresö, Sweden. Ohne eine verbindliche Regel zur Ortsgranularität ist die Gemeinde plausibler, aber nicht automatisch gegenüber dem Bezirk oder einem postalischen Ortsbegriff zu bestätigen.",
+        "local_reference": "klawiter:entry/4269; sourceTextId=37310; [2001]: Inko, Tyresö, Sweden",
+        "uncertainty": "medium; modelling depth must be decided consistently"
+      }
+    ],
+    "summary": {
+      "total": 22,
+      "obvious_single_candidate": 17,
+      "requires_split": 3,
+      "unresolved": 2,
+      "locally_obvious_candidate_found": true,
+      "auto_publish_authorized": false
+    }
+  },
+  "gate_2_work_index_comparisons": {
+    "source": {
+      "path": "data/provenance/szd-work-index.xml",
+      "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf",
+      "access_mode": "read-only",
+      "repository_modified": false
+    },
+    "comparison_rule": "Bestätigt wird die Identität des Werks anhand des exakten Haupttitels. MediaWiki-Routingzusätze wie VIST oder Volume und ein ausgeschriebener Untertitel werden getrennt ausgewiesen. Sie werden nicht still zum SZD-Titel erklärt.",
+    "decisions": [
+      {
+        "case_id": "work-page-54-ungeduld-des-herzens",
+        "klawiter": {
+          "source_page_id": 54,
+          "entry_id": "klawiter:entry/54",
+          "source_text_id": 61144,
+          "mediawiki_page_title": "Ungeduld des Herzens (VIST)",
+          "work_title_in_source": "Ungeduld des Herzens",
+          "source_slice": "Ungeduld des Herzens. Roman. 443p."
+        },
+        "szd": {
+          "xml_id": "SZDWRK.133",
+          "title": "Ungeduld des Herzens",
+          "gnd_ref": "http://d-nb.info/gnd/4447444-1",
+          "xml_location": "SZDWRK.xml:1251",
+          "xml_xpath": "//tei:bibl[@xml:id='SZDWRK.133']/tei:title",
+          "xml_slice": "<bibl sortKey=\"Ungedulddesherzens\" xml:id=\"SZDWRK.133\"> ... <title ref=\"http://d-nb.info/gnd/4447444-1\">Ungeduld des Herzens</title>"
+        },
+        "title_identity": {
+          "exact_main_title_equal": true,
+          "literal_page_label_equal": false,
+          "difference": "VIST ist ein Klawiter-Routingzusatz und kein Bestandteil des Werktitels."
+        },
+        "gnd_ref_present": true,
+        "disposition": "confirm",
+        "rationale": "Der exakte Haupttitel in der Klawiter-Fundstelle stimmt mit dem SZD-Titel überein. SZDWRK.133 liefert einen vorhandenen GND-ref. Der aktuell exportierte Klawiter-Titelwert [ca. 1965]: Deutscher Bücherklub, Bochum ist eine separate Feldfidelitätsabweichung und wurde nicht als Werkidentität verwendet.",
+        "uncertainty": {
+          "level": "none",
+          "reason": null
+        }
+      },
+      {
+        "case_id": "work-page-56-die-welt-von-gestern",
+        "klawiter": {
+          "source_page_id": 56,
+          "entry_id": "klawiter:entry/56",
+          "source_text_id": 50710,
+          "mediawiki_page_title": "Die Welt von Gestern. Erinnerungen eines Europäers",
+          "work_title_in_source": "Die Welt von Gestern",
+          "source_subtitle": "Erinnerungen eines Europäers",
+          "source_slice": "Die Welt von Gestern. Erinnerungen eines Europäers. 493p."
+        },
+        "szd": {
+          "xml_id": "SZDWRK.5",
+          "title": "Die Welt von Gestern",
+          "gnd_ref": "http://d-nb.info/gnd/4436762-4",
+          "xml_location": "SZDWRK.xml:84",
+          "xml_xpath": "//tei:bibl[@xml:id='SZDWRK.5']/tei:title",
+          "xml_slice": "<bibl sortKey=\"Weltvongestern\" xml:id=\"SZDWRK.5\"> ... <title ref=\"http://d-nb.info/gnd/4436762-4\">Die Welt von Gestern</title>"
+        },
+        "title_identity": {
+          "exact_main_title_equal": true,
+          "literal_page_label_equal": false,
+          "difference": "Die Klawiter-Seite führt zusätzlich den Untertitel Erinnerungen eines Europäers; der SZD-Werkindex führt den identischen Haupttitel."
+        },
+        "gnd_ref_present": true,
+        "disposition": "confirm",
+        "rationale": "Der Haupttitel ist buchstabengetreu identisch. Der zusätzliche Untertitel spezifiziert dieselbe autobiographische Arbeit und erzeugt keine konkurrierende Werkidentität. SZDWRK.5 enthält den GND-ref.",
+        "uncertainty": {
+          "level": "none",
+          "reason": null
+        }
+      },
+      {
+        "case_id": "work-page-4916-schachnovelle-volume",
+        "klawiter": {
+          "source_page_id": 4916,
+          "entry_id": "klawiter:entry/4916",
+          "source_text_id": 59061,
+          "mediawiki_page_title": "Schachnovelle / Volume",
+          "work_title_in_source": "Schachnovelle",
+          "source_slice": "[1942]: Verlag Pigmalión, Buénos Aires ... Schachnovelle. 97p."
+        },
+        "szd": {
+          "xml_id": "SZDWRK.39",
+          "title": "Schachnovelle",
+          "gnd_ref": "http://d-nb.info/gnd/4255212-6",
+          "xml_location": "SZDWRK.xml:391",
+          "xml_xpath": "//tei:bibl[@xml:id='SZDWRK.39']/tei:title",
+          "xml_slice": "<bibl sortKey=\"Schachnovelle\" xml:id=\"SZDWRK.39\"> ... <title ref=\"http://d-nb.info/gnd/4255212-6\">Schachnovelle</title>"
+        },
+        "title_identity": {
+          "exact_main_title_equal": true,
+          "literal_page_label_equal": false,
+          "difference": "Volume ist ein Klawiter-Klassifikationszusatz und kein Bestandteil des Werktitels."
+        },
+        "gnd_ref_present": true,
+        "disposition": "confirm",
+        "rationale": "Der Werkseiten-Haupttitel stimmt exakt mit SZDWRK.39 überein und der SZD-Eintrag trägt einen GND-ref. Diese Bestätigung betrifft die Werkseite und ihre echten Schachnovelle-Ausgaben. Sie entscheidet nicht die quarantänisierte Werkbindung der Adaption klawiter:edition/4916-2016-b; diese bleibt gemäß Lane-Vertrag unresolved.",
+        "uncertainty": {
+          "level": "none",
+          "reason": null
+        },
+        "explicit_non_effect": "Keine Entscheidung über die Werkidentität der 2016er Graphic-Novel-Adaption."
+      }
+    ],
+    "summary": {
+      "total": 3,
+      "confirm": 3,
+      "unresolved": 0,
+      "gnd_ref_present": 3,
+      "exact_main_title_equal": 3,
+      "literal_full_page_label_equal": 0,
+      "blocking_work_index_match": false,
+      "remaining_separate_quarantine": "klawiter:edition/4916-2016-b"
+    }
+  },
+  "application_rules": [
+    {
+      "rule": "Die drei bestätigten bestehenden QIDs Q3856, Q26040 und Q1842 können technisch beibehalten werden.",
+      "authority_class": "confirmed technical mapping"
+    },
+    {
+      "rule": "Die drei verworfenen QIDs Q2720540, Q956 und Q26085641 dürfen nicht in Gate-2-Ausgaben veröffentlicht werden. Ihre bestätigten Ersatzkandidaten sind Q8678, Q713362 und Q1156.",
+      "authority_class": "confirmed technical correction"
+    },
+    {
+      "rule": "Die 17 offensichtlichen offenen Einzelkandidaten dürfen als Gate-2-Vorschläge erzeugt werden. Ihre Veröffentlichung als bestätigte Links erfordert den vorgesehenen Entscheidungsdatensatz.",
+      "authority_class": "proposal only"
+    },
+    {
+      "rule": "Varna, Sofija; Sofija, Varna; und Bloemfontein, Kaapstad bleiben bis zur verlustfreien Mehrort-Modellierung unverknüpft.",
+      "authority_class": "modelling decision"
+    },
+    {
+      "rule": "Saint-Aignan und Tyresö bleiben in der priorisierten Prüfliste. Kein Kandidat darf still als sicher übernommen werden.",
+      "authority_class": "expert or policy decision"
+    }
+  ],
+  "prioritized_unresolved_review_queue": [
+    {
+      "priority": 1,
+      "location": "Saint-Aignan",
+      "question": "Belegt die Primärbibliographie Mont-Saint-Aignan als Verlagsort, oder muss der gedruckte String Saint-Aignan unverändert und unverknüpft bleiben?",
+      "required_evidence": "Titelblatt, Impressum oder autorisierte Universitätsbibliographie der Ausgabe von 1993",
+      "decision_class": "bibliographic and institution-bound"
+    },
+    {
+      "priority": 2,
+      "location": "Tyresö",
+      "question": "Welche Wikidata-Granularität gilt im Projekt für schwedische Publikationsorte, Gemeinde oder Bezirk?",
+      "required_evidence": "verbindliche Gate-2-Ortspolicy und nach Möglichkeit Verlagsimpressum mit Postanschrift",
+      "decision_class": "modelling depth"
+    },
+    {
+      "priority": 3,
+      "location": "Varna, Sofija | Sofija, Varna | Bloemfontein, Kaapstad",
+      "question": "Wie werden mehrere belegte Publikationsorte im ratifizierten Datenmodell geordnet und jeweils verknüpft?",
+      "required_evidence": "verlustfreie Mehrort-Repräsentation mit erhaltener Reihenfolge",
+      "decision_class": "technical modelling"
+    },
+    {
+      "priority": 4,
+      "location": "RĀ«ga | Soul T'ŭkpyŏlsi, Sŏul-si | La Tour d'Aigues | Villeneuve d'Ascq",
+      "question": "Sind die nicht mehr in klawiter.json auffindbaren Quellstrings noch kanonischer Bestand?",
+      "required_evidence": "Rückbindung an den aktuellen Primärimport oder dokumentierte Entfernung aus dem Reconciliation-Log",
+      "decision_class": "provenance drift"
+    }
+  ],
+  "gate_2_finding": {
+    "status": "partial-release",
+    "finding": "Die sechs beauftragten Niedrigscore-Fälle sind vollständig entschieden. Drei bestehende Links sind bestätigt; drei müssen vor einer Gate-2-Veröffentlichung auf die bestätigten Stadtentitäten korrigiert werden. Von den 22 offenen Log-Einträgen tragen 17 einen belastbaren Einzelkandidaten. Drei zusammengesetzte Strings benötigen eine Mehrort-Modellierung. Saint-Aignan und Tyresö bleiben explizit unresolved. Die drei SZD-Werkabgleiche bestätigen die Werkidentitäten und vorhandenen GND-Referenzen; die quarantänisierte 2016er Adaption auf Seite 4916 bleibt davon unberührt.",
+    "blocking_conditions": [
+      "Q2720540, Q956 und Q26085641 dürfen nicht als bestätigte Ortslinks ausgegeben werden.",
+      "Zusammengesetzte Ortsstrings dürfen nicht auf eine Einzel-QID reduziert werden.",
+      "Saint-Aignan und Tyresö dürfen nicht automatisch bestätigt werden."
+    ],
+    "release_condition": "Gate-2-Vorschläge für die 17 offensichtlichen Einzelkandidaten sind zulässig, sofern proposal und confirmation getrennt bleiben. Eine vollständige Veröffentlichung bleibt bis zur Korrektur der drei falschen Kernlinks und zur expliziten Behandlung der offenen Modellierungsfälle gesperrt."
+  },
+  "summary": {
+    "requested_case_dispositions": {
+      "confirm": 3,
+      "reject": 0,
+      "correct-candidate": 3,
+      "unresolved": 0
+    },
+    "wrong_existing_qids": [
+      "Q2720540",
+      "Q956",
+      "Q26085641"
+    ],
+    "confirmed_replacements": [
+      "Q8678",
+      "Q713362",
+      "Q1156"
+    ],
+    "open_log_entries": {
+      "obvious_single_candidate": 17,
+      "requires_split": 3,
+      "unresolved": 2
+    },
+    "szd_work_index_comparisons": {
+      "confirm": 3,
+      "unresolved": 0,
+      "gnd_ref_present": 3,
+      "separate_adaptation_quarantine_preserved": true
+    },
+    "silent_promotion_of_uncertainty": false
+  }
+}

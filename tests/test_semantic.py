@@ -19,7 +19,15 @@ from pathlib import Path
 import pytest
 
 _GROUND_TRUTH_PATH = Path(__file__).parent / "wiki_ground_truth.json"
-_FIELDS = ("title", "year", "publisher", "location", "language", "translator", "pageCount")
+_FIELDS = (
+    "title",
+    "year",
+    "publisher",
+    "location",
+    "language",
+    "translator",
+    "pageCount",
+)
 
 
 def _find_entry(ns0_entries, page_id):
@@ -49,8 +57,11 @@ def _mismatches(wiki_entries, ns0_entries):
         if entry is None:
             bad.extend((w["page_id"], f) for f in _FIELDS)
             continue
-        bad.extend((w["page_id"], f) for f in _FIELDS
-                   if not _field_ok(f, w["expected"][f], entry))
+        bad.extend(
+            (w["page_id"], f)
+            for f in _FIELDS
+            if not _field_ok(f, w["expected"][f], entry)
+        )
     return bad
 
 
@@ -104,8 +115,9 @@ class TestSemanticAccuracy:
             assert not actual, _msg(wiki_entry, "title", None, actual)
         else:
             # Title should match or start with expected (some titles are legitimately longer)
-            assert actual.startswith(expected) or actual == expected, \
-                _msg(wiki_entry, "title", expected, actual)
+            assert actual.startswith(expected) or actual == expected, _msg(
+                wiki_entry, "title", expected, actual
+            )
 
     def test_year(self, wiki_entry, ns0_entries):
         entry = _find_entry(ns0_entries, wiki_entry["page_id"])

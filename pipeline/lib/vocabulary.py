@@ -7,13 +7,11 @@ and klawiter: (domain-specific extensions for Stefan Zweig bibliography types).
 CONTEXT = {
     "@context": {
         "@version": 1.1,
-
         # --- Namespace prefixes ---
         "schema": "https://schema.org/",
         "dcterms": "http://purl.org/dc/terms/",
         "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
-
         # --- Schema.org mappings ---
         "name": "schema:name",
         "description": "schema:description",
@@ -30,10 +28,8 @@ CONTEXT = {
         "workTranslation": {"@id": "schema:workTranslation", "@container": "@set"},
         "hasPart": {"@id": "schema:hasPart", "@container": "@list"},
         "author": "schema:author",
-
         # --- Dublin Core mappings ---
         "bibliographicCitation": "dcterms:bibliographicCitation",
-
         # --- Domain-specific (klawiter:) ---
         "entryType": "klawiter:entryType",
         "timePeriod": "klawiter:timePeriod",
@@ -67,7 +63,10 @@ SCHEMA_TYPE_MAP = {
     "film": ["schema:Movie", "klawiter:FilmEntry"],
     "correspondence": ["schema:Message", "klawiter:CorrespondenceEntry"],
     "collected-works": ["schema:Collection", "klawiter:CollectedWorksEntry"],
-    "secondary-literature": ["schema:ScholarlyArticle", "klawiter:SecondaryLiteratureEntry"],
+    "secondary-literature": [
+        "schema:ScholarlyArticle",
+        "klawiter:SecondaryLiteratureEntry",
+    ],
     "historical-study": ["schema:ScholarlyArticle", "klawiter:HistoricalStudyEntry"],
     "translation": ["schema:Book", "klawiter:TranslationEntry"],
     "foreword": ["schema:CreativeWork", "klawiter:ForewordEntry"],
@@ -126,19 +125,57 @@ CATEGORY_TYPE_MAP = {
 
 # ISO 639-1 language mapping
 LANGUAGE_MAP = {
-    "German": "de", "English": "en", "French": "fr", "Spanish": "es",
-    "Italian": "it", "Portuguese": "pt", "Russian": "ru", "Chinese": "zh",
-    "Japanese": "ja", "Arabic": "ar", "Hebrew": "he", "Hindi": "hi",
-    "Turkish": "tr", "Polish": "pl", "Czech": "cs", "Dutch": "nl",
-    "Swedish": "sv", "Danish": "da", "Norwegian": "no", "Finnish": "fi",
-    "Hungarian": "hu", "Romanian": "ro", "Greek": "el", "Korean": "ko",
-    "Serbian": "sr", "Croatian": "hr", "Bulgarian": "bg", "Slovak": "sk",
-    "Slovenian": "sl", "Lithuanian": "lt", "Latvian": "lv", "Estonian": "et",
-    "Albanian": "sq", "Georgian": "ka", "Armenian": "hy", "Catalan": "ca",
-    "Basque": "eu", "Galician": "gl", "Persian": "fa", "Urdu": "ur",
-    "Bengali": "bn", "Thai": "th", "Vietnamese": "vi", "Indonesian": "id",
-    "Malay": "ms", "Tagalog": "tl", "Ukrainian": "uk", "Belarusian": "be",
-    "Yiddish": "yi", "Esperanto": "eo", "Latin": "la",
+    "German": "de",
+    "English": "en",
+    "French": "fr",
+    "Spanish": "es",
+    "Italian": "it",
+    "Portuguese": "pt",
+    "Russian": "ru",
+    "Chinese": "zh",
+    "Japanese": "ja",
+    "Arabic": "ar",
+    "Hebrew": "he",
+    "Hindi": "hi",
+    "Turkish": "tr",
+    "Polish": "pl",
+    "Czech": "cs",
+    "Dutch": "nl",
+    "Swedish": "sv",
+    "Danish": "da",
+    "Norwegian": "no",
+    "Finnish": "fi",
+    "Hungarian": "hu",
+    "Romanian": "ro",
+    "Greek": "el",
+    "Korean": "ko",
+    "Serbian": "sr",
+    "Croatian": "hr",
+    "Bulgarian": "bg",
+    "Slovak": "sk",
+    "Slovenian": "sl",
+    "Lithuanian": "lt",
+    "Latvian": "lv",
+    "Estonian": "et",
+    "Albanian": "sq",
+    "Georgian": "ka",
+    "Armenian": "hy",
+    "Catalan": "ca",
+    "Basque": "eu",
+    "Galician": "gl",
+    "Persian": "fa",
+    "Urdu": "ur",
+    "Bengali": "bn",
+    "Thai": "th",
+    "Vietnamese": "vi",
+    "Indonesian": "id",
+    "Malay": "ms",
+    "Tagalog": "tl",
+    "Ukrainian": "uk",
+    "Belarusian": "be",
+    "Yiddish": "yi",
+    "Esperanto": "eo",
+    "Latin": "la",
 }
 
 

@@ -6,17 +6,17 @@ Tests mojibake detection/repair and HTML entity handling.
 import unicodedata
 
 from lib.encoding import (
-    fix_mojibake,
-    fix_html_entities,
     fix_encoding,
+    fix_html_entities,
+    fix_mojibake,
     has_mojibake,
 )
 
 
 class TestHasMojibake:
     def test_detects_common_mojibake_patterns(self):
-        assert has_mojibake("SchÃ¤fer") is True      # ä
-        assert has_mojibake("MÃ¼ller") is True       # ü
+        assert has_mojibake("SchÃ¤fer") is True  # ä
+        assert has_mojibake("MÃ¼ller") is True  # ü
         assert has_mojibake("Text\xc2\xa0here") is True  # nbsp
 
     def test_rejects_clean_text(self):
@@ -43,7 +43,7 @@ class TestFixMojibake:
 
     def test_nfc_normalization(self):
         result = fix_mojibake("SchÃ¤fer")
-        assert result == unicodedata.normalize('NFC', result)
+        assert result == unicodedata.normalize("NFC", result)
 
     def test_none_passthrough(self):
         assert fix_mojibake(None) is None
@@ -52,7 +52,7 @@ class TestFixMojibake:
 def corrupt(s):
     """Reproduce the original corruption: UTF-8 bytes read back as Latin-1.
     fix_mojibake must invert this, restoring the source string."""
-    return s.encode('utf-8').decode('latin-1')
+    return s.encode("utf-8").decode("latin-1")
 
 
 class TestMojibakeTransliteration:
@@ -61,8 +61,16 @@ class TestMojibakeTransliteration:
 
     def test_latin_extended_a(self):
         # Arabic, Slavic, Turkish, Baltic romanization: macrons, carons, cedillas.
-        for word in ["al-Qāhira", "Athēna", "ūmūr", "Mektuplaşmalar",
-                     "Książki", "Muž", "čovek", "Tōkyō"]:
+        for word in [
+            "al-Qāhira",
+            "Athēna",
+            "ūmūr",
+            "Mektuplaşmalar",
+            "Książki",
+            "Muž",
+            "čovek",
+            "Tōkyō",
+        ]:
             assert fix_mojibake(corrupt(word)) == word
 
     def test_latin_extended_additional(self):
@@ -75,8 +83,16 @@ class TestMojibakeTransliteration:
 
     def test_clean_german_unchanged(self):
         # Accented letters followed by ASCII are not a mojibake run.
-        for word in ["Amokläufer", "Erzählungen", "Dämon", "Hölderlin",
-                     "Büchern", "Aufsätze", "Größe", "Straße"]:
+        for word in [
+            "Amokläufer",
+            "Erzählungen",
+            "Dämon",
+            "Hölderlin",
+            "Büchern",
+            "Aufsätze",
+            "Größe",
+            "Straße",
+        ]:
             assert fix_mojibake(word) == word
 
     def test_clean_accent_before_guillemet_not_corrupted(self):

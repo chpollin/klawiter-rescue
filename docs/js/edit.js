@@ -15,14 +15,21 @@
 const Edit = {
   EDITOR_ROLE: 'Editor (SZD)',          // role, not a personal name (privacy convention)
   STORAGE_KEY: 'klawiter.pendingEdits.v2',
+  RECONCILIATION_STORAGE_KEY: 'klawiter.pendingReconciliation.v1',
   TRIAGE_URL: 'data/triage.json',       // built by pipeline/build_triage.py (local file, no external request)
+  RECONCILIATION_URL: 'data/reconciliation.json',
 
   FIELD_LABELS: { publisher: 'Publisher', location: 'Location', translator: 'Translator',
                   pageCount: 'Pages', title: 'Title' },
   TRACKED_FIELDS: ['publisher', 'location', 'translator', 'pageCount'],
 
   triage: null,            // pageId(str) -> flags from triage.json; null until loaded
+  reconciliation: null,    // location string -> Gate 2 candidates and decisions
+  editionClaims: {},       // sourcePageId(str) -> contested edition claims
+  contestedAuthorityClaims: [],
+  pendingReconciliation: {},
   _triageFetched: false,
+  _reconciliationFetched: false,
 
   // Load the triage artifact once, on entering edit mode. On failure the
   // hints honestly degrade to what the entry itself carries (provenance).
@@ -35,6 +42,19 @@ const Edit = {
       .catch(() => { this.triage = {}; });
   },
 
+  loadReconciliation() {
+    if (this._reconciliationFetched) return Promise.resolve();
+    this._reconciliationFetched = true;
+    return fetch(this.RECONCILIATION_URL)
+      .then(r => (r.ok ? r.json() : null))
+      .then(doc => {
+        this.reconciliation = doc && doc.locations ? doc.locations : {};
+        this.editionClaims = doc && doc.editionClaims ? doc.editionClaims : {};
+        this.contestedAuthorityClaims = doc && doc.contestedClaims ? doc.contestedClaims : [];
+      })
+      .catch(() => { this.reconciliation = {}; });
+  },
+
   // Restore pending edits from a previous session so in-progress work survives a reload.
   restore() {
     try {
@@ -43,6 +63,11 @@ const Edit = {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') App.state.pendingEdits = parsed;
       }
+      const reconciliationRaw = localStorage.getItem(this.RECONCILIATION_STORAGE_KEY);
+      if (reconciliationRaw) {
+        const parsed = JSON.parse(reconciliationRaw);
+        if (parsed && typeof parsed === 'object') this.pendingReconciliation = parsed;
+      }
     } catch (e) { /* corrupt or unavailable store: start clean */ }
     this.updateBadge();
   },
@@ -50,6 +75,10 @@ const Edit = {
   persist() {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(App.state.pendingEdits));
+      localStorage.setItem(
+        this.RECONCILIATION_STORAGE_KEY,
+        JSON.stringify(this.pendingReconciliation)
+      );
     } catch (e) { /* quota exceeded or disabled: stay in-memory for this session */ }
   },
 
@@ -125,6 +154,71 @@ const Edit = {
     return App.state.pendingEdits[pid] ? App.state.pendingEdits[pid][field] : undefined;
   },
 
+  locationReconciliation(entry) {
+    if (!entry || !entry.location || !this.reconciliation) return null;
+    return this.reconciliation[entry.location] || null;
+  },
+
+  editionClaimsFor(entry) {
+    if (!entry) return [];
+    return this.editionClaims[String(entry.sourcePageId)] || [];
+  },
+
+  authorityClaimsFor(entry) {
+    if (!entry) return [];
+    const pageId = Number(entry.sourcePageId);
+    const locationId = entry.location ? `klawiter:location/${entry.location}` : null;
+    return this.contestedAuthorityClaims.filter(claim => {
+      if (locationId && claim.subject && claim.subject['@id'] === locationId) return true;
+      return (claim.sourceEvidence || []).some(
+        evidence => Number(evidence.sourcePageId) === pageId
+      );
+    });
+  },
+
+  pendingLocationDecision(pid) {
+    const entry = App.entryMap.get(pid);
+    return entry && entry.location
+      ? this.pendingReconciliation[entry.location]
+      : undefined;
+  },
+
+  decideLocation(pid, action, qid = null) {
+    if (!App.state.editMode) return;
+    const entry = App.entryMap.get(pid);
+    if (!entry || !entry.location) return;
+    const review = this.locationReconciliation(entry);
+    const candidate = review && (review.candidates || []).find(item => item.qid === qid);
+    if ((action === 'confirm' || action === 'correct') && !candidate) return;
+    const target = qid ? `/${qid}` : '';
+    this.pendingReconciliation[entry.location] = {
+      entityType: 'location',
+      subject: entry.location,
+      action,
+      qid,
+      label: candidate ? candidate.label : null,
+      decisionId: `location/${entry.location}${target}/editor-${this._now()}`,
+      decidedBy: this.EDITOR_ROLE,
+      decidedAt: this._now(),
+      evidence: [`frontend-entry/${pid}`, candidate ? candidate.candidateId : 'no-candidate'],
+      source: 'human',
+    };
+    this._afterChange(pid);
+  },
+
+  revertLocationDecision(pid) {
+    const entry = App.entryMap.get(pid);
+    if (!entry || !entry.location) return;
+    delete this.pendingReconciliation[entry.location];
+    this._afterChange(pid);
+  },
+
+  reconciliationPatches() {
+    return Object.values(this.pendingReconciliation).sort((a, b) =>
+      a.subject.localeCompare(b.subject)
+    );
+  },
+
   // Live review status: persisted from the dataset, raised to approved by pending human edits.
   entryStatus(pid) {
     if (App.state.pendingEdits[pid] && Object.keys(App.state.pendingEdits[pid]).length) {
@@ -159,7 +253,7 @@ const Edit = {
   getPendingCount() {
     let count = 0;
     for (const pid in App.state.pendingEdits) count += Object.keys(App.state.pendingEdits[pid]).length;
-    return count;
+    return count + Object.keys(this.pendingReconciliation).length;
   },
 
   updateBadge() {
@@ -334,19 +428,22 @@ const Edit = {
       }
     }
 
-    if (patches.length === 0) return;
+    const reconciliationPatches = this.reconciliationPatches();
+    if (patches.length === 0 && reconciliationPatches.length === 0) return;
 
     const patchDoc = {
       patchVersion: 2,
+      reconciliationPatchVersion: 1,
       created: this._now(),
       source: 'klawiter-eil-interface',
-      totalChanges: patches.length,
+      totalChanges: patches.length + reconciliationPatches.length,
       patches: patches,
+      reconciliationPatches: reconciliationPatches,
     };
 
     downloadBlob(
       JSON.stringify(patchDoc, null, 2),
-      `klawiter-patch-${this._now().slice(0, 10)}.json`,
+      `klawiter-curation-${this._now().slice(0, 10)}.json`,
       'application/json'
     );
   },

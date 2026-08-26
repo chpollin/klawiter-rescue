@@ -8,7 +8,7 @@ import re
 
 def parse_redirect(content):
     """Extract redirect target from #REDIRECT markup."""
-    m = re.match(r'#REDIRECT\s*\[\[(.+?)\]\]', content, re.IGNORECASE)
+    m = re.match(r"#REDIRECT\s*\[\[(.+?)\]\]", content, re.IGNORECASE)
     if m:
         return m.group(1).strip()
     return None
@@ -16,21 +16,21 @@ def parse_redirect(content):
 
 def is_redirect(content):
     """Check if content is a redirect."""
-    return bool(content and content.strip().startswith('#REDIRECT'))
+    return bool(content and content.strip().startswith("#REDIRECT"))
 
 
 def extract_categories(content):
     """Extract all [[Category:...]] tags and return (categories_list, content_without_categories)."""
-    cats = re.findall(r'\[\[Category:([^\]]+)\]\]', content)
-    cleaned = re.sub(r'\[\[Category:[^\]]+\]\]\s*', '', content)
+    cats = re.findall(r"\[\[Category:([^\]]+)\]\]", content)
+    cleaned = re.sub(r"\[\[Category:[^\]]+\]\]\s*", "", content)
     return [c.strip() for c in cats], cleaned.strip()
 
 
 def extract_defaultsortkey(content):
     """Extract and remove {{DEFAULTSORTKEY:...}} from content."""
-    m = re.search(r'\{\{DEFAULTSORTKEY:\s*(.+?)\}\}', content)
+    m = re.search(r"\{\{DEFAULTSORTKEY:\s*(.+?)\}\}", content)
     sortkey = m.group(1).strip() if m else None
-    cleaned = re.sub(r'\{\{DEFAULTSORTKEY:[^}]+\}\}\s*', '', content)
+    cleaned = re.sub(r"\{\{DEFAULTSORTKEY:[^}]+\}\}\s*", "", content)
     return sortkey, cleaned.strip()
 
 
@@ -42,48 +42,50 @@ def remove_wiki_markup(text):
     result = text
 
     # Wiki links: [[target|display]] → display, [[target]] → target
-    result = re.sub(r'\[\[([^\]|]+)\|([^\]]+)\]\]', r'\2', result)
-    result = re.sub(r'\[\[([^\]]+)\]\]', r'\1', result)
+    result = re.sub(r"\[\[([^\]|]+)\|([^\]]+)\]\]", r"\2", result)
+    result = re.sub(r"\[\[([^\]]+)\]\]", r"\1", result)
 
     # Orphaned wiki brackets (unmatched [[ or ]])
-    result = result.replace(']]', '')
-    result = result.replace('[[', '')
+    result = result.replace("]]", "")
+    result = result.replace("[[", "")
 
     # External links: [url text] → text
-    result = re.sub(r'\[https?://\S+\s+([^\]]+)\]', r'\1', result)
-    result = re.sub(r'\[https?://\S+\]', '', result)
+    result = re.sub(r"\[https?://\S+\s+([^\]]+)\]", r"\1", result)
+    result = re.sub(r"\[https?://\S+\]", "", result)
 
     # Bold/italic: '''text''' → text, ''text'' → text
-    result = re.sub(r"'''(.+?)'''", r'\1', result)
-    result = re.sub(r"''(.+?)''", r'\1', result)
+    result = re.sub(r"'''(.+?)'''", r"\1", result)
+    result = re.sub(r"''(.+?)''", r"\1", result)
 
     # List tags: <lst type=bracket start=N> ... </lst>
-    result = re.sub(r'<lst[^>]*>', '', result)
-    result = re.sub(r'</lst>', '', result)
+    result = re.sub(r"<lst[^>]*>", "", result)
+    result = re.sub(r"</lst>", "", result)
 
     # Other HTML tags
-    result = re.sub(r'<br\s*/?>', '\n', result)
-    result = re.sub(r'</?[a-zA-Z][^>]*>', '', result)
+    result = re.sub(r"<br\s*/?>", "\n", result)
+    result = re.sub(r"</?[a-zA-Z][^>]*>", "", result)
 
     # MediaWiki magic words
-    result = re.sub(r'__(?:TOC|NOTOC|FORCETOC|NOEDITSECTION)__', '', result)
+    result = re.sub(r"__(?:TOC|NOTOC|FORCETOC|NOEDITSECTION)__", "", result)
 
     # DEFAULTSORT key
-    result = re.sub(r'\{\{DEFAULTSORT(?:KEY)?:[^}]*\}\}', '', result, flags=re.IGNORECASE)
+    result = re.sub(
+        r"\{\{DEFAULTSORT(?:KEY)?:[^}]*\}\}", "", result, flags=re.IGNORECASE
+    )
 
     # Section headers: ==text== → text, ===text=== → text
-    result = re.sub(r'^={2,6}\s*(.+?)\s*={2,6}$', r'\1', result, flags=re.MULTILINE)
+    result = re.sub(r"^={2,6}\s*(.+?)\s*={2,6}$", r"\1", result, flags=re.MULTILINE)
 
     # Unpaired bold markers (start of line + any remaining)
-    result = re.sub(r"^'''\s*", '', result, flags=re.MULTILINE)
-    result = result.replace("'''", '')
+    result = re.sub(r"^'''\s*", "", result, flags=re.MULTILINE)
+    result = result.replace("'''", "")
 
     # Escaped quotes from CSV
     result = result.replace('\\"', '"')
 
     # Normalize whitespace
-    result = re.sub(r'\n{3,}', '\n\n', result)
-    result = re.sub(r'[ \t]+', ' ', result)
+    result = re.sub(r"\n{3,}", "\n\n", result)
+    result = re.sub(r"[ \t]+", " ", result)
 
     return result.strip()
 
@@ -100,7 +102,9 @@ def extract_title(content):
 
     # Strip leading magic words only — __TOC__ at the start is not a title,
     # but removing it mid-content would shift the first-line fallback
-    content = re.sub(r'^\s*__(?:TOC|NOTOC|FORCETOC|NOEDITSECTION)__\s*\n?', '', content).strip()
+    content = re.sub(
+        r"^\s*__(?:TOC|NOTOC|FORCETOC|NOEDITSECTION)__\s*\n?", "", content
+    ).strip()
     if not content:
         return None
 
@@ -109,7 +113,7 @@ def extract_title(content):
     if m:
         bold_text = m.group(1).strip()
         # Reject: [1922]: Insel-Verlag, Leipzig (publisher/year pattern, not a title)
-        if not re.match(r'\[\d{4}\]\s*:', bold_text):
+        if not re.match(r"\[\d{4}\]\s*:", bold_text):
             return bold_text
 
     # Pattern 2: "Title" in escaped or regular quotes at start
@@ -117,16 +121,16 @@ def extract_title(content):
     if m:
         title = m.group(1).strip()
         # Clean orphaned ]] from titles (e.g. unclosed wiki links in source)
-        title = re.sub(r'\]\]', '', title).strip()
+        title = re.sub(r"\]\]", "", title).strip()
         return title
 
     # Pattern 3: For collected-works entries with '''[year]: Publisher''' format,
     # look for the page_title or the first meaningful text line
-    first_line = content.split('\n')[0].strip()
+    first_line = content.split("\n")[0].strip()
     if first_line and len(first_line) < 300:
         cleaned = remove_wiki_markup(first_line)
         # Reject lines that are just category/structural markers
-        if cleaned and not cleaned.startswith('[[') and not cleaned.startswith('{{'):
+        if cleaned and not cleaned.startswith("[[") and not cleaned.startswith("{{"):
             return cleaned
 
     return None
@@ -139,12 +143,12 @@ def extract_original_title(content):
     m = re.search(r"'''[^']+'''\s*\(([^)]+)\)", content)
     if m:
         candidate = m.group(1).strip()
-        if not re.match(r'^\d{4}$', candidate):
+        if not re.match(r"^\d{4}$", candidate):
             return candidate
     m = re.search(r"'''[^']+'''\s*\[([^\]]+)\]", content)
     if m:
         candidate = m.group(1).strip()
-        if not re.match(r'^\d{4}$', candidate):
+        if not re.match(r"^\d{4}$", candidate):
             return candidate
     return None
 
@@ -156,9 +160,11 @@ def extract_see_references(content):
     for m in re.finditer(r"'''See(?:\s+also)?:?'''\s*\[\[([^\]]+)\]\]", content):
         refs.append(m.group(1).strip())
     # See: [[target1]], [[target2]]
-    see_block = re.search(r"'''See(?:\s+also)?:?'''\s*(.+?)(?:\n\n|\Z)", content, re.DOTALL)
+    see_block = re.search(
+        r"'''See(?:\s+also)?:?'''\s*(.+?)(?:\n\n|\Z)", content, re.DOTALL
+    )
     if see_block:
-        for m in re.finditer(r'\[\[([^\]]+)\]\]', see_block.group(1)):
+        for m in re.finditer(r"\[\[([^\]]+)\]\]", see_block.group(1)):
             ref = m.group(1).strip()
             if ref not in refs:
                 refs.append(ref)
@@ -168,11 +174,13 @@ def extract_see_references(content):
 def _extract_wiki_section(content, pattern, min_length=5):
     """Generic extractor for bold-header wiki sections (Reprinted in, Translations, Contents)."""
     items = []
-    block = re.search(pattern + r"\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL)
+    block = re.search(
+        pattern + r"\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL
+    )
     if block:
-        for line in block.group(1).split('\n'):
+        for line in block.group(1).split("\n"):
             line = line.strip()
-            if not line or line.startswith('<') or line.startswith('</'):
+            if not line or line.startswith("<") or line.startswith("</"):
                 continue
             if len(line) > min_length:
                 items.append(remove_wiki_markup(line))
@@ -206,53 +214,53 @@ def extract_structured_data(content):
     # Redirect
     redirect_target = parse_redirect(content)
     if redirect_target:
-        result['redirect_target'] = redirect_target
-        result['is_redirect'] = True
+        result["redirect_target"] = redirect_target
+        result["is_redirect"] = True
         return result
 
-    result['is_redirect'] = False
+    result["is_redirect"] = False
 
     # Categories
     categories, content_no_cats = extract_categories(content)
     if categories:
-        result['categories'] = categories
+        result["categories"] = categories
 
     # Sort key
     sortkey, content_clean = extract_defaultsortkey(content_no_cats)
     if sortkey:
-        result['sortkey'] = sortkey
+        result["sortkey"] = sortkey
 
     # Title
     title = extract_title(content_clean)
     if title:
-        result['title'] = title
+        result["title"] = title
 
     # Original title
     orig_title = extract_original_title(content_clean)
     if orig_title:
-        result['original_title'] = orig_title
+        result["original_title"] = orig_title
 
     # Cross-references
     see_refs = extract_see_references(content_clean)
     if see_refs:
-        result['see_also'] = see_refs
+        result["see_also"] = see_refs
 
     # Reprints
     reprints = extract_reprints(content_clean)
     if reprints:
-        result['reprints'] = reprints
+        result["reprints"] = reprints
 
     # Translations
     translations = extract_translations_block(content_clean)
     if translations:
-        result['translations'] = translations
+        result["translations"] = translations
 
     # Contents (collected works)
     contents = extract_contents_block(content_clean)
     if contents:
-        result['content_items'] = contents
+        result["content_items"] = contents
 
     # Clean content (markup removed)
-    result['clean_content'] = remove_wiki_markup(content_clean)
+    result["clean_content"] = remove_wiki_markup(content_clean)
 
     return result

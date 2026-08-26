@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0",
+  "decisionScope": "Source- and authority-bound decisions linking segmented Klawiter works to the frozen SZD work index",
+  "authoritySource": {
+    "path": "data/provenance/szd-work-index.xml",
+    "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf"
+  },
+  "decisions": [
+    {
+      "decisionId": "work/54/SZDWRK.133",
+      "subjectId": "klawiter:work/54",
+      "action": "confirm",
+      "szdId": "SZDWRK.133",
+      "decidedBy": "independent-verification-agent",
+      "evidence": ["data/output/reconciliation/location-low-score-review.json#work-page-54-ungeduld-des-herzens"]
+    },
+    {
+      "decisionId": "work/56/SZDWRK.5",
+      "subjectId": "klawiter:work/56",
+      "action": "confirm",
+      "szdId": "SZDWRK.5",
+      "decidedBy": "independent-verification-agent",
+      "evidence": ["data/output/reconciliation/location-low-score-review.json#work-page-56-die-welt-von-gestern"]
+    },
+    {
+      "decisionId": "work/4916/SZDWRK.39",
+      "subjectId": "klawiter:work/4916",
+      "action": "confirm",
+      "szdId": "SZDWRK.39",
+      "decidedBy": "independent-verification-agent",
+      "evidence": ["data/output/reconciliation/location-low-score-review.json#work-page-4916-schachnovelle-volume"]
+    }
+  ]
+}

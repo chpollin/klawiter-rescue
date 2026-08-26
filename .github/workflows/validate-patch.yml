@@ -17,16 +17,20 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: |
+          python -m pip install uv==0.12.5
+          python -m uv sync --locked
 
       # Reuses pipeline/apply_patches.validate_patch so CI and the overlay
       # step can never drift apart on what a valid patch is.
       - name: Validate correction patches
         run: |
-          python - <<'EOF'
+          python -m uv run python - <<'EOF'
           import glob, json, sys
+          from pathlib import Path
           sys.path.insert(0, 'pipeline')
           from apply_patches import validate_patch
+          from lib.reconciliation import load_reconciliation_patches
           errors = []
           files = sorted(glob.glob('data/corrections/*.json'))
           if not files:
@@ -34,13 +38,19 @@ jobs:
           for path in files:
               with open(path, encoding='utf-8') as fh:
                   doc = json.load(fh)
-              if doc.get('patchVersion') != 2:
-                  errors.append(f"{path}: patchVersion is {doc.get('patchVersion')!r}, expected 2")
               patches = doc.get('patches', [])
+              if patches and doc.get('patchVersion') != 2:
+                  errors.append(f"{path}: patchVersion is {doc.get('patchVersion')!r}, expected 2")
               for p in patches:
                   for problem in validate_patch(p):
                       errors.append(f'{path}: {problem}')
               print(f'{path}: {len(patches)} patch(es) checked')
+          reconciliation = load_reconciliation_patches(Path('data/corrections'))
+          print(
+              'Reconciliation decisions: '
+              f"{len(reconciliation['location'])} location, "
+              f"{len(reconciliation['work'])} work"
+          )
           if errors:
               print('\n'.join('FAIL: ' + e for e in errors))
               sys.exit(1)
@@ -65,7 +75,7 @@ jobs:
       # thresholds live there and in the tests, not duplicated here.
       - name: Run regression tests
         if: hashFiles('data/output/quality-report.json') != ''
-        run: python -m pytest tests/test_regression.py -v
+        run: python -m uv run python -m pytest tests/test_regression.py -v
 
       - name: Report coverage changes
         run: |

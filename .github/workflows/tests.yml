@@ -6,7 +6,10 @@ on:
   pull_request:
 
 jobs:
-  pytest:
+  # Fast feedback: full suite against cached (or regenerated) stage
+  # intermediates. KLAWITER_REQUIRE_INTERMEDIATES=1 turns the local
+  # friendly skip into a hard failure, so nothing is skipped silently in CI.
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,17 +19,75 @@ jobs:
           python-version: '3.11'
 
       # Node runs the frontend-logic bridge (tests/test_frontend_logic.py
-      # executes tests/evidence_triage.test.js); without it those tests
+      # executes the tests/*.test.js files); without it those tests
       # skip silently.
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: |
+          python -m pip install uv==0.12.5
+          python -m uv sync --locked
 
-      # All suite inputs are committed (frontend JSON, quality report,
-      # baseline), so no pipeline run is needed. LLM tests are deselected
-      # via pytest.ini addopts.
+      # Key over the stage code and the frozen LLM cache, not over data/raw
+      # (363 MB that never change; hashing them costs more than it saves).
+      - name: Restore stage intermediates
+        id: cache-intermediates
+        uses: actions/cache@v4
+        with:
+          path: data/intermediate
+          key: intermediates-${{ hashFiles('pipeline/01_extract.py', 'pipeline/02_fix_encoding.py', 'pipeline/03_parse_entries.py', 'pipeline/03b_llm_enrich.py', 'pipeline/03c_normalize.py', 'pipeline/04_classify.py', 'pipeline/lib/config.py', 'pipeline/lib/encoding.py', 'pipeline/lib/patterns.py', 'pipeline/lib/wiki_parser.py', 'pipeline/lib/vocabulary.py', 'pipeline/lib/llm_extract.py', 'data/provenance/llm-enrichment-cache.json') }}
+
+      - name: Regenerate stage intermediates
+        if: steps.cache-intermediates.outputs.cache-hit != 'true'
+        run: python -m uv run python pipeline/run_pipeline.py --to-stage 04 --no-postprocess
+
       - name: Run test suite
-        run: python -m pytest -q
+        env:
+          KLAWITER_REQUIRE_INTERMEDIATES: '1'
+        run: python -m uv run python -m pytest -q
+
+      - name: Run static checks
+        run: |
+          python -m uv run ruff check pipeline tests
+          python -m uv run ruff format --check pipeline tests
+
+  # Authoritative reproduction: rebuild everything from the committed raw
+  # sources, run both gate validators, and prove the committed deterministic
+  # artifacts are byte-identical. A forgotten re-freeze is a build failure.
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install uv==0.12.5
+          python -m uv sync --locked
+
+      - name: Full deterministic pipeline run
+        run: python -m uv run python pipeline/run_pipeline.py
+
+      # Timestamped artifacts (manifests, EARL, provenance, validation
+      # reports carry generatedAt) are excluded; every other derived file
+      # must reproduce byte-identically.
+      - name: Deterministic artifact reproduction check
+        run: |
+          git diff --exit-code -- \
+            data/output/klawiter.jsonld \
+            data/output/quality-report.json \
+            data/output/census-report.json \
+            data/output/verification-report.json \
+            data/output/editions/work-editions.jsonld \
+            data/output/editions/review-queue.json \
+            data/output/reconciliation/decisions.json \
+            data/output/reconciliation/publishable-links.json \
+            data/output/reconciliation/contested-claims.json \
+            docs/data/klawiter.json \
+            docs/data/reconciliation.json \
+            docs/data/triage.json

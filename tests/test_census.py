@@ -7,19 +7,17 @@ Fixtures (frontend_data, all_entries, ns0_entries, redirects, baseline)
 are defined in conftest.py and shared across all data test files.
 """
 
-import pytest
-
 
 # ---------------------------------------------------------------------------
 # Entry count exactness
 # ---------------------------------------------------------------------------
+
 
 class TestEntryCounts:
     """Verify exact entry counts match baseline — not just loose minimums."""
 
     def test_total_entries_exact(self, all_entries, baseline):
         """Total entries within 0.5% of baseline (stricter than old 1% threshold)."""
-        expected = baseline["summary"]["total_entries"]
         # Entries in frontend JSON = non-redirects only
         expected_non_redirects = baseline["summary"]["non_redirects_all"]
         actual = len(all_entries)
@@ -44,10 +42,7 @@ class TestEntryCounts:
         but the frontend JSON redirect map only stores redirect page titles
         that resolve to actual entries. The map is a subset.
         """
-        # Frozen reference in baseline known_issues — updated after title fix
-        # (section headers → page_titles): 430 → 1228 → 1210, then 1224 after the
-        # M3 full-run (mojibake repair of transliterated titles resolves +14 more
-        # redirect titles; ns0 entry count unchanged, no record loss).
+        # The frozen reference is ratcheted after intentional title repairs.
         expected = baseline["known_issues"]["redirect_map_size"]
         actual = len(redirects)
         assert actual == expected, (
@@ -59,6 +54,7 @@ class TestEntryCounts:
 # ---------------------------------------------------------------------------
 # No duplicate records
 # ---------------------------------------------------------------------------
+
 
 class TestNoDuplicates:
     """Every entry must appear exactly once."""
@@ -94,6 +90,7 @@ class TestNoDuplicates:
 # Known gaps are explicit — no silent data loss
 # ---------------------------------------------------------------------------
 
+
 class TestKnownGaps:
     """Document known missing entries explicitly so new gaps are detectable."""
 
@@ -106,7 +103,9 @@ class TestKnownGaps:
     def test_known_stub_has_fallback_title_but_no_content(self, all_entries):
         """Page 2979 is a content stub: the page-title fallback gives it a title,
         but no bibliographic content was recoverable from the BLOBs."""
-        stubs = [e for e in all_entries if e["sourcePageId"] in self.KNOWN_STUB_PAGE_IDS]
+        stubs = [
+            e for e in all_entries if e["sourcePageId"] in self.KNOWN_STUB_PAGE_IDS
+        ]
         assert stubs, "KNOWN_STUB_PAGE_IDS entries not present in dataset"
         for stub in stubs:
             assert (stub.get("title") or "").strip(), (
@@ -117,6 +116,7 @@ class TestKnownGaps:
                 f"Stub page {stub['sourcePageId']} now has bibliographic content — "
                 f"content may have been recovered. Update KNOWN_STUB_PAGE_IDS."
             )
+
     # Note: a former `test_no_new_gaps_in_ns0` (ns-0 count >= baseline) was a strict
     # subset of TestEntryCounts.test_ns0_entries_exact (==, same value) and was removed.
 
@@ -124,6 +124,7 @@ class TestKnownGaps:
 # ---------------------------------------------------------------------------
 # Every ns-0 entry has minimum required fields
 # ---------------------------------------------------------------------------
+
 
 class TestRequiredFields:
     """Every bibliography entry must have core identifying fields."""
@@ -137,14 +138,18 @@ class TestRequiredFields:
 
     def test_every_entry_has_type(self, all_entries):
         """Every entry must have an entryType."""
-        missing = [e.get("sourcePageId", "?") for e in all_entries if not e.get("entryType")]
+        missing = [
+            e.get("sourcePageId", "?") for e in all_entries if not e.get("entryType")
+        ]
         assert len(missing) == 0, (
             f"{len(missing)} entries missing entryType: {missing[:20]}"
         )
 
     def test_every_entry_has_ld_type(self, all_entries):
         """Every entry must have an @type array."""
-        missing = [e.get("sourcePageId", "?") for e in all_entries if not e.get("@type")]
+        missing = [
+            e.get("sourcePageId", "?") for e in all_entries if not e.get("@type")
+        ]
         assert len(missing) == 0, (
             f"{len(missing)} entries missing @type: {missing[:20]}"
         )
@@ -152,15 +157,14 @@ class TestRequiredFields:
     def test_every_entry_has_ld_id(self, all_entries):
         """Every entry must have an @id."""
         missing = [e.get("sourcePageId", "?") for e in all_entries if not e.get("@id")]
-        assert len(missing) == 0, (
-            f"{len(missing)} entries missing @id: {missing[:20]}"
-        )
+        assert len(missing) == 0, f"{len(missing)} entries missing @id: {missing[:20]}"
 
     def test_every_ns0_entry_has_title(self, ns0_entries):
         """Every ns-0 entry must have a title. The blanked stub 2979 is shown with
         its page-title fallback (decision 2026-06-21), so there are no exceptions."""
         missing = [
-            e["sourcePageId"] for e in ns0_entries
+            e["sourcePageId"]
+            for e in ns0_entries
             if not e.get("title") or str(e["title"]).strip() == ""
         ]
         assert len(missing) == 0, (
@@ -172,6 +176,7 @@ class TestRequiredFields:
 # Frontend JSON structural integrity
 # ---------------------------------------------------------------------------
 
+
 class TestFrontendStructure:
     """The frontend JSON has the expected top-level shape."""
 
@@ -181,6 +186,7 @@ class TestFrontendStructure:
         assert "entries" in frontend_data
         assert "redirects" in frontend_data
         assert "totalEntries" in frontend_data
+        assert "generated" not in frontend_data["_meta"]
 
     def test_total_entries_matches_array(self, frontend_data):
         """The totalEntries count matches the actual entries array length."""

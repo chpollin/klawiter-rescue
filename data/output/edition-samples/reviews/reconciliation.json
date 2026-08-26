@@ -1,0 +1,386 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "independent-agentic-edition-sample-reconciliation",
+  "verifier_provenance": {
+    "verifier_id": "reconciliation-verifier",
+    "role": "higher-capacity independent verification and reconciliation agent",
+    "agent": "OpenAI Codex; runtime model identifier was not exposed to the agent",
+    "task": "/root/sample_reconciliation",
+    "verified_at": "2026-08-21T19:55:31.5693923+02:00",
+    "repository": ".",
+    "git_head": "c32ab03567fc4b2262021bd0cdd91a06040b3a67",
+    "worktree_treatment": "Existing uncommitted files were treated as parallel work. Only this reconciliation file was created.",
+    "authority_boundary": "Evidence-bound technical and bibliographic questions were adjudicated. Institutionally content-changing work identity remains explicit and unresolved."
+  },
+  "input_hashes": [
+    {"path": "CLAUDE.md", "sha256": "b7e3d538fa76b4d98a7f9dab868317b0e6219522ca945e37a3efd4ab74fea1a7"},
+    {"path": "knowledge/production-readiness.md", "sha256": "db68e512073bbb344757dab07d45d1097eb9218ca7158a2b41fe5ce6ba4585f5"},
+    {"path": "pipeline/segment_editions.py", "sha256": "beff1f4b1e744a7839ea101f7692055280d0621f61092ecfec76629b0cc20aa0"},
+    {"path": "data/output/edition-samples/REVIEW.md", "sha256": "42077ed05bcb3fc19d0be312c5648a2f56c66bdb3b2f76cd550190a9a89465b9"},
+    {"path": "data/output/edition-samples/reviews/reviewer-a.json", "sha256": "a4b19e8d9b5958d0df416235eeca431a8d55c210a9b3baa46727826d32446487"},
+    {"path": "data/output/edition-samples/reviews/reviewer-b.json", "sha256": "446936000c0895e2528a96054a94455aabaf1ca54f845ab06f18f24317d3eb9e"},
+    {"path": "data/output/edition-samples/ungeduld_p54.draft.json", "sha256": "fa00e697a5b4ad7f3a4c3b6f5f5678cdb453c49ed0945d4303f93c43a28f8ccd"},
+    {"path": "data/output/edition-samples/ungeduld_p54.wiki.txt", "sha256": "52ad5d25870145dadccedb36dc8719fe5f80136b36aa1ac7046b52431e3bd7f0"},
+    {"path": "data/output/edition-samples/schachnovelle_p4916.draft.json", "sha256": "347c6d36d78be06994b9e22492d32b008c1f3e2d1ab1d5a5a2c53175beaf5ac1"},
+    {"path": "data/output/edition-samples/schachnovelle_p4916.wiki.txt", "sha256": "242515e6500bf6c59eeed953542116eaf57a1017bf6f74a7891272341025e137"},
+    {"path": "data/output/edition-samples/welt-von-gestern_p56.draft.json", "sha256": "251a3a39539b80f93d24de873a0ca9628a7d45503c80016c87e6fa9e1b84ce82"},
+    {"path": "data/output/edition-samples/welt-von-gestern_p56.wiki.txt", "sha256": "835d4fab4b8304aa20ca10e999a45f6499957fde174d8a1d1e3b0271b33d4b35"},
+    {"path": "forschungsleitstelle/dashboard/lanes.md", "sha256": "f96d39afb1985352923db934205798cc1052143b94bdefc559c156076566c2a0"},
+    {"path": "obsidian/Projects/szd/Project Overview Klawiter-Rescue.md", "sha256": "7b1144148285144f92ddf0a682596dfb3919fc9780fe41dde429ad78799dc496"}
+  ],
+  "source_contract": {
+    "54": {"file": "ungeduld_p54.wiki.txt", "source_text_id": "klawiter:sourceText/54"},
+    "56": {"file": "welt-von-gestern_p56.wiki.txt", "source_text_id": "klawiter:sourceText/56"},
+    "4916": {"file": "schachnovelle_p4916.wiki.txt", "source_text_id": "klawiter:sourceText/4916"}
+  },
+  "methodology": {
+    "steps": [
+      "The complete lane contract was read in state run before the artifact was created.",
+      "Both review files and all six draft/source inputs were loaded. Their case sets, selectors, exact slices, observed draft values and SHA-256 values were recomputed.",
+      "Source offsets were checked after universal-newline normalization to LF, matching the Python segmenter and both reviewers.",
+      "Each of the 76 cases was adjudicated against its exact source slice and the ratified work/edition model.",
+      "Technical segment boundaries, bibliographic fields, modeling depth and institutionally bound identity decisions were assessed separately.",
+      "A case was confirmed only when no unresolved uncertainty affected the accepted data."
+    ],
+    "disposition_legend": {
+      "confirm": "The current case is source-bound and model-conformant within the reviewed scope.",
+      "correct": "A deterministic field or affiliation correction is required before acceptance.",
+      "reject-proposal": "A reviewer escalation or proposed alternative is rejected because the source and ratified model determine the usable state.",
+      "unresolved": "The case requires authority that this verifier does not hold and must remain quarantined."
+    },
+    "decision_basis_codes": {
+      "exact-match": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "confirmed",
+        "modeling_depth": "no case-specific issue",
+        "institutional_authority": "not required",
+        "criterion": "Selector, slice hash, header, stable ID, year, publisher, location, page count and flags agree with the source and both independent checks."
+      },
+      "source-exact-authority-normalization-deferred": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "confirmed as source transcription",
+        "modeling_depth": "no issue",
+        "institutional_authority": "normalization may be reconciled later",
+        "criterion": "The extracted value reproduces the source exactly. A normalized authority value must remain a separate, provenanced assertion."
+      },
+      "double-header-two-editions": {
+        "technical_segment_boundary": "confirmed shared physical block",
+        "bibliographic_fields": "confirmed per header component",
+        "modeling_depth": "two publication statements produce two edition nodes",
+        "institutional_authority": "not required",
+        "criterion": "Each slash-delimited component has its own year, publisher and location. Shared block evidence may target both bodies while the component span remains recorded."
+      },
+      "approximate-year-stable-id": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "confirmed with yearRaw and uncertainty flag",
+        "modeling_depth": "numeric year anchor retained",
+        "institutional_authority": "not required",
+        "criterion": "The ratified ID schema uses the source year. The circa qualifier is preserved in yearRaw and jahr-unsicher; the normalized 1965 anchor remains deterministic."
+      },
+      "header-cleanup": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "deterministic correction required",
+        "modeling_depth": "qualifier retained without inventing an unratified field",
+        "institutional_authority": "not required",
+        "criterion": "Markup, series text or post-bold qualifiers are excluded from publisher and location while the raw header remains evidence."
+      },
+      "page-count-repair": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "deterministic pageCount correction required",
+        "modeling_depth": "no issue",
+        "institutional_authority": "not required",
+        "criterion": "The source contains a narrow, recognizable page notation variant. The primary numbered-page value is retained and the raw notation remains evidence."
+      },
+      "carrier-occurrence": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "confirmed",
+        "modeling_depth": "edition node retained and linked to carrier with schema:isPartOf",
+        "institutional_authority": "carrier detail may be deepened later",
+        "criterion": "The ratified model specifies schema:isPartOf from the edition to the carrier. Relation and edition node coexist, so the proposed either-or choice is rejected."
+      },
+      "malformed-header-fields-clean": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "confirmed",
+        "modeling_depth": "no issue",
+        "institutional_authority": "not required",
+        "criterion": "A missing closing bold marker does not contaminate the parsed values. The exact raw header remains available for provenance."
+      },
+      "adaptation-work-identity": {
+        "technical_segment_boundary": "confirmed",
+        "bibliographic_fields": "confirmed for the publication",
+        "modeling_depth": "distinct adaptation work is indicated",
+        "institutional_authority": "final work binding required",
+        "criterion": "The source calls the item a graphic novel by Thomas Humeau and points to Le Joueur d'échecs [2015]. Rebinding changes work identity and remains quarantined pending authorized reconciliation."
+      }
+    }
+  },
+  "review_integrity": {
+    "reviewer_a": {"cases": 76, "unique_ids": 76, "input_hashes_match": true, "slice_hashes_match": 76, "observed_values_match_drafts": 76},
+    "reviewer_b": {"cases": 76, "unique_ids": 76, "input_hashes_match": true, "slice_hashes_match": 76, "observed_values_match_drafts": 76},
+    "expected_case_set": 76,
+    "case_sets_identical": true,
+    "selector_or_slice_failures": 0,
+    "provenance_finding": "Both reviews are complete and internally traceable. Reviewer A uses zero-based edition_index and reviewer B uses one-based edition_index; edition_id is identical and canonical in every case.",
+    "limitations": [
+      "The reviewer files hash the six paired data inputs. This reconciliation additionally hashes both reviewer files, the segmenter, the review specification, the model document, the lane contract and the local instruction file.",
+      "Reviewer dispositions are judgments. Matching hashes establish input identity and do not establish scholarly correctness by themselves."
+    ]
+  },
+  "reviewer_disposition_disagreements": [
+    {"edition_id": "klawiter:edition/4916-1966-a", "reviewer_a": "escalate", "reviewer_b": "confirm", "reconciled": "reject-proposal", "finding": "The edition remains valid and receives schema:isPartOf to Lockende Ferne."},
+    {"edition_id": "klawiter:edition/4916-1995-a", "reviewer_a": "correct", "reviewer_b": "uncertain", "reconciled": "correct", "finding": "The explicit notation (80)p. supports pageCount 80 with raw notation retained."},
+    {"edition_id": "klawiter:edition/4916-2016-b", "reviewer_a": "escalate", "reviewer_b": "confirm", "reconciled": "unresolved", "finding": "The publication is source-bound; its binding to the original Schachnovelle work is not accepted."},
+    {"edition_id": "klawiter:edition/54-1957-a", "reviewer_a": "uncertain", "reviewer_b": "confirm", "reconciled": "confirm", "finding": "Zũrich is the exact source value. Any authority-normalized Zürich value must be separate and provenanced."},
+    {"edition_id": "klawiter:edition/54-1965-a", "reviewer_a": "escalate", "reviewer_b": "uncertain", "reconciled": "reject-proposal", "finding": "The numeric 1965 ID anchor is retained with yearRaw ca. 1965 and jahr-unsicher."},
+    {"edition_id": "klawiter:edition/54-1965-b", "reviewer_a": "escalate", "reviewer_b": "uncertain", "reconciled": "reject-proposal", "finding": "The numeric 1965 ID anchor is retained with yearRaw ca. 1965 and jahr-unsicher."},
+    {"edition_id": "klawiter:edition/54-1981-c", "reviewer_a": "confirm", "reviewer_b": "correct", "reconciled": "correct", "finding": "Gesammelte Werke in Einzelbänden is header residue outside the location."},
+    {"edition_id": "klawiter:edition/54-1981-d", "reviewer_a": "escalate", "reviewer_b": "correct", "reconciled": "correct", "finding": "The orphaned ]]] residue is removed from location; the carrier relation coexists with the edition."},
+    {"edition_id": "klawiter:edition/54-1982-a", "reviewer_a": "escalate", "reviewer_b": "confirm", "reconciled": "reject-proposal", "finding": "The edition remains and receives schema:isPartOf to the cited Jubiläumsausgabe carrier."},
+    {"edition_id": "klawiter:edition/54-1995-a", "reviewer_a": "escalate", "reviewer_b": "confirm", "reconciled": "reject-proposal", "finding": "The edition remains and receives schema:isPartOf to Stefan Zweig. Vier Bände."},
+    {"edition_id": "klawiter:edition/54-2013-b", "reviewer_a": "confirm", "reviewer_b": "uncertain", "reconciled": "reject-proposal", "finding": "The malformed bold marker leaves publisher and location unambiguous."},
+    {"edition_id": "klawiter:edition/54-2020-a", "reviewer_a": "escalate", "reviewer_b": "confirm", "reconciled": "reject-proposal", "finding": "The edition remains and receives schema:isPartOf to the seven-volume carrier."},
+    {"edition_id": "klawiter:edition/56-1981-c", "reviewer_a": "escalate", "reviewer_b": "uncertain", "reconciled": "reject-proposal", "finding": "The header fields are clean; the cassette is modeled with schema:isPartOf."},
+    {"edition_id": "klawiter:edition/56-1981-d", "reviewer_a": "confirm", "reviewer_b": "uncertain", "reconciled": "reject-proposal", "finding": "The missing bold marker does not contaminate any parsed field."}
+  ],
+  "shared_nonconfirm_findings": [
+    {"edition_id": "klawiter:edition/54-1960-a", "reviewers": "escalate/escalate", "reconciled": "reject-proposal", "finding": "First independently complete publication component of a double header."},
+    {"edition_id": "klawiter:edition/54-1964-a", "reviewers": "escalate/escalate", "reconciled": "reject-proposal", "finding": "Second independently complete publication component of a double header."},
+    {"edition_id": "klawiter:edition/56-1952-a", "reviewers": "correct/correct", "reconciled": "correct", "finding": "Period delimiter and trailing series qualifier require deterministic header cleanup."},
+    {"edition_id": "klawiter:edition/56-1978-a", "reviewers": "correct/correct", "reconciled": "correct", "finding": "Special edition is a qualifier after the closed bold header."},
+    {"edition_id": "klawiter:edition/56-1981-b", "reviewers": "correct/correct", "reconciled": "correct", "finding": "Series qualifier must be removed from location."},
+    {"edition_id": "klawiter:edition/56-2010-a", "reviewers": "uncertain/uncertain", "reconciled": "correct", "finding": "463/1)p. is the narrow malformed variant of the corpus pattern 463/(1)p.; pageCount is 463."}
+  ],
+  "case_decisions": [
+    {"edition_id":"klawiter:edition/54-1939-a","source":{"selector":[0,562],"slice_sha256":"59b2837cc4b7ef936c58c15640d3616a6107ac5849ff077a2f3e9d28e27e096f","header":"'''[1939]: Gottfried Bermann-Fischer Verlag, Stockholm / Uitgeverij Allert de Lange, Amsterdam  / Longmans, Green and Company, New York/Toronto'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1952-a","source":{"selector":[562,739],"slice_sha256":"9368ff8c417ef205158b5c04ce036f62e3fe342afa615e0657b215308ec5334e","header":"'''[1952]: Bertelsmann Verlag, Gütersloh'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1953-a","source":{"selector":[739,889],"slice_sha256":"6342a724fc45a31756b706c9847e6c2e7e6392f7657b72af61e02ec1b4b5fe75","header":"'''[1953]: Büchergilde Gutenberg, Wien'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1954-a","source":{"selector":[889,1104],"slice_sha256":"af30b8be4e2ca60ba5daf9c7994480d3d38714c49d734f39382026fe4f8646fd","header":"'''[1954]: S. Fischer Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1956-a","source":{"selector":[1104,1266],"slice_sha256":"ffcd8edfe4b188e1b596b837ed2958037856510854bed6e6d4a90065cbe1ebc6","header":"'''[1956]: Deutsche Buch-Gemeinschaft, Berlin/Darmstadt'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1957-a","source":{"selector":[1266,1371],"slice_sha256":"1a9d1981dc60246c989382b8f6194f7a16cbc8fa91e5c1aaf8359c19103d9032","header":"'''[1957]: Ex Libris Verlag, Zũrich'''"},"reviewers":{"a":"uncertain","b":"confirm"},"disposition":"confirm","basis":"source-exact-authority-normalization-deferred","accepted":{"location":"Zũrich"}},
+    {"edition_id":"klawiter:edition/54-1960-a","source":{"selector":[1371,1543],"slice_sha256":"0579d873e4310211284680312c958c71a124f37d04588cff998e89bb80c52b48","header":"'''[1960]: Deutscher Bücherbund, Düsseldorf / [1964]: Ex Libris Verlag, Zürich'''"},"reviewers":{"a":"escalate","b":"escalate"},"disposition":"reject-proposal","basis":"double-header-two-editions","accepted":{"yearRaw":"1960","publisher":"Deutscher Bücherbund","location":"Düsseldorf","shared_selector":true}},
+    {"edition_id":"klawiter:edition/54-1964-a","source":{"selector":[1371,1543],"slice_sha256":"0579d873e4310211284680312c958c71a124f37d04588cff998e89bb80c52b48","header":"'''[1960]: Deutscher Bücherbund, Düsseldorf / [1964]: Ex Libris Verlag, Zürich'''"},"reviewers":{"a":"escalate","b":"escalate"},"disposition":"reject-proposal","basis":"double-header-two-editions","accepted":{"yearRaw":"1964","publisher":"Ex Libris Verlag","location":"Zürich","shared_selector":true}},
+    {"edition_id":"klawiter:edition/54-1961-a","source":{"selector":[1543,1661],"slice_sha256":"46df4164c282a79a2da76f3de4379af02314ae6584402d45cf5fa27d6305648c","header":"'''[1961]:  Deutscher Bücherbund, Stuttgart/Hamburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1963-a","source":{"selector":[1661,1794],"slice_sha256":"18aa4b6a155f89f4fd94efa65d4ba7806af6720319ae8494fe112dba7ef2722a","header":"'''[1963]: Buchgemeinschaft Donauland, Wien'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1963-b","source":{"selector":[1794,1933],"slice_sha256":"1052074b8f663d4a4435f1e5e64b46797adbf02b060124c3544f304684d0d3ad","header":"'''[1963]: G. B. Fischer Verlag, Berlin/Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1965-a","source":{"selector":[1933,2043],"slice_sha256":"4a7e06f38284263f94d13822540ff682dfd0520c0dd36134b54944a3c67f2b1a","header":"'''[ca. 1965]: Deutscher Bücherklub, Bochum'''"},"reviewers":{"a":"escalate","b":"uncertain"},"disposition":"reject-proposal","basis":"approximate-year-stable-id","accepted":{"year":1965,"yearRaw":"ca. 1965","reviewFlags":["jahr-unsicher"]}},
+    {"edition_id":"klawiter:edition/54-1965-b","source":{"selector":[2043,2173],"slice_sha256":"63100243e552e08576319bd5405437f620bd3363610840cc1d7c7bd49c53eaee","header":"'''[ca. 1965]: Europäischer Buchklub, Stuttgart/Zürich/Salzburg'''"},"reviewers":{"a":"escalate","b":"uncertain"},"disposition":"reject-proposal","basis":"approximate-year-stable-id","accepted":{"year":1965,"yearRaw":"ca. 1965","reviewFlags":["jahr-unsicher"]}},
+    {"edition_id":"klawiter:edition/54-1968-a","source":{"selector":[2173,2307],"slice_sha256":"0a765ae4e6bdf2eb9fc84feae8197d5af1e90262e0e20f2779b61716dd65e0b2","header":"'''[1968]: Büchergilde Gutenberg, Frankfurt am Main/Wien/Zürich'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1968-b","source":{"selector":[2307,2418],"slice_sha256":"a594d4d3900236bdf73666d6338715b14f15e921a76311344cd7ed3f14a5c55b","header":"'''[1968]: Neue Schweizer Bibliothek, Zürich'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1971-a","source":{"selector":[2418,2536],"slice_sha256":"94881e0d0de92caca582730adcf6abb8ddc37100ea19703a07ac8f56d52897b3","header":"'''[1971]:   Aufbau Verlag, Berlin/Weimar'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1972-a","source":{"selector":[2536,2645],"slice_sha256":"8d1c0f2e6b5440fcc8262490787dcce95d1c2609485b0f1c1a3e6c7442febfcb","header":"'''[1972]: Fackelverlag, Brugg/Stuttgart/Salzburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1976-a","source":{"selector":[2645,2983],"slice_sha256":"1f70144f736f70f867165d5171caad6c0a2401153a8d5ec5f703dcb194b2a482","header":"'''[1976]: Fischer Taschenbuch Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1977-a","source":{"selector":[4092,4216],"slice_sha256":"3331d4aeaba274ce89658de2b7128b13a744f7f782517a2cb1ee300e906def5c","header":"'''[1977]: S. Fischer Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1978-a","source":{"selector":[4216,4365],"slice_sha256":"d689ce1622d8d4c941f35db32f37056dd0143503a99b563065581881c323223c","header":"'''[1978]: Deutscher Bücherbund, Stuttgart/Hamburg/München'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1981-a","source":{"selector":[4365,4491],"slice_sha256":"b64d2df93ea3f333b35d19f775410b6c1904867ddb688cfea1b1ab9ea023ab71","header":"'''[1981]: Buch- und Schallplattenfreunde, Zug, Switzerland'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1981-b","source":{"selector":[4491,4612],"slice_sha256":"9b9694ce72a2a365d99cd86c65ef309a5c8bc438bd86ed75c6aad472f029434b","header":"'''[1981]: Europäische Bildungsgemeinschaft, Stuttgart'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-1981-c","source":{"selector":[4612,4907],"slice_sha256":"d96be7cd3074563009e8f51f5757cab77588e5df5fb51854b2b77f85b197c681","header":"'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]"},"reviewers":{"a":"confirm","b":"correct"},"disposition":"correct","basis":"header-cleanup","correction":{"publisher":"S. Fischer Verlag","location":"Frankfurt am Main","qualifier":"[Gesammelte Werke in Einzelbänden]","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/54-1981-d","source":{"selector":[4907,5161],"slice_sha256":"de2f3ea964d4fbb761f8e7273211040a9773409cdc394a582fb4002c7ce6bd90","header":"'''[1981]: S. Fischer Verlag, Frankfurt am Main]]]","excerpt":"Ungeduld des Herzens. Roman in Kassette I: Stefan Zweig - Ein großer Europäer: Jubiläumskassette zum 100. Geburtstag, Vol. 9"},"reviewers":{"a":"escalate","b":"correct"},"disposition":"correct","basis":"header-cleanup","correction":{"location":"Frankfurt am Main","remove_residue":"]]]","relation":"schema:isPartOf carrier cited in source","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/54-1982-a","source":{"selector":[5161,5320],"slice_sha256":"160c0c9c5d8994f8bded28300a92c6dde46a8fa3e0b79e0fbba8a1966602557b","header":"'''[1982]: Ex Libris Verlag, Zürich'''","excerpt":"Ungeduld des Herzens. Roman in Stefan Zweig (1881-1942). Jubiläumsausgabe in 12 Bänden / Kassette I, Vol. 11"},"reviewers":{"a":"escalate","b":"confirm"},"disposition":"reject-proposal","basis":"carrier-occurrence","accepted":{"relation":"schema:isPartOf carrier cited in source"}},
+    {"edition_id":"klawiter:edition/54-1995-a","source":{"selector":[5320,5439],"slice_sha256":"f14b25d1a73a83c4e35f3442e6d12690338da7b42a52fa9b9b9accc096962ae9","header":"'''[1995]: Weltbild Verlag, Augsburg'''","excerpt":"Ungeduld des Herzens in Stefan Zweig. Vier Bände, Vol. 3. 455/(1)p."},"reviewers":{"a":"escalate","b":"confirm"},"disposition":"reject-proposal","basis":"carrier-occurrence","accepted":{"relation":"schema:isPartOf Stefan Zweig. Vier Bände"}},
+    {"edition_id":"klawiter:edition/54-2006-a","source":{"selector":[5439,5792],"slice_sha256":"42bbfe6089e8b3f6952be8da4d9d599eb8a19512ebeaa4ed2a84ed522b032d7f","header":"'''[2006]: Der Club Bertelsmann, Berlin'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-2013-a","source":{"selector":[5792,6095],"slice_sha256":"f4c7cf8ff1e715244ad4f051115b64a17e60fc1683aa09e575dc55dd1ad5a7b8","header":"'''[2013]: Diogenes Verlag, Zürich '''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-2013-b","source":{"selector":[6095,6225],"slice_sha256":"89eebc7a09aa4ad31b3caf4357ad42f973aa8bd6302e33a8a116703964546fba","header":"'''[2013]: Insel-Verlag, Berlin"},"reviewers":{"a":"confirm","b":"uncertain"},"disposition":"reject-proposal","basis":"malformed-header-fields-clean","accepted":{"publisher":"Insel-Verlag","location":"Berlin","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/54-2015-a","source":{"selector":[6225,6391],"slice_sha256":"a3a764d19aa4b58f4bd6291865867d18bb3b46dc9311777ce2a7f08cdbcb205e","header":"'''[2015]: Manesse Verlag, Zürich'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/54-2020-a","source":{"selector":[6391,6597],"slice_sha256":"a288af6cfd215171a0740313102361db70d519ee18c71fa193ca8216f771ec35","header":"'''[2020]: Paul Zsolnay Verlag, Wien'''","excerpt":"Ungeduld des Herzens in Stefan Zweig. Das erzählerische Werk in VII Bänden, Salzburger Ausgabe, Vol. IV"},"reviewers":{"a":"escalate","b":"confirm"},"disposition":"reject-proposal","basis":"carrier-occurrence","accepted":{"relation":"schema:isPartOf carrier cited in source"}},
+
+    {"edition_id":"klawiter:edition/56-1942-a","source":{"selector":[0,475],"slice_sha256":"dad24bb87a80a9496c94c7344ccbb89f4412a44ee73ae5092cea828ae382b122","header":"'''[1942]: Bermann-Fischer Verlag, Stockholm'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1947-a","source":{"selector":[475,671],"slice_sha256":"7d70479e402200ea12f340305e6a05b76d84a555f08e655623685f383d7c3ce9","header":"'''[1947]: Suhrkamp Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1952-a","source":{"selector":[671,1002],"slice_sha256":"8ac1aec10f5249cdd1134ed91da71bc9cb5ab34bd120edb6ad9b51f0e93f6ea7","header":"'''[1952]: S. Fischer Verlag. Frankfurt am Main''' [S. Fischer Bibliothek]"},"reviewers":{"a":"correct","b":"correct"},"disposition":"correct","basis":"header-cleanup","correction":{"publisher":"S. Fischer Verlag","location":"Frankfurt am Main","qualifier":"[S. Fischer Bibliothek]","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/56-1952-b","source":{"selector":[1002,1221],"slice_sha256":"469a915b61893d264631eed2ca10955088338a36d97735846e3964dfb2eaaab6","header":"'''[1952]: Büchergilde Gutenberg, Wien'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1953-a","source":{"selector":[1221,1434],"slice_sha256":"0f43b45a4d04f4e5adf6a79a02f3ddbe26176cec32a67e76f88f144306a68045","header":"'''[1953]: G. B. Fischer Verlag, Frankfurt am Main/Hamburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1959-a","source":{"selector":[1434,1624],"slice_sha256":"9fa2d5d5b03daaae66fa192a6fee5e1f27719b59ad109a763cca3cf885418323","header":"'''[1959]: Ex Libris Verlag, Zürich'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1960-a","source":{"selector":[1624,1761],"slice_sha256":"ca1d599ea3c741a3686d96757ebddf16e786c07aba7e8a3329443ffccd0ca53a","header":"'''[1960]: Bertelsmann Verlag, Gütersloh'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1962-a","source":{"selector":[1761,2050],"slice_sha256":"1f8fd8de05eb0a46d3f63bd1fa6b550a56c596577a751c0276ee937ceee441c0","header":"'''[1962]: G. B. Fischer Verlag, Frankfurt am Main/Hamburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1964-a","source":{"selector":[2050,2236],"slice_sha256":"4d065b37f3d9f527db0ef5cbfcc7cf0894c5648d9838721df3b35f0be4256593","header":"'''[1964]: Deutscher Bücherbund, Stuttgart/Hamburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1968-a","source":{"selector":[2236,2436],"slice_sha256":"abccfe4c2bc9ce48834b43f4c9072f06b65c6d96d3a04aa03d8983dd48678ec5","header":"'''[1968]: Büchergilde Gutenberg, Frankfurt am Main/Wien/Zürich'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1970-a","source":{"selector":[2436,2789],"slice_sha256":"4150b1236e6c5831c9488b9ce6e8913ec564a02d365e62c54fd9ce3d73fea87e","header":"'''[1970]: Fischer Bücherei, Frankfurt am Main/Hamburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1978-a","source":{"selector":[2789,2960],"slice_sha256":"caf760120d406b316b39c158ed9c9ab8c2442d03fe68ab710662d655b211da8c","header":"'''[1978]: S. Fischer Verlag, Frankfurt am Main''' Special edition"},"reviewers":{"a":"correct","b":"correct"},"disposition":"correct","basis":"header-cleanup","correction":{"location":"Frankfurt am Main","qualifier":"Special edition","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/56-1981-a","source":{"selector":[2960,3151],"slice_sha256":"030b2e3928075e2469280e5075c26242b9af4198a0ca1f6295e4e66894e7984b","header":"'''[1981]: Deutscher Bücherbund, Stuttgart/Hamburg/ München'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-1981-b","source":{"selector":[3151,3514],"slice_sha256":"4b6f866b58afee6f631e5738b50e5aa5254958e6623d06b04b925cfe8df72a8f","header":"'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]"},"reviewers":{"a":"correct","b":"correct"},"disposition":"correct","basis":"header-cleanup","correction":{"location":"Frankfurt am Main","qualifier":"[Gesammelte Werke in Einzelbänden]","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/56-1981-c","source":{"selector":[3514,3785],"slice_sha256":"0b152f01f43a474660e027e7594b3858b54beddd67328071ee8075a4e6cd633a","header":"'''[1981]: S. Fischer Verlag, Frankfurt am Main","excerpt":"Kassette I: Stefan Zweig - Ein großer Europäer: Jubiläumskassette zum 100. Geburtstag. 494/(1)p."},"reviewers":{"a":"escalate","b":"uncertain"},"disposition":"reject-proposal","basis":"carrier-occurrence","accepted":{"publisher":"S. Fischer Verlag","location":"Frankfurt am Main","relation":"schema:isPartOf cassette cited in source","retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/56-1981-d","source":{"selector":[3919,4151],"slice_sha256":"b19b92c476bb8c9a44313c514197083d0dc43ca884a5cd5123b759ed41ad441f","header":"'''[1981]: Aufbau Verlag, Berlin/Weimar"},"reviewers":{"a":"confirm","b":"uncertain"},"disposition":"reject-proposal","basis":"malformed-header-fields-clean","accepted":{"publisher":"Aufbau Verlag","location":"Berlin/Weimar","pageCount":509,"retain_raw_header":true}},
+    {"edition_id":"klawiter:edition/56-1982-a","source":{"selector":[4151,4335],"slice_sha256":"0b16950da8790db0e45320f4025ee18bc13b321d2133e1945debadac57fc4c49","header":"'''[1982]: Ex Libris Verlag, Zürich'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-2010-a","source":{"selector":[4335,4585],"slice_sha256":"38460f2424c66bafe7352a4d3436f4ee79564b338b80aefb80a5a018a1487d1a","header":"'''[2010]. Fischer Taschenbuch Verlag, Frankfurt am Main'''","excerpt":"463/1)p. [Fischer Klassik, 90314]"},"reviewers":{"a":"uncertain","b":"uncertain"},"disposition":"correct","basis":"page-count-repair","correction":{"pageCount":463,"raw_page_notation":"463/1)p.","normalization_basis":"Corpus pattern N/(M)p. with one missing opening parenthesis"}},
+    {"edition_id":"klawiter:edition/56-2013-a","source":{"selector":[4764,4903],"slice_sha256":"00bbeda12cce2c30ae2d512654d577ea0daef5c823f679177a66d70b89e0ec5f","header":"'''[2013]: Suhrkamp-Insel Verlag, Berlin'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/56-2017-a","source":{"selector":[4903,5272],"slice_sha256":"0903b5d2b0d8d29a5bd68b5f53a06545eed260340e8206674bcfadc360fc4ff0","header":"'''[2017]: S. Fischer Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+
+    {"edition_id":"klawiter:edition/4916-1942-a","source":{"selector":[0,141],"slice_sha256":"ede2f584b38d7684770a0338933c12a2467b74fa236488fb976e68b00d9a798a","header":"'''[1942]: Verlag Pigmalión, Buénos Aires'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1942-b","source":{"selector":[141,265],"slice_sha256":"71c2df7fefdb842e2041c352d287727fd16c211c34a6c39ac69542bf06b212ed","header":"'''[1942]: Verlag János Peter Kramer, Buenos Aires'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1943-a","source":{"selector":[265,708],"slice_sha256":"45d32039df23b90759e748fc395f8a667d3479c74f1ce92ea5968a598c8e779a","header":"'''[1943]: Bermann-Fischer Verlag, Stockholm'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1950-a","source":{"selector":[708,898],"slice_sha256":"ac9518fe0e7cc1367474fe54b30534e09147392387dbc63e0b3ba0dec47569d7","header":"'''[1950]: Hirschsprung Forlag, København/Copenhagen'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1950-b","source":{"selector":[898,1233],"slice_sha256":"b35523296b634fe07749ff85b40d64d1abe804255b9bcb77b40c7eb7202bba20","header":"'''[1950]: Uitgeverij J. M. Meulenhoff, Amsterdam'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1951-a","source":{"selector":[1233,1769],"slice_sha256":"78997deda0d1558af93711ee7c997b26f938093ec0a0aa46cf92c25adfe0e218","header":"'''[1951]: S. Fischer Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1951-b","source":{"selector":[1769,1965],"slice_sha256":"dfd1cf8f7a42dee2ac3ed8d11f90db202fc8516b150ac1e7de61f2162f7fa4f4","header":"'''[1951]: H. Aschehoug & Co. (W. Nygaard), Oslo'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1960-a","source":{"selector":[1965,2182],"slice_sha256":"c2f3d3e61a9c65ae0c1947985ee0ac6c545582c0475364f31e0a1d520e8ad27d","header":"'''[1960]: W. W. Norton & Company, Inc., New York'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1962-a","source":{"selector":[2182,2364],"slice_sha256":"35c438dd3003e6941e59c2120a12d4d90f5a96ba3cfb0b7d64664c7dfa671fe0","header":"'''[1962]: Methuen Publishing Ltd, London'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1966-a","source":{"selector":[2364,2681],"slice_sha256":"ba161379b2a15f4ec834bf8bfcf1f1f4332585fd7d38dc88f3960fecca32cdcf","header":"'''[1966]: C(arl) Bertelsmann Verlag, Gütersloh / Europäischer Buch- und Phonoklub, Stuttgart / Buchgemeinschaft Donauland, Wien'''","excerpt":"Schachnovelle in Lockende Ferne. Die schönsten Reisegeschichten, pages 223-279"},"reviewers":{"a":"escalate","b":"confirm"},"disposition":"reject-proposal","basis":"carrier-occurrence","accepted":{"relation":"schema:isPartOf Lockende Ferne. Die schönsten Reisegeschichten"}},
+    {"edition_id":"klawiter:edition/4916-1968-a","source":{"selector":[2681,2875],"slice_sha256":"f45f736db966c1c5413e1a54d2f641d8a12b5084e78c92bfe092e45a161b5c61","header":"'''[1968]: Éditions Payot, Lausanne'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1969-a","source":{"selector":[2875,2973],"slice_sha256":"c3e26c04751d50ab1d6c8da33582850bd96bed1391524eaf585be8c432c8bd57","header":"'''[1969]: C(arl) Bertelsmann Verlag, Gütersloh'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1974-a","source":{"selector":[2973,4459],"slice_sha256":"68b68e20c7e14428391a1f7a38625836d468cf088fd97c62b76d8848184e5fdf","header":"'''[1974]: Fischer Taschenbuch Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1976-a","source":{"selector":[4459,4700],"slice_sha256":"fc626a5d2677ea38a266f120c8e7fd368f4f1eff7f9f13c5f9cf08f9842bcbfe","header":"'''[1976]: Európa Könyvkiadó, Budapest'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1979-a","source":{"selector":[4700,5244],"slice_sha256":"1ddc84e50b7abb71456264d1b1e4e5aa3299aa32068787b9b47b2ab63ba86384","header":"'''[1979]: Fischer Taschenbuch Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1992-a","source":{"selector":[5244,5521],"slice_sha256":"3c59d13feb116e9ca74c2a48f748d5d807c3086a8a861ade634fc03e02233884","header":"'''[1992]: Fischer Taschenbuch Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-1995-a","source":{"selector":[5521,5791],"slice_sha256":"f7c39070e87bd43a2b733e6e479b0dbe6acd62afacdac5c2e3fa8e79ef3fce59","header":"'''[1995]: S. Fischer Verlag, Frankfurt am Main'''","excerpt":"Schachnovelle. Edited by Karl-Heinrich Laudage. Paper cutouts by Alfons Holtgreve. (80)p."},"reviewers":{"a":"correct","b":"uncertain"},"disposition":"correct","basis":"page-count-repair","correction":{"pageCount":80,"raw_page_notation":"(80)p.","interpretation":"80 unnumbered pages"}},
+    {"edition_id":"klawiter:edition/4916-1995-b","source":{"selector":[5791,5926],"slice_sha256":"b36d31a462bb49f280635a824d686ef4dd36e3bb590daf82369b58d8a6481908","header":"'''[1995]: S. Fischer Verlag, Frankfurt am Main'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-2003-a","source":{"selector":[5926,6170],"slice_sha256":"67b59f9e3e09f7ed0813e5f2d4e7be611ab1c52e03974b0cc542c2e150dd96ac","header":"'''[2003]: RM Buch und Medien Vertrieb + Der Club Bertelsmann, Gütersloh / Buchgemeinschaft Donauland, Wien'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-2003-b","source":{"selector":[6170,6319],"slice_sha256":"845008420abb4b130ad058772f59fe24bd89fd312c66090a4f6b68cef4ece129","header":"'''[2003]: K. G. Saur Verlag GmbH, München'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-2015-a","source":{"selector":[6319,6476],"slice_sha256":"42096db68f1d8ba00f40b006388b60094d84d5ffdab61bba365a409409b08f80","header":"'''[2015]: Alfred Kröner Verlag, Stuttgart'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-2016-a","source":{"selector":[6736,6866],"slice_sha256":"f1637ca4e17ee9d1e8c86c9911049dd1a6ea681cef47eb54fac5424698f02ef0","header":"'''[2016]: Aionas Verlag, Weimar'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-2016-b","source":{"selector":[6866,7104],"slice_sha256":"ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5","header":"'''[2016]: Knesebeck GmbH & Co. Verlag, München'''","excerpt":"Die Schachnovelle nach Stefan Zweig. A graphic novel by Thomas Humeau adapted into German by Anja Kootz. See Le Joueur d'échecs [2015]."},"reviewers":{"a":"escalate","b":"confirm"},"disposition":"unresolved","basis":"adaptation-work-identity","accepted":{"segment_boundary":true,"publisher":"Knesebeck GmbH & Co. Verlag","location":"München","pageCount":120},"quarantine":"Do not attach this edition to klawiter:work/4916 as confirmed until the adaptation work binding is authorized."},
+    {"edition_id":"klawiter:edition/4916-2016-c","source":{"selector":[7104,7375],"slice_sha256":"762a4d12738816fb92eb4a0a5be4465e1ab877b2c2aa95e831e49cf1be82f016","header":"'''[2016]: Philipp Reclam jun. GmbH & Co. KG, Stuttgart'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"},
+    {"edition_id":"klawiter:edition/4916-2019-a","source":{"selector":[8941,9098],"slice_sha256":"a518e5051114a90babf9ef194781166fbc67fe23a5e1547ce6da4bf90c68e5ad","header":"'''[2019]: Nikol Verlag, Hamburg'''"},"reviewers":{"a":"confirm","b":"confirm"},"disposition":"confirm","basis":"exact-match"}
+  ],
+  "automatic_implementation_rules": [
+    {
+      "rule_id": "header-strip-balanced-bold-tail",
+      "priority": 1,
+      "scope": ["klawiter:edition/56-1978-a"],
+      "condition": "A header has a closed triple-apostrophe span followed by nonempty text on the same line.",
+      "action": "Parse publisher and location only inside the closed span; preserve the tail as a raw qualifier or description with its source selector.",
+      "expected": {"location": "Frankfurt am Main", "qualifier": "Special edition"},
+      "safety": "Apply only when the bold span contains a complete year, publisher and location."
+    },
+    {
+      "rule_id": "header-period-publisher-location",
+      "priority": 1,
+      "scope": ["klawiter:edition/56-1952-a"],
+      "condition": "No comma separates publisher and location inside the bold span, and a single period separates a publisher phrase ending in Verlag from a place phrase.",
+      "action": "Split at that period; preserve the post-span bracket text as a qualifier.",
+      "expected": {"publisher": "S. Fischer Verlag", "location": "Frankfurt am Main", "qualifier": "[S. Fischer Bibliothek]"},
+      "safety": "Otherwise emit a review candidate."
+    },
+    {
+      "rule_id": "header-series-residue",
+      "priority": 1,
+      "scope": ["klawiter:edition/54-1981-c", "klawiter:edition/56-1981-b"],
+      "condition": "A location is followed by a terminal bracketed qualifier and the header lacks a closing bold marker.",
+      "action": "Remove the bracketed qualifier from location, retain it as raw qualifier evidence and retain the original header.",
+      "expected": {"location": "Frankfurt am Main", "qualifier": "[Gesammelte Werke in Einzelbänden]"},
+      "safety": "Apply only when the place prefix is independently recognized in the location vocabulary."
+    },
+    {
+      "rule_id": "header-orphan-wiki-brackets",
+      "priority": 1,
+      "scope": ["klawiter:edition/54-1981-d"],
+      "condition": "A parsed location ends in unmatched closing wiki brackets.",
+      "action": "Strip only the unmatched brackets from the normalized location and retain the exact header as evidence.",
+      "expected": {"location": "Frankfurt am Main", "removed": "]]]"},
+      "safety": "Balanced link syntax is never changed by this rule."
+    },
+    {
+      "rule_id": "double-header-components",
+      "priority": 2,
+      "scope": ["klawiter:edition/54-1960-a", "klawiter:edition/54-1964-a"],
+      "condition": "A slash is immediately followed by a bracketed year and both components contain a nonempty publisher and location.",
+      "action": "Emit one edition node per component, preserve one shared physical block selector and record each component span as header evidence.",
+      "safety": "Any incomplete component enters the review queue."
+    },
+    {
+      "rule_id": "approximate-year-id",
+      "priority": 2,
+      "scope": ["klawiter:edition/54-1965-a", "klawiter:edition/54-1965-b"],
+      "condition": "yearRaw matches ca. plus a four-digit year.",
+      "action": "Use the four-digit year in the stable ID, preserve yearRaw verbatim and add jahr-unsicher.",
+      "safety": "The rule does not infer a year when the header contains no four-digit value."
+    },
+    {
+      "rule_id": "page-count-parenthesized-primary",
+      "priority": 2,
+      "scope": ["klawiter:edition/4916-1995-a"],
+      "condition": "The first bounded page notation is exactly (N)p.",
+      "action": "Set pageCount to N and retain the raw notation as field evidence.",
+      "expected": {"pageCount": 80},
+      "safety": "Carrier ranges written as pp. remain excluded."
+    },
+    {
+      "rule_id": "page-count-missing-open-parenthesis",
+      "priority": 2,
+      "scope": ["klawiter:edition/56-2010-a"],
+      "condition": "The first bounded page notation matches N/M)p. and the corpus convention N/(M)p. is otherwise established.",
+      "action": "Set pageCount to N, retain the malformed raw notation and record the deterministic repair.",
+      "expected": {"pageCount": 463},
+      "safety": "Other malformed page strings enter the review queue."
+    },
+    {
+      "rule_id": "malformed-bold-clean-fields",
+      "priority": 3,
+      "scope": ["klawiter:edition/54-2013-b", "klawiter:edition/56-1981-c", "klawiter:edition/56-1981-d"],
+      "condition": "The header lacks a closing bold marker while year, publisher and location parse without trailing markup or qualifier residue.",
+      "action": "Keep the parsed fields, retain the raw header and add a diagnostic malformed-header flag without escalating the bibliographic values.",
+      "safety": "Any field contamination is handled by the higher-priority cleanup rules or enters review."
+    }
+  ],
+  "unresolved_review_queue": [
+    {
+      "priority": 1,
+      "queue_id": "work-identity-4916-2016-b",
+      "edition_id": "klawiter:edition/4916-2016-b",
+      "blocking_scope": "This edition's confirmed work binding",
+      "question": "Should the German 2016 Knesebeck publication be bound to the Humeau adaptation represented by Le Joueur d'échecs [2015], and which canonical work ID owns that adaptation?",
+      "evidence": {"source_selector": [6866,7104], "slice_sha256": "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5", "source_link": "[[Le Joueur d'échecs]] [2015]"},
+      "competing_dispositions": [
+        "Bind the 2016 book as an edition or translation of a distinct Humeau adaptation work.",
+        "Retain it under klawiter:work/4916 as a direct edition of Schachnovelle."
+      ],
+      "verifier_finding": "The second disposition is not supported by the wording graphic novel by Thomas Humeau. The exact canonical target requires authorized work-identity reconciliation.",
+      "required_authority": "Repository or institutional work-identity decision during Gate 2 reconciliation",
+      "quarantine": true
+    },
+    {
+      "priority": 2,
+      "queue_id": "carrier-model-depth",
+      "edition_ids": ["klawiter:edition/4916-1966-a", "klawiter:edition/54-1981-d", "klawiter:edition/54-1982-a", "klawiter:edition/54-1995-a", "klawiter:edition/54-2020-a", "klawiter:edition/56-1981-c"],
+      "blocking_scope": "Carrier description depth only",
+      "question": "How many carrier properties and nodes should be materialized beyond the required schema:isPartOf relation?",
+      "verifier_finding": "Edition retention and schema:isPartOf are resolved by the ratified model. Carrier detail remains a modeling-depth decision and does not block Gate 1 segmentation.",
+      "required_authority": "Later modeling decision",
+      "quarantine": false
+    },
+    {
+      "priority": 3,
+      "queue_id": "authority-normalization-zurich",
+      "edition_id": "klawiter:edition/54-1957-a",
+      "blocking_scope": "Normalized authority value only",
+      "question": "Should the source string Zũrich receive a separate normalized Zürich authority assertion?",
+      "verifier_finding": "The source transcription Zũrich is confirmed. Normalization must preserve the source value and carry separate provenance.",
+      "required_authority": "Location reconciliation or later expert validation",
+      "quarantine": false
+    }
+  ],
+  "gate_1_full_run": {
+    "finding": "blocked-pending-implementation",
+    "reason": "The 76-case review is reconciled, but the current segmenter still emits five contaminated header fields and misses two safely recoverable page counts. One work-identity case must be quarantined.",
+    "release_conditions": [
+      "Implement the automatic rules in this artifact with focused regression tests.",
+      "Regenerate the three samples and verify all selectors, IDs, corrected fields, raw-header evidence and slice hashes.",
+      "Keep klawiter:edition/4916-2016-b out of confirmed workExample links until its authorized work binding is recorded.",
+      "Emit every future incomplete double-header component, unrecognized malformed header and unrecognized page notation into the canonical review queue.",
+      "Record deterministic repair provenance and retain source-exact values for every normalized field."
+    ],
+    "post_condition_status": "release-with-case-quarantine",
+    "full_run_policy": "The full run may proceed after the deterministic rules and tests pass. The quarantined adaptation case remains visible and cannot be silently promoted."
+  },
+  "summary": {
+    "total_cases": 76,
+    "by_disposition": {"confirm": 57, "correct": 7, "reject-proposal": 11, "unresolved": 1},
+    "by_page": {
+      "54": {"total": 31, "confirm": 21, "correct": 2, "reject-proposal": 8, "unresolved": 0},
+      "56": {"total": 20, "confirm": 14, "correct": 4, "reject-proposal": 2, "unresolved": 0},
+      "4916": {"total": 25, "confirm": 22, "correct": 1, "reject-proposal": 1, "unresolved": 1}
+    },
+    "technical_segment_boundaries_confirmed": 76,
+    "selector_hashes_confirmed": 76,
+    "deterministic_corrections": [
+      "klawiter:edition/54-1981-c location cleanup",
+      "klawiter:edition/54-1981-d location cleanup",
+      "klawiter:edition/56-1952-a publisher and location cleanup",
+      "klawiter:edition/56-1978-a location and qualifier cleanup",
+      "klawiter:edition/56-1981-b location cleanup",
+      "klawiter:edition/56-2010-a pageCount 463",
+      "klawiter:edition/4916-1995-a pageCount 80"
+    ],
+    "named_quarantines": ["klawiter:edition/4916-2016-b"],
+    "no_silent_uncertainty": true,
+    "external_review_status": "A later external expert review is additional validation and may revise the provenanced decisions. It is not a start condition for implementing the deterministic rules."
+  }
+}

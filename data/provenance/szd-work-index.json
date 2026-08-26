@@ -1,0 +1,10 @@
+{
+  "artifact": "data/provenance/szd-work-index.xml",
+  "sourceRepository": "https://github.com/chpollin/SZD",
+  "sourceRevision": "45115eaa58a83a12660ab556e7fcdbe1fc56f588",
+  "sourcePath": "data/Index/Werke/SZDWRK.xml",
+  "retrievedAt": "2026-08-21T20:15:00+02:00",
+  "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf",
+  "license": "CC BY 4.0",
+  "purpose": "Frozen authority input for reproducible Gate 2 work reconciliation"
+}

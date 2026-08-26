@@ -4,24 +4,27 @@ Uses real examples from the Klawiter bibliography dataset.
 """
 
 from lib.wiki_parser import (
-    parse_redirect,
-    is_redirect,
     extract_categories,
-    extract_defaultsortkey,
-    remove_wiki_markup,
-    extract_title,
-    extract_original_title,
-    extract_see_references,
-    extract_reprints,
-    extract_translations_block,
     extract_contents_block,
+    extract_defaultsortkey,
+    extract_original_title,
+    extract_reprints,
+    extract_see_references,
     extract_structured_data,
+    extract_title,
+    extract_translations_block,
+    is_redirect,
+    parse_redirect,
+    remove_wiki_markup,
 )
 
 
 class TestParseRedirect:
     def test_standard_redirect(self, entry_redirect):
-        assert parse_redirect(entry_redirect) == "Mariia Antoaneta. Slika jednog osrednjeg karaktera"
+        assert (
+            parse_redirect(entry_redirect)
+            == "Mariia Antoaneta. Slika jednog osrednjeg karaktera"
+        )
 
     def test_case_insensitive(self):
         assert parse_redirect("#redirect [[Target]]") == "Target"
@@ -129,7 +132,9 @@ class TestExtractTitle:
         assert title is not None
 
     def test_quoted_title(self):
-        assert extract_title('"Some Quoted Title" in Journal, 1976') == "Some Quoted Title"
+        assert (
+            extract_title('"Some Quoted Title" in Journal, 1976') == "Some Quoted Title"
+        )
 
     def test_empty_none(self):
         assert extract_title(None) is None
@@ -230,7 +235,9 @@ class TestExtractStructuredData:
         assert "Films / Plays / Operas" in data["categories"]
         assert data["sortkey"] == "Sach-mat"
 
-    def test_entry_with_all_blocks(self, entry_reprints, entry_translations_block, entry_collected_works):
+    def test_entry_with_all_blocks(
+        self, entry_reprints, entry_translations_block, entry_collected_works
+    ):
         assert "reprints" in extract_structured_data(entry_reprints)
         assert "translations" in extract_structured_data(entry_translations_block)
         assert "content_items" in extract_structured_data(entry_collected_works)

@@ -1,0 +1,184 @@
+{
+  "locations": {
+    "Amsterdam": {
+      "decisionId": "location/Amsterdam/Q727",
+      "label": "Amsterdam",
+      "qid": "Q727",
+      "uri": "https://www.wikidata.org/entity/Q727"
+    },
+    "Bambaī": {
+      "decisionId": "location/Bambai/Q1156",
+      "label": "Mumbai",
+      "qid": "Q1156",
+      "uri": "https://www.wikidata.org/entity/Q1156"
+    },
+    "Barcelona": {
+      "decisionId": "location/Barcelona/Q1492",
+      "label": "Barcelona",
+      "qid": "Q1492",
+      "uri": "https://www.wikidata.org/entity/Q1492"
+    },
+    "Beijing": {
+      "decisionId": "location/Beijing/Q956",
+      "label": "Beijing",
+      "qid": "Q956",
+      "uri": "https://www.wikidata.org/entity/Q956"
+    },
+    "Beirut": {
+      "decisionId": "location/Beirut/Q3820",
+      "label": "Beirut",
+      "qid": "Q3820",
+      "uri": "https://www.wikidata.org/entity/Q3820"
+    },
+    "Berlin": {
+      "decisionId": "location/Berlin/Q64",
+      "label": "Berlin",
+      "qid": "Q64",
+      "uri": "https://www.wikidata.org/entity/Q64"
+    },
+    "Borås, Sweden": {
+      "decisionId": "location/Boras-Sweden/Q26040",
+      "label": "Borås",
+      "qid": "Q26040",
+      "uri": "https://www.wikidata.org/entity/Q26040"
+    },
+    "Buenos Aires": {
+      "decisionId": "location/Buenos-Aires/Q1486",
+      "label": "Buenos Aires",
+      "qid": "Q1486",
+      "uri": "https://www.wikidata.org/entity/Q1486"
+    },
+    "Cairo": {
+      "decisionId": "location/Cairo/Q85",
+      "label": "Cairo",
+      "qid": "Q85",
+      "uri": "https://www.wikidata.org/entity/Q85"
+    },
+    "Frankfurt am Main": {
+      "decisionId": "location/Frankfurt-am-Main/Q1794",
+      "label": "Frankfurt",
+      "qid": "Q1794",
+      "uri": "https://www.wikidata.org/entity/Q1794"
+    },
+    "Leipzig": {
+      "decisionId": "location/Leipzig/Q2079",
+      "label": "Leipzig",
+      "qid": "Q2079",
+      "uri": "https://www.wikidata.org/entity/Q2079"
+    },
+    "London": {
+      "decisionId": "location/London/Q84",
+      "label": "London",
+      "qid": "Q84",
+      "uri": "https://www.wikidata.org/entity/Q84"
+    },
+    "Luxembourg City, Luxembourg": {
+      "decisionId": "location/Luxembourg-City/Q1842",
+      "label": "Luxembourg",
+      "qid": "Q1842",
+      "uri": "https://www.wikidata.org/entity/Q1842"
+    },
+    "München": {
+      "decisionId": "location/Muenchen/Q1726",
+      "label": "Munich",
+      "qid": "Q1726",
+      "uri": "https://www.wikidata.org/entity/Q1726"
+    },
+    "New York": {
+      "decisionId": "location/New-York/Q60",
+      "label": "New York City",
+      "qid": "Q60",
+      "uri": "https://www.wikidata.org/entity/Q60"
+    },
+    "Nicosia, Cyprus": {
+      "decisionId": "location/Nicosia-Cyprus/Q3856",
+      "label": "Nicosia",
+      "qid": "Q3856",
+      "uri": "https://www.wikidata.org/entity/Q3856"
+    },
+    "Paris": {
+      "decisionId": "location/Paris/Q90",
+      "label": "Paris",
+      "qid": "Q90",
+      "uri": "https://www.wikidata.org/entity/Q90"
+    },
+    "Praha": {
+      "decisionId": "location/Praha/Q1085",
+      "label": "Prague",
+      "qid": "Q1085",
+      "uri": "https://www.wikidata.org/entity/Q1085"
+    },
+    "Rio de Janiero": {
+      "decisionId": "location/Rio-de-Janiero/Q8678",
+      "label": "Rio de Janeiro",
+      "qid": "Q8678",
+      "uri": "https://www.wikidata.org/entity/Q8678"
+    },
+    "Salzburg": {
+      "decisionId": "location/Salzburg/Q34713",
+      "label": "Salzburg",
+      "qid": "Q34713",
+      "uri": "https://www.wikidata.org/entity/Q34713"
+    },
+    "Sofija": {
+      "decisionId": "location/Sofija/Q472",
+      "label": "Sofia",
+      "qid": "Q472",
+      "uri": "https://www.wikidata.org/entity/Q472"
+    },
+    "Stockholm": {
+      "decisionId": "location/Stockholm/Q1754",
+      "label": "Stockholm",
+      "qid": "Q1754",
+      "uri": "https://www.wikidata.org/entity/Q1754"
+    },
+    "Stuttgart": {
+      "decisionId": "location/Stuttgart/Q1022",
+      "label": "Stuttgart",
+      "qid": "Q1022",
+      "uri": "https://www.wikidata.org/entity/Q1022"
+    },
+    "Tokyo": {
+      "decisionId": "location/Tokyo/Q1490",
+      "label": "Tokyo",
+      "qid": "Q1490",
+      "uri": "https://www.wikidata.org/entity/Q1490"
+    },
+    "Wien": {
+      "decisionId": "location/Wien/Q1741",
+      "label": "Wien",
+      "qid": "Q1741",
+      "uri": "https://www.wikidata.org/entity/Q1741"
+    },
+    "Yanji": {
+      "decisionId": "location/Yanji/Q713362",
+      "label": "Yanji",
+      "qid": "Q713362",
+      "uri": "https://www.wikidata.org/entity/Q713362"
+    }
+  },
+  "publicationContract": "Only targets with an evidence-bearing confirm or correct decision are projected into public data.",
+  "works": {
+    "klawiter:work/4916": {
+      "decisionId": "work/4916/SZDWRK.39",
+      "gndUri": "http://d-nb.info/gnd/4255212-6",
+      "label": "Schachnovelle",
+      "szdId": "SZDWRK.39",
+      "szdUri": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.39"
+    },
+    "klawiter:work/54": {
+      "decisionId": "work/54/SZDWRK.133",
+      "gndUri": "http://d-nb.info/gnd/4447444-1",
+      "label": "Ungeduld des Herzens",
+      "szdId": "SZDWRK.133",
+      "szdUri": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.133"
+    },
+    "klawiter:work/56": {
+      "decisionId": "work/56/SZDWRK.5",
+      "gndUri": "http://d-nb.info/gnd/4436762-4",
+      "label": "Die Welt von Gestern",
+      "szdId": "SZDWRK.5",
+      "szdUri": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.5"
+    }
+  }
+}

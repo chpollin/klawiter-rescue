@@ -23,24 +23,23 @@ Output: docs/data/triage.json
 import json
 import os
 import sys
-from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import setup_logging, PROJECT_ROOT, OUTPUT_DIR
+from lib.config import OUTPUT_DIR, PROJECT_ROOT, setup_logging
 
 log = setup_logging(__name__)
 
-VERIFICATION_REPORT = os.path.join(OUTPUT_DIR, 'verification-report.json')
-CENSUS_REPORT = os.path.join(OUTPUT_DIR, 'census-report.json')
-TRIAGE_PATH = os.path.join(PROJECT_ROOT, 'docs', 'data', 'triage.json')
+VERIFICATION_REPORT = os.path.join(OUTPUT_DIR, "verification-report.json")
+CENSUS_REPORT = os.path.join(OUTPUT_DIR, "census-report.json")
+TRIAGE_PATH = os.path.join(PROJECT_ROOT, "docs", "data", "triage.json")
 
 # verify.py speaks pipeline field names; the frontend speaks camelCase.
-FIELD_NAME_MAP = {'page_count': 'pageCount'}
+FIELD_NAME_MAP = {"page_count": "pageCount"}
 
 # Fields whose verify flags reach the editor. year is excluded: it is neither
 # provenance-tracked nor editable, and its false-negative list (allYears gaps)
 # mostly restates the multi-edition limitation.
-FLAGGED_FIELDS = ('title', 'publisher', 'location', 'translator', 'page_count')
+FLAGGED_FIELDS = ("title", "publisher", "location", "translator", "page_count")
 
 
 def _frontend_field(name):
@@ -62,59 +61,64 @@ def build_triage(detailed_results, census_report):
         return triage.setdefault(str(pid), {})
 
     for result in detailed_results:
-        pid = result.get('page_id')
+        pid = result.get("page_id")
         if pid is None:
             continue
-        fields = result.get('fields', {})
+        fields = result.get("fields", {})
 
         not_in_source = []
         detectable = {}
         for name in FLAGGED_FIELDS:
             f = fields.get(name)
-            if isinstance(f, dict) and f.get('status') == 'false_positive':
+            if isinstance(f, dict) and f.get("status") == "false_positive":
                 not_in_source.append(_frontend_field(name))
-            fn = fields.get(f'{name}_false_negative')
-            if isinstance(fn, dict) and fn.get('detected_in_raw'):
-                detectable[_frontend_field(name)] = fn['detected_in_raw']
+            fn = fields.get(f"{name}_false_negative")
+            if isinstance(fn, dict) and fn.get("detected_in_raw"):
+                detectable[_frontend_field(name)] = fn["detected_in_raw"]
 
         if not_in_source:
-            flags_for(pid)['notInSource'] = not_in_source
+            flags_for(pid)["notInSource"] = not_in_source
         if detectable:
-            flags_for(pid)['detectable'] = detectable
+            flags_for(pid)["detectable"] = detectable
 
-    empty = (census_report.get('source', {})
-             .get('empty_content_pages', {})
-             .get('bibliographic_ns0', []))
+    empty = (
+        census_report.get("source", {})
+        .get("empty_content_pages", {})
+        .get("bibliographic_ns0", [])
+    )
     for page in empty:
-        flags_for(page['page_id'])['census'] = 'Quellseitig geleerte Seite (Census-Anomalie)'
+        flags_for(page["page_id"])["census"] = (
+            "Quellseitig geleerte Seite (Census-Anomalie)"
+        )
 
     return triage
 
 
 def main():
-    with open(VERIFICATION_REPORT, encoding='utf-8') as f:
+    with open(VERIFICATION_REPORT, encoding="utf-8") as f:
         verification = json.load(f)
-    with open(CENSUS_REPORT, encoding='utf-8') as f:
+    with open(CENSUS_REPORT, encoding="utf-8") as f:
         census = json.load(f)
 
-    triage = build_triage(verification.get('detailed_results', []), census)
+    triage = build_triage(verification.get("detailed_results", []), census)
 
     doc = {
-        '_meta': {
-            'generated': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-            'sources': ['verification-report.json', 'census-report.json'],
-            'note': ('Per-entry attention hints from existing data signals; '
-                     'not a quality or workflow metric.'),
+        "_meta": {
+            "sources": ["verification-report.json", "census-report.json"],
+            "note": (
+                "Per-entry attention hints from existing data signals; "
+                "not a quality or workflow metric."
+            ),
         },
-        'entries': triage,
+        "entries": triage,
     }
 
     os.makedirs(os.path.dirname(TRIAGE_PATH), exist_ok=True)
-    with open(TRIAGE_PATH, 'w', encoding='utf-8') as f:
+    with open(TRIAGE_PATH, "w", encoding="utf-8") as f:
         json.dump(doc, f, ensure_ascii=False, indent=1)
     log.info(f"Wrote {len(triage)} flagged entries to {TRIAGE_PATH}")
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

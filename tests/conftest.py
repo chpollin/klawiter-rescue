@@ -32,6 +32,7 @@ QUALITY_REPORT = PROJECT_ROOT / "data" / "output" / "quality-report.json"
 
 # --- Shared data fixtures (loaded once per session) ---
 
+
 @pytest.fixture(scope="session")
 def frontend_data():
     """Load frontend JSON once for all data tests."""
@@ -89,11 +90,38 @@ def quality_report():
         return json.load(f)
 
 
+# Regenerable stage intermediates (gitignored; stages 01-04 recreate them from
+# the committed raw dump).
+STAGE_02_CSV = PROJECT_ROOT / "data" / "intermediate" / "02_encoding_fixed.csv"
+STAGE_04_CSV = PROJECT_ROOT / "data" / "intermediate" / "04_classified.csv"
+
+
+@pytest.fixture(scope="session")
+def required_intermediates():
+    """Guard for tests that read the gitignored stage CSVs.
+
+    Locally their absence is a friendly skip; CI regenerates them first and
+    sets KLAWITER_REQUIRE_INTERMEDIATES=1 so a missing file there is a hard
+    failure, never a silent skip.
+    """
+    missing = [p.name for p in (STAGE_02_CSV, STAGE_04_CSV) if not p.exists()]
+    if not missing:
+        return
+    message = (
+        f"stage intermediates missing ({', '.join(missing)}) — run "
+        "`python pipeline/run_pipeline.py --to-stage 04 --no-postprocess`"
+    )
+    if os.environ.get("KLAWITER_REQUIRE_INTERMEDIATES") == "1":
+        pytest.fail(message, pytrace=False)
+    pytest.skip(message)
+
+
 # --- Real dataset fixtures ---
+
 
 def _load_test_sample():
     """Load hand-labeled test entries from test_sample_20.json."""
-    with open(TEST_SAMPLE_PATH, 'r', encoding='utf-8') as f:
+    with open(TEST_SAMPLE_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -101,8 +129,10 @@ def _load_test_sample():
 def real_entries():
     """All 20 hand-labeled test entries."""
     if not TEST_SAMPLE_PATH.exists():
-        pytest.skip("test_sample_20.json not found — hand-labeled sample, "
-                    "not regenerable (see knowledge/testing.md)")
+        pytest.skip(
+            "test_sample_20.json not found — hand-labeled sample, "
+            "not regenerable (see knowledge/testing.md)"
+        )
     return _load_test_sample()
 
 
@@ -110,7 +140,7 @@ def _load_wiki_ground_truth():
     """Load wiki-verified ground truth entries."""
     if not WIKI_GROUND_TRUTH.exists():
         return []
-    with open(WIKI_GROUND_TRUTH, 'r', encoding='utf-8') as f:
+    with open(WIKI_GROUND_TRUTH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -122,9 +152,18 @@ def pytest_generate_tests(metafunc):
             ids = [f"page_{e['page_id']}_{e['label']}" for e in entries]
             metafunc.parametrize("real_entry", entries, ids=ids)
         else:
-            metafunc.parametrize("real_entry", [pytest.param(None, marks=pytest.mark.skip(
-                reason="test_sample_20.json not found — hand-labeled sample, "
-                       "not regenerable (see knowledge/testing.md)"))])
+            metafunc.parametrize(
+                "real_entry",
+                [
+                    pytest.param(
+                        None,
+                        marks=pytest.mark.skip(
+                            reason="test_sample_20.json not found — hand-labeled sample, "
+                            "not regenerable (see knowledge/testing.md)"
+                        ),
+                    )
+                ],
+            )
     if "wiki_entry" in metafunc.fixturenames:
         entries = _load_wiki_ground_truth()
         if not entries:
@@ -135,18 +174,22 @@ def pytest_generate_tests(metafunc):
 
 # --- Gemini client fixture ---
 
+
 @pytest.fixture(scope="session")
 def gemini_client():
     """Create Gemini client, loading API key from .env if needed."""
     from lib.config import load_env
+
     load_env()
     if not os.environ.get("GEMINI_API_KEY"):
         pytest.skip("GEMINI_API_KEY not set — LLM tests need it in .env")
     from lib.llm_extract import create_client
+
     return create_client()
 
 
 # --- Wiki content samples for unit tests ---
+
 
 @pytest.fixture
 def entry_standard_header():
@@ -184,7 +227,7 @@ def entry_redirect():
 def entry_see_references():
     """Entry with See references."""
     return (
-        "\\\"Amoku\\\" [Der Amokläufer]. "
+        '\\"Amoku\\" [Der Amokläufer]. '
         "'''See:''' [[Der Amokläufer]] [Translations: Japanese)]\n\n"
         "[[Category:Fiction / Individual Stories (Japanese)]]"
     )
@@ -250,6 +293,7 @@ def entry_film():
 
 
 # --- Encoding fixtures ---
+
 
 @pytest.fixture
 def mojibake_text():

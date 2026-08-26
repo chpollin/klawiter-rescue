@@ -212,6 +212,31 @@ test('triageRank: most urgent class present; 9 when clean', () => {
   assert.strictEqual(ctx.Edit.triageRank(43), 9);
 });
 
+// --- Gate 2 reconciliation decisions ---
+
+test('looks up location reconciliation without promoting a candidate', () => {
+  const entry = { sourcePageId: 7, location: 'Girona' };
+  const ctx = makeContext([entry]);
+  ctx.Edit.reconciliation = {
+    Girona: { candidates: [{ qid: 'Q7038' }], decision: null, publishable: null },
+  };
+  const review = ctx.Edit.locationReconciliation(entry);
+  assert.strictEqual(review.candidates[0].qid, 'Q7038');
+  assert.strictEqual(review.publishable, null);
+});
+
+test('exports pending reconciliation decisions in stable subject order', () => {
+  const ctx = makeContext();
+  ctx.Edit.pendingReconciliation = {
+    Wien: { subject: 'Wien', action: 'confirm', qid: 'Q1741' },
+    Berlin: { subject: 'Berlin', action: 'confirm', qid: 'Q64' },
+  };
+  assert.deepStrictEqual(
+    Array.from(ctx.Edit.reconciliationPatches(), item => item.subject),
+    ['Berlin', 'Wien']
+  );
+});
+
 if (failures) {
   console.error(`\n${failures} failure(s)`);
   process.exit(1);

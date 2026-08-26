@@ -1,0 +1,207 @@
+@prefix klawiter: <https://chpollin.github.io/klawiter-rescue/vocab/> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+klawiter:WorkShape
+    a sh:NodeShape ;
+    sh:targetClass schema:CreativeWork ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path schema:workExample ;
+        sh:minCount 2 ;
+        sh:class schema:Book ;
+    ] .
+
+klawiter:EditionShape
+    a sh:NodeShape ;
+    sh:targetClass schema:Book ;
+    sh:property [
+        sh:path schema:exampleOfWork ;
+        sh:maxCount 1 ;
+        sh:class schema:CreativeWork ;
+    ] ;
+    sh:property [
+        sh:path schema:datePublished ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[0-9]{4}$" ;
+    ] ;
+    sh:property [
+        sh:path klawiter:sourcePageId ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+    ] ;
+    sh:property [
+        sh:path klawiter:reviewStatus ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("proposed" "confirmed" "rejected" "contested") ;
+    ] ;
+    sh:property [
+        sh:path schema:isPartOf ;
+        sh:maxCount 1 ;
+        sh:class schema:PublicationVolume ;
+    ] ;
+    sh:or (
+        [
+            sh:property [
+                sh:path schema:exampleOfWork ;
+                sh:minCount 1 ;
+            ]
+        ]
+        [
+            sh:property [
+                sh:path klawiter:reviewStatus ;
+                sh:hasValue "contested" ;
+            ] ;
+            sh:property [
+                sh:path klawiter:contestedClaim ;
+                sh:minCount 1 ;
+                sh:maxCount 1 ;
+                sh:class klawiter:ContestedClaim ;
+            ]
+        ]
+    ) .
+
+klawiter:ContestedClaimShape
+    a sh:NodeShape ;
+    sh:targetClass klawiter:ContestedClaim ;
+    sh:property [
+        sh:path klawiter:claimSubject ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class schema:Book ;
+    ] ;
+    sh:property [
+        sh:path klawiter:claimPredicate ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path klawiter:claimStatus ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:hasValue "contested" ;
+    ] ;
+    sh:property [
+        sh:path klawiter:decisionStatus ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:hasValue "open" ;
+    ] ;
+    sh:property [
+        sh:path klawiter:interpretation ;
+        sh:minCount 2 ;
+        sh:class klawiter:ClaimInterpretation ;
+    ] ;
+    sh:property [
+        sh:path klawiter:reviewAction ;
+        sh:minCount 3 ;
+        sh:class klawiter:ReviewAction ;
+    ] ;
+    sh:property [
+        sh:path (oa:hasTarget oa:hasSelector) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class oa:TextPositionSelector ;
+    ] .
+
+klawiter:ClaimInterpretationShape
+    a sh:NodeShape ;
+    sh:targetClass klawiter:ClaimInterpretation ;
+    sh:property [
+        sh:path klawiter:proposedObject ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path klawiter:interpretationStatus ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:hasValue "contested" ;
+    ] .
+
+klawiter:ReviewActionShape
+    a sh:NodeShape ;
+    sh:targetClass klawiter:ReviewAction ;
+    sh:property [
+        sh:path prov:wasAssociatedWith ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path klawiter:reviewOutcome ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] .
+
+klawiter:WorkIdentityCandidateShape
+    a sh:NodeShape ;
+    sh:targetClass klawiter:WorkIdentityCandidate ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path klawiter:identityStatus ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:hasValue "contested" ;
+    ] .
+
+klawiter:CarrierShape
+    a sh:NodeShape ;
+    sh:targetClass schema:PublicationVolume ;
+    sh:property [
+        sh:path schema:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path klawiter:sourceEdition ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class schema:Book ;
+    ] .
+
+klawiter:AnnotationShape
+    a sh:NodeShape ;
+    sh:targetClass oa:Annotation ;
+    sh:property [
+        sh:path oa:hasBody ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class schema:Book ;
+    ] ;
+    sh:property [
+        sh:path (oa:hasTarget oa:hasSelector) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class oa:TextPositionSelector ;
+    ] ;
+    sh:property [
+        sh:path (oa:hasTarget oa:hasSelector oa:start) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+    ] ;
+    sh:property [
+        sh:path (oa:hasTarget oa:hasSelector oa:end) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+    ] .

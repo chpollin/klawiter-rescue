@@ -3,8 +3,8 @@
     "title": {
       "total_entries": 4751,
       "extracted": 4750,
-      "correct": 3521,
-      "correct_fallback": 1229,
+      "correct": 3476,
+      "correct_fallback": 1274,
       "false_positive": 0,
       "false_negative": 0,
       "coverage": 100.0,
@@ -457,13 +457,13 @@
     },
     {
       "page_id": 10,
-      "title": "Kassette IV",
+      "title": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Dramatiker / Kassette IV",
       "fields": {
         "title": {
-          "extracted": "Kassette IV",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Dramatiker / Kassette IV",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1984,
@@ -814,10 +814,10 @@
     },
     {
       "page_id": 23,
-      "title": "Review:",
+      "title": "Castellio gegen Calvin oder Ein Gewissen gegen die Gewalt",
       "fields": {
         "title": {
-          "extracted": "Review:",
+          "extracted": "Castellio gegen Calvin oder Ein Gewissen gegen die Gewalt",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -1171,10 +1171,10 @@
     },
     {
       "page_id": 36,
-      "title": "[ca. 1965]: Schweizer Druck- und Verlagshaus, Zürich",
+      "title": "Marie Antoinette. Bildnis eines mittleren Charakters",
       "fields": {
         "title": {
-          "extracted": "[ca. 1965]: Schweizer Druck- und Verlagshaus, Zürich",
+          "extracted": "Marie Antoinette. Bildnis eines mittleren Charakters",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -1628,13 +1628,13 @@
     },
     {
       "page_id": 54,
-      "title": "[ca. 1965]: Deutscher Bücherklub, Bochum",
+      "title": "Ungeduld des Herzens (VIST)",
       "fields": {
         "title": {
-          "extracted": "[ca. 1965]: Deutscher Bücherklub, Bochum",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Ungeduld des Herzens (VIST)",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1939,
@@ -1921,13 +1921,13 @@
     },
     {
       "page_id": 66,
-      "title": "Kassette III",
+      "title": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Lyriker / Kassette III",
       "fields": {
         "title": {
-          "extracted": "Kassette III",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Lyriker / Kassette III",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1983,
@@ -1948,13 +1948,13 @@
     },
     {
       "page_id": 67,
-      "title": "Kassette V",
+      "title": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Dramatiker / Kassette V",
       "fields": {
         "title": {
-          "extracted": "Kassette V",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Dramatiker / Kassette V",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1987,
@@ -1975,13 +1975,13 @@
     },
     {
       "page_id": 68,
-      "title": "Kassette VI",
+      "title": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Dramatiker / Kassette VI",
       "fields": {
         "title": {
-          "extracted": "Kassette VI",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Stefan Zweig - Ein großer Europäer: Erzähler - Essayist - Dramatiker / Kassette VI",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1990,
@@ -3591,13 +3591,13 @@
     },
     {
       "page_id": 165,
-      "title": "Reprinted:",
+      "title": "Altenberg, Peter",
       "fields": {
         "title": {
-          "extracted": "Reprinted:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Altenberg, Peter",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1901,
@@ -4090,10 +4090,10 @@
     },
     {
       "page_id": 190,
-      "title": "Reprinted:",
+      "title": "Hommes et destins",
       "fields": {
         "title": {
-          "extracted": "Reprinted:",
+          "extracted": "Hommes et destins",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -10915,10 +10915,10 @@
     },
     {
       "page_id": 483,
-      "title": "Impressions",
+      "title": "Amok. A Story",
       "fields": {
         "title": {
-          "extracted": "Impressions",
+          "extracted": "Amok. A Story",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -10989,10 +10989,10 @@
     },
     {
       "page_id": 486,
-      "title": "Review of a later reprint:",
+      "title": "Beware of Pity",
       "fields": {
         "title": {
-          "extracted": "Review of a later reprint:",
+          "extracted": "Beware of Pity",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -12814,10 +12814,10 @@
     },
     {
       "page_id": 577,
-      "title": "Mục lục [Contents]:",
+      "title": "Bức thư của người đàn bà không quen. Truyện tập truyện ngắn, truyện vừa chọn lọc",
       "fields": {
         "title": {
-          "extracted": "Mục lục [Contents]:",
+          "extracted": "Bức thư của người đàn bà không quen. Truyện tập truyện ngắn, truyện vừa chọn lọc",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -13132,10 +13132,10 @@
     },
     {
       "page_id": 594,
-      "title": "Printed in",
+      "title": "Fear",
       "fields": {
         "title": {
-          "extracted": "Printed in",
+          "extracted": "Fear",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -17434,10 +17434,10 @@
     },
     {
       "page_id": 783,
-      "title": "[I]",
+      "title": "Die Kette. Ein Novellenkreis. Drei Ringe",
       "fields": {
         "title": {
-          "extracted": "[I]",
+          "extracted": "Die Kette. Ein Novellenkreis. Drei Ringe",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -19008,10 +19008,10 @@
     },
     {
       "page_id": 844,
-      "title": "See",
+      "title": "Zuori de shijie: Yige ouzhouren de huiyi",
       "fields": {
         "title": {
-          "extracted": "See",
+          "extracted": "Zuori de shijie: Yige ouzhouren de huiyi",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -19150,10 +19150,10 @@
     },
     {
       "page_id": 849,
-      "title": "Individual Story:",
+      "title": "Mendel de los libros",
       "fields": {
         "title": {
-          "extracted": "Individual Story:",
+          "extracted": "Mendel de los libros",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -20612,10 +20612,10 @@
     },
     {
       "page_id": 911,
-      "title": "Review:",
+      "title": "Joseph Fouché",
       "fields": {
         "title": {
-          "extracted": "Review:",
+          "extracted": "Joseph Fouché",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -34649,13 +34649,13 @@
     },
     {
       "page_id": 1691,
-      "title": "Historical Note",
+      "title": "Lā'ib al-shaṭranj",
       "fields": {
         "title": {
-          "extracted": "Historical Note",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Lā'ib al-shaṭranj",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1953,
@@ -34748,10 +34748,10 @@
     },
     {
       "page_id": 1695,
-      "title": "Historical Note",
+      "title": "Mājillān. Qāhir al-biḥār",
       "fields": {
         "title": {
-          "extracted": "Historical Note",
+          "extracted": "Mājillān. Qāhir al-biḥār",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -37757,10 +37757,10 @@
     },
     {
       "page_id": 1840,
-      "title": "Excerpt:",
+      "title": "Dostojevski",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Dostojevski",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -38334,10 +38334,10 @@
     },
     {
       "page_id": 1859,
-      "title": "I. Ljudi I sudbina",
+      "title": "Vrijeme i svijet. Sabrani napisi i predavanja 1904-1940",
       "fields": {
         "title": {
-          "extracted": "I. Ljudi I sudbina",
+          "extracted": "Vrijeme i svijet. Sabrani napisi i predavanja 1904-1940",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -39477,13 +39477,13 @@
     },
     {
       "page_id": 1915,
-      "title": "[1]",
+      "title": "Archipov, Iuriĭ",
       "fields": {
         "title": {
-          "extracted": "[1]",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Archipov, Iuriĭ",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1962,
@@ -39604,10 +39604,10 @@
     },
     {
       "page_id": 1925,
-      "title": "Vol. l. Novelly",
+      "title": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh",
       "fields": {
         "title": {
-          "extracted": "Vol. l. Novelly",
+          "extracted": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -43377,10 +43377,10 @@
     },
     {
       "page_id": 2086,
-      "title": "Zweig lectures",
+      "title": "Blickwechsel",
       "fields": {
         "title": {
-          "extracted": "Zweig lectures",
+          "extracted": "Blickwechsel",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -45765,13 +45765,13 @@
     },
     {
       "page_id": 2184,
-      "title": "Kindlers Literatur-Lexikon",
+      "title": "Kindlers Literatur-Lexikon / Kindlers Neues Literatur-Lexikon",
       "fields": {
         "title": {
-          "extracted": "Kindlers Literatur-Lexikon",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Kindlers Literatur-Lexikon / Kindlers Neues Literatur-Lexikon",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1965,
@@ -47361,10 +47361,10 @@
     },
     {
       "page_id": 2268,
-      "title": "Reprints of:",
+      "title": "Stefan Zweig. Der Mann und das Werk",
       "fields": {
         "title": {
-          "extracted": "Reprints of:",
+          "extracted": "Stefan Zweig. Der Mann und das Werk",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -48624,10 +48624,10 @@
     },
     {
       "page_id": 2326,
-      "title": "Contains:",
+      "title": "Anthologie österreichischer Lyrik",
       "fields": {
         "title": {
-          "extracted": "Contains:",
+          "extracted": "Anthologie österreichischer Lyrik",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -48656,10 +48656,10 @@
     },
     {
       "page_id": 2327,
-      "title": "Review of the 1927 edition",
+      "title": "Marceline Desbordes-Valmore. Das Lebensbild einer Dichterin",
       "fields": {
         "title": {
-          "extracted": "Review of the 1927 edition",
+          "extracted": "Marceline Desbordes-Valmore. Das Lebensbild einer Dichterin",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -49307,10 +49307,10 @@
     },
     {
       "page_id": 2359,
-      "title": "Tri mastera",
+      "title": "Istoricheskie portreti. Avtorskii sbornik",
       "fields": {
         "title": {
-          "extracted": "Tri mastera",
+          "extracted": "Istoricheskie portreti. Avtorskii sbornik",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -50899,10 +50899,10 @@
     },
     {
       "page_id": 2446,
-      "title": "Zweig references/related articles:",
+      "title": "Joseph Roth: Europäisch-jüdischer Schriftsteller und österreichischer Universalist",
       "fields": {
         "title": {
-          "extracted": "Zweig references/related articles:",
+          "extracted": "Joseph Roth: Europäisch-jüdischer Schriftsteller und österreichischer Universalist",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -51889,10 +51889,10 @@
     },
     {
       "page_id": 2500,
-      "title": "Vol. I: Escritores e artistas",
+      "title": "Encontros",
       "fields": {
         "title": {
-          "extracted": "Vol. I: Escritores e artistas",
+          "extracted": "Encontros",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -54138,13 +54138,13 @@
     },
     {
       "page_id": 2613,
-      "title": "Review of:",
+      "title": "Isenschmid, Andreas",
       "fields": {
         "title": {
-          "extracted": "Review of:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Isenschmid, Andreas",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2013,
@@ -54319,13 +54319,13 @@
     },
     {
       "page_id": 2621,
-      "title": "Sommaire (Contents):",
+      "title": "Delatte, Anne-Elise",
       "fields": {
         "title": {
-          "extracted": "Sommaire (Contents):",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Delatte, Anne-Elise",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2007,
@@ -56812,13 +56812,13 @@
     },
     {
       "page_id": 2773,
-      "title": "Zweig references:",
+      "title": "Brücken über dem Abgrund / Bridging the Abyss",
       "fields": {
         "title": {
-          "extracted": "Zweig references:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Brücken über dem Abgrund / Bridging the Abyss",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1994,
@@ -57754,13 +57754,13 @@
     },
     {
       "page_id": 2826,
-      "title": "[1]",
+      "title": "Rilke, Rainer Maria / Essays",
       "fields": {
         "title": {
-          "extracted": "[1]",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Rilke, Rainer Maria / Essays",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1928,
@@ -57985,10 +57985,10 @@
     },
     {
       "page_id": 2845,
-      "title": "Primera parte: Personas y destinos",
+      "title": "Tiempo y mundo",
       "fields": {
         "title": {
-          "extracted": "Primera parte: Personas y destinos",
+          "extracted": "Tiempo y mundo",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -58559,10 +58559,10 @@
     },
     {
       "page_id": 2886,
-      "title": "Reprinted",
+      "title": "Die Zukunft der deutschen Bühne",
       "fields": {
         "title": {
-          "extracted": "Reprinted",
+          "extracted": "Die Zukunft der deutschen Bühne",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -58586,10 +58586,10 @@
     },
     {
       "page_id": 2887,
-      "title": "Reprinted:",
+      "title": "Das zukünftige Theater des Geistes",
       "fields": {
         "title": {
-          "extracted": "Reprinted:",
+          "extracted": "Das zukünftige Theater des Geistes",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -58781,10 +58781,10 @@
     },
     {
       "page_id": 2932,
-      "title": "Volume 1",
+      "title": "Romain Rolland - Stefan Zweig. Briefwechsel 1910-1940",
       "fields": {
         "title": {
-          "extracted": "Volume 1",
+          "extracted": "Romain Rolland - Stefan Zweig. Briefwechsel 1910-1940",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -59500,10 +59500,10 @@
     },
     {
       "page_id": 2967,
-      "title": "Some Reviews and Relative articles:",
+      "title": "The Grand Budapest Hotel",
       "fields": {
         "title": {
-          "extracted": "Some Reviews and Relative articles:",
+          "extracted": "The Grand Budapest Hotel",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -60456,10 +60456,10 @@
     },
     {
       "page_id": 3014,
-      "title": "Briefe [Correspondence] 1903-1938",
+      "title": "Hermann Hesse - Stefan Zweig. Briefwechsel",
       "fields": {
         "title": {
-          "extracted": "Briefe [Correspondence] 1903-1938",
+          "extracted": "Hermann Hesse - Stefan Zweig. Briefwechsel",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -60643,10 +60643,10 @@
     },
     {
       "page_id": 3035,
-      "title": "Excerpt:",
+      "title": "Jorden er rund",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Jorden er rund",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -60754,10 +60754,10 @@
     },
     {
       "page_id": 3039,
-      "title": "Excerpt:",
+      "title": "Maghellanes",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Maghellanes",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -61087,10 +61087,10 @@
     },
     {
       "page_id": 3053,
-      "title": "Vol. I:",
+      "title": "Magelanas",
       "fields": {
         "title": {
-          "extracted": "Vol. I:",
+          "extracted": "Magelanas",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -61198,10 +61198,10 @@
     },
     {
       "page_id": 3058,
-      "title": "Subsequent editions/reprints:",
+      "title": "Fernão de Magalhães",
       "fields": {
         "title": {
-          "extracted": "Subsequent editions/reprints:",
+          "extracted": "Fernão de Magalhães",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -61272,10 +61272,10 @@
     },
     {
       "page_id": 3060,
-      "title": "Subsequent editions:",
+      "title": "Magellan. Omul şi fapta sa",
       "fields": {
         "title": {
-          "extracted": "Subsequent editions:",
+          "extracted": "Magellan. Omul şi fapta sa",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -61491,10 +61491,10 @@
     },
     {
       "page_id": 3078,
-      "title": "Excerpt:",
+      "title": "Magallanes. La aventura más audaz de la humanidad",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Magallanes. La aventura más audaz de la humanidad",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -62086,10 +62086,10 @@
     },
     {
       "page_id": 3131,
-      "title": "Reprinted as:",
+      "title": "Autobiographie des Dichters",
       "fields": {
         "title": {
-          "extracted": "Reprinted as:",
+          "extracted": "Autobiographie des Dichters",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -62577,13 +62577,13 @@
     },
     {
       "page_id": 3160,
-      "title": "Amerigo. Tarihsel Bir Yanlişliğin Hikâyesi. Biyografi / Amerigo. Die Geschichte eines historischen Irrtums",
+      "title": "Amerigo. Biyografi",
       "fields": {
         "title": {
-          "extracted": "Amerigo. Tarihsel Bir Yanlişliğin Hikâyesi. Biyografi / Amerigo. Die Geschichte eines historischen Irrtums",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Amerigo. Biyografi",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2005,
@@ -63653,13 +63653,13 @@
     },
     {
       "page_id": 3224,
-      "title": "Reprinted:",
+      "title": "Toscanini, Arturo",
       "fields": {
         "title": {
-          "extracted": "Reprinted:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Toscanini, Arturo",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1935,
@@ -64037,10 +64037,10 @@
     },
     {
       "page_id": 3249,
-      "title": "Editions:",
+      "title": "Die frühen Kränze",
       "fields": {
         "title": {
-          "extracted": "Editions:",
+          "extracted": "Die frühen Kränze",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -64438,13 +64438,13 @@
     },
     {
       "page_id": 3263,
-      "title": ". Freely adapted by Stefan Zweig. Translated into English by Ruth Langner. 159p.",
+      "title": "Ben Jonson's 'Volpone'",
       "fields": {
         "title": {
-          "extracted": ". Freely adapted by Stefan Zweig. Translated into English by Ruth Langner. 159p.",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Ben Jonson's 'Volpone'",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1928,
@@ -64644,10 +64644,10 @@
     },
     {
       "page_id": 3277,
-      "title": "Stefan Zweig references:",
+      "title": "Österreicher im Exil 1934 bis 1945",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig references:",
+          "extracted": "Österreicher im Exil 1934 bis 1945",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -64807,13 +64807,13 @@
     },
     {
       "page_id": 3288,
-      "title": "Review:",
+      "title": "Suarès, André",
       "fields": {
         "title": {
-          "extracted": "Review:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Suarès, André",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1920,
@@ -65248,10 +65248,10 @@
     },
     {
       "page_id": 3316,
-      "title": "Briefe",
+      "title": "Briefe und Werknotizen",
       "fields": {
         "title": {
-          "extracted": "Briefe",
+          "extracted": "Briefe und Werknotizen",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -66024,10 +66024,10 @@
     },
     {
       "page_id": 3353,
-      "title": "Excerpt:",
+      "title": "Tak til bøgerne",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Tak til bøgerne",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -66216,10 +66216,10 @@
     },
     {
       "page_id": 3368,
-      "title": "Reprinted:",
+      "title": "Amoḳi",
       "fields": {
         "title": {
-          "extracted": "Reprinted:",
+          "extracted": "Amoḳi",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -66322,10 +66322,10 @@
     },
     {
       "page_id": 3375,
-      "title": "Excerpt:",
+      "title": "Saxli zğvis piras",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Saxli zğvis piras",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -66578,10 +66578,10 @@
     },
     {
       "page_id": 3393,
-      "title": "Excerpt:",
+      "title": "Triunfo y tragedia de Erasmo de Rotterdam",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Triunfo y tragedia de Erasmo de Rotterdam",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -66872,10 +66872,10 @@
     },
     {
       "page_id": 3434,
-      "title": "Some reviews:",
+      "title": "Vor der Morgenröte",
       "fields": {
         "title": {
-          "extracted": "Some reviews:",
+          "extracted": "Vor der Morgenröte",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -67123,13 +67123,13 @@
     },
     {
       "page_id": 3447,
-      "title": "Stefan Zweig references:",
+      "title": "Ackermann, Gregor",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig references:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Ackermann, Gregor",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2016,
@@ -67431,10 +67431,10 @@
     },
     {
       "page_id": 3484,
-      "title": "[Das Lamm des Armen. Tragikomödie in drei Akten]. Translated by Leōn Koukoulas. 101p.",
+      "title": "Tou phtōchou t'arni",
       "fields": {
         "title": {
-          "extracted": "[Das Lamm des Armen. Tragikomödie in drei Akten]. Translated by Leōn Koukoulas. 101p.",
+          "extracted": "Tou phtōchou t'arni",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -67904,10 +67904,10 @@
     },
     {
       "page_id": 3510,
-      "title": "Quotation from and comments about this Stefan Zweig historical study in:",
+      "title": "Erasmus of Rotterdam",
       "fields": {
         "title": {
-          "extracted": "Quotation from and comments about this Stefan Zweig historical study in:",
+          "extracted": "Erasmus of Rotterdam",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -68436,13 +68436,13 @@
     },
     {
       "page_id": 3539,
-      "title": "Schachnovelle",
+      "title": "Freund-Spork, Walburga",
       "fields": {
         "title": {
-          "extracted": "Schachnovelle",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Freund-Spork, Walburga",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2002,
@@ -68500,10 +68500,10 @@
     },
     {
       "page_id": 3541,
-      "title": "Stefan Zweig \"Schachnovelle\"",
+      "title": "Literatur und Spannung",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig \"Schachnovelle\"",
+          "extracted": "Literatur und Spannung",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -72077,13 +72077,13 @@
     },
     {
       "page_id": 3782,
-      "title": "Discussion:",
+      "title": "Beware of Pity / Film and Stage Play",
       "fields": {
         "title": {
-          "extracted": "Discussion:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Beware of Pity / Film and Stage Play",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1946,
@@ -73401,13 +73401,13 @@
     },
     {
       "page_id": 3852,
-      "title": "Contains:",
+      "title": "Flo, Antoon",
       "fields": {
         "title": {
-          "extracted": "Contains:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Flo, Antoon",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1994,
@@ -74696,13 +74696,13 @@
     },
     {
       "page_id": 3936,
-      "title": "Stefan Zweig 1881 - 1942",
+      "title": "1996: Stefan Zweig 1881-1942",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig 1881 - 1942",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "1996: Stefan Zweig 1881-1942",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1996,
@@ -77438,10 +77438,10 @@
     },
     {
       "page_id": 4124,
-      "title": ", Vol. 35, pp. 113-296. Biographical note, p. 297",
+      "title": "Marie Antoinette. Portret van een middelmatig karakter",
       "fields": {
         "title": {
-          "extracted": ", Vol. 35, pp. 113-296. Biographical note, p. 297",
+          "extracted": "Marie Antoinette. Portret van een middelmatig karakter",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -77851,10 +77851,10 @@
     },
     {
       "page_id": 4161,
-      "title": "Condensed version:",
+      "title": "Maria Antonietta",
       "fields": {
         "title": {
-          "extracted": "Condensed version:",
+          "extracted": "Maria Antonietta",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -77957,13 +77957,13 @@
     },
     {
       "page_id": 4165,
-      "title": "[pre1969]: Maṭābi' Dār al-Kashshāf, Bairūt [Beirut]",
+      "title": "Arbaʿ wa-ʿishrūn sā‘ah min ḥayāt imra’ah",
       "fields": {
         "title": {
-          "extracted": "[pre1969]: Maṭābi' Dār al-Kashshāf, Bairūt [Beirut]",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Arbaʿ wa-ʿishrūn sā‘ah min ḥayāt imra’ah",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1960,
@@ -78456,13 +78456,13 @@
     },
     {
       "page_id": 4210,
-      "title": "Excerpt:''",
+      "title": "Marie Antoinette / Rumanian",
       "fields": {
         "title": {
-          "extracted": "Excerpt:''",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Marie Antoinette / Rumanian",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1934,
@@ -79397,10 +79397,10 @@
     },
     {
       "page_id": 4269,
-      "title": "[ca. 1996]: [s.n.], [s.l.]",
+      "title": "La ŝaknovelo",
       "fields": {
         "title": {
-          "extracted": "[ca. 1996]: [s.n.], [s.l.]",
+          "extracted": "La ŝaknovelo",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -79562,10 +79562,10 @@
     },
     {
       "page_id": 4281,
-      "title": "[ca. 1970]: Hinda Păkeṭa Buksa, Dillī [Delhi]",
+      "title": "Eka anajāna aurata kā ḵẖata",
       "fields": {
         "title": {
-          "extracted": "[ca. 1970]: Hinda Păkeṭa Buksa, Dillī [Delhi]",
+          "extracted": "Eka anajāna aurata kā ḵẖata",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -79786,10 +79786,10 @@
     },
     {
       "page_id": 4300,
-      "title": "Excerpt:",
+      "title": "Mariia Antuanetta",
       "fields": {
         "title": {
-          "extracted": "Excerpt:",
+          "extracted": "Mariia Antuanetta",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -80025,10 +80025,10 @@
     },
     {
       "page_id": 4321,
-      "title": "Editions:",
+      "title": "María Antonieta. Una vida involuntariamente heroica",
       "fields": {
         "title": {
-          "extracted": "Editions:",
+          "extracted": "María Antonieta. Una vida involuntariamente heroica",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -80206,10 +80206,10 @@
     },
     {
       "page_id": 4338,
-      "title": "Editions:",
+      "title": "Marie Antoinette. En olycklig drottnings historia",
       "fields": {
         "title": {
-          "extracted": "Editions:",
+          "extracted": "Marie Antoinette. En olycklig drottnings historia",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -81368,10 +81368,10 @@
     },
     {
       "page_id": 4404,
-      "title": "See",
+      "title": "Marie Antoinette: wajah seorang wanita",
       "fields": {
         "title": {
-          "extracted": "See",
+          "extracted": "Marie Antoinette: wajah seorang wanita",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -81552,13 +81552,13 @@
     },
     {
       "page_id": 4411,
-      "title": "Translation:",
+      "title": "Gorki, Maxim / Forewords",
       "fields": {
         "title": {
-          "extracted": "Translation:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Gorki, Maxim / Forewords",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1931,
@@ -82860,10 +82860,10 @@
     },
     {
       "page_id": 4486,
-      "title": "Subsequent editions:",
+      "title": "The World of Yesterday. An Autobiography",
       "fields": {
         "title": {
-          "extracted": "Subsequent editions:",
+          "extracted": "The World of Yesterday. An Autobiography",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -84246,10 +84246,10 @@
     },
     {
       "page_id": 4566,
-      "title": "Al-Fihris",
+      "title": "Risālah min imraʾah majhūlah",
       "fields": {
         "title": {
-          "extracted": "Al-Fihris",
+          "extracted": "Risālah min imraʾah majhūlah",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -85770,10 +85770,10 @@
     },
     {
       "page_id": 4648,
-      "title": "Mündəricat",
+      "title": "İblislə savaşanlar: Hölderlin, Kleyst, Niçşe",
       "fields": {
         "title": {
-          "extracted": "Mündəricat",
+          "extracted": "İblislə savaşanlar: Hölderlin, Kleyst, Niçşe",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -86077,10 +86077,10 @@
     },
     {
       "page_id": 4672,
-      "title": "Review:",
+      "title": "Only Yesterday",
       "fields": {
         "title": {
-          "extracted": "Review:",
+          "extracted": "Only Yesterday",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -88522,13 +88522,13 @@
     },
     {
       "page_id": 4824,
-      "title": "[1]",
+      "title": "Amok / Opera / Play",
       "fields": {
         "title": {
-          "extracted": "[1]",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Amok / Opera / Play",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1992,
@@ -89221,13 +89221,13 @@
     },
     {
       "page_id": 4858,
-      "title": "Quotation in Friulian:",
+      "title": "Plesnicar, Marco / Portelli, Ivan",
       "fields": {
         "title": {
-          "extracted": "Quotation in Friulian:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Plesnicar, Marco / Portelli, Ivan",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2015,
@@ -89523,13 +89523,13 @@
     },
     {
       "page_id": 4873,
-      "title": "See",
+      "title": "Angst / Dramatic Reading",
       "fields": {
         "title": {
-          "extracted": "See",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Angst / Dramatic Reading",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2017,
@@ -89550,10 +89550,10 @@
     },
     {
       "page_id": 4874,
-      "title": "See",
+      "title": "Casanova - Mesmer - Amerigo",
       "fields": {
         "title": {
-          "extracted": "See",
+          "extracted": "Casanova - Mesmer - Amerigo",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -89577,13 +89577,13 @@
     },
     {
       "page_id": 4875,
-      "title": "See",
+      "title": "Erasmus von Rotterdam / Dramatic Reading",
       "fields": {
         "title": {
-          "extracted": "See",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Erasmus von Rotterdam / Dramatic Reading",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2015,
@@ -89604,13 +89604,13 @@
     },
     {
       "page_id": 4876,
-      "title": "See",
+      "title": "Joseph Fouché / Dramatic Reading",
       "fields": {
         "title": {
-          "extracted": "See",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Joseph Fouché / Dramatic Reading",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2015,
@@ -89706,13 +89706,13 @@
     },
     {
       "page_id": 4882,
-      "title": "See",
+      "title": "Maria Stuart / Dramatic Reading",
       "fields": {
         "title": {
-          "extracted": "See",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Maria Stuart / Dramatic Reading",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2016,
@@ -89733,13 +89733,13 @@
     },
     {
       "page_id": 4883,
-      "title": "See",
+      "title": "Marie Antoinette / Dramatic Reading",
       "fields": {
         "title": {
-          "extracted": "See",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Marie Antoinette / Dramatic Reading",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2013,
@@ -92584,13 +92584,13 @@
     },
     {
       "page_id": 5027,
-      "title": "Inhaltsverzeichnis [Contents]:",
+      "title": "Moellmann, Franz",
       "fields": {
         "title": {
-          "extracted": "Inhaltsverzeichnis [Contents]:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Moellmann, Franz",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1996,
@@ -93205,10 +93205,10 @@
     },
     {
       "page_id": 5052,
-      "title": "Reprinted as",
+      "title": "Anthologie jüngster Lyrik",
       "fields": {
         "title": {
-          "extracted": "Reprinted as",
+          "extracted": "Anthologie jüngster Lyrik",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -95345,10 +95345,10 @@
     },
     {
       "page_id": 5150,
-      "title": "and the English intermediate translation Twenty-Four Hours of a Woman's Life. Illustrated. 149p.",
+      "title": "Bức thư của người đàn bà không quen",
       "fields": {
         "title": {
-          "extracted": "and the English intermediate translation Twenty-Four Hours of a Woman's Life. Illustrated. 149p.",
+          "extracted": "Bức thư của người đàn bà không quen",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -95634,10 +95634,10 @@
     },
     {
       "page_id": 5160,
-      "title": "Mục lục [Contents]:",
+      "title": "Stefan Zweig tuyển tập",
       "fields": {
         "title": {
-          "extracted": "Mục lục [Contents]:",
+          "extracted": "Stefan Zweig tuyển tập",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -95739,10 +95739,10 @@
     },
     {
       "page_id": 5167,
-      "title": "Mục lục [Contents]:",
+      "title": "Điều bí mật khủng khiếp. Truyện ngắn chọn lọc",
       "fields": {
         "title": {
-          "extracted": "Mục lục [Contents]:",
+          "extracted": "Điều bí mật khủng khiếp. Truyện ngắn chọn lọc",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -95876,10 +95876,10 @@
     },
     {
       "page_id": 5173,
-      "title": "Munderije [Contents]:",
+      "title": "Hësdashliq jinayiti",
       "fields": {
         "title": {
-          "extracted": "Munderije [Contents]:",
+          "extracted": "Hësdashliq jinayiti",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -96493,10 +96493,10 @@
     },
     {
       "page_id": 5203,
-      "title": "Munderije [Contents]:",
+      "title": "Natonush ayaldin kelgen xet (Avstriye)",
       "fields": {
         "title": {
-          "extracted": "Munderije [Contents]:",
+          "extracted": "Natonush ayaldin kelgen xet (Avstriye)",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -97074,10 +97074,10 @@
     },
     {
       "page_id": 5241,
-      "title": "Mục lục [Contents]:",
+      "title": "Những khoảng khắc sao sáng của nhân loại",
       "fields": {
         "title": {
-          "extracted": "Mục lục [Contents]:",
+          "extracted": "Những khoảng khắc sao sáng của nhân loại",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -97617,13 +97617,13 @@
     },
     {
       "page_id": 5265,
-      "title": "Mundarija [Contents]:",
+      "title": "Ayol hayotidan 24 soat. Novella va hikoyalar",
       "fields": {
         "title": {
-          "extracted": "Mundarija [Contents]:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Ayol hayotidan 24 soat. Novella va hikoyalar",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2012,
@@ -97994,10 +97994,10 @@
     },
     {
       "page_id": 5281,
-      "title": "Pasqyra e lëndës",
+      "title": "Gjeniu i një nate. Miniatura historike",
       "fields": {
         "title": {
-          "extracted": "Pasqyra e lëndës",
+          "extracted": "Gjeniu i një nate. Miniatura historike",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -98031,10 +98031,10 @@
     },
     {
       "page_id": 5282,
-      "title": "Pasqyra e lëndës",
+      "title": "E fshehta e Bajronit. Miniatura historike",
       "fields": {
         "title": {
-          "extracted": "Pasqyra e lëndës",
+          "extracted": "E fshehta e Bajronit. Miniatura historike",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -103740,10 +103740,10 @@
     },
     {
       "page_id": 5603,
-      "title": "Garchig [Contents]:",
+      "title": "Shatryn tuuj",
       "fields": {
         "title": {
-          "extracted": "Garchig [Contents]:",
+          "extracted": "Shatryn tuuj",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -114842,10 +114842,10 @@
     },
     {
       "page_id": 6307,
-      "title": "Premiere:",
+      "title": "Sternstunden der Menschheit",
       "fields": {
         "title": {
-          "extracted": "Premiere:",
+          "extracted": "Sternstunden der Menschheit",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -115875,13 +115875,13 @@
     },
     {
       "page_id": 6354,
-      "title": "Facsimiles:",
+      "title": "Bermann Fischer, Gottfried",
       "fields": {
         "title": {
-          "extracted": "Facsimiles:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Bermann Fischer, Gottfried",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1967,
@@ -116691,13 +116691,13 @@
     },
     {
       "page_id": 6423,
-      "title": "Englsih original:",
+      "title": "Russell, Archibald / Die visionäre Kunstphilosophie des William Blake",
       "fields": {
         "title": {
-          "extracted": "Englsih original:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Russell, Archibald / Die visionäre Kunstphilosophie des William Blake",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1906,
@@ -116867,13 +116867,13 @@
     },
     {
       "page_id": 6433,
-      "title": "Reprinted as:",
+      "title": "Lilien, Ephraim Mose",
       "fields": {
         "title": {
-          "extracted": "Reprinted as:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Lilien, Ephraim Mose",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1903,
@@ -117305,13 +117305,13 @@
     },
     {
       "page_id": 6462,
-      "title": "\"Dostojewski\" is reprinted in:",
+      "title": "Dostojewski, Fedor Mikhailovich",
       "fields": {
         "title": {
-          "extracted": "\"Dostojewski\" is reprinted in:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Dostojewski, Fedor Mikhailovich",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1921,
@@ -117600,10 +117600,10 @@
     },
     {
       "page_id": 6482,
-      "title": "Stefan Zweig's foreword reprinted as \"Chateaubriand\" in:",
+      "title": "Chateaubriand, François René Auguste",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig's foreword reprinted as \"Chateaubriand\" in:",
+          "extracted": "Chateaubriand, François René Auguste",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -118292,10 +118292,10 @@
     },
     {
       "page_id": 6527,
-      "title": "Contains:",
+      "title": "Die heilige Erde",
       "fields": {
         "title": {
-          "extracted": "Contains:",
+          "extracted": "Die heilige Erde",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -118361,10 +118361,10 @@
     },
     {
       "page_id": 6529,
-      "title": "Contains:",
+      "title": "Der Brunnen. Ein Buch Lyrik",
       "fields": {
         "title": {
-          "extracted": "Contains:",
+          "extracted": "Der Brunnen. Ein Buch Lyrik",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -119429,13 +119429,13 @@
     },
     {
       "page_id": 6592,
-      "title": "[2]",
+      "title": "Lafer, Celso / French",
       "fields": {
         "title": {
-          "extracted": "[2]",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Lafer, Celso / French",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2017,
@@ -119717,13 +119717,13 @@
     },
     {
       "page_id": 6603,
-      "title": "[VI]: Stefan Zweig",
+      "title": "L'unité spirituelle de l'Europe / Gr",
       "fields": {
         "title": {
-          "extracted": "[VI]: Stefan Zweig",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "L'unité spirituelle de l'Europe / Gr",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2017,
@@ -120678,13 +120678,13 @@
     },
     {
       "page_id": 6676,
-      "title": "Subsequent editions:",
+      "title": "Brod, Max",
       "fields": {
         "title": {
-          "extracted": "Subsequent editions:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Brod, Max",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1927,
@@ -120978,13 +120978,13 @@
     },
     {
       "page_id": 6688,
-      "title": "[1]",
+      "title": "Ehrenstein, Albert",
       "fields": {
         "title": {
-          "extracted": "[1]",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Ehrenstein, Albert",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1989,
@@ -121573,13 +121573,13 @@
     },
     {
       "page_id": 6713,
-      "title": "Stefan Zweig References - Illustrated Volumes:",
+      "title": "Frans Masereel: Graphische Meisterwerke",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig References - Illustrated Volumes:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Frans Masereel: Graphische Meisterwerke",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1989,
@@ -122135,13 +122135,13 @@
     },
     {
       "page_id": 6742,
-      "title": "Contains",
+      "title": "Verhaeren, Emile / Die schönsten Gedichte der Weltliteratur",
       "fields": {
         "title": {
-          "extracted": "Contains",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Verhaeren, Emile / Die schönsten Gedichte der Weltliteratur",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1936,
@@ -122167,13 +122167,13 @@
     },
     {
       "page_id": 6743,
-      "title": "Contains:",
+      "title": "Verhaeren, Emile / Heilige Erde",
       "fields": {
         "title": {
-          "extracted": "Contains:",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Verhaeren, Emile / Heilige Erde",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1912,
@@ -131472,10 +131472,10 @@
     },
     {
       "page_id": 7272,
-      "title": "tranScript",
+      "title": "\"Was wir wollen!\" Gedichte und Nachdichtungen",
       "fields": {
         "title": {
-          "extracted": "tranScript",
+          "extracted": "\"Was wir wollen!\" Gedichte und Nachdichtungen",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -135230,10 +135230,10 @@
     },
     {
       "page_id": 7503,
-      "title": "Briefe zum Judentum. Edited by Stefan Litt. 295p. Contains 10 photographs",
+      "title": "Briefe zum Judentum",
       "fields": {
         "title": {
-          "extracted": "Briefe zum Judentum. Edited by Stefan Litt. 295p. Contains 10 photographs",
+          "extracted": "Briefe zum Judentum",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"

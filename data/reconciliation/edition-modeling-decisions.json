@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "decision_scope": "Source-occurrence carriers and explicit contested-claim modeling required by the ratified Work/Edition model",
+  "sample_reconciliation": "data/output/edition-samples/reviews/reconciliation.json",
+  "sample_reconciliation_sha256": "388ade9b6a8ff93949c366472a2c5311cccd5749dc0ee5ad4f164db5c487f0cf",
+  "identity_boundary": "Carrier identifiers describe only the cited source occurrence. They do not merge bibliographic carrier identities across editions.",
+  "contested_claims": [
+    {
+      "edition_id": "klawiter:edition/4916-2016-b",
+      "claim_id": "klawiter:claim/work-binding/4916-2016-b",
+      "predicate": "schema:exampleOfWork",
+      "decision_status": "open",
+      "interpretations": [
+        {
+          "interpretation_id": "klawiter:interpretation/4916-2016-b/original-work",
+          "label": "Edition of the Schachnovelle work represented by source page 4916",
+          "proposed_object": "klawiter:work/4916",
+          "basis": "The bibliography places the publication on the Schachnovelle volume page."
+        },
+        {
+          "interpretation_id": "klawiter:interpretation/4916-2016-b/adaptation-work",
+          "label": "Edition of a distinct graphic-novel adaptation work",
+          "proposed_object": "klawiter:work-candidate/4916-2016-b-adaptation",
+          "basis": "The exact source calls the publication a graphic novel after Stefan Zweig and names an adaptor.",
+          "candidate_work": {
+            "work_id": "klawiter:work-candidate/4916-2016-b-adaptation",
+            "label": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)"
+          }
+        }
+      ]
+    }
+  ],
+  "carrier_relations": [
+    {
+      "edition_id": "klawiter:edition/54-1981-d",
+      "carrier_id": "klawiter:carrier/source-54-1981-d",
+      "source_label": "Kassette I: Stefan Zweig - Ein großer Europäer: Jubiläumskassette zum 100. Geburtstag"
+    },
+    {
+      "edition_id": "klawiter:edition/54-1982-a",
+      "carrier_id": "klawiter:carrier/source-54-1982-a",
+      "source_label": "Stefan Zweig (1881-1942). Jubiläumsausgabe in 12 Bänden / Kassette I"
+    },
+    {
+      "edition_id": "klawiter:edition/54-1995-a",
+      "carrier_id": "klawiter:carrier/source-54-1995-a",
+      "source_label": "Stefan Zweig. Vier Bände"
+    },
+    {
+      "edition_id": "klawiter:edition/54-2020-a",
+      "carrier_id": "klawiter:carrier/source-54-2020-a",
+      "source_label": "Stefan Zweig. Das erzählerische Werk in VII Bänden, Salzburger Ausgabe"
+    },
+    {
+      "edition_id": "klawiter:edition/56-1981-c",
+      "carrier_id": "klawiter:carrier/source-56-1981-c",
+      "source_label": "Kassette I: Stefan Zweig - Ein großer Europäer: Jubiläumskassette zum 100. Geburtstag"
+    },
+    {
+      "edition_id": "klawiter:edition/4916-1966-a",
+      "carrier_id": "klawiter:carrier/source-4916-1966-a",
+      "source_label": "Lockende Ferne. Die schönsten Reisegeschichten"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ Unit tests for pipeline/lib/vocabulary.py.
 Tests classification, category mapping, and ISO language conversion.
 """
 
-from lib.vocabulary import classify_time_period, category_to_entry_type, language_to_iso
+from lib.vocabulary import category_to_entry_type, classify_time_period, language_to_iso
 
 
 class TestClassifyTimePeriod:
@@ -35,22 +35,33 @@ class TestClassifyTimePeriod:
 class TestCategoryToEntryType:
     def test_fiction_prefix(self):
         assert category_to_entry_type("Fiction / Volumes (German)") == "fiction"
-        assert category_to_entry_type("Fiction / Individual Stories (Chinese)") == "fiction"
+        assert (
+            category_to_entry_type("Fiction / Individual Stories (Chinese)")
+            == "fiction"
+        )
 
     def test_essays(self):
         assert category_to_entry_type("Essays / Individual Essays (French)") == "essay"
 
     def test_historical_studies(self):
-        assert category_to_entry_type("Historical Studies / Volumes (Bulgarian)") == "historical-study"
+        assert (
+            category_to_entry_type("Historical Studies / Volumes (Bulgarian)")
+            == "historical-study"
+        )
 
     def test_secondary_literature(self):
-        assert category_to_entry_type("Secondary Literature / Authors (English)") == "secondary-literature"
+        assert (
+            category_to_entry_type("Secondary Literature / Authors (English)")
+            == "secondary-literature"
+        )
 
     def test_films(self):
         assert category_to_entry_type("Films / Plays / Operas") == "film"
 
     def test_collected_works(self):
-        assert category_to_entry_type("Collected and Selected Works") == "collected-works"
+        assert (
+            category_to_entry_type("Collected and Selected Works") == "collected-works"
+        )
 
     def test_poetry(self):
         assert category_to_entry_type("Poetry / Individual Poems (German)") == "poetry"

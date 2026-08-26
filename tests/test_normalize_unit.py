@@ -58,6 +58,7 @@ def reject_patterns():
 # normalize_location
 # ---------------------------------------------------------------------------
 
+
 class TestNormalizeLocation:
     def test_every_variant_maps_to_canonical(self, m, location_map):
         """Each variant in the real table maps to its canonical form."""
@@ -65,7 +66,10 @@ class TestNormalizeLocation:
             assert m.normalize_location(variant, location_map) == canonical
 
     def test_unknown_value_unchanged(self, m, location_map):
-        assert m.normalize_location("Some Unmapped City", location_map) == "Some Unmapped City"
+        assert (
+            m.normalize_location("Some Unmapped City", location_map)
+            == "Some Unmapped City"
+        )
 
     def test_empty_value_returned_as_is(self, m, location_map):
         assert m.normalize_location("", location_map) == ""
@@ -78,6 +82,7 @@ class TestNormalizeLocation:
 # ---------------------------------------------------------------------------
 # normalize_all_locations
 # ---------------------------------------------------------------------------
+
 
 class TestNormalizeAllLocations:
     def test_maps_and_dedupes(self, m, location_map):
@@ -92,7 +97,9 @@ class TestNormalizeAllLocations:
 
     def test_unmapped_locations_kept(self, m, location_map):
         value = json.dumps(["Some Unmapped City"])
-        assert json.loads(m.normalize_all_locations(value, location_map)) == ["Some Unmapped City"]
+        assert json.loads(m.normalize_all_locations(value, location_map)) == [
+            "Some Unmapped City"
+        ]
 
     def test_empty_value(self, m, location_map):
         assert m.normalize_all_locations("", location_map) == ""
@@ -109,6 +116,7 @@ class TestNormalizeAllLocations:
 # ---------------------------------------------------------------------------
 # clean_publisher
 # ---------------------------------------------------------------------------
+
 
 class TestCleanPublisher:
     def test_every_reject_pattern_strips_a_match(self, m, reject_patterns):
@@ -132,7 +140,10 @@ class TestCleanPublisher:
 
     def test_valid_publisher_kept(self, m, reject_patterns):
         assert m.clean_publisher("Insel-Verlag", reject_patterns) == "Insel-Verlag"
-        assert m.clean_publisher("S. Fischer Verlag", reject_patterns) == "S. Fischer Verlag"
+        assert (
+            m.clean_publisher("S. Fischer Verlag", reject_patterns)
+            == "S. Fischer Verlag"
+        )
 
     def test_empty_value(self, m, reject_patterns):
         assert m.clean_publisher("", reject_patterns) == ""
@@ -142,6 +153,7 @@ class TestCleanPublisher:
 # ---------------------------------------------------------------------------
 # normalize_publisher
 # ---------------------------------------------------------------------------
+
 
 class TestNormalizePublisher:
     def test_variant_maps_to_canonical(self, m):
@@ -163,9 +175,12 @@ class TestNormalizePublisher:
 # clean_translator
 # ---------------------------------------------------------------------------
 
+
 class TestCleanTranslator:
     def test_strips_afterword_suffix(self, m):
-        assert m.clean_translator("Hugo Hultenberg. Afterword by X") == "Hugo Hultenberg"
+        assert (
+            m.clean_translator("Hugo Hultenberg. Afterword by X") == "Hugo Hultenberg"
+        )
 
     def test_strips_introduction_suffix(self, m):
         assert m.clean_translator("Anthea Bell. Introduction by Y") == "Anthea Bell"
@@ -192,6 +207,7 @@ class TestCleanTranslator:
 # ---------------------------------------------------------------------------
 # validate_page_count
 # ---------------------------------------------------------------------------
+
 
 class TestValidatePageCount:
     def test_plausible_counts_kept(self, m):

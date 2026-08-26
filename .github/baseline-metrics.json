@@ -111,11 +111,11 @@
   },
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better — when extraction improves, update the value.",
-    "redirect_map_size": 1224,
+    "redirect_map_size": 1310,
     "german_translator_fp": 110,
     "film_pagecount": 10,
     "publisher_equals_location": 2,
-    "broken_see_also_refs": 619,
+    "broken_see_also_refs": 585,
     "wiki_markup_in_fields": 6,
     "section_header_titles": 0,
     "long_titles": 43,

@@ -1,0 +1,141 @@
+{
+  "@context": {
+    "dc": "http://purl.org/dc/terms/",
+    "earl": "http://www.w3.org/ns/earl#",
+    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/"
+  },
+  "@graph": [
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/edition-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-26T09:53:58.353148+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/work-editions"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/shacl"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/edition-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-26T09:53:58.353148+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/work-editions"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/selectors"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/edition-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-26T09:53:58.353148+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/work-editions"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/stableIdentifiers"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/edition-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-26T09:53:58.353148+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/work-editions"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/reviewQueue"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/edition-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-26T09:53:58.353148+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/work-editions"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/contestedClaims"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/edition-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-26T09:53:58.353148+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/work-editions"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/deterministicRebuild"
+      }
+    }
+  ]
+}

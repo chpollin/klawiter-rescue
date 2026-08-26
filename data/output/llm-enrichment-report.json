@@ -1,0 +1,27 @@
+{
+  "mode": "frozen",
+  "model": "gemini-3.1-flash-lite-preview",
+  "promptSha256": "c078baa8bde4baeb69d8fb4ac60c94e7326148882fe2c06ae418757c13d80fa1",
+  "frozenProvenance": {
+    "model": "gemini-3.1-flash-lite-preview",
+    "promptSha256": "c078baa8bde4baeb69d8fb4ac60c94e7326148882fe2c06ae418757c13d80fa1",
+    "parsedInputSha256": "a8b42caf8d4c0e6cecd3c47e305274f00a664b73e9f7c55aa0d95f8833807212",
+    "resultsSha256": "d8d8f477d28dceae5e2afffa89d96dd7baac1014cffa37bff5c46e18c766a070",
+    "frozenAt": "2026-08-21T17:51:38.288166+00:00",
+    "origin": "pre-existing resumable cache",
+    "originLimit": "The legacy cache did not record per-response timestamps or request identifiers. The frozen artifact preserves that limitation explicitly.",
+    "validation": "Every reused value is revalidated against the current source row and mojibake guard before merge."
+  },
+  "frozenResultCount": 3905,
+  "workingResultCount": 0,
+  "cacheMissCount": 19,
+  "networkCallsAllowed": false,
+  "networkCallsMade": false,
+  "rejectedCachedValues": 31,
+  "fieldsFilled": {
+    "publisher": 1004,
+    "location": 248,
+    "translator": 323,
+    "page_count": 35
+  }
+}

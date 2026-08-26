@@ -1,0 +1,563 @@
+[
+  {
+    "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3",
+    "@type": "klawiter:ContestedClaim",
+    "claimStatus": "contested",
+    "decisionStatus": "open",
+    "entityType": "location",
+    "interpretations": [
+      {
+        "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3/interpretation/Q113730",
+        "candidateId": "location/Tyresö/Q113730",
+        "candidateSource": "independent-review-proposal",
+        "label": "Tyresö Municipality",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q113730"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3/interpretation/Q21667397",
+        "candidateId": "location/Tyresö/Q21667397",
+        "candidateSource": "independent-review-proposal",
+        "label": "Tyresö district",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q21667397"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3/interpretation/no-assignment",
+        "candidateId": null,
+        "candidateSource": "fail-closed-alternative",
+        "label": "No canonical authority assignment in the current evidence",
+        "proposedObject": null,
+        "status": "contested"
+      }
+    ],
+    "predicate": {
+      "@id": "schema:sameAs"
+    },
+    "reviewHistory": [
+      {
+        "@id": "klawiter:review/reconciliation/c2e71f5d9a751732",
+        "action": "unresolved",
+        "decidedAt": null,
+        "decidedBy": "independent-verification-agent",
+        "decisionId": "location/Tyreso/unresolved",
+        "evidence": [
+          "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+        ]
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "@id": "klawiter:sourceOccurrence/location/249/61529/144",
+        "sourceLine": 144,
+        "sourceMatchMode": "exact-string",
+        "sourcePageId": 249,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Esperanto:''' \\\"Brulanta sekreto\\\" in [1].  [[Brulanta sekreto]] [Heronsgate/Rickmansworth, England, 1949], No. 2, pp. (7)-74.  Translated by Kathy R. and Paul E. Schwerin. [2]. ''Brulanta sekreto''. 83p. Tyresö, 2001. Translated by Kathy R. and Paul E. Schwerin",
+        "sourceTextId": 61529,
+        "sourceTextSha256": "8053d38277ee1df195a0cbf05dadfe8a213ea698ac4dbc3411a88f28a6c42d2e",
+        "sourceValue": "Tyresö"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/4169/57772/15",
+        "sourceLine": 15,
+        "sourceMatchMode": "exact-string",
+        "sourcePageId": 4169,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[2001]: Inko, Tyresö'''",
+        "sourceTextId": 57772,
+        "sourceTextSha256": "25823ca10de03e4c4bbfadb3fb02b7eedc780afb5e7f62bdc6ca2a47c391763c",
+        "sourceValue": "Tyresö"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/4269/37310/5",
+        "sourceLine": 5,
+        "sourceMatchMode": "exact-string",
+        "sourcePageId": 4269,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[2001]: Inko, Tyresö, Sweden'''",
+        "sourceTextId": 37310,
+        "sourceTextSha256": "bef4da4e8a0660cfdc8d8c16e4baf376bd56fd1804b076b1bbda819ca7557a37",
+        "sourceValue": "Tyresö"
+      }
+    ],
+    "subject": {
+      "@id": "klawiter:location/Tyresö"
+    }
+  },
+  {
+    "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7",
+    "@type": "klawiter:ContestedClaim",
+    "claimStatus": "contested",
+    "decisionStatus": "open",
+    "entityType": "location",
+    "interpretations": [
+      {
+        "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/Q472",
+        "candidateId": "location/Sofija, Varna/Q472",
+        "candidateSource": "independent-review-proposal",
+        "label": "Sofia",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q472"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/Q6506",
+        "candidateId": "location/Sofija, Varna/Q6506",
+        "candidateSource": "independent-review-proposal",
+        "label": "Varna",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q6506"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/no-assignment",
+        "candidateId": null,
+        "candidateSource": "fail-closed-alternative",
+        "label": "No canonical authority assignment in the current evidence",
+        "proposedObject": null,
+        "status": "contested"
+      }
+    ],
+    "predicate": {
+      "@id": "schema:sameAs"
+    },
+    "reviewHistory": [
+      {
+        "@id": "klawiter:review/reconciliation/2555757b78ef071e",
+        "action": "unresolved",
+        "decidedAt": null,
+        "decidedBy": "independent-verification-agent",
+        "decisionId": "location/Sofija-Varna/unresolved",
+        "evidence": [
+          "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+        ]
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "@id": "klawiter:sourceOccurrence/location/299/61398/46",
+        "sourceLine": 46,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 299,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Zakopanijat sveshtnik\\\" in  [1]. [[Igrachŭt na shakh  * Zakopanijat sveshtnik. Noveli]]  [Varna, 1992], No. 2, pp. 79-240.  Translated by An. Liubenova.  [2]. [[Zakopanijat sveshtnik. Legendi]]  [Sofija, 1946], No. 1, pp. 5-120. Translated by Dimitŭr Simidov",
+        "sourceTextId": 61398,
+        "sourceTextSha256": "d499c7774fa4e243598f6bc668f57c49bdb6ad6b816b9d0d3b157b7a96e501d6",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/1725/19466/11",
+        "sourceLine": 11,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 1725,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna'''",
+        "sourceTextId": 19466,
+        "sourceTextSha256": "b7289404e7867f1053ec7f714aa7a6c8f8a5692bc825f2afb1e2c0e361b1be34",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/1799/18911/11",
+        "sourceLine": 11,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 1799,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna'''",
+        "sourceTextId": 18911,
+        "sourceTextSha256": "b7289404e7867f1053ec7f714aa7a6c8f8a5692bc825f2afb1e2c0e361b1be34",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/2418/55869/29",
+        "sourceLine": 29,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 2418,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:'''  \\\"Knigata kato vŭvezhdane v sveta\\\" in [1].  [[Srešti]] [Sofija, 1947], No. 24, pp. 241-249 //  New translation: \\\"Knigata kato vrata kŭm sveta\\\" in  [2].[[Evropeïskata misŭl]] [Varna, 1985], No. 2, pp. 11-19.  [3].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 15, pp. 141-149",
+        "sourceTextId": 55869,
+        "sourceTextSha256": "bb3fcc7ae066bc2646e59850d3953d4227fcf194d59add19fca5f0488fcf3e11",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/3324/54121/22",
+        "sourceLine": 22,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 3324,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Evropeĭskata misŭl v  neĭnoto istorichesko razvitie\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 21, pp. 320-338. [2]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 8, pp. 58-78",
+        "sourceTextId": 54121,
+        "sourceTextSha256": "1a15f1ce4701a0abe03a3c71c843df5c30c331da3516a3a22880d27dd11e33fd",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6222/56114/72",
+        "sourceLine": 72,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6222,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Balzak\\\" in [1].  [[Evropeĭskata misŭl]] [Varna, 1985], No. 4, pp. 60-88. [2]. [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 3, pp. 85-110. [3]. [[Romanŭt na edin zhivot. Balzak]]  [Sofija, 1947 and 1960]. [4]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 30, pp. 305-335. [5].  [[Trima maĭstori: Balzak - Dikens - Dostoevski]] [Sofija, 1946], No. 3, pp. 35-70",
+        "sourceTextId": 56114,
+        "sourceTextSha256": "fbda5be943b4fb227cd36873b419ce472243f4d45c263be5b2b29d2f7f654797",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6242/55044/39",
+        "sourceLine": 39,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6242,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Romen Rolan\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 12, pp. 205-220. [2].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]]  [Sofija, 1987-1989], Vol. 4, No. 14, pp. 125-140",
+        "sourceTextId": 55044,
+        "sourceTextSha256": "3a9a531e29ea7a910c908e317124b6cb92a4d64bbbcc1e71c714f516f16b995c",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6448/56242/33",
+        "sourceLine": 33,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6448,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Dikenz\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 5, pp. 89-115. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 4, pp. 111-134. [3].  [[Trima maĭstori: Balzak  - Dikenz  - Dostoevski]]   [Sofija, 1946], No. 4, pp. 71-103",
+        "sourceTextId": 56242,
+        "sourceTextSha256": "23bde594dc70e4212e829fc5ba6651e0e567a6b65e1ec3385f52657da53f09bb",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6820/61508/50",
+        "sourceLine": 50,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6820,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Igrachŭt na shakh\\\" in [1].  [[Igrachŭt na shakh * Zakopanijat sveshtnik. Noveli]] [Varna, 1992], No. 1, pp. 3-78. Translated by An. Liubenova. [2]. [[Zvezdni migove]] [Plovdiv, 1992], No. 7, pp. 65-102. Translated by Rumiana Khristova. '''See:''' [[Igrachŭt na shakh]]  //   \\\"Shakhmatna novela\\\" in [3]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], No. 12, pp. 542-600. Translated by Ventseslav Konstantinov. '''See:''' [[Shakhmatistŭt. Novela]] and [[Shakhmatna novela]]",
+        "sourceTextId": 61508,
+        "sourceTextSha256": "5177bd90bcc91506337363da86f91893e49df0f9047b5b7292d5094d097f16ba",
+        "sourceValue": "Sofija, Varna"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/7207/55478/46",
+        "sourceLine": 46,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 7207,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Monten\\\" in [1]. [[Evropeĭskata misŭl]] [Varna, 1985], No. 20, pp. 260-319. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 2, pp. 27-82",
+        "sourceTextId": 55478,
+        "sourceTextSha256": "9f58d422c119448aa176b7eb1dd2d098f9b0394d9b6a1474c12ce3451ad0721d",
+        "sourceValue": "Sofija, Varna"
+      }
+    ],
+    "subject": {
+      "@id": "klawiter:location/Sofija, Varna"
+    }
+  },
+  {
+    "@id": "klawiter:claim/reconciliation/location/d72833396adc8499",
+    "@type": "klawiter:ContestedClaim",
+    "claimStatus": "contested",
+    "decisionStatus": "open",
+    "entityType": "location",
+    "interpretations": [
+      {
+        "@id": "klawiter:claim/reconciliation/location/d72833396adc8499/interpretation/Q1055925",
+        "candidateId": "location/Saint-Aignan/Q1055925",
+        "candidateSource": "independent-review-proposal",
+        "label": "Mont-Saint-Aignan",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q1055925"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/d72833396adc8499/interpretation/no-assignment",
+        "candidateId": null,
+        "candidateSource": "fail-closed-alternative",
+        "label": "No canonical authority assignment in the current evidence",
+        "proposedObject": null,
+        "status": "contested"
+      }
+    ],
+    "predicate": {
+      "@id": "schema:sameAs"
+    },
+    "reviewHistory": [
+      {
+        "@id": "klawiter:review/reconciliation/b5bc4dc8b99535b7",
+        "action": "unresolved",
+        "decidedAt": null,
+        "decidedBy": "independent-verification-agent",
+        "decisionId": "location/Saint-Aignan/unresolved",
+        "evidence": [
+          "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+        ]
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "@id": "klawiter:sourceOccurrence/location/4819/34446/1",
+        "sourceLine": 1,
+        "sourceMatchMode": "exact-string",
+        "sourcePageId": 4819,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1993]: l'Université de Rouen - Haute Normandie, Saint-Aignan'''",
+        "sourceTextId": 34446,
+        "sourceTextSha256": "55197b89e54f3a7222113c188398a279e4defcc1615e49682b6e150dcd2cdee5",
+        "sourceValue": "Saint-Aignan"
+      }
+    ],
+    "subject": {
+      "@id": "klawiter:location/Saint-Aignan"
+    }
+  },
+  {
+    "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9",
+    "@type": "klawiter:ContestedClaim",
+    "claimStatus": "contested",
+    "decisionStatus": "open",
+    "entityType": "location",
+    "interpretations": [
+      {
+        "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/Q37701",
+        "candidateId": "location/Bloemfontein, Kaapstad/Q37701",
+        "candidateSource": "independent-review-proposal",
+        "label": "Bloemfontein",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q37701"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/Q5465",
+        "candidateId": "location/Bloemfontein, Kaapstad/Q5465",
+        "candidateSource": "independent-review-proposal",
+        "label": "Cape Town",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q5465"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/no-assignment",
+        "candidateId": null,
+        "candidateSource": "fail-closed-alternative",
+        "label": "No canonical authority assignment in the current evidence",
+        "proposedObject": null,
+        "status": "contested"
+      }
+    ],
+    "predicate": {
+      "@id": "schema:sameAs"
+    },
+    "reviewHistory": [
+      {
+        "@id": "klawiter:review/reconciliation/55bfb7a5fa7f12fa",
+        "action": "unresolved",
+        "decidedAt": null,
+        "decidedBy": "independent-verification-agent",
+        "decisionId": "location/Bloemfontein-Kaapstad/unresolved",
+        "evidence": [
+          "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+        ]
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "@id": "klawiter:sourceOccurrence/location/4209/42182/1",
+        "sourceLine": 1,
+        "sourceMatchMode": "exact-string",
+        "sourcePageId": 4209,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''",
+        "sourceTextId": 42182,
+        "sourceTextSha256": "50b82822a302197f7c788bec90aeb49b065129dfa970072f72a33f5b456c56f5",
+        "sourceValue": "Bloemfontein, Kaapstad"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/5330/40807/1",
+        "sourceLine": 1,
+        "sourceMatchMode": "exact-string",
+        "sourcePageId": 5330,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''",
+        "sourceTextId": 40807,
+        "sourceTextSha256": "50b82822a302197f7c788bec90aeb49b065129dfa970072f72a33f5b456c56f5",
+        "sourceValue": "Bloemfontein, Kaapstad"
+      }
+    ],
+    "subject": {
+      "@id": "klawiter:location/Bloemfontein, Kaapstad"
+    }
+  },
+  {
+    "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9",
+    "@type": "klawiter:ContestedClaim",
+    "claimStatus": "contested",
+    "decisionStatus": "open",
+    "entityType": "location",
+    "interpretations": [
+      {
+        "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/Q6506",
+        "candidateId": "location/Varna, Sofija/Q6506",
+        "candidateSource": "independent-review-proposal",
+        "label": "Varna",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q6506"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/Q472",
+        "candidateId": "location/Varna, Sofija/Q472",
+        "candidateSource": "independent-review-proposal",
+        "label": "Sofia",
+        "proposedObject": {
+          "@id": "https://www.wikidata.org/entity/Q472"
+        },
+        "status": "contested"
+      },
+      {
+        "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/no-assignment",
+        "candidateId": null,
+        "candidateSource": "fail-closed-alternative",
+        "label": "No canonical authority assignment in the current evidence",
+        "proposedObject": null,
+        "status": "contested"
+      }
+    ],
+    "predicate": {
+      "@id": "schema:sameAs"
+    },
+    "reviewHistory": [
+      {
+        "@id": "klawiter:review/reconciliation/1a0a02215105f3e0",
+        "action": "unresolved",
+        "decidedAt": null,
+        "decidedBy": "independent-verification-agent",
+        "decisionId": "location/Varna-Sofija/unresolved",
+        "evidence": [
+          "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+        ]
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "@id": "klawiter:sourceOccurrence/location/299/61398/46",
+        "sourceLine": 46,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 299,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Zakopanijat sveshtnik\\\" in  [1]. [[Igrachŭt na shakh  * Zakopanijat sveshtnik. Noveli]]  [Varna, 1992], No. 2, pp. 79-240.  Translated by An. Liubenova.  [2]. [[Zakopanijat sveshtnik. Legendi]]  [Sofija, 1946], No. 1, pp. 5-120. Translated by Dimitŭr Simidov",
+        "sourceTextId": 61398,
+        "sourceTextSha256": "d499c7774fa4e243598f6bc668f57c49bdb6ad6b816b9d0d3b157b7a96e501d6",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/1725/19466/11",
+        "sourceLine": 11,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 1725,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna'''",
+        "sourceTextId": 19466,
+        "sourceTextSha256": "b7289404e7867f1053ec7f714aa7a6c8f8a5692bc825f2afb1e2c0e361b1be34",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/1799/18911/11",
+        "sourceLine": 11,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 1799,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna'''",
+        "sourceTextId": 18911,
+        "sourceTextSha256": "b7289404e7867f1053ec7f714aa7a6c8f8a5692bc825f2afb1e2c0e361b1be34",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/2418/55869/29",
+        "sourceLine": 29,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 2418,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:'''  \\\"Knigata kato vŭvezhdane v sveta\\\" in [1].  [[Srešti]] [Sofija, 1947], No. 24, pp. 241-249 //  New translation: \\\"Knigata kato vrata kŭm sveta\\\" in  [2].[[Evropeïskata misŭl]] [Varna, 1985], No. 2, pp. 11-19.  [3].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 15, pp. 141-149",
+        "sourceTextId": 55869,
+        "sourceTextSha256": "bb3fcc7ae066bc2646e59850d3953d4227fcf194d59add19fca5f0488fcf3e11",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/3324/54121/22",
+        "sourceLine": 22,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 3324,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Evropeĭskata misŭl v  neĭnoto istorichesko razvitie\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 21, pp. 320-338. [2]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 8, pp. 58-78",
+        "sourceTextId": 54121,
+        "sourceTextSha256": "1a15f1ce4701a0abe03a3c71c843df5c30c331da3516a3a22880d27dd11e33fd",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6222/56114/72",
+        "sourceLine": 72,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6222,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Balzak\\\" in [1].  [[Evropeĭskata misŭl]] [Varna, 1985], No. 4, pp. 60-88. [2]. [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 3, pp. 85-110. [3]. [[Romanŭt na edin zhivot. Balzak]]  [Sofija, 1947 and 1960]. [4]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 30, pp. 305-335. [5].  [[Trima maĭstori: Balzak - Dikens - Dostoevski]] [Sofija, 1946], No. 3, pp. 35-70",
+        "sourceTextId": 56114,
+        "sourceTextSha256": "fbda5be943b4fb227cd36873b419ce472243f4d45c263be5b2b29d2f7f654797",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6242/55044/39",
+        "sourceLine": 39,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6242,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Romen Rolan\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 12, pp. 205-220. [2].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]]  [Sofija, 1987-1989], Vol. 4, No. 14, pp. 125-140",
+        "sourceTextId": 55044,
+        "sourceTextSha256": "3a9a531e29ea7a910c908e317124b6cb92a4d64bbbcc1e71c714f516f16b995c",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6448/56242/33",
+        "sourceLine": 33,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6448,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Dikenz\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 5, pp. 89-115. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 4, pp. 111-134. [3].  [[Trima maĭstori: Balzak  - Dikenz  - Dostoevski]]   [Sofija, 1946], No. 4, pp. 71-103",
+        "sourceTextId": 56242,
+        "sourceTextSha256": "23bde594dc70e4212e829fc5ba6651e0e567a6b65e1ec3385f52657da53f09bb",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/6820/61508/50",
+        "sourceLine": 50,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 6820,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Igrachŭt na shakh\\\" in [1].  [[Igrachŭt na shakh * Zakopanijat sveshtnik. Noveli]] [Varna, 1992], No. 1, pp. 3-78. Translated by An. Liubenova. [2]. [[Zvezdni migove]] [Plovdiv, 1992], No. 7, pp. 65-102. Translated by Rumiana Khristova. '''See:''' [[Igrachŭt na shakh]]  //   \\\"Shakhmatna novela\\\" in [3]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], No. 12, pp. 542-600. Translated by Ventseslav Konstantinov. '''See:''' [[Shakhmatistŭt. Novela]] and [[Shakhmatna novela]]",
+        "sourceTextId": 61508,
+        "sourceTextSha256": "5177bd90bcc91506337363da86f91893e49df0f9047b5b7292d5094d097f16ba",
+        "sourceValue": "Varna, Sofija"
+      },
+      {
+        "@id": "klawiter:sourceOccurrence/location/7207/55478/46",
+        "sourceLine": 46,
+        "sourceMatchMode": "component-set",
+        "sourcePageId": 7207,
+        "sourcePath": "data/intermediate/04_classified.csv",
+        "sourceText": "'''Bulgarian:''' \\\"Monten\\\" in [1]. [[Evropeĭskata misŭl]] [Varna, 1985], No. 20, pp. 260-319. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 2, pp. 27-82",
+        "sourceTextId": 55478,
+        "sourceTextSha256": "9f58d422c119448aa176b7eb1dd2d098f9b0394d9b6a1474c12ce3451ad0721d",
+        "sourceValue": "Varna, Sofija"
+      }
+    ],
+    "subject": {
+      "@id": "klawiter:location/Varna, Sofija"
+    }
+  }
+]

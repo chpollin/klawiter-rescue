@@ -16,12 +16,18 @@ Output: data/output/klawiter.jsonld (complete dataset)
 import json
 import os
 import sys
-from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    setup_logging, load_csv, csv_bool, write_json, STEP_04_OUTPUT,
-    OUTPUT_JSONLD, OUTPUT_ENTRIES_DIR, OUTPUT_FRONTEND_JSON, LOCATIONS_JSON,
+    OUTPUT_ENTRIES_DIR,
+    OUTPUT_FRONTEND_JSON,
+    OUTPUT_JSONLD,
+    OUTPUT_PUBLISHABLE_LINKS,
+    STEP_04_OUTPUT,
+    csv_bool,
+    load_csv,
+    setup_logging,
+    write_json,
 )
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP
 
@@ -34,27 +40,21 @@ STEFAN_ZWEIG = {
     "sameAs": "https://www.wikidata.org/entity/Q78491",
 }
 
-WIKIDATA_ENTITY_PREFIX = "http://www.wikidata.org/entity/"
-
 
 def load_location_wikidata():
-    """Load location → Wikidata URI map from the reconciled locations file.
-
-    Returns an empty dict (with a warning) if the file is missing, so the
-    pipeline degrades gracefully without locationSameAs rather than failing.
-    """
-    if not os.path.exists(LOCATIONS_JSON):
-        log.warning(f"Locations file not found at {LOCATIONS_JSON}; "
-                    "locationSameAs will be omitted")
-        return {}
-    with open(LOCATIONS_JSON, 'r', encoding='utf-8') as f:
-        locations = json.load(f)
-    uri_map = {}
-    for name, info in locations.items():
-        qid = info.get('wikidataId')
-        if qid:
-            uri_map[name] = WIKIDATA_ENTITY_PREFIX + qid
-    log.info(f"Loaded {len(uri_map)} Wikidata-linked locations")
+    """Load only reviewed and publishable location links from Gate 2."""
+    if not os.path.exists(OUTPUT_PUBLISHABLE_LINKS):
+        raise FileNotFoundError(
+            "Gate 2 publishable links are missing. Run reconcile_entities.py "
+            "before stage 05."
+        )
+    with open(OUTPUT_PUBLISHABLE_LINKS, "r", encoding="utf-8") as handle:
+        document = json.load(handle)
+    uri_map = {
+        name: decision["uri"]
+        for name, decision in document.get("locations", {}).items()
+    }
+    log.info("Loaded %d reviewed Wikidata location links", len(uri_map))
     return uri_map
 
 
@@ -72,9 +72,9 @@ def safe_json_parse(value):
 def row_to_jsonld(row, location_uris=None):
     """Convert a CSV row to a JSON-LD entry using Schema.org + DC + klawiter: blend."""
     location_uris = location_uris or {}
-    page_id = row['page_id']
-    entry_type = row.get('entry_type', 'other')
-    namespace = int(row.get('page_namespace', 0))
+    page_id = row["page_id"]
+    entry_type = row.get("entry_type", "other")
+    namespace = int(row.get("page_namespace", 0))
 
     # @type: array of Schema.org + klawiter: types
     type_array = SCHEMA_TYPE_MAP.get(entry_type, ["schema:CreativeWork"])
@@ -88,16 +88,16 @@ def row_to_jsonld(row, location_uris=None):
     }
 
     # Title → schema:name
-    title = row.get('title', '')
+    title = row.get("title", "")
     if title:
         entry["name"] = title
 
-    original_title = row.get('original_title', '')
+    original_title = row.get("original_title", "")
     if original_title:
         entry["originalTitle"] = original_title
 
     # Text ID provenance
-    text_id = row.get('text_id', '')
+    text_id = row.get("text_id", "")
     if text_id:
         try:
             entry["sourceTextId"] = int(text_id)
@@ -105,42 +105,47 @@ def row_to_jsonld(row, location_uris=None):
             pass
 
     # Redirect
-    if csv_bool(row.get('is_redirect')):
+    if csv_bool(row.get("is_redirect")):
         entry["isRedirect"] = True
-        redirect_target = row.get('redirect_target', '')
+        redirect_target = row.get("redirect_target", "")
         if redirect_target:
             entry["redirectTarget"] = redirect_target
         return entry
 
     # Author (Stefan Zweig for primary works, omit for secondary literature)
-    if entry_type not in ('secondary-literature', 'historical-study', 'symposium',
-                          'redirect', 'other'):
+    if entry_type not in (
+        "secondary-literature",
+        "historical-study",
+        "symposium",
+        "redirect",
+        "other",
+    ):
         entry["author"] = STEFAN_ZWEIG
 
     # Year → schema:datePublished
-    year = row.get('year', '')
+    year = row.get("year", "")
     if year:
         try:
             entry["datePublished"] = str(int(year))
         except (ValueError, TypeError):
             pass
 
-    all_years = safe_json_parse(row.get('all_years', ''))
+    all_years = safe_json_parse(row.get("all_years", ""))
     if all_years and len(all_years) > 1:
         entry["allYears"] = all_years
 
     # Time period (domain-specific)
-    time_period = row.get('time_period', '')
+    time_period = row.get("time_period", "")
     if time_period:
         entry["timePeriod"] = time_period
 
     # Publisher → schema:publisher
-    publisher = row.get('publisher', '')
+    publisher = row.get("publisher", "")
     if publisher:
         entry["publisher"] = publisher
 
     # Location → schema:locationCreated
-    location = row.get('location', '')
+    location = row.get("location", "")
     if location:
         entry["locationCreated"] = location
         # Wikidata URI of the primary publication location (klawiter:locationSameAs)
@@ -148,20 +153,20 @@ def row_to_jsonld(row, location_uris=None):
         if location_uri:
             entry["locationSameAs"] = location_uri
 
-    all_locations = safe_json_parse(row.get('all_locations', ''))
+    all_locations = safe_json_parse(row.get("all_locations", ""))
     if all_locations and len(all_locations) > 1:
         entry["allLocations"] = all_locations
 
     # Language → schema:inLanguage + klawiter:languageCode
-    language = row.get('language', '')
-    language_iso = row.get('language_iso', '')
+    language = row.get("language", "")
+    language_iso = row.get("language_iso", "")
     if language:
         entry["inLanguage"] = language
     if language_iso:
         entry["languageCode"] = language_iso
 
     # Page count → schema:numberOfPages
-    page_count = row.get('page_count', '')
+    page_count = row.get("page_count", "")
     if page_count:
         try:
             entry["numberOfPages"] = int(page_count)
@@ -169,44 +174,44 @@ def row_to_jsonld(row, location_uris=None):
             pass
 
     # Translator → schema:translator
-    translator = row.get('translator', '')
+    translator = row.get("translator", "")
     if translator:
         entry["translator"] = translator
 
     # Categories (domain-specific)
-    categories = safe_json_parse(row.get('categories', ''))
+    categories = safe_json_parse(row.get("categories", ""))
     if categories:
         entry["categories"] = categories
 
-    main_category = row.get('main_category', '')
+    main_category = row.get("main_category", "")
     if main_category:
         entry["mainCategory"] = main_category
 
     # Cross-references
-    see_also = safe_json_parse(row.get('see_also', ''))
+    see_also = safe_json_parse(row.get("see_also", ""))
     if see_also:
         entry["isRelatedTo"] = see_also
 
-    reprints = safe_json_parse(row.get('reprints', ''))
+    reprints = safe_json_parse(row.get("reprints", ""))
     if reprints:
         entry["reprints"] = reprints
 
-    translations = safe_json_parse(row.get('translations', ''))
+    translations = safe_json_parse(row.get("translations", ""))
     if translations:
         entry["workTranslation"] = translations
 
-    content_items = safe_json_parse(row.get('content_items', ''))
+    content_items = safe_json_parse(row.get("content_items", ""))
     if content_items:
         entry["hasPart"] = content_items
 
     # Full bibliographic entry → dcterms:bibliographicCitation
-    clean_content = row.get('clean_content', '')
+    clean_content = row.get("clean_content", "")
     if clean_content:
         entry["bibliographicCitation"] = clean_content
 
     # Blob ID provenance
-    blob_id = row.get('blob_id', '')
-    if blob_id and blob_id != '-1':
+    blob_id = row.get("blob_id", "")
+    if blob_id and blob_id != "-1":
         try:
             entry["sourceBlobId"] = int(blob_id)
         except (ValueError, TypeError):
@@ -237,7 +242,7 @@ def make_frontend_entry(jsonld_entry):
     """
     e = {}
     for key, val in jsonld_entry.items():
-        if key.startswith('@'):
+        if key.startswith("@"):
             e[key] = val
             continue
         # Map to frontend key name, or keep as-is
@@ -286,14 +291,16 @@ def main():
     # Write individual entry files
     os.makedirs(OUTPUT_ENTRIES_DIR, exist_ok=True)
     for entry in entries:
-        entry_id = entry.get('@id', '').split('/')[-1]
+        entry_id = entry.get("@id", "").split("/")[-1]
         if entry_id:
             entry_file = {**CONTEXT, **entry}
-            path = os.path.join(OUTPUT_ENTRIES_DIR, f'{entry_id}.jsonld')
-            with open(path, 'w', encoding='utf-8') as f:
+            path = os.path.join(OUTPUT_ENTRIES_DIR, f"{entry_id}.jsonld")
+            with open(path, "w", encoding="utf-8") as f:
                 json.dump(entry_file, f, ensure_ascii=False, indent=2)
 
-    log.info(f"Individual entries written to {OUTPUT_ENTRIES_DIR}/ ({len(entries)} files)")
+    log.info(
+        f"Individual entries written to {OUTPUT_ENTRIES_DIR}/ ({len(entries)} files)"
+    )
 
     # Write frontend-optimized JSON
     os.makedirs(os.path.dirname(OUTPUT_FRONTEND_JSON), exist_ok=True)
@@ -303,18 +310,18 @@ def main():
     title_to_pid = {}
 
     for e in entries:
-        if not e.get('isRedirect'):
+        if not e.get("isRedirect"):
             fe = make_frontend_entry(e)
             non_redirect_entries.append(fe)
-            title = e.get('name', '')
-            pid = e.get('sourcePageId')
+            title = e.get("name", "")
+            pid = e.get("sourcePageId")
             if title and pid:
                 title_to_pid[title] = pid
 
     for e in entries:
-        if e.get('isRedirect'):
-            target_title = e.get('name', '')
-            source_title = e.get('redirectTarget', '') or target_title
+        if e.get("isRedirect"):
+            target_title = e.get("name", "")
+            source_title = e.get("redirectTarget", "") or target_title
             target_pid = title_to_pid.get(target_title)
             if target_pid:
                 redirect_map[target_title] = target_pid
@@ -322,17 +329,21 @@ def main():
                     redirect_map[source_title] = target_pid
 
     # Compute _meta for frontend data verification
-    ns0 = [e for e in non_redirect_entries if e.get('pageNamespace') == 0]
+    ns0 = [e for e in non_redirect_entries if e.get("pageNamespace") == 0]
     ns0_count = len(ns0)
 
     coverage_fields = {
-        'title': 'title', 'year': 'year', 'publisher': 'publisher',
-        'location': 'location', 'language': 'language',
-        'translator': 'translator', 'pageCount': 'pageCount',
+        "title": "title",
+        "year": "year",
+        "publisher": "publisher",
+        "location": "location",
+        "language": "language",
+        "translator": "translator",
+        "pageCount": "pageCount",
     }
     field_coverage = {}
     for label, key in coverage_fields.items():
-        count = sum(1 for e in ns0 if e.get(key) not in (None, ''))
+        count = sum(1 for e in ns0 if e.get(key) not in (None, ""))
         field_coverage[label] = {
             "count": count,
             "pct": round(100 * count / ns0_count, 1) if ns0_count else 0,
@@ -340,21 +351,23 @@ def main():
 
     type_counts = {}
     for e in ns0:
-        t = e.get('entryType', 'unknown')
+        t = e.get("entryType", "unknown")
         type_counts[t] = type_counts.get(t, 0) + 1
 
-    years = [e['year'] for e in ns0 if e.get('year')]
-    languages = set(e.get('language') for e in ns0 if e.get('language'))
-    locations = set(e.get('location') for e in ns0 if e.get('location'))
+    years = [e["year"] for e in ns0 if e.get("year")]
+    languages = set(e.get("language") for e in ns0 if e.get("language"))
+    locations = set(e.get("location") for e in ns0 if e.get("location"))
 
     _meta = {
-        "generated": datetime.now(timezone.utc).isoformat(timespec='seconds'),
         "ns0Count": ns0_count,
         "totalCount": len(non_redirect_entries),
         "redirectCount": len(redirect_map),
         "fieldCoverage": field_coverage,
         "entryTypes": type_counts,
-        "yearRange": {"min": min(years) if years else None, "max": max(years) if years else None},
+        "yearRange": {
+            "min": min(years) if years else None,
+            "max": max(years) if years else None,
+        },
         "languageCount": len(languages),
         "locationCount": len(locations),
     }
@@ -369,7 +382,7 @@ def main():
         "redirects": redirect_map,
     }
 
-    write_json(OUTPUT_FRONTEND_JSON, frontend_data, separators=(',', ':'))
+    write_json(OUTPUT_FRONTEND_JSON, frontend_data, separators=(",", ":"))
 
     size_mb = os.path.getsize(OUTPUT_FRONTEND_JSON) / 1024 / 1024
     log.info(f"Frontend JSON written to {OUTPUT_FRONTEND_JSON} ({size_mb:.1f} MB)")
@@ -380,13 +393,15 @@ def main():
     types = {}
     redirects = 0
     for e in entries:
-        t = e.get('entryType', 'unknown')
+        t = e.get("entryType", "unknown")
         types[t] = types.get(t, 0) + 1
-        if e.get('isRedirect'):
+        if e.get("isRedirect"):
             redirects += 1
 
-    log.info(f"JSON-LD conversion complete: {len(entries)} entries, {redirects} redirects")
+    log.info(
+        f"JSON-LD conversion complete: {len(entries)} entries, {redirects} redirects"
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

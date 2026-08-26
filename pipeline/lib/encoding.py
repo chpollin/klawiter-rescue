@@ -28,7 +28,7 @@ HTML_ENTITIES = {
 # Matching whole runs lets one pass repair 2-, 3- and 4-byte sequences alike
 # (umlauts, the Latin Extended-A diacritics of transliterated titles, and
 # double-encoded smart quotes).
-_MOJIBAKE_RE = re.compile('[\u00c2-\u00f4][\u0080-\u00bf]+')
+_MOJIBAKE_RE = re.compile("[\u00c2-\u00f4][\u0080-\u00bf]+")
 
 
 def _redecode_run(match):
@@ -42,10 +42,10 @@ def _redecode_run(match):
     """
     run = match.group(0)
     try:
-        fixed = run.encode('latin-1').decode('utf-8')
+        fixed = run.encode("latin-1").decode("utf-8")
     except (UnicodeDecodeError, UnicodeEncodeError):
         return run
-    if any('\u0080' <= c <= '\u009f' for c in fixed):
+    if any("\u0080" <= c <= "\u009f" for c in fixed):
         return run
     return fixed
 
@@ -62,7 +62,7 @@ def fix_mojibake(text):
     if not _MOJIBAKE_RE.search(text):
         return text  # No Mojibake detected, skip
     result = _MOJIBAKE_RE.sub(_redecode_run, text)
-    return unicodedata.normalize('NFC', result)
+    return unicodedata.normalize("NFC", result)
 
 
 def fix_html_entities(text):
@@ -73,8 +73,8 @@ def fix_html_entities(text):
     for entity, char in HTML_ENTITIES.items():
         result = result.replace(entity, char)
     # Numeric entities
-    result = re.sub(r'&#(\d+);', lambda m: chr(int(m.group(1))), result)
-    result = re.sub(r'&#x([0-9a-fA-F]+);', lambda m: chr(int(m.group(1), 16)), result)
+    result = re.sub(r"&#(\d+);", lambda m: chr(int(m.group(1))), result)
+    result = re.sub(r"&#x([0-9a-fA-F]+);", lambda m: chr(int(m.group(1), 16)), result)
     return result
 
 
@@ -106,32 +106,57 @@ def has_mojibake(text):
 
 # Common mojibake substitution pairs for encoding-aware comparison
 ENCODING_PAIRS = [
-    ('ä', 'Ã¤'), ('ö', 'Ã¶'), ('ü', 'Ã¼'), ('ß', 'Ã\x9f'),
-    ('é', 'Ã©'), ('è', 'Ã¨'), ('ê', 'Ãª'), ('ë', 'Ã«'),
-    ('á', 'Ã¡'), ('à', 'Ã '), ('â', 'Ã¢'), ('ã', 'Ã£'),
-    ('ó', 'Ã³'), ('ò', 'Ã²'), ('ô', 'Ã´'), ('õ', 'Ãµ'),
-    ('ú', 'Ãº'), ('ù', 'Ã¹'), ('û', 'Ã»'),
-    ('ñ', 'Ã±'), ('ø', 'Ã¸'), ('å', 'Ã¥'), ('æ', 'Ã¦'),
-    ('ş', 'Å\x9f'), ('ţ', 'Å£'), ('ă', 'Ä'), ('ē', 'Ä'),
-    ('š', 'Å¡'), ('č', 'Ä\x8d'), ('ž', 'Å¾'), ('ř', 'Å\x99'),
-    ('ī', 'Ä«'), ('ū', 'Å«'),
-    ("'", 'â'), ("'", 'â'),
+    ("ä", "Ã¤"),
+    ("ö", "Ã¶"),
+    ("ü", "Ã¼"),
+    ("ß", "Ã\x9f"),
+    ("é", "Ã©"),
+    ("è", "Ã¨"),
+    ("ê", "Ãª"),
+    ("ë", "Ã«"),
+    ("á", "Ã¡"),
+    ("à", "Ã "),
+    ("â", "Ã¢"),
+    ("ã", "Ã£"),
+    ("ó", "Ã³"),
+    ("ò", "Ã²"),
+    ("ô", "Ã´"),
+    ("õ", "Ãµ"),
+    ("ú", "Ãº"),
+    ("ù", "Ã¹"),
+    ("û", "Ã»"),
+    ("ñ", "Ã±"),
+    ("ø", "Ã¸"),
+    ("å", "Ã¥"),
+    ("æ", "Ã¦"),
+    ("ş", "Å\x9f"),
+    ("ţ", "Å£"),
+    ("ă", "Ä"),
+    ("ē", "Ä"),
+    ("š", "Å¡"),
+    ("č", "Ä\x8d"),
+    ("ž", "Å¾"),
+    ("ř", "Å\x99"),
+    ("ī", "Ä«"),
+    ("ū", "Å«"),
+    ("'", "â"),
+    ("'", "â"),
 ]
 
 
 def normalize_text(text):
     """Normalize text for comparison: lowercase, collapse whitespace."""
     if not text:
-        return ''
-    return ' '.join(str(text).lower().split())
+        return ""
+    return " ".join(str(text).lower().split())
 
 
 def strip_encoding_artifacts(text):
     """Strip common mojibake artifacts for looser comparison."""
     if not text:
-        return ''
+        return ""
     result = text
     for clean, garbled in ENCODING_PAIRS:
         result = result.replace(garbled, clean)
-    result = re.sub(r'[\u0300-\u036f]', '', result)
+    result = re.sub(r"[\u0300-\u036f]", "", result)
     return result

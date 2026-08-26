@@ -8,31 +8,33 @@ Requires GEMINI_API_KEY in .env
 
 import json
 import warnings
-from typing import Literal, Optional
+from typing import Literal
 
 import pytest
 
 # CI runs without the LLM stack installed; skip collection instead of erroring.
 pytest.importorskip("pydantic", reason="pydantic not installed — LLM stack absent")
-pytest.importorskip("google.genai", reason="google-genai not installed — LLM stack absent")
+pytest.importorskip(
+    "google.genai", reason="google-genai not installed — LLM stack absent"
+)
 
-from pydantic import BaseModel
-
+from lib.llm_extract import MODEL_ID
 from lib.patterns import (
-    extract_year,
-    extract_publisher,
+    extract_language_from_category,
     extract_location,
     extract_page_count,
+    extract_publisher,
     extract_translator,
-    extract_language_from_category,
+    extract_year,
 )
 from lib.wiki_parser import extract_categories, extract_structured_data
-from lib.llm_extract import MODEL_ID
+from pydantic import BaseModel
 
 pytestmark = pytest.mark.llm
 
 
 # --- Pydantic schemas for structured judge response ---
+
 
 class FieldJudgment(BaseModel):
     field: str
@@ -123,17 +125,21 @@ class TestLLMJudge:
     @pytest.fixture(scope="class")
     def judge_results(self, real_entries, gemini_client):
         """Run extraction + judgment for selected entries (once per class)."""
-        selected = [real_entries[i] for i in JUDGE_ENTRY_INDICES if i < len(real_entries)]
+        selected = [
+            real_entries[i] for i in JUDGE_ENTRY_INDICES if i < len(real_entries)
+        ]
 
         entries_for_judge = []
         for entry in selected:
             extracted = _extract_all_fields(entry)
-            entries_for_judge.append({
-                "page_id": entry["page_id"],
-                "label": entry["label"],
-                "text": entry["text"][:500],
-                "extracted": extracted,
-            })
+            entries_for_judge.append(
+                {
+                    "page_id": entry["page_id"],
+                    "label": entry["label"],
+                    "text": entry["text"][:500],
+                    "extracted": extracted,
+                }
+            )
 
         result = _call_judge(gemini_client, entries_for_judge)
         return result.results
@@ -143,10 +149,16 @@ class TestLLMJudge:
     # - publisher/translator: truncated by mojibake in fixture text
     # - page_count: start page extracted from "pp. X-Y" ranges
     _KNOWN_WRONG = {
-        (4303, "title"), (1800, "title"), (4473, "title"),
-        (5082, "title"), (4376, "title"), (162, "title"),
-        (1800, "publisher"), (1800, "translator"),
-        (634, "page_count"), (533, "page_count"),
+        (4303, "title"),
+        (1800, "title"),
+        (4473, "title"),
+        (5082, "title"),
+        (4376, "title"),
+        (162, "title"),
+        (1800, "publisher"),
+        (1800, "translator"),
+        (634, "page_count"),
+        (533, "page_count"),
     }
 
     def test_no_unexpected_wrong_extractions(self, judge_results):
@@ -170,7 +182,10 @@ class TestLLMJudge:
         known_found = 0
         for result in judge_results:
             for j in result.judgments:
-                if j.verdict == "wrong" and (result.page_id, j.field) in self._KNOWN_WRONG:
+                if (
+                    j.verdict == "wrong"
+                    and (result.page_id, j.field) in self._KNOWN_WRONG
+                ):
                     known_found += 1
 
         # If fewer known issues are found, some may have been fixed — update _KNOWN_WRONG

@@ -10,13 +10,12 @@ Strategy: Every field has an explicit expected value in the fixture
 """
 
 import pytest
-
 from lib.patterns import (
+    extract_language_from_category,
     extract_location,
     extract_page_count,
     extract_publisher,
     extract_translator,
-    extract_language_from_category,
 )
 from lib.wiki_parser import extract_categories, extract_structured_data
 

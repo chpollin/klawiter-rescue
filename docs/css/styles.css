@@ -2140,6 +2140,74 @@ body.edit-mode .meta-table {
   overflow-y: auto;
 }
 
+/* --- Gate 2 reconciliation (edit mode) --- */
+.reconciliation-block {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+}
+.reconciliation-block ul {
+  margin: 0.35rem 0;
+  padding-left: 1.1rem;
+}
+.reconciliation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+.reconciliation-btn {
+  border: 1px solid var(--sz-border);
+  border-radius: 3px;
+  background: var(--sz-cream);
+  color: var(--sz-burgundy);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.15rem 0.35rem;
+}
+.reconciliation-btn:hover,
+.reconciliation-btn:focus-visible {
+  border-color: var(--sz-burgundy);
+  outline: 2px solid rgba(128, 0, 32, 0.2);
+  outline-offset: 1px;
+}
+
+/* --- Explicit contested statements --- */
+.contested-status,
+.contested-claim {
+  border: 1px solid #9a6a00;
+  border-left: 4px solid #9a6a00;
+  border-radius: 3px;
+  background: #fff8e7;
+  color: var(--sz-text);
+  font-family: var(--font-sans);
+  padding: 0.65rem 0.8rem;
+}
+.contested-status ul,
+.contested-claim ul {
+  margin: 0.45rem 0;
+  padding-left: 1.25rem;
+}
+.contested-claims {
+  display: grid;
+  gap: 0.75rem;
+}
+.contested-claim-heading {
+  color: #6e4a00;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.contested-claim-id,
+.contested-source {
+  color: var(--sz-text-light);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.contested-claim h4 {
+  font-size: 0.8rem;
+  margin: 0.7rem 0 0.2rem;
+}
+
 /* --- Verbund Bar --- */
 .verbund-bar {
   background: #f2f2f2;

@@ -1,0 +1,33 @@
+{
+  "allChecksPass": true,
+  "checks": {
+    "contestedClaims": true,
+    "decisionSeparation": true,
+    "deterministicRebuild": true,
+    "frontendProjection": true,
+    "inputHashes": true,
+    "jsonldProjection": true
+  },
+  "counts": {
+    "contestedAuthorityClaims": 5,
+    "contestedEditionClaims": 1,
+    "locationCandidates": 392,
+    "locationDecisions": 31,
+    "locationSubjects": 382,
+    "publishableLocationLinks": 26,
+    "publishableWorkLinks": 3,
+    "reviewCases": 796,
+    "workCandidates": 841,
+    "workDecisions": 3,
+    "workSubjects": 443
+  },
+  "errors": {
+    "contestedClaims": [],
+    "decisionSeparation": [],
+    "deterministicRebuild": [],
+    "frontendProjection": [],
+    "inputHashes": [],
+    "jsonldProjection": []
+  },
+  "generatedAt": "2026-08-26T09:54:57.705023+00:00"
+}

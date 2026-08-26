@@ -12,8 +12,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    setup_logging, load_csv, write_csv, EXTRACTED_FIELDS,
-    STEP_01_OUTPUT, STEP_02_OUTPUT,
+    EXTRACTED_FIELDS,
+    STEP_01_OUTPUT,
+    STEP_02_OUTPUT,
+    load_csv,
+    setup_logging,
+    write_csv,
 )
 from lib.encoding import fix_encoding, has_mojibake
 
@@ -24,14 +28,20 @@ def main():
     rows = load_csv(STEP_01_OUTPUT)
     log.info(f"Loaded {len(rows)} entries")
 
-    mojibake_before = sum(1 for r in rows if has_mojibake(r.get('content', '')) or has_mojibake(r.get('page_title', '')))
-    log.info(f"Entries with Mojibake before fix: {mojibake_before} ({100*mojibake_before/len(rows):.1f}%)")
+    mojibake_before = sum(
+        1
+        for r in rows
+        if has_mojibake(r.get("content", "")) or has_mojibake(r.get("page_title", ""))
+    )
+    log.info(
+        f"Entries with Mojibake before fix: {mojibake_before} ({100 * mojibake_before / len(rows):.1f}%)"
+    )
 
     fixed_count = 0
     for row in rows:
         changed = False
-        for field in ('content', 'page_title'):
-            original = row.get(field, '')
+        for field in ("content", "page_title"):
+            original = row.get(field, "")
             if original:
                 fixed = fix_encoding(original)
                 if fixed != original:
@@ -42,12 +52,18 @@ def main():
 
     log.info(f"Fixed encoding in {fixed_count} entries")
 
-    mojibake_after = sum(1 for r in rows if has_mojibake(r.get('content', '')) or has_mojibake(r.get('page_title', '')))
-    log.info(f"Entries with Mojibake after fix: {mojibake_after} ({100*mojibake_after/len(rows):.1f}%)")
+    mojibake_after = sum(
+        1
+        for r in rows
+        if has_mojibake(r.get("content", "")) or has_mojibake(r.get("page_title", ""))
+    )
+    log.info(
+        f"Entries with Mojibake after fix: {mojibake_after} ({100 * mojibake_after / len(rows):.1f}%)"
+    )
 
     write_csv(STEP_02_OUTPUT, rows, EXTRACTED_FIELDS)
     log.info(f"Output written to {STEP_02_OUTPUT}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

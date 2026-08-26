@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "decisionScope": "Prior repository ground-truth assertions and independently reviewed Gate 2 location decisions",
+  "groundTruthSource": {
+    "path": "tests/wikidata_ground_truth.json",
+    "sha256": "2d3446a9583b848dc11ae1f068793260095c939cd0f90afbe8e1096283c05c24"
+  },
+  "decisions": [
+    {"decisionId":"location/Amsterdam/Q727","subject":"Amsterdam","action":"confirm","qid":"Q727","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Barcelona/Q1492","subject":"Barcelona","action":"confirm","qid":"Q1492","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Beijing/Q956","subject":"Beijing","action":"confirm","qid":"Q956","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Beirut/Q3820","subject":"Beirut","action":"confirm","qid":"Q3820","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Berlin/Q64","subject":"Berlin","action":"confirm","qid":"Q64","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Buenos-Aires/Q1486","subject":"Buenos Aires","action":"confirm","qid":"Q1486","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Cairo/Q85","subject":"Cairo","action":"confirm","qid":"Q85","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Frankfurt-am-Main/Q1794","subject":"Frankfurt am Main","action":"confirm","qid":"Q1794","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Leipzig/Q2079","subject":"Leipzig","action":"confirm","qid":"Q2079","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/London/Q84","subject":"London","action":"confirm","qid":"Q84","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Muenchen/Q1726","subject":"München","action":"confirm","qid":"Q1726","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/New-York/Q60","subject":"New York","action":"confirm","qid":"Q60","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Paris/Q90","subject":"Paris","action":"confirm","qid":"Q90","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Praha/Q1085","subject":"Praha","action":"confirm","qid":"Q1085","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Salzburg/Q34713","subject":"Salzburg","action":"confirm","qid":"Q34713","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Sofija/Q472","subject":"Sofija","action":"confirm","qid":"Q472","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Stockholm/Q1754","subject":"Stockholm","action":"confirm","qid":"Q1754","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Stuttgart/Q1022","subject":"Stuttgart","action":"confirm","qid":"Q1022","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Tokyo/Q1490","subject":"Tokyo","action":"confirm","qid":"Q1490","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Wien/Q1741","subject":"Wien","action":"confirm","qid":"Q1741","decidedBy":"repository-ground-truth-fixture","evidence":["tests/wikidata_ground_truth.json"]},
+    {"decisionId":"location/Nicosia-Cyprus/Q3856","subject":"Nicosia, Cyprus","action":"confirm","qid":"Q3856","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#location-nicosia-q3856"]},
+    {"decisionId":"location/Boras-Sweden/Q26040","subject":"Borås, Sweden","action":"confirm","qid":"Q26040","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#location-boras-q26040"]},
+    {"decisionId":"location/Luxembourg-City/Q1842","subject":"Luxembourg City, Luxembourg","action":"confirm","qid":"Q1842","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#location-luxembourg-q1842"]},
+    {"decisionId":"location/Rio-de-Janiero/Q8678","subject":"Rio de Janiero","action":"correct","qid":"Q8678","label":"Rio de Janeiro","decidedBy":"independent-verification-agent","rejectedQid":"Q2720540","evidence":["data/output/reconciliation/location-low-score-review.json#location-rio-de-janiero-q2720540"]},
+    {"decisionId":"location/Yanji/Q713362","subject":"Yanji","action":"correct","qid":"Q713362","label":"Yanji","decidedBy":"independent-verification-agent","rejectedQid":"Q956","evidence":["data/output/reconciliation/location-low-score-review.json#location-yanji-q956"]},
+    {"decisionId":"location/Bambai/Q1156","subject":"Bambaī","action":"correct","qid":"Q1156","label":"Mumbai","decidedBy":"independent-verification-agent","rejectedQid":"Q26085641","evidence":["data/output/reconciliation/location-low-score-review.json#location-bambai-q26085641"]},
+    {"decisionId":"location/Varna-Sofija/unresolved","subject":"Varna, Sofija","action":"unresolved","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"]},
+    {"decisionId":"location/Sofija-Varna/unresolved","subject":"Sofija, Varna","action":"unresolved","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"]},
+    {"decisionId":"location/Bloemfontein-Kaapstad/unresolved","subject":"Bloemfontein, Kaapstad","action":"unresolved","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"]},
+    {"decisionId":"location/Saint-Aignan/unresolved","subject":"Saint-Aignan","action":"unresolved","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"]},
+    {"decisionId":"location/Tyreso/unresolved","subject":"Tyresö","action":"unresolved","decidedBy":"independent-verification-agent","evidence":["data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"]}
+  ]
+}

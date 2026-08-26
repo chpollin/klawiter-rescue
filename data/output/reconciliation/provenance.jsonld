@@ -1,0 +1,121 @@
+{
+  "@context": {
+    "earl": "http://www.w3.org/ns/earl#",
+    "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "schema": "https://schema.org/"
+  },
+  "@graph": [
+    {
+      "@id": "klawiter:run/gate2-reconciliation",
+      "@type": "prov:Activity",
+      "prov:generatedAtTime": "2026-08-26T09:54:23.213780+00:00",
+      "prov:qualifiedAssociation": {
+        "@type": "prov:Association",
+        "prov:agent": {
+          "@id": "klawiter:agent/gate2-builder"
+        },
+        "prov:hadPlan": {
+          "@id": "klawiter:plan/gate2-v1"
+        }
+      },
+      "prov:used": [
+        {
+          "@id": "klawiter:gate2-input/classified-source"
+        },
+        {
+          "@id": "klawiter:gate2-input/edition-modeling-decisions"
+        },
+        {
+          "@id": "klawiter:gate2-input/editions"
+        },
+        {
+          "@id": "klawiter:gate2-input/location-decisions"
+        },
+        {
+          "@id": "klawiter:gate2-input/location-log"
+        },
+        {
+          "@id": "klawiter:gate2-input/location-review"
+        },
+        {
+          "@id": "klawiter:gate2-input/locations"
+        },
+        {
+          "@id": "klawiter:gate2-input/szd-work-index"
+        },
+        {
+          "@id": "klawiter:gate2-input/work-decisions"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:agent/gate2-builder",
+      "@type": [
+        "prov:SoftwareAgent",
+        "earl:Software"
+      ],
+      "schema:name": "Klawiter deterministic Gate 2 reconciliation builder"
+    },
+    {
+      "@id": "klawiter:plan/gate2-v1",
+      "@type": "prov:Plan",
+      "klawiter:algorithmVersion": "1.1",
+      "klawiter:sourceCodeSha256": "3255850f7baca344251b5d52aac7089fa0372458b05118b17986989efa1533ef"
+    },
+    {
+      "@id": "klawiter:gate2-input/classified-source",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "3a7f3a280a0df87550d562c1e74bb908bdf41de6d977d9836e27339c4a268329",
+      "prov:atLocation": "data/intermediate/04_classified.csv"
+    },
+    {
+      "@id": "klawiter:gate2-input/edition-modeling-decisions",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "9be90e8fa3b8348bd52746a364d22ee03c6e4fbeb138a0bb72df0c27cf842f05",
+      "prov:atLocation": "data/reconciliation/edition-modeling-decisions.json"
+    },
+    {
+      "@id": "klawiter:gate2-input/editions",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a",
+      "prov:atLocation": "data/output/editions/work-editions.jsonld"
+    },
+    {
+      "@id": "klawiter:gate2-input/location-decisions",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "80c1697dc87da1da9a7c232f17ed9c92751f6e5705565764c8b8d2a8a24d0c9b",
+      "prov:atLocation": "data/reconciliation/location-decisions.json"
+    },
+    {
+      "@id": "klawiter:gate2-input/location-log",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "299f1dfb6fe8c6fbf5c69f952c3803f01227d6ecba9efe4c38a66b70c7c67afd",
+      "prov:atLocation": "docs/data/locations_reconciliation_log.json"
+    },
+    {
+      "@id": "klawiter:gate2-input/location-review",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "123b696a590cda99114f9e575efc885c677da69434a2d873de01317d490cb1e0",
+      "prov:atLocation": "data/output/reconciliation/location-low-score-review.json"
+    },
+    {
+      "@id": "klawiter:gate2-input/locations",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "c35990917d8186eb17239a4c97893e396b2ed905305270631c8ec9684a4c1ec1",
+      "prov:atLocation": "docs/data/locations.json"
+    },
+    {
+      "@id": "klawiter:gate2-input/szd-work-index",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf",
+      "prov:atLocation": "data/provenance/szd-work-index.xml"
+    },
+    {
+      "@id": "klawiter:gate2-input/work-decisions",
+      "@type": "prov:Entity",
+      "klawiter:sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc",
+      "prov:atLocation": "data/reconciliation/work-decisions.json"
+    }
+  ]
+}

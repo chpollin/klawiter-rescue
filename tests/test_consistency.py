@@ -6,14 +6,12 @@ They test relationships BETWEEN fields, not individual field values.
 Fixtures (ns0_entries, all_titles, redirect_targets) are defined in conftest.py.
 """
 
-import pytest
-
 from lib.vocabulary import TIME_PERIODS
-
 
 # ---------------------------------------------------------------------------
 # German entries should not have translators (with known exceptions)
 # ---------------------------------------------------------------------------
+
 
 class TestGermanTranslator:
     """German-language originals should not have a translator field.
@@ -39,16 +37,19 @@ class TestGermanTranslator:
         )
         if german_with_translator and len(german_with_translator) < known:
             import warnings
+
             warnings.warn(
                 f"German translator FPs decreased from {known} "
                 f"to {len(german_with_translator)} — update known_issues.german_translator_fp",
-                UserWarning, stacklevel=1,
+                UserWarning,
+                stacklevel=1,
             )
 
 
 # ---------------------------------------------------------------------------
 # Films should not have page counts (with exceptions for screenplays)
 # ---------------------------------------------------------------------------
+
 
 class TestFilmPageCount:
     """Film entries typically don't have page counts. Screenplays may be exceptions."""
@@ -71,6 +72,7 @@ class TestFilmPageCount:
 # Publisher and location should not be identical
 # ---------------------------------------------------------------------------
 
+
 class TestPublisherLocationDistinct:
     """Publisher and location should be different values."""
 
@@ -80,18 +82,19 @@ class TestPublisherLocationDistinct:
         same = [
             (e["sourcePageId"], e.get("publisher"))
             for e in ns0_entries
-            if e.get("publisher") and e.get("location")
+            if e.get("publisher")
+            and e.get("location")
             and e["publisher"] == e["location"]
         ]
         assert len(same) <= known, (
-            f"Publisher == Location increased from {known} "
-            f"to {len(same)}: {same[:10]}"
+            f"Publisher == Location increased from {known} to {len(same)}: {same[:10]}"
         )
 
 
 # ---------------------------------------------------------------------------
 # Year and timePeriod must be consistent
 # ---------------------------------------------------------------------------
+
 
 class TestYearPeriodConsistency:
     """The timePeriod classification must match the year."""
@@ -114,13 +117,11 @@ class TestYearPeriodConsistency:
             lo, hi = self.PERIOD_RANGES[period]
             if lo is not None and year < lo:
                 inconsistent.append(
-                    (entry["sourcePageId"], year, period,
-                     f"year {year} < {lo}")
+                    (entry["sourcePageId"], year, period, f"year {year} < {lo}")
                 )
             if hi is not None and year > hi:
                 inconsistent.append(
-                    (entry["sourcePageId"], year, period,
-                     f"year {year} > {hi}")
+                    (entry["sourcePageId"], year, period, f"year {year} > {hi}")
                 )
 
         assert len(inconsistent) == 0, (
@@ -136,6 +137,7 @@ class TestYearPeriodConsistency:
 # seeAlso referential integrity
 # ---------------------------------------------------------------------------
 
+
 class TestSeeAlsoIntegrity:
     """Cross-references should point to entries that exist."""
 
@@ -143,29 +145,30 @@ class TestSeeAlsoIntegrity:
     # (correct titles resolve more redirects). Remaining: language suffixes, person names.
     # Frozen value lives in baseline known_issues.broken_see_also_refs.
 
-    def test_broken_references_bounded(self, ns0_entries, all_titles, redirect_targets, baseline):
+    def test_broken_references_bounded(
+        self, ns0_entries, all_titles, redirect_targets, baseline
+    ):
         """Count of broken seeAlso references must not increase."""
         known = baseline["known_issues"]["broken_see_also_refs"]
         broken = []
         for entry in ns0_entries:
-            for ref in (entry.get("seeAlso") or []):
+            for ref in entry.get("seeAlso") or []:
                 if ref not in all_titles and ref not in redirect_targets:
                     broken.append((entry["sourcePageId"], ref))
 
         assert len(broken) <= known, (
             f"Broken seeAlso references increased from {known} "
             f"to {len(broken)}. Sample:\n"
-            + "\n".join(
-                f"  page {pid} → '{ref}'"
-                for pid, ref in broken[:10]
-            )
+            + "\n".join(f"  page {pid} → '{ref}'" for pid, ref in broken[:10])
         )
         if broken and len(broken) < known:
             import warnings
+
             warnings.warn(
                 f"Broken seeAlso references decreased from {known} "
                 f"to {len(broken)} — update known_issues.broken_see_also_refs",
-                UserWarning, stacklevel=1,
+                UserWarning,
+                stacklevel=1,
             )
 
     def test_see_also_not_self_referencing(self, ns0_entries):

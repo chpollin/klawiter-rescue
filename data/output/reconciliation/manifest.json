@@ -1,0 +1,85 @@
+{
+  "algorithmVersion": "1.1",
+  "artifacts": {
+    "candidates.json": "adf45fedbf74da63ea398ed12803e18ff5822e135ff20938ef1c1d606e499273",
+    "contested-claims.json": "d3016cef54b4e956b3fb1e30a199b63c3571e9ba78e9859b19e221f3c52c455e",
+    "decisions.json": "5c5d8999cbaa072874444470d8bb9b7c807faa2a6e047c4efdd5f8200d645a57",
+    "earl.jsonld": "539265e2a7e67d01eecd2050476106c43be58e22ede690d93abaeead037d0b50",
+    "provenance.jsonld": "08a7468dd77e9cd57c3fc19957b9a4e74b9a46b8b20143b034e4e3663f0ba353",
+    "publishable-links.json": "6ae562617aeb02089613b2c27594b16ecb483ac19ca4d17f623421787a7346fb",
+    "review-queue.json": "51077417247f87fd13c4d56ee2a5a538438cf21f2e3bf6c2269590b4bf0ee930",
+    "validation-report.json": "f7d611919823d3dc97e2291f7d707996818c856430bc652f94965818e5bef981"
+  },
+  "codeSha256": "3255850f7baca344251b5d52aac7089fa0372458b05118b17986989efa1533ef",
+  "counts": {
+    "contestedAuthorityClaims": 5,
+    "contestedEditionClaims": 1,
+    "locationCandidates": 392,
+    "locationDecisions": 31,
+    "locationSubjects": 382,
+    "publishableLocationLinks": 26,
+    "publishableWorkLinks": 3,
+    "reviewCases": 796,
+    "workCandidates": 841,
+    "workDecisions": 3,
+    "workSubjects": 443
+  },
+  "frontendArtifact": {
+    "path": "docs/data/reconciliation.json",
+    "sha256": "2134d8e0e5b6ee8a3f153589c8a46b3ddbc221efbcf9320d537d3afb303824ca"
+  },
+  "generatedAt": "2026-08-26T09:54:23.213780+00:00",
+  "inputs": {
+    "classified-source": {
+      "path": "data/intermediate/04_classified.csv",
+      "sha256": "3a7f3a280a0df87550d562c1e74bb908bdf41de6d977d9836e27339c4a268329"
+    },
+    "edition-modeling-decisions": {
+      "path": "data/reconciliation/edition-modeling-decisions.json",
+      "sha256": "9be90e8fa3b8348bd52746a364d22ee03c6e4fbeb138a0bb72df0c27cf842f05"
+    },
+    "editions": {
+      "path": "data/output/editions/work-editions.jsonld",
+      "sha256": "4f3a3d0a6fd9dddc69e84ee3421f3bce0f6374eabd179c8d5e1b6eaeb6ed438a"
+    },
+    "location-decisions": {
+      "path": "data/reconciliation/location-decisions.json",
+      "sha256": "80c1697dc87da1da9a7c232f17ed9c92751f6e5705565764c8b8d2a8a24d0c9b"
+    },
+    "location-log": {
+      "path": "docs/data/locations_reconciliation_log.json",
+      "sha256": "299f1dfb6fe8c6fbf5c69f952c3803f01227d6ecba9efe4c38a66b70c7c67afd"
+    },
+    "location-review": {
+      "path": "data/output/reconciliation/location-low-score-review.json",
+      "sha256": "123b696a590cda99114f9e575efc885c677da69434a2d873de01317d490cb1e0"
+    },
+    "locations": {
+      "path": "docs/data/locations.json",
+      "sha256": "c35990917d8186eb17239a4c97893e396b2ed905305270631c8ec9684a4c1ec1"
+    },
+    "szd-work-index": {
+      "path": "data/provenance/szd-work-index.xml",
+      "sha256": "dfe38561d7b22d055aeed88ab883521a768c528e708debb0fbdb4ed87655bddf"
+    },
+    "work-decisions": {
+      "path": "data/reconciliation/work-decisions.json",
+      "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
+    }
+  },
+  "operatorPoints": [
+    {
+      "evidence": "data/output/editions/review-queue.json",
+      "question": "Select or create the canonical adaptation work before accepting its work binding.",
+      "subject": "klawiter:edition/4916-2016-b"
+    }
+  ],
+  "validation": {
+    "contestedClaims": true,
+    "decisionSeparation": true,
+    "deterministicRebuild": true,
+    "frontendProjection": true,
+    "inputHashes": true,
+    "jsonldProjection": true
+  }
+}

@@ -4,14 +4,14 @@ Uses real examples from the Klawiter bibliography dataset.
 """
 
 from lib.patterns import (
-    extract_year,
-    extract_all_years,
-    extract_publisher,
-    extract_location,
     extract_all_locations,
-    extract_page_count,
-    extract_translator,
+    extract_all_years,
     extract_language_from_category,
+    extract_location,
+    extract_page_count,
+    extract_publisher,
+    extract_translator,
+    extract_year,
 )
 
 
@@ -23,7 +23,10 @@ class TestExtractYear:
         assert extract_year("Published in Leipzig, 1932. 542p.") == 1932
 
     def test_multiple_years_returns_first(self):
-        assert extract_year("'''[1947]: Pechat Far'''\n'''[1960]: Narodna Kultura'''") == 1947
+        assert (
+            extract_year("'''[1947]: Pechat Far'''\n'''[1960]: Narodna Kultura'''")
+            == 1947
+        )
 
     def test_rejects_page_numbers(self):
         assert extract_year("pp. 100-124") is None
@@ -55,13 +58,18 @@ class TestExtractPublisher:
         assert extract_publisher("Suhrkamp Verlag, Frankfurt") == "Suhrkamp Verlag"
 
     def test_press_suffix(self):
-        assert extract_publisher("Oxford University Press, 2001") == "Oxford University Press"
+        assert (
+            extract_publisher("Oxford University Press, 2001")
+            == "Oxford University Press"
+        )
 
     def test_explicit_label(self):
         assert extract_publisher("Verlag: Insel-Verlag") == "Insel-Verlag"
 
     def test_published_by(self):
-        assert extract_publisher("Published by Insel-Verlag. Leipzig.") == "Insel-Verlag"
+        assert (
+            extract_publisher("Published by Insel-Verlag. Leipzig.") == "Insel-Verlag"
+        )
 
     def test_editions_suffix(self):
         result = extract_publisher("Éditions Gallimard, Paris")
@@ -92,13 +100,18 @@ class TestExtractLocation:
 
     def test_location_from_publication_header(self):
         # The bold '''[YEAR]: Publisher, Location''' header is read first.
-        assert extract_location("'''[1943]: Skoglunds Bokförlag, Stockholm'''") == "Stockholm"
+        assert (
+            extract_location("'''[1943]: Skoglunds Bokförlag, Stockholm'''")
+            == "Stockholm"
+        )
 
     def test_chapter_title_city_not_taken_as_location(self):
         # A city inside a chapter title must not become the place of publication
         # when a real publication header is present. This is the Weimar bug.
-        text = ("'''[1981]: Insel Verlag, Frankfurt am Main'''\n"
-                "''Die Marienbader Elegie. Goethe zwischen Karlsbad und Weimar''. 120p.")
+        text = (
+            "'''[1981]: Insel Verlag, Frankfurt am Main'''\n"
+            "''Die Marienbader Elegie. Goethe zwischen Karlsbad und Weimar''. 120p."
+        )
         assert extract_location(text) == "Frankfurt am Main"
 
     def test_non_western_city_recovered_from_header(self):
@@ -109,11 +122,16 @@ class TestExtractLocation:
     def test_trailing_us_state_code_falls_back_to_city(self):
         # "City, ST" — a two-letter state code is not the place; use the segment
         # before it. Ann Arbor is not in the known list, so it is kept literally.
-        assert extract_location("'''[1955]: Some Press, Ann Arbor, MI'''") == "Ann Arbor"
+        assert (
+            extract_location("'''[1955]: Some Press, Ann Arbor, MI'''") == "Ann Arbor"
+        )
 
     def test_primary_alternate_reduced_to_primary(self):
         # "Wien [Vienna]" -> "Wien".
-        assert extract_location("'''[1935]: Herbert Reichner Verlag, Wien [Vienna]'''") == "Wien"
+        assert (
+            extract_location("'''[1935]: Herbert Reichner Verlag, Wien [Vienna]'''")
+            == "Wien"
+        )
 
     def test_bracket_known_city_preferred_over_reprint_reference(self):
         # A headerless article keeps its original journal place ([Berlin]) rather
@@ -128,7 +146,10 @@ class TestExtractLocation:
 
     def test_header_without_location_falls_through_to_body(self):
         # Header carries no recognizable place: fall through to the body search.
-        assert extract_location("'''[1920]: Insel-Verlag'''\nsomething in Leipzig") == "Leipzig"
+        assert (
+            extract_location("'''[1920]: Insel-Verlag'''\nsomething in Leipzig")
+            == "Leipzig"
+        )
 
     def test_period_separator_header_read_like_colon(self):
         # Some headers separate the year bracket with a period, not a colon
@@ -189,17 +210,27 @@ class TestExtractTranslator:
         assert extract_translator("Übersetzt von Hermann Wolf.") == "Hermann Wolf"
         assert extract_translator("Traduit par Alzir Hella.") == "Alzir Hella"
         assert extract_translator("Traducción de Alfredo Cahn.") == "Alfredo Cahn"
-        assert extract_translator("Traduzione di Lavinia Mazzucchetti.") == "Lavinia Mazzucchetti"
+        assert (
+            extract_translator("Traduzione di Lavinia Mazzucchetti.")
+            == "Lavinia Mazzucchetti"
+        )
         assert extract_translator("Trans. John Smith.") == "John Smith"
 
     def test_strips_trailing_punctuation(self):
-        assert extract_translator("Translated by Hugo Hultenberg.,;:") == "Hugo Hultenberg"
+        assert (
+            extract_translator("Translated by Hugo Hultenberg.,;:") == "Hugo Hultenberg"
+        )
 
     def test_name_must_start_uppercase(self):
         assert extract_translator("Translated by someone unknown") is None
 
     def test_german_original_no_translator(self):
-        assert extract_translator("Compiled with an afterword by Volker Michels. 254/(1)p.") is None
+        assert (
+            extract_translator(
+                "Compiled with an afterword by Volker Michels. 254/(1)p."
+            )
+            is None
+        )
 
     def test_no_match(self):
         assert extract_translator(None) is None
@@ -208,8 +239,13 @@ class TestExtractTranslator:
 
 class TestExtractLanguageFromCategory:
     def test_common_languages(self):
-        assert extract_language_from_category(["Fiction / Volumes (German)"]) == "German"
-        assert extract_language_from_category(["Secondary Literature (English)"]) == "English"
+        assert (
+            extract_language_from_category(["Fiction / Volumes (German)"]) == "German"
+        )
+        assert (
+            extract_language_from_category(["Secondary Literature (English)"])
+            == "English"
+        )
         assert extract_language_from_category(["Fiction (Japanese)"]) == "Japanese"
 
     def test_unknown_language_rejected(self):

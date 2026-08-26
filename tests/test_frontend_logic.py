@@ -15,11 +15,26 @@ PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def test_evidence_and_triage_logic():
-    node = shutil.which('node')
+    node = shutil.which("node")
     if not node:
-        pytest.skip('node not available')
+        pytest.skip("node not available")
     result = subprocess.run(
-        [node, str(PROJECT_ROOT / 'tests' / 'evidence_triage.test.js')],
-        capture_output=True, text=True, cwd=PROJECT_ROOT,
+        [node, str(PROJECT_ROOT / "tests" / "evidence_triage.test.js")],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_contested_claim_export_and_display():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node not available")
+    result = subprocess.run(
+        [node, str(PROJECT_ROOT / "tests" / "contested_claims.test.js")],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
     )
     assert result.returncode == 0, result.stdout + result.stderr

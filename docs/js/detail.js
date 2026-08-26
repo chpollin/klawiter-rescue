@@ -124,6 +124,92 @@ const Detail = {
       + this._fieldEvidence(fieldName, entry);
   },
 
+  _reconciliationCell(entry) {
+    const review = Edit.locationReconciliation(entry);
+    if (!review) return '<span class="missing-value">No reconciliation record</span>';
+    const pending = Edit.pendingLocationDecision(entry.sourcePageId);
+    const decision = pending || review.decision;
+    const status = pending
+      ? 'pending editor decision'
+      : (decision ? decision.action : 'proposal only');
+    const published = review.publishable
+      ? ` <a class="wikidata-link" href="${esc(review.publishable.uri)}" target="_blank" rel="noopener">published link</a>`
+      : '';
+    const candidates = (review.candidates || []).map(candidate => {
+      const score = candidate.score == null ? '' : `, score ${candidate.score}`;
+      return `<li><a href="${esc(candidate.uri)}" target="_blank" rel="noopener">${esc(candidate.label)} (${esc(candidate.qid)})</a>${score}
+        <button class="reconciliation-btn" onclick="Edit.decideLocation(${entry.sourcePageId}, 'confirm', '${candidate.qid}')">Confirm</button></li>`;
+    }).join('');
+    const revert = pending
+      ? `<button class="reconciliation-btn" onclick="Edit.revertLocationDecision(${entry.sourcePageId})">Undo pending</button>`
+      : '';
+    return `<div class="reconciliation-block">
+      <div><strong>${esc(status)}</strong>${published}</div>
+      ${candidates ? `<ul>${candidates}</ul>` : '<div>No candidate available.</div>'}
+      <div class="reconciliation-actions">
+        <button class="reconciliation-btn" onclick="Edit.decideLocation(${entry.sourcePageId}, 'reject')">Reject candidates</button>
+        <button class="reconciliation-btn" onclick="Edit.decideLocation(${entry.sourcePageId}, 'unresolved')">Keep unresolved</button>
+        ${revert}
+      </div>
+    </div>`;
+  },
+
+  _contestedAuthorityCell(entry) {
+    const claims = Edit.authorityClaimsFor(entry);
+    if (!claims.length) return '';
+    const rendered = claims.map(claim => {
+      const interpretations = (claim.interpretations || []).map(item => {
+        const proposedObject = item.proposedObject && item.proposedObject['@id'];
+        const object = proposedObject
+          ? `<br><code>${esc(proposedObject)}</code>`
+          : '<br><span>Keine Normdatenzuordnung</span>';
+        return `<li><strong>${esc(item.label)}</strong>${object}</li>`;
+      }).join('');
+      const evidence = (claim.sourceEvidence || []).map(item =>
+        `<li>Seite ${esc(item.sourcePageId)}, Zeile ${esc(item.sourceLine)}: ${esc(item.sourceValue)}<br>SHA-256 <code>${esc(item.sourceTextSha256)}</code></li>`
+      ).join('');
+      const history = (claim.reviewHistory || []).map(item =>
+        `<li><code>${esc(item.decidedBy)}</code>: ${esc(item.action)} — <code>${esc(item.decisionId)}</code></li>`
+      ).join('');
+      return `<article class="contested-claim">
+        <div class="contested-claim-heading">Strittige Normdatenzuordnung — Entscheidung offen</div>
+        <div class="contested-claim-id"><code>${esc(claim['@id'])}</code></div>
+        <p>Die Aussage bleibt Bestandteil der Daten. Keine Deutung wird als bestätigte <code>schema:sameAs</code>-Beziehung ausgegeben.</p>
+        <h4>Konkurrierende Deutungen</h4>
+        <ul>${interpretations}</ul>
+        <h4>Quellenbelege</h4>
+        <ul>${evidence}</ul>
+        <h4>Prüfverlauf</h4>
+        <ul>${history}</ul>
+      </article>`;
+    }).join('');
+    return `<div class="contested-status" role="status">${rendered}</div>`;
+  },
+
+  _contestedClaimsBlock(entry) {
+    const claims = Edit.editionClaimsFor(entry);
+    if (!claims.length) return '';
+    const rendered = claims.map(claim => {
+      const interpretations = claim.interpretations.map(item =>
+        `<li><strong>${esc(item.label)}</strong><br><span>${esc(item.basis)}</span><br><code>${esc(item.proposedObject)}</code></li>`
+      ).join('');
+      const history = claim.reviewHistory.map(item =>
+        `<li><code>${esc(item.reviewer)}</code>: ${esc(item.outcome)}${item.basis ? ` — ${esc(item.basis)}` : ''}</li>`
+      ).join('');
+      return `<article class="contested-claim">
+        <div class="contested-claim-heading">Strittige Werksbindung — Entscheidung offen</div>
+        <div class="contested-claim-id"><code>${esc(claim.claimId)}</code></div>
+        <p>Die Edition bleibt Bestandteil der Daten. Keine der folgenden Deutungen wird als bestätigte <code>schema:exampleOfWork</code>-Beziehung ausgegeben.</p>
+        <h4>Konkurrierende Deutungen</h4>
+        <ul>${interpretations}</ul>
+        <h4>Prüfverlauf</h4>
+        <ul>${history}</ul>
+        <div class="contested-source">Quelle: Seite ${claim.source.sourcePageId}, Zeichen ${claim.source.selector[0]}–${claim.source.selector[1]}; SHA-256 <code>${esc(claim.source.sliceSha256)}</code></div>
+      </article>`;
+    }).join('');
+    return `<section class="detail-section contested-claims" aria-label="Strittige Aussagen">${rendered}</section>`;
+  },
+
   // Ordered attention hints for the entry (edit mode): where checking is most
   // urgent, by data signal. A priority aid, not a quality or workflow score.
   _triageBlock(entry) {
@@ -147,6 +233,7 @@ const Detail = {
     let html = '';
     const rows = [];
     const prov = entry._provenance || {};
+    const contestedAuthority = this._contestedAuthorityCell(entry);
 
     // Title (always present, not provenance-tracked)
     rows.push(this.row('Title', esc(entry.title)));
@@ -188,6 +275,13 @@ const Detail = {
         cell = locText;
       }
       rows.push(this.row('Location', cell, 'location', entry));
+      if (App.state.editMode && entry.location) {
+        rows.push(this.row('Authority reconciliation', this._reconciliationCell(entry)));
+      }
+    }
+
+    if (contestedAuthority) {
+      rows.push(this.row('Normdatenstatus', contestedAuthority));
     }
 
     if (entry.language) {
@@ -218,6 +312,7 @@ const Detail = {
 
     if (App.state.editMode) html = this._reviewChip(entry) + this._triageBlock(entry) + html;
     html += `<div class="meta-table">${rows.join('')}</div>`;
+    html += this._contestedClaimsBlock(entry);
 
     // --- Full bibliographic entry (always visible as verification source) ---
     // In edit mode this is the adjudication source: the editor checks each field
