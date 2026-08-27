@@ -182,7 +182,7 @@ const Pages = {
           <li>
             Some cross-references point to titles that no entry and no redirect
             carries. They remain unresolvable red links and are listed
-            individually in the <a href="#quality">Data Quality</a> workbench.
+            individually in the <a href="#data/quality">Data Quality</a> workbench.
           </li>
           <li>
             The flat entry layer cannot fully separate edition-specific fields
@@ -228,7 +228,7 @@ const Pages = {
         <p>
           <a href="#stats">Explore</a> offers a timeline, a geographic view and a
           Connections view with a ranked list of the most-referenced entries and
-          a translator flow diagram. <a href="#quality">Data Quality</a> shows
+          a translator flow diagram. <a href="#data/quality">Data Quality</a> shows
           the processing state: field completeness per entry type, open review
           queues, unresolvable cross-references and the authority candidate
           queue for translators and publishers. Every list opens the affected
@@ -335,7 +335,7 @@ const Pages = {
           Every asserted field carries its <strong>provenance</strong>: whether
           it was read from the markup by a regular expression, derived by the
           language model, or set by an editor. The interface shows this as an
-          R/L/E badge, and the <a href="#quality">Data Quality</a> workbench
+          R/L/E badge, and the <a href="#data/quality">Data Quality</a> workbench
           lists the model-derived values as their own work queue.
         </p>
       </section>
@@ -345,7 +345,7 @@ const Pages = {
         <p>
           The <code>klawiter:</code> namespace resolves to
           <a href="vocab/index.html">the vocabulary documentation</a>, which
-          publishes 91 terms, each with its own resolvable page: the entry type
+          publishes each term with its own resolvable page: the entry type
           classes, the bibliographic and provenance properties, and the terms of
           the contested-claim model. Alongside it the entries use
           <a href="https://schema.org" target="_blank" rel="noopener">Schema.org</a>
@@ -377,8 +377,7 @@ const Pages = {
             <tr>
               <td><a href="data/klawiter.json"><code>data/klawiter.json</code></a></td>
               <td>The flat entry layer this site runs on: all entries, the
-                  redirect map and the coverage baseline in
-                  <code>_meta</code>. Frontend key names, no
+                  redirect map and dataset metadata. Frontend key names, no
                   <code>@context</code>. About 10&nbsp;MB.</td>
             </tr>
             <tr>
@@ -399,7 +398,7 @@ const Pages = {
           </tbody>
         </table>
         <div class="page-actions">
-          <button class="action-btn page-download-btn" data-page-act="download-dataset">
+          <button class="page-download-btn" data-page-act="download-dataset">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
               <polyline points="7 10 12 15 17 10"/>
@@ -469,41 +468,21 @@ const Pages = {
           <button class="jsonld-tab" data-tab="triples" aria-pressed="false">Triples</button>
         </div>
 
-        <div id="jsonld-compact" class="jsonld-panel jsonld-code"></div>
+        <div id="jsonld-compact" class="jsonld-panel">
+          <details class="jsonld-context">
+            <summary>@context</summary>
+            <div id="jsonld-context-code" class="jsonld-code"></div>
+          </details>
+          <div id="jsonld-compact-code" class="jsonld-code"></div>
+        </div>
         <div id="jsonld-expanded" class="jsonld-panel jsonld-code hidden"></div>
         <div id="jsonld-triples" class="jsonld-panel hidden"></div>
-
-        <table class="page-table">
-          <thead><tr><th>Prefix</th><th>Namespace</th><th>Usage</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>schema:</code></td>
-              <td><code>https://schema.org/</code></td>
-              <td>Standard bibliographic properties (name, datePublished, publisher, inLanguage, numberOfPages, translator, locationCreated, author)</td>
-            </tr>
-            <tr>
-              <td><code>dcterms:</code></td>
-              <td><code>http://purl.org/dc/terms/</code></td>
-              <td>Full bibliographic citation text (bibliographicCitation)</td>
-            </tr>
-            <tr>
-              <td><code>klawiter:</code></td>
-              <td><code>chpollin.github.io/klawiter-rescue/vocab/</code></td>
-              <td>Domain-specific: entryType, timePeriod, categories, sourcePageId, the entry type classes and the contested-claim terms</td>
-            </tr>
-            <tr>
-              <td><code>xsd:</code></td>
-              <td><code>w3.org/2001/XMLSchema#</code></td>
-              <td>Typed literals: integer (page counts, IDs), gYear (publication dates)</td>
-            </tr>
-          </tbody>
-        </table>
       </section>
 
       <section id="sec-quality">
         <h2>Data quality</h2>
         <p>
-          The <a href="#quality">Data Quality</a> workbench answers what is still
+          The <a href="#data/quality">Data Quality</a> workbench answers what is still
           open in the data: field completeness per entry type, the entries whose
           values are unverified or model-derived, the unresolvable
           cross-references and the undecided authority candidates, each list

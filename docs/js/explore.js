@@ -63,14 +63,20 @@ const Explore = {
   // Init & Preprocessing
   // -------------------------------------------------------------------------
 
+  /** Modes the interface offers, in tab order. */
+  MODES: ['timeline', 'geography', 'network'],
+
   render(entries) {
     this.entries = entries;
     this._initializing = true;
     this._preprocess();
     this._renderScaffolding();
     this._bindModeTabs();
-    this.setMode('timeline');
+    // #stats opens the last mode used in this session, the first one otherwise;
+    // there is no overview layer above the visualizations any more.
+    this.setMode(this.MODES.includes(this.mode) ? this.mode : this.MODES[0]);
     this._initializing = false;
+    this.updateExploreURL(false);
   },
 
   /** The dataset-wide year range published in the data baseline. */
@@ -140,55 +146,54 @@ const Explore = {
   // Scaffolding
   // -------------------------------------------------------------------------
 
+  /**
+   * The frame every mode draws into: mode choice on top, one persistent
+   * sidebar on the left carrying filters, chips, the coverage notes and the
+   * selection, and the drawing surface taking the whole remaining width.
+   */
   _renderScaffolding() {
     const container = document.getElementById('view-stats');
-    const e = this.entries;
-    const languages = new Set(e.map(x => x.language).filter(Boolean));
-    // The header describes the whole dataset, so it states the published
-    // baseline range rather than the extent of the entries in hand.
-    const range = this._metaYearRange();
-    const headerYears = range
-      ? `${range.min}–${range.max}`
-      : `${this.yearExtent[0]}–${this.yearExtent[1]}`;
 
     container.innerHTML = `
-      <div class="explore-header">
-        <h2 class="section-heading">Explore the Bibliography</h2>
-        <div class="explore-header-meta">
-          ${fmt(e.length)} entries &middot; ${languages.size} languages &middot;
-          ${this.typeCount} types &middot; ${headerYears}
-        </div>
-        <div class="explore-mode-tabs">
-          <button type="button" class="mode-tab active" data-mode="timeline" aria-pressed="true">Timeline</button>
+      <div class="explore-head">
+        <h1 class="page-title">Explore</h1>
+        <div class="explore-mode-tabs" role="group" aria-label="Visualization">
+          <button type="button" class="mode-tab" data-mode="timeline" aria-pressed="false">Timeline</button>
           <button type="button" class="mode-tab" data-mode="geography" aria-pressed="false">Geography</button>
           <button type="button" class="mode-tab" data-mode="network" aria-pressed="false">Connections</button>
         </div>
       </div>
 
-      <div id="explore-filter-chips" class="explore-filter-chips"></div>
-
-      <div class="explore-body explore-body-full">
-        <div class="explore-viz explore-viz-full" id="explore-viz">
+      <div class="explore-layout">
+        <aside class="explore-sidebar" aria-label="Filters and selection">
+          <div id="explore-facets"></div>
+          <div id="explore-filter-chips" class="explore-filter-chips"></div>
+          <div id="explore-notes" class="explore-notes"></div>
+          <div class="explore-detail hidden" id="explore-detail">
+            <div class="explore-detail-summary" id="explore-detail-content"></div>
+          </div>
+        </aside>
+        <div class="explore-viz" id="explore-viz">
           <div id="viz-timeline" class="explore-panel"></div>
           <div id="viz-geography" class="explore-panel hidden"></div>
           <div id="viz-network" class="explore-panel hidden"></div>
         </div>
-        <aside class="explore-detail hidden" id="explore-detail">
-          <div class="explore-detail-summary" id="explore-detail-content"></div>
-        </aside>
       </div>
 
       <div class="stats-export">
-        <button class="action-btn" onclick="Export.fullDataset()">
+        <button type="button" class="action-btn" data-act="export-dataset">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          Download full dataset (JSON-LD)
+          Download dataset (JSON)
         </button>
       </div>
     `;
+
+    const exportBtn = container.querySelector('[data-act="export-dataset"]');
+    if (exportBtn) exportBtn.addEventListener('click', () => Export.fullDataset());
 
     // Shared tooltip — announced as a live region so the keyboard path
     // conveys the same reading the pointer path does.
@@ -206,6 +211,114 @@ const Explore = {
     document.querySelectorAll('.mode-tab').forEach(tab => {
       tab.addEventListener('click', () => this.setMode(tab.dataset.mode));
     });
+  },
+
+  // ---------------------------------------------------------------------------
+  // Sidebar filters — one filter bar for all three visualizations
+  // ---------------------------------------------------------------------------
+
+  /** Facet groups of the sidebar; every mode reads the same selection. */
+  FACET_GROUPS: [
+    { key: 'languages', label: 'Language', limit: 10 },
+    { key: 'types', label: 'Type', limit: 12 },
+    { key: 'decade', label: 'Decade', limit: 8 },
+  ],
+
+  _expandedFacets: {},
+
+  /** The facet value a record falls into, or null when it has none. */
+  _facetValue(key, entry) {
+    if (key === 'languages') return entry.language || this.NOT_RECORDED;
+    if (key === 'types') return entry.entryType || 'other';
+    if (key === 'decade') return entry.year ? Math.floor(entry.year / 10) * 10 : null;
+    return null;
+  },
+
+  _facetLabel(key, value) {
+    if (key === 'types') return ENTRY_TYPE_LABELS[value] || value;
+    if (key === 'decade') return `${value}s`;
+    return String(value);
+  },
+
+  _isFacetActive(key, value) {
+    if (key === 'decade') return this.filters.decade === value;
+    return this.filters[key].includes(value);
+  },
+
+  /**
+   * Counts of one facet group against every other active filter. Counting
+   * against the fully filtered set would collapse a group to its own
+   * selection, so no second value of it stays reachable.
+   */
+  facetCounts(key) {
+    const others = { ...this.filters };
+    if (key === 'decade') { others.decade = null; others.yearRange = [null, null]; }
+    else others[key] = [];
+    const counts = new Map();
+    for (const entry of this._applyFilters(this.entries, others)) {
+      const value = this._facetValue(key, entry);
+      if (value == null) continue;
+      counts.set(value, (counts.get(value) || 0) + 1);
+    }
+    return [...counts.entries()].sort((a, b) => key === 'decade'
+      ? a[0] - b[0]
+      : (b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))));
+  },
+
+  _renderSidebar() {
+    const host = document.getElementById('explore-facets');
+    if (!host) return;
+    host.innerHTML = this.FACET_GROUPS.map(g => this._facetGroupHtml(g)).join('');
+  },
+
+  _facetGroupHtml(group) {
+    const rows = this.facetCounts(group.key);
+    const expanded = !!this._expandedFacets[group.key];
+    const shown = expanded ? rows : rows.slice(0, group.limit);
+    const items = shown.map(([value, count]) => {
+      const on = this._isFacetActive(group.key, value);
+      return `<button type="button" class="facet-item${on ? ' active' : ''}"
+        aria-pressed="${on}" data-facet="${group.key}" data-value="${esc(String(value))}">
+        <span class="facet-label">${esc(this._facetLabel(group.key, value))}</span>
+        <span class="facet-count">${fmt(count)}</span>
+      </button>`;
+    }).join('');
+    const more = rows.length > group.limit
+      ? `<button type="button" class="facet-more" data-facet-more="${group.key}">${
+          expanded ? 'Show fewer' : `Show all ${rows.length}`}</button>`
+      : '';
+    return `<div class="facet-group">
+      <div class="facet-heading">${group.label}</div>${items}${more}
+    </div>`;
+  },
+
+  toggleFacetExpand(key) {
+    this._expandedFacets[key] = !this._expandedFacets[key];
+    this._renderSidebar();
+  },
+
+  /** A sidebar click; the value arrives as the string the attribute carried. */
+  setFacet(key, raw) {
+    if (key === 'decade') {
+      // A decade and a brushed year range address the same axis.
+      this.filters.yearRange = [null, null];
+      const timeline = this._module('timeline');
+      if (timeline) timeline.zoomedDomain = null;
+      this.toggleFilter('decade', parseInt(raw, 10));
+      return;
+    }
+    this.toggleFilter(key, raw);
+  },
+
+  /**
+   * What the active view cannot draw, stated once in the sidebar instead of
+   * on the drawing surface. Returns the host so the caller can bind the
+   * controls it wrote into it.
+   */
+  setViewNote(html) {
+    const host = document.getElementById('explore-notes');
+    if (host) host.innerHTML = html;
+    return host;
   },
 
   // -------------------------------------------------------------------------
@@ -228,6 +341,7 @@ const Explore = {
 
     // Reset selection (visual highlight is mode-specific) but preserve filters
     this.selection = [];
+    this.setViewNote('');
     this._renderFilterChips();
     this.updateSelection([]);
     this._renderActiveMode(this.visibleEntries());
@@ -247,8 +361,12 @@ const Explore = {
   },
 
   getFiltered() {
-    let filtered = this.entries;
-    const f = this.filters;
+    return this._applyFilters(this.entries, this.filters);
+  },
+
+  /** Apply one filter set to one record set; the facet counts reuse this. */
+  _applyFilters(entries, f) {
+    let filtered = entries;
     if (f.languages.length) {
       filtered = filtered.filter(e => f.languages.includes(e.language || this.NOT_RECORDED));
     }
@@ -346,7 +464,13 @@ const Explore = {
     document.addEventListener('explore:filterChange', handler);
   },
 
+  /**
+   * The chip bar and the facet lists show one and the same selection, so the
+   * single entry point redraws both; the views that set a filter directly
+   * (timeline brush, decade playback) call this and stay in step.
+   */
   _renderFilterChips() {
+    this._renderSidebar();
     const el = document.getElementById('explore-filter-chips');
     if (!el) return;
     const f = this.filters;
@@ -556,7 +680,7 @@ const Explore = {
     const listHtml = shown.map(e =>
       `<li class="detail-entry-item">
         <a href="#entry=${e.sourcePageId}" class="detail-entry-link">
-          <span class="badge badge-${e.entryType}">${ENTRY_TYPE_LABELS[e.entryType] || e.entryType}</span>
+          <span class="badge">${ENTRY_TYPE_LABELS[e.entryType] || e.entryType}</span>
           ${esc(e.title || 'Untitled')}
           ${e.year ? `<span class="detail-entry-year">${e.year}</span>` : ''}
         </a>
@@ -648,3 +772,12 @@ const Explore = {
     this.navigateToResults(params);
   },
 };
+
+// One delegated listener for the sidebar; the facet lists are rebuilt on every
+// filter change, so per-element handlers would have to be rebound each time.
+document.addEventListener('click', (ev) => {
+  const more = ev.target.closest('#explore-facets [data-facet-more]');
+  if (more) { Explore.toggleFacetExpand(more.dataset.facetMore); return; }
+  const item = ev.target.closest('#explore-facets [data-facet]');
+  if (item) Explore.setFacet(item.dataset.facet, item.dataset.value);
+});

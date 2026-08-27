@@ -25,6 +25,9 @@
 
   --max-width: 1200px;
   --sidebar-width: 240px;
+  /* Explore keeps its own, slightly wider column: it carries the filter
+     chips and the selection detail as well as the facet lists. */
+  --explore-sidebar-width: 264px;
   --header-height: 56px;
 }
 
@@ -61,14 +64,86 @@ h1, h2, h3, h4 {
   font-weight: 400;
 }
 
-.section-heading {
+/* Letterspaced capitals are reserved for the page title of a view. Everything
+   below it is a plain serif heading, distinguished by colour and size. */
+.page-title {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 400;
-  color: var(--sz-gold-dark);
+  color: var(--sz-burgundy);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--sz-gold-dark);
   margin-bottom: 1rem;
+}
+
+/* --- Buttons ---
+   The interface offers two button styles and nothing between them: filled
+   burgundy for the action a view is there for, outlined for every other
+   action. The named classes below are the historical hooks in the markup;
+   they are grouped here so a button cannot acquire a third look. Compact
+   controls inside lists and rows (facet items, legend entries, the per-field
+   controls of edit mode) are not buttons in this sense and keep their own
+   in-place form. */
+.btn-primary,
+.browse-btn,
+.page-download-btn,
+.mode-tab.active {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sz-cream);
+  background: var(--sz-burgundy);
+  border: 1px solid var(--sz-burgundy);
+  border-radius: 4px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-primary:hover,
+.browse-btn:hover,
+.page-download-btn:hover,
+.mode-tab.active:hover {
+  background: var(--sz-burgundy-dark);
+  border-color: var(--sz-burgundy-dark);
+  color: var(--sz-cream);
+}
+
+.btn-secondary,
+.action-btn,
+.mode-tab,
+.load-more button {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--sz-burgundy);
+  background: none;
+  border: 1px solid var(--sz-border);
+  border-radius: 4px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn-secondary:hover,
+.action-btn:hover,
+.mode-tab:hover,
+.load-more button:hover {
+  border-color: var(--sz-burgundy);
+  background: rgba(99, 26, 52, 0.04);
+  color: var(--sz-burgundy);
 }
 
 /* --- Header --- */
@@ -246,24 +321,37 @@ h1, h2, h3, h4 {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--sz-gold);
+  color: var(--sz-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 0.5rem;
 }
 
+/* Written as a div in the results sidebar and as a button in Explore; the
+   reset keeps the two spellings visually identical. */
 .facet-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
   padding: 0.2rem 0;
   padding-left: 0.5rem;
+  text-align: left;
   cursor: pointer;
   font-family: var(--font-serif);
   font-size: 0.875rem;
   color: var(--sz-text);
+  background: none;
+  border: 0;
   border-left: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;
+}
+
+/* The value name yields to the count when the sidebar is narrow. */
+.facet-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .facet-item:hover {
   color: var(--sz-burgundy);
@@ -297,14 +385,6 @@ h1, h2, h3, h4 {
   margin-bottom: 0.25rem;
 }
 
-.home-subtitle {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  color: var(--sz-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 1rem;
-}
 
 .home-text {
   font-family: var(--font-serif);
@@ -351,7 +431,8 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-/* Category list (expandable rows) */
+/* Category list. One row is one button opening the filtered list; rows
+   separate through spacing and hover, not through rules. */
 .category-section {
   margin-bottom: 2rem;
 }
@@ -361,36 +442,31 @@ h1, h2, h3, h4 {
   flex-direction: column;
 }
 
-/* Rows separate through spacing and hover, not through rules. */
-.category-row-header:hover {
-  background: var(--sz-white);
-}
-
-.category-row-header {
+.category-row {
   display: flex;
-  align-items: center;
-  padding: 0.625rem 0;
-  gap: 0.5rem;
+  align-items: baseline;
+  width: 100%;
+  gap: 0.75rem;
+  padding: 0.4rem 0.25rem;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.category-row:hover {
+  background: var(--sz-cream);
+}
+.category-row:hover .category-row-name {
+  color: var(--sz-burgundy);
 }
 
 .category-row-name {
   font-family: var(--font-serif);
   font-size: 0.9375rem;
   color: var(--sz-text);
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 1px;
-}
-.category-row-name:hover {
-  color: var(--sz-burgundy);
-  border-bottom-color: var(--sz-burgundy);
-}
-.category-row-name:focus-visible {
-  color: var(--sz-burgundy);
-  outline: 2px solid var(--sz-gold);
-  outline-offset: 2px;
-  border-radius: 2px;
+  transition: color 0.15s;
 }
 
 .category-row-count {
@@ -401,103 +477,6 @@ h1, h2, h3, h4 {
   margin-left: auto;
 }
 
-.category-expand-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
-  color: var(--sz-text-light);
-  transition: color 0.15s;
-  display: flex;
-  align-items: center;
-}
-.category-expand-btn:hover {
-  color: var(--sz-burgundy);
-}
-.expand-chevron {
-  transition: transform 0.2s ease;
-}
-.category-row.expanded .expand-chevron {
-  transform: rotate(180deg);
-}
-
-/* Subcategory expand area */
-.category-expand {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding-left: 1rem;
-}
-.category-row.expanded .category-expand {
-  max-height: 500px;
-}
-
-.subcategory-group {
-  margin-bottom: 0.5rem;
-}
-
-.subcategory-format {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--sz-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-.subcategory-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  margin-bottom: 0.375rem;
-}
-
-.subcategory-item {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  color: var(--sz-text);
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 3px;
-  padding: 0.2rem 0.5rem;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-}
-.subcategory-item:hover {
-  border-color: var(--sz-burgundy);
-  color: var(--sz-burgundy);
-}
-
-.subcategory-count {
-  font-family: var(--font-sans);
-  font-size: 0.65rem;
-  color: var(--sz-text-light);
-}
-
-.subcategory-more {
-  font-family: var(--font-sans);
-  font-size: 0.7rem;
-  color: var(--sz-text-light);
-  padding: 0.2rem 0.5rem;
-}
-
-.browse-btn {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--sz-cream);
-  background: var(--sz-burgundy);
-  border: none;
-  border-radius: 4px;
-  padding: 0.625rem 1.5rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.browse-btn:hover {
-  background: var(--sz-burgundy-dark);
-}
 
 /* Compact one-screen home layout */
 .home-compact .home-title {
@@ -545,12 +524,8 @@ h1, h2, h3, h4 {
   color: var(--sz-gold-dark);
   margin: 0 0 0.35rem;
 }
-.home-groups .category-row-header {
+.home-groups .category-row {
   padding: 0.3rem 0.25rem;
-}
-/* The rows already sit on white inside the card. */
-.home-groups .category-row-header:hover {
-  background: var(--sz-cream);
 }
 /* --- Results --- */
 .results-header {
@@ -671,22 +646,11 @@ h1, h2, h3, h4 {
   text-align: center;
   padding: 1rem 0;
 }
-.load-more button {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  color: var(--sz-burgundy);
-  background: none;
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 0.5rem 1.5rem;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-.load-more button:hover {
-  border-color: var(--sz-burgundy);
-}
 
 /* --- Entry Type Badges --- */
+/* The entry type is a classification every card carries, so it reads as a
+   quiet label. Colour on a card means a state that needs attention (review
+   status, matrix cell, contested claim). */
 .badge {
   display: inline-block;
   padding: 0.125rem 0.5rem;
@@ -697,23 +661,9 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
   letter-spacing: 0.025em;
   white-space: nowrap;
+  background: var(--sz-border-light);
+  color: var(--sz-text-light);
 }
-
-.badge-fiction { background: #EDE4D4; color: #7A1B2D; }
-.badge-essay { background: #F5EDD8; color: #7A5C11; }
-.badge-poetry { background: #E8E0EF; color: #5B3A7A; }
-.badge-drama { background: #F0DDE4; color: #7A1B2D; }
-.badge-correspondence { background: #DDE8E0; color: #2D5B3A; }
-.badge-film { background: #EDDDDD; color: #7A2D1B; }
-.badge-historical-study { background: #E0E0ED; color: #3A3A7A; }
-.badge-secondary-literature { background: #EDE8E0; color: #5B5040; }
-.badge-collected-works { background: #F0EBD8; color: #6B5A14; }
-.badge-foreword { background: #DDE8E4; color: #2D5B4A; }
-.badge-translation { background: #E0EDDD; color: #3A5B2D; }
-.badge-symposium { background: #F0E4DD; color: #7A4A1B; }
-.badge-dramatic-reading { background: #EDDDEE; color: #6B1B6E; }
-.badge-newspaper { background: #E8E4E0; color: #5B504A; }
-.badge-other { background: #E8E4E0; color: #5C5C5C; }
 
 /* Metadata table */
 .meta-table {
@@ -770,10 +720,8 @@ h1, h2, h3, h4 {
 .detail-section-heading {
   font-family: var(--font-serif);
   font-size: 1rem;
-  font-weight: 400;
-  color: var(--sz-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--sz-gold-dark);
   margin-bottom: 0.75rem;
 }
 
@@ -822,23 +770,10 @@ h1, h2, h3, h4 {
   margin-top: 1.25rem;
 }
 
-.action-btn {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  color: var(--sz-burgundy);
-  background: none;
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
+/* Inside a card's action bar the outlined button sits in a dense row. */
+.action-bar .action-btn {
   padding: 0.375rem 0.75rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
   gap: 0.375rem;
-  transition: border-color 0.15s, background 0.15s;
-}
-.action-btn:hover {
-  border-color: var(--sz-burgundy);
-  background: rgba(122, 27, 45, 0.04);
 }
 
 .action-btn svg {
@@ -853,14 +788,20 @@ h1, h2, h3, h4 {
   margin-top: 1rem;
 }
 
-/* --- Explore Interface --- */
-.explore-header {
+/* --- Explore Interface ---
+   One frame carries all three visualizations: the mode choice on top, a
+   persistent sidebar holding the filters that every mode reads, and the
+   drawing surface across the remaining width. */
+.explore-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.explore-head .page-title {
+  margin-bottom: 0;
 }
 
 .explore-mode-tabs {
@@ -868,28 +809,38 @@ h1, h2, h3, h4 {
   gap: 0.25rem;
 }
 
+/* Base and active look come from the two button styles. */
 .mode-tab {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--sz-text-light);
-  background: transparent;
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
   padding: 0.4rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.mode-tab:hover {
-  color: var(--sz-burgundy);
-  border-color: var(--sz-burgundy);
+  color: var(--sz-text-light);
 }
 .mode-tab.active {
-  color: var(--sz-white);
-  background: var(--sz-burgundy);
-  border-color: var(--sz-burgundy);
+  padding: 0.4rem 1rem;
 }
 
+.explore-layout {
+  display: grid;
+  grid-template-columns: var(--explore-sidebar-width) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.explore-sidebar {
+  background: var(--sz-white);
+  border: 1px solid var(--sz-border);
+  border-radius: 4px;
+  padding: 1rem;
+  position: sticky;
+  top: calc(var(--header-height) + 0.75rem);
+  max-height: calc(100vh - var(--header-height) - 2rem);
+  overflow-y: auto;
+}
+.explore-sidebar .facet-group:last-of-type {
+  margin-bottom: 1rem;
+}
+
+/* The active filters of all three modes, above the coverage notes. */
 .explore-filter-chips {
   min-height: 0;
   display: flex;
@@ -898,7 +849,29 @@ h1, h2, h3, h4 {
   align-items: center;
 }
 .explore-filter-chips:not(:empty) {
-  margin-bottom: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sz-border-light);
+}
+
+/* What the active mode cannot draw, stated once beside it rather than on it. */
+.explore-notes {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--sz-text-light);
+}
+.explore-notes:not(:empty) {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sz-border-light);
+}
+.explore-notes .link-btn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+.explore-notes summary {
+  cursor: pointer;
+  margin-top: 0.35rem;
 }
 .explore-provenance-toggle {
   display: inline-flex;
@@ -912,28 +885,9 @@ h1, h2, h3, h4 {
 }
 .explore-provenance-toggle input { cursor: pointer; }
 
-.explore-header-meta {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: var(--sz-text-light);
-  margin-top: -0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.explore-body {
-  display: flex;
-  gap: 1.5rem;
-  min-height: 450px;
-  margin-bottom: 1.5rem;
-}
-
-.explore-body-full .explore-viz-full {
-  flex: 1;
-}
-
 .explore-viz {
-  flex: 1;
   min-width: 0;
+  min-height: 480px;
   background: var(--sz-white);
   border: 1px solid var(--sz-border);
   border-radius: 4px;
@@ -944,15 +898,11 @@ h1, h2, h3, h4 {
 
 .explore-panel { width: 100%; }
 
+/* The selection reads under the filters that produced it. */
 .explore-detail {
-  width: 320px;
-  flex-shrink: 0;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 1.25rem;
-  overflow-y: auto;
-  max-height: 600px;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sz-border-light);
 }
 .explore-detail.hidden { display: none; }
 
@@ -1010,7 +960,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--sz-gold);
+  color: var(--sz-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.375rem;
@@ -1059,7 +1009,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--sz-gold);
+  color: var(--sz-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 0.5rem;
@@ -1149,13 +1099,6 @@ h1, h2, h3, h4 {
   border-color: var(--sz-burgundy);
   font-weight: 600;
 }
-.timeline-coverage {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  color: var(--sz-text-light);
-  font-style: italic;
-  margin-top: 0.5rem;
-}
 .rank-sparse-band {
   fill: var(--sz-text-light);
   opacity: 0.07;
@@ -1230,13 +1173,6 @@ h1, h2, h3, h4 {
 .geo-bubble {
   transition: stroke 0.15s, stroke-width 0.15s;
 }
-.geo-note {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  color: var(--sz-text-light);
-  font-style: italic;
-  margin-top: 0.5rem;
-}
 .geo-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1281,10 +1217,10 @@ h1, h2, h3, h4 {
 .geo-missing {
   display: block;
   margin-top: 0.375rem;
-  font-style: normal;
   line-height: 1.7;
 }
 .geo-missing-item {
+  font-family: var(--font-sans);
   font-size: 0.72rem;
 }
 
@@ -1388,7 +1324,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--sz-gold);
+  color: var(--sz-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 0.5rem;
@@ -1400,8 +1336,45 @@ h1, h2, h3, h4 {
   color: var(--sz-text-light);
   line-height: 1.6;
 }
+.footer-text + .footer-text,
+.footer-org + .footer-text {
+  margin-top: 0.6rem;
+}
 .footer-text a {
   color: var(--sz-burgundy);
+}
+
+/* The information column runs in two columns so six links stay one block. */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.3rem 1.5rem;
+}
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.gh-mark {
+  flex-shrink: 0;
+}
+
+/* Producer credit: the mark and the name are one link. */
+.footer-org {
+  margin-top: 0.6rem;
+}
+.footer-org-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--sz-burgundy);
+}
+.footer-org-link img {
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 
 /* Stats export */
@@ -1432,12 +1405,19 @@ h1, h2, h3, h4 {
 
 /* --- Focus Visible --- */
 .action-btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.browse-btn:focus-visible,
+.page-download-btn:focus-visible,
+.mode-tab:focus-visible,
+.category-row:focus-visible,
 .facet-item:focus-visible,
 .card-header:focus-visible,
 .sort-select:focus-visible,
 .load-more button:focus-visible,
 .chip button:focus-visible,
 .facet-more:focus-visible,
+.footer-links a:focus-visible,
 .site-nav a:focus-visible {
   outline: 2px solid var(--sz-burgundy);
   outline-offset: 2px;
@@ -1474,8 +1454,7 @@ h1, h2, h3, h4 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1.25rem;
-  padding: 0.6rem 0 0.9rem;
-  border-bottom: 1px solid var(--sz-border);
+  padding: 0 0 0.9rem;
   margin-bottom: 1rem;
 }
 .page-anchors a {
@@ -1491,9 +1470,15 @@ h1, h2, h3, h4 {
   border-bottom-color: var(--sz-burgundy);
 }
 
+/* Reading text sits on a white card with a quiet edge, so a long page is a
+   sheet on the cream ground rather than text laid directly on it. */
 .page-content {
-  max-width: 720px;
-  padding-bottom: 2rem;
+  max-width: 800px;
+  margin-bottom: 2rem;
+  background: var(--sz-white);
+  border: 1px solid var(--sz-border);
+  border-radius: 4px;
+  padding: 1.75rem 2rem 2rem;
 }
 
 .page-content h1 {
@@ -1508,11 +1493,9 @@ h1, h2, h3, h4 {
 
 .page-content h2 {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
-  font-weight: 400;
+  font-size: 1.3125rem;
+  font-weight: 600;
   color: var(--sz-gold-dark);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
   margin: 2.5rem 0 0.75rem;
 }
 .page-content h2:first-of-type {
@@ -1592,49 +1575,30 @@ h1, h2, h3, h4 {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
 }
+/* A table is read row by row, so alternating rows carry the structure and
+   the header needs one rule rather than a filled bar. */
 .page-table th {
   text-align: left;
-  padding: 0.5rem 0.75rem;
-  background: var(--sz-burgundy);
-  color: var(--sz-cream);
+  padding: 0.4rem 0.75rem;
+  color: var(--sz-gold-dark);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   font-size: 0.75rem;
+  border-bottom: 2px solid var(--sz-border);
 }
 .page-table td {
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--sz-border-light);
   vertical-align: top;
 }
-.page-table tr:last-child td {
-  border-bottom: none;
+.page-table tbody tr:nth-child(even) {
+  background: var(--sz-cream);
 }
 .page-table tbody tr:hover {
-  background: rgba(184, 150, 62, 0.05);
+  background: rgba(184, 150, 62, 0.12);
 }
 
 /* Action buttons on pages (download, etc.) */
 .page-actions {
   margin: 1rem 0 1.5rem;
-}
-.page-download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: var(--sz-burgundy);
-  color: var(--sz-cream);
-  border: none;
-  border-radius: 4px;
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.page-download-btn:hover {
-  background: var(--sz-burgundy-dark);
 }
 
 /* --- JSON-LD Playground --- */
@@ -1744,6 +1708,24 @@ h1, h2, h3, h4 {
 .jsonld-tab.active {
   color: var(--sz-burgundy);
   border-bottom-color: var(--sz-burgundy);
+}
+
+/* The @context is identical for every entry, so it opens on request and the
+   record itself is what the panel shows first. */
+.jsonld-context {
+  margin-bottom: 0.75rem;
+}
+.jsonld-context summary {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--sz-burgundy);
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+.jsonld-context .jsonld-code {
+  border-radius: 4px;
+  max-height: 320px;
+  margin-bottom: 0;
 }
 
 .jsonld-code {
@@ -2228,44 +2210,6 @@ body.edit-mode .meta-table {
   margin: 0.7rem 0 0.2rem;
 }
 
-/* --- Verbund Bar --- */
-.verbund-bar {
-  background: #f2f2f2;
-  border-bottom: 1px solid var(--sz-border);
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  height: 28px;
-  padding: 0 1rem;
-}
-.verbund-mark {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--sz-burgundy);
-  line-height: 1;
-}
-.verbund-bar a {
-  color: var(--sz-text-light);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.verbund-bar a:hover {
-  color: var(--sz-burgundy);
-  text-decoration: none;
-}
-.verbund-bar .verbund-active {
-  color: var(--sz-burgundy);
-  font-weight: 600;
-}
-.verbund-sep {
-  color: var(--sz-border);
-}
-
 /* --- Responsive (basic) --- */
 @media (max-width: 1024px) {
   .sidebar {
@@ -2275,12 +2219,17 @@ body.edit-mode .meta-table {
     display: flex;
   }
 
-  .explore-body {
-    flex-direction: column;
+  /* The Explore sidebar carries the only filter path of that view, so it
+     stacks above the drawing surface rather than disappearing. */
+  .explore-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .explore-detail {
-    width: 100%;
-    max-height: 300px;
+  .explore-sidebar {
+    position: static;
+    max-height: none;
+  }
+  .explore-viz {
+    min-height: 380px;
   }
   .footer-inner {
     grid-template-columns: 1fr;
@@ -2312,7 +2261,12 @@ body.edit-mode .meta-table {
   .home-title {
     font-size: 1.375rem;
   }
-
+  .page-content {
+    padding: 1.25rem 1rem 1.5rem;
+  }
+  .footer-links {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* --- Compact entry detail (read layout) --- */
@@ -2445,7 +2399,7 @@ body.edit-mode .meta-table {
   .reference-rank-sources { columns: 1; }
 }
 
-/* --- Data-quality workbench (#quality) --- */
+/* --- Data-quality workbench (#data/quality) --- */
 .curate-page .curate-intro {
   color: var(--sz-text-light);
   max-width: 46rem;
@@ -2462,7 +2416,11 @@ body.edit-mode .meta-table {
   color: var(--sz-text-light);
   margin-bottom: 0.6rem;
 }
-.curate-stats { margin-bottom: 0.5rem; }
+/* Three figures that direct the work; everything else is a queue below. */
+.curate-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 0.5rem;
+}
 .matrix-scroll { overflow-x: auto; }
 .curate-matrix {
   border-collapse: collapse;

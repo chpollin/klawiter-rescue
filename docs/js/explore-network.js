@@ -124,7 +124,7 @@ const ExploreNetwork = {
         <summary>
           <span class="reference-rank-pos">${i + 1}</span>
           <span class="reference-rank-main">
-            <span class="badge badge-${entry.entryType}">${ENTRY_TYPE_LABELS[entry.entryType] || entry.entryType}</span>
+            <span class="badge">${ENTRY_TYPE_LABELS[entry.entryType] || entry.entryType}</span>
             <a href="#entry=${row.id}">${esc(entry.title || 'Untitled')}</a>
             ${entry.year ? `<span class="detail-entry-year">${entry.year}</span>` : ''}
           </span>

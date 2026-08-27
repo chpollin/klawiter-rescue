@@ -228,7 +228,12 @@ const App = {
     help: 'about/help',
     imprint: 'about/imprint',
     jsonld: 'data/playground',
+    // The workbench became a sub-page of Data; the published hash stays valid.
+    quality: 'data/quality',
   },
+
+  /** The data-quality workbench, a sub-page of Data rather than a page of its own. */
+  QUALITY_ROUTE: 'data/quality',
 
   /** Scroll a rendered page section into view; the id is set by Pages. */
   _scrollToSection(section) {
@@ -268,8 +273,8 @@ const App = {
       return;
     }
 
-    // Data-quality workbench (curation view)
-    if (hash === 'quality') {
+    // Data-quality workbench (curation view), rendered in the Data page frame
+    if (hash === this.QUALITY_ROUTE) {
       this._resetSearchState();
       this.showView('page');
       Curate.render();
@@ -675,9 +680,9 @@ const App = {
   _updateEditToggleVisibility() {
     const btn = document.getElementById('edit-toggle');
     if (!btn) return;
-    const slug = location.hash.slice(1).split('/')[0];
+    const hash = location.hash.slice(1);
     const usable = this.EDIT_VIEWS.includes(this.state.view)
-      || (this.state.view === 'page' && slug === 'quality');
+      || (this.state.view === 'page' && hash === this.QUALITY_ROUTE);
     btn.style.display = usable ? '' : 'none';
   },
 
@@ -691,8 +696,10 @@ const App = {
     };
     if (titles[view]) { document.title = titles[view]; return; }
     if (view === 'page') {
-      const page = location.hash.slice(1).split('/')[0];
-      const labels = { about: 'About', data: 'Data', quality: 'Data Quality' };
+      const hash = location.hash.slice(1);
+      if (hash === this.QUALITY_ROUTE) { document.title = `Data Quality \u2014 ${base}`; return; }
+      const labels = { about: 'About', data: 'Data' };
+      const page = hash.split('/')[0];
       document.title = labels[page] ? `${labels[page]} \u2014 ${base}` : base;
       return;
     }
@@ -749,7 +756,9 @@ const App = {
   },
 
   renderCard(e) {
-    const badge = `<span class="badge badge-${e.entryType}">${ENTRY_TYPE_LABELS[e.entryType] || e.entryType}</span>`;
+    // Monochrome: the type is a plain meta item, colour stays with the states
+    // that carry meaning (review status, matrix, contested).
+    const badge = `<span class="badge">${ENTRY_TYPE_LABELS[e.entryType] || e.entryType}</span>`;
     const year = e.year ? `<span class="card-meta-text">${e.year}</span>` : '';
     const lang = e.language ? `<span class="card-meta-text">${e.language}</span>` : '';
     const loc = e.location ? `<span class="card-meta-text">${esc(e.location)}</span>` : '';
@@ -937,11 +946,12 @@ const App = {
   },
 
   /** Routes a session list can be opened from, with the name of the way back. */
-  RESULT_ORIGINS: { quality: 'Data Quality', stats: 'Explore' },
+  RESULT_ORIGINS: { 'data/quality': 'Data Quality', stats: 'Explore' },
 
   _backLinkHtml() {
     const from = location.hash.slice(1);
-    const name = this.RESULT_ORIGINS[from.split('/')[0]];
+    // The workbench route carries a segment of its own; Explore keys on its slug.
+    const name = this.RESULT_ORIGINS[from] || this.RESULT_ORIGINS[from.split('/')[0]];
     if (!name) return '';
     return `<button class="link-btn results-back" data-act="back" data-hash="${esc(from)}">
       &larr; Back to ${esc(name)}</button>`;

@@ -1,12 +1,12 @@
 ---
-title: Oberfläche und Kuration
+title: Interface and Curation
 aliases: [frontend, interface, EIL, curation tool]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
-language: de
-version: 1.4
+language: en
+version: 1.5
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
 updated: 2026-08-27
@@ -14,144 +14,160 @@ authors: [Christopher Pollin]
 related: [data, pipeline, testing, production-readiness]
 ---
 
-# Oberfläche und Kuration
+# Interface and Curation
 
-## Aufgabe
+## Purpose
 
-Die statische Anwendung unter `docs/` macht den geretteten Bestand recherchierbar und stellt eine lokale Expert-in-the-Loop-Kurationsoberfläche bereit. Sie benötigt keinen Build-Schritt und keinen Serverprozess außer einem statischen localhost-Server für den Editiermodus.
+The static application under `docs/` makes the rescued holding searchable and provides a local Expert-in-the-Loop curation surface. It needs no build step and no server process beyond a static localhost server for edit mode.
 
-Die öffentliche Anwendung unterstützt Suche, Facetten, Zeitverlauf, Sprach- und Ortsauswertung, Referenz-Ranglisten, Detailkarten, eine Datenqualitäts-Werkbank und Zitationsexporte. Die lokale Kurationsschicht ergänzt Fundstellen, Provenienz, Triage, subjektbezogene Normdaten-Entscheidungen und den versionierten Patch-Export. Die Oberflächensprache ist durchgehend Englisch, auch im Editiermodus.
+The public application supports search, facets, a timeline, language and place analysis, reference rankings, detail cards, a data-quality workbench and citation exports. The local curation layer adds source evidence, provenance, triage, subject-level authority decisions and a versioned patch export. The interface language is English throughout, edit mode included.
 
-## Architektur
+## Architecture
 
-`docs/index.html` lädt klassische Skripte (kein Modulsystem, gemeinsamer globaler Namensraum) und lokal vendorte Abhängigkeiten (`docs/vendor/`: FlexSearch, D3 v7, topojson-client, d3-sankey, `countries-110m.json` mit Provenienzvermerk). FlexSearch ist `defer` geladen, weil jeder Besuch den Suchindex braucht. Die drei Visualisierungs-Bundles lädt `App.ensureExploreLibs` erst beim ersten Wechsel auf `#stats` in fester Reihenfolge nach und rendert Explore hinter einem einmaligen Promise-Gate; scheitert der Nachladevorgang, zeigt die Explore-Ansicht eine Fehlermeldung mit Retry, während Suche und Ergebnisliste unberührt weiterlaufen. Die Anwendung kontaktiert zur Laufzeit keinen externen Host.
+`docs/index.html` loads classic scripts (no module system, one shared global namespace) and locally vendored dependencies (`docs/vendor/`: FlexSearch, D3 v7, topojson-client, d3-sankey, `countries-110m.json` with a provenance note). FlexSearch is loaded with `defer` because every visit needs the search index. The three visualization bundles are fetched by `App.ensureExploreLibs` on the first switch to `#stats`, in a fixed order and behind a single promise gate; if that fetch fails, the Explore view shows an error with a retry while search and the result list keep working. The application contacts no external host at runtime.
 
-| Modul | Aufgabe |
+| Module | Task |
 |---|---|
-| `app.js` | Daten laden, Zustand, Hash-Routing, Ergebnisliste, Karten, Editiermodus-Schalter |
-| `constants.js` | Typ- und Periodenlabels, Farbkonstanten, Chart-Maße |
-| `utils.js` | Escaping, Highlighting, Zähl- und Downloadhelfer |
-| `home.js` | Startansicht mit Kennzahlen und Einstiegen |
-| `facets.js` | Facettenleiste der Ergebnisansicht |
-| `detail.js` | Eintragsdetail in zwei Layouts: kompakte Leseansicht, Adjudikationstabelle im Editiermodus |
-| `edit.js` | lokale Feld- und Reconciliation-Kuration, Triage-Hinweise, Fundstellen, Patch-Export |
-| `curate.js` | Datenqualitäts-Werkbank (`#quality`): Vollständigkeitsmatrix, Arbeitsvorräte, Kandidaten-Queue |
-| `export.js` | BibTeX-, RIS-, Einzel- und Gesamtexport, Permalink |
-| `pages.js` | die beiden statischen Seiten About und Data, Zahlen dynamisch aus `_meta` |
-| `jsonld-playground.js` | interaktive JSON-LD-Ansicht mit escaptem Syntax-Highlighting, als Abschnitt der Data-Seite gerendert; adressierbar über `#data/playground/<pageId>`, Vorschlagsliste als `listbox` mit Pfeil- und Enter-Bedienung und eigenem Leerzustand, Ansichts-Buttons mit `aria-pressed`, Dokument-Listener einmalig registriert, Eintragstypen aus `constants.js` |
-| `explore.js` | Explore-Rahmen: Modi, geteilte Filter, URL-Zustand, Detailpanel |
-| `explore-timeline.js` | Zeitverlauf mit Sprach-, Typ- und Provenienz-Schichten |
-| `explore-geography.js` | Globus- und Kartenansicht aus der vendorten Geometrie |
-| `explore-network.js` | Referenz-Rangliste (meistreferenzierte Einträge) und Übersetzer-Sankey |
+| `app.js` | data loading, state, hash routing, result list, cards, edit-mode switch |
+| `constants.js` | type and period labels, colour constants, chart dimensions |
+| `utils.js` | escaping, highlighting, counting and download helpers |
+| `home.js` | start view with figures and entry points; one plain row per category |
+| `facets.js` | facet sidebar of the result view |
+| `detail.js` | entry detail in two layouts, a compact reading view and an adjudication table in edit mode |
+| `edit.js` | local field and reconciliation curation, triage hints, source evidence, patch export |
+| `curate.js` | data-quality workbench (`#data/quality`): completeness matrix, work queues, candidate queue |
+| `export.js` | BibTeX, RIS, single-entry and full export, permalink |
+| `pages.js` | the two static pages About and Data, figures taken from `_meta` |
+| `jsonld-playground.js` | interactive JSON-LD view with escaped syntax highlighting, rendered as a section of the Data page; addressable through `#data/playground/<pageId>`, suggestion list as a `listbox` with arrow and Enter operation and its own empty state, view buttons carrying `aria-pressed`, document listener registered once, entry types read from `constants.js` |
+| `explore.js` | Explore frame: modes, the shared filter set, URL state, detail panel |
+| `explore-timeline.js` | timeline with language, type and provenance layers |
+| `explore-geography.js` | globe and map view from the vendored geometry |
+| `explore-network.js` | reference ranking (most-referenced entries) and translator Sankey |
 
-Die Anwendung lädt `docs/data/klawiter.json` blockierend mit `resp.ok`-Prüfung. Scheitert dieser Ladevorgang, tritt ein ganzseitiger Fehlerzustand an die Stelle der Startansicht, der die Ursache benennt und einen Retry anbietet; Navigation und Suchfeld sind dabei sichtbar deaktiviert, weil ohne Bestand keine von beiden etwas auflöst. `reconciliation.json` wird dort geladen, wo die Daten zum ersten Mal sichtbar werden (aufgeklappte Karte, Editiermodus, Werkbank), über eine geteilte Ladezusage, und eine bereits offene Karte wird nach dem Eintreffen aufgefrischt. `triage.json` kommt erst beim Betreten des Editiermodus. Der Suchindex wird nach dem ersten Paint über `requestIdleCallback` vorgebaut, mit `setTimeout`-Fallback und Lazy-Bau bei der ersten Suche als Rückfallweg. Die Datenverifikation (`verifyData`) läuft nur auf `localhost`, weil sie ein Entwicklungsinstrument ist und mehrere Vollpässe über den Bestand kostet. Fehlende Reconciliation-Daten führen nicht zu erfundenen Links; die betroffenen UI-Bereiche bleiben leer.
+The application loads `docs/data/klawiter.json` blocking and checks `resp.ok`. If that load fails, a full-page error state replaces the start view, names the cause and offers a retry; navigation and the search field are visibly disabled meanwhile, because without the holding neither resolves anything. `reconciliation.json` is loaded where its data first becomes visible (expanded card, edit mode, workbench) through a shared load promise, and a card that is already open is refreshed once the data arrives. `triage.json` is fetched only on entering edit mode. The search index is built after first paint through `requestIdleCallback`, with a `setTimeout` fallback and a lazy build on the first search as the last resort. Data verification (`verifyData`) runs on `localhost` only, because it is a development instrument and costs several full passes over the holding. Missing reconciliation data produces no invented links; the affected areas stay empty.
 
-## Navigation, Routen und Seitenzuschnitt
+## Navigation, Routes and Page Layout
 
-Die Kopfnavigation führt vier Ziele, Overview, Explore, Data und About. Ein Dropdown gibt es nicht mehr; alles, was dort lag, ist in die beiden Textseiten eingegangen oder steht im Footer. Der Footer trägt zwei Spalten, links Kompilator, herausgebendes Umfeld und die Lizenzzeile, rechts die Verweise.
+The header navigation carries four destinations, Overview, Explore, Data and About. There is no dropdown and no research-network bar above the header; what those held has moved into the two text pages or into the footer. The footer carries two blocks, credits on the left with compiler, publishing context, the Promptotyping attribution, the producer credit and the licence line, and the link column on the right, which runs in two columns over About, Data, Data Quality, Stefan Zweig Digital, Ontology & Data and GitHub. The imprint is reachable from the credits text and carries no link of its own, because it is a section of About.
 
-| Route | Inhalt |
+| Route | Content |
 |---|---|
-| `#` | Startseite mit Suche, Browse-Einstieg und den Kategoriengruppen als Karten |
-| `#stats`, `#stats/<modus>` | Explore mit Zeit-, Karten- und Verbindungsansicht |
-| `#data`, `#data/<abschnitt>` | Datenmodell, Spezifikation und Vokabular, Downloads, JSON-LD-Playground, Verweis auf die Werkbank |
-| `#data/playground/<pageId>` | Playground mit vorgeladenem Eintrag; die Aktionsleiste der Eintragskarte verlinkt als „View as JSON-LD" dorthin |
-| `#about`, `#about/<abschnitt>` | Projekt, Methodik, Hilfe, Impressum als Abschnitte einer Seite mit Anker-Navigation |
-| `#quality` | Datenqualitäts-Werkbank |
-| `#browse`, `#q=…`, `#entry=…`, Facettenparameter | Ergebnisliste |
+| `#` | start page with search, browse entry point and the category groups as cards |
+| `#stats`, `#stats/<mode>` | Explore with timeline, map and connections view |
+| `#data`, `#data/<section>` | data model, specification and vocabulary, downloads, JSON-LD playground, pointer to the workbench |
+| `#data/playground/<pageId>` | playground with a preloaded entry; the action bar of an entry card links there as "View as JSON-LD" |
+| `#data/quality` | data-quality workbench, a sub-page of Data |
+| `#about`, `#about/<section>` | project, methodology, help and imprint as sections of one page with anchor navigation |
+| `#browse`, `#q=…`, `#entry=…`, facet parameters | result list |
 
-Benutzerausgelöste Zustandswechsel (Facette wählen, Chip entfernen, Suche übernommen, Sortierung) schreiben einen echten History-Eintrag; `replaceState` bleibt den Normalisierungen vorbehalten, die einen bereits in der URL stehenden Zustand nur nachziehen. Damit führt der Zurück-Weg durch die Rechercheschritte, statt die Anwendung nach der ersten Interaktion zu verlassen. Der Router ignoriert das Fragment `#main-content` des Skip-Links, weil es ein Element adressiert und keine Route.
+User-triggered state changes (choosing a facet, removing a chip, submitting a search, changing the sort) write a real history entry; `replaceState` is reserved for normalizations that only catch the URL up with a state it already carries. The back path therefore leads through the research steps instead of leaving the application after the first interaction. The router ignores the fragment `#main-content` of the skip link, because it addresses an element rather than a route.
 
-Ein `#entry=`-Permalink beschriftet die Ergebniszeile nach dem Render als „Permalink — 1 entry". Löst die Kennung nicht auf, erscheint ein eigener Zustand mit dem Hinweis auf eine mögliche Weiterleitung und einem Weg zur Startseite; ein `#title=` ohne Treffer in Redirect-Map und Titelindex führt zum selben Zustand, statt still auf die Startseite durchzufallen. Die statischen Seiten und `#quality` setzen Query, Filter und Suchfeld zurück wie der Explore-Zweig.
+An `#entry=` permalink labels the result line after render as "Permalink — 1 entry". If the identifier does not resolve, a state of its own appears that points at a possible redirect and offers a way to the start page; a `#title=` without a hit in the redirect map and the title index leads to the same state instead of silently falling through to the start page. The static pages and the workbench reset query, filters and the search field the way the Explore branch does.
 
-Eine statische Seite adressiert ihre Abschnitte über ein Suffix im Hash (`#about/imprint`); der Router rendert die Seite und scrollt anschließend auf `sec-<abschnitt>`. Die vier Deep-Links der früheren Seitenaufteilung bleiben gültig und werden im Router auf ihren Abschnitt umgeschrieben, `#methodology` und `#help` und `#imprint` nach `#about/…`, `#jsonld` nach `#data/playground`. Der Dokumenttitel wird ausschließlich in `App._updateTitle` gesetzt, Basistitel „Klawiter — Stefan Zweig Bibliography" wie im ausgelieferten HTML.
+A static page addresses its sections through a suffix in the hash (`#about/imprint`); the router renders the page and then scrolls to `sec-<section>`. The published deep links of the earlier page layout stay valid and are rewritten in the router to their section, `#methodology` and `#help` and `#imprint` to `#about/…`, `#jsonld` to `#data/playground`, and `#quality` to `#data/quality`. The workbench hash takes the same rewrite path, so it never reaches the branch that would render it under its former address. The document title is set in `App._updateTitle` alone, with the base title "Klawiter — Stefan Zweig Bibliography" as shipped in the HTML.
 
-Die About-Seite führt die Zahlen des Bestands dynamisch aus `_meta` (Bestandsgröße, Sprachen, Jahresspanne, Feldabdeckung, Typenzahl), damit Prosa und Datenstand nicht auseinanderlaufen. Die Data-Seite benennt die ausgelieferten Dateien unter `docs/data/` mit ihrer Rolle und weist die kanonischen Graphen unter `data/output/` als nur über das Repository erreichbar aus. Der Gesamtexport heißt „Download dataset (JSON)", weil er die flache Projektion in Frontend-Schlüsseln liefert und keinen `@context` trägt.
+The About page takes the figures of the holding dynamically from `_meta` (holding size, languages, year span, field coverage, number of types), so prose and data state cannot drift apart. The Data page names the files shipped under `docs/data/` with their role and marks the canonical graphs under `data/output/` as reachable through the repository only. The full export is called "Download dataset (JSON)", because it delivers the flat projection in frontend key names and carries no `@context`.
 
-## Gestaltungs- und Zugänglichkeitsvertrag
+## Design and Accessibility Contract
 
-Die Oberfläche verwendet die etablierte Stefan-Zweig-Digital-Palette, Source Serif 4 für Lesetext und Source Sans 3 für Navigation und Bedienung. CSS-Variablen sind die einzige Quelle für Farben und Abstände. Bibliotheken und Fonts liegen lokal.
+The interface uses the established Stefan Zweig Digital palette, Source Serif 4 for reading text and Source Sans 3 for navigation and controls. CSS variables are the only source for colours and spacing. Libraries and fonts are local.
 
-Semantisches HTML, sichtbarer Tastaturfokus, beschriftete Formulare, ARIA-Labels für ikonische Steuerelemente und ausreichende Kontraste bilden die Basis. Nach einem Ansichtswechsel setzt `showView` den Fokus auf die Überschrift der Ansicht oder auf `#main-content`, damit die Hash-Navigation bei Screenreadern ankommt; ein Wechsel, der aus dem Tippen im Suchfeld folgt, lässt den Fokus dort. Alle Tastaturkürzel steigen bei gedrückter Steuerungs-, Meta- oder Alt-Taste aus. `prefers-reduced-motion` wird global respektiert (Animationen und Smooth-Scrolling entfallen). Inhaltliche Zustände werden nie ausschließlich über Farbe vermittelt. Mobile Layouts bewahren Suche, Filter und Detailinformationen ohne horizontales Scrollen; die Vollständigkeitsmatrix scrollt in ihrem eigenen Container.
+The visual language is deliberately narrow. Letterspaced capitals mark the title of a view and nothing below it, so section headings are plain serif in the dark gold token or in burgundy. Reading pages sit on a white card with a quiet edge on the cream ground, and the anchor navigation of a page carries no rule under it. Tables structure themselves through row striping under a single header rule. The entry-type badge on a result card is monochrome, because colour on a card is reserved for a state that needs attention, meaning review status, a gap in the completeness matrix and a contested claim. There are two button styles, filled burgundy for the action a view exists for and outlined for every other action; compact controls inside lists and rows (facet items, legend entries, the per-field controls of edit mode) are not buttons in this sense and keep their in-place form.
 
-## Rechercheansichten
+Semantic HTML, visible keyboard focus, labelled forms, ARIA labels for iconic controls and sufficient contrast form the basis. Gold that carries text uses the darkened token that clears 4.5:1 against white and cream. After a view change `showView` moves focus to the heading of the view or to `#main-content`, so hash navigation reaches screen readers; a change that follows from typing in the search field leaves the focus there. All keyboard shortcuts bail out when Control, Meta or Alt is held. `prefers-reduced-motion` is respected globally (animations and smooth scrolling are dropped). A state is never conveyed by colour alone. Mobile layouts preserve search, filters and detail information without horizontal scrolling; the completeness matrix scrolls in its own container.
 
-- Die Übersicht zeigt Umfang, zeitliche Verteilung, Sprachen, Typen und Orte.
-- Die Ergebnisliste kombiniert Textsuche, Facetten und Sortierung. Die Karte zeigt Typ, Titel, Jahr, Sprache, Ort, Verlag und Seitenzahl; der Quelltext-Auszug entfällt, weil die aufgeklappte Karte den Volleintrag führt. Der Kartenkopf führt `aria-expanded` und `aria-controls` auf die Detail-ID.
-- Der Suchindex faltet Diakritika (`charset: 'latin:advanced'`), damit die Transliterationen des Bestands auch in schlichter Schreibweise auffindbar sind. Ab zwei Zeichen läuft eine Suche, darunter keine. Die Trefferzahl ist auf 5.000 gekappt; ist die Kappung erreicht, sagt das Ergebnislabel es. Kopf- und Startseitenfeld hängen am selben Handler, das Startseitenfeld wird beim Rendern mit der aktuellen Query vorbelegt, und beim Wechsel auf die Ergebnisansicht wandert der Fokus in das Kopffeld. Markiert wird auf dem Rohtext und escapt wird segmentweise, damit Apostroph, Ampersand und Anführungszeichen in der Query treffen und keine Entity zerrissen wird.
-- Facettenzähler folgen dem Standard-Drilldown: jede Facette zählt gegen die Menge, die alle anderen Filter anwendet, sodass die Alternativen einer gewählten Facette wählbar bleiben. Sprache und Ort zeigen die häufigsten Werte und klappen je Gruppe auf den vollen Bestand auf. Chips tragen beschriftete Schließer und ab zwei aktiven Filtern einen „Clear all"-Chip; der Leerzustand bietet dieselbe Aktion an.
-- Die mobile Schublade verschiebt die Sidebar per DOM-Move in das Overlay und beim Schließen zurück, statt ihr Markup zu klonen. Der Fokus springt beim Öffnen auf den Schließen-Button, bleibt zyklisch im Panel, Escape schließt, eine Auswahl schließt, und der Fokus kehrt zum Öffner zurück. Der mobile Filter-Button erscheint nur auf der Ergebnisansicht.
-- Die aufgeklappte Leseansicht ergänzt nur, was der Kartenkopf nicht trägt (Originaltitel, Übersetzer, Kategorien, Wikidata-Ortslink), rendert die Contents als strukturierte Liste mit Seitenangaben und hält den vollständigen Klawiter-Originaleintrag als eingeklappte Quelle. Trägt ein Eintrag außer dem Volleintrag nichts, wird die Quelle aufgeklappt gerendert, weil eine Aufklappung, die nur aus einer zugeklappten Zeile besteht, leer wirkt. Strittige Claims bleiben in der Leseansicht sichtbar, ebenso der Prüfstatus-Chip, der in beiden Layouts steht. Ein Kategorienlink filtert auf die Kategorie selbst (`#category=`); ein Contents-Item, dessen Titel einen eigenen Eintrag hat, wird zum `#entry=`-Link.
-- Zeit-, Karten- und Verbindungsansichten leiten ihre Daten aus derselben gefilterten Record-Menge ab. Die Verbindungsansicht ist eine Rangliste der meistreferenzierten Seiten mit aufklappbaren Verweislisten; der frühere globale Communities-Graph ist entfernt, weil sein größter Knoten die Restmüll-Aggregation war und er keine bibliographische Frage beantwortete. Der Übersetzer-Sankey bleibt; Mehrfachnennungen werden an Konjunktionen aufgeteilt, abgeschnittene Werte ausgeschlossen, Kleinstknoten in „Other translators" gebündelt.
-- Explore-Konventionen nach der Fix-Runde: fehlende Sprache heißt in allen drei Ansichten „Not recorded" und bleibt von „Other languages" (seltene, erfasste Sprachen) getrennt; jede Ansicht benennt, was sie nicht zeichnet (jahrlose Einträge, nicht geokodierte Orte) und öffnet diese Mengen als Ergebnisliste; das Provenienz-Overlay ist ein eigener Streifen unter der Zeitachse; die Modusreiter sind schlichte Buttons mit `aria-pressed`, die SVGs `role="group"`, die Legenden echte, filternde Buttons als Tastaturweg; `prefers-reduced-motion` nullt alle d3-Transitionsdauern. Klickwege übergeben ihre Filter vollständig an die Ergebnisroute, die dafür auch `publisher`, `translator` und Jahresbereiche kennt; nur der Länderfilter der Karte bleibt sitzungsgebunden, weil die Ergebnisroute `locations.json` nicht lädt.
-- Weiterleitungen erscheinen nicht als eigene Suchtreffer; die Redirect-Map (inklusive Seitentitel-Aliasse aus Stufe 05) leitet Suchanfragen und Querverweise zum kanonischen Eintrag.
+## Research Views
 
-## Datenqualitäts-Werkbank (`#quality`)
+- The overview shows extent, temporal distribution, languages, types and places. A category is one row that opens the filtered list; the former expandable subcategories assumed a "format and language" structure most categories do not have.
+- The result list combines full-text search, facets and sorting. The card shows type, title, year, language, place, publisher and page count; the source excerpt is dropped, because the expanded card carries the full entry. The card header carries `aria-expanded` and `aria-controls` pointing at the detail id.
+- The search index folds diacritics (`charset: 'latin:advanced'`), so the transliterations of the holding are findable in plain spelling as well. A search runs from two characters on. The hit count is capped at 5,000, and the result label says so once the cap is reached. The header field and the start-page field share one handler, the start-page field is prefilled with the current query on render, and focus moves into the header field on the switch to the result view. Highlighting marks the raw text and escapes segment by segment, so an apostrophe, ampersand or quotation mark in the query matches and no entity is torn apart.
+- Facet counters follow the standard drilldown, so every facet counts against the set that all other filters select and the alternatives of a chosen facet stay selectable. Language and place show the most frequent values and expand per group to the full holding. Chips carry labelled closers and, from two active filters on, a "Clear all" chip; the empty state offers the same action.
+- The mobile drawer moves the sidebar into the overlay by DOM move and back on close instead of cloning its markup. Focus jumps to the close button on open, stays cyclic inside the panel, Escape closes, a selection closes, and focus returns to the opener. The mobile filter button appears on the result view only.
+- The expanded reading view adds only what the card header does not carry (original title, translator, categories, Wikidata place link), renders the contents as a structured list with page references and holds the complete original Klawiter entry as a collapsed source. If an entry carries nothing beyond the full entry, the source is rendered open, because an expansion consisting of one collapsed line reads as empty. Contested claims stay visible in the reading view, as does the review-status chip, which stands in both layouts. A category link filters on the category itself (`#category=`); a contents item whose title has an entry of its own becomes an `#entry=` link.
+- Redirects do not appear as search hits of their own; the redirect map (including the page-title aliases from stage 05) leads queries and cross-references to the canonical entry.
 
-Die Route `#quality` beantwortet die Kurationsfrage, ob alle Daten sauber bearbeitet sind, aus den publizierten Artefakten selbst:
+## Explore
 
-- Statuszeile mit Bestandsgröße, Prüfhinweis-, LLM-, Referenz-, Normdaten- und Claim-Zählern, live berechnet.
-- Vollständigkeitsmatrix Feld × Eintragstyp; jede Zelle mit Lücken öffnet die betroffenen Einträge als Ergebnisliste.
-- Arbeitsvorräte als klickbare Listen: Census-Anomalien, nicht im Quelltext belegte Werte, erkennbare aber nicht extrahierte Werte, LLM-abgeleitete Felder, unauflösbare Querverweise (mit Liste der häufigsten Rotlink-Ziele), strittige Normdatenclaims.
-- Kandidaten-Queue für Übersetzer- und Verlagsnamen: subjektbezogen, sortiert offene Fälle nach Reichweite (Vorkommenszahl) zuerst. Öffentlich lesbar; entscheiden lässt sie sich nur im lokalen Editiermodus.
+Explore is one frame for three visualizations. The mode choice sits above the frame as a group of buttons carrying `aria-pressed`; `#stats` opens the mode last used in the session and the first one otherwise, because there is no overview layer above the visualizations. A persistent sidebar on the left carries the filters, and the drawing surface takes the whole remaining width. On a narrow viewport the sidebar stacks above the surface rather than disappearing, because it holds the only filter path of that view.
 
-Die Queue ist eine `listbox` mit wanderndem Tabindex, also ein einziger Tabstopp, der auf der Zeile aufsetzt, an der die Arbeit beginnt (zuletzt bearbeitetes Subjekt, sonst erster offener Fall). Tastenweg im Editiermodus: Pfeile und j/k bewegen, y bestätigt den Top-Kandidaten, n lehnt ab, u hält offen, z und Backspace nehmen die letzte Entscheidung zurück, Enter öffnet die betroffenen Einträge. Alle Queue-Tasten steigen bei gedrückter Steuerungs-, Meta- oder Alt-Taste aus. Der Rückweg aus der Ergebnisliste findet das zuletzt bearbeitete Subjekt über seine Kennung wieder, scrollt darauf und setzt den Fokus. Jede Zeile zeigt den Top-Kandidaten und hält die weiteren in einem aufklappbaren Block mit eigenem Bestätigen-Button je Kandidat, damit eine Entscheidung nicht auf den höchsten Score gezwungen wird. Ein Neuzeichnen der Queue schreibt das Statuspanel darüber mit fort, weil dessen Zähler der laufenden Sitzung sonst dem Save-Zähler widerspricht.
+One filter set serves all three modes. The sidebar offers language, type and decade as facet groups, counted against every other active filter the way the result sidebar counts, so a group does not collapse to its own selection. Below the groups the active filters stand as chips, and a filter set from inside a view (the timeline brush, the decade playback of the map) redraws chips and facet lists through the same entry point, so the two stay in step. A decade and a brushed year range address the same axis, so choosing one clears the other.
 
-Scheitert `triage.json` oder `reconciliation.json`, hält der Ladezustand das im Modul fest, und die betroffenen Zähler und Blöcke weisen sich als „not available (failed to load)" aus. Ein Ladefehler ist damit von einem sauberen Bestand unterscheidbar.
+What a view cannot draw is stated once in the sidebar instead of on the drawing surface. The timeline names the undated entries, the map names the entries without a mapped place and the place names that the geocoding could not resolve, each as a control that opens the affected records as a result list. Pointer instructions for the globe live in its tooltip and in the SVG description rather than as a caption. The selection detail sits under the filters in the same sidebar.
 
-Die Werkbank-Listen sind Sitzungsansichten ohne eigene Hash-Adresse, weil sie aus Artefakten und nicht aus Filterzustand abgeleitet sind. Der Dokumenttitel übernimmt dann das Listenlabel, und über der Liste steht ein sichtbarer Rückweg auf die Ansicht, aus der sie geöffnet wurde (Werkbank oder Explore).
+Timeline, map and connections view derive their data from the same filtered record set. Missing language reads as "Not recorded" in all three views and stays separate from "Other languages", which means a recorded language outside the top ranks. The connections view is a ranking of the most-referenced pages with expandable reference lists; the former global community graph is gone, because its largest node was the residual aggregation and it answered no bibliographic question. The translator Sankey stays; multiple mentions are split at conjunctions, truncated values are excluded, and the smallest nodes are bundled into "Other translators". The provenance overlay is a strip of its own under the timeline axis. Legends are real filtering buttons and serve as the keyboard path, the SVGs carry `role="group"`, and `prefers-reduced-motion` zeroes every d3 transition duration. Click paths hand their filters over to the result route in full, which for that purpose also knows `publisher`, `translator` and year ranges; only the country filter of the map stays bound to the session, because the result route does not load `locations.json`.
+
+## Data Quality Workbench (`#data/quality`)
+
+The workbench answers the curation question whether all data is cleanly processed, out of the published artifacts themselves:
+
+- A status panel with three figures that direct the work, open authority candidates, contested claims and pending decisions of the current session. Everything the panel used to count as well stands in the matrix and the queues below, where it is also clickable.
+- A completeness matrix of field against entry type; every cell with gaps opens the affected entries as a result list.
+- Work queues as clickable lists over census anomalies, values not evidenced in the source text, detectable but unextracted values, LLM-derived fields, unresolvable cross-references (with a list of the most frequent red-link targets) and contested authority claims.
+- A subject-level candidate queue for translator and publisher names, sorting open cases by reach (number of occurrences) first. It is publicly readable, and deciding is possible in local edit mode only.
+
+The queue is a `listbox` with a roving tabindex, so it is a single tab stop that lands on the row where the work begins (the subject last worked on, otherwise the first open case). On the keyboard in edit mode, arrows and j/k move, y confirms the top candidate, n rejects, u holds open, z and Backspace take back the last decision, and Enter opens the affected entries. All queue keys bail out when Control, Meta or Alt is held. The way back from the result list finds the subject last worked on by its identifier, scrolls to it and sets focus. Every row shows the top candidate and holds the others in an expandable block with a confirm button per candidate, so a decision is not forced onto the highest score. A redraw of the queue rewrites the status panel above it, because its counters for the running session would otherwise contradict the save counter.
+
+If `triage.json` or `reconciliation.json` fails to load, the module records that in its load state, and the affected counters and blocks mark themselves as "not available (failed to load)". A load failure is thereby distinguishable from a clean holding.
+
+The workbench lists are session views without a hash address of their own, because they derive from artifacts rather than from filter state. The document title then takes the list label, and above the list stands a visible way back to the view it was opened from (workbench or Explore).
 
 ## EIL Curation Interface
 
-Der Editiermodus ist ausschließlich auf `localhost` aktiv; der Schalter prüft `isLocal` im Setter, die publizierte Site kann den Modus auch über die Konsole nicht betreten. Der Schalter im Kopf ist zusätzlich viewabhängig sichtbar und erscheint nur dort, wo Edieren tatsächlich ansetzt, auf Startseite, Ergebnisliste und Werkbank; auf den Textseiten und in Explore ist er ausgeblendet. Der Modus-Zustand selbst bleibt über den Viewwechsel erhalten. Bearbeitet werden Verlag, Publikationsort, Übersetzer und Seitenzahl. Jede Feldaktion ist typisiert:
+Edit mode is active on `localhost` only; the switch checks `isLocal` in the setter, and the published site cannot enter the mode even through the console. The switch in the header is additionally view-dependent and appears only where editing actually applies, on the start page, the result list and the workbench; on the text pages and in Explore it is hidden. The mode state itself survives a view change. Publisher, place of publication, translator and page count are editable. Every field action is typed:
 
-- `accept` bestätigt einen vorhandenen Wert;
-- `correct` ersetzt einen Wert und bewahrt den Vorgänger;
-- `add` ergänzt einen zuvor leeren Wert.
+- `accept` confirms an existing value;
+- `correct` replaces a value and preserves its predecessor;
+- `add` fills a previously empty value.
 
-Für jede Aktion zeigt die Oberfläche die belegbare Textstelle oder den vollständigen Quelltext. Triage-Hinweise priorisieren Round-Trip-Abweichungen, fehlende oder modellgestützte Provenienz sowie Census-Anomalien; eine Provenienz-Legende erklärt die R/L/E-Badges. Im Editiermodus laufen j/k als Kartennavigation durch die Ergebnisliste, und die Sortierung „Needs review first" ordnet nach dringlichstem Datensignal.
+For every action the interface shows the evidencing passage or the complete source text. Triage hints prioritize round-trip deviations, missing or model-supported provenance and census anomalies; a provenance legend explains the R/L/E badges. In edit mode j/k walk the result list card by card, and the sort "Needs review first" orders by the most urgent data signal.
 
-Ein Feld mit offener Korrektur zeigt den korrigierten Wert; der ersetzte Datenbestandswert steht durchgestrichen daneben, sodass ein Re-Render die eben getippte Eingabe nicht scheinbar zurücknimmt. Ein leeres Feld trägt neben der Platzhalterfläche einen beschrifteten Add-Button, der es fokussiert. In einem `contenteditable`-Feld schließt Enter die Eingabe ab (Zeilenumbruch unterbunden, Feld verlassen) und Escape verwirft sie auf den gerenderten Stand zurück; jedes Feld führt `role="textbox"` und ein `aria-label` mit dem Feldnamen. Sämtliche Bedienelemente der Karte laufen über Event-Delegation mit Data-Attributen, in der Aktionsleiste ebenso wie in den Kandidatenblöcken; Orts- und Agent-Kandidaten teilen sich einen Renderer, der über die Subjektart parametrisiert ist.
+A field with an open correction shows the corrected value; the replaced dataset value stands struck through beside it, so a re-render does not appear to take back what was just typed. An empty field carries a labelled add button beside the placeholder area that focuses it. In a `contenteditable` field Enter completes the input (line break suppressed, field left) and Escape discards it back to the rendered state; every field carries `role="textbox"` and an `aria-label` with the field name. All controls of a card run through event delegation with data attributes, in the action bar as well as in the candidate blocks; place and agent candidates share one renderer parameterized by the kind of subject.
 
-Laufende Änderungen bleiben bis zum Export in `localStorage`, zusammen mit dem Zeitstempel des letzten Schreibvorgangs; der Save-Zähler im Kopf zeigt den ungesicherten Stand und bei einer aus einer früheren Sitzung wiederhergestellten Lage den Vermerk „resumed from <Datum>". Bringt ein Reload offene Entscheidungen zurück, ohne dass der Editiermodus an ist, steht neben dem Zähler eine Notiz, dass der Modus für die Weiterarbeit einzuschalten ist. Nach dem Patch-Download fragt die Oberfläche, ob die Sitzung geleert wird oder mit den offenen Entscheidungen weiterläuft, weil der Download allein über den Verbleib der Sitzung nichts aussagt.
+Running changes stay in `localStorage` until export, together with the timestamp of the last write; the save counter in the header shows the unsecured state and, for a state restored from an earlier sitting, the note "resumed from <date>". If a reload brings back open decisions without edit mode being on, a note beside the counter says the mode has to be switched on to continue. After the patch download the interface asks whether the session is cleared or continues with the open decisions, because the download alone says nothing about what happens to the session.
 
-Der Sitzungszustand ist von der Datenlage getrennt. Eine ungesicherte Feldaktion macht den Eintrag „edited (unsaved)"; „approved" bleibt der `review`-Projektion des Datenbestands vorbehalten, die die Pipeline nach angewandtem Patch schreibt.
+Session state is separate from the data state. An unsecured field action makes the entry "edited (unsaved)"; "approved" is reserved for the `review` projection of the dataset, which the pipeline writes after an applied patch.
 
-Die Orts-Reconciliation bietet `confirm`, `reject` und `unresolved`; `unresolved` hält konkurrierende Deutungen als offenen Claim fest. Übersetzer- und Verlagskandidaten bieten dieselben Aktionen, seit Gate 2 je Agentsubjekt die Fundstellen aus der klassifizierten Quelle erhebt und `docs/data/reconciliation.json` sie unter `sourceOccurrences` ausweist; eine unaufgelöste Agent-Entscheidung ist damit quellengebunden belegt. Beide Kandidatenarten sind subjektbezogen; die Oberfläche weist die Reichweite („applies to N entries") aus. Kandidaten bleiben Vorschläge; nichts publiziert ohne Entscheidung. Der kombinierte Export verwendet `patchVersion: 2` und `reconciliationPatchVersion: 1`.
+Place reconciliation offers `confirm`, `reject` and `unresolved`; `unresolved` records competing readings as an open claim. Translator and publisher candidates offer the same actions, and since Gate 2 the source occurrences per agent subject are collected from the classified source and published under `sourceOccurrences` in `docs/data/reconciliation.json`, so an unresolved agent decision is evidenced against the source. Both kinds of candidate are subject-level; the interface states the reach ("applies to N entries"). Candidates stay proposals; nothing is published without a decision. The combined export uses `patchVersion: 2` and `reconciliationPatchVersion: 1`.
 
-Der Prüfstatus-Chip liest das `review`-Feld des Eintrags, dessen Semantik in [[data]] steht. Ein Eintrag ohne dieses Feld bleibt ungeprüft, eine ungesicherte Bearbeitung der laufenden Sitzung bleibt ein eigener Zustand der Oberfläche.
+The review-status chip reads the `review` field of the entry, whose semantics are in [[data]]. An entry without that field stays unchecked, and an unsecured edit of the running session remains a state of the interface.
 
-## Darstellung strittiger Aussagen
+## Rendering of Contested Statements
 
-Bestätigte Beziehungen und strittige Aussagen werden getrennt gerendert. Ein offener Normdatenclaim zeigt Quellenwert, Kandidaten, Entscheidungsgeschichte und offenen Status. Der Adaptionsfall auf Seite 4916 zeigt beide Werkdeutungen, Quellenkennung und Reviews.
+Confirmed relations and contested statements are rendered separately. An open authority claim shows the source value, the candidates, the decision history and the open status. The adaptation case on page 4916 shows both work readings, the source identifier and the reviews.
 
-Die UI erzeugt aus einem strittigen Kandidaten keinen klickbaren bestätigten Normdatenlink. Kennzahlen zählen ausschließlich publizierbare Beziehungen. Die Anzahl offener Claims wird getrennt ausgewiesen.
+The interface does not turn a contested candidate into a clickable confirmed authority link. Figures count publishable relations only. The number of open claims is reported separately.
+
+## Data Page and JSON-LD Playground
+
+The Data page describes the model, the shipped files and the vocabulary without repeating figures that the vocabulary itself publishes. The `klawiter:` namespace resolves to the vocabulary documentation, and the page points there instead of naming a term count that ages with the next vocabulary round. The prefix and namespace table is gone, because the `@context` block in the playground states the same bindings against a live record.
+
+The playground shows one entry in three views, compact, expanded and as triples. In the compact view the `@context` sits in a collapsed disclosure above the record, because it is identical for every entry and long. The record itself shows only keys the `@context` defines. A key without a term definition carries no IRI and would be dropped by a conformant processor, so showing it would suggest a term the vocabulary does not publish; this is what removes `_provenance`, `review` and `locationSameAs` from the view.
 
 ## Export
 
-- BibTeX und RIS dienen der Zitationsweitergabe der flachen Records. Beide lesen dieselbe Typregel und legen den Permalink bei (`url` beziehungsweise `UR`); der erfasste Seitenumfang steht in `pagetotal`, weil `pages` den Seitenbereich innerhalb eines Behälters meint. Ein Lauf auf `localhost` oder über `file://` zitiert die publizierte Adresse, damit der Link beim Empfänger auflöst.
-- Der Gesamtexport der Ergebnisliste beschriftet sich mit der Trefferzahl und fragt oberhalb von tausend Einträgen zurück.
-- Das Kopieren des Permalinks fängt eine verweigerte Zwischenablage ab und bietet die Adresse dann in einem auswählbaren Feld an.
-- Der JSON-LD-Einzelexport ergänzt vorhandene Editionsclaims als eigene Graphknoten.
-- Der Gesamtexport enthält strittige Editions- und Normdatenclaims zusätzlich zu den bestätigten Beziehungen.
-- Die kanonischen vollständigen Graphen bleiben `data/output/editions/work-editions.jsonld` und die Gate-2-Artefakte unter `data/output/reconciliation/`.
+- BibTeX and RIS serve citation transfer of the flat records. Both read the same type rule and include the permalink (`url` and `UR` respectively); the recorded extent stands in `pagetotal`, because `pages` means the page range inside a container. A run on `localhost` or over `file://` cites the published address, so the link resolves for the recipient.
+- The batch export of the result list labels itself with the hit count and asks back above a thousand entries.
+- Copying the permalink catches a denied clipboard and then offers the address in a selectable field.
+- The single-entry JSON-LD export adds existing edition claims as graph nodes of their own, under the properties `klawiter:hasContestedClaim` and `klawiter:hasReviewAction` of the current vocabulary; the class names `ContestedClaim` and `ReviewAction` are unchanged.
+- The full export carries contested edition and authority claims alongside the confirmed relations.
+- The canonical complete graphs remain `data/output/editions/work-editions.jsonld` and the Gate 2 artifacts under `data/output/reconciliation/`.
 
-Ein Claim mit Prädikat `schema:exampleOfWork` wird exportiert, ohne gleichzeitig die entsprechende bestätigte Beziehung am Editionsknoten zu setzen.
+A claim with the predicate `schema:exampleOfWork` is exported without setting the corresponding confirmed relation on the edition node at the same time.
 
-## Validierung
+## Validation
 
-Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export, die Trennung strittiger Claims, den Routing-Guard samt Editiermodus-Gate, die Redirects der alten Deep-Links, den Abschnitts-Suffix statischer Seiten, die Sichtbarkeitsregel des Edit-Schalters und die Ordnung der Kandidaten-Queue. `tests/edit_session.test.js` hält den Sitzungszustand fest: gerendeter Korrekturwert mit durchgestrichenem Vorgänger, Add-Bedienelement am leeren Feld, „edited" statt „approved", der Index über strittige Claims, der Kategorienlink, Prüfstatus-Chip und aufgeklappte Quelle in der Leseansicht sowie die Playground-Route. Dazu kommen die Suchzusagen in `tests/search_logic.test.js` (Diakritika-Faltung des Index, Markieren gegen Escaping, Mindestquerylänge, Facetten-Drilldown, Labelauflösung und Kappungsnotiz) sowie die History-Zusage und die Fehlrouten in `tests/routing_guard.test.js`. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge (inklusive Frontend-Projektionsvertrag) und ruft die Node-Tests über die gemeinsame Testbrücke auf.
+Node tests cover source-evidence logic, triage order, reconciliation lookup, a stable patch export, the separation of contested claims, the routing guard including the edit-mode gate, the redirects of the published deep links, the section suffix of static pages, the visibility rule of the edit switch and the order of the candidate queue. The workbench route is asserted in both directions, as a redirect of `#quality` and as the one page route on which the edit switch appears. `tests/edit_session.test.js` holds the session state, meaning the rendered correction value with its struck-through predecessor, the add control on an empty field, "edited" instead of "approved", the index over contested claims, the category link, the review-status chip and the opened source in the reading view, and the playground route. Added to that are the search guarantees in `tests/search_logic.test.js` (diacritic folding of the index, highlighting against escaping, minimum query length, facet drilldown, label resolution and the cap notice) and the history guarantee and error routes in `tests/routing_guard.test.js`. `node --check` validates every module syntactically. The Python suite checks the generated data contracts (including the frontend projection contract) and calls the Node tests through the shared test bridge.
 
-Ein lokaler Smoke-Test läuft mit einem statischen Server über `docs/`:
+A local smoke test runs with a static server over `docs/`:
 
 ```bash
 python -m http.server 8000 --directory docs
 ```
 
-Die Anwendung ist danach unter `http://localhost:8000/` erreichbar; nur dort ist die Kurationsoberfläche aktiv.
+The application is then reachable at `http://localhost:8000/`; the curation surface is active only there.
 
-## Deployment und Grenzen
+## Deployment and Limits
 
-GitHub Pages veröffentlicht den Inhalt von `docs/`. Die Anwendung führt keine Live-Rückschreibung aus. Exporte werden lokal heruntergeladen und anschließend als geprüfte Repository-Patches integriert.
+GitHub Pages publishes the content of `docs/`. The application performs no live write-back. Exports are downloaded locally and then integrated as reviewed repository patches.
 
-Die flache Detailseite kann editionenspezifische Felder auf Mehrfachausgabenseiten nicht vollständig trennen. Der Editionsgraph und seine Queue bleiben für diese Fälle maßgeblich. Titelbearbeitung und institutionelle Werkentscheidungen gehören nicht zum aktuellen lokalen Editor.
+The flat detail page cannot fully separate edition-specific fields on multi-edition pages. The edition graph and its queue stay authoritative for those cases. Title editing and institutional work decisions are outside the current local editor.

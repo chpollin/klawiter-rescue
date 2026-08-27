@@ -1,5 +1,5 @@
 /**
- * Data-quality workbench (#quality) — the curation-facing exploration view.
+ * Data-quality workbench (#data/quality) — the curation-facing exploration view.
  *
  * Turns the evidence the pipeline already publishes (triage.json,
  * reconciliation.json, the provenance layer inside klawiter.json) into
@@ -35,7 +35,7 @@ const Curate = {
   _build(container) {
     container.innerHTML = `
       <div class="page-content curate-page">
-        <h1 class="section-heading">Data Quality</h1>
+        <h1 class="page-title">Data Quality</h1>
         <p class="curate-intro">
           The processing state of the dataset, computed live from the published
           artifacts. Every list opens the affected entries.
@@ -66,16 +66,17 @@ const Curate = {
     return failed ? '<span class="curate-unavailable">n/a</span>' : null;
   },
 
+  /**
+   * Three figures that direct the work. Everything the panel used to count as
+   * well (entries, review hints, LLM-derived fields, unresolved references)
+   * stands in the matrix and the queues below, where it is also clickable.
+   */
   _statusPanel() {
-    const meta = App.data._meta || {};
     const summary = Edit.summary || {};
-    const triageOut = this._unavailable(Edit.triageFailed);
     const reconOut = this._unavailable(Edit.reconciliationFailed);
-    const triageCount = Edit.triage ? Object.keys(Edit.triage).length : 0;
-    const llmEntries = App.entries.filter(e =>
-      e._provenance && Object.values(e._provenance).includes('llm')).length;
-    const broken = this._brokenReferences();
-    const brokenEntryCount = new Set(broken.flatMap(b => b.pids)).size;
+    const openCandidates = Edit.reconciliationFailed ? 0
+      : this.agentQueue(Edit.agents, Edit.pendingReconciliation)
+          .filter(r => r.status === 'open').length;
     const pending = Edit.getPendingCount();
 
     const stat = (value, label) =>
@@ -88,11 +89,7 @@ const Curate = {
         }. The figures and queues that read those files are marked n/a rather than zero.</p>`
       : '';
     return `${failNote}<div class="network-stats-grid curate-stats">
-      ${stat((meta.ns0Count || App.entries.length).toLocaleString('en'), 'Bibliography entries')}
-      ${stat(triageOut || triageCount.toLocaleString('en'), 'Entries with review hints')}
-      ${stat(llmEntries.toLocaleString('en'), 'Entries with LLM-derived fields')}
-      ${stat(brokenEntryCount.toLocaleString('en'), 'Entries with unresolved references')}
-      ${stat(reconOut || ((summary.locationSubjects || 0) - (summary.publishedLocationLinks || 0)).toLocaleString('en'), 'Location names without link')}
+      ${stat(reconOut || openCandidates.toLocaleString('en'), 'Open authority candidates')}
       ${stat(reconOut || ((summary.contestedAuthorityClaims || 0) + (summary.contestedEditionClaims || 0)), 'Contested claims')}
       ${stat(pending.toLocaleString('en'), 'Pending decisions this session')}
     </div>`;

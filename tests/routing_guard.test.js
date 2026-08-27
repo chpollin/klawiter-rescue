@@ -177,7 +177,10 @@ test('the old deep links still resolve to their merged section', () => {
   assert.strictEqual(App.LEGACY_ROUTES.jsonld, 'data/playground');
   // #data itself is a page of its own and must not redirect.
   assert.strictEqual(App.LEGACY_ROUTES.data, undefined);
-  assert.strictEqual(App.LEGACY_ROUTES.quality, undefined);
+  // The workbench became a sub-page of Data, so its published hash redirects
+  // like the others rather than addressing a page of its own.
+  assert.strictEqual(App.LEGACY_ROUTES.quality, App.QUALITY_ROUTE);
+  assert.strictEqual(App.QUALITY_ROUTE, 'data/quality');
 });
 
 test('a legacy hash is rewritten rather than rendered', () => {
@@ -186,6 +189,13 @@ test('a legacy hash is rewritten rather than rendered', () => {
   ctx.location.hash = '#methodology';
   App.handleRoute();
   assert.strictEqual(ctx.location.hash, 'about/methodology');
+
+  // The workbench hash takes the same path, so it never reaches the branch
+  // that would render it under its old address.
+  App._lastHash = null;
+  ctx.location.hash = '#quality';
+  App.handleRoute();
+  assert.strictEqual(ctx.location.hash, 'data/quality');
 });
 
 test('a page hash carries an optional section suffix', () => {
@@ -215,9 +225,12 @@ test('the edit toggle shows only where entry cards can be edited', () => {
   for (const [hash, view, visible] of [
     ['', 'home', true],
     ['#q=zweig', 'results', true],
-    ['#quality', 'page', true],
+    ['#data/quality', 'page', true],
     ['#about/help', 'page', false],
     ['#data', 'page', false],
+    // The workbench sits under Data, so the Data page itself with a section
+    // suffix must stay a plain text page as far as the toggle is concerned.
+    ['#data/playground', 'page', false],
     ['#stats', 'stats', false],
   ]) {
     ctx.location.hash = hash;

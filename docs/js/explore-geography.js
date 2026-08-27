@@ -508,8 +508,11 @@ const ExploreGeography = {
     this.svg.append('title').attr('id', 'geo-title').text('Publication places');
     this.svg.append('desc').attr('id', 'geo-desc').text(
       'Map of publication places; bubble area is the number of entries. ' +
+      'Drag to rotate, scroll to zoom from countries to cities. ' +
       'The legend below filters by language or period from the keyboard.'
     );
+    // The pointer instruction is a hint, not a caption; it stays off the map.
+    container.title = 'Drag to rotate, scroll to zoom (countries to cities)';
 
     this.globeG = this.svg.append('g');
 
@@ -565,33 +568,39 @@ const ExploreGeography = {
   },
 
   /**
-   * States how much of the current set the map can show, and makes the
-   * remainder reachable: an unresolved place name is a curation task, not a
-   * rounding error, so each one opens its own records.
+   * States what the map cannot show, in the sidebar rather than on the map,
+   * and makes the remainder reachable: an unresolved place name is a curation
+   * task, not a rounding error, so each one opens its own records.
    */
   _renderCoverageNote(container, totalEntries) {
-    const old = container.querySelector('.geo-note');
-    if (old) old.remove();
-    const note = document.createElement('div');
-    note.className = 'geo-note';
     const geocoded = this._geocodedEntries || 0;
-    const pct = totalEntries > 0 ? Math.round(geocoded / totalEntries * 100) : 0;
+    const unplaced = Math.max(0, totalEntries - geocoded);
     const missing = this._ungeocoded || [];
-    const missingTotal = missing.reduce((s, [, n]) => s + n, 0);
 
-    let html = `${fmt(geocoded)} of ${fmt(totalEntries)} entries (${pct}%) placed. `
-      + `Drag to rotate, scroll to zoom (countries → cities).`;
+    let html = unplaced
+      ? `<button type="button" class="link-btn" id="geo-unplaced">${fmt(unplaced)} entries not placed</button>`
+      : '';
     if (missing.length) {
-      html += `<div class="geo-missing"><span>${fmt(missingTotal)} entries name a place the geocoding could not resolve:</span> `
+      html += `<details class="geo-missing"><summary>${fmt(missing.length)} unresolved place names</summary> `
         + missing.slice(0, 25).map(([name, n]) =>
           `<button type="button" class="link-btn geo-missing-item" data-loc="${esc(name)}">${esc(name)} (${fmt(n)})</button>`
         ).join(' ')
         + (missing.length > 25 ? ` <span>and ${fmt(missing.length - 25)} more names</span>` : '')
-        + `</div>`;
+        + `</details>`;
     }
-    note.innerHTML = html;
-    container.appendChild(note);
+    const note = Explore.setViewNote(html);
+    if (!note) return;
 
+    const unplacedBtn = note.querySelector('#geo-unplaced');
+    if (unplacedBtn) {
+      unplacedBtn.addEventListener('click', () => {
+        // Placed means the record names a location the geodata resolves.
+        App.showCustomResults(
+          this.currentEntries.filter(e => !e.location || !this._mergeKeys.get(e.location)),
+          'Entries without a mapped place'
+        );
+      });
+    }
     note.querySelectorAll('.geo-missing-item').forEach(btn => {
       btn.addEventListener('click', () => {
         const loc = btn.dataset.loc;

@@ -216,9 +216,13 @@ const JsonldPlayground = {
     const expanded = this._toExpandedJsonld(compact);
     const triples = this._toTriples(expanded);
 
-    // Compact view
-    const compactEl = document.getElementById('jsonld-compact');
-    if (compactEl) compactEl.innerHTML = this._syntaxHighlight(compact);
+    // Compact view. The @context is the same block for every entry and is
+    // long, so it sits in its own collapsed disclosure above the record.
+    const { '@context': context, ...record } = compact;
+    const contextEl = document.getElementById('jsonld-context-code');
+    if (contextEl) contextEl.innerHTML = this._syntaxHighlight(context);
+    const compactEl = document.getElementById('jsonld-compact-code');
+    if (compactEl) compactEl.innerHTML = this._syntaxHighlight(record);
 
     // Expanded view
     const expandedEl = document.getElementById('jsonld-expanded');
@@ -241,7 +245,10 @@ const JsonldPlayground = {
       '@context': this.CONTEXT,
     };
 
-    // Copy fields, mapping frontend keys back to JSON-LD keys
+    // Copy fields, mapping frontend keys back to JSON-LD keys. A key the
+    // @context does not define carries no IRI, so a processor would drop it;
+    // showing it would suggest a term the vocabulary does not publish. This
+    // is what removes _provenance, review and locationSameAs from the view.
     for (const [key, val] of Object.entries(entry)) {
       if (val == null || val === '') continue;
       if (key.startsWith('@')) {
@@ -249,6 +256,7 @@ const JsonldPlayground = {
         continue;
       }
       const jsonldKey = this.FRONTEND_TO_JSONLD[key] || key;
+      if (!(jsonldKey in this.CONTEXT)) continue;
       // Convert year int back to string for datePublished
       if (jsonldKey === 'datePublished') {
         jsonld[jsonldKey] = String(val);

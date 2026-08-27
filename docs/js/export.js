@@ -119,7 +119,7 @@ const Export = {
         'klawiter:proposedObject': { '@id': item.proposedObject },
         'klawiter:interpretationStatus': item.status,
       })),
-      'klawiter:reviewAction': claim.reviewHistory.map(item => ({
+      'klawiter:hasReviewAction': claim.reviewHistory.map(item => ({
         '@id': item.reviewId,
         '@type': 'klawiter:ReviewAction',
         'prov:wasAssociatedWith': { '@id': item.reviewer },

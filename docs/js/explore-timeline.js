@@ -138,7 +138,7 @@ const ExploreTimeline = {
     this.g.append('g').attr('class', 'brush').call(this.brush);
 
     this._drawControls(container);
-    this._renderCoverageNote(container, drawn, yearless);
+    this._renderCoverageNote(yearless);
 
     this.g.append('text')
       .attr('class', 'brush-hint')
@@ -151,20 +151,18 @@ const ExploreTimeline = {
   },
 
   /**
-   * Names what the chart leaves out. The dated subset is what the axes can
-   * carry; the undated remainder is a fact about the source and gets its own
-   * way into the results list.
+   * Names what the chart leaves out, in the sidebar rather than on the
+   * drawing surface. The drawn count is in the chart's own description; the
+   * undated remainder is a fact about the source and gets its own way into
+   * the results list.
    */
-  _renderCoverageNote(container, drawn, yearless) {
-    const note = document.createElement('p');
-    note.className = 'timeline-coverage';
-    note.innerHTML = `Drawing ${fmt(drawn)} dated entries.`;
-    if (yearless > 0) {
-      note.innerHTML += ` <button type="button" class="link-btn" id="timeline-yearless">`
-        + `${fmt(yearless)} entries carry no year</button> and are not on the axis.`;
-    }
-    container.appendChild(note);
-    const btn = document.getElementById('timeline-yearless');
+  _renderCoverageNote(yearless) {
+    if (!yearless) { Explore.setViewNote(''); return; }
+    const host = Explore.setViewNote(
+      `<button type="button" class="link-btn" id="timeline-yearless">`
+      + `${fmt(yearless)} undated entries not drawn</button>`
+    );
+    const btn = host && host.querySelector('#timeline-yearless');
     if (btn) {
       btn.addEventListener('click', () => {
         App.showCustomResults(this.entries.filter(e => !e.year), 'Entries without a year');
