@@ -230,7 +230,8 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
             }
         )
     return {
-        "schemaVersion": "1.0",
+        # 1.1 added source-occurrence evidence to the agent subjects.
+        "schemaVersion": "1.1",
         "contract": result["publishable"]["publicationContract"],
         "summary": {
             "locationSubjects": len(result["candidates"]["locations"]),
@@ -250,6 +251,21 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
                 "kind": subject["entityType"],
                 "name": subject["sourceName"],
                 "occurrences": subject["occurrences"],
+                # The internal pipeline path of an occurrence stays out of
+                # the published projection.
+                "sourceOccurrences": [
+                    {
+                        key: value
+                        for key, value in occurrence.items()
+                        if key != "sourcePath"
+                    }
+                    for occurrence in subject["sourceOccurrences"]
+                ],
+                **(
+                    {"sourceOccurrenceNote": subject["sourceOccurrenceNote"]}
+                    if subject.get("sourceOccurrenceNote")
+                    else {}
+                ),
                 "candidates": subject["candidates"],
                 "decision": subject.get("decision"),
                 "publishable": result["publishable"]["agents"].get(

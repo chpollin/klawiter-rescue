@@ -34,6 +34,7 @@ from lib.config import (  # noqa: E402
     write_json,
 )
 from lib.reconciliation import (  # noqa: E402
+    AGENT_SOURCE_FIELDS,
     build_reconciliation,
     load_reconciliation_patches,
     merge_agent_decision_patches,
@@ -96,7 +97,7 @@ def _check_contested_claims(result: dict) -> list[str]:
     errors = []
     unresolved = sum(
         decision["action"] == "unresolved"
-        for key in ("locationDecisions", "workDecisions")
+        for key in ("locationDecisions", "workDecisions", "agentDecisions")
         for decision in result["decisions"][key]
     )
     claims = result["contestedClaims"]
@@ -121,6 +122,39 @@ def _check_contested_claims(result: dict) -> list[str]:
             source_hash = evidence.get("sourceTextSha256")
             if source_hash and not re.fullmatch(r"[0-9a-f]{64}", source_hash):
                 errors.append(f"{claim_id}: invalid source evidence hash")
+    return errors
+
+
+def _check_agent_occurrences(result: dict) -> list[str]:
+    """Every agent subject that carries a candidate must carry source
+    evidence for it, or state the null finding explicitly. Without that
+    evidence an unresolved decision would rest on nothing."""
+    errors = []
+    for subject in result["candidates"]["agents"]:
+        subject_id = subject["subjectId"]
+        occurrences = subject.get("sourceOccurrences")
+        if occurrences is None:
+            errors.append(f"{subject_id}: occurrence scan did not run")
+            continue
+        if subject["candidates"] and not occurrences:
+            if not subject.get("sourceOccurrenceNote"):
+                errors.append(
+                    f"{subject_id}: candidate without occurrence evidence and "
+                    "without an explicit null finding"
+                )
+            continue
+        field = AGENT_SOURCE_FIELDS[subject["entityType"]]
+        for occurrence in occurrences:
+            if occurrence.get("sourceField") != field:
+                errors.append(f"{subject_id}: occurrence names a foreign field")
+            if occurrence.get("sourceValue") != subject["sourceName"]:
+                errors.append(f"{subject_id}: occurrence value differs from subject")
+            source_hash = occurrence.get("sourceTextSha256")
+            if source_hash and not re.fullmatch(r"[0-9a-f]{64}", source_hash):
+                errors.append(f"{subject_id}: invalid occurrence hash")
+        decision = subject.get("decision")
+        if decision and decision["action"] == "unresolved" and not occurrences:
+            errors.append(f"{subject_id}: unresolved without source occurrences")
     return errors
 
 
@@ -207,6 +241,7 @@ def main() -> None:
     deterministic = expected == actual
     decision_errors = _check_decisions(actual)
     contested_errors = _check_contested_claims(actual)
+    agent_occurrence_errors = _check_agent_occurrences(actual)
 
     # SHACL over the standalone contested-claims artifact: the unified
     # claim model must satisfy the same shapes the edition graph obeys.
@@ -270,6 +305,7 @@ def main() -> None:
         "deterministicRebuild": deterministic,
         "decisionSeparation": not decision_errors,
         "contestedClaims": not contested_errors,
+        "agentOccurrenceEvidence": not agent_occurrence_errors,
         "shacl": bool(shacl_conforms),
         "inputHashes": not input_hash_errors,
         "jsonldProjection": not public_errors,
@@ -281,6 +317,7 @@ def main() -> None:
         else ["Rebuilding from frozen inputs changed a Gate 2 layer"],
         "decisionSeparation": decision_errors,
         "contestedClaims": contested_errors,
+        "agentOccurrenceEvidence": agent_occurrence_errors,
         "shacl": [] if shacl_conforms else [str(shacl_text)],
         "inputHashes": input_hash_errors,
         "jsonldProjection": public_errors,

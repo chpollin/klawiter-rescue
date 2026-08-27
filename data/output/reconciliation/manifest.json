@@ -1,16 +1,16 @@
 {
   "algorithmVersion": "1.1",
   "artifacts": {
-    "candidates.json": "198b6f79ac5276ec91f330d9aef3a3f2c32420e9ee600742b8e4e4cdbe6fb16a",
+    "candidates.json": "a62404a529d0a0bd4b74f8da8f68106a9617c281a371628fc8327cde8a5c6071",
     "contested-claims.json": "10a38f79efd563fdbacc1cf59e6221dd292904c51e721f6651fcaff194d59b3e",
     "decisions.json": "bde3864bc41507a0e96c018e02ae44667ce54cf1133932f47c80d0b35118c78f",
-    "earl.jsonld": "210b5dc07027db6b999eab46964b041816a01e0ff5049ad9824913db21fa845d",
-    "provenance.jsonld": "e8516d7542dd23baa306575572d8546e9087911b06af9d1b374b5ab70bc84682",
+    "earl.jsonld": "cc17859f306495c19e1530cfea48069a6175b4688730b356d1b263845be6223e",
+    "provenance.jsonld": "d7e6c12608dc1bc39ac3d6e29f3a98d5f381de77344f04d56ed27ce4102490db",
     "publishable-links.json": "49d645b6d689e1c23e8f2088d22f98e4b5f0e32c04d4c28c19c694d7a1b6577b",
-    "review-queue.json": "d35cb49e637fdc18cc9df5f2c618c2f5a06d0f101b12a47dd26003ada6e4c969",
-    "validation-report.json": "e145e5ec1b9ceb14d92712ca3e0a7dfc6576f7a171d123b91065adbdfbbfc3d3"
+    "review-queue.json": "2cbfd3b009f33fc88b52a41e9ac89573d76ac7be7188d76af5e0dc9fef84d7d8",
+    "validation-report.json": "84b89e35696a4c69f128e62517e93c83031bde5124b01c6ee16f7a9784b75e7f"
   },
-  "codeSha256": "b7031ed7165318b859aa26924b52ce55a0db6865963019741dd03fb3e2648542",
+  "codeSha256": "bf563d5cfc711288e7321f419b9d791e6e9939f0f7a6547673adbe047dbbcb55",
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
@@ -29,9 +29,9 @@
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "637300f8329f9259088633629bf72536ea429bc695a2ddce11c34aba9ae66010"
+    "sha256": "3a6cb6a5b301933deb8845e4ad73febcd6b5ef4bfa2ee78f8c43e7c3db4851db"
   },
-  "generatedAt": "2026-08-27T05:56:14.418578+00:00",
+  "generatedAt": "2026-08-27T08:27:14.770182+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -86,6 +86,7 @@
     }
   ],
   "validation": {
+    "agentOccurrenceEvidence": true,
     "contestedClaims": true,
     "decisionSeparation": true,
     "deterministicRebuild": true,

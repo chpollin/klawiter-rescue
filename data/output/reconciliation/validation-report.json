@@ -1,6 +1,7 @@
 {
   "allChecksPass": true,
   "checks": {
+    "agentOccurrenceEvidence": true,
     "contestedClaims": true,
     "decisionSeparation": true,
     "deterministicRebuild": true,
@@ -26,6 +27,7 @@
     "workSubjects": 443
   },
   "errors": {
+    "agentOccurrenceEvidence": [],
     "contestedClaims": [],
     "decisionSeparation": [],
     "deterministicRebuild": [],
@@ -34,5 +36,5 @@
     "jsonldProjection": [],
     "shacl": []
   },
-  "generatedAt": "2026-08-27T05:56:43.271331+00:00"
+  "generatedAt": "2026-08-27T08:27:46.669001+00:00"
 }

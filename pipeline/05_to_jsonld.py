@@ -24,6 +24,7 @@ from lib.config import (
     OUTPUT_FRONTEND_JSON,
     OUTPUT_JSONLD,
     OUTPUT_PUBLISHABLE_LINKS,
+    OUTPUT_RECONCILIATION_DECISIONS,
     STEP_01_PAGELINKS,
     STEP_04_OUTPUT,
     csv_bool,
@@ -308,8 +309,75 @@ _FRONTEND_KEY_MAP = {
 # RDF-only structure the UI does not render
 _FRONTEND_SKIPPED_KEYS = {"author", "relation", "seeAlsoText", "decomposedAsWork"}
 
+# Review projection: the flat entry fields Gate 2 decides on, and the agent
+# kind that decides each of them.
+_REVIEW_FIELDS = ("location", "translator", "publisher")
+_AGENT_DECISION_FIELDS = {"person": "translator", "publisher": "publisher"}
+# What a decision action says about the entry as a whole. reject is a
+# completed review too: the reviewer saw the candidate and refused it.
+_REVIEW_STATUS_BY_ACTION = {
+    "confirm": "agent_verified",
+    "correct": "agent_verified",
+    "reject": "agent_verified",
+    "unresolved": "contested",
+}
+# approved is reserved for apply_patches.py, where a human editor decided.
+_REVIEW_STATUS_RANK = {"contested": 0, "agent_verified": 1, "approved": 2}
 
-def make_frontend_entry(jsonld_entry):
+
+def load_review_index():
+    """Index the Gate-2 decisions by the flat field value they adjudicate.
+
+    Locations resolve through the location value of an entry, translators and
+    publishers through their agent name; both are the exact strings the
+    entry carries, so no fuzzy matching enters the projection.
+    """
+    with open(OUTPUT_RECONCILIATION_DECISIONS, encoding="utf-8") as handle:
+        document = json.load(handle)
+    index = {}
+    for decision in document.get("locationDecisions", []):
+        index[("location", decision["subject"])] = decision
+    for decision in document.get("agentDecisions", []):
+        field = _AGENT_DECISION_FIELDS.get(decision["entityType"])
+        if field:
+            index[(field, decision["subject"])] = decision
+    log.info("Review index: %d decided field values", len(index))
+    return index
+
+
+def build_review(frontend_entry, review_index):
+    """Project the reviewed state of an entry's own field values.
+
+    Returns None where no decision covers any value of the entry, so an
+    unreviewed entry carries no key at all. The status reports the strongest
+    statement any of its fields carries; the fields map keeps the per-field
+    detail the interface needs to say what was reviewed.
+    """
+    fields = {}
+    strongest = None
+    for field in _REVIEW_FIELDS:
+        value = frontend_entry.get(field)
+        decision = review_index.get((field, value)) if value else None
+        if not decision:
+            continue
+        action = decision["action"]
+        fields[field] = action
+        status = _REVIEW_STATUS_BY_ACTION[action]
+        if strongest is None or (
+            _REVIEW_STATUS_RANK[status] > _REVIEW_STATUS_RANK[strongest[0]]
+        ):
+            strongest = (status, decision)
+    if not fields:
+        return None
+    status, decision = strongest
+    review = {"status": status, "reviewed_by": decision["decidedBy"]}
+    if decision.get("decidedAt"):
+        review["reviewed_at"] = decision["decidedAt"]
+    review["fields"] = fields
+    return review
+
+
+def make_frontend_entry(jsonld_entry, review_index=None):
     """Create a simplified entry for the frontend JSON.
 
     Maps semantic property names back to short keys the frontend expects.
@@ -337,6 +405,9 @@ def make_frontend_entry(jsonld_entry):
             except (ValueError, TypeError):
                 pass
         e[frontend_key] = val
+    review = build_review(e, review_index or {})
+    if review:
+        e["review"] = review
     return e
 
 
@@ -482,10 +553,11 @@ def main():
     non_redirect_entries = []
     redirect_map = {}
     title_to_pid = {}
+    review_index = load_review_index()
 
     for e in entries:
         if not e.get("isRedirect"):
-            fe = make_frontend_entry(e)
+            fe = make_frontend_entry(e, review_index)
             non_redirect_entries.append(fe)
             title = e.get("name", "")
             pid = e.get("sourcePageId")
@@ -550,6 +622,9 @@ def main():
     locations = set(e.get("location") for e in ns0 if e.get("location"))
 
     _meta = {
+        # Declared shape of this file; tests/test_frontend_contract.py holds
+        # the matching declaration. 1.1 added the per-entry review projection.
+        "frontendSchemaVersion": "1.1",
         "ns0Count": ns0_count,
         "totalCount": len(non_redirect_entries),
         "redirectCount": len(redirect_map),

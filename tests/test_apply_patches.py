@@ -246,3 +246,21 @@ def test_rerun_on_patched_data_is_not_a_mismatch():
     ap.apply_patches(entries, patches)
     report = ap.apply_patches(entries, patches)  # current equals newValue
     assert report["old_value_mismatch"] == []
+
+
+def test_editor_review_keeps_the_dataset_review_projection():
+    """Stage 05 projects Gate-2 field decisions into entry['review']; an
+    editor patch raises the status without discarding that field record."""
+    entries = make_entries()
+    entries[0]["review"] = {
+        "status": "agent_verified",
+        "reviewed_by": "independent-verification-agent",
+        "fields": {"location": "confirm"},
+    }
+    ap.apply_patches(
+        entries, [patch(1, "publisher", "correct", old="Leipzig", new="Insel-Verlag")]
+    )
+    review = entries[0]["review"]
+    assert review["status"] == "approved"
+    assert review["reviewed_by"] == "Editor (SZD)"
+    assert review["fields"] == {"location": "confirm"}

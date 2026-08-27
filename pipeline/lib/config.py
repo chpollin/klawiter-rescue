@@ -78,6 +78,9 @@ LOCATION_REVIEW_EVIDENCE = os.path.join(
 OUTPUT_PUBLISHABLE_LINKS = os.path.join(
     OUTPUT_RECONCILIATION_DIR, "publishable-links.json"
 )
+OUTPUT_RECONCILIATION_DECISIONS = os.path.join(
+    OUTPUT_RECONCILIATION_DIR, "decisions.json"
+)
 OUTPUT_RECONCILIATION_FRONTEND = os.path.join(
     PROJECT_ROOT, "docs", "data", "reconciliation.json"
 )

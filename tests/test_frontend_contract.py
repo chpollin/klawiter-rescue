@@ -9,6 +9,12 @@ adapts the frontend, never as a side effect of modeling work.
 
 from __future__ import annotations
 
+import importlib
+
+# Bumped whenever the declared entry or _meta shape changes. 1.1 added the
+# review projection (dataset-level review state per entry).
+FRONTEND_SCHEMA_VERSION = "1.1"
+
 TOP_LEVEL_KEYS = {
     "_meta",
     "compiler",
@@ -22,6 +28,7 @@ TOP_LEVEL_KEYS = {
 META_KEYS = {
     "entryTypes",
     "fieldCoverage",
+    "frontendSchemaVersion",
     "languageCount",
     "locationCount",
     "ns0Count",
@@ -45,6 +52,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "allYears": (False, (list,)),
     "categories": (False, (list,)),
     "contentItems": (False, (list,)),
+    "edit_history": (False, (list,)),
     "fullBibliographicEntry": (False, (str,)),
     "language": (False, (str,)),
     "languageCode": (False, (str,)),
@@ -55,6 +63,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "pageCount": (False, (int,)),
     "publisher": (False, (str,)),
     "reprints": (False, (list,)),
+    "review": (False, (dict,)),
     "seeAlso": (False, (list,)),
     "sourceBlobId": (False, (int,)),
     "timePeriod": (False, (str,)),
@@ -92,6 +101,70 @@ def test_every_entry_matches_the_declared_contract(all_entries) -> None:
                 f"entry {entry.get('@id')} key {key} has type {type(value).__name__}, "
                 f"contract allows {[t.__name__ for t in allowed]}"
             )
+
+
+# Review projection: which review vocabulary a projected entry may carry.
+REVIEW_KEYS = {"status", "reviewed_by", "reviewed_at", "fields"}
+REVIEW_REQUIRED_KEYS = {"status", "reviewed_by"}
+REVIEW_STATUSES = {"approved", "agent_verified", "contested"}
+REVIEW_FIELDS = {"location", "translator", "publisher"}
+REVIEW_ACTIONS = {"confirm", "correct", "reject", "unresolved"}
+
+
+def test_meta_declares_the_contract_version(frontend_data) -> None:
+    assert frontend_data["_meta"]["frontendSchemaVersion"] == FRONTEND_SCHEMA_VERSION
+
+
+def test_review_projection_matches_the_declared_vocabulary(all_entries) -> None:
+    reviewed = [entry for entry in all_entries if "review" in entry]
+    assert reviewed, (
+        "no entry carries a review projection although Gate 2 holds "
+        "evidence-bearing decisions on entry field values"
+    )
+    for entry in reviewed:
+        review = entry["review"]
+        assert set(review) <= REVIEW_KEYS
+        assert REVIEW_REQUIRED_KEYS <= set(review)
+        assert review["status"] in REVIEW_STATUSES
+        assert isinstance(review["reviewed_by"], str) and review["reviewed_by"]
+        fields = review.get("fields", {})
+        assert set(fields) <= REVIEW_FIELDS
+        assert set(fields.values()) <= REVIEW_ACTIONS
+        for field in fields:
+            assert entry.get(field), (
+                f"entry {entry['@id']} reviews {field} without carrying a value"
+            )
+
+
+def test_review_projection_is_derived_from_gate2_decisions() -> None:
+    """The projection reports a decision that exists, never a bare status."""
+    stage_05 = importlib.import_module("05_to_jsonld")
+    index = stage_05.load_review_index()
+    assert index, "Gate 2 decisions did not reach the review index"
+    entry = {"location": "Amsterdam", "translator": "not a reviewed name"}
+    review = stage_05.build_review(entry, index)
+    assert review["fields"] == {"location": "confirm"}
+    assert review["status"] == "agent_verified"
+    assert review["reviewed_by"] == index[("location", "Amsterdam")]["decidedBy"]
+    assert stage_05.build_review({"location": "not a reviewed place"}, index) is None
+
+
+def test_unresolved_decision_projects_as_contested() -> None:
+    stage_05 = importlib.import_module("05_to_jsonld")
+    index = {
+        ("location", "Tyresö"): {
+            "action": "unresolved",
+            "decidedBy": "independent-verification-agent",
+            "decidedAt": "2026-08-21T20:00:00Z",
+        }
+    }
+    review = stage_05.build_review({"location": "Tyresö"}, index)
+    assert review == {
+        "status": "contested",
+        "reviewed_by": "independent-verification-agent",
+        "reviewed_at": "2026-08-21T20:00:00Z",
+        "fields": {"location": "unresolved"},
+    }
 
 
 def test_display_values_are_flat(all_entries) -> None:

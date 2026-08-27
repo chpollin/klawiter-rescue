@@ -19,7 +19,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -41,7 +41,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -63,7 +63,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -85,7 +85,29 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/gate2-reconciliation"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/agentOccurrenceEvidence"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/gate2-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -107,7 +129,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -129,7 +151,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -151,7 +173,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-08-27T05:56:43.271331+00:00",
+        "dc:date": "2026-08-27T08:27:46.669001+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }

@@ -163,11 +163,17 @@ def apply_patches(entries, patches, location_links=None):
         entry["edit_history"] = history
         last = plist[-1]
         status = "approved" if "human" in sources else "agent_verified"
-        entry["review"] = {
-            "status": status,
-            "reviewed_by": last["edited_by"],
-            "reviewed_at": last["edited_at"],
-        }
+        # Stage 05 projects the Gate-2 field decisions into review["fields"];
+        # the editor decision raises the entry status without discarding that
+        # record of what the dataset already had reviewed.
+        review = entry.setdefault("review", {})
+        review.update(
+            {
+                "status": status,
+                "reviewed_by": last["edited_by"],
+                "reviewed_at": last["edited_at"],
+            }
+        )
         touched += 1
 
     return {

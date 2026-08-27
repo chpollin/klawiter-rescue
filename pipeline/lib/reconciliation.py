@@ -10,6 +10,7 @@ import unicodedata
 import xml.etree.ElementTree as ET
 from difflib import SequenceMatcher
 from pathlib import Path
+from typing import NamedTuple
 from urllib.parse import quote
 
 # Canonical Wikidata RDF entity IRI: the http form is what Wikidata's own
@@ -175,11 +176,11 @@ def build_location_candidates(
     locations: dict,
     reconciliation_log: list[dict],
     review_evidence: dict | None = None,
-    source_rows: list[dict[str, str]] | None = None,
+    folded_rows: list[_SourceRow] | None = None,
 ) -> list[dict]:
     """Preserve every legacy reconciliation output as an unconfirmed candidate."""
     log_by_location = {item["location"]: item for item in reconciliation_log}
-    folded_rows = _folded_source_lines(source_rows or [])
+    folded_rows = folded_rows or []
     results = []
     for name in sorted(locations, key=str.casefold):
         info = locations[name]
@@ -271,12 +272,26 @@ def build_location_candidates(
     return results
 
 
-def _folded_source_lines(
-    source_rows: list[dict[str, str]],
-) -> list[tuple[int, int | None, list[tuple[int, str, str]]]]:
+OCCURRENCE_SOURCE_PATH = "data/intermediate/04_classified.csv"
+
+# The flat field a frozen agent name was counted over at freezing time; the
+# occurrence scan resolves a subject through the same field.
+AGENT_SOURCE_FIELDS = {"person": "translator", "publisher": "publisher"}
+
+
+class _SourceRow(NamedTuple):
+    """One classified source row, folded for repeated occurrence scanning."""
+
+    page_id: int
+    text_id: int | None
+    lines: list[tuple[int, str, str]]
+    fields: dict[str, str]
+
+
+def _folded_source_lines(source_rows: list[dict[str, str]]) -> list[_SourceRow]:
     """Fold every source line exactly once. The occurrence scan runs per
-    location subject over the full source; folding inside that scan would
-    re-fold the corpus hundreds of times per build."""
+    subject over the full source; folding inside that scan would re-fold the
+    corpus hundreds of times per build."""
     folded = []
     for row in source_rows:
         text = (
@@ -285,74 +300,159 @@ def _folded_source_lines(
             or row.get("full_bibliographic_entry")
             or ""
         )
-        page_id = int(row["page_id"])
-        text_id = int(row["text_id"]) if row.get("text_id") else None
         lines = [
             (number, line, line.casefold())
             for number, line in enumerate(text.splitlines(), start=1)
         ]
-        folded.append((page_id, text_id, lines))
+        folded.append(
+            _SourceRow(
+                page_id=int(row["page_id"]),
+                text_id=int(row["text_id"]) if row.get("text_id") else None,
+                lines=lines,
+                fields={
+                    field: row.get(field, "") for field in AGENT_SOURCE_FIELDS.values()
+                },
+            )
+        )
     return folded
 
 
+def _line_occurrence(
+    scope: str,
+    row: _SourceRow,
+    line_number: int,
+    line: str,
+    value: str,
+    match_mode: str,
+    field: str | None = None,
+) -> dict:
+    """An occurrence anchored to one exact source line."""
+    occurrence = {
+        "@id": (
+            f"klawiter:sourceOccurrence/{scope}/{row.page_id}/"
+            f"{row.text_id or 0}/{line_number}"
+        ),
+        "sourcePageId": row.page_id,
+        "sourceTextId": row.text_id,
+        "sourcePath": OCCURRENCE_SOURCE_PATH,
+        "sourceLine": line_number,
+        "sourceValue": value,
+        "sourceMatchMode": match_mode,
+        "sourceText": line,
+        "sourceTextSha256": hashlib.sha256(line.encode("utf-8")).hexdigest(),
+    }
+    if field:
+        occurrence["sourceField"] = field
+    return occurrence
+
+
+def _field_occurrence(scope: str, row: _SourceRow, value: str, field: str) -> dict:
+    """An occurrence proved by the extracted field alone. The value reached
+    the field through enrichment or normalization, so no line of the source
+    text carries it literally; the record says exactly that instead of
+    asserting a text position it cannot support."""
+    return {
+        "@id": (
+            f"klawiter:sourceOccurrence/{scope}/{row.page_id}/{row.text_id or 0}/field"
+        ),
+        "sourcePageId": row.page_id,
+        "sourceTextId": row.text_id,
+        "sourcePath": OCCURRENCE_SOURCE_PATH,
+        "sourceLine": None,
+        "sourceValue": value,
+        "sourceMatchMode": "field-value",
+        "sourceField": field,
+    }
+
+
+def _sorted_occurrences(occurrences: list[dict]) -> list[dict]:
+    occurrences.sort(
+        key=lambda item: (
+            item["sourcePageId"],
+            item["sourceTextId"] or 0,
+            item["sourceLine"] or 0,
+        )
+    )
+    return occurrences
+
+
 def _location_source_occurrences(
-    location: str,
-    folded_rows: list[tuple[int, int | None, list[tuple[int, str, str]]]],
+    location: str, folded_rows: list[_SourceRow]
 ) -> list[dict]:
     """Return stable, exact source-line references for a location string."""
     occurrences: list[dict] = []
     seen: set[tuple[int, int | None, int]] = set()
     needle = location.casefold()
     components = [item.strip().casefold() for item in location.split(",")]
-    for page_id, text_id, lines in folded_rows:
-        for line_number, line, folded_line in lines:
+    for row in folded_rows:
+        for line_number, line, folded_line in row.lines:
             exact_match = needle in folded_line
             component_match = len(components) > 1 and all(
                 component in folded_line for component in components
             )
             if not exact_match and not component_match:
                 continue
-            key = (page_id, text_id, line_number)
+            key = (row.page_id, row.text_id, line_number)
             if key in seen:
                 continue
             seen.add(key)
-            occurrence_id = (
-                f"klawiter:sourceOccurrence/location/{page_id}/"
-                f"{text_id or 0}/{line_number}"
-            )
             occurrences.append(
-                {
-                    "@id": occurrence_id,
-                    "sourcePageId": page_id,
-                    "sourceTextId": text_id,
-                    "sourcePath": "data/intermediate/04_classified.csv",
-                    "sourceLine": line_number,
-                    "sourceValue": location,
-                    "sourceMatchMode": (
-                        "exact-string" if exact_match else "component-set"
-                    ),
-                    "sourceText": line,
-                    "sourceTextSha256": hashlib.sha256(
-                        line.encode("utf-8")
-                    ).hexdigest(),
-                }
+                _line_occurrence(
+                    "location",
+                    row,
+                    line_number,
+                    line,
+                    location,
+                    "exact-string" if exact_match else "component-set",
+                )
             )
-    occurrences.sort(
-        key=lambda item: (
-            item["sourcePageId"],
-            item["sourceTextId"] or 0,
-            item["sourceLine"],
-        )
-    )
-    return occurrences
+    return _sorted_occurrences(occurrences)
 
 
-def build_agent_candidates(agent_reconciliation: dict) -> list[dict]:
+def _agent_source_occurrences(
+    kind: str, name: str, folded_rows: list[_SourceRow]
+) -> list[dict]:
+    """Return source references for a translator or publisher name.
+
+    A location is a substring of the bibliographic text, so its scan runs
+    over every line. An agent name is a parsed field value, so the field
+    identifies the entries that carry it; the scan then anchors the name in
+    the lines of exactly those entries and falls back to the field itself
+    where no line spells it out.
+    """
+    field = AGENT_SOURCE_FIELDS[kind]
+    needle = name.casefold()
+    occurrences: list[dict] = []
+    for row in folded_rows:
+        if row.fields.get(field) != name:
+            continue
+        matched = [
+            (line_number, line)
+            for line_number, line, folded_line in row.lines
+            if needle in folded_line
+        ]
+        if matched:
+            occurrences.extend(
+                _line_occurrence(
+                    kind, row, line_number, line, name, "field-value-line", field
+                )
+                for line_number, line in matched
+            )
+        else:
+            occurrences.append(_field_occurrence(kind, row, name, field))
+    return _sorted_occurrences(occurrences)
+
+
+def build_agent_candidates(
+    agent_reconciliation: dict, folded_rows: list[_SourceRow] | None = None
+) -> list[dict]:
     """Rank frozen Wikidata candidates for translator and publisher names.
 
     Proposals only: like locations and works, an agent name publishes an
-    authority link exclusively through a confirmed decision.
+    authority link exclusively through a confirmed decision. Each subject
+    carries the source occurrences that make an unresolved decision arguable.
     """
+    folded_rows = folded_rows or []
     subjects = []
     for item in agent_reconciliation.get("agents", []):
         kind, name = item["kind"], item["name"]
@@ -368,16 +468,21 @@ def build_agent_candidates(agent_reconciliation: dict) -> list[dict]:
             }
             for hit in item.get("candidates", [])
         ]
-        subjects.append(
-            {
-                "entityType": kind,
-                "subjectId": f"klawiter:{kind}/{quote(name, safe='')}",
-                "sourceName": name,
-                "occurrences": item["occurrences"],
-                "candidates": candidates,
-                "decision": None,
-            }
-        )
+        subject = {
+            "entityType": kind,
+            "subjectId": f"klawiter:{kind}/{quote(name, safe='')}",
+            "sourceName": name,
+            "occurrences": item["occurrences"],
+            "sourceOccurrences": _agent_source_occurrences(kind, name, folded_rows),
+            "candidates": candidates,
+            "decision": None,
+        }
+        if not subject["sourceOccurrences"]:
+            subject["sourceOccurrenceNote"] = (
+                f"Null finding: no {AGENT_SOURCE_FIELDS[kind]} value in "
+                f"{OCCURRENCE_SOURCE_PATH} equals this frozen agent name."
+            )
+        subjects.append(subject)
     subjects.sort(key=lambda subject: (subject["entityType"], subject["sourceName"]))
     return subjects
 
@@ -403,11 +508,10 @@ def apply_agent_decisions(subjects: list[dict], decisions: list[dict]) -> list[d
             raise ValueError(f"Unsupported decision action: {action}")
         if not decision.get("evidence"):
             raise ValueError(f"Decision lacks evidence: {decision['decisionId']}")
-        if action == "unresolved":
+        if action == "unresolved" and not subject["sourceOccurrences"]:
             raise ValueError(
-                "Unresolved agent decisions need source-occurrence evidence, "
-                "which the pipeline does not collect for agents yet; keep "
-                f"{key} pending instead"
+                "An unresolved agent decision needs source-occurrence "
+                f"evidence, and the scan found none for {key}"
             )
         target = decision.get("qid")
         candidate_targets = {candidate["qid"] for candidate in subject["candidates"]}
@@ -645,31 +749,41 @@ def _decision_history(decision: dict) -> list[dict]:
     return history
 
 
-def _contested_claims(locations: list[dict], works: list[dict]) -> list[dict]:
+def _claim_subject_key(subject: dict, entity_type: str) -> str:
+    if entity_type == "location":
+        return subject["sourceLocation"]
+    if entity_type in AGENT_SOURCE_FIELDS:
+        return subject["sourceName"]
+    return subject["subjectId"]
+
+
+def _contested_claims(
+    locations: list[dict], works: list[dict], agents: list[dict] | None = None
+) -> list[dict]:
     """Materialize unresolved decisions as claims without publishing them as links."""
     claims = []
-    for entity_type, subjects in (("location", locations), ("work", works)):
+    groups: list[tuple[str, list[dict]]] = [("location", locations), ("work", works)]
+    for subject in agents or []:
+        groups.append((subject["entityType"], [subject]))
+    for entity_type, subjects in groups:
         for subject in subjects:
             decision = subject.get("decision")
             if not decision or decision["action"] != "unresolved":
                 continue
             subject_id = subject["subjectId"]
-            subject_key = (
-                subject["sourceLocation"] if entity_type == "location" else subject_id
-            )
+            subject_key = _claim_subject_key(subject, entity_type)
             claim_suffix = hashlib.sha256(
                 f"{entity_type}\0{subject_key}".encode("utf-8")
             ).hexdigest()[:16]
             claim_id = f"klawiter:claim/reconciliation/{entity_type}/{claim_suffix}"
-            target_key = "qid" if entity_type == "location" else "szdId"
+            wikidata_scope = entity_type == "location" or (
+                entity_type in AGENT_SOURCE_FIELDS
+            )
+            target_key = "qid" if wikidata_scope else "szdId"
             interpretations = []
             for candidate in subject["candidates"]:
                 target = candidate[target_key]
-                target_uri = (
-                    candidate["uri"]
-                    if entity_type == "location"
-                    else candidate["szdUri"]
-                )
+                target_uri = candidate["uri"] if wikidata_scope else candidate["szdUri"]
                 interpretations.append(
                     {
                         "@id": f"{claim_id}/interpretation/{target}",
@@ -695,7 +809,7 @@ def _contested_claims(locations: list[dict], works: list[dict]) -> list[dict]:
             )
             source_evidence = (
                 subject["sourceOccurrences"]
-                if entity_type == "location"
+                if "sourceOccurrences" in subject
                 else [
                     {
                         "@id": f"klawiter:sourceText/{subject['sourcePageId']}",
@@ -738,9 +852,10 @@ def build_reconciliation(
     agent_decisions: dict | None = None,
 ) -> dict:
     """Build all deterministic Gate-2 layers from frozen inputs."""
+    folded_rows = _folded_source_lines(source_rows or [])
     location_subjects = apply_decisions(
         build_location_candidates(
-            locations, location_log, location_review, source_rows
+            locations, location_log, location_review, folded_rows
         ),
         location_decisions["decisions"],
         "location",
@@ -751,7 +866,7 @@ def build_reconciliation(
         "work",
     )
     agent_subjects = apply_agent_decisions(
-        build_agent_candidates(agent_reconciliation or {}),
+        build_agent_candidates(agent_reconciliation or {}, folded_rows),
         (agent_decisions or {}).get("decisions", []),
     )
     decisions = {
@@ -769,7 +884,9 @@ def build_reconciliation(
     publishable = _publishable_links(location_subjects, work_subjects)
     publishable["agents"] = _publishable_agent_links(agent_subjects)
     queue = _review_queue(location_subjects, work_subjects, agent_subjects)
-    contested_claims = _contested_claims(location_subjects, work_subjects)
+    contested_claims = _contested_claims(
+        location_subjects, work_subjects, agent_subjects
+    )
     return {
         "candidates": candidates,
         "decisions": decisions,

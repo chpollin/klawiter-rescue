@@ -206,3 +206,135 @@ def test_gate2_provenance_paths_are_repository_relative() -> None:
     ]
     assert locations
     assert all(not Path(path).is_absolute() and "\\" not in path for path in locations)
+
+
+AGENT_OCCURRENCE_FIELDS = {"person": "translator", "publisher": "publisher"}
+
+
+def test_agent_subjects_carry_source_occurrence_evidence(reconciliation: dict) -> None:
+    """Every agent subject with a candidate needs source evidence or an
+    explicit null finding; without it no unresolved decision is arguable."""
+    subjects = reconciliation["candidates"]["agents"]
+    with_candidates = [subject for subject in subjects if subject["candidates"]]
+    assert with_candidates
+    for subject in subjects:
+        occurrences = subject["sourceOccurrences"]
+        if subject["candidates"]:
+            assert occurrences or subject.get("sourceOccurrenceNote"), (
+                f"{subject['subjectId']} has candidates without occurrence evidence"
+            )
+        field = AGENT_OCCURRENCE_FIELDS[subject["entityType"]]
+        for occurrence in occurrences:
+            assert occurrence["sourceField"] == field
+            assert occurrence["sourceValue"] == subject["sourceName"]
+            assert occurrence["sourcePath"] == "data/intermediate/04_classified.csv"
+            assert isinstance(occurrence["sourcePageId"], int)
+            assert occurrence["sourceMatchMode"] in {"field-value", "field-value-line"}
+            if occurrence["sourceMatchMode"] == "field-value-line":
+                assert len(occurrence["sourceTextSha256"]) == 64
+                assert occurrence["sourceText"]
+                assert occurrence["sourceLine"] >= 1
+
+
+def test_agent_occurrence_pages_match_the_classified_source(
+    reconciliation: dict,
+) -> None:
+    rows = load_csv(STEP_04_OUTPUT)
+    for subject in reconciliation["candidates"]["agents"][:5]:
+        field = AGENT_OCCURRENCE_FIELDS[subject["entityType"]]
+        expected = {
+            int(row["page_id"]) for row in rows if row[field] == subject["sourceName"]
+        }
+        found = {
+            occurrence["sourcePageId"] for occurrence in subject["sourceOccurrences"]
+        }
+        assert found == expected
+
+
+def test_agent_occurrences_are_deterministically_ordered(reconciliation: dict) -> None:
+    for subject in reconciliation["candidates"]["agents"]:
+        keys = [
+            (
+                occurrence["sourcePageId"],
+                occurrence["sourceTextId"] or 0,
+                occurrence["sourceLine"] or 0,
+            )
+            for occurrence in subject["sourceOccurrences"]
+        ]
+        assert keys == sorted(keys)
+        ids = [occurrence["@id"] for occurrence in subject["sourceOccurrences"]]
+        assert len(ids) == len(set(ids))
+
+
+def _rebuild_with_agent_decision(decision: dict) -> dict:
+    def read(path: str | Path) -> dict | list:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+
+    agent_decisions = read(AGENT_DECISIONS)
+    agent_decisions = {**agent_decisions, "decisions": [decision]}
+    return build_reconciliation(
+        read(Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld"),
+        read(LOCATIONS_JSON),
+        read(LOCATION_RECONCILIATION_LOG),
+        read(LOCATION_REVIEW_EVIDENCE),
+        read(LOCATION_DECISIONS),
+        read(WORK_DECISIONS),
+        parse_szd_work_index(Path(SZD_WORK_INDEX)),
+        load_csv(STEP_04_OUTPUT),
+        read(AGENT_RECONCILIATION),
+        agent_decisions,
+    )
+
+
+def test_unresolved_agent_decision_becomes_a_contested_claim(
+    reconciliation: dict,
+) -> None:
+    """The occurrence scan is what makes an unresolved agent decision
+    representable: it supplies the source evidence the claim requires."""
+    subject = next(
+        item
+        for item in reconciliation["candidates"]["agents"]
+        if item["candidates"] and item["sourceOccurrences"]
+    )
+    rebuilt = _rebuild_with_agent_decision(
+        {
+            "entityType": subject["entityType"],
+            "subject": subject["sourceName"],
+            "action": "unresolved",
+            "decisionId": f"agent/{subject['sourceName']}/unresolved",
+            "decidedBy": "independent-verification-agent",
+            "decidedAt": "2026-08-27T10:00:00Z",
+            "evidence": ["source-imprint"],
+        }
+    )
+    claim = next(
+        item
+        for item in rebuilt["contestedClaims"]
+        if item["klawiter:claimSubject"]["@id"] == subject["subjectId"]
+    )
+    assert claim["klawiter:identityScope"] == subject["entityType"]
+    assert claim["klawiter:claimStatus"] == "contested"
+    assert claim["klawiter:decisionStatus"] == "open"
+    assert len(claim["klawiter:interpretation"]) >= 2
+    assert claim["klawiter:sourceEvidence"] == subject["sourceOccurrences"]
+    assert rebuilt["publishable"]["agents"] == {}
+
+
+def test_public_agent_projection_carries_occurrence_evidence(
+    reconciliation: dict,
+) -> None:
+    reconcile_entities = importlib.import_module("reconcile_entities")
+    edition_dataset = json.loads(
+        (Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld").read_text(encoding="utf-8")
+    )
+    frontend = reconcile_entities._frontend(reconciliation, edition_dataset)
+    assert frontend["schemaVersion"] == "1.1"
+    subject = reconciliation["candidates"]["agents"][0]
+    key = f"{subject['entityType']}/{subject['sourceName']}"
+    projected = frontend["agents"][key]
+    # The internal pipeline path stays out of the published projection, the
+    # same rule the contested-claim projection follows.
+    assert projected["sourceOccurrences"] == [
+        {name: value for name, value in occurrence.items() if name != "sourcePath"}
+        for occurrence in subject["sourceOccurrences"]
+    ]
