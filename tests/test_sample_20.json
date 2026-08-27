@@ -1,0 +1,331 @@
+[
+  {
+    "page_id": 4303,
+    "needed": [
+      "publisher"
+    ],
+    "text": "'''[1934]: Binoza, Zagreb'''\n\n''Mariia Antoaneta'' [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Iso VelikanoviÄ. 496p. Illustrated. [Svjetski pisci, 26]. See: [[Mariia Antoaneta. Slika jednog osrednjeg karaktera]]\n\n\n[[Category:Historical Studies / Volumes (Serbo-Croatian)]]",
+    "label": "1a: publisher only (non-DE)",
+    "existing": {
+      "publisher": "",
+      "location": "Zagreb",
+      "translator": "Iso VelikanoviÄ",
+      "page_count": "496",
+      "language": ""
+    }
+  },
+  {
+    "page_id": 1800,
+    "needed": [
+      "location"
+    ],
+    "text": "'''[1947]: Pechat Far, Sofija'''\n\n''RomanÅ­t na edin zhivot. Balzak'' [Balzac]. Translated by DimitÅ­r Stoevski. 1st edition. 500p. Illustrated. [Series: Biblioteka Zlatni zÅ­rna. Godina XII, premiia]\n\n\n'''[1960]: Narodna Kultura, Sofija'''\n\n''RomanÅ­t na edin zhivot. Balzak'' [Balzac]. Translated by DimitÅ­r Stoevski. 2nd revised edition. 383/(1)p. Illustrated [Series: Biblioteka  Svetovni obrazi]\n\n\n\n[[Category:Historical Studies / Volumes (Bulgarian)]]",
+    "label": "1b: location only",
+    "existing": {
+      "publisher": "r Stoevski. 1st edition",
+      "location": "",
+      "translator": "DimitÅ",
+      "page_count": "500",
+      "language": "Bulgarian"
+    }
+  },
+  {
+    "page_id": 72,
+    "needed": [
+      "translator"
+    ],
+    "text": "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''\n\n''Ausgewählte Prosa. 1. Bändchen''. Edited with a foreword and notes by H(erman) Wolf. 142p. [Reprinted 1935, 1939] [Meulenhoffs Sammlung deutscher Schriftsteller, 53]\n\n'''Contents:'''\n<lst type=bracket start=1>\nStefan Zweig [H. Wolf], pp. 9-11\nDie Weltminute von Waterloo. Napoleon, 18. Juni 1815, pp. 13-30\nDie Entdeckung Eldorados. J. A. Suter,  Kalifornien, Januar 1848, pp. 31-42\nDer Kampf um den Südpol. Kapitän Scott, 90. Breitengrad, 16. Janu",
+    "label": "1c: translator only (non-DE)",
+    "existing": {
+      "publisher": "J. M. Meulenhoff Verlag",
+      "location": "Amsterdam",
+      "translator": "",
+      "page_count": "142",
+      "language": ""
+    }
+  },
+  {
+    "page_id": 5746,
+    "needed": [
+      "page_count"
+    ],
+    "text": "\\\"Franz/Francisco Masereel\\\" [Frans  Masereel. Der Mann und Bildner] in:\n<lst type=bracket start=1>\n[[Hombres, libros y ciudades]] [Barcelona, 1963], No. 13, pp. (120)-127 [Translated by the Editorial Juventud].  Here entitled: \\\"Franz Masereel. El hombre y el escultor\\\"\n[[Prohombres del espíritu]] [Buenos Aires, 1940], No. 11, pp. (161)-173 [Translated by Alfredo Cahn]. Here entitled: \\\"Francisco Masereel. El hombre y artista\\\"\n</lst>\n\nSee: [[Begegnungen mit Menschen, Büchern, Städten]] [Wien/L",
+    "label": "1d: page_count only",
+    "existing": {
+      "publisher": "Juventud",
+      "location": "Barcelona",
+      "translator": "Alfredo Cahn",
+      "page_count": "",
+      "language": "Spanish"
+    }
+  },
+  {
+    "page_id": 4473,
+    "needed": [
+      "publisher",
+      "location",
+      "translator",
+      "page_count"
+    ],
+    "text": "'''[1984]: Czechoslovakia'''\n\n''Sach mat'' [Schachnovelle]\n<lst type=bracket start=1>\nLanguage: Chechen\nDirector: Ladislav Rychman\nWriter: Pavel Grym\nCast: Therese Herz, Gustav Bubnik, Stanislav Fiser, Miro Grisa and Otto Simánek\nCinematography: Petr Cepický\nRuntime: 32 minutes\n</lst>\n\n\n\n[[Category:Films / Plays / Operas]]\n{{DEFAULTSORTKEY:Sach-mat}}",
+    "label": "1e: 3+ fields missing",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "",
+      "language": ""
+    }
+  },
+  {
+    "page_id": 2866,
+    "needed": [
+      "publisher",
+      "location",
+      "translator",
+      "page_count"
+    ],
+    "text": "\\\"The Agony of Humanism in World War I: The Case of Stefan Zweig\\\" in ''Journal of European Studies. Literature and Ideas from the Renaissance to the Present'' [Halfpenny Furze, Mill Lane, Chalfont St Giles, Buckinghamshire HP8 4NR], 6:2 [June 1976], pp. (100)-124\n\n[[Category:Secondary Literature / Authors (English)]]",
+    "label": "2a: English",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "",
+      "language": "English"
+    }
+  },
+  {
+    "page_id": 5082,
+    "needed": [
+      "publisher",
+      "location",
+      "translator"
+    ],
+    "text": "'''[1994]: Bibliothèque principale de la Ville de Namur, Namur'''\n\n''Stefan Zweig: exposition du 20 avril au 14 mai 1994''. Foreword by Michel Gilles.  42p. Illustrated. Contains a portrait of Stefan Zweig\n\n\n\n\n[[Category:Secondary Literature / Authors (French)]]",
+    "label": "2b: French",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "42",
+      "language": "French"
+    }
+  },
+  {
+    "page_id": 1891,
+    "needed": [
+      "publisher",
+      "location",
+      "page_count"
+    ],
+    "text": "'''[1993]: KavkazskiÄ­ Krai, Stavropolâ''' \n\n''Mariia Stiuart * Kazanova'' [Maria Stuart * Casanova]. Edited by N. Vysotskaia. Illustrated by I. L. Prostitov. 444/(3)p. [Istoricheskie romani]\n\n'''Contents:'''\n<lst type=bracket start=1>\nMariia Stiuart [Maria Stuart. Translated by  R. Galâperina. Verses translated by V. Levik], pp. (7)-(370)\nKazanova [Casanova. Translated by P. S. BernshteÄ­n], pp. (371)-(445)\n</lst>\n\n[[Category:Historical Studies / Volumes (Russian)]]",
+    "label": "2c: Russian",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "R. Galâ",
+      "page_count": "",
+      "language": "Russian"
+    }
+  },
+  {
+    "page_id": 634,
+    "needed": [
+      "publisher",
+      "translator"
+    ],
+    "text": "\\\"Shi ta ma?\\\" [War er es? / Jupiter] in:\n<lst type=bracket start=1>\n[[Ciweige ji]] [Beijing, 2000], No. 10, pp. 289-325\n[[Ciweige jingdian xiaoshuo]] [Yanji, 2000], Vol. 3, No. 22, pp. 890-931\n[[Ciweige wenji]] [Taiyuan/Xi'an, 1998], Vol. 2, No. 8, pp. 310-343 \n[[Ciweige xiaoshuo ji]] [Beijing, 1997], Vol. 3, No. 29, pp. 315-347\n[[Xiangqi de gushi]] [Beijing, 2000/2], No. 10, pp. 289-325 \n</lst>\n\n[[Category:Fiction / Individual Stories (Chinese)]]",
+    "label": "2d: Chinese",
+    "existing": {
+      "publisher": "",
+      "location": "Beijing",
+      "translator": "",
+      "page_count": "289",
+      "language": "Chinese"
+    }
+  },
+  {
+    "page_id": 7263,
+    "needed": [
+      "publisher",
+      "location",
+      "translator",
+      "page_count"
+    ],
+    "text": "\\\"Amoku\\\" [Der Amokläufer]. '''See:''' [[Der Amokläufer]] [Translations: Japanese)]\n\n\n[[Category:Fiction / Individual Stories (Japanese)]]",
+    "label": "2e: Japanese",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "",
+      "language": "Japanese"
+    }
+  },
+  {
+    "page_id": 4445,
+    "needed": [
+      "publisher",
+      "translator"
+    ],
+    "text": "'''German'''\n\n'''[2000]: Hochschulverl., Freiburg im Breisgau'''\n\n''Frauen- und Männerbilder in den Novellen von Stefan Zweig''. 168p. [Hochschulsammlung Philosophie. Literaturwissenschaft, 16]. This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau\n\n'''Arabic'''\n\n'''[2015]'''\n\n\\\"á¹¢Å«rat al-marÊ¾ah waÊ¾l-rajul fÄ« uqá¹£Å«á¹£at StÄ«fÄn TsfÄygh 'ArbaÊ¿ wa-Ê¿ishrÅ«n sÄÊ¿ah min á¸¥ayÄt imraÊ¾ah'\\\" [The Image of Woman and Man in Stefan Zwe",
+    "label": "2f: Arabic",
+    "existing": {
+      "publisher": "",
+      "location": "Freiburg",
+      "translator": "",
+      "page_count": "168",
+      "language": "Arabic"
+    }
+  },
+  {
+    "page_id": 5892,
+    "needed": [
+      "publisher",
+      "location",
+      "translator",
+      "page_count"
+    ],
+    "text": "\\\"El pensamiento europeo en su evolución histórica\\\". '''See:'''  [[El pensamiento europeo en su desarrollo histórico]]\n\n\n[[Category:Essays / Individual Essays (Spanish)]]\n{{DEFAULTSORTKEY:Pensamiento europeo en su evolución histórica}}",
+    "label": "2g: Spanish",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "",
+      "language": "Spanish"
+    }
+  },
+  {
+    "page_id": 4376,
+    "needed": [
+      "publisher",
+      "page_count"
+    ],
+    "text": "'''[1943]: Skoglunds Bokförlag, Stockholm'''\n\nSchack, Amok och andra noveller [Schachnovelle, Der Amokläufer und andere Novellen]. Translated by Hugo Hultenberg. 347/(1)p. \n\n'''Contents:'''\n<lst type=bracket start=1>\nSchack [Schachnovelle], pp. (7)-79\nAmoklöparen [Der Amokläufer], pp. (81)-155\nKvinnan och landskapet [Die Frau und die Landschaft], pp. (157)-187\nEn fantastisk natt [Phantastische Nacht], pp. (189)-267\nEtt brev från en okänd [Brief einer Unbekannten], pp. (269)-321\nMånskensgränden [",
+    "label": "3a: standard header format",
+    "existing": {
+      "publisher": "",
+      "location": "Stockholm",
+      "translator": "Hugo Hultenberg",
+      "page_count": "",
+      "language": "Swedish"
+    }
+  },
+  {
+    "page_id": 584,
+    "needed": [
+      "publisher",
+      "location",
+      "translator"
+    ],
+    "text": "\\\"Jueze\\\" [Brennendes Geheimnis] in:\n<lst type=bracket start=1>\n[[Ciweige xiaoshuo]] [T'aipei, 1975], Part III, No. 18, pp. 115-188\n[[Pa]] [T'aipei, 1968], No. 4, pp. 47-114\n[[Tongqing de zui]] [Jinan, 1982], No. 11, pp. 422-479\n</lst>\n\n'''See also:''' '''[1]'''. [[Baoshou buzhu de mimi]]; '''[2]'''. [[Huoxiao huoliao de mimi]]; '''[3]'''. [[Rewang de mimi]]; '''[4]'''. [[Yan'gai buzhu de mimi]]; '''[5]'''. [[Zhuoren de mimi]]\n\n\n[[Category:Fiction / Individual Stories (Chinese)]]",
+    "label": "3b: no header, embedded info",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "115",
+      "language": "Chinese"
+    }
+  },
+  {
+    "page_id": 533,
+    "needed": [
+      "publisher",
+      "location",
+      "translator"
+    ],
+    "text": "[Angst. F 2] in [[Novelle]] [3], pp. 84-125\n\n\n[[Category:Fiction / Individual Stories (Estonian)]]",
+    "label": "3c: very short text",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "84",
+      "language": ""
+    }
+  },
+  {
+    "page_id": 162,
+    "needed": [
+      "translator"
+    ],
+    "text": "'''Essays / Volumes (German)'''\n\n'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''\n\n''Die Monotonisierung der Welt. Aufsätze und Vorträge''. Compiled with an afterword by Volker Michels. 254/(1)p. Frontispiece portait of Zweig [Suhrkamp Bibliothek, 493]\n\n*1st edition 3,000 copies. 1976\n*2nd edition. 2,000 copies. 1978\n*3rd edition. 1,000 copies. 1982\n*4th edition. 3,000 copies. 1988\n\n'''Contents:'''\n\n'''I.  Die Monotonisierung der Welt'''\n<lst type=bracket start=1>\nDie Monotonisierung der Welt, ",
+    "label": "4a: German (should return null translator)",
+    "existing": {
+      "publisher": "Suhrkakmp Verlag",
+      "location": "Frankfurt am Main",
+      "translator": "",
+      "page_count": "7",
+      "language": "German"
+    }
+  },
+  {
+    "page_id": 1999,
+    "needed": [
+      "translator"
+    ],
+    "text": "<lst type=bracket>\n''Geist der Wirklichkeit. Vom Werden der österreichischen Dichtung''. Wien: Österreichische Verlagsanstalt, 1967. Zweig references, pp. 223-224, Note 224, p. 425\n\n''Die Literatur  Österreichs  an der Jahrtausendwende''. Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien: Peter Lang Verlag, 2001. Zweig reference, p. 255, 288. 2nd, expanded edition. 2003. Zweig references, pp. 222, 252, 284\n</lst>\n\n[[Category:Secondary Literature / Authors (German)]]",
+    "label": "4b: German with publisher (negative test)",
+    "existing": {
+      "publisher": "Peter Lang Verlag",
+      "location": "Wien",
+      "translator": "",
+      "page_count": "223",
+      "language": "German"
+    }
+  },
+  {
+    "page_id": 4209,
+    "needed": [
+      "publisher",
+      "location",
+      "translator"
+    ],
+    "text": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''\n\n''Vreemdes in 'n vreemde wêreld'' [Vier Erzählungen]. Translated with a foreword and preface by Hymne Weiss. 160p. \n\n'''Contents:'''\n<lst type=bracket start=1>\nVoorwoord [Hymme Weiss, Pretoria, 25 January, 1944], p. (5)\nInleiding [Preface, Hymme Weiss], pp. 7-9\nDie onsigbare Versameling [Die unsichtbare Sammlung], pp. 10-37\nDie Voorval by die Meer van Genève [Episode vom (am) Genfer See], pp. 38-52\nLeporella [Leporella], pp.",
+    "label": "4c: unknown language, many gaps",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "160",
+      "language": ""
+    }
+  },
+  {
+    "page_id": 6005,
+    "needed": [
+      "publisher",
+      "location",
+      "translator",
+      "page_count"
+    ],
+    "text": "\\\"Vrapuesi i amoku\\\" [Der Amokläufer] in:\n<lst type=bracket start=1>\n[[Novela]] [Tiranë/Tirana, 2014], Vol. 2, No. 4, pp. ??  \n</lst>\n\n'''See:''' [[Amok / Albanian]];  [[Amoku / Albanian]]   and [[Der Amokläufer]] [Translation: Albanian]\n\n[[Category:Fiction / Individual Stories (Albanian)]]",
+    "label": "5: random diverse",
+    "existing": {
+      "publisher": "",
+      "location": "",
+      "translator": "",
+      "page_count": "",
+      "language": "Albanian"
+    }
+  },
+  {
+    "page_id": 7140,
+    "needed": [
+      "publisher",
+      "translator"
+    ],
+    "text": "\\\"Florence, ville de fêtes\\\" in [[Voyages]] [Paris, 2002/2009], No. 12, pp. 111-118 [Le Livre de Poche, 15372]\n\n'''See:''' [[Festliches Florenz]]\n\n\n[[Category:Essays / Individual Essays (French)]]",
+    "label": "5: random diverse",
+    "existing": {
+      "publisher": "",
+      "location": "Paris",
+      "translator": "",
+      "page_count": "111",
+      "language": "French"
+    }
+  }
+]
