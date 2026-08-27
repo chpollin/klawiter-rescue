@@ -13,6 +13,7 @@ const App = {
     filters: {},
     sort: 'relevance',
     browse: false,   // catalogue view without query or filters
+    customLabel: null,  // session list opened from the workbench or Explore
     view: 'home',
     entryId: null,
     page: 0,
@@ -31,26 +32,79 @@ const App = {
       this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
       this.entryMap = new Map(this.entries.map(e => [e.sourcePageId, e]));
       this.titleMap = new Map(this.entries.filter(e => e.title).map(e => [e.title, e.sourcePageId]));
-      this.verifyData();
-      this.bindEvents();
-      // Reconciliation data is additive (curation candidates, contested
-      // claims) and must never block the first paint; redraw once it is in.
-      Edit.loadReconciliation().then(() => {
-        if (this.state.view === 'results') this.renderResults();
-      });
-      if (this.state.isLocal) Edit.restore();   // recover pending edits from a prior session
+      this._clearUnavailable();
+      // The verification runs some fifteen full passes over the corpus and
+      // writes to the console; that is a development instrument and has no
+      // business in the critical path of the published site.
+      if (this.state.isLocal) this.verifyData();
+      if (!this._eventsBound) {
+        this.bindEvents();
+        window.addEventListener('hashchange', () => this.handleRoute());
+        window.addEventListener('popstate', () => this.handleRoute());
+        this._eventsBound = true;
+      }
+      if (this.state.isLocal) {
+        Edit.restore();   // recover pending edits from a prior session
+        this._notePendingFromPreviousSession();
+      }
       this._lastHash = null;
       this.handleRoute();
-      window.addEventListener('hashchange', () => this.handleRoute());
-      window.addEventListener('popstate', () => this.handleRoute());
+      this._prewarmIndex();
     } catch (err) {
-      const home = document.getElementById('view-home');
-      home.textContent = '';
-      const message = document.createElement('p');
-      message.style.color = 'var(--sz-burgundy)';
-      message.textContent = `Error loading data: ${err.message}`;
-      home.appendChild(message);
+      this._renderUnavailable(err.message);
     }
+  },
+
+  /**
+   * Full-page failure state. Without the dataset nothing in the header does
+   * anything, so navigation and search are visibly disabled rather than left
+   * inert, and the cause is named next to a retry.
+   */
+  _renderUnavailable(cause) {
+    document.body.classList.add('app-unavailable');
+    for (const id of ['view-results', 'view-stats', 'view-page']) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    }
+    const input = document.getElementById('search-input');
+    if (input) input.disabled = true;
+    document.querySelectorAll('.site-nav a').forEach(a => a.setAttribute('aria-disabled', 'true'));
+    const home = document.getElementById('view-home');
+    if (!home) return;
+    home.classList.remove('hidden');
+    home.innerHTML = `<div class="fatal-error" role="alert">
+      <h1>The bibliography could not be loaded</h1>
+      <p class="fatal-cause"></p>
+      <p>The dataset file is served from this site; a reload usually resolves a
+         transient network error.</p>
+      <p><button id="fatal-retry" class="browse-btn">Retry</button></p>
+    </div>`;
+    home.querySelector('.fatal-cause').textContent = cause;
+    const retry = document.getElementById('fatal-retry');
+    if (retry) retry.addEventListener('click', () => this.init());
+  },
+
+  _clearUnavailable() {
+    document.body.classList.remove('app-unavailable');
+    const input = document.getElementById('search-input');
+    if (input) input.disabled = false;
+    document.querySelectorAll('.site-nav a').forEach(a => a.removeAttribute('aria-disabled'));
+  },
+
+  /**
+   * A restored session shows the save counter while every field stays
+   * read-only until edit mode is on. Say so at the badge instead of leaving a
+   * counter that answers to nothing.
+   */
+  _notePendingFromPreviousSession() {
+    if (this.state.editMode || Edit.getPendingCount() === 0) return;
+    const saveBtn = document.getElementById('edit-save-btn');
+    if (!saveBtn || document.getElementById('edit-pending-note')) return;
+    const note = document.createElement('span');
+    note.id = 'edit-pending-note';
+    note.className = 'edit-pending-note';
+    note.textContent = 'pending decisions from a previous session — enable Edit to continue';
+    saveBtn.insertAdjacentElement('afterend', note);
   },
 
   verifyData() {
@@ -120,16 +174,39 @@ const App = {
     console.groupEnd();
   },
 
-  // Built lazily on the first search: indexing 5,000+ full texts is the
-  // most expensive startup step and the home view never needs it.
+  /** Shorter inputs match almost everything and are not worth a full pass. */
+  MIN_QUERY_LENGTH: 2,
+
+  /** Cap on the hits a single query returns; a reached cap is disclosed. */
+  SEARCH_LIMIT: 5000,
+
+  /** Result count above which a batch export asks first. */
+  BATCH_CONFIRM_ABOVE: 1000,
+
+  // Built lazily: indexing the full texts is the most expensive startup step
+  // and the home view never needs it.
   ensureIndex() {
     if (!this.index) this.buildIndex();
+  },
+
+  /**
+   * Build the index once the first paint is done. Building it on the first
+   * keystroke instead blocked the main thread exactly while the visitor was
+   * typing; idle time before that is free.
+   */
+  _prewarmIndex() {
+    const build = () => { try { this.ensureIndex(); } catch (e) { /* built on demand instead */ } };
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(build, { timeout: 3000 });
+    else if (typeof setTimeout === 'function') setTimeout(build, 1200);
   },
 
   buildIndex() {
     this.index = new FlexSearch.Index({
       tokenize: 'forward',
       resolution: 9,
+      // Diacritics folding: the corpus is full of transliterations, and
+      // without it "Zoscenko" misses "Zoščenko".
+      charset: 'latin:advanced',
     });
     this.entries.forEach((e, i) => {
       const text = [
@@ -159,13 +236,29 @@ const App = {
     if (el) el.scrollIntoView({ block: 'start' });
   },
 
+  /** Fragments that address an element on the page rather than a route. */
+  ELEMENT_FRAGMENTS: ['main-content'],
+
+  /** Drop query, filters and the search field; every non-results route does. */
+  _resetSearchState() {
+    this.state.query = '';
+    this.state.filters = {};
+    const input = document.getElementById('search-input');
+    if (input) input.value = '';
+  },
+
   handleRoute() {
     const hash = location.hash.slice(1);
+    // The skip link points at #main-content. Treating it as a route threw the
+    // reader back to the start view, which is the opposite of skipping.
+    if (this.ELEMENT_FRAGMENTS.includes(hash)) return;
     // Guard: skip if hash unchanged (avoids double-processing from popstate + hashchange)
     if (hash === this._lastHash) return;
     this._lastHash = hash;
     const params = new URLSearchParams(hash);
     this.state.browse = false;
+    this.state.customLabel = null;
+    this._setResultsContext('');
 
     // Legacy deep links from the four-page layout. The pages were merged into
     // #about and #data; the old hashes stay valid and land on their section.
@@ -177,6 +270,7 @@ const App = {
 
     // Data-quality workbench (curation view)
     if (hash === 'quality') {
+      this._resetSearchState();
       this.showView('page');
       Curate.render();
       return;
@@ -185,6 +279,7 @@ const App = {
     // Static content pages, optionally with a section anchor: '#about/help'.
     const [slug, section] = hash.split('/');
     if (this.STATIC_PAGES.includes(slug)) {
+      this._resetSearchState();
       this.showView('page');
       Pages.render(slug);
       if (section) this._scrollToSection(section);
@@ -194,11 +289,9 @@ const App = {
     // Browse view — show all entries, no filters. Recognized by the parameter
     // so that the sort state can ride along (#browse&sort=title).
     if (params.has('browse')) {
-      this.state.query = '';
-      this.state.filters = {};
+      this._resetSearchState();
       this.state.browse = true;
       this.applySortFromParams(params);
-      document.getElementById('search-input').value = '';
       this.filtered = [...this.entries];
       this.state.page = 0;
       this.sortEntries();
@@ -211,45 +304,45 @@ const App = {
 
     // Stats view — explore interface with optional sub-state in hash
     if (hash === 'stats' || hash.startsWith('stats/')) {
-      this.state.query = '';
-      this.state.filters = {};
-      document.getElementById('search-input').value = '';
+      this._resetSearchState();
       this.showView('stats');
-      Explore.render(this.entries);
-      // Restore explore sub-state from hash if present
-      if (hash.startsWith('stats/')) {
-        const rest = hash.slice(6);
-        const qIdx = rest.indexOf('?');
-        const mode = qIdx >= 0 ? rest.slice(0, qIdx) : rest;
-        const paramStr = qIdx >= 0 ? rest.slice(qIdx + 1) : '';
-        Explore.restoreFromHash(mode, new URLSearchParams(paramStr));
-      }
+      this._renderExploreLoading();
+      this.ensureExploreLibs().then(() => {
+        if (this.state.view !== 'stats') return;   // navigated away while loading
+        Explore.render(this.entries);
+        // Restore explore sub-state from hash if present
+        if (hash.startsWith('stats/')) {
+          const rest = hash.slice(6);
+          const qIdx = rest.indexOf('?');
+          const mode = qIdx >= 0 ? rest.slice(0, qIdx) : rest;
+          const paramStr = qIdx >= 0 ? rest.slice(qIdx + 1) : '';
+          Explore.restoreFromHash(mode, new URLSearchParams(paramStr));
+        }
+      }).catch(() => this._renderExploreError());
       return;
     }
 
     // Entry view — show in results with card expanded
     if (params.has('entry')) {
-      const pid = parseInt(params.get('entry'));
+      const pid = parseInt(params.get('entry'), 10);
       const entry = this.entryMap.get(pid);
+      this._resetSearchState();
+      this.state.page = 0;
+      this.filtered = entry ? [entry] : [];
+      this.showView('results');
+      // The sidebar and the chip bar would otherwise keep the state of the
+      // result list this permalink was opened from.
+      Facets.render(this.filtered);
+      this.renderChips();
       if (entry) {
-        // Show all entries of the same type as context, with this entry visible
-        this.state.query = '';
-        this.state.filters = {};
-        this.filtered = [entry];
-        this.state.page = 0;
-        this.showView('results');
-        document.getElementById('results-count').textContent = 'Permalink';
         this.renderResults();
+        // renderResults writes the count label, so the permalink label has to
+        // be set after it, not before.
+        document.getElementById('results-count').textContent = 'Permalink — 1 entry';
         // Auto-expand after render
         setTimeout(() => this.toggleCard(pid), 50);
       } else {
-        this.state.query = '';
-        this.state.filters = {};
-        this.filtered = [];
-        this.state.page = 0;
-        this.showView('results');
-        this.renderResults();
-        document.getElementById('results-count').textContent = 'Entry not found';
+        this._renderMissingPage('This page ID does not exist (it may have been a redirect).');
       }
       return;
     }
@@ -257,11 +350,22 @@ const App = {
     // Redirect resolution
     if (params.has('title')) {
       const title = params.get('title');
-      const targetPid = this.data.redirects[title];
+      const redirects = (this.data && this.data.redirects) || {};
+      const targetPid = redirects[title] || (this.titleMap && this.titleMap.get(title));
       if (targetPid) {
         location.hash = `entry=${targetPid}`;
         return;
       }
+      // An unresolvable title used to fall through to the start view without a
+      // word, which reads as a broken link rather than a missing page.
+      this._resetSearchState();
+      this.state.page = 0;
+      this.filtered = [];
+      this.showView('results');
+      Facets.render(this.filtered);
+      this.renderChips();
+      this._renderMissingPage('This page title does not exist (it may have been a redirect).');
+      return;
     }
 
     // Parse filters
@@ -274,15 +378,85 @@ const App = {
     }
     this.applySortFromParams(params);
 
-    document.getElementById('search-input').value = this.state.query;
+    const input = document.getElementById('search-input');
+    if (input) input.value = this.state.query;
 
     if (this.state.query || Object.keys(this.state.filters).length > 0) {
-      this.applyFilters();
+      // A route render reproduces a state that is already in the URL, so it
+      // normalizes the hash rather than adding a second entry for it.
+      this.applyFilters({ push: false });
       this.showView('results');
     } else {
       this.showView('home');
       Home.render(this.entries);
     }
+  },
+
+  /** Message page for a permalink that resolves to nothing. */
+  _renderMissingPage(message) {
+    const countEl = document.getElementById('results-count');
+    if (countEl) countEl.textContent = 'Not found';
+    const exportBtn = document.getElementById('batch-export-btn');
+    if (exportBtn) exportBtn.classList.add('hidden');
+    const loadMore = document.getElementById('load-more');
+    if (loadMore) loadMore.classList.add('hidden');
+    const list = document.getElementById('results-list');
+    if (!list) return;
+    list.innerHTML = `<div class="empty-state">
+      <p class="missing-page-message"></p>
+      <p><a href="#">Back to the start page</a></p>
+    </div>`;
+    list.querySelector('.missing-page-message').textContent = message;
+  },
+
+  // --- Explore libraries ---
+  /** d3 first: topojson-client and d3-sankey both read the d3 global. */
+  EXPLORE_SCRIPTS: ['vendor/d3.v7.min.js', 'vendor/topojson-client.min.js',
+    'vendor/d3-sankey.min.js'],
+
+  _loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = src;
+      el.onload = () => resolve();
+      el.onerror = () => reject(new Error(`could not load ${src}`));
+      document.body.appendChild(el);
+    });
+  },
+
+  /**
+   * The visualization stack is the largest asset on the site and only Explore
+   * uses it, so every other visitor paid for it. Loaded on the first visit to
+   * the route, in order, once.
+   */
+  ensureExploreLibs() {
+    if (!this._exploreLibs) {
+      this._exploreLibs = this.EXPLORE_SCRIPTS.reduce(
+        (chain, src) => chain.then(() => this._loadScript(src)),
+        Promise.resolve()
+      );
+      // A failed load must not poison the route forever; retry rebuilds it.
+      this._exploreLibs.catch(() => { this._exploreLibs = null; });
+    }
+    return this._exploreLibs;
+  },
+
+  _renderExploreLoading() {
+    const el = document.getElementById('view-stats');
+    if (el) {
+      el.innerHTML = `<div class="loading-indicator"><div class="loading-spinner"></div>
+        <p>Loading visualizations&hellip;</p></div>`;
+    }
+  },
+
+  _renderExploreError() {
+    const el = document.getElementById('view-stats');
+    if (!el) return;
+    el.innerHTML = `<div class="empty-state" role="alert">
+      <p>The visualization libraries could not be loaded.</p>
+      <p>Search, filters and the entry lists work without them.</p>
+      <p><button class="link-btn" data-act="retry-explore">Retry</button></p>
+    </div>`;
   },
 
   // Filter keys the results route reads from the hash. `publisher`,
@@ -335,7 +509,15 @@ const App = {
     if (sel) sel.value = this.state.sort;
   },
 
-  updateURL() {
+  /**
+   * Write the current state to the URL.
+   *
+   * A user-triggered state change is a place the Back button must return to,
+   * so it pushes. Renders that only reproduce a state already in the URL
+   * normalize it with replaceState; pushing there filled the history with
+   * duplicates and made Back leave the application after one interaction.
+   */
+  updateURL(push) {
     const params = new URLSearchParams();
     if (this.state.browse) params.set('browse', '');
     if (this.state.query) params.set('q', this.state.query);
@@ -345,45 +527,70 @@ const App = {
     // Default sort stays out of the URL, so unsorted views keep clean hashes.
     if (this.state.sort && this.state.sort !== 'relevance') params.set('sort', this.state.sort);
     const hash = params.toString();
-    history.replaceState(null, '', hash ? `#${hash}` : location.pathname);
-    // Keep the route guard in sync: replaceState fires no hashchange, so
-    // without this the next navigation back to the very hash we replaced
+    const url = hash ? `#${hash}` : location.pathname;
+    if (push && hash !== this._lastHash) history.pushState(null, '', url);
+    else history.replaceState(null, '', url);
+    // Keep the route guard in sync: neither call fires a hashchange, so
+    // without this the next navigation back to the very hash we wrote
     // (for example '' for home) would be swallowed as "unchanged".
     this._lastHash = hash;
   },
 
   // --- Filtering ---
-  applyFilters() {
-    let indices;
-    if (this.state.query) {
-      this.ensureIndex();
-      indices = this.index.search(this.state.query, { limit: 5000 });
-    } else {
-      indices = this.entries.map((_, i) => i);
-    }
+  /** True while the entry passes every filter in `f`. */
+  _matchesFilters(e, f, bounds) {
+    if (f.type && e.entryType !== f.type) return false;
+    if (f.language && e.language !== f.language) return false;
+    if (f.period && e.timePeriod !== f.period) return false;
+    if (f.location && e.location !== f.location) return false;
+    if (f.publisher && e.publisher !== f.publisher) return false;
+    if (f.translator && !translatorKeys(e).includes(f.translator)) return false;
+    if (bounds && !(e.year >= bounds[0] && e.year <= bounds[1])) return false;
+    if (f.category && !(e.categories || []).includes(f.category)) return false;
+    return true;
+  },
 
-    const bounds = this.yearBounds(this.state.filters);
-    this.filtered = indices
-      .map(i => this.entries[i])
-      .filter(e => {
-        const f = this.state.filters;
-        if (f.type && e.entryType !== f.type) return false;
-        if (f.language && e.language !== f.language) return false;
-        if (f.period && e.timePeriod !== f.period) return false;
-        if (f.location && e.location !== f.location) return false;
-        if (f.publisher && e.publisher !== f.publisher) return false;
-        if (f.translator && !translatorKeys(e).includes(f.translator)) return false;
-        if (bounds && !(e.year >= bounds[0] && e.year <= bounds[1])) return false;
-        if (f.category && !(e.categories || []).includes(f.category)) return false;
-        return true;
-      });
+  _applyFilterSet(entries, filters) {
+    const bounds = this.yearBounds(filters);
+    return entries.filter(e => this._matchesFilters(e, filters, bounds));
+  },
+
+  /** Entries the query alone selects; the whole corpus when there is none. */
+  _queryBase() {
+    const q = this.state.query;
+    if (q && q.length >= this.MIN_QUERY_LENGTH) {
+      this.ensureIndex();
+      const indices = this.index.search(q, { limit: this.SEARCH_LIMIT });
+      this._searchCapped = indices.length >= this.SEARCH_LIMIT;
+      return indices.map(i => this.entries[i]);
+    }
+    this._searchCapped = false;
+    return this.entries;
+  },
+
+  /**
+   * Entry set a facet group counts against: every active filter except its
+   * own. Counting against the fully filtered set instead made a facet collapse
+   * to its own selection, so no second value of that facet was reachable.
+   */
+  facetCandidates(filterKey) {
+    const others = {};
+    for (const [k, v] of Object.entries(this.state.filters)) {
+      if (k !== filterKey) others[k] = v;
+    }
+    return this._applyFilterSet(this._filterBase || this.entries, others);
+  },
+
+  applyFilters(opts) {
+    this._filterBase = this._queryBase();
+    this.filtered = this._applyFilterSet(this._filterBase, this.state.filters);
 
     this.sortEntries();
     this.state.page = 0;
     this.renderResults();
     Facets.render(this.filtered);
     this.renderChips();
-    this.updateURL();
+    this.updateURL(opts ? opts.push : false);
   },
 
   sortEntries() {
@@ -404,15 +611,20 @@ const App = {
   },
 
   // --- Views ---
-  showView(view) {
+  showView(view, opts) {
+    const changed = this.state.view !== view;
     this.state.view = view;
+    if (view !== 'results') this.closeMobileFacets();
     document.getElementById('view-home').classList.toggle('hidden', view !== 'home');
     document.getElementById('view-results').classList.toggle('hidden', view !== 'results');
     document.getElementById('view-stats').classList.toggle('hidden', view !== 'stats');
     document.getElementById('view-page').classList.toggle('hidden', view !== 'page');
 
-    // Sidebar only on results view
+    // Sidebar only on results view; the mobile opener follows it, because a
+    // filter button on a page without a result list filters nothing.
     document.getElementById('facets').classList.toggle('hidden', view !== 'results');
+    const mobileBtn = document.getElementById('mobile-filter-btn');
+    if (mobileBtn) mobileBtn.classList.toggle('hidden', view !== 'results');
 
     // Hide header search on home (home has its own prominent search)
     document.querySelector('.header-search').classList.toggle('hidden', view === 'home');
@@ -438,6 +650,22 @@ const App = {
 
     // Dynamic page title
     this._updateTitle(view);
+
+    // Hash navigation replaces the page without a document load, so nothing
+    // announces the new view. Only on a real view change, and never while the
+    // caller is keeping the focus somewhere deliberate (typing in the search).
+    if (changed && !(opts && opts.focus === false)) this._focusViewStart();
+  },
+
+  _focusViewStart() {
+    const containers = { home: 'view-home', results: 'view-results',
+      stats: 'view-stats', page: 'view-page' };
+    const container = document.getElementById(containers[this.state.view]);
+    const target = (container && container.querySelector('h1'))
+      || document.getElementById('main-content');
+    if (!target || typeof target.focus !== 'function') return;
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
   },
 
   // Edit is a card-level action: only the views that actually show entry
@@ -470,6 +698,11 @@ const App = {
     }
     if (view === 'results') {
       const f = this.state.filters;
+      // A workbench list names itself; it has no filter state to derive from.
+      if (this.state.customLabel) {
+        document.title = `${this.state.customLabel} — ${base}`;
+        return;
+      }
       if (f.type) { document.title = `${ENTRY_TYPE_LABELS[f.type] || f.type} \u2014 ${base}`; return; }
       if (this.state.query) { document.title = `\u201c${this.state.query}\u201d \u2014 ${base}`; return; }
       document.title = `Browse \u2014 ${base}`;
@@ -487,16 +720,25 @@ const App = {
     const countEl = document.getElementById('results-count');
     countEl.textContent = this._resultsLabel(total);
 
-    // Show/hide batch export button
+    // Show/hide batch export button, and say how much it would export
     const exportBtn = document.getElementById('batch-export-btn');
-    if (exportBtn) exportBtn.classList.toggle('hidden', total === 0);
+    if (exportBtn) {
+      exportBtn.classList.toggle('hidden', total === 0);
+      const label = document.getElementById('batch-export-label');
+      if (label) label.textContent = `Export ${total.toLocaleString('en')} as BibTeX`;
+    }
 
     const list = document.getElementById('results-list');
     if (total === 0) {
-      const q = this.state.query ? `for "${esc(this.state.query)}"` : '';
+      const q = this.state.query ? ` for “${esc(this.state.query)}”` : '';
+      const active = Object.keys(this.state.filters).length > 0 || !!this.state.query;
+      const clear = active
+        ? '<p><button class="link-btn" data-act="clear-all">Clear all filters</button></p>'
+        : '';
       list.innerHTML = `<div class="empty-state">
-        <p>No results ${q}.</p>
+        <p>No results${q}.</p>
         <p>Try broadening your search or removing filters.</p>
+        ${clear}
       </div>`;
       document.getElementById('load-more').classList.add('hidden');
       return;
@@ -512,7 +754,7 @@ const App = {
     const lang = e.language ? `<span class="card-meta-text">${e.language}</span>` : '';
     const loc = e.location ? `<span class="card-meta-text">${esc(e.location)}</span>` : '';
 
-    const title = hl(esc(e.title || 'Untitled'), this.state.query);
+    const title = hlEsc(e.title || 'Untitled', this.state.query);
 
     const parts = [];
     if (e.publisher) parts.push(esc(e.publisher));
@@ -524,13 +766,20 @@ const App = {
     // No source-text snippet here: it duplicated the start of the full
     // bibliographic entry shown on expansion. Title plus meta identify the card.
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
-      <div class="card-header" tabindex="0" role="button">
+      <div class="card-header" tabindex="0" role="button" aria-expanded="false"
+           aria-controls="card-detail-${e.sourcePageId}">
         <div class="card-meta">${badge} ${year} ${lang} ${loc} ${triage}</div>
         <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
         ${secondary}
       </div>
       <div class="card-detail hidden" id="card-detail-${e.sourcePageId}"></div>
     </div>`;
+  },
+
+  _setCardExpanded(cardEl, on) {
+    cardEl.classList.toggle('card-expanded', on);
+    const header = cardEl.querySelector('.card-header');
+    if (header) header.setAttribute('aria-expanded', on ? 'true' : 'false');
   },
 
   toggleCard(pageId) {
@@ -541,14 +790,14 @@ const App = {
     // If already open, close it
     if (!detailEl.classList.contains('hidden')) {
       detailEl.classList.add('hidden');
-      cardEl.classList.remove('card-expanded');
+      this._setCardExpanded(cardEl, false);
       return;
     }
 
     // Close any other open card
     document.querySelectorAll('.card-detail:not(.hidden)').forEach(el => {
       el.classList.add('hidden');
-      el.closest('.entry-card').classList.remove('card-expanded');
+      this._setCardExpanded(el.closest('.entry-card'), false);
     });
 
     // Render detail content and expand
@@ -556,50 +805,88 @@ const App = {
     if (entry) {
       detailEl.innerHTML = Detail.renderInline(entry);
       detailEl.classList.remove('hidden');
-      cardEl.classList.add('card-expanded');
+      this._setCardExpanded(cardEl, true);
       // Scroll card into view if needed
       cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // The expanded card is the first place reconciliation data shows up, so
+      // this is where it is fetched rather than on every page load.
+      if (Edit.reconciliation === null) {
+        this._ensureReconciliation().then(() => Edit._rerender(pageId));
+      }
     }
+  },
+
+  /**
+   * Load the additive curation data once, sharing one promise across the
+   * places that need it (an expanded card, the edit toggle). Curate.render
+   * holds its own await on the same idempotent loader.
+   */
+  _ensureReconciliation() {
+    if (!this._reconPromise) this._reconPromise = Edit.loadReconciliation();
+    return this._reconPromise;
+  },
+
+  /**
+   * Human-readable value of one filter. Chips and the result label resolve
+   * their labels here, so a period reads as its own name in both instead of
+   * as the raw key in one of them.
+   */
+  _filterDisplay(key, val) {
+    if (key === 'type') return ENTRY_TYPE_LABELS[val] || val;
+    if (key === 'period') return PERIOD_LABELS[val] || val;
+    if (key === 'decade') return `${val}s`;
+    if (key === 'years') return String(val).replace('-', '–');
+    return String(val);
+  },
+
+  /** Active filters plus the query, in a stable order. */
+  _activeFilters() {
+    const active = [];
+    for (const key of this.FILTER_KEYS) {
+      const val = this.state.filters[key];
+      if (val == null || val === '') continue;
+      // A decade wins over a stale range, matching yearBounds.
+      if (key === 'years' && this.state.filters.decade) continue;
+      active.push({
+        key,
+        label: this.FILTER_LABELS[key] || key,
+        display: this._filterDisplay(key, val),
+      });
+    }
+    if (this.state.query) {
+      active.push({ key: 'search', label: 'Search', display: this.state.query });
+    }
+    return active;
   },
 
   renderChips() {
     const container = document.getElementById('filter-chips');
-    const chips = [];
-    for (const [key, val] of Object.entries(this.state.filters)) {
-      const label = this.FILTER_LABELS[key] || key;
-      const display = key === 'type' ? (ENTRY_TYPE_LABELS[val] || val) :
-                      key === 'period' ? (PERIOD_LABELS[val] || val) :
-                      key === 'decade' ? `${val}s` :
-                      key === 'years' ? String(val).replace('-', '–') : val;
-      chips.push(`<span class="chip" data-filter-key="${key}">${esc(label)}: ${esc(display)}
-        <button>&times;</button></span>`);
-    }
-    if (this.state.query) {
-      chips.push(`<span class="chip" data-filter-key="search">Search: ${esc(this.state.query)}
-        <button>&times;</button></span>`);
+    if (!container) return;
+    const active = this._activeFilters();
+    const chips = active.map(({ key, label, display }) =>
+      `<span class="chip" data-filter-key="${esc(key)}">${esc(label)}: ${esc(display)}
+        <button aria-label="Remove filter ${esc(label)}: ${esc(display)}">&times;</button></span>`);
+    if (active.length > 1) {
+      chips.push('<button class="chip-clear" data-filter-key="all">Clear all</button>');
     }
     container.innerHTML = chips.join('');
   },
 
   _resultsLabel(total) {
-    const f = this.state.filters;
-    const parts = [];
-    if (f.type) parts.push(ENTRY_TYPE_LABELS[f.type] || f.type);
-    if (f.language) parts.push(f.language);
-    if (f.period) parts.push(f.period);
-    if (f.location) parts.push(f.location);
-    if (f.publisher) parts.push(f.publisher);
-    if (f.translator) parts.push(f.translator);
-    if (f.decade) parts.push(`${f.decade}s`);
-    else if (f.years) parts.push(String(f.years).replace('-', '\u2013'));
-    if (this.state.query) parts.push(`\u201c${this.state.query}\u201d`);
+    const parts = this._activeFilters().map(({ key, display }) =>
+      key === 'search' ? `\u201c${display}\u201d` : display);
     const count = `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
-    return parts.length ? `${parts.join(' \u00b7 ')} \u2014 ${count}` : count;
+    let label = parts.length ? `${parts.join(' \u00b7 ')} \u2014 ${count}` : count;
+    // A capped search used to look like a complete count.
+    if (this._searchCapped) {
+      label += ` (first ${this.SEARCH_LIMIT.toLocaleString('en')} matches)`;
+    }
+    return label;
   },
 
   setFilter(key, value) {
     this.state.filters[key] = value;
-    this.applyFilters();
+    this.applyFilters({ push: true });
     this.showView('results');
   },
 
@@ -608,37 +895,139 @@ const App = {
     if (!this.state.query && Object.keys(this.state.filters).length === 0) {
       location.hash = '';
     } else {
-      this.applyFilters();
+      this.applyFilters({ push: true });
     }
   },
 
   clearSearch() {
     this.state.query = '';
-    document.getElementById('search-input').value = '';
+    const input = document.getElementById('search-input');
+    if (input) input.value = '';
     if (Object.keys(this.state.filters).length === 0) {
       location.hash = '';
     } else {
-      this.applyFilters();
+      this.applyFilters({ push: true });
     }
+  },
+
+  /** Drop query and every filter at once, from the chip bar or the empty state. */
+  clearAll() {
+    this._resetSearchState();
+    location.hash = '';
   },
 
   // Session-scoped result list from the data-quality workbench: shows a
   // precomputed entry set under its own label. Not hash-addressable — the
   // lists derive from artifacts, not from filter state.
   showCustomResults(entries, label) {
-    this.state.query = '';
-    this.state.filters = {};
+    this._resetSearchState();
     this.state.browse = false;
-    document.getElementById('search-input').value = '';
+    this.state.customLabel = label;
     this.filtered = [...entries];
     this.state.page = 0;
     this.sortEntries();
+    // The list carries no hash, so the way back has to be on the page.
+    this._setResultsContext(this._backLinkHtml());
     this.showView('results');
     this.renderResults();
     Facets.render(this.filtered);
     this.renderChips();
     document.getElementById('results-count').textContent =
       `${label} — ${entries.length.toLocaleString('en')} entr${entries.length === 1 ? 'y' : 'ies'}`;
+  },
+
+  /** Routes a session list can be opened from, with the name of the way back. */
+  RESULT_ORIGINS: { quality: 'Data Quality', stats: 'Explore' },
+
+  _backLinkHtml() {
+    const from = location.hash.slice(1);
+    const name = this.RESULT_ORIGINS[from.split('/')[0]];
+    if (!name) return '';
+    return `<button class="link-btn results-back" data-act="back" data-hash="${esc(from)}">
+      &larr; Back to ${esc(name)}</button>`;
+  },
+
+  _setResultsContext(html) {
+    const el = document.getElementById('results-context');
+    if (!el) return;
+    el.innerHTML = html;
+    el.classList.toggle('hidden', !html);
+  },
+
+  /**
+   * Navigate to a hash that may already be the current one. A session list
+   * leaves the hash of the view it was opened from untouched, so assigning it
+   * again fires no hashchange and the guard would swallow the route.
+   */
+  goTo(hash) {
+    if (location.hash.slice(1) === hash) {
+      this._lastHash = null;
+      this.handleRoute();
+    } else {
+      location.hash = hash;
+    }
+  },
+
+  // --- Mobile filter drawer ---
+  /**
+   * Move the sidebar into the drawer instead of copying its markup. The copy
+   * duplicated every element id, froze at the state of the moment it was
+   * taken, and its facet clicks reached the original list, so the drawer never
+   * reflected or closed on a selection.
+   */
+  openMobileFacets() {
+    const overlay = document.getElementById('mobile-facets');
+    const host = document.getElementById('mobile-facet-content');
+    const sidebar = document.getElementById('facets');
+    if (!overlay || !host || !sidebar || !overlay.classList.contains('hidden')) return;
+    this._facetHome = sidebar.parentNode;
+    this._facetAnchor = sidebar.nextSibling;
+    host.appendChild(sidebar);
+    overlay.classList.remove('hidden');
+    this._mobileOpener = document.activeElement;
+    const close = document.getElementById('mobile-filter-close');
+    if (close) close.focus();
+  },
+
+  closeMobileFacets() {
+    const overlay = document.getElementById('mobile-facets');
+    if (!overlay || overlay.classList.contains('hidden')) return;
+    overlay.classList.add('hidden');
+    const sidebar = document.getElementById('facets');
+    if (sidebar && this._facetHome) {
+      this._facetHome.insertBefore(sidebar, this._facetAnchor);
+    }
+    this._facetHome = null;
+    this._facetAnchor = null;
+    if (this._mobileOpener && typeof this._mobileOpener.focus === 'function') {
+      this._mobileOpener.focus();
+    }
+    this._mobileOpener = null;
+  },
+
+  /** Escape closes the drawer; Tab stays inside it while it is open. */
+  _mobileFacetsKeydown(ev) {
+    if (ev.key === 'Escape') {
+      ev.preventDefault();
+      this.closeMobileFacets();
+      return;
+    }
+    if (ev.key !== 'Tab') return;
+    const panel = document.querySelector('#mobile-facets .mobile-panel');
+    if (!panel) return;
+    const focusable = [...panel.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )].filter(el => el.offsetParent !== null || el === document.activeElement);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (ev.shiftKey && document.activeElement === first) {
+      ev.preventDefault();
+      last.focus();
+    } else if (!ev.shiftKey && document.activeElement === last) {
+      ev.preventDefault();
+      first.focus();
+    }
   },
 
   // Edit-mode keyboard: j/k walks the result cards (next/previous expanded).
@@ -651,20 +1040,50 @@ const App = {
     this.toggleCard(parseInt(cards[next].dataset.pid));
   },
 
+  // --- Search input ---
+  /**
+   * The one search behaviour. The header field and the start-page field feed
+   * the same debounce, so the two places do not teach two different models of
+   * when a search happens.
+   */
+  onSearchInput(value) {
+    clearTimeout(this._searchTimer);
+    this._searchTimer = setTimeout(() => this.commitSearch(value), 200);
+  },
+
+  commitSearch(value) {
+    clearTimeout(this._searchTimer);
+    const raw = String(value == null ? '' : value).trim();
+    // A single character matches almost the whole corpus; it is not yet a query.
+    this.state.query = raw.length >= this.MIN_QUERY_LENGTH ? raw : '';
+    if (this.state.query || Object.keys(this.state.filters).length > 0) {
+      const fromHome = this.state.view !== 'results';
+      this.applyFilters({ push: true });
+      // The search field keeps the focus; announcing the view would take it
+      // away mid-word.
+      this.showView('results', { focus: false });
+      // The start-page field does not exist on the results view, so typing
+      // continues in the header field, caret at the end.
+      if (fromHome) this._focusHeaderSearch();
+    } else {
+      location.hash = '';
+    }
+  },
+
+  _focusHeaderSearch() {
+    const input = document.getElementById('search-input');
+    if (!input) return;
+    input.value = this.state.query;
+    input.focus();
+    try {
+      input.setSelectionRange(input.value.length, input.value.length);
+    } catch (e) { /* not a field that carries a selection */ }
+  },
+
   // --- Events ---
   bindEvents() {
-    let timer;
     document.getElementById('search-input').addEventListener('input', (ev) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        this.state.query = ev.target.value.trim();
-        if (this.state.query || Object.keys(this.state.filters).length > 0) {
-          this.applyFilters();
-          this.showView('results');
-        } else {
-          location.hash = '';
-        }
-      }, 200);
+      this.onSearchInput(ev.target.value);
     });
 
     document.getElementById('sort-select').addEventListener('change', (ev) => {
@@ -673,17 +1092,30 @@ const App = {
       this.renderResults();
       // Only a hash-addressable result list may write itself back to the URL;
       // the workbench lists derive from artifacts and carry no hash.
-      if (this.isAddressableResults()) this.updateURL();
+      if (this.isAddressableResults()) this.updateURL(true);
     });
 
     // Delegated click/keydown on results list (replaces per-card inline handlers)
     const resultsList = document.getElementById('results-list');
     resultsList.addEventListener('click', (ev) => {
+      const action = ev.target.closest('[data-act]');
+      if (action && action.dataset.act === 'clear-all') {
+        this.clearAll();
+        return;
+      }
       const header = ev.target.closest('.card-header');
       if (header) {
         const card = header.closest('.entry-card');
         if (card) this.toggleCard(parseInt(card.dataset.pid));
       }
+    });
+
+    // Way back out of a session list, and the retry of the Explore libraries.
+    document.addEventListener('click', (ev) => {
+      const el = ev.target.closest('#results-context [data-act="back"], [data-act="retry-explore"]');
+      if (!el) return;
+      if (el.dataset.act === 'back') this.goTo(el.dataset.hash);
+      else { this._lastHash = null; this.handleRoute(); }
     });
     resultsList.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter' || ev.key === ' ') {
@@ -700,6 +1132,7 @@ const App = {
     document.getElementById('filter-chips').addEventListener('click', (ev) => {
       const btn = ev.target.closest('button');
       if (!btn) return;
+      if (btn.dataset.filterKey === 'all') { this.clearAll(); return; }
       const chip = btn.closest('.chip');
       if (!chip) return;
       const key = chip.dataset.filterKey;
@@ -709,6 +1142,13 @@ const App = {
 
     // Batch export button
     document.getElementById('batch-export-btn').addEventListener('click', () => {
+      const total = this.filtered.length;
+      // A very large export takes a while and produces a file few people meant
+      // to ask for, so it is confirmed rather than started silently.
+      if (total > this.BATCH_CONFIRM_ABOVE && typeof confirm === 'function'
+          && !confirm(`Export ${total.toLocaleString('en')} entries as BibTeX?`)) {
+        return;
+      }
       Export.batchBibtex(this.filtered);
     });
 
@@ -728,17 +1168,20 @@ const App = {
     });
 
     // Mobile filter
-    document.getElementById('mobile-filter-btn').addEventListener('click', () => {
-      document.getElementById('mobile-facets').classList.remove('hidden');
-      document.getElementById('mobile-facet-content').innerHTML =
-        document.getElementById('facets').innerHTML;
+    document.getElementById('mobile-filter-btn')
+      .addEventListener('click', () => this.openMobileFacets());
+    document.getElementById('mobile-filter-close')
+      .addEventListener('click', () => this.closeMobileFacets());
+    const overlay = document.getElementById('mobile-facets');
+    overlay.addEventListener('click', (ev) => {
+      if (ev.target === overlay) this.closeMobileFacets();
     });
-    document.getElementById('mobile-filter-close').addEventListener('click', () => {
-      document.getElementById('mobile-facets').classList.add('hidden');
-    });
+    overlay.addEventListener('keydown', (ev) => this._mobileFacetsKeydown(ev));
 
     // Edit-mode keyboard navigation on the results list (j = next, k = previous).
     document.addEventListener('keydown', (ev) => {
+      // A browser or OS shortcut is not a card command.
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
       if (!this.state.editMode || this.state.view !== 'results') return;
       const t = ev.target;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
@@ -777,9 +1220,11 @@ const App = {
     }
     this._setTriageSortOption(this.state.editMode);
     if (this.state.editMode) {
+      const note = document.getElementById('edit-pending-note');
+      if (note) note.remove();   // the counter is actionable again
       // Triage hints need the artifact; refresh once it is in (cards render
       // their hint chips only from a full pass, so redraw the results list).
-      Promise.all([Edit.loadTriage(), Edit.loadReconciliation()])
+      Promise.all([Edit.loadTriage(), this._ensureReconciliation()])
         .then(() => this._refreshAfterEditToggle());
     } else {
       this._refreshAfterEditToggle();
@@ -801,7 +1246,7 @@ const App = {
         this.state.sort = 'relevance';
         sel.value = 'relevance';
         this.sortEntries();
-        if (this.isAddressableResults()) this.updateURL();
+        if (this.isAddressableResults()) this.updateURL(false);
       }
       opt.remove();
     }

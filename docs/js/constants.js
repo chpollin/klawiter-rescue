@@ -56,7 +56,18 @@ const NON_LATIN_SCRIPT_LANGS = new Set([
   'ru', 'sr', 'uk', 'ur', 'yi', 'zh',
 ]);
 
-/** Entry types that are about Zweig (not by Zweig) */
+/**
+ * Published location of the site. Citation exports must carry a URL that
+ * resolves for the reader, so a localhost or file:// run cites this instead of
+ * its own origin.
+ */
+const SITE_URL = 'https://chpollin.github.io/klawiter-rescue/';
+
+/**
+ * Entry types that are about Zweig rather than by Zweig.
+ * JsonldPlayground keeps a second copy of this list as an own property; the
+ * two have to be changed together until that one reads from here.
+ */
 const ABOUT_ZWEIG_TYPES = ['secondary-literature', 'historical-study', 'symposium', 'other'];
 
 /** Category groupings for the home page */

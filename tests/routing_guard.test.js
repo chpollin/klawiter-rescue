@@ -18,11 +18,17 @@ const vm = require('node:vm');
 
 function loadAppCtx() {
   const location = { hash: '', pathname: '/', hostname: 'localhost' };
+  const calls = [];
   const ctx = {
     window: { location, addEventListener() {} },
-    document: { addEventListener() {}, getElementById() { return null; } },
+    document: { addEventListener() {}, getElementById() { return null; },
+      querySelectorAll() { return []; } },
     location,
-    history: { replaceState() {} },
+    history: {
+      replaceState(a, b, url) { calls.push(['replace', url]); },
+      pushState(a, b, url) { calls.push(['push', url]); },
+    },
+    historyCalls: calls,
     URLSearchParams,
     console,
   };
@@ -219,6 +225,81 @@ test('the edit toggle shows only where entry cards can be edited', () => {
     App._updateEditToggleVisibility();
     assert.strictEqual(btn.style.display, visible ? '' : 'none', `${hash} / ${view}`);
   }
+});
+
+test('a user-triggered state change is a history entry, a normalization is not', () => {
+  const { App, ctx } = loadAppCtx();
+  App._lastHash = '';
+  App.state.query = '';
+  App.state.filters = {};
+
+  // Choosing a facet, removing a chip, submitting a search: places Back has to
+  // return to. Before, every one of them replaced the entry, so the first
+  // interaction made Back leave the application.
+  App.state.filters = { type: 'fiction' };
+  App.updateURL(true);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['push', '#type=fiction']);
+
+  // Re-rendering a state that is already in the URL only normalizes it.
+  App.updateURL(false);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['replace', '#type=fiction']);
+
+  // A push that would duplicate the current entry stays a replace.
+  App.updateURL(true);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['replace', '#type=fiction']);
+
+  App.state.filters = { type: 'essay' };
+  App.updateURL(true);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['push', '#type=essay']);
+  assert.strictEqual(App._lastHash, 'type=essay');
+});
+
+test('the skip-link fragment is not treated as a route', () => {
+  const { App, ctx } = loadAppCtx();
+  App._lastHash = 'q=zweig';
+  ctx.location.hash = '#main-content';
+  App.handleRoute();
+  // The route state is untouched: skipping to the content must not throw the
+  // reader back to the start view.
+  assert.strictEqual(App._lastHash, 'q=zweig');
+});
+
+test('an unresolvable title reports the missing page instead of falling through', () => {
+  const { App, ctx } = loadAppCtx();
+  const seen = [];
+  App.data = {};   // no redirect map at all: the access must be guarded
+  App.titleMap = new Map();
+  App.showView = (v) => { App.state.view = v; };
+  App._resetSearchState = () => {};
+  App._setResultsContext = () => {};
+  App.renderChips = () => {};
+  App._renderMissingPage = (msg) => seen.push(msg);
+  ctx.Facets = { render() {} };
+
+  App._lastHash = null;
+  ctx.location.hash = '#title=Nonexistent%20Page';
+  App.handleRoute();
+  assert.strictEqual(App.state.view, 'results');
+  assert.strictEqual(seen.length, 1);
+  assert.match(seen[0], /does not exist/);
+});
+
+test('a known title resolves to its entry permalink', () => {
+  const { App, ctx } = loadAppCtx();
+  App.data = { redirects: { 'Old Name': 4711 } };
+  App.titleMap = new Map([['Real Title', 42]]);
+  App._resetSearchState = () => {};
+  App._setResultsContext = () => {};
+
+  App._lastHash = null;
+  ctx.location.hash = '#title=Old%20Name';
+  App.handleRoute();
+  assert.strictEqual(ctx.location.hash, 'entry=4711');
+
+  App._lastHash = null;
+  ctx.location.hash = '#title=Real%20Title';
+  App.handleRoute();
+  assert.strictEqual(ctx.location.hash, 'entry=42');
 });
 
 test('edit mode cannot be entered on the published site', () => {

@@ -13,13 +13,34 @@ function esc(s) {
     .replace(/'/g, '&#39;');
 }
 
-/** Highlight search terms in text */
-function hl(text, query) {
-  if (!query || !text) return text;
-  const words = query.split(/\s+/).filter(w => w.length > 1);
-  if (!words.length) return text;
-  const re = new RegExp(`(${words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
-  return text.replace(re, '<mark>$1</mark>');
+/** Alternation regex for the query words worth marking, or null. */
+function _hlPattern(query) {
+  const words = String(query == null ? '' : query).split(/\s+/).filter(w => w.length > 1);
+  if (!words.length) return null;
+  const alt = words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  return new RegExp(alt, 'gi');
+}
+
+/**
+ * Escape text and mark the query inside it.
+ *
+ * Marking must run on the raw text and escaping on the resulting segments.
+ * Highlighting escaped text matched against the entity spellings instead of
+ * the characters: a query with an apostrophe or an ampersand never matched,
+ * and the query "amp" tore `&amp;` apart into invalid markup.
+ */
+function hlEsc(text, query) {
+  const s = String(text == null ? '' : text);
+  const re = query ? _hlPattern(query) : null;
+  if (!re) return esc(s);
+  let out = '';
+  let last = 0;
+  let m;
+  while ((m = re.exec(s)) !== null) {
+    out += esc(s.slice(last, m.index)) + '<mark>' + esc(m[0]) + '</mark>';
+    last = m.index + m[0].length;
+  }
+  return out + esc(s.slice(last));
 }
 
 /** Escape BibTeX special characters */

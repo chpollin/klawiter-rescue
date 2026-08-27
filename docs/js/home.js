@@ -69,7 +69,9 @@ const Home = {
         <div class="home-search-row">
           <div class="home-search">
             <input type="search" id="home-search-input"
-                   placeholder="Search ${entries.length.toLocaleString('en')} entries\u2026 (press Enter)">
+                   aria-label="Search bibliography"
+                   value="${esc(App.state.query || '')}"
+                   placeholder="Search ${entries.length.toLocaleString('en')} entries\u2026">
             <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
@@ -84,13 +86,16 @@ const Home = {
       </div>
     `;
 
-    // Bind home search
+    // The start-page field runs the same search as the header field. Two
+    // fields with two models (Enter here, live there) taught the visitor that
+    // search works differently depending on where they clicked.
     const homeSearch = document.getElementById('home-search-input');
     if (homeSearch) {
+      homeSearch.addEventListener('input', (ev) => App.onSearchInput(ev.target.value));
       homeSearch.addEventListener('keydown', (ev) => {
         if (ev.key === 'Enter') {
-          const q = ev.target.value.trim();
-          if (q) location.hash = `q=${encodeURIComponent(q)}`;
+          ev.preventDefault();
+          App.commitSearch(ev.target.value);
         }
       });
     }
@@ -245,6 +250,7 @@ document.addEventListener('click', (ev) => {
 });
 
 document.addEventListener('keydown', (ev) => {
+  if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   if (ev.key !== 'Enter' && ev.key !== ' ') return;
   const el = ev.target.closest('#view-home [role="button"][data-act]');
   if (!el) return;

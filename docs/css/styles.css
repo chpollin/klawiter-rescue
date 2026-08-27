@@ -483,15 +483,6 @@ h1, h2, h3, h4 {
   padding: 0.2rem 0.5rem;
 }
 
-/* Browse & Explore buttons */
-.home-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-}
-
 .browse-btn {
   font-family: var(--font-sans);
   font-size: 0.875rem;
@@ -661,18 +652,6 @@ h1, h2, h3, h4 {
   margin-bottom: 0.25rem;
 }
 
-.card-snippet {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  color: var(--sz-text-light);
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  max-height: 3em; /* fallback for browsers without -webkit-line-clamp */
-}
-
 /* Empty state */
 .empty-state {
   text-align: center;
@@ -721,7 +700,7 @@ h1, h2, h3, h4 {
 }
 
 .badge-fiction { background: #EDE4D4; color: #7A1B2D; }
-.badge-essay { background: #F5EDD8; color: #8B6914; }
+.badge-essay { background: #F5EDD8; color: #7A5C11; }
 .badge-poetry { background: #E8E0EF; color: #5B3A7A; }
 .badge-drama { background: #F0DDE4; color: #7A1B2D; }
 .badge-correspondence { background: #DDE8E0; color: #2D5B3A; }
@@ -734,41 +713,7 @@ h1, h2, h3, h4 {
 .badge-symposium { background: #F0E4DD; color: #7A4A1B; }
 .badge-dramatic-reading { background: #EDDDEE; color: #6B1B6E; }
 .badge-newspaper { background: #E8E4E0; color: #5B504A; }
-.badge-other { background: #E8E4E0; color: #6B6B6B; }
-
-/* --- Detail View --- */
-.detail-back {
-  display: inline-block;
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  color: var(--sz-burgundy);
-  margin-bottom: 1rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-}
-.detail-back:hover {
-  text-decoration: underline;
-}
-
-.detail-type {
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  color: var(--sz-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.25rem;
-}
-
-.detail-title {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--sz-text);
-  line-height: 1.3;
-  margin-bottom: 1.5rem;
-}
+.badge-other { background: #E8E4E0; color: #5C5C5C; }
 
 /* Metadata table */
 .meta-table {
@@ -908,39 +853,6 @@ h1, h2, h3, h4 {
   margin-top: 1rem;
 }
 
-/* --- Statistics --- */
-.stats-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 1rem;
-  text-align: center;
-}
-
-.stat-value {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--sz-burgundy);
-}
-
-.stat-label {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--sz-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.25rem;
-}
-
 /* --- Explore Interface --- */
 .explore-header {
   display: flex;
@@ -1073,25 +985,12 @@ h1, h2, h3, h4 {
   color: var(--sz-burgundy);
   margin-bottom: 0.5rem;
 }
-.detail-summary-text {
-  font-size: 0.8125rem;
-  color: var(--sz-text);
-  margin-bottom: 0.5rem;
-}
+
 .detail-summary-hint {
   font-size: 0.75rem;
   color: var(--sz-text-light);
   font-style: italic;
   margin-bottom: 1rem;
-}
-.detail-summary-stats {
-  font-size: 0.8125rem;
-  color: var(--sz-text-light);
-  line-height: 1.8;
-}
-.detail-summary-stats strong {
-  color: var(--sz-burgundy);
-  font-weight: 600;
 }
 
 .detail-group-title {
@@ -1429,9 +1328,6 @@ h1, h2, h3, h4 {
   margin-bottom: 0.5rem;
 }
 
-.network-controls {
-  margin-bottom: 0.5rem;
-}
 .network-info {
   display: flex;
   align-items: center;
@@ -1446,44 +1342,7 @@ h1, h2, h3, h4 {
   flex-wrap: wrap;
   font-family: var(--font-sans);
 }
-.network-slider-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--sz-text-light);
-}
-.network-slider {
-  width: 120px;
-  accent-color: var(--sz-burgundy);
-  cursor: pointer;
-}
-.network-color-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.75rem;
-  color: var(--sz-text-light);
-}
-.network-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-  font-family: var(--font-sans);
-  font-size: 0.7rem;
-  color: var(--sz-text-light);
-}
-.network-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-.network-legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
+
 /* Network stats in detail panel */
 .network-stats-grid {
   display: grid;
@@ -1578,7 +1437,7 @@ h1, h2, h3, h4 {
 .sort-select:focus-visible,
 .load-more button:focus-visible,
 .chip button:focus-visible,
-.detail-back:focus-visible,
+.facet-more:focus-visible,
 .site-nav a:focus-visible {
   outline: 2px solid var(--sz-burgundy);
   outline-offset: 2px;
@@ -1631,7 +1490,6 @@ h1, h2, h3, h4 {
 .page-anchors a:hover {
   border-bottom-color: var(--sz-burgundy);
 }
-
 
 .page-content {
   max-width: 720px;
@@ -1989,8 +1847,7 @@ mark {
 }
 .prov-regex { background: #d4edda; color: #155724; }
 .prov-llm { background: #fff3cd; color: #856404; }
-.prov-missing { background: #f0f0f0; color: #999; }
-.prov-expert { background: #cce5ff; color: #004085; }
+.prov-missing { background: #f0f0f0; color: #595959; }
 
 /* --- Edit Mode --- */
 .edit-toggle-btn {
@@ -2098,7 +1955,7 @@ body.edit-mode .meta-table {
   margin-bottom: 0.75rem;
   border: 1px solid transparent;
 }
-.review-unreviewed { background: #f0f0f0; color: #777; border-color: #ddd; }
+.review-unreviewed { background: #f0f0f0; color: #595959; border-color: #ddd; }
 .review-agent { background: #fff3cd; color: #856404; border-color: #f0e0a8; }
 .review-contested { background: #fbe4e4; color: #8a2a2a; border-color: #eec6c6; }
 .review-approved { background: #d4edda; color: #155724; border-color: #b8dcc0; }
@@ -2373,9 +2230,7 @@ body.edit-mode .meta-table {
   .mobile-filter-btn {
     display: flex;
   }
-  .stats-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
   .explore-body {
     flex-direction: column;
   }
@@ -2393,7 +2248,7 @@ body.edit-mode .meta-table {
 @media print {
   .site-header, .site-footer, .sidebar, .mobile-filter-btn,
   .mobile-overlay, .filter-chips, .action-bar, .load-more,
-  .home-search, .results-header, .detail-back, .detail-provenance,
+  .home-search, .results-header, .results-context, .detail-provenance,
   .stats-export, .page-actions { display: none !important; }
   body { background: white; font-size: 11pt; }
   .main-layout { max-width: 100%; padding: 0; }
@@ -2401,7 +2256,6 @@ body.edit-mode .meta-table {
   .entry-card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
   .card-detail { animation: none; }
   .meta-table { border: 1px solid #ccc; }
-  .chart-card { break-inside: avoid; }
 }
 
 @media (max-width: 640px) {
@@ -2414,9 +2268,7 @@ body.edit-mode .meta-table {
   .home-title {
     font-size: 1.375rem;
   }
-  .stats-cards {
-    grid-template-columns: 1fr 1fr;
-  }
+
 }
 
 /* --- Compact entry detail (read layout) --- */
@@ -2698,4 +2550,83 @@ td.matrix-low { background: #F5E3E3; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* --- Facet long tail --- */
+.facet-more {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-burgundy);
+  background: none;
+  border: none;
+  padding: 0.25rem 0 0 0.5rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* --- Session-list context bar --- */
+.results-context {
+  margin-bottom: 0.75rem;
+}
+.results-back {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+}
+
+/* --- Data unavailable --- */
+.fatal-error {
+  max-width: 40rem;
+  padding: 3rem 0;
+  font-family: var(--font-sans);
+}
+.fatal-error h1 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--sz-burgundy);
+  margin-bottom: 0.75rem;
+}
+.fatal-error p {
+  margin-bottom: 0.75rem;
+  color: var(--sz-text);
+}
+.fatal-cause {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.8125rem;
+  color: var(--sz-text-light);
+}
+/* Nothing in the header resolves without the dataset; say so by look. */
+.app-unavailable .site-nav a,
+.app-unavailable .header-search {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+/* --- Permalink fallback (no clipboard access) --- */
+.permalink-fallback {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--sz-border);
+  border-radius: 3px;
+}
+
+/* --- Restored-session note at the save badge --- */
+.edit-pending-note {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--sz-text-light);
+  margin-left: 0.5rem;
+  max-width: 16rem;
+  line-height: 1.3;
+}
+
+/* --- Mobile drawer holds the real sidebar, not a copy --- */
+.mobile-panel .sidebar {
+  display: block;
+  width: auto;
+}
+.mobile-filter-btn.hidden {
+  display: none;
 }

@@ -6,7 +6,7 @@ project:
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
 language: de
-version: 1.2
+version: 1.3
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
 updated: 2026-08-27
@@ -24,7 +24,7 @@ Die öffentliche Anwendung unterstützt Suche, Facetten, Zeitverlauf, Sprach- un
 
 ## Architektur
 
-`docs/index.html` lädt klassische Skripte (kein Modulsystem, gemeinsamer globaler Namensraum) und lokal vendorte Abhängigkeiten (`docs/vendor/`: FlexSearch, D3 v7, topojson-client, d3-sankey, `countries-110m.json` mit Provenienzvermerk). Die Visualisierungs-Bundles sind `defer` geladen und blockieren den ersten Aufbau nicht. Die Anwendung kontaktiert zur Laufzeit keinen externen Host.
+`docs/index.html` lädt klassische Skripte (kein Modulsystem, gemeinsamer globaler Namensraum) und lokal vendorte Abhängigkeiten (`docs/vendor/`: FlexSearch, D3 v7, topojson-client, d3-sankey, `countries-110m.json` mit Provenienzvermerk). FlexSearch ist `defer` geladen, weil jeder Besuch den Suchindex braucht. Die drei Visualisierungs-Bundles lädt `App.ensureExploreLibs` erst beim ersten Wechsel auf `#stats` in fester Reihenfolge nach und rendert Explore hinter einem einmaligen Promise-Gate; scheitert der Nachladevorgang, zeigt die Explore-Ansicht eine Fehlermeldung mit Retry, während Suche und Ergebnisliste unberührt weiterlaufen. Die Anwendung kontaktiert zur Laufzeit keinen externen Host.
 
 | Modul | Aufgabe |
 |---|---|
@@ -44,7 +44,7 @@ Die öffentliche Anwendung unterstützt Suche, Facetten, Zeitverlauf, Sprach- un
 | `explore-geography.js` | Globus- und Kartenansicht aus der vendorten Geometrie |
 | `explore-network.js` | Referenz-Rangliste (meistreferenzierte Einträge) und Übersetzer-Sankey |
 
-Die Anwendung lädt `docs/data/klawiter.json` (blockierend, mit `resp.ok`-Prüfung und escapter Fehlermeldung), `reconciliation.json` (nicht blockierend, additive Kurationsdaten) und `triage.json` (erst beim Betreten des Editiermodus). Der Suchindex wird lazy bei der ersten Suche gebaut. Fehlende Reconciliation-Daten führen nicht zu erfundenen Links; die betroffenen UI-Bereiche bleiben leer.
+Die Anwendung lädt `docs/data/klawiter.json` blockierend mit `resp.ok`-Prüfung. Scheitert dieser Ladevorgang, tritt ein ganzseitiger Fehlerzustand an die Stelle der Startansicht, der die Ursache benennt und einen Retry anbietet; Navigation und Suchfeld sind dabei sichtbar deaktiviert, weil ohne Bestand keine von beiden etwas auflöst. `reconciliation.json` wird dort geladen, wo die Daten zum ersten Mal sichtbar werden (aufgeklappte Karte, Editiermodus, Werkbank), über eine geteilte Ladezusage, und eine bereits offene Karte wird nach dem Eintreffen aufgefrischt. `triage.json` kommt erst beim Betreten des Editiermodus. Der Suchindex wird nach dem ersten Paint über `requestIdleCallback` vorgebaut, mit `setTimeout`-Fallback und Lazy-Bau bei der ersten Suche als Rückfallweg. Die Datenverifikation (`verifyData`) läuft nur auf `localhost`, weil sie ein Entwicklungsinstrument ist und mehrere Vollpässe über den Bestand kostet. Fehlende Reconciliation-Daten führen nicht zu erfundenen Links; die betroffenen UI-Bereiche bleiben leer.
 
 ## Navigation, Routen und Seitenzuschnitt
 
@@ -59,6 +59,10 @@ Die Kopfnavigation führt vier Ziele, Overview, Explore, Data und About. Ein Dro
 | `#quality` | Datenqualitäts-Werkbank |
 | `#browse`, `#q=…`, `#entry=…`, Facettenparameter | Ergebnisliste |
 
+Benutzerausgelöste Zustandswechsel (Facette wählen, Chip entfernen, Suche übernommen, Sortierung) schreiben einen echten History-Eintrag; `replaceState` bleibt den Normalisierungen vorbehalten, die einen bereits in der URL stehenden Zustand nur nachziehen. Damit führt der Zurück-Weg durch die Rechercheschritte, statt die Anwendung nach der ersten Interaktion zu verlassen. Der Router ignoriert das Fragment `#main-content` des Skip-Links, weil es ein Element adressiert und keine Route.
+
+Ein `#entry=`-Permalink beschriftet die Ergebniszeile nach dem Render als „Permalink — 1 entry". Löst die Kennung nicht auf, erscheint ein eigener Zustand mit dem Hinweis auf eine mögliche Weiterleitung und einem Weg zur Startseite; ein `#title=` ohne Treffer in Redirect-Map und Titelindex führt zum selben Zustand, statt still auf die Startseite durchzufallen. Die statischen Seiten und `#quality` setzen Query, Filter und Suchfeld zurück wie der Explore-Zweig.
+
 Eine statische Seite adressiert ihre Abschnitte über ein Suffix im Hash (`#about/imprint`); der Router rendert die Seite und scrollt anschließend auf `sec-<abschnitt>`. Die vier Deep-Links der früheren Seitenaufteilung bleiben gültig und werden im Router auf ihren Abschnitt umgeschrieben, `#methodology` und `#help` und `#imprint` nach `#about/…`, `#jsonld` nach `#data/playground`. Der Dokumenttitel wird ausschließlich in `App._updateTitle` gesetzt, Basistitel „Klawiter — Stefan Zweig Bibliography" wie im ausgelieferten HTML.
 
 Die About-Seite führt die Zahlen des Bestands dynamisch aus `_meta` (Bestandsgröße, Sprachen, Jahresspanne, Feldabdeckung, Typenzahl), damit Prosa und Datenstand nicht auseinanderlaufen. Die Data-Seite benennt die ausgelieferten Dateien unter `docs/data/` mit ihrer Rolle und weist die kanonischen Graphen unter `data/output/` als nur über das Repository erreichbar aus. Der Gesamtexport heißt „Download dataset (JSON)", weil er die flache Projektion in Frontend-Schlüsseln liefert und keinen `@context` trägt.
@@ -67,12 +71,15 @@ Die About-Seite führt die Zahlen des Bestands dynamisch aus `_meta` (Bestandsgr
 
 Die Oberfläche verwendet die etablierte Stefan-Zweig-Digital-Palette, Source Serif 4 für Lesetext und Source Sans 3 für Navigation und Bedienung. CSS-Variablen sind die einzige Quelle für Farben und Abstände. Bibliotheken und Fonts liegen lokal.
 
-Semantisches HTML, sichtbarer Tastaturfokus, beschriftete Formulare, ARIA-Labels für ikonische Steuerelemente und ausreichende Kontraste bilden die Basis. `prefers-reduced-motion` wird global respektiert (Animationen und Smooth-Scrolling entfallen). Inhaltliche Zustände werden nie ausschließlich über Farbe vermittelt. Mobile Layouts bewahren Suche, Filter und Detailinformationen ohne horizontales Scrollen; die Vollständigkeitsmatrix scrollt in ihrem eigenen Container.
+Semantisches HTML, sichtbarer Tastaturfokus, beschriftete Formulare, ARIA-Labels für ikonische Steuerelemente und ausreichende Kontraste bilden die Basis. Nach einem Ansichtswechsel setzt `showView` den Fokus auf die Überschrift der Ansicht oder auf `#main-content`, damit die Hash-Navigation bei Screenreadern ankommt; ein Wechsel, der aus dem Tippen im Suchfeld folgt, lässt den Fokus dort. Alle Tastaturkürzel steigen bei gedrückter Steuerungs-, Meta- oder Alt-Taste aus. `prefers-reduced-motion` wird global respektiert (Animationen und Smooth-Scrolling entfallen). Inhaltliche Zustände werden nie ausschließlich über Farbe vermittelt. Mobile Layouts bewahren Suche, Filter und Detailinformationen ohne horizontales Scrollen; die Vollständigkeitsmatrix scrollt in ihrem eigenen Container.
 
 ## Rechercheansichten
 
 - Die Übersicht zeigt Umfang, zeitliche Verteilung, Sprachen, Typen und Orte.
-- Die Ergebnisliste kombiniert Textsuche, Facetten und Sortierung. Die Karte zeigt Typ, Titel, Jahr, Sprache, Ort, Verlag und Seitenzahl; der Quelltext-Auszug entfällt, weil die aufgeklappte Karte den Volleintrag führt.
+- Die Ergebnisliste kombiniert Textsuche, Facetten und Sortierung. Die Karte zeigt Typ, Titel, Jahr, Sprache, Ort, Verlag und Seitenzahl; der Quelltext-Auszug entfällt, weil die aufgeklappte Karte den Volleintrag führt. Der Kartenkopf führt `aria-expanded` und `aria-controls` auf die Detail-ID.
+- Der Suchindex faltet Diakritika (`charset: 'latin:advanced'`), damit die Transliterationen des Bestands auch in schlichter Schreibweise auffindbar sind. Ab zwei Zeichen läuft eine Suche, darunter keine. Die Trefferzahl ist auf 5.000 gekappt; ist die Kappung erreicht, sagt das Ergebnislabel es. Kopf- und Startseitenfeld hängen am selben Handler, das Startseitenfeld wird beim Rendern mit der aktuellen Query vorbelegt, und beim Wechsel auf die Ergebnisansicht wandert der Fokus in das Kopffeld. Markiert wird auf dem Rohtext und escapt wird segmentweise, damit Apostroph, Ampersand und Anführungszeichen in der Query treffen und keine Entity zerrissen wird.
+- Facettenzähler folgen dem Standard-Drilldown: jede Facette zählt gegen die Menge, die alle anderen Filter anwendet, sodass die Alternativen einer gewählten Facette wählbar bleiben. Sprache und Ort zeigen die häufigsten Werte und klappen je Gruppe auf den vollen Bestand auf. Chips tragen beschriftete Schließer und ab zwei aktiven Filtern einen „Clear all"-Chip; der Leerzustand bietet dieselbe Aktion an.
+- Die mobile Schublade verschiebt die Sidebar per DOM-Move in das Overlay und beim Schließen zurück, statt ihr Markup zu klonen. Der Fokus springt beim Öffnen auf den Schließen-Button, bleibt zyklisch im Panel, Escape schließt, eine Auswahl schließt, und der Fokus kehrt zum Öffner zurück. Der mobile Filter-Button erscheint nur auf der Ergebnisansicht.
 - Die aufgeklappte Leseansicht ergänzt nur, was der Kartenkopf nicht trägt (Originaltitel, Übersetzer, Kategorien, Wikidata-Ortslink), rendert die Contents als strukturierte Liste mit Seitenangaben und hält den vollständigen Klawiter-Originaleintrag als eingeklappte Quelle. Strittige Claims bleiben in der Leseansicht sichtbar.
 - Zeit-, Karten- und Verbindungsansichten leiten ihre Daten aus derselben gefilterten Record-Menge ab. Die Verbindungsansicht ist eine Rangliste der meistreferenzierten Seiten mit aufklappbaren Verweislisten; der frühere globale Communities-Graph ist entfernt, weil sein größter Knoten die Restmüll-Aggregation war und er keine bibliographische Frage beantwortete. Der Übersetzer-Sankey bleibt; Mehrfachnennungen werden an Konjunktionen aufgeteilt, abgeschnittene Werte ausgeschlossen, Kleinstknoten in „Other translators" gebündelt.
 - Explore-Konventionen nach der Fix-Runde: fehlende Sprache heißt in allen drei Ansichten „Not recorded" und bleibt von „Other languages" (seltene, erfasste Sprachen) getrennt; jede Ansicht benennt, was sie nicht zeichnet (jahrlose Einträge, nicht geokodierte Orte) und öffnet diese Mengen als Ergebnisliste; das Provenienz-Overlay ist ein eigener Streifen unter der Zeitachse; die Modusreiter sind schlichte Buttons mit `aria-pressed`, die SVGs `role="group"`, die Legenden echte, filternde Buttons als Tastaturweg; `prefers-reduced-motion` nullt alle d3-Transitionsdauern. Klickwege übergeben ihre Filter vollständig an die Ergebnisroute, die dafür auch `publisher`, `translator` und Jahresbereiche kennt; nur der Länderfilter der Karte bleibt sitzungsgebunden, weil die Ergebnisroute `locations.json` nicht lädt.
@@ -87,7 +94,7 @@ Die Route `#quality` beantwortet die Kurationsfrage, ob alle Daten sauber bearbe
 - Arbeitsvorräte als klickbare Listen: Census-Anomalien, nicht im Quelltext belegte Werte, erkennbare aber nicht extrahierte Werte, LLM-abgeleitete Felder, unauflösbare Querverweise (mit Liste der häufigsten Rotlink-Ziele), strittige Normdatenclaims.
 - Kandidaten-Queue für Übersetzer- und Verlagsnamen: subjektbezogen, sortiert offene Fälle nach Reichweite (Vorkommenszahl) zuerst. Öffentlich lesbar; entscheiden lässt sie sich nur im lokalen Editiermodus, dort mit Tastatur (Pfeile/j/k bewegen, y bestätigt den Top-Kandidaten, n lehnt ab, Enter zeigt die betroffenen Einträge).
 
-Die Werkbank-Listen sind Sitzungsansichten ohne eigene Hash-Adresse, weil sie aus Artefakten und nicht aus Filterzustand abgeleitet sind.
+Die Werkbank-Listen sind Sitzungsansichten ohne eigene Hash-Adresse, weil sie aus Artefakten und nicht aus Filterzustand abgeleitet sind. Der Dokumenttitel übernimmt dann das Listenlabel, und über der Liste steht ein sichtbarer Rückweg auf die Ansicht, aus der sie geöffnet wurde (Werkbank oder Explore).
 
 ## EIL Curation Interface
 
@@ -97,7 +104,7 @@ Der Editiermodus ist ausschließlich auf `localhost` aktiv; der Schalter prüft 
 - `correct` ersetzt einen Wert und bewahrt den Vorgänger;
 - `add` ergänzt einen zuvor leeren Wert.
 
-Für jede Aktion zeigt die Oberfläche die belegbare Textstelle oder den vollständigen Quelltext. Triage-Hinweise priorisieren Round-Trip-Abweichungen, fehlende oder modellgestützte Provenienz sowie Census-Anomalien; eine Provenienz-Legende erklärt die R/L/E-Badges. Im Editiermodus laufen j/k als Kartennavigation durch die Ergebnisliste, und die Sortierung „Needs review first" ordnet nach dringlichstem Datensignal. Laufende Änderungen bleiben bis zum Export in `localStorage`; der Save-Zähler im Kopf zeigt den ungesicherten Stand.
+Für jede Aktion zeigt die Oberfläche die belegbare Textstelle oder den vollständigen Quelltext. Triage-Hinweise priorisieren Round-Trip-Abweichungen, fehlende oder modellgestützte Provenienz sowie Census-Anomalien; eine Provenienz-Legende erklärt die R/L/E-Badges. Im Editiermodus laufen j/k als Kartennavigation durch die Ergebnisliste, und die Sortierung „Needs review first" ordnet nach dringlichstem Datensignal. Laufende Änderungen bleiben bis zum Export in `localStorage`; der Save-Zähler im Kopf zeigt den ungesicherten Stand. Bringt ein Reload offene Entscheidungen zurück, ohne dass der Editiermodus an ist, steht neben dem Zähler eine Notiz, dass der Modus für die Weiterarbeit einzuschalten ist.
 
 Die Orts-Reconciliation bietet `confirm`, `reject` und `unresolved`; `unresolved` hält konkurrierende Deutungen als offenen Claim fest. Übersetzer- und Verlagskandidaten bieten dieselben Aktionen, seit Gate 2 je Agentsubjekt die Fundstellen aus der klassifizierten Quelle erhebt und `docs/data/reconciliation.json` sie unter `sourceOccurrences` ausweist; eine unaufgelöste Agent-Entscheidung ist damit quellengebunden belegt. Beide Kandidatenarten sind subjektbezogen; die Oberfläche weist die Reichweite („applies to N entries") aus. Kandidaten bleiben Vorschläge; nichts publiziert ohne Entscheidung. Der kombinierte Export verwendet `patchVersion: 2` und `reconciliationPatchVersion: 1`.
 
@@ -111,7 +118,9 @@ Die UI erzeugt aus einem strittigen Kandidaten keinen klickbaren bestätigten No
 
 ## Export
 
-- BibTeX und RIS dienen der Zitationsweitergabe der flachen Records.
+- BibTeX und RIS dienen der Zitationsweitergabe der flachen Records. Beide lesen dieselbe Typregel und legen den Permalink bei (`url` beziehungsweise `UR`); der erfasste Seitenumfang steht in `pagetotal`, weil `pages` den Seitenbereich innerhalb eines Behälters meint. Ein Lauf auf `localhost` oder über `file://` zitiert die publizierte Adresse, damit der Link beim Empfänger auflöst.
+- Der Gesamtexport der Ergebnisliste beschriftet sich mit der Trefferzahl und fragt oberhalb von tausend Einträgen zurück.
+- Das Kopieren des Permalinks fängt eine verweigerte Zwischenablage ab und bietet die Adresse dann in einem auswählbaren Feld an.
 - Der JSON-LD-Einzelexport ergänzt vorhandene Editionsclaims als eigene Graphknoten.
 - Der Gesamtexport enthält strittige Editions- und Normdatenclaims zusätzlich zu den bestätigten Beziehungen.
 - Die kanonischen vollständigen Graphen bleiben `data/output/editions/work-editions.jsonld` und die Gate-2-Artefakte unter `data/output/reconciliation/`.
@@ -120,7 +129,7 @@ Ein Claim mit Prädikat `schema:exampleOfWork` wird exportiert, ohne gleichzeiti
 
 ## Validierung
 
-Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export, die Trennung strittiger Claims, den Routing-Guard samt Editiermodus-Gate, die Redirects der alten Deep-Links, den Abschnitts-Suffix statischer Seiten, die Sichtbarkeitsregel des Edit-Schalters und die Ordnung der Kandidaten-Queue. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge (inklusive Frontend-Projektionsvertrag) und ruft die Node-Tests über die gemeinsame Testbrücke auf.
+Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export, die Trennung strittiger Claims, den Routing-Guard samt Editiermodus-Gate, die Redirects der alten Deep-Links, den Abschnitts-Suffix statischer Seiten, die Sichtbarkeitsregel des Edit-Schalters und die Ordnung der Kandidaten-Queue. Dazu kommen die Suchzusagen in `tests/search_logic.test.js` (Diakritika-Faltung des Index, Markieren gegen Escaping, Mindestquerylänge, Facetten-Drilldown, Labelauflösung und Kappungsnotiz) sowie die History-Zusage und die Fehlrouten in `tests/routing_guard.test.js`. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge (inklusive Frontend-Projektionsvertrag) und ruft die Node-Tests über die gemeinsame Testbrücke auf.
 
 Ein lokaler Smoke-Test läuft mit einem statischen Server über `docs/`:
 
