@@ -21,6 +21,15 @@ Arbeitsjournal der Klawiter Bibliography. Jede substantielle Sitzung dokumentier
 
 ---
 
+## 2026-08-27 — Session 27: Registrierte Ausbaupunkte abgearbeitet
+
+**Runde.** Abarbeitung der nach der 1.0 registrierten offenen Punkte auf Operator-Freigabe, ausgeführt durch zwei parallele Agents (Frontend, Pipeline) mit anschließender Verdrahtung.
+**Geändert.** Kosmetikrunde: Sprach- und Richtungsattribute auf Titeln (`dir="auto"` plus Script-Subtag wie `ar-Latn`, weil der Bestand durchgehend transliteriert ist und stumpfes RTL zwei Titel falsch drehen würde); Sortierung überlebt als Hash-Parameter Reload und Back, Default bleibt parameterlos, Triage-Sortierung bleibt an den Editiermodus gebunden; home und facets vollständig auf Event-Delegation (behebt die Apostroph-Bruchklasse der Inline-Handler). review-Feld-Projektion: Stufe 05 projiziert Gate-2-Entscheidungen und Editor-Patches als kompaktes `review`-Feld je Eintrag (`frontendSchemaVersion` 1.1), der Prüfstatus-Chip zeigt jetzt Unreviewed, Agent-verified, Contested und Expert-reviewed, Sitzungszustand gewinnt über Datenbestand. Occurrence-Scan: der Orts-Fundstellenscan ist auf Übersetzer- und Verlagsnamen verallgemeinert, alle Agentsubjekte tragen Quellenfundstellen (`sourceOccurrences`, Schema 1.1), die Gate-2-Prüfung `agentOccurrenceEvidence` verlangt Belege je Kandidat; damit ist `unresolved` für Agenten freigeschaltet (Karte, Queue-Button, Taste u) und erzeugt wie bei Orten einen quellengebundenen ContestedClaim.
+**Entschieden.** Cross-View-Brushing bewusst zurückgestellt (Komplexität eines geteilten Selektionszustands ohne erkennbaren Nutzen); `dir="auto"` statt erzwungenem RTL nach Datenprüfung.
+**Offen.** `docs/data/reconciliation.json` wächst durch die Zeilentexte auf gut das Dreifache; falls der Erstladepfad leidet, sind die Zeilentexte der Kürzungskandidat. Zwei Titel mit verirrtem arabischem Diakritikum als Normalisierungskandidat. Restpunkte und Operator Points in [[production-readiness]].
+
+**Der eine nächste Schritt.** Operator-Sichtung des Frontends und Abnahme der Version 1.0.
+
 ## 2026-08-26/27 — Session 26: Sanierungsprogramm zur Version 1.0
 
 **Runde.** Umsetzung des vom Operator genehmigten Fertigstellungsprogramms nach fünf unabhängigen Prüfungen (Modellierung, Datenvollständigkeit, Testlage, Architektur, Frontend). Acht Phasen von der Baseline-Sicherung bis zur Endverifikation, elf Milestone-Commits, jeder auf beiden CI-Jobs grün.

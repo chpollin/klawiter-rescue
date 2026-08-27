@@ -46,6 +46,16 @@ const PERIOD_LABELS = {
   'contemporary': 'Contemporary (2001–)',
 };
 
+/**
+ * Language codes occurring in the data whose customary script is not Latin.
+ * A title of one of these languages written in Latin letters is a
+ * transliteration and is tagged `<code>-Latn` (see titleAttrs in utils.js).
+ */
+const NON_LATIN_SCRIPT_LANGS = new Set([
+  'ar', 'bg', 'bn', 'el', 'fa', 'he', 'hi', 'hy', 'ja', 'ka', 'ko',
+  'ru', 'sr', 'uk', 'ur', 'yi', 'zh',
+]);
+
 /** Entry types that are about Zweig (not by Zweig) */
 const ABOUT_ZWEIG_TYPES = ['secondary-literature', 'historical-study', 'symposium', 'other'];
 

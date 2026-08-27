@@ -12,6 +12,7 @@ const App = {
     query: '',
     filters: {},
     sort: 'relevance',
+    browse: false,   // catalogue view without query or filters
     view: 'home',
     entryId: null,
     page: 0,
@@ -147,6 +148,7 @@ const App = {
     if (hash === this._lastHash) return;
     this._lastHash = hash;
     const params = new URLSearchParams(hash);
+    this.state.browse = false;
 
     // Data-quality workbench (curation view)
     if (hash === 'quality') {
@@ -163,10 +165,13 @@ const App = {
       return;
     }
 
-    // Browse view — show all entries, no filters
-    if (hash === 'browse') {
+    // Browse view — show all entries, no filters. Recognized by the parameter
+    // so that the sort state can ride along (#browse&sort=title).
+    if (params.has('browse')) {
       this.state.query = '';
       this.state.filters = {};
+      this.state.browse = true;
+      this.applySortFromParams(params);
       document.getElementById('search-input').value = '';
       this.filtered = [...this.entries];
       this.state.page = 0;
@@ -241,6 +246,7 @@ const App = {
         this.state.filters[key] = val;
       }
     }
+    this.applySortFromParams(params);
 
     document.getElementById('search-input').value = this.state.query;
 
@@ -253,12 +259,39 @@ const App = {
     }
   },
 
+  // Sort values the hash may carry. 'triage' orders by data signal and needs
+  // the triage artifact, which only the local edit mode loads.
+  SORTS: ['relevance', 'year-asc', 'year-desc', 'title', 'triage'],
+
+  /** Validated sort value for a hash parameter set; unknown values fall back. */
+  sortFromParams(params) {
+    const s = params.get('sort');
+    if (!s || !this.SORTS.includes(s)) return 'relevance';
+    if (s === 'triage' && !this.state.editMode) return 'relevance';
+    return s;
+  },
+
+  /** True while the current result list is reproducible from the hash. */
+  isAddressableResults() {
+    return this.state.view === 'results'
+      && (this.state.browse || !!this.state.query || Object.keys(this.state.filters).length > 0);
+  },
+
+  applySortFromParams(params) {
+    this.state.sort = this.sortFromParams(params);
+    const sel = document.getElementById('sort-select');
+    if (sel) sel.value = this.state.sort;
+  },
+
   updateURL() {
     const params = new URLSearchParams();
+    if (this.state.browse) params.set('browse', '');
     if (this.state.query) params.set('q', this.state.query);
     for (const [k, v] of Object.entries(this.state.filters)) {
       params.set(k, v);
     }
+    // Default sort stays out of the URL, so unsorted views keep clean hashes.
+    if (this.state.sort && this.state.sort !== 'relevance') params.set('sort', this.state.sort);
     const hash = params.toString();
     history.replaceState(null, '', hash ? `#${hash}` : location.pathname);
     // Keep the route guard in sync: replaceState fires no hashchange, so
@@ -421,7 +454,7 @@ const App = {
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
       <div class="card-header" tabindex="0" role="button">
         <div class="card-meta">${badge} ${year} ${lang} ${loc} ${triage}</div>
-        <div class="card-title">${title}</div>
+        <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
         ${secondary}
       </div>
       <div class="card-detail hidden" id="card-detail-${e.sourcePageId}"></div>
@@ -518,6 +551,7 @@ const App = {
   showCustomResults(entries, label) {
     this.state.query = '';
     this.state.filters = {};
+    this.state.browse = false;
     document.getElementById('search-input').value = '';
     this.filtered = [...entries];
     this.state.page = 0;
@@ -560,6 +594,9 @@ const App = {
       this.state.sort = ev.target.value;
       this.sortEntries();
       this.renderResults();
+      // Only a hash-addressable result list may write itself back to the URL;
+      // the workbench lists derive from artifacts and carry no hash.
+      if (this.isAddressableResults()) this.updateURL();
     });
 
     // Delegated click/keydown on results list (replaces per-card inline handlers)
@@ -702,6 +739,7 @@ const App = {
         this.state.sort = 'relevance';
         sel.value = 'relevance';
         this.sortEntries();
+        if (this.isAddressableResults()) this.updateURL();
       }
       opt.remove();
     }

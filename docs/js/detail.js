@@ -36,18 +36,25 @@ const Detail = {
     return `<span class="prov-badge prov-${cls}" title="${titles[source] || source}">${labels[source] || source[0].toUpperCase()}</span>`;
   },
 
-  // Review chip with the two reachable states: unreviewed, or carrying
-  // pending human edits in this session. A dataset review projection is a
-  // registered extension.
+  // Review chip: the dataset projection (entry.review, built by the pipeline
+  // from decided reconciliation subjects and applied patches) layered under
+  // the live session state, which wins because it is newer.
   _reviewChip(entry) {
-    const st = Edit.entryStatus(entry.sourcePageId);
     const map = {
       unreviewed: { label: 'Unreviewed', cls: 'review-unreviewed' },
-      approved: { label: 'Human-reviewed', cls: 'review-approved' },
+      agent_verified: { label: 'Agent-verified', cls: 'review-agent' },
+      contested: { label: 'Contested', cls: 'review-contested' },
+      approved: { label: 'Expert-reviewed', cls: 'review-approved' },
     };
-    const m = map[st.status] || map.unreviewed;
+    const st = Edit.entryStatus(entry.sourcePageId);
+    const dataset = entry.review && entry.review.status;
+    const status = st.pending ? st.status : (dataset || 'unreviewed');
+    const m = map[status] || map.unreviewed;
+    const by = !st.pending && dataset && entry.review.reviewed_by
+      ? ` title="Decided by ${esc(entry.review.reviewed_by)}"`
+      : '';
     const note = st.pending ? ' <span class="review-pending">unsaved</span>' : '';
-    return `<div class="review-chip ${m.cls}">${m.label}${note}</div>`;
+    return `<div class="review-chip ${m.cls}"${by}>${m.label}${note}</div>`;
   },
 
   // Editable cell for a provenance-tracked field (edit mode only). An empty
@@ -156,9 +163,9 @@ const Detail = {
   },
 
   // Candidate block for translator (kind 'person') and publisher names,
-  // reusing the location pattern. No "keep unresolved": an unresolved
-  // agent decision needs occurrence evidence the pipeline does not
-  // collect yet, so the pipeline rejects it.
+  // reusing the location pattern. "Keep unresolved" is available because
+  // every agent subject now carries source occurrences, which the pipeline
+  // requires as the evidence behind an unresolved decision.
   _agentReconciliationCell(entry, kind) {
     const review = Edit.agentReconciliation(entry, kind);
     if (!review) return '<span class="missing-value">No candidate record (below occurrence threshold)</span>';
@@ -185,6 +192,7 @@ const Detail = {
       ${candidates ? `<ul>${candidates}</ul>` : '<div>No candidate available.</div>'}
       <div class="reconciliation-actions">
         <button class="reconciliation-btn" onclick="Edit.decideAgent(${entry.sourcePageId}, '${kind}', 'reject')">Reject candidates</button>
+        <button class="reconciliation-btn" onclick="Edit.decideAgent(${entry.sourcePageId}, '${kind}', 'unresolved')">Keep unresolved</button>
         ${revert}
       </div>
     </div>`;
@@ -275,7 +283,7 @@ const Detail = {
     // Inline meta: only what the collapsed header does not carry.
     const meta = [];
     if (entry.originalTitle && entry.originalTitle !== entry.title) {
-      meta.push(`<span class="inline-meta-item"><span class="inline-meta-label">Original title</span> ${esc(entry.originalTitle)}</span>`);
+      meta.push(`<span class="inline-meta-item"><span class="inline-meta-label">Original title</span> <span${titleAttrs(entry, entry.originalTitle)}>${esc(entry.originalTitle)}</span></span>`);
     }
     if (entry.translator) {
       meta.push(`<span class="inline-meta-item"><span class="inline-meta-label">Translator</span> ${esc(entry.translator)}</span>`);
@@ -377,10 +385,11 @@ const Detail = {
     const rows = [];
     const contestedAuthority = this._contestedAuthorityCell(entry);
 
-    rows.push(this.row('Title', esc(entry.title)));
+    rows.push(this.row('Title', `<span${titleAttrs(entry, entry.title)}>${esc(entry.title)}</span>`));
 
     if (entry.originalTitle && entry.originalTitle !== entry.title) {
-      rows.push(this.row('Original title', esc(entry.originalTitle)));
+      rows.push(this.row('Original title',
+        `<span${titleAttrs(entry, entry.originalTitle)}>${esc(entry.originalTitle)}</span>`));
     }
 
     if (entry.year) {

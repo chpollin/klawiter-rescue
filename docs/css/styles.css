@@ -1992,7 +1992,7 @@ body.edit-mode .meta-table {
   font-size: 0.8rem;
 }
 
-/* Three-status review chip */
+/* Review chip (dataset projection plus session state) */
 .review-chip {
   display: inline-block;
   font-family: var(--font-sans);
@@ -2007,6 +2007,7 @@ body.edit-mode .meta-table {
 }
 .review-unreviewed { background: #f0f0f0; color: #777; border-color: #ddd; }
 .review-agent { background: #fff3cd; color: #856404; border-color: #f0e0a8; }
+.review-contested { background: #fbe4e4; color: #8a2a2a; border-color: #eec6c6; }
 .review-approved { background: #d4edda; color: #155724; border-color: #b8dcc0; }
 .review-pending {
   font-weight: 700;

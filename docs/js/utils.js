@@ -57,6 +57,43 @@ function normalizeTranslator(raw) {
   return name.trim();
 }
 
+// Basic Latin through Combining Diacritics, Latin Extended Additional,
+// general punctuation, currency symbols, letterlike symbols. Together these
+// cover the transliterations Klawiter used.
+const LATIN_RANGES = [[0x0000, 0x036F], [0x1E00, 0x1EFF], [0x2000, 0x206F],
+  [0x20A0, 0x20CF], [0x2100, 0x214F]];
+
+/** True when the string uses no script beyond Latin and its companions. */
+function isRomanized(text) {
+  for (const ch of String(text == null ? '' : text)) {
+    const c = ch.codePointAt(0);
+    if (!LATIN_RANGES.some(([lo, hi]) => c >= lo && c <= hi)) return false;
+  }
+  return true;
+}
+
+/**
+ * Language and direction attributes for a title element.
+ *
+ * `lang` comes from the record's languageCode. Almost every title in this
+ * corpus is a romanization (Klawiter transliterated Arabic, Hebrew, Chinese
+ * and others into Latin script), so a Latin-script title of a language
+ * customarily written otherwise gets the `-Latn` subtag; without it a screen
+ * reader would voice Latin letters with Arabic or Chinese phonetics.
+ *
+ * `dir="auto"` instead of a script probe: the only titles in the current data
+ * that contain characters from an RTL block carry a single stray Arabic
+ * diacritic inside otherwise Latin text, where dir="rtl" would reverse a
+ * left-to-right line. dir="auto" resolves those to ltr by their first strong
+ * character and still runs a genuinely Hebrew or Arabic title right-to-left.
+ */
+function titleAttrs(entry, text) {
+  const code = entry && entry.languageCode;
+  if (!code || !/^[a-z]{2,3}$/.test(code)) return ' dir="auto"';
+  const tag = NON_LATIN_SCRIPT_LANGS.has(code) && isRomanized(text) ? `${code}-Latn` : code;
+  return ` lang="${tag}" dir="auto"`;
+}
+
 /** Trigger a file download from in-memory content */
 function downloadBlob(content, filename, type) {
   const blob = new Blob([content], { type });

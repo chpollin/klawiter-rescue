@@ -81,7 +81,7 @@ Die 76-Fälle-Stichprobe wurde von zwei unabhängigen Agenten geprüft und durch
 
 Die Publikationsregel lautet: Nur eine belegte `confirm`- oder `correct`-Entscheidung erzeugt eine Beziehung in `publishable-links.json`. `unresolved` erzeugt einen quellengebundenen `klawiter:ContestedClaim`. `reject` bewahrt die negative Entscheidung, veröffentlicht jedoch keinen Link.
 
-Quellvorkommen werden aus `04_classified.csv` mit Seiten-ID, Text-ID, Zeilennummer, exaktem Text und SHA-256 belegt. Mehrteilige Ortswerte verwenden einen dokumentierten Component-Set-Match. Neue Kurationspatches ersetzen keine Geschichte; die vorherige Entscheidung bleibt in `supersedes` erhalten.
+Quellvorkommen werden aus `04_classified.csv` mit Seiten-ID, Text-ID, Zeilennummer, exaktem Text und SHA-256 belegt. Mehrteilige Ortswerte verwenden einen dokumentierten Component-Set-Match. Derselbe Scan erhebt die Fundstellen der Übersetzer- und Verlagsnamen über das Feld, das den Namen trägt, und benennt den Feldnamen in jeder Fundstelle; die Gate-2-Prüfung verlangt für jedes Agentsubjekt mit Kandidat entweder eine Fundstelle oder einen ausformulierten Nullbefund. Neue Kurationspatches ersetzen keine Geschichte; die vorherige Entscheidung bleibt in `supersedes` erhalten.
 
 ## Export und Oberfläche
 

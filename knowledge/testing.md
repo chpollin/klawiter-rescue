@@ -70,6 +70,7 @@ Gate 2 prüft:
 
 - vollständige Trennung von Kandidat, Entscheidung, offenem Claim und publizierbarem Link;
 - exakte Quellenbelege für jeden unresolved Fall;
+- Fundstellen oder einen ausformulierten Nullbefund für jedes Agentsubjekt mit Kandidat;
 - Supersessionsgeschichte bei Entscheidungspatches;
 - Eingabehashes für Editionsgraph, Ortsdaten, Review, Entscheidungen, SZD-Index und klassifizierte Quelle;
 - identische JSON-LD- und Frontendprojektion;

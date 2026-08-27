@@ -100,7 +100,7 @@ Der localhost-gebundene Editiermodus implementiert:
 - Accept, Correct und Add für provenienzgetrackte Felder;
 - Feldfundstellen oder den vollständigen Quelltext als Evidenz;
 - Triage-Hinweise aus Provenienz, Round-Trip-Verifikation und Census;
-- Ortskandidaten mit Confirm, Reject und Unresolved; Übersetzer- und Verlagskandidaten mit Confirm und Reject (Unresolved braucht Occurrence-Evidenz, die die Pipeline noch nicht erhebt);
+- Ortskandidaten sowie Übersetzer- und Verlagskandidaten mit Confirm, Reject und Unresolved, wobei Unresolved in beiden Fällen auf den Fundstellen des Occurrence-Scans aufsitzt;
 - subjektbezogene Entscheidungen mit ausgewiesener Reichweite, erreichbar am Eintrag und in der Kandidaten-Queue der Datenqualitäts-Werkbank (`#quality`, mit Tastatursteuerung);
 - Persistenz der laufenden Sitzung in `localStorage`;
 - einen kombinierten Export mit `patchVersion: 2` und `reconciliationPatchVersion: 1`.
@@ -135,11 +135,10 @@ Die flache Kompatibilitätsschicht bleibt für Mehrfachausgabenseiten strukturel
 Registrierte offene Punkte, die den reproduzierbaren Produktionsstand nicht blockieren:
 
 - Triage der 207 Seiten in der MediaWiki-Archivtabelle (nicht beauftragt; Entscheidung beim Operator).
-- Frontend-Kosmetik als eigene Runde nach der Operator-Feedback-Sichtung (RTL/lang-Attribute, Sortierung im URL-Hash, verbliebene Inline-Handler, Cross-View-Brushing).
-- Projektion des `review`-Felds aus dem Datenbestand in den Prüfstatus-Chip der Oberfläche.
-- Occurrence-Scan für Übersetzer- und Verlagsnamen, damit auch dort `unresolved`-Entscheidungen mit Quellenbelegen möglich werden.
+- Cross-View-Brushing in den Explore-Ansichten (bewusst zurückgestellt; der Nutzen einer verknüpften Selektion über die Views steht in keinem Verhältnis zur Komplexität eines geteilten Selektionszustands, Wiederaufnahme nur auf Operator-Entscheid). Die übrigen Punkte der Kosmetikrunde (Sprach- und Richtungsattribute, Sortierung im URL-Hash, Inline-Handler in home und facets) sind umgesetzt.
 - Abarbeitung des Übersetzer- und Verlags-Prüfvorrats als Kurationsaufgabe.
 - Externe Fachprüfung als zusätzliche Validierung auf dem fertigen Werkzeug.
+- Zwei Titel (Seiten 4775 und 5913) tragen ein verirrtes arabisches Diakritikum (U+0650) als Encoding-Rest; Kandidat für die Normalisierungsstufe, kosmetisch.
 
 Operator Points: die institutionelle Werkidentität der Graphic-Novel-Adaption `klawiter:edition/4916-2016-b` (der vorhandene Claim sichert den Fall vollständig), die Abnahme der Version 1.0 und, nach der Abnahme, die Publikations- und Zitierform (Release-Tag, Zenodo/DOI).
 

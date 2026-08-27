@@ -79,6 +79,8 @@ Der offene Adaptionsfall `klawiter:claim/work-binding/4916-2016-b` bewahrt die D
 
 Gate 2 trennt Kandidaten, Entscheidungen, strittige Claims und publizierbare Links. Kandidaten entstehen für Orts-, Werk- sowie Übersetzer- und Verlagssubjekte (die Agent-Kandidaten aus dem eingefrorenen Wikidata-Abgleich `data/provenance/agent-reconciliation.json`, Schwelle fünf Vorkommen). Belegte Entscheidungen veröffentlichen die bestätigten Orts- und SZD-Werklinks; die aktuellen Zählungen stehen im Gate-2-Manifest `data/output/reconciliation/manifest.json`. Offene Ortsentscheidungen bleiben als strittige Claims erhalten.
 
+Jedes Subjekt trägt seine Fundstellen in der klassifizierten Quelle. Für einen Ort belegt der Scan jede Zeile, die den Ortsnamen oder seine Komponenten enthält. Für einen Übersetzer- oder Verlagsnamen bestimmt zuerst das Feld die Einträge, die den Namen tragen, und der Scan verankert ihn danach in den Zeilen genau dieser Einträge; wo keine Zeile ihn ausschreibt, weil er aus Anreicherung oder Normalisierung stammt, bleibt der Feldwert selbst der Beleg und die Fundstelle sagt das mit `sourceMatchMode: field-value`. Ein Agentsubjekt ohne jede Fundstelle trägt einen ausformulierten Nullbefund. Erst diese Evidenz macht eine unaufgelöste Agent-Entscheidung darstellbar, die dann wie bei Orten als offener Claim erhalten bleibt.
+
 `pipeline/05_to_jsonld.py` liest ausschließlich `publishable-links.json`. Kandidaten und offene Claims können in Oberfläche und Export sichtbar sein, erscheinen aber nicht als `schema:sameAs`. Die priorisierte Gate-2-Prüfliste umfasst alle offenen Orts-, Werk- und Agent-Fälle; ihre Größe steht im Manifest.
 
 ## Provenienz
@@ -86,6 +88,19 @@ Gate 2 trennt Kandidaten, Entscheidungen, strittige Claims und publizierbare Lin
 Feldwerte in der flachen Frontend-Schicht tragen `regex`, `llm`, `missing` oder nach einer bestätigten Korrektur `editor`. Der Standardlauf verwendet den versionierten Cache `data/provenance/llm-enrichment-cache.json`; ein lokaler Arbeitscache beeinflusst den Produktionslauf nicht.
 
 Gate 1 und Gate 2 speichern Eingabehashes, Codehashes, PROV-O-Aktivitäten, SHACL- beziehungsweise Vertragsprüfungen und EARL-Ergebnisse. Agentische Reviews benennen Eingabe, Reviewer, Ergebnis und Reconciliation. Unsichere Fälle bleiben in der Queue und werden nicht zu sicheren Aussagen geglättet.
+
+## Prüfstatus je Eintrag
+
+Die Frontend-Schicht trägt neben der Feldprovenienz einen Prüfstatus. Stufe 05 projiziert ihn als Feld `review` und setzt es ausschließlich dort, wo eine Gate-2-Entscheidung einen Feldwert des Eintrags abdeckt; ein ungeprüfter Eintrag führt das Feld nicht. Die Zuordnung läuft über den exakten Wert, den der Eintrag trägt, für den Publikationsort über den Ortsnamen und für Übersetzer und Verlag über den Agentnamen.
+
+Das Feld führt vier Schlüssel:
+
+- `status` mit `agent_verified` für eine abgeschlossene Entscheidung (`confirm`, `correct`, `reject`), `contested` für eine unaufgelöste Entscheidung und `approved` für eine freigegebene Feldkorrektur aus `data/corrections/`;
+- `reviewed_by` mit der entscheidenden Rolle, etwa `independent-verification-agent` oder `repository-ground-truth-fixture`;
+- `reviewed_at` mit dem Entscheidungszeitpunkt, sofern die Entscheidung einen trägt;
+- `fields` mit der Aktion je geprüftem Feld.
+
+Der Status des Eintrags ist die stärkste Aussage seiner Felder, `approved` vor `agent_verified` vor `contested`. `apply_patches.py` hebt nach einer Feldkorrektur den Status und bewahrt dabei den projizierten Feldbefund. Die Feldprovenienz bleibt davon getrennt, denn sie sagt, woher ein Wert stammt, während der Prüfstatus sagt, wer ihn beurteilt hat.
 
 ## Korrekturprotokoll
 

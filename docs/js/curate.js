@@ -258,7 +258,7 @@ const Curate = {
     const open = rows.filter(r => r.status === 'open').length;
     const editable = App.state.isLocal && App.state.editMode;
     hint.textContent = editable
-      ? `${open} open of ${rows.length} subjects. Keys: ↓/↑ or j/k move, y confirm top candidate, n reject, Enter show entries. A decision covers every entry with the name.`
+      ? `${open} open of ${rows.length} subjects. Keys: ↓/↑ or j/k move, y confirm top candidate, n reject, u keep unresolved, Enter show entries. A decision covers every entry with the name.`
       : `${open} open of ${rows.length} subjects. One decision covers every entry with the name; deciding requires the local edit mode.`;
 
     host.innerHTML = `<div class="agent-queue" role="list">${rows.map(r => this._agentRow(r, editable)).join('')}</div>`;
@@ -285,7 +285,8 @@ const Curate = {
         actions = `<button class="reconciliation-btn" data-act="undo">Undo</button>`;
       } else if (r.status === 'open') {
         actions = (top ? `<button class="reconciliation-btn" data-act="confirm">Confirm</button>` : '')
-          + `<button class="reconciliation-btn" data-act="reject">Reject</button>`;
+          + `<button class="reconciliation-btn" data-act="reject">Reject</button>`
+          + `<button class="reconciliation-btn" data-act="unresolved" title="Keep the case open as a contested claim with its source occurrences">Unresolved</button>`;
       }
     }
     return `<div class="agent-queue-row status-${r.status}" role="listitem" tabindex="0"
@@ -313,12 +314,13 @@ const Curate = {
     } else if (ev.key === 'Enter') {
       ev.preventDefault();
       this._showSubjectEntries(kind, name);
-    } else if (App.state.editMode && (ev.key === 'y' || ev.key === 'n')) {
+    } else if (App.state.editMode && (ev.key === 'y' || ev.key === 'n' || ev.key === 'u')) {
       ev.preventDefault();
+      const action = ev.key === 'y' ? 'confirm' : (ev.key === 'n' ? 'reject' : 'unresolved');
       const qid = ev.key === 'y' ? row.dataset.qid : null;
       if (ev.key === 'y' && !qid) return;
       const next = row.nextElementSibling;
-      Edit.decideAgentSubject(kind, name, ev.key === 'y' ? 'confirm' : 'reject', qid);
+      Edit.decideAgentSubject(kind, name, action, qid);
       // refreshQueue re-renders and re-sorts; put focus on the row that
       // followed, found again by identity, so the walk continues.
       if (next) {

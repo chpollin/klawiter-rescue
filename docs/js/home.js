@@ -75,7 +75,7 @@ const Home = {
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
           </div>
-          <button class="browse-btn" onclick="location.hash='browse'">Browse Catalogue</button>
+          <button class="browse-btn" data-act="browse">Browse Catalogue</button>
           <a href="#stats" class="explore-link">Explore &rarr;</a>
         </div>
       </div>
@@ -102,7 +102,7 @@ const Home = {
     const label = ENTRY_TYPE_LABELS[type] || type;
     const hasSubcats = subcatData && subcatData.length > 0;
     const chevron = hasSubcats
-      ? `<button class="category-expand-btn" onclick="event.stopPropagation();Home.toggleExpand('${type}')" aria-label="Expand ${label}">
+      ? `<button class="category-expand-btn" data-act="expand" data-type="${esc(type)}" aria-label="Expand ${esc(label)}">
            <svg class="expand-chevron" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="8">
              <path d="M1 1.5L6 6.5L11 1.5"/>
            </svg>
@@ -117,8 +117,7 @@ const Home = {
       <div class="category-row" id="catrow-${type}">
         <div class="category-row-header">
           <span class="category-row-name" role="button" tabindex="0"
-                onclick="App.setFilter('type','${type}')"
-                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('type','${type}')}">${esc(label)}</span>
+                data-act="filter-type" data-type="${esc(type)}">${esc(label)}</span>
           <span class="category-row-count">${count.toLocaleString('en')}</span>
           ${chevron}
         </div>
@@ -140,8 +139,7 @@ const Home = {
       items.sort((a, b) => b.count - a.count);
       const itemsHtml = items.slice(0, 10).map(it =>
         `<span class="subcategory-item" role="button" tabindex="0"
-              onclick="App.setFilter('category','${esc(it.fullCategory)}')"
-              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();App.setFilter('category','${esc(it.fullCategory)}')}">${esc(it.language)} <span class="subcategory-count">${it.count}</span></span>`
+              data-act="filter-category" data-category="${esc(it.fullCategory)}">${esc(it.language)} <span class="subcategory-count">${it.count}</span></span>`
       ).join('');
       const moreCount = items.length - 10;
       const more = moreCount > 0 ? `<span class="subcategory-more">+${moreCount} more</span>` : '';
@@ -226,4 +224,32 @@ const Home = {
       this.expandedType = type;
     }
   },
+
+  // One delegated dispatcher for the whole home view. Inline handlers carried
+  // the value inside a JS string literal, which broke on category names with
+  // an apostrophe: esc() writes &#39; into the attribute, the parser hands the
+  // decoded ' back to the handler, and the literal ends early.
+  _dispatch(el) {
+    const act = el.dataset.act;
+    if (act === 'browse') location.hash = 'browse';
+    else if (act === 'expand') this.toggleExpand(el.dataset.type);
+    else if (act === 'filter-type') App.setFilter('type', el.dataset.type);
+    else if (act === 'filter-category') App.setFilter('category', el.dataset.category);
+  },
 };
+
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('#view-home [data-act]');
+  // closest() resolves to the innermost target, so the expand button inside a
+  // category row no longer needs to stop propagation to its row.
+  if (!el) return;
+  Home._dispatch(el);
+});
+
+document.addEventListener('keydown', (ev) => {
+  if (ev.key !== 'Enter' && ev.key !== ' ') return;
+  const el = ev.target.closest('#view-home [role="button"][data-act]');
+  if (!el) return;
+  ev.preventDefault();
+  Home._dispatch(el);
+});

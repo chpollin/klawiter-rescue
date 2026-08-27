@@ -23,10 +23,8 @@ const Facets = {
     container.innerHTML = sorted.map(([val, count]) => {
       const label = labels ? (labels[val] || val) : val;
       const isActive = active === val;
-      const escaped = val.replace(/'/g, "\\'");
       return `<div class="facet-item ${isActive ? 'active' : ''}" tabindex="0" role="button"
-                   onclick="Facets.toggle('${filterKey}', '${escaped}')"
-                   onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();Facets.toggle('${filterKey}','${escaped}')}">
+                   data-facet-key="${esc(filterKey)}" data-facet-value="${esc(val)}">
         <span>${esc(label)}</span>
         <span class="facet-count">${count}</span>
       </div>`;
@@ -40,4 +38,25 @@ const Facets = {
       App.setFilter(filterKey, value);
     }
   },
+
+  _target(ev) {
+    return ev.target.closest('.facet-item[data-facet-key]');
+  },
 };
+
+// Delegated on the document so the mobile drawer, which clones the facet
+// markup, is served by the same handler. The value travels as a data
+// attribute; inside an inline handler it was a JS string literal that a
+// quote in the value could end early.
+document.addEventListener('click', (ev) => {
+  const item = Facets._target(ev);
+  if (item) Facets.toggle(item.dataset.facetKey, item.dataset.facetValue);
+});
+
+document.addEventListener('keydown', (ev) => {
+  if (ev.key !== 'Enter' && ev.key !== ' ') return;
+  const item = Facets._target(ev);
+  if (!item) return;
+  ev.preventDefault();
+  Facets.toggle(item.dataset.facetKey, item.dataset.facetValue);
+});
