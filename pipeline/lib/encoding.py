@@ -65,6 +65,59 @@ def fix_mojibake(text):
     return unicodedata.normalize("NFC", result)
 
 
+# Unicode ranges of the Arabic script (Arabic, Arabic Supplement, Arabic
+# Extended-A, and the presentation-form blocks). A combining mark from these
+# ranges is genuine vocalization only when it sits on an Arabic base letter.
+_ARABIC_SCRIPT_RANGES = (
+    (0x0600, 0x06FF),
+    (0x0750, 0x077F),
+    (0x08A0, 0x08FF),
+    (0xFB50, 0xFDFF),
+    (0xFE70, 0xFEFF),
+)
+
+
+def _is_arabic_script(char):
+    cp = ord(char)
+    return any(lo <= cp <= hi for lo, hi in _ARABIC_SCRIPT_RANGES)
+
+
+def _is_arabic_mark(char):
+    return _is_arabic_script(char) and unicodedata.category(char) == "Mn"
+
+
+def strip_orphan_arabic_marks(text):
+    """Drop Arabic combining marks that have no Arabic base character.
+
+    Source artifact: a kasra typed with an Arabic keyboard layout, where
+    Shift+A produces U+0650, survives in front of a Latin capital A
+    ("[<kasra>Abu Dhabi]"). Such a mark combines with nothing, renders as a
+    lone diacritic and misleads language attribution of the title.
+
+    The rule is narrow. Only a mark of Unicode category Mn from the Arabic
+    script ranges is considered, and only where the base character it would
+    attach to is absent or not Arabic script; intervening marks are skipped
+    so a stacked sequence is judged by its real base. Vocalized Arabic text
+    keeps every mark, and Latin combining diacritics (U+0300..U+036F) are out
+    of range by construction.
+    """
+    if not text:
+        return text
+    if not any(_is_arabic_mark(c) for c in text):
+        return text
+    result = []
+    base = ""  # last character that was not a combining mark
+    for char in text:
+        if _is_arabic_mark(char):
+            if base and _is_arabic_script(base):
+                result.append(char)
+            continue
+        if unicodedata.category(char) != "Mn":
+            base = char
+        result.append(char)
+    return "".join(result)
+
+
 def fix_html_entities(text):
     """Replace HTML entities with their Unicode equivalents."""
     if not text:
@@ -84,6 +137,7 @@ def fix_encoding(text):
         return text
     text = fix_mojibake(text)
     text = fix_html_entities(text)
+    text = strip_orphan_arabic_marks(text)
     return text
 
 

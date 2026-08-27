@@ -1,10 +1,10 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "earl.jsonld": "4b19e289e95a6db768843af37280a467c6c300e3f40f91081d6b606173e86e7e",
-    "provenance.jsonld": "613cfecd6939b3da4c9a3db45f34610a430c53e1181c03386daffa7f74b060ba",
+    "earl.jsonld": "5d7fd33f3e58885a026ff3143f664ffc5d27f10dd9f437db8da577454ac0fe67",
+    "provenance.jsonld": "43b4057147fc9d15da3cd9bc1107745bd2f47dd2341b240c56abc5525785a142",
     "review-queue.json": "6a615f4aff822128b507aed9ea76455923f3b484a4fb2d118b34bbb6b0a193c2",
-    "validation-report.json": "9a06d33696ecbe41e1f760eeaa9929f142c92f76c81c233dbaa3b45075e9258b",
+    "validation-report.json": "47a2a98be02b778d58d897f7cc8ad47fad90720741aa7ef0d89b29e822723d0d",
     "work-editions.jsonld": "5a6bffc828f152bfa35156636d4cde868462da800765a2b5283327c36392160b"
   },
   "authorityEvidence": {
@@ -29,7 +29,7 @@
     "reviewCases": 317,
     "works": 443
   },
-  "generatedAt": "2026-08-27T10:30:08.725392+00:00",
+  "generatedAt": "2026-08-27T11:02:55.045219+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
@@ -44,7 +44,7 @@
   "source": {
     "path": "data/intermediate/02_encoding_fixed.csv",
     "selectedCorpusSha256": "01411303221d069af0dfdf3b0690c1de976168f7113e7f8c4164e59f42460456",
-    "sha256": "da6ab867f8214ba40be1e419e925a3f76845044a0e6571ed4fc2d1627219bc46"
+    "sha256": "ccad2060a7cb26a4133c1263c86937ed7017f0edada29803c37e343e8d6c7304"
   },
   "validation": {
     "contestedClaims": true,

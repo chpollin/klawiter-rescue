@@ -87870,10 +87870,10 @@
     },
     {
       "page_id": 4775,
-      "title": "\"Maktabah isrāʾīliyyah tanshur risālat intiḥār Shtīfān Tsfāyj\" [An Israeli Library Publishes Stefan Zweig's Suicide Letter] in Al-Ittiḥād [The Union] [ِAbu Dhabi], Vol. ?:No. ? [1 March 2012], pp. ?",
+      "title": "\"Maktabah isrāʾīliyyah tanshur risālat intiḥār Shtīfān Tsfāyj\" [An Israeli Library Publishes Stefan Zweig's Suicide Letter] in Al-Ittiḥād [The Union] [Abu Dhabi], Vol. ?:No. ? [1 March 2012], pp. ?",
       "fields": {
         "title": {
-          "extracted": "\"Maktabah isrāʾīliyyah tanshur risālat intiḥār Shtīfān Tsfāyj\" [An Israeli Library Publishes Stefan Zweig's Suicide Letter] in Al-Ittiḥād [The Union] [ِAbu Dhabi], Vol. ?:No. ? [1 March 2012], pp. ?",
+          "extracted": "\"Maktabah isrāʾīliyyah tanshur risālat intiḥār Shtīfān Tsfāyj\" [An Israeli Library Publishes Stefan Zweig's Suicide Letter] in Al-Ittiḥād [The Union] [Abu Dhabi], Vol. ?:No. ? [1 March 2012], pp. ?",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -109130,10 +109130,10 @@
     },
     {
       "page_id": 5913,
-      "title": "ِAl-ʿAmrī, Mashāʿil / Alamri, Mashael",
+      "title": "Al-ʿAmrī, Mashāʿil / Alamri, Mashael",
       "fields": {
         "title": {
-          "extracted": "ِAl-ʿAmrī, Mashāʿil / Alamri, Mashael",
+          "extracted": "Al-ʿAmrī, Mashāʿil / Alamri, Mashael",
           "in_raw": false,
           "status": "correct_fallback",
           "title_source": "page_title_fallback"

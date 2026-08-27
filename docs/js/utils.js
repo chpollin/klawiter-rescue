@@ -163,11 +163,11 @@ function isRomanized(text) {
  * customarily written otherwise gets the `-Latn` subtag; without it a screen
  * reader would voice Latin letters with Arabic or Chinese phonetics.
  *
- * `dir="auto"` instead of a script probe: the only titles in the current data
- * that contain characters from an RTL block carry a single stray Arabic
- * diacritic inside otherwise Latin text, where dir="rtl" would reverse a
- * left-to-right line. dir="auto" resolves those to ltr by their first strong
- * character and still runs a genuinely Hebrew or Arabic title right-to-left.
+ * `dir="auto"` instead of a script probe: the corpus is transliterated
+ * throughout (no title is genuinely written in an RTL script today), and
+ * dir="auto" resolves direction by the first strong character, so it keeps
+ * these left-to-right while still running a future genuinely Hebrew or
+ * Arabic title right-to-left.
  */
 function titleAttrs(entry, text) {
   const code = entry && entry.languageCode;

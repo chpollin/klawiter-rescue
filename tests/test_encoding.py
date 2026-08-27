@@ -10,6 +10,7 @@ from lib.encoding import (
     fix_html_entities,
     fix_mojibake,
     has_mojibake,
+    strip_orphan_arabic_marks,
 )
 
 
@@ -110,6 +111,49 @@ class TestMojibakeTransliteration:
         # Clean text and a corrupt token on one line: only the token is repaired.
         text = "Edited by " + corrupt("Książki") + " in Wien"
         assert fix_mojibake(text) == "Edited by Książki in Wien"
+
+
+class TestStripOrphanArabicMarks:
+    """A stray Arabic combining mark in Latin surroundings is an input
+    artifact; genuine Arabic vocalization carries an Arabic base character."""
+
+    def test_real_title_page_4775(self):
+        # Journal place of publication inside a Latin bibliographic reference.
+        text = (
+            "in Al-Ittiḥād [The Union] [ِAbu Dhabi], Vol. ?:No. ? [1 March 2012], pp. ?"
+        )
+        assert strip_orphan_arabic_marks(text) == (
+            "in Al-Ittiḥād [The Union] [Abu Dhabi], Vol. ?:No. ? [1 March 2012], pp. ?"
+        )
+
+    def test_real_title_page_5913(self):
+        # Mark at string start, no base character at all.
+        text = "ِAl-ʿAmrī, Mashāʿil / Alamri, Mashael"
+        assert strip_orphan_arabic_marks(text) == "Al-ʿAmrī, Mashāʿil / Alamri, Mashael"
+
+    def test_genuine_arabic_unchanged(self):
+        # Source passage from the dump: kasra and shadda on an Arabic base,
+        # damma inside the following word. Vocalization is content, not noise.
+        text = "أيادٍ خفية تحرِّكنا .. الحياة تُشبه"
+        assert strip_orphan_arabic_marks(text) == text
+
+    def test_latin_combining_diacritics_unchanged(self):
+        # Decomposed Latin diacritics are outside the Arabic script ranges.
+        for word in ["Schäfer", "naïve", "Tokyō", "Zwéig"]:
+            assert strip_orphan_arabic_marks(word) == word
+
+    def test_mark_after_latin_letter_is_orphan(self):
+        assert strip_orphan_arabic_marks("Abuِ Dhabi") == "Abu Dhabi"
+
+    def test_idempotent_and_passthrough(self):
+        once = strip_orphan_arabic_marks("[ِAmman]")
+        assert once == "[Amman]"
+        assert strip_orphan_arabic_marks(once) == once
+        assert strip_orphan_arabic_marks("") == ""
+        assert strip_orphan_arabic_marks(None) is None
+
+    def test_applied_by_fix_encoding(self):
+        assert fix_encoding("[ِAmman] &amp; [ِAbu Dhabi]") == ("[Amman] & [Abu Dhabi]")
 
 
 class TestFixHtmlEntities:

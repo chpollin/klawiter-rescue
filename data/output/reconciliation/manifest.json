@@ -1,14 +1,14 @@
 {
   "algorithmVersion": "1.1",
   "artifacts": {
-    "candidates.json": "a62404a529d0a0bd4b74f8da8f68106a9617c281a371628fc8327cde8a5c6071",
+    "candidates.json": "b98e1f18e9e752b8eb26fd0e67dcf00dd06dbb11bef138f8695a721ae9ce7dce",
     "contested-claims.json": "c6dc9b6325c350ab03c1294088dc886e7df1eb5c704f849abc0474082b55e183",
     "decisions.json": "bde3864bc41507a0e96c018e02ae44667ce54cf1133932f47c80d0b35118c78f",
-    "earl.jsonld": "33c95a67364c30fc7e103f65828d7927ab43a2a5c3bdd04e904d84a7a1005bb3",
-    "provenance.jsonld": "e7279ba1e7ff1dda6bd42ef174d52be4fd962f1e0123ce83a2aa3451778fd387",
+    "earl.jsonld": "078a91eb4e7349daf6bd3aaacd8bad56cc7bcbec830fd6c05c79dd0ba5162744",
+    "provenance.jsonld": "d0e6dfe3a77a7b67d20a929dbef4c94eff39f5383ddd98767c9005d011cf1f7e",
     "publishable-links.json": "49d645b6d689e1c23e8f2088d22f98e4b5f0e32c04d4c28c19c694d7a1b6577b",
-    "review-queue.json": "2cbfd3b009f33fc88b52a41e9ac89573d76ac7be7188d76af5e0dc9fef84d7d8",
-    "validation-report.json": "57d87096e8afe866436c59560db0db30114a19bbe9428655edece607d0584bc3"
+    "review-queue.json": "5becfe7619b7f5552ddda50c354489759ac23c98c50f61667a8cdb7537616adb",
+    "validation-report.json": "95442d20774d9df2afb6456ca9c91eaf890d045a29b7a5c548c6126eeed6f45e"
   },
   "codeSha256": "33bbabdb0dd3e4671d576dab08577c1ad685ec55de800c8f24c91da467dfb6f3",
   "counts": {
@@ -31,7 +31,7 @@
     "path": "docs/data/reconciliation.json",
     "sha256": "3a6cb6a5b301933deb8845e4ad73febcd6b5ef4bfa2ee78f8c43e7c3db4851db"
   },
-  "generatedAt": "2026-08-27T10:30:22.639788+00:00",
+  "generatedAt": "2026-08-27T11:03:08.914601+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -43,7 +43,7 @@
     },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
-      "sha256": "df5e41130db01a577995d1a4cfa6fd1fc2f3004abb86be88f15fa22c1941b1bd"
+      "sha256": "1d9a9d597d68e8e326555e4a89d011b3e130135ad45e4aa401ffa21837e54198"
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
