@@ -67,8 +67,10 @@ WORK_DECISIONS = os.path.join(
     PROJECT_ROOT, "data", "reconciliation", "work-decisions.json"
 )
 SZD_WORK_INDEX = os.path.join(PROJECT_ROOT, "data", "provenance", "szd-work-index.xml")
+# Frozen Gate-2 input; lives with the other provenance inputs instead of
+# the served docs/data/ directory, which no frontend module reads it from.
 LOCATION_RECONCILIATION_LOG = os.path.join(
-    PROJECT_ROOT, "docs", "data", "locations_reconciliation_log.json"
+    PROJECT_ROOT, "data", "provenance", "locations-reconciliation-log.json"
 )
 LOCATION_REVIEW_EVIDENCE = os.path.join(
     OUTPUT_RECONCILIATION_DIR, "location-low-score-review.json"

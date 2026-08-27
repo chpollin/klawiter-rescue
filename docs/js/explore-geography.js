@@ -64,7 +64,9 @@ const ExploreGeography = {
     }
     if (!this.worldData) {
       try {
-        const resp = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+        // Vendored world-atlas@2 geometry (Natural Earth data, public
+        // domain): the site contacts no external host at runtime.
+        const resp = await fetch('vendor/countries-110m.json');
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         this.worldData = await resp.json();
       } catch (e) {

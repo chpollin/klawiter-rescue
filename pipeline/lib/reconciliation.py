@@ -23,7 +23,7 @@ ALGORITHM_VERSION = "1.1"
 
 def load_reconciliation_patches(directory: Path) -> dict:
     """Load approved EIL decision patches placed in the correction store."""
-    result = {"location": [], "work": [], "files": []}
+    result = {"location": [], "work": [], "person": [], "publisher": [], "files": []}
     if not directory.exists():
         return result
     for path in sorted(directory.glob("*.json")):
@@ -36,7 +36,7 @@ def load_reconciliation_patches(directory: Path) -> dict:
         result["files"].append(path)
         for patch in patches:
             entity_type = patch.get("entityType")
-            if entity_type not in {"location", "work"}:
+            if entity_type not in {"location", "work", "person", "publisher"}:
                 raise ValueError(f"Invalid reconciliation entity type in {path}")
             required = {
                 "decisionId",
@@ -45,11 +45,34 @@ def load_reconciliation_patches(directory: Path) -> dict:
                 "decidedAt",
                 "evidence",
             }
-            subject_key = "subject" if entity_type == "location" else "subjectId"
+            subject_key = "subjectId" if entity_type == "work" else "subject"
             if not required.issubset(patch) or subject_key not in patch:
                 raise ValueError(f"Incomplete reconciliation decision in {path}")
             result[entity_type].append(copy.deepcopy(patch))
     return result
+
+
+def merge_agent_decision_patches(decision_document: dict, patches: list[dict]) -> dict:
+    """Overlay approved EIL agent decisions (person and publisher kinds in
+    one document) while retaining supersession evidence."""
+    merged = copy.deepcopy(decision_document)
+    by_key = {
+        (decision["entityType"], decision["subject"]): decision
+        for decision in merged["decisions"]
+    }
+    for patch in patches:
+        key = (patch["entityType"], patch["subject"])
+        prior = by_key.get(key)
+        replacement = copy.deepcopy(patch)
+        if prior:
+            replacement["supersedesDecisionId"] = prior["decisionId"]
+            replacement["supersedes"] = copy.deepcopy(prior)
+        by_key[key] = replacement
+    merged["decisions"] = sorted(
+        by_key.values(),
+        key=lambda item: (item["entityType"], str(item["subject"]).casefold()),
+    )
+    return merged
 
 
 def merge_decision_patches(

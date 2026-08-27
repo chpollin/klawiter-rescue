@@ -49,10 +49,12 @@ const Edit = {
       .then(r => (r.ok ? r.json() : null))
       .then(doc => {
         this.reconciliation = doc && doc.locations ? doc.locations : {};
+        this.agents = doc && doc.agents ? doc.agents : {};
         this.editionClaims = doc && doc.editionClaims ? doc.editionClaims : {};
         this.contestedAuthorityClaims = doc && doc.contestedClaims ? doc.contestedClaims : [];
+        this.summary = doc && doc.summary ? doc.summary : {};
       })
-      .catch(() => { this.reconciliation = {}; });
+      .catch(() => { this.reconciliation = {}; this.agents = {}; this.summary = {}; });
   },
 
   // Restore pending edits from a previous session so in-progress work survives a reload.
@@ -167,9 +169,10 @@ const Edit = {
   authorityClaimsFor(entry) {
     if (!entry) return [];
     const pageId = Number(entry.sourcePageId);
-    const locationId = entry.location ? `klawiter:location/${entry.location}` : null;
+    // Claim subject IRIs are percent-encoded; the display name is the
+    // stable match key.
     return this.contestedAuthorityClaims.filter(claim => {
-      if (locationId && claim.subject && claim.subject['@id'] === locationId) return true;
+      if (entry.location && claim.subject && claim.subject.name === entry.location) return true;
       return (claim.sourceEvidence || []).some(
         evidence => Number(evidence.sourcePageId) === pageId
       );
@@ -213,20 +216,91 @@ const Edit = {
     this._afterChange(pid);
   },
 
+  // --- Agent (translator/publisher) authority candidates, same fail-closed
+  // contract as locations: a candidate publishes only through a decision.
+  _agentField(kind) {
+    return kind === 'person' ? 'translator' : 'publisher';
+  },
+
+  agentReconciliation(entry, kind) {
+    const name = entry && entry[this._agentField(kind)];
+    if (!name || !this.agents) return null;
+    return this.agents[`${kind}/${name}`] || null;
+  },
+
+  pendingAgentDecision(kind, name) {
+    return this.pendingReconciliation[`agent:${kind}/${name}`];
+  },
+
+  // Shared recorder: agent decisions are subject-level (one decision covers
+  // every entry carrying the name), reachable from an entry card or from the
+  // data-quality queue. evidenceRef names where the editor decided.
+  _recordAgentDecision(kind, name, action, qid, evidenceRef) {
+    const review = this.agents ? this.agents[`${kind}/${name}`] : null;
+    const candidate = review && (review.candidates || []).find(item => item.qid === qid);
+    if ((action === 'confirm' || action === 'correct') && !candidate) return false;
+    const target = qid ? `/${qid}` : '';
+    this.pendingReconciliation[`agent:${kind}/${name}`] = {
+      entityType: kind,
+      subject: name,
+      action,
+      qid,
+      label: candidate ? candidate.label : null,
+      decisionId: `agent/${kind}/${name}${target}/editor-${this._now()}`,
+      decidedBy: this.EDITOR_ROLE,
+      decidedAt: this._now(),
+      evidence: [evidenceRef, candidate ? candidate.candidateId : 'no-candidate'],
+      source: 'human',
+    };
+    return true;
+  },
+
+  decideAgent(pid, kind, action, qid = null) {
+    if (!App.state.editMode) return;
+    const entry = App.entryMap.get(pid);
+    const name = entry && entry[this._agentField(kind)];
+    if (!name) return;
+    if (!this._recordAgentDecision(kind, name, action, qid, `frontend-entry/${pid}`)) return;
+    this._afterChange(pid);
+  },
+
+  // Queue path: decide on the subject itself, without an entry context.
+  decideAgentSubject(kind, name, action, qid = null) {
+    if (!App.state.editMode) return;
+    if (!this._recordAgentDecision(kind, name, action, qid, 'quality-view')) return;
+    this.persist();
+    this.updateBadge();
+    if (typeof Curate !== 'undefined') Curate.refreshQueue();
+  },
+
+  revertAgentDecisionSubject(kind, name) {
+    delete this.pendingReconciliation[`agent:${kind}/${name}`];
+    this.persist();
+    this.updateBadge();
+    if (typeof Curate !== 'undefined') Curate.refreshQueue();
+  },
+
+  revertAgentDecision(pid, kind) {
+    const entry = App.entryMap.get(pid);
+    const name = entry && entry[this._agentField(kind)];
+    if (!name) return;
+    delete this.pendingReconciliation[`agent:${kind}/${name}`];
+    this._afterChange(pid);
+  },
+
   reconciliationPatches() {
     return Object.values(this.pendingReconciliation).sort((a, b) =>
       a.subject.localeCompare(b.subject)
     );
   },
 
-  // Live review status: persisted from the dataset, raised to approved by pending human edits.
+  // Review status has exactly two reachable states: an entry either has
+  // pending human edits in this session or it is unreviewed. A dataset
+  // review projection does not exist yet (registered extension).
   entryStatus(pid) {
     if (App.state.pendingEdits[pid] && Object.keys(App.state.pendingEdits[pid]).length) {
       return { status: 'approved', pending: true };
     }
-    const entry = App.entryMap.get(pid);
-    const r = entry && entry.review;
-    if (r && r.status) return { status: r.status, pending: false };
     return { status: 'unreviewed', pending: false };
   },
 
@@ -238,15 +312,11 @@ const Edit = {
     setTimeout(() => this._rerender(pid), 0);
   },
 
-  // Re-render the open detail/card for one entry so badges and status refresh.
+  // Re-render the open card for one entry so badges and status refresh.
   _rerender(pid) {
     const inline = document.getElementById(`card-detail-${pid}`);
     if (inline && !inline.classList.contains('hidden')) {
       inline.innerHTML = Detail.renderInline(App.entryMap.get(pid));
-      return;
-    }
-    if (App.state.view === 'detail' && App.state.entryId === pid) {
-      Detail.render(App.entryMap.get(pid));
     }
   },
 
@@ -299,18 +369,18 @@ const Edit = {
     if (t.census) hints.push({ rank: 0, field: null, label: t.census });
     for (const f of (t.notInSource || [])) {
       if (adjudicated(f)) continue;
-      hints.push({ rank: 1, field: f, label: 'Wert nicht im Rohtext gefunden' });
+      hints.push({ rank: 1, field: f, label: 'Value not found in source text' });
     }
     for (const [f, raw] of Object.entries(t.detectable || {})) {
       if (adjudicated(f)) continue;
-      hints.push({ rank: 2, field: f, label: 'Im Rohtext erkennbar, nicht extrahiert', detail: raw });
+      hints.push({ rank: 2, field: f, label: 'Detectable in source, not extracted', detail: raw });
     }
     for (const f of this.TRACKED_FIELDS) {
       if (adjudicated(f)) continue;
       if (prov[f] === 'llm') {
-        hints.push({ rank: 3, field: f, label: 'LLM-abgeleitet, nicht validiert' });
+        hints.push({ rank: 3, field: f, label: 'LLM-derived, not validated' });
       } else if (prov[f] === 'missing' && !(t.detectable && t.detectable[f])) {
-        hints.push({ rank: 4, field: f, label: 'Nicht extrahiert, Rohtext auf Wert prüfen' });
+        hints.push({ rank: 4, field: f, label: 'Not extracted, check source for a value' });
       }
     }
     hints.sort((a, b) => a.rank - b.rank);
@@ -331,7 +401,7 @@ const Edit = {
     const top = hints[0];
     const field = top.field ? `${this.FIELD_LABELS[top.field] || top.field}: ` : '';
     const more = hints.length > 1 ? ` <span class="triage-more">+${hints.length - 1}</span>` : '';
-    return `<span class="triage-chip triage-rank-${top.rank}" title="Prüfhinweis aus Datensignalen">${esc(field)}${esc(top.label)}${more}</span>`;
+    return `<span class="triage-chip triage-rank-${top.rank}" title="Review hint from data signals">${esc(field)}${esc(top.label)}${more}</span>`;
   },
 
   // --- Source evidence per field (increment 3) ---

@@ -35,6 +35,7 @@ from lib.reconciliation import (  # noqa: E402
     ALGORITHM_VERSION,
     build_reconciliation,
     load_reconciliation_patches,
+    merge_agent_decision_patches,
     merge_decision_patches,
     parse_szd_work_index,
 )
@@ -148,7 +149,12 @@ def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
                 "predicate": {"@id": claim["klawiter:claimPredicate"]["@id"]},
                 "claimStatus": claim["klawiter:claimStatus"],
                 "decisionStatus": claim["klawiter:decisionStatus"],
-                "sourceEvidence": claim["klawiter:sourceEvidence"],
+                # The internal pipeline path of an occurrence stays out of
+                # the published projection.
+                "sourceEvidence": [
+                    {k: v for k, v in evidence.items() if k != "sourcePath"}
+                    for evidence in claim["klawiter:sourceEvidence"]
+                ],
                 "interpretations": [
                     {
                         "interpretationId": item["@id"],
@@ -298,6 +304,10 @@ def main() -> None:
     work_decisions = merge_decision_patches(
         work_decisions, decision_patches["work"], "work"
     )
+    agent_decisions = merge_agent_decision_patches(
+        _read_json(input_paths["agent-decisions"]),
+        decision_patches["person"] + decision_patches["publisher"],
+    )
     authorities = parse_szd_work_index(input_paths["szd-work-index"])
     result = build_reconciliation(
         edition_dataset,
@@ -309,7 +319,7 @@ def main() -> None:
         authorities,
         load_csv(STEP_04_OUTPUT),
         _read_json(input_paths["agent-reconciliation"]),
-        _read_json(input_paths["agent-decisions"]),
+        agent_decisions,
     )
     generated_at = datetime.now(timezone.utc).isoformat()
     # LF-normalize so the recorded provenance hash is independent of the

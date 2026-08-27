@@ -32,9 +32,10 @@ const Pages = {
 
       <p>
         The Klawiter Bibliography is one of the most comprehensive reference works
-        on Stefan Zweig (1881&ndash;1942). It documents over 6,200 publications by and about
-        the Austrian author &mdash; spanning fiction, essays, poetry, drama, correspondence,
-        secondary literature, translations, and collected editions in more than 40 languages.
+        on Stefan Zweig (1881&ndash;1942). It documents ${App.data._meta.ns0Count.toLocaleString('en')}
+        bibliographic records of publications by and about the Austrian author &mdash;
+        spanning fiction, essays, poetry, drama, correspondence, secondary literature,
+        translations, and collected editions in more than 40 languages.
       </p>
 
       <h2>The Compiler</h2>
@@ -52,7 +53,7 @@ const Pages = {
         Klawiter&rsquo;s bibliography was made available online as a MediaWiki instance,
         allowing researchers to browse the entries by category and search across the
         full dataset. Over time, the wiki accumulated 6,725 pages, including 6,296
-        bibliography entries, 1,545 redirect pages (cross-references and title
+        bibliography entries, 1,546 redirect pages (cross-references and title
         variants), and 420 category descriptions.
       </p>
       <p>
@@ -203,11 +204,13 @@ const Pages = {
 
       <h2>Quality Assurance</h2>
       <p>
-        The pipeline is validated by a test suite of 326 automated tests covering
+        The pipeline is validated by an automated test suite covering
         encoding repair, regex patterns, wiki markup parsing, entry classification,
-        and real-data extraction. Additionally, a round-trip verification script
-        compares the final JSON-LD output against the original wiki content for
-        every entry.
+        and real-data extraction, plus SHACL contracts over both published
+        graphs. Additionally, a round-trip verification script compares the
+        final JSON-LD output against the original wiki content for every entry,
+        and a source census proves that every wiki page reaches the published
+        data.
       </p>
       <p>
         An LLM-as-a-Judge evaluation uses a language model to assess extraction
@@ -368,6 +371,18 @@ const Pages = {
         or the <a href="#stats">Statistics</a> page.
       </p>
 
+      <h2>Exploring and Data Quality</h2>
+      <p>
+        The <a href="#stats">Explore</a> view offers a timeline, a geographic
+        view, and a Connections view: a ranked list of the most-referenced
+        entries (expand a row for the citing entries) and a translator flow
+        diagram. The <a href="#quality">Data Quality</a> page shows the
+        processing state of the dataset: field completeness by entry type,
+        open review queues, unresolved cross-references, and the authority
+        candidate queue for translators and publishers. Every list opens the
+        affected entries directly.
+      </p>
+
       <h2>Using with Zotero</h2>
       <p>
         The BibTeX and RIS export formats are directly compatible with
@@ -515,10 +530,11 @@ const Pages = {
 
       <h2>License</h2>
       <p>
-        The bibliographic data is provided for scholarly and non-commercial use.
-        The source code of the extraction pipeline and this website is available
-        on <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub</a>.
-        A formal license designation is forthcoming.
+        The bibliographic dataset and the documentation are licensed under
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>;
+        the source code of the extraction pipeline and this website is
+        licensed under the MIT License. Both are available on
+        <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub</a>.
       </p>
 
       <h2>Citation</h2>
@@ -677,9 +693,10 @@ const Pages = {
 
       <h2>License</h2>
       <p>
-        The source code for the extraction pipeline and this website is available
-        on GitHub. A formal license for the bibliographic data and the code is
-        forthcoming.
+        The bibliographic dataset and the documentation are licensed under
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>;
+        the source code for the extraction pipeline and this website is
+        licensed under the MIT License.
       </p>
       <ul>
         <li>

@@ -36,6 +36,7 @@ from lib.config import (  # noqa: E402
 from lib.reconciliation import (  # noqa: E402
     build_reconciliation,
     load_reconciliation_patches,
+    merge_agent_decision_patches,
     merge_decision_patches,
     parse_szd_work_index,
 )
@@ -180,6 +181,10 @@ def main() -> None:
         decision_patches["work"],
         "work",
     )
+    agent_decisions = merge_agent_decision_patches(
+        _read_json(paths["agent_decisions"]),
+        decision_patches["person"] + decision_patches["publisher"],
+    )
     expected = build_reconciliation(
         _read_json(paths["edition_dataset"]),
         _read_json(paths["locations"]),
@@ -190,7 +195,7 @@ def main() -> None:
         parse_szd_work_index(paths["szd_index"]),
         load_csv(STEP_04_OUTPUT),
         _read_json(paths["agent_reconciliation"]),
-        _read_json(paths["agent_decisions"]),
+        agent_decisions,
     )
     actual = {
         "candidates": _read_json(paths["candidates"]),

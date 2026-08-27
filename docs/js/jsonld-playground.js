@@ -309,7 +309,12 @@ const JsonldPlayground = {
 
   /** Syntax-highlight a JSON object */
   _syntaxHighlight(obj) {
-    const json = JSON.stringify(obj, null, 2);
+    // Escape before highlighting: JSON.stringify keeps < > & literally,
+    // and titles in the data do contain angle brackets.
+    const json = JSON.stringify(obj, null, 2)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
     return json.replace(
       /("(?:\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")\s*:?|(\btrue\b|\bfalse\b|\bnull\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
       (match, str, bool, num) => {

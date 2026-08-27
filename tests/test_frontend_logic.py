@@ -38,3 +38,29 @@ def test_contested_claim_export_and_display():
         cwd=PROJECT_ROOT,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_routing_guard_and_edit_gate():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node not available")
+    result = subprocess.run(
+        [node, "--test", str(PROJECT_ROOT / "tests" / "routing_guard.test.js")],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_curation_queue_ordering():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node not available")
+    result = subprocess.run(
+        [node, "--test", str(PROJECT_ROOT / "tests" / "curation_queue.test.js")],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

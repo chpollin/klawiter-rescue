@@ -6,10 +6,10 @@ project:
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
 language: de
-version: 1.0
+version: 1.1
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
-updated: 2026-08-21
+updated: 2026-08-27
 authors: [Christopher Pollin]
 related: [data, pipeline, testing, production-readiness]
 ---
@@ -20,54 +20,74 @@ related: [data, pipeline, testing, production-readiness]
 
 Die statische Anwendung unter `docs/` macht den geretteten Bestand recherchierbar und stellt eine lokale Expert-in-the-Loop-Kurationsoberfläche bereit. Sie benötigt keinen Build-Schritt und keinen Serverprozess außer einem statischen localhost-Server für den Editiermodus.
 
-Die öffentliche Anwendung unterstützt Suche, Facetten, Zeitverlauf, Sprach- und Ortsauswertung, Netzwerkansichten, Detailseiten und Zitationsexporte. Die lokale Kurationsschicht ergänzt Fundstellen, Provenienz, Triage und versionierten Patch-Export.
+Die öffentliche Anwendung unterstützt Suche, Facetten, Zeitverlauf, Sprach- und Ortsauswertung, Referenz-Ranglisten, Detailkarten, eine Datenqualitäts-Werkbank und Zitationsexporte. Die lokale Kurationsschicht ergänzt Fundstellen, Provenienz, Triage, subjektbezogene Normdaten-Entscheidungen und den versionierten Patch-Export. Die Oberflächensprache ist durchgehend Englisch, auch im Editiermodus.
 
 ## Architektur
 
-`docs/index.html` lädt Vanilla-JavaScript-Module und lokalisierte Abhängigkeiten. Zentrale Verantwortlichkeiten sind:
+`docs/index.html` lädt klassische Skripte (kein Modulsystem, gemeinsamer globaler Namensraum) und lokal vendorte Abhängigkeiten (`docs/vendor/`: FlexSearch, D3 v7, topojson-client, d3-sankey, `countries-110m.json` mit Provenienzvermerk). Die Visualisierungs-Bundles sind `defer` geladen und blockieren den ersten Aufbau nicht. Die Anwendung kontaktiert zur Laufzeit keinen externen Host.
 
 | Modul | Aufgabe |
 |---|---|
-| `app.js` | Daten laden, Zustand initialisieren, Routen koordinieren |
-| `state.js` | Filter-, Auswahl- und Ansichtsstatus |
-| `search.js`, `filters.js` | Volltextsuche und Facetten |
-| `detail.js` | Eintragsdetail, Provenienz und strittige Aussagen |
-| `edit.js` | lokale Feld- und Reconciliation-Kuration |
-| `export.js` | BibTeX-, RIS-, Einzel- und Gesamtexport |
-| `timeline.js`, `locations.js`, `network.js` | explorative Visualisierungen |
+| `app.js` | Daten laden, Zustand, Hash-Routing, Ergebnisliste, Karten, Editiermodus-Schalter |
+| `constants.js` | Typ- und Periodenlabels, Farbkonstanten, Chart-Maße |
+| `utils.js` | Escaping, Highlighting, Zähl- und Downloadhelfer |
+| `home.js` | Startansicht mit Kennzahlen und Einstiegen |
+| `facets.js` | Facettenleiste der Ergebnisansicht |
+| `detail.js` | Eintragsdetail in zwei Layouts: kompakte Leseansicht, Adjudikationstabelle im Editiermodus |
+| `edit.js` | lokale Feld- und Reconciliation-Kuration, Triage-Hinweise, Fundstellen, Patch-Export |
+| `curate.js` | Datenqualitäts-Werkbank (`#quality`): Vollständigkeitsmatrix, Arbeitsvorräte, Kandidaten-Queue |
+| `export.js` | BibTeX-, RIS-, Einzel- und Gesamtexport, Permalink |
+| `pages.js` | statische Seiten (About, Methodology, Help, Data Access, Imprint) |
+| `jsonld-playground.js` | interaktive JSON-LD-Ansicht mit escaptem Syntax-Highlighting |
+| `explore.js` | Explore-Rahmen: Modi, geteilte Filter, URL-Zustand, Detailpanel |
+| `explore-timeline.js` | Zeitverlauf mit Sprach-, Typ- und Provenienz-Schichten |
+| `explore-geography.js` | Globus- und Kartenansicht aus der vendorten Geometrie |
+| `explore-network.js` | Referenz-Rangliste (meistreferenzierte Einträge) und Übersetzer-Sankey |
 
-Die Anwendung lädt `docs/data/klawiter.json`, `triage.json` und `reconciliation.json`. Fehlende Reconciliation-Daten führen nicht zu erfundenen Links; die betroffenen UI-Bereiche bleiben leer.
+Die Anwendung lädt `docs/data/klawiter.json` (blockierend, mit `resp.ok`-Prüfung und escapter Fehlermeldung), `reconciliation.json` (nicht blockierend, additive Kurationsdaten) und `triage.json` (erst beim Betreten des Editiermodus). Der Suchindex wird lazy bei der ersten Suche gebaut. Fehlende Reconciliation-Daten führen nicht zu erfundenen Links; die betroffenen UI-Bereiche bleiben leer.
 
 ## Gestaltungs- und Zugänglichkeitsvertrag
 
 Die Oberfläche verwendet die etablierte Stefan-Zweig-Digital-Palette, Source Serif 4 für Lesetext und Source Sans 3 für Navigation und Bedienung. CSS-Variablen sind die einzige Quelle für Farben und Abstände. Bibliotheken und Fonts liegen lokal.
 
-Semantisches HTML, sichtbarer Tastaturfokus, beschriftete Formulare, ARIA-Labels für ikonische Steuerelemente, ausreichende Kontraste und reduzierte Bewegung bilden die Basis. Inhaltliche Zustände werden nie ausschließlich über Farbe vermittelt. Mobile Layouts bewahren Suche, Filter und Detailinformationen ohne horizontales Scrollen.
+Semantisches HTML, sichtbarer Tastaturfokus, beschriftete Formulare, ARIA-Labels für ikonische Steuerelemente und ausreichende Kontraste bilden die Basis. `prefers-reduced-motion` wird global respektiert (Animationen und Smooth-Scrolling entfallen). Inhaltliche Zustände werden nie ausschließlich über Farbe vermittelt. Mobile Layouts bewahren Suche, Filter und Detailinformationen ohne horizontales Scrollen; die Vollständigkeitsmatrix scrollt in ihrem eigenen Container.
 
 ## Rechercheansichten
 
 - Die Übersicht zeigt Umfang, zeitliche Verteilung, Sprachen, Typen und Orte.
-- Die Eintragsliste kombiniert Textsuche, Facetten und Sortierung.
-- Die Detailseite zeigt strukturierte Felder, vollständigen Quelltext, Provenienz, verwandte Einträge, bestätigte Normdatenlinks und getrennte strittige Claims.
-- Zeit-, Karten- und Netzansichten leiten ihre Daten aus derselben gefilterten Record-Menge ab.
+- Die Ergebnisliste kombiniert Textsuche, Facetten und Sortierung. Die Karte zeigt Typ, Titel, Jahr, Sprache, Ort, Verlag und Seitenzahl; der Quelltext-Auszug entfällt, weil die aufgeklappte Karte den Volleintrag führt.
+- Die aufgeklappte Leseansicht ergänzt nur, was der Kartenkopf nicht trägt (Originaltitel, Übersetzer, Kategorien, Wikidata-Ortslink), rendert die Contents als strukturierte Liste mit Seitenangaben und hält den vollständigen Klawiter-Originaleintrag als eingeklappte Quelle. Strittige Claims bleiben in der Leseansicht sichtbar.
+- Zeit-, Karten- und Verbindungsansichten leiten ihre Daten aus derselben gefilterten Record-Menge ab. Die Verbindungsansicht ist eine Rangliste der meistreferenzierten Einträge mit aufklappbaren Verweislisten; der frühere globale Communities-Graph ist entfernt, weil sein größter Knoten die Restmüll-Aggregation war und er keine bibliographische Frage beantwortete. Der Übersetzer-Sankey bleibt.
+- Weiterleitungen erscheinen nicht als eigene Suchtreffer; die Redirect-Map (inklusive Seitentitel-Aliasse aus Stufe 05) leitet Suchanfragen und Querverweise zum kanonischen Eintrag.
 
-Weiterleitungen erscheinen nicht als eigene Suchtreffer. Eine Map mit 1.310 auflösbaren Namen leitet Suchanfragen und Querverweise zum kanonischen Eintrag.
+## Datenqualitäts-Werkbank (`#quality`)
+
+Die Route `#quality` beantwortet die Kurationsfrage, ob alle Daten sauber bearbeitet sind, aus den publizierten Artefakten selbst:
+
+- Statuszeile mit Bestandsgröße, Prüfhinweis-, LLM-, Referenz-, Normdaten- und Claim-Zählern, live berechnet.
+- Vollständigkeitsmatrix Feld × Eintragstyp; jede Zelle mit Lücken öffnet die betroffenen Einträge als Ergebnisliste.
+- Arbeitsvorräte als klickbare Listen: Census-Anomalien, nicht im Quelltext belegte Werte, erkennbare aber nicht extrahierte Werte, LLM-abgeleitete Felder, unauflösbare Querverweise (mit Liste der häufigsten Rotlink-Ziele), strittige Normdatenclaims.
+- Kandidaten-Queue für Übersetzer- und Verlagsnamen: subjektbezogen, sortiert offene Fälle nach Reichweite (Vorkommenszahl) zuerst. Öffentlich lesbar; entscheiden lässt sie sich nur im lokalen Editiermodus, dort mit Tastatur (Pfeile/j/k bewegen, y bestätigt den Top-Kandidaten, n lehnt ab, Enter zeigt die betroffenen Einträge).
+
+Die Werkbank-Listen sind Sitzungsansichten ohne eigene Hash-Adresse, weil sie aus Artefakten und nicht aus Filterzustand abgeleitet sind.
 
 ## EIL Curation Interface
 
-Der Editiermodus ist ausschließlich auf `localhost` aktiv. Er bearbeitet Verlag, Publikationsort, Übersetzer und Seitenzahl. Jede Aktion ist typisiert:
+Der Editiermodus ist ausschließlich auf `localhost` aktiv; der Schalter prüft `isLocal` im Setter, die publizierte Site kann den Modus auch über die Konsole nicht betreten. Bearbeitet werden Verlag, Publikationsort, Übersetzer und Seitenzahl. Jede Feldaktion ist typisiert:
 
 - `accept` bestätigt einen vorhandenen Wert;
 - `correct` ersetzt einen Wert und bewahrt den Vorgänger;
 - `add` ergänzt einen zuvor leeren Wert.
 
-Für jede Aktion zeigt die Oberfläche die belegbare Textstelle oder den vollständigen Quelltext. Triage-Hinweise priorisieren Round-Trip-Abweichungen, fehlende oder modellgestützte Provenienz sowie Census-Anomalien. Laufende Änderungen bleiben bis zum Export in `localStorage`.
+Für jede Aktion zeigt die Oberfläche die belegbare Textstelle oder den vollständigen Quelltext. Triage-Hinweise priorisieren Round-Trip-Abweichungen, fehlende oder modellgestützte Provenienz sowie Census-Anomalien; eine Provenienz-Legende erklärt die R/L/E-Badges. Im Editiermodus laufen j/k als Kartennavigation durch die Ergebnisliste, und die Sortierung „Needs review first" ordnet nach dringlichstem Datensignal. Laufende Änderungen bleiben bis zum Export in `localStorage`; der Save-Zähler im Kopf zeigt den ungesicherten Stand.
 
-Die Reconciliation-Kuration bietet `confirm`, `correct`, `reject` und `unresolved`. Kandidaten bleiben Vorschläge. `unresolved` hält konkurrierende Deutungen als offenen Claim fest. Der kombinierte Export verwendet `patchVersion: 2` und `reconciliationPatchVersion: 1`.
+Die Orts-Reconciliation bietet `confirm`, `reject` und `unresolved`; `unresolved` hält konkurrierende Deutungen als offenen Claim fest. Übersetzer- und Verlagskandidaten kennen `confirm` und `reject`, kein `unresolved`, weil eine unaufgelöste Agent-Entscheidung Occurrence-Evidenz bräuchte, die die Pipeline noch nicht erhebt (registrierter Ausbau). Beide Kandidatenarten sind subjektbezogen; die Oberfläche weist die Reichweite („applies to N entries") aus. Kandidaten bleiben Vorschläge; nichts publiziert ohne Entscheidung. Der kombinierte Export verwendet `patchVersion: 2` und `reconciliationPatchVersion: 1`.
+
+Der Prüfstatus-Chip kennt die zwei real erreichbaren Zustände (ungeprüft, ungesicherte menschliche Bearbeitung in dieser Sitzung); eine Projektion des Review-Felds aus dem Datenbestand ist ein registrierter Ausbau.
 
 ## Darstellung strittiger Aussagen
 
-Bestätigte Beziehungen und strittige Aussagen werden getrennt gerendert. Ein offener Ortsclaim zeigt Quellenwert, Kandidaten, Entscheidungsgeschichte und offenen Status. Der Adaptionsfall auf Seite 4916 zeigt beide Werkdeutungen, Quellenkennung und Reviews.
+Bestätigte Beziehungen und strittige Aussagen werden getrennt gerendert. Ein offener Normdatenclaim zeigt Quellenwert, Kandidaten, Entscheidungsgeschichte und offenen Status. Der Adaptionsfall auf Seite 4916 zeigt beide Werkdeutungen, Quellenkennung und Reviews.
 
 Die UI erzeugt aus einem strittigen Kandidaten keinen klickbaren bestätigten Normdatenlink. Kennzahlen zählen ausschließlich publizierbare Beziehungen. Die Anzahl offener Claims wird getrennt ausgewiesen.
 
@@ -82,15 +102,15 @@ Ein Claim mit Prädikat `schema:exampleOfWork` wird exportiert, ohne gleichzeiti
 
 ## Validierung
 
-Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export und die Trennung strittiger Claims. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge und ruft die Node-Tests über die gemeinsame Testbrücke auf.
+Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export, die Trennung strittiger Claims, den Routing-Guard samt Editiermodus-Gate und die Ordnung der Kandidaten-Queue. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge (inklusive Frontend-Projektionsvertrag) und ruft die Node-Tests über die gemeinsame Testbrücke auf.
 
-Ein lokaler Smoke-Test kann mit einem statischen Server im Repository-Root erfolgen:
+Ein lokaler Smoke-Test läuft mit einem statischen Server über `docs/`:
 
 ```bash
-python -m http.server 8000
+python -m http.server 8000 --directory docs
 ```
 
-Die Anwendung ist danach unter `http://localhost:8000/docs/` erreichbar; nur dort ist die Kurationsoberfläche aktiv.
+Die Anwendung ist danach unter `http://localhost:8000/` erreichbar; nur dort ist die Kurationsoberfläche aktiv.
 
 ## Deployment und Grenzen
 

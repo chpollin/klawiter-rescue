@@ -83,8 +83,8 @@ function load(file, context, exported) {
   };
   const Detail = load('detail.js', context, 'Detail');
   const html = Detail._contestedClaimsBlock({ sourcePageId: 4916 });
-  assert.match(html, /Strittige Werksbindung/);
-  assert.match(html, /Entscheidung offen/);
+  assert.match(html, /Contested work identity/);
+  assert.match(html, /decision open/);
   assert.match(html, /Original work/);
   assert.match(html, /Adaptation work/);
 }
@@ -104,7 +104,8 @@ function load(file, context, exported) {
   Edit.contestedAuthorityClaims = reconciliation.contestedClaims;
   const entry = { sourcePageId: 299, title: 'Buried candlestick', location: 'Varna' };
   const matchedClaims = Edit.authorityClaimsFor(entry);
-  assert.ok(matchedClaims.some(item => item['@id'] === realClaim['@id']));
+  assert.ok(matchedClaims.some(item => item.claimId === realClaim.claimId));
+  assert.ok(realClaim.claimId, 'projected claims carry a claimId');
 
   const context = {
     App: { state: { editMode: false } },
@@ -113,10 +114,10 @@ function load(file, context, exported) {
   };
   const Detail = load('detail.js', context, 'Detail');
   const html = Detail._contestedAuthorityCell(entry);
-  assert.match(html, /Strittige Normdatenzuordnung/);
-  assert.match(html, /Konkurrierende Deutungen/);
-  assert.match(html, /Quellenbelege/);
-  assert.match(html, /Prüfverlauf/);
+  assert.match(html, /Contested authority assignment/);
+  assert.match(html, /Competing interpretations/);
+  assert.match(html, /Source evidence/);
+  assert.match(html, /Review history/);
   assert.match(html, /SHA-256/);
   assert.match(html, /schema:sameAs/);
 }

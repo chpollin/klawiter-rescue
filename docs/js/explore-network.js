@@ -1,31 +1,23 @@
 /**
- * Explore Network — Two-level network visualization of cross-references.
+ * Explore Network — Connections between entries.
  *
- * Level 1 (Overview): Communities as meta-nodes. Each circle = one connected
- * component, sized by member count, labeled with the hub title. ~10-20 nodes.
+ * Sub-mode 1 (Cross-References): ranked list of the most-referenced entries.
+ * A bibliography answers "which works are referenced most, and from where";
+ * the earlier global bubble graph answered neither (its largest node was the
+ * small-cluster aggregate), so it was replaced by this ranking. Each row
+ * expands to the referencing entries; entry-level neighborhood stays on the
+ * entry card (See Also).
  *
- * Level 2 (Detail): Drill-down into a single community. Shows all member nodes
- * with force layout, hub highlighting, degree filter.
- *
- * Sub-mode 2: Translators network (unchanged, flat force layout).
+ * Sub-mode 2 (Translators): Sankey flow diagram, type → language → translator.
  */
 const ExploreNetwork = {
-  simulation: null,
   svg: null,
 
-  // Raw graph
+  // Raw reference graph: links are directed source → target (source's
+  // seeAlso resolves to target).
   nodes: [],
   links: [],
-  communities: new Map(),    // nodeId → communityId
 
-  // Aggregated for overview
-  communityData: [],         // meta-node objects
-  communityLinks: [],        // meta-link objects
-
-  // View state
-  viewLevel: 'overview',     // 'overview' | 'detail'
-  activeCommunity: null,     // communityId for detail view (or language string for translators)
-  minDegree: 1,              // degree filter (detail only)
   subMode: 'references',     // 'references' | 'translators'
 
   // Translator Sankey state
@@ -57,8 +49,6 @@ const ExploreNetwork = {
     toggle.querySelectorAll('.geo-toggle').forEach(btn => {
       btn.addEventListener('click', () => {
         this.subMode = btn.dataset.sub;
-        this.viewLevel = 'overview';
-        this.activeCommunity = null;
         this.render(entries);
       });
     });
@@ -71,7 +61,7 @@ const ExploreNetwork = {
   },
 
   // =========================================================================
-  // Cross-Reference Network (two-level)
+  // Cross-Reference ranking
   // =========================================================================
 
   _renderReferences(container, entries) {
@@ -83,461 +73,106 @@ const ExploreNetwork = {
           <p>No cross-references found in the current dataset.</p>
           <p style="font-size:0.8rem;color:var(--sz-text-light)">
             ${entries.filter(e => e.seeAlso && e.seeAlso.length).length} entries have cross-references,
-            but not enough could be resolved to build a graph.
+            but not enough could be resolved to build a ranking.
           </p>
         </div>
       `;
       return;
     }
 
-    this._detectCommunities();
-    this._buildCommunityData();
-
-    if (this.viewLevel === 'detail' && this.activeCommunity !== null) {
-      this._renderDetail(container);
-    } else {
-      this._renderOverview(container);
-    }
-  },
-
-  // =========================================================================
-  // Level 1: Community Overview
-  // =========================================================================
-
-  _renderOverview(container) {
-    const data = this.communityData;
-    const links = this.communityLinks.map(l => ({ ...l })); // copy for simulation
+    const ranked = this._rankTargets();
+    const referencing = new Set(this.links.map(l => l.source));
 
     // Info bar
-    const info = document.createElement('div');
-    info.className = 'network-info';
-    const realComm = data.filter(d => !d.isAggregate).length;
     const totalEntries = this._lastEntries ? this._lastEntries.length : this.nodes.length;
     const coveragePct = totalEntries > 0
       ? (this.nodes.length / totalEntries * 100).toFixed(1) : '0.0';
+    const info = document.createElement('div');
+    info.className = 'network-info';
     info.innerHTML = `
-      <span class="ov-title" style="margin-bottom:0">Cross-Reference Network</span>
+      <span class="ov-title" style="margin-bottom:0">Most Referenced Entries</span>
       <span style="font-size:0.75rem;color:var(--sz-text-light)">
-        ${this.nodes.length.toLocaleString('en')} of ${totalEntries.toLocaleString('en')} entries connected (${coveragePct}%) in ${realComm} communities \u2014 click to explore
+        ${this.nodes.length.toLocaleString('en')} of ${totalEntries.toLocaleString('en')} entries connected (${coveragePct}%) ·
+        ${this.links.length.toLocaleString('en')} resolved reference links
       </span>
     `;
     container.appendChild(info);
 
-    const rect = container.getBoundingClientRect();
-    const width = rect.width || 700;
-    const height = CHART_DIMS.network.height;
+    // Ranked list: each row expands to the entries referencing this target.
+    const maxCount = ranked.length ? ranked[0].sources.length : 1;
+    const list = document.createElement('div');
+    list.className = 'reference-ranking';
+    list.innerHTML = ranked.slice(0, 50).map((row, i) => {
+      const entry = App.entryMap.get(row.id);
+      if (!entry) return '';
+      const barWidth = Math.max(2, Math.round(100 * row.sources.length / maxCount));
+      const sources = row.sources
+        .map(pid => App.entryMap.get(pid))
+        .filter(Boolean)
+        .sort((a, b) => (a.year ?? 9999) - (b.year ?? 9999));
+      const sourceList = sources.map(s =>
+        `<li><a href="#entry=${s.sourcePageId}">${esc(s.title || 'Untitled')}</a>${s.year ? ` <span class="detail-entry-year">${s.year}</span>` : ''}</li>`
+      ).join('');
+      return `<details class="reference-rank-row">
+        <summary>
+          <span class="reference-rank-pos">${i + 1}</span>
+          <span class="reference-rank-main">
+            <span class="badge badge-${entry.entryType}">${ENTRY_TYPE_LABELS[entry.entryType] || entry.entryType}</span>
+            <a href="#entry=${row.id}">${esc(entry.title || 'Untitled')}</a>
+            ${entry.year ? `<span class="detail-entry-year">${entry.year}</span>` : ''}
+          </span>
+          <span class="reference-rank-count" title="Referenced by ${row.sources.length} entries">
+            <span class="reference-rank-bar" style="width:${barWidth}%"></span>
+            ${row.sources.length}
+          </span>
+        </summary>
+        <ul class="reference-rank-sources">${sourceList}</ul>
+      </details>`;
+    }).join('');
+    container.appendChild(list);
 
-    // Scales
-    const maxSize = d3.max(data, d => d.size) || 1;
-    const rScale = d3.scaleSqrt().domain([1, maxSize]).range([14, 65]);
+    if (ranked.length > 50) {
+      const more = document.createElement('p');
+      more.className = 'detail-more';
+      more.textContent = `and ${(ranked.length - 50).toLocaleString('en')} more referenced entries with fewer links`;
+      container.appendChild(more);
+    }
 
-    const communityColor = d3.scaleOrdinal(d3.schemeTableau10)
-      .domain(data.map(d => d.id));
-
-    // SVG
-    this.svg = d3.select(container).append('svg')
-      .attr('class', 'explore-svg')
-      .attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMidYMid meet')
-      .attr('role', 'img')
-      .attr('aria-label', 'Cross-reference community overview');
-
-    const zoomG = this.svg.append('g');
-    this.svg.call(d3.zoom()
-      .scaleExtent([0.5, 3])
-      .on('zoom', (event) => zoomG.attr('transform', event.transform))
-    );
-
-    // Meta-links
-    const maxWeight = d3.max(links, d => d.weight) || 1;
-    const linkWidth = d3.scaleLinear().domain([1, maxWeight]).range([1.5, 7]);
-
-    const link = zoomG.append('g').selectAll('line')
-      .data(links)
-      .join('line')
-      .attr('stroke', Explore.colors.textLight)
-      .attr('stroke-width', d => linkWidth(d.weight))
-      .attr('stroke-opacity', 0.35);
-
-    // Meta-nodes
-    const node = zoomG.append('g').selectAll('circle')
-      .data(data)
-      .join('circle')
-      .attr('r', d => rScale(d.size))
-      .attr('fill', d => d.isAggregate ? '#9E9585' : communityColor(d.id))
-      .attr('stroke', Explore.colors.cream)
-      .attr('stroke-width', 2)
-      .attr('opacity', d => d.isAggregate ? 0.5 : 0.85)
-      .style('cursor', d => d.isAggregate ? 'default' : 'pointer');
-
-    // Labels on all meta-nodes
-    const label = zoomG.append('g').selectAll('text')
-      .data(data)
-      .join('text')
-      .text(d => {
-        const t = d.hub.title || 'Small clusters';
-        const short = t.length > 25 ? t.slice(0, 23) + '\u2026' : t;
-        return `${short} (${d.size})`;
-      })
-      .attr('font-size', d => d.size > 20 ? '11px' : '9px')
-      .attr('font-family', 'system-ui, sans-serif')
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#333')
-      .attr('paint-order', 'stroke')
-      .attr('stroke', 'white')
-      .attr('stroke-width', 3)
-      .attr('pointer-events', 'none');
-
-    // Member count inside large circles
-    const countLabel = zoomG.append('g').selectAll('text')
-      .data(data.filter(d => d.size >= 10))
-      .join('text')
-      .text(d => d.size)
-      .attr('font-size', d => Math.min(rScale(d.size) * 0.6, 24) + 'px')
-      .attr('font-family', 'system-ui, sans-serif')
-      .attr('font-weight', '700')
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'central')
-      .attr('fill', 'white')
-      .attr('opacity', 0.8)
-      .attr('pointer-events', 'none');
-
-    // Hover
-    node.on('mouseenter', (event, d) => {
-      node.attr('opacity', n => n.id === d.id ? 1 : 0.3);
-      link.attr('stroke-opacity', l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        return (s === d.id || t === d.id) ? 0.8 : 0.08;
-      }).attr('stroke', l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        return (s === d.id || t === d.id) ? Explore.colors.gold : Explore.colors.textLight;
-      });
-
-      const types = d.topTypes ? d.topTypes.slice(0, 3)
-        .map(([t, c]) => `${ENTRY_TYPE_LABELS[t] || t}: ${c}`).join('<br>') : '';
-
-      Explore.showTooltip(
-        `<strong>${esc(d.hub.title || 'Small clusters')}</strong><br>` +
-        `${d.size} entries, ${d.internalEdges} internal links<br>` +
-        (d.externalEdges ? `${d.externalEdges} links to other communities<br>` : '') +
-        (types ? `<small>${types}</small>` : '') +
-        (!d.isAggregate ? '<br><small>Click to explore</small>' : ''),
-        event
-      );
-    })
-    .on('mouseleave', () => {
-      node.attr('opacity', d => d.isAggregate ? 0.5 : 0.85);
-      link.attr('stroke-opacity', 0.35).attr('stroke', Explore.colors.textLight);
-      Explore.hideTooltip();
-    })
-    .on('click', (event, d) => {
-      if (d.isAggregate) return;
-      this.activeCommunity = d.id;
-      this.viewLevel = 'detail';
-      this.minDegree = d.size > 100 ? 2 : 1;
-      this.render(this._lastEntries);
-    });
-
-    // Simulation
-    const pad = 30;
-    this.simulation = d3.forceSimulation(data)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(d =>
-        rScale(d.source.size || 1) + rScale(d.target.size || 1) + 40
-      ))
-      .force('charge', d3.forceManyBody().strength(d => -rScale(d.size) * 8))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collide', d3.forceCollide().radius(d => rScale(d.size) + 8).strength(0.8))
-      .force('x', d3.forceX(width / 2).strength(0.04))
-      .force('y', d3.forceY(height / 2).strength(0.04));
-
-    this.simulation.tick(300);
-    this.simulation.stop();
-
-    data.forEach(d => {
-      d.x = Math.max(pad + rScale(d.size), Math.min(width - pad - rScale(d.size), d.x));
-      d.y = Math.max(pad + rScale(d.size), Math.min(height - pad - rScale(d.size), d.y));
-    });
-
-    link
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-    node
-      .attr('cx', d => d.x).attr('cy', d => d.y);
-    label
-      .attr('x', d => d.x)
-      .attr('y', d => d.y + rScale(d.size) + 14);
-    countLabel
-      .attr('x', d => d.x)
-      .attr('y', d => d.y);
-
-    // Legend
-    this._drawOverviewLegend(container, communityColor, data);
-
-    // Stats panel
-    this._renderOverviewStats();
+    this._renderReferenceStats(ranked, referencing);
   },
 
-  // =========================================================================
-  // Level 2: Community Detail (drill-down)
-  // =========================================================================
-
-  _renderDetail(container) {
-    const cid = this.activeCommunity;
-    const meta = this.communityData.find(c => c.id === cid);
-    if (!meta) { this.viewLevel = 'overview'; this._renderOverview(container); return; }
-
-    const memberIds = new Set(meta.memberIds);
-
-    // Extract community sub-graph
-    const detailNodes = this.nodes
-      .filter(n => memberIds.has(n.id))
-      .map(n => ({ ...n })); // copy for simulation
-
-    const detailLinks = this.links
-      .filter(l => memberIds.has(l.source) && memberIds.has(l.target))
-      .map(l => ({ source: l.source, target: l.target })); // copy
-
-    // Recompute degree within community
-    const degMap = new Map();
-    for (const n of detailNodes) degMap.set(n.id, 0);
-    for (const l of detailLinks) {
-      degMap.set(l.source, (degMap.get(l.source) || 0) + 1);
-      degMap.set(l.target, (degMap.get(l.target) || 0) + 1);
+  // Rank reference targets by how many distinct entries point at them.
+  _rankTargets() {
+    const inbound = new Map();   // targetId → Set of referencing sourcePageIds
+    for (const l of this.links) {
+      if (!inbound.has(l.target)) inbound.set(l.target, new Set());
+      inbound.get(l.target).add(l.source);
     }
-    for (const n of detailNodes) n.degree = degMap.get(n.id) || 0;
+    return [...inbound.entries()]
+      .map(([id, set]) => ({ id, sources: [...set] }))
+      .sort((a, b) => b.sources.length - a.sources.length
+        || (App.entryMap.get(a.id)?.title || '').localeCompare(App.entryMap.get(b.id)?.title || ''));
+  },
 
-    // Controls: back button + degree filter
-    const maxDeg = d3.max(detailNodes, d => d.degree) || 1;
-    const sliderMax = Math.min(maxDeg, 10);
+  _renderReferenceStats(ranked, referencing) {
+    const panel = document.getElementById('explore-detail');
+    const detail = document.getElementById('explore-detail-content');
+    if (!panel || !detail) return;
+    if (Explore.selection.length > 0) return;
 
-    const controls = document.createElement('div');
-    controls.className = 'network-controls';
-    controls.innerHTML = `
-      <div class="network-info">
-        <button class="geo-toggle active" id="network-back">\u2190 All communities</button>
-        <span class="ov-title" style="margin-bottom:0">${esc(meta.hub.title)}</span>
-        <span id="network-count" style="font-size:0.75rem;color:var(--sz-text-light)">
-          ${detailNodes.length} entries, ${detailLinks.length} connections
-        </span>
-      </div>
-      <div class="network-toolbar">
-        <label class="network-slider-label">
-          Min. connections: <strong id="degree-val">${this.minDegree}</strong>
-          <input type="range" id="degree-slider" min="1" max="${sliderMax}" value="${this.minDegree}" class="network-slider">
-        </label>
+    panel.classList.remove('hidden');
+    detail.innerHTML = `
+      <div class="detail-summary">
+        <h3 class="detail-summary-title">Reference Network</h3>
+        <div class="network-stats-grid">
+          <div class="network-stat"><strong>${this.links.length.toLocaleString('en')}</strong><span>Resolved links</span></div>
+          <div class="network-stat"><strong>${ranked.length.toLocaleString('en')}</strong><span>Referenced entries</span></div>
+          <div class="network-stat"><strong>${referencing.size.toLocaleString('en')}</strong><span>Referencing entries</span></div>
+          <div class="network-stat"><strong>${ranked.length ? ranked[0].sources.length : 0}</strong><span>Top in-degree</span></div>
+        </div>
+        <p class="detail-summary-hint">Expand a row for the entries citing it; open any entry for its own See-Also neighborhood. Unresolvable references are listed under Data Quality.</p>
       </div>
     `;
-    container.appendChild(controls);
-
-    // Back button
-    controls.querySelector('#network-back').addEventListener('click', () => {
-      this.viewLevel = 'overview';
-      this.activeCommunity = null;
-      this.minDegree = 1;
-      this.render(this._lastEntries);
-    });
-
-    const rect = container.getBoundingClientRect();
-    const width = rect.width || 700;
-    const height = CHART_DIMS.network.height;
-
-    // Color by entry type
-    const typeColor = d3.scaleOrdinal()
-      .domain(Object.keys(ENTRY_TYPE_LABELS))
-      .range([
-        COLORS.burgundy, COLORS.gold, '#6B7A3A', '#5B5040', '#8B5C3A',
-        '#5B3A7A', '#3A5B6B', '#7A4A1B', '#3A3A5B', '#6B3A4A',
-        '#9E9585', '#4A6B3A', '#6B5B3A', '#3A4A6B', '#5B3A3A', '#7A6B3A',
-      ]);
-
-    // Size scale
-    const rScale = d3.scaleSqrt().domain([1, maxDeg]).range([5, 18]);
-    for (const n of detailNodes) n._r = rScale(n.degree);
-
-    // SVG
-    this.svg = d3.select(container).append('svg')
-      .attr('class', 'explore-svg')
-      .attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMidYMid meet')
-      .attr('role', 'img')
-      .attr('aria-label', `Community detail: ${meta.hub.title}`);
-
-    const zoomG = this.svg.append('g');
-    this.svg.call(d3.zoom()
-      .scaleExtent([0.3, 5])
-      .on('zoom', (event) => zoomG.attr('transform', event.transform))
-    );
-
-    // Links
-    const link = zoomG.append('g').selectAll('line')
-      .data(detailLinks)
-      .join('line')
-      .attr('stroke', Explore.colors.gridLine)
-      .attr('stroke-width', 1)
-      .attr('stroke-opacity', 0.4);
-
-    // Hub identification (top 10)
-    const hubs = [...detailNodes].sort((a, b) => b.degree - a.degree).slice(0, 10);
-    const hubIds = new Set(hubs.map(h => h.id));
-
-    // Halo
-    const halo = zoomG.append('g').selectAll('circle')
-      .data(hubs)
-      .join('circle')
-      .attr('r', d => rScale(d.degree) * 2.5)
-      .attr('fill', d => typeColor(d.entryType))
-      .attr('opacity', 0.15)
-      .attr('pointer-events', 'none');
-
-    // Nodes
-    const node = zoomG.append('g').selectAll('circle')
-      .data(detailNodes)
-      .join('circle')
-      .attr('r', d => rScale(d.degree))
-      .attr('fill', d => typeColor(d.entryType))
-      .attr('stroke', d => hubIds.has(d.id) ? Explore.colors.gold : Explore.colors.cream)
-      .attr('stroke-width', d => hubIds.has(d.id) ? 2 : 1)
-      .style('cursor', 'pointer')
-      .call(this._drag());
-
-    // Hub labels
-    const hubLabel = zoomG.append('g').selectAll('text')
-      .data(hubs.filter(h => h.degree >= this.minDegree))
-      .join('text')
-      .text(d => {
-        const t = d.title || 'Untitled';
-        return t.length > 35 ? t.slice(0, 33) + '\u2026' : t;
-      })
-      .attr('font-size', '9px')
-      .attr('font-family', 'system-ui, sans-serif')
-      .attr('fill', '#333')
-      .attr('paint-order', 'stroke')
-      .attr('stroke', 'white')
-      .attr('stroke-width', 3)
-      .attr('pointer-events', 'none');
-
-    // Hover
-    node.on('mouseenter', (event, d) => {
-      const neighborIds = new Set([d.id]);
-      detailLinks.forEach(l => {
-        const s = typeof l.source === 'object' ? l.source.id : l.source;
-        const t = typeof l.target === 'object' ? l.target.id : l.target;
-        if (s === d.id) neighborIds.add(t);
-        if (t === d.id) neighborIds.add(s);
-      });
-
-      node.attr('opacity', n => neighborIds.has(n.id) ? 1 : 0.15);
-      link.attr('stroke-opacity', l =>
-        (l.source.id === d.id || l.target.id === d.id) ? 0.8 : 0.05
-      ).attr('stroke', l =>
-        (l.source.id === d.id || l.target.id === d.id) ? Explore.colors.gold : Explore.colors.gridLine
-      );
-      halo.attr('opacity', h => neighborIds.has(h.id) ? 0.2 : 0.05);
-      hubLabel.attr('opacity', h => neighborIds.has(h.id) ? 1 : 0.15);
-
-      Explore.showTooltip(
-        `<strong>${esc(d.title || 'Untitled')}</strong><br>` +
-        `${ENTRY_TYPE_LABELS[d.entryType] || d.entryType}${d.year ? ` (${d.year})` : ''}<br>` +
-        `${d.degree} connection${d.degree !== 1 ? 's' : ''}`,
-        event
-      );
-    })
-    .on('mouseleave', () => {
-      const min = this.minDegree;
-      node.attr('opacity', d => d.degree >= min ? 1 : 0);
-      link.attr('stroke-opacity', l => {
-        const sd = typeof l.source === 'object' ? l.source.degree : 0;
-        const td = typeof l.target === 'object' ? l.target.degree : 0;
-        return (sd >= min && td >= min) ? 0.4 : 0;
-      }).attr('stroke', Explore.colors.gridLine);
-      halo.attr('opacity', d => d.degree >= min ? 0.15 : 0);
-      hubLabel.attr('opacity', d => d.degree >= min ? 1 : 0);
-      Explore.hideTooltip();
-    })
-    .on('click', (event, d) => {
-      const entry = App.entryMap.get(d.id);
-      if (entry) Explore.updateSelection([entry]);
-    })
-    .on('dblclick', (event, d) => {
-      location.hash = `entry=${d.id}`;
-    });
-
-    // Simulation — tuned for community size
-    const pad = 20;
-    const charge = detailNodes.length > 100 ? -40 : -80;
-    const dist = detailNodes.length > 100 ? 60 : 100;
-
-    this.simulation = d3.forceSimulation(detailNodes)
-      .force('link', d3.forceLink(detailLinks).id(d => d.id).distance(dist))
-      .force('charge', d3.forceManyBody().strength(charge))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collide', d3.forceCollide().radius(d => rScale(d.degree) + 3))
-      .force('x', d3.forceX(width / 2).strength(0.03))
-      .force('y', d3.forceY(height / 2).strength(0.03));
-
-    this.simulation.tick(250);
-    this.simulation.stop();
-
-    detailNodes.forEach(d => {
-      d.x = Math.max(pad, Math.min(width - pad, d.x));
-      d.y = Math.max(pad, Math.min(height - pad, d.y));
-    });
-
-    link
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
-    node
-      .attr('cx', d => d.x).attr('cy', d => d.y);
-    halo
-      .attr('cx', d => d.x).attr('cy', d => d.y);
-    hubLabel
-      .attr('x', d => d.x + rScale(d.degree) + 4)
-      .attr('y', d => d.y + 3);
-
-    // Degree filter
-    const slider = container.querySelector('#degree-slider');
-    const degreeVal = container.querySelector('#degree-val');
-    const countEl = container.querySelector('#network-count');
-
-    const applyFilter = () => {
-      const min = this.minDegree;
-      const t = d3.transition().duration(300);
-
-      node.transition(t)
-        .attr('opacity', d => d.degree >= min ? 1 : 0)
-        .attr('pointer-events', d => d.degree >= min ? 'auto' : 'none');
-      link.transition(t)
-        .attr('stroke-opacity', l =>
-          (l.source.degree >= min && l.target.degree >= min) ? 0.4 : 0
-        );
-      halo.transition(t)
-        .attr('opacity', d => d.degree >= min ? 0.15 : 0);
-      hubLabel.transition(t)
-        .attr('opacity', d => d.degree >= min ? 1 : 0);
-
-      const vis = detailNodes.filter(d => d.degree >= min).length;
-      const visL = detailLinks.filter(l => l.source.degree >= min && l.target.degree >= min).length;
-      countEl.textContent = `${vis} entries, ${visL} connections`;
-
-      this._renderDetailStats(meta, detailNodes, detailLinks);
-    };
-
-    slider.addEventListener('input', () => {
-      this.minDegree = +slider.value;
-      degreeVal.textContent = this.minDegree;
-      applyFilter();
-    });
-
-    // Apply initial filter (important for large communities starting at minDegree > 1)
-    applyFilter();
-
-    // Legend
-    this._drawDetailLegend(container, typeColor, detailNodes);
-
-    // Stats
-    this._renderDetailStats(meta, detailNodes, detailLinks);
   },
 
   // =========================================================================
@@ -583,230 +218,6 @@ const ExploreNetwork = {
     this.links = links;
   },
 
-  _detectCommunities() {
-    const adj = new Map();
-    for (const node of this.nodes) adj.set(node.id, []);
-    for (const link of this.links) {
-      const s = link.source, t = link.target;
-      if (adj.has(s)) adj.get(s).push(t);
-      if (adj.has(t)) adj.get(t).push(s);
-    }
-
-    this.communities = new Map();
-    let communityId = 0;
-    const visited = new Set();
-    const sorted = [...this.nodes].sort((a, b) => b.degree - a.degree);
-
-    for (const node of sorted) {
-      if (visited.has(node.id)) continue;
-      const queue = [node.id];
-      visited.add(node.id);
-      while (queue.length > 0) {
-        const current = queue.shift();
-        this.communities.set(current, communityId);
-        for (const neighbor of (adj.get(current) || [])) {
-          if (!visited.has(neighbor)) {
-            visited.add(neighbor);
-            queue.push(neighbor);
-          }
-        }
-      }
-      communityId++;
-    }
-  },
-
-  _buildCommunityData() {
-    // Group nodes by community
-    const groups = new Map();
-    for (const node of this.nodes) {
-      const cid = this.communities.get(node.id);
-      if (!groups.has(cid)) groups.set(cid, []);
-      groups.get(cid).push(node);
-    }
-
-    const MIN_SIZE = 3;
-    const metaNodes = [];
-    const smallMembers = [];
-
-    for (const [cid, members] of groups) {
-      if (members.length < MIN_SIZE) {
-        smallMembers.push(...members);
-        continue;
-      }
-
-      const hub = members.reduce((a, b) => a.degree > b.degree ? a : b);
-      const memberIdSet = new Set(members.map(m => m.id));
-
-      // Type distribution
-      const typeCounts = {};
-      for (const m of members) {
-        typeCounts[m.entryType] = (typeCounts[m.entryType] || 0) + 1;
-      }
-      const topTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
-
-      // Edge counts
-      let internal = 0, external = 0;
-      for (const l of this.links) {
-        const sIn = memberIdSet.has(l.source);
-        const tIn = memberIdSet.has(l.target);
-        if (sIn && tIn) internal++;
-        else if (sIn || tIn) external++;
-      }
-
-      metaNodes.push({
-        id: cid,
-        size: members.length,
-        hub: { id: hub.id, title: hub.title, degree: hub.degree },
-        dominantType: topTypes[0] ? topTypes[0][0] : 'other',
-        topTypes,
-        memberIds: [...memberIdSet],
-        internalEdges: internal,
-        externalEdges: external,
-      });
-    }
-
-    // Aggregate small communities
-    if (smallMembers.length > 0) {
-      metaNodes.push({
-        id: -1,
-        size: smallMembers.length,
-        hub: { id: null, title: 'Small clusters', degree: 0 },
-        dominantType: 'other',
-        topTypes: [],
-        memberIds: smallMembers.map(n => n.id),
-        internalEdges: 0,
-        externalEdges: 0,
-        isAggregate: true,
-      });
-    }
-
-    // Sort: largest first
-    metaNodes.sort((a, b) => {
-      if (a.isAggregate) return 1;
-      if (b.isAggregate) return -1;
-      return b.size - a.size;
-    });
-
-    // Build meta-links
-    const metaIdSet = new Set(metaNodes.filter(m => !m.isAggregate).map(m => m.id));
-    const metaLinkMap = new Map();
-
-    for (const l of this.links) {
-      const cs = this.communities.get(l.source);
-      const ct = this.communities.get(l.target);
-      if (cs === ct) continue;
-
-      const cs2 = metaIdSet.has(cs) ? cs : -1;
-      const ct2 = metaIdSet.has(ct) ? ct : -1;
-      if (cs2 === ct2) continue;
-
-      const key = Math.min(cs2, ct2) + '|' + Math.max(cs2, ct2);
-      metaLinkMap.set(key, (metaLinkMap.get(key) || 0) + 1);
-    }
-
-    this.communityLinks = [];
-    for (const [key, weight] of metaLinkMap) {
-      const [s, t] = key.split('|').map(Number);
-      this.communityLinks.push({ source: s, target: t, weight });
-    }
-
-    this.communityData = metaNodes;
-  },
-
-  // =========================================================================
-  // Stats panels
-  // =========================================================================
-
-  _renderOverviewStats() {
-    const panel = document.getElementById('explore-detail');
-    const detail = document.getElementById('explore-detail-content');
-    if (!panel || !detail) return;
-    if (Explore.selection.length > 0) return;
-
-    panel.classList.remove('hidden');
-
-    const data = this.communityData.filter(d => !d.isAggregate);
-    const smallCluster = this.communityData.find(d => d.isAggregate);
-
-    const totalEntries = this._lastEntries ? this._lastEntries.length : this.nodes.length;
-    const coveragePct = totalEntries > 0
-      ? (this.nodes.length / totalEntries * 100).toFixed(1) : '0.0';
-    detail.innerHTML = `
-      <div class="detail-summary">
-        <h3 class="detail-summary-title">Network Overview</h3>
-        <div class="network-stats-grid">
-          <div class="network-stat"><strong>${this.nodes.length} / ${totalEntries}</strong><span>Connected (${coveragePct}%)</span></div>
-          <div class="network-stat"><strong>${this.links.length}</strong><span>Edges</span></div>
-          <div class="network-stat"><strong>${data.length}</strong><span>Communities</span></div>
-          <div class="network-stat"><strong>${smallCluster ? smallCluster.size : 0}</strong><span>Small clusters</span></div>
-        </div>
-        <div class="detail-group-section" style="margin-top:0.75rem">
-          <h4>Communities</h4>
-          <ul class="detail-entry-list">
-            ${data.slice(0, 8).map(c => `
-              <li class="detail-entry-item" style="cursor:pointer" onclick="ExploreNetwork.activeCommunity=${c.id};ExploreNetwork.viewLevel='detail';ExploreNetwork.minDegree=${c.size > 100 ? 2 : 1};ExploreNetwork.render(ExploreNetwork._lastEntries)">
-                <span class="detail-entry-link">
-                  <span class="badge badge-${c.dominantType}">${c.size}</span>
-                  ${esc(c.hub.title)}
-                  <span class="detail-entry-year">${c.hub.degree} links</span>
-                </span>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-        <p class="detail-summary-hint">Click a community to explore its members.</p>
-      </div>
-    `;
-  },
-
-  _renderDetailStats(meta, detailNodes, detailLinks) {
-    const panel = document.getElementById('explore-detail');
-    const detail = document.getElementById('explore-detail-content');
-    if (!panel || !detail) return;
-    if (Explore.selection.length > 0) return;
-
-    panel.classList.remove('hidden');
-
-    const min = this.minDegree;
-    const vis = detailNodes.filter(d => d.degree >= min);
-    const visL = detailLinks.filter(l => {
-      const sd = typeof l.source === 'object' ? l.source.degree : 0;
-      const td = typeof l.target === 'object' ? l.target.degree : 0;
-      return sd >= min && td >= min;
-    });
-
-    const totalDeg = vis.reduce((s, n) => s + n.degree, 0);
-    const avgDeg = vis.length ? (totalDeg / vis.length).toFixed(1) : '0';
-    const topHubs = [...vis].sort((a, b) => b.degree - a.degree).slice(0, 5);
-
-    detail.innerHTML = `
-      <div class="detail-summary">
-        <h3 class="detail-summary-title">${esc(meta.hub.title)}</h3>
-        <div class="network-stats-grid">
-          <div class="network-stat"><strong>${vis.length}</strong><span>Visible</span></div>
-          <div class="network-stat"><strong>${visL.length}</strong><span>Edges</span></div>
-          <div class="network-stat"><strong>${avgDeg}</strong><span>Avg. degree</span></div>
-          <div class="network-stat"><strong>${meta.externalEdges}</strong><span>External</span></div>
-        </div>
-        <div class="detail-group-section" style="margin-top:0.75rem">
-          <h4>Top Hubs</h4>
-          <ul class="detail-entry-list">
-            ${topHubs.map(h => `
-              <li class="detail-entry-item">
-                <a href="#entry=${h.id}" class="detail-entry-link">
-                  <span class="badge badge-${h.entryType}">${ENTRY_TYPE_LABELS[h.entryType] || h.entryType}</span>
-                  ${esc(h.title || 'Untitled')}
-                  <span class="detail-entry-year">${h.degree} links</span>
-                </a>
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-        <p class="detail-summary-hint">Click a node for entry details.</p>
-      </div>
-    `;
-  },
-
   // =========================================================================
   // Translator Sankey Flow Diagram
   // Ref: SankeyNetwork (2025, doi:10.1016/j.mex.2025.103230) —
@@ -829,10 +240,10 @@ const ExploreNetwork = {
     this._activePeriod = this._activePeriod || 'all';
     const periods = [
       { key: 'all', label: 'All periods' },
-      { key: 'lifetime', label: '1881\u20131942', min: 1881, max: 1942 },
-      { key: 'post-wwii', label: '1943\u20131980', min: 1943, max: 1980 },
-      { key: 'late-20c', label: '1981\u20132000', min: 1981, max: 2000 },
-      { key: 'contemporary', label: '2001\u2013', min: 2001, max: 2030 },
+      { key: 'lifetime', label: '1881–1942', min: 1881, max: 1942 },
+      { key: 'post-wwii', label: '1943–1980', min: 1943, max: 1980 },
+      { key: 'late-20c', label: '1981–2000', min: 1981, max: 2000 },
+      { key: 'contemporary', label: '2001–', min: 2001, max: 2030 },
     ];
 
     const filterBar = document.createElement('div');
@@ -1121,7 +532,7 @@ const ExploreNetwork = {
       .text(d => {
         const v = d.value || 0;
         const maxChars = d.col === 1 ? 15 : 25;
-        const name = d.name.length > maxChars ? d.name.slice(0, maxChars - 1) + '\u2026' : d.name;
+        const name = d.name.length > maxChars ? d.name.slice(0, maxChars - 1) + '…' : d.name;
         return d.y1 - d.y0 > 8 ? `${name} (${v})` : '';
       });
 
@@ -1165,8 +576,8 @@ const ExploreNetwork = {
       Explore.showTooltip(
         `<strong>${esc(d.name)}</strong><br>` +
         `${d.value || 0} entries<br>` +
-        (inflow ? `<small>\u2190 ${inflow} inflow</small><br>` : '') +
-        (outflow ? `<small>\u2192 ${outflow} outflow</small>` : ''),
+        (inflow ? `<small>← ${inflow} inflow</small><br>` : '') +
+        (outflow ? `<small>→ ${outflow} outflow</small>` : ''),
         event
       );
     })
@@ -1192,7 +603,7 @@ const ExploreNetwork = {
     link.on('mouseenter', (event, d) => {
       link.attr('stroke-opacity', l => l === d ? 0.7 : 0.08);
       Explore.showTooltip(
-        `<strong>${esc(d.source.name)} \u2192 ${esc(d.target.name)}</strong><br>` +
+        `<strong>${esc(d.source.name)} → ${esc(d.target.name)}</strong><br>` +
         `${d.value} entries`,
         event
       );
@@ -1275,69 +686,9 @@ const ExploreNetwork = {
       if (Explore.mode !== 'network') return;
       if (event.detail && event.detail.mode === 'network') return;
       const data = Explore.hasActiveFilters() ? Explore.getFiltered() : Explore.entries;
-      this.viewLevel = 'overview';
-      this.activeCommunity = null;
       this.render(data);
     };
     document.addEventListener('explore:filterChange', this._filterHandler);
-  },
-
-  // =========================================================================
-  // Helpers
-  // =========================================================================
-
-  _drag() {
-    return d3.drag()
-      .on('start', (event, d) => {
-        if (!event.active && this.simulation) this.simulation.alphaTarget(0.3).restart();
-        d.fx = d.x; d.fy = d.y;
-      })
-      .on('drag', (event, d) => {
-        d.fx = event.x; d.fy = event.y;
-        this.svg.selectAll('line')
-          .attr('x1', l => l.source.x).attr('y1', l => l.source.y)
-          .attr('x2', l => l.target.x).attr('y2', l => l.target.y);
-        this.svg.selectAll('circle')
-          .attr('cx', n => n.x).attr('cy', n => n.y);
-        this.svg.selectAll('text')
-          .filter((n) => n && n.id === d.id)
-          .attr('x', d.x + (d._r || 8) + 4)
-          .attr('y', d.y + 3);
-      })
-      .on('end', (event, d) => {
-        if (!event.active && this.simulation) this.simulation.alphaTarget(0);
-        d.fx = null; d.fy = null;
-      });
-  },
-
-  _drawOverviewLegend(container, communityColor, data) {
-    const shown = data.filter(d => !d.isAggregate).slice(0, 8);
-    if (shown.length < 2) return;
-    const legend = document.createElement('div');
-    legend.className = 'network-legend';
-    legend.innerHTML = shown.map(d => {
-      const t = d.hub.title || '?';
-      const short = t.length > 20 ? t.slice(0, 18) + '\u2026' : t;
-      return `<span class="network-legend-item">
-        <span class="network-legend-dot" style="background:${communityColor(d.id)}"></span>
-        ${esc(short)} (${d.size})
-      </span>`;
-    }).join('');
-    container.appendChild(legend);
-  },
-
-  _drawDetailLegend(container, typeColor, nodes) {
-    const types = [...new Set(nodes.map(n => n.entryType))];
-    if (types.length < 2) return;
-    const legend = document.createElement('div');
-    legend.className = 'network-legend';
-    legend.innerHTML = types.slice(0, 8).map(t =>
-      `<span class="network-legend-item">
-        <span class="network-legend-dot" style="background:${typeColor(t)}"></span>
-        ${ENTRY_TYPE_LABELS[t] || t}
-      </span>`
-    ).join('');
-    container.appendChild(legend);
   },
 
 };

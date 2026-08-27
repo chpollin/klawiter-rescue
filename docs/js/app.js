@@ -24,23 +24,31 @@ const App = {
   async init() {
     try {
       const resp = await fetch('data/klawiter.json');
+      if (!resp.ok) throw new Error(`data/klawiter.json: HTTP ${resp.status}`);
       this.data = await resp.json();
       // Filter to namespace 0 only
       this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
       this.entryMap = new Map(this.entries.map(e => [e.sourcePageId, e]));
       this.titleMap = new Map(this.entries.filter(e => e.title).map(e => [e.title, e.sourcePageId]));
       this.verifyData();
-      this.buildIndex();
       this.bindEvents();
-      await Edit.loadReconciliation();
+      // Reconciliation data is additive (curation candidates, contested
+      // claims) and must never block the first paint; redraw once it is in.
+      Edit.loadReconciliation().then(() => {
+        if (this.state.view === 'results') this.renderResults();
+      });
       if (this.state.isLocal) Edit.restore();   // recover pending edits from a prior session
       this._lastHash = null;
       this.handleRoute();
       window.addEventListener('hashchange', () => this.handleRoute());
       window.addEventListener('popstate', () => this.handleRoute());
     } catch (err) {
-      document.getElementById('view-home').innerHTML =
-        `<p style="color:var(--sz-burgundy)">Error loading data: ${err.message}</p>`;
+      const home = document.getElementById('view-home');
+      home.textContent = '';
+      const message = document.createElement('p');
+      message.style.color = 'var(--sz-burgundy)';
+      message.textContent = `Error loading data: ${err.message}`;
+      home.appendChild(message);
     }
   },
 
@@ -111,6 +119,12 @@ const App = {
     console.groupEnd();
   },
 
+  // Built lazily on the first search: indexing 5,000+ full texts is the
+  // most expensive startup step and the home view never needs it.
+  ensureIndex() {
+    if (!this.index) this.buildIndex();
+  },
+
   buildIndex() {
     this.index = new FlexSearch.Index({
       tokenize: 'forward',
@@ -133,6 +147,13 @@ const App = {
     if (hash === this._lastHash) return;
     this._lastHash = hash;
     const params = new URLSearchParams(hash);
+
+    // Data-quality workbench (curation view)
+    if (hash === 'quality') {
+      this.showView('page');
+      Curate.render();
+      return;
+    }
 
     // Static content pages
     const staticPages = ['about', 'methodology', 'help', 'data', 'jsonld', 'imprint'];
@@ -191,7 +212,13 @@ const App = {
         // Auto-expand after render
         setTimeout(() => this.toggleCard(pid), 50);
       } else {
-        this.showDetail(pid);
+        this.state.query = '';
+        this.state.filters = {};
+        this.filtered = [];
+        this.state.page = 0;
+        this.showView('results');
+        this.renderResults();
+        document.getElementById('results-count').textContent = 'Entry not found';
       }
       return;
     }
@@ -234,12 +261,17 @@ const App = {
     }
     const hash = params.toString();
     history.replaceState(null, '', hash ? `#${hash}` : location.pathname);
+    // Keep the route guard in sync: replaceState fires no hashchange, so
+    // without this the next navigation back to the very hash we replaced
+    // (for example '' for home) would be swallowed as "unchanged".
+    this._lastHash = hash;
   },
 
   // --- Filtering ---
   applyFilters() {
     let indices;
     if (this.state.query) {
+      this.ensureIndex();
       indices = this.index.search(this.state.query, { limit: 5000 });
     } else {
       indices = this.entries.map((_, i) => i);
@@ -287,7 +319,6 @@ const App = {
     this.state.view = view;
     document.getElementById('view-home').classList.toggle('hidden', view !== 'home');
     document.getElementById('view-results').classList.toggle('hidden', view !== 'results');
-    document.getElementById('view-detail').classList.toggle('hidden', view !== 'detail');
     document.getElementById('view-stats').classList.toggle('hidden', view !== 'stats');
     document.getElementById('view-page').classList.toggle('hidden', view !== 'page');
 
@@ -328,7 +359,7 @@ const App = {
     if (titles[view]) { document.title = titles[view]; return; }
     if (view === 'page') {
       const page = location.hash.slice(1);
-      const labels = { about: 'About', methodology: 'Methodology', help: 'Help', data: 'Data Access', imprint: 'Imprint' };
+      const labels = { about: 'About', methodology: 'Methodology', help: 'Help', data: 'Data Access', imprint: 'Imprint', quality: 'Data Quality' };
       document.title = labels[page] ? `${labels[page]} \u2014 ${base}` : base;
       return;
     }
@@ -340,15 +371,6 @@ const App = {
       return;
     }
     document.title = base;
-  },
-
-  showDetail(pageId) {
-    const entry = this.entryMap.get(pageId);
-    this.state.view = 'detail';
-    this.state.entryId = pageId;
-    this.showView('detail');
-    Detail.render(entry);
-    window.scrollTo(0, 0);
   },
 
   // --- Results ---
@@ -392,15 +414,15 @@ const App = {
     if (e.pageCount) parts.push(e.pageCount + ' pp.');
     const secondary = parts.length ? `<div class="card-secondary">${parts.join(' · ')}</div>` : '';
 
-    const snippet = esc((e.fullBibliographicEntry || '').slice(0, 180));
     const triage = this.state.editMode ? Edit.cardHint(e.sourcePageId) : '';
 
+    // No source-text snippet here: it duplicated the start of the full
+    // bibliographic entry shown on expansion. Title plus meta identify the card.
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
       <div class="card-header" tabindex="0" role="button">
         <div class="card-meta">${badge} ${year} ${lang} ${loc} ${triage}</div>
         <div class="card-title">${title}</div>
         ${secondary}
-        <div class="card-snippet">${snippet}</div>
       </div>
       <div class="card-detail hidden" id="card-detail-${e.sourcePageId}"></div>
     </div>`;
@@ -490,6 +512,34 @@ const App = {
     }
   },
 
+  // Session-scoped result list from the data-quality workbench: shows a
+  // precomputed entry set under its own label. Not hash-addressable — the
+  // lists derive from artifacts, not from filter state.
+  showCustomResults(entries, label) {
+    this.state.query = '';
+    this.state.filters = {};
+    document.getElementById('search-input').value = '';
+    this.filtered = [...entries];
+    this.state.page = 0;
+    this.sortEntries();
+    this.showView('results');
+    this.renderResults();
+    Facets.render(this.filtered);
+    this.renderChips();
+    document.getElementById('results-count').textContent =
+      `${label} — ${entries.length.toLocaleString('en')} entr${entries.length === 1 ? 'y' : 'ies'}`;
+  },
+
+  // Edit-mode keyboard: j/k walks the result cards (next/previous expanded).
+  _stepCard(dir) {
+    const cards = [...document.querySelectorAll('#results-list .entry-card')];
+    if (!cards.length) return;
+    const openIdx = cards.findIndex(c => c.classList.contains('card-expanded'));
+    const next = openIdx === -1 ? (dir > 0 ? 0 : cards.length - 1) : openIdx + dir;
+    if (next < 0 || next >= cards.length) return;
+    this.toggleCard(parseInt(cards[next].dataset.pid));
+  },
+
   // --- Events ---
   bindEvents() {
     let timer;
@@ -563,10 +613,6 @@ const App = {
       location.hash = '';
     });
 
-    document.getElementById('back-btn').addEventListener('click', () => {
-      history.back();
-    });
-
     // Nav "More" dropdown
     const dropdownToggle = document.querySelector('#nav-more .nav-dropdown-toggle');
     if (dropdownToggle) {
@@ -593,6 +639,17 @@ const App = {
       document.getElementById('mobile-facets').classList.add('hidden');
     });
 
+    // Edit-mode keyboard navigation on the results list (j = next, k = previous).
+    document.addEventListener('keydown', (ev) => {
+      if (!this.state.editMode || this.state.view !== 'results') return;
+      const t = ev.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      if (ev.key === 'j' || ev.key === 'k') {
+        ev.preventDefault();
+        this._stepCard(ev.key === 'j' ? 1 : -1);
+      }
+    });
+
     // Edit mode toggle (localhost only)
     if (this.state.isLocal) {
       const header = document.querySelector('.header-inner');
@@ -606,6 +663,9 @@ const App = {
   },
 
   toggleEditMode() {
+    // The curation mode is a localhost tool; the published site must not
+    // enter it even when the setter is called from the console.
+    if (!this.state.isLocal) return;
     this.state.editMode = !this.state.editMode;
     document.body.classList.toggle('edit-mode', this.state.editMode);
     const btn = document.getElementById('edit-toggle');
@@ -634,7 +694,7 @@ const App = {
     if (on && !opt) {
       opt = document.createElement('option');
       opt.value = 'triage';
-      opt.textContent = 'Prüfbedarf zuerst';
+      opt.textContent = 'Needs review first';
       sel.appendChild(opt);
     } else if (!on && opt) {
       if (this.state.sort === 'triage') {
@@ -646,20 +706,15 @@ const App = {
     }
   },
 
-  // Redraw whatever is on screen after an edit-mode change: results list
-  // (keeping the expanded card open), or the standalone detail view.
+  // Redraw the results list after an edit-mode change, keeping the
+  // expanded card open.
   _refreshAfterEditToggle() {
-    if (this.state.view === 'results') {
-      const expanded = document.querySelector('.entry-card.card-expanded');
-      const expandedPid = expanded ? parseInt(expanded.dataset.pid) : null;
-      if (this.state.sort === 'triage') this.sortEntries();
-      this.renderResults();
-      if (expandedPid != null && this.entryMap.has(expandedPid)) this.toggleCard(expandedPid);
-      return;
-    }
-    if (this.state.view === 'detail' && this.state.entryId != null) {
-      Detail.render(this.entryMap.get(this.state.entryId));
-    }
+    if (this.state.view !== 'results') return;
+    const expanded = document.querySelector('.entry-card.card-expanded');
+    const expandedPid = expanded ? parseInt(expanded.dataset.pid) : null;
+    if (this.state.sort === 'triage') this.sortEntries();
+    this.renderResults();
+    if (expandedPid != null && this.entryMap.has(expandedPid)) this.toggleCard(expandedPid);
   },
 };
 

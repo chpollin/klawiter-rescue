@@ -11,10 +11,12 @@
   <meta property="og:url" content="https://chpollin.github.io/klawiter-rescue/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="fonts/fonts.css">
-  <script src="vendor/flexsearch.bundle.min.js"></script>
-  <script src="vendor/d3.v7.min.js"></script>
-  <script src="vendor/topojson-client.min.js"></script>
-  <script src="vendor/d3-sankey.min.js"></script>
+  <!-- defer: the visualization stack is needed only on the Explore route
+       and must not block first paint; deferred scripts keep their order. -->
+  <script defer src="vendor/flexsearch.bundle.min.js"></script>
+  <script defer src="vendor/d3.v7.min.js"></script>
+  <script defer src="vendor/topojson-client.min.js"></script>
+  <script defer src="vendor/d3-sankey.min.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -55,6 +57,7 @@
             <a href="#methodology" role="menuitem">Methodology</a>
             <a href="#help" role="menuitem">Help</a>
             <a href="#data" role="menuitem">Data Access</a>
+            <a href="#quality" role="menuitem">Data Quality</a>
             <a href="#jsonld" role="menuitem">JSON-LD Playground</a>
             <a href="#imprint" role="menuitem">Imprint</a>
           </div>
@@ -129,12 +132,6 @@
         </div>
       </div>
 
-      <!-- View: Detail -->
-      <div id="view-detail" class="hidden">
-        <button id="back-btn" class="detail-back">&larr; Back</button>
-        <div id="detail-content"></div>
-      </div>
-
       <!-- View: Statistics -->
       <div id="view-stats" class="hidden"></div>
 
@@ -187,6 +184,7 @@
           <a href="#methodology">Methodology</a><br>
           <a href="#help">Help</a><br>
           <a href="#data">Data Access</a><br>
+          <a href="#quality">Data Quality</a><br>
           <a href="#jsonld">JSON-LD Playground</a><br>
           <a href="#imprint">Imprint</a>
         </div>
@@ -211,6 +209,7 @@
   <script src="js/facets.js"></script>
   <script src="js/detail.js"></script>
   <script src="js/edit.js"></script>
+  <script src="js/curate.js"></script>
   <script src="js/explore.js"></script>
   <script src="js/explore-timeline.js"></script>
   <script src="js/explore-geography.js"></script>
