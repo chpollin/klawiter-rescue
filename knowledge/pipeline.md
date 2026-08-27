@@ -53,7 +53,7 @@ Der Runner beendet sich beim ersten Fehler. Pfade stammen ausschließlich aus `p
 | `05` | klassifizierte Daten, publizierbare Links | JSON-LD und Frontend-Daten erzeugen | `klawiter.jsonld`, `klawiter.json` |
 | `06` | JSON-LD | Schema- und Qualitätsbericht erzeugen | `quality-report.json` |
 
-Danach folgen Round-Trip-Verifikation, Census, Provenienzprojektion, Triage, Patch-Replay, die Generierung der dereferenzierbaren Vokabular-Termseiten und die abschließende Gate-2-Prüfung.
+Danach folgen Round-Trip-Verifikation, Census, Provenienzprojektion, Triage, Patch-Replay, die Generierung der dereferenzierbaren Vokabular-Termseiten samt Indexseite (beide deterministisch aus dem Termregister `docs/vocab/klawiter.ttl`, gruppiert nach dessen Banner-Sektionen) und die abschließende Gate-2-Prüfung.
 
 ## Extraktion und Encoding
 

@@ -35,7 +35,7 @@
     td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
     tr:hover td { background: #f5f0e8; }
     td code { font-size: 0.85em; }
-    .schema-equiv { color: #555; font-style: italic; }
+    .kind { color: #555; font-style: italic; white-space: nowrap; }
     .tag { display: inline-block; background: var(--burgundy); color: white; font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 3px; margin-right: 0.3rem; }
     .tag.schema { background: #1a73e8; }
     .tag.dc { background: #e67e22; }
@@ -51,190 +51,207 @@
 <div class="namespace">
   <strong>Namespace URI:</strong> https://chpollin.github.io/klawiter-rescue/vocab/<br>
   <strong>Preferred prefix:</strong> klawiter:<br>
-  <strong>Version:</strong> 2.0 (Schema.org blend)<br>
-  <strong>Last updated:</strong> 2026-03-29
+  <strong>Version:</strong> 3.0 (gate evidence terms, RDF resource modeling)
 </div>
 
-<p>
-  This vocabulary extends <a href="https://schema.org/">Schema.org</a> and
-  <a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">Dublin Core</a>
-  with domain-specific terms for the Klawiter Stefan Zweig bibliography.
-  Standard bibliographic properties use Schema.org; provenance and citation use Dublin Core;
-  terms without equivalents in existing vocabularies are defined here.
-</p>
+<p>Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/&lt;TermName&gt;/.</p>
 
 <h2>Machine-readable</h2>
 <p>
-  The vocabulary defined on this page is also available as a machine-readable ontology
-  (RDFS classes and properties, with SKOS and OWL declarations). Both files carry the
-  same content in two serializations:
+  This page is generated from the Turtle register, so it lists every term the
+  ontology defines. Both serializations carry the same content:
 </p>
 <ul style="margin: 0.5rem 0 1rem 1.5rem;">
   <li><a href="klawiter.ttl">klawiter.ttl</a> &mdash; Turtle (RDFS / SKOS)</li>
   <li><a href="klawiter.vocab.jsonld">klawiter.vocab.jsonld</a> &mdash; JSON-LD</li>
 </ul>
+<p>Every term below is dereferenceable at <code>https://chpollin.github.io/klawiter-rescue/vocab/TermName/</code>.</p>
 
 <h2>Vocabulary Design</h2>
 <p>Each bibliographic entry uses multiple vocabularies via JSON-LD <code>@context</code>:</p>
 <ul style="margin: 0.5rem 0 1rem 1.5rem;">
-  <li><span class="tag schema">schema:</span> Standard fields (name, datePublished, publisher, translator, inLanguage, numberOfPages, etc.)</li>
+  <li><span class="tag schema">schema:</span> Standard bibliographic fields</li>
   <li><span class="tag dc">dcterms:</span> Bibliographic citation and provenance</li>
-  <li><span class="tag domain">klawiter:</span> Domain-specific types, classifications, and source metadata (defined below)</li>
+  <li><span class="tag domain">klawiter:</span> Domain types, classifications, source metadata, and gate evidence (defined below)</li>
 </ul>
 
-<h2>Entry Types</h2>
-<p>Each entry carries a <code>@type</code> array combining a Schema.org type with a domain-specific <code>klawiter:</code> type:</p>
-
+<h2>Entry type classes</h2>
 <table>
   <thead>
-    <tr><th>klawiter: Type</th><th>Schema.org Type</th><th>Description</th></tr>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>klawiter:FictionEntry</code></td><td><code>schema:Book</code></td><td>Novels, novellas, short stories by Stefan Zweig</td></tr>
-    <tr><td><code>klawiter:EssayEntry</code></td><td><code>schema:Article</code></td><td>Essays, articles, reviews</td></tr>
-    <tr><td><code>klawiter:PoetryEntry</code></td><td><code>schema:CreativeWork</code></td><td>Individual poems and poetry collections</td></tr>
-    <tr><td><code>klawiter:DramaEntry</code></td><td><code>schema:Play</code></td><td>Plays, libretti, dramatic works</td></tr>
-    <tr><td><code>klawiter:FilmEntry</code></td><td><code>schema:Movie</code></td><td>Film adaptations, operas, multimedia</td></tr>
-    <tr><td><code>klawiter:CorrespondenceEntry</code></td><td><code>schema:Message</code></td><td>Letters and correspondence (schema:Message is the closest Schema.org type; no dedicated letter type exists)</td></tr>
-    <tr><td><code>klawiter:CollectedWorksEntry</code></td><td><code>schema:Collection</code></td><td>Anthologies, selected and collected works</td></tr>
-    <tr><td><code>klawiter:SecondaryLiteratureEntry</code></td><td><code>schema:ScholarlyArticle</code></td><td>Scholarship about Stefan Zweig</td></tr>
-    <tr><td><code>klawiter:HistoricalStudyEntry</code></td><td><code>schema:ScholarlyArticle</code></td><td>Monographs, dissertations, academic studies</td></tr>
-    <tr><td><code>klawiter:TranslationEntry</code></td><td><code>schema:Book</code></td><td>Translations by Zweig of other authors' works</td></tr>
-    <tr><td><code>klawiter:ForewordEntry</code></td><td><code>schema:CreativeWork</code></td><td>Forewords, afterwords, editorial contributions</td></tr>
-    <tr><td><code>klawiter:SymposiumEntry</code></td><td><code>schema:Event</code></td><td>Symposia, exhibitions, conferences about Zweig</td></tr>
-    <tr><td><code>klawiter:DramaticReadingEntry</code></td><td><code>schema:CreativeWork</code></td><td>Dramatic readings and staged performances</td></tr>
-    <tr><td><code>klawiter:NewspaperEntry</code></td><td><code>schema:NewsArticle</code></td><td>Newspaper articles</td></tr>
-    <tr><td><code>klawiter:RedirectEntry</code></td><td>&mdash;</td><td>Alias pointing to another entry (from MediaWiki)</td></tr>
-    <tr><td><code>klawiter:OtherEntry</code></td><td><code>schema:CreativeWork</code></td><td>Unclassifiable entries</td></tr>
+    <tr><td><code><a href="FictionEntry/">klawiter:FictionEntry</a></code></td><td class="kind">Class</td><td>Novels, novellas, short stories by Stefan Zweig.</td></tr>
+    <tr><td><code><a href="EssayEntry/">klawiter:EssayEntry</a></code></td><td class="kind">Class</td><td>Essays, articles, reviews.</td></tr>
+    <tr><td><code><a href="PoetryEntry/">klawiter:PoetryEntry</a></code></td><td class="kind">Class</td><td>Individual poems and poetry collections.</td></tr>
+    <tr><td><code><a href="DramaEntry/">klawiter:DramaEntry</a></code></td><td class="kind">Class</td><td>Plays, libretti, dramatic works.</td></tr>
+    <tr><td><code><a href="FilmEntry/">klawiter:FilmEntry</a></code></td><td class="kind">Class</td><td>Film adaptations, operas, multimedia.</td></tr>
+    <tr><td><code><a href="CorrespondenceEntry/">klawiter:CorrespondenceEntry</a></code></td><td class="kind">Class</td><td>Bibliographic records describing letters and correspondence. schema:Message is the closest Schema.org type; the record describes correspondence, it is not the message itself, so only a close match is asserted and the emitted type is schema:CreativeWork.</td></tr>
+    <tr><td><code><a href="CollectedWorksEntry/">klawiter:CollectedWorksEntry</a></code></td><td class="kind">Class</td><td>Anthologies, selected and collected works.</td></tr>
+    <tr><td><code><a href="SecondaryLiteratureEntry/">klawiter:SecondaryLiteratureEntry</a></code></td><td class="kind">Class</td><td>Scholarship about Stefan Zweig.</td></tr>
+    <tr><td><code><a href="HistoricalStudyEntry/">klawiter:HistoricalStudyEntry</a></code></td><td class="kind">Class</td><td>Monographs, dissertations, academic studies.</td></tr>
+    <tr><td><code><a href="TranslationEntry/">klawiter:TranslationEntry</a></code></td><td class="kind">Class</td><td>Translations by Zweig of other authors&#x27; works.</td></tr>
+    <tr><td><code><a href="ForewordEntry/">klawiter:ForewordEntry</a></code></td><td class="kind">Class</td><td>Forewords, afterwords, editorial contributions.</td></tr>
+    <tr><td><code><a href="SymposiumEntry/">klawiter:SymposiumEntry</a></code></td><td class="kind">Class</td><td>Bibliographic records describing symposia, exhibitions, and conferences about Zweig. The record is the description that carries publication properties; the event itself is only a close match, so schema:Event is not emitted as a direct type.</td></tr>
+    <tr><td><code><a href="DramaticReadingEntry/">klawiter:DramaticReadingEntry</a></code></td><td class="kind">Class</td><td>Dramatic readings and staged performances.</td></tr>
+    <tr><td><code><a href="NewspaperEntry/">klawiter:NewspaperEntry</a></code></td><td class="kind">Class</td><td>Newspaper articles.</td></tr>
+    <tr><td><code><a href="RedirectEntry/">klawiter:RedirectEntry</a></code></td><td class="kind">Class</td><td>Alias pointing to another entry, from MediaWiki. No Schema.org equivalent is mapped.</td></tr>
+    <tr><td><code><a href="OtherEntry/">klawiter:OtherEntry</a></code></td><td class="kind">Class</td><td>Unclassifiable entries.</td></tr>
+    <tr><td><code><a href="WikiInfrastructurePage/">klawiter:WikiInfrastructurePage</a></code></td><td class="kind">Class</td><td>Non-bibliographic MediaWiki page preserved as source structure: category, template, help, file, and system pages. Never typed as a bibliographic work and never carries a bibliographic citation.</td></tr>
   </tbody>
 </table>
 
-<h2>Domain-Specific Properties</h2>
-<p>Properties defined in the <code>klawiter:</code> namespace (no Schema.org or Dublin Core equivalent):</p>
-
+<h2>Gate evidence classes</h2>
 <table>
   <thead>
-    <tr><th>Property</th><th>Range</th><th>Description</th></tr>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
   </thead>
   <tbody>
-    <tr>
-      <td><code>klawiter:entryType</code></td>
-      <td><code>xsd:string</code></td>
-      <td>Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:timePeriod</code></td>
-      <td><code>xsd:string</code></td>
-      <td>Historical period: pre-zweig (&lt;1881), lifetime (1881&ndash;1942), post-wwii (1943&ndash;1980), late-20c (1981&ndash;2000), contemporary (2001+)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:categories</code></td>
-      <td><code>@set</code> of <code>xsd:string</code></td>
-      <td>MediaWiki categories from the original bibliography wiki</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:mainCategory</code></td>
-      <td><code>xsd:string</code></td>
-      <td>Primary category used for entry type classification</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:originalTitle</code></td>
-      <td><code>xsd:string</code></td>
-      <td>Original-language title (when entry title differs, e.g. for translations)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:languageCode</code></td>
-      <td><code>xsd:string</code></td>
-      <td>ISO 639-1 language code (de, en, fr, zh, etc.)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:allYears</code></td>
-      <td><code>@set</code> of <code>xsd:integer</code></td>
-      <td>All years mentioned in the entry (when multiple editions/reprints are listed)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:allLocations</code></td>
-      <td><code>@set</code> of <code>xsd:string</code></td>
-      <td>All publication locations when multiple are mentioned</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:locationSameAs</code></td>
-      <td><code>@id</code> (IRI)</td>
-      <td>Wikidata URI of the primary publication location (e.g. <code>http://www.wikidata.org/entity/Q90</code> for Paris). The place is taken from the source and reconciled against Wikidata; a dedicated property, not <code>schema:sameAs</code>, which would conflate the work with the place.</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:reprints</code></td>
-      <td><code>@set</code> of <code>xsd:string</code></td>
-      <td>References to reprint editions</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:contentItems</code></td>
-      <td><code>@list</code> of <code>xsd:string</code></td>
-      <td>Table of contents for collected works (ordered)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:sourcePageId</code></td>
-      <td><code>xsd:integer</code></td>
-      <td>Original MediaWiki page ID (provenance)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:sourceTextId</code></td>
-      <td><code>xsd:integer</code></td>
-      <td>MediaWiki text revision ID (provenance)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:sourceBlobId</code></td>
-      <td><code>xsd:integer</code></td>
-      <td>BLOB file number (0&ndash;7) containing the source text</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:pageNamespace</code></td>
-      <td><code>xsd:integer</code></td>
-      <td>MediaWiki namespace (0=main, 14=category, etc.)</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:isRedirect</code></td>
-      <td><code>xsd:boolean</code></td>
-      <td>True if entry is a redirect alias</td>
-    </tr>
-    <tr>
-      <td><code>klawiter:redirectTarget</code></td>
-      <td><code>xsd:string</code></td>
-      <td>Title of the target entry for redirects</td>
-    </tr>
+    <tr><td><code><a href="ContestedClaim/">klawiter:ContestedClaim</a></code></td><td class="kind">Class</td><td>A disputed identity assertion that stays part of the final dataset with its exact source evidence, all competing interpretations, the review trail, and an open decision status. Two evidence kinds exist: edition work-binding claims carry a Web Annotation offset selector, authority reconciliation claims carry source-occurrence evidence.</td></tr>
+    <tr><td><code><a href="ClaimInterpretation/">klawiter:ClaimInterpretation</a></code></td><td class="kind">Class</td><td>One competing reading of a contested claim, optionally proposing an object. The fail-closed alternative proposes no object.</td></tr>
+    <tr><td><code><a href="ReviewAction/">klawiter:ReviewAction</a></code></td><td class="kind">Class</td><td>One step of the review trail on a claim or edition: who reviewed, on what basis, with what outcome.</td></tr>
+    <tr><td><code><a href="WorkIdentityCandidate/">klawiter:WorkIdentityCandidate</a></code></td><td class="kind">Class</td><td>A candidate independent work identity proposed by a contested work-binding claim, kept unresolved until an authorized decision.</td></tr>
   </tbody>
 </table>
 
-<h2>Schema.org Properties Used</h2>
-<p>Standard properties mapped via <code>@context</code>:</p>
-
+<h2>Dataset structure properties</h2>
 <table>
   <thead>
-    <tr><th>Short Key</th><th>Maps To</th><th>Description</th></tr>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>name</code></td><td><code>schema:name</code></td><td>Entry title</td></tr>
-    <tr><td><code>author</code></td><td><code>schema:author</code></td><td>Author (Stefan Zweig for primary works, with Wikidata sameAs)</td></tr>
-    <tr><td><code>datePublished</code></td><td><code>schema:datePublished</code></td><td>Publication year</td></tr>
-    <tr><td><code>publisher</code></td><td><code>schema:publisher</code></td><td>Publisher name</td></tr>
-    <tr><td><code>locationCreated</code></td><td><code>schema:locationCreated</code></td><td>Place of publication</td></tr>
-    <tr><td><code>inLanguage</code></td><td><code>schema:inLanguage</code></td><td>Language of the work</td></tr>
-    <tr><td><code>numberOfPages</code></td><td><code>schema:numberOfPages</code></td><td>Page count</td></tr>
-    <tr><td><code>translator</code></td><td><code>schema:translator</code></td><td>Translator name</td></tr>
-    <tr><td><code>isRelatedTo</code></td><td><code>schema:isRelatedTo</code></td><td>Cross-references ("see also")</td></tr>
-    <tr><td><code>workTranslation</code></td><td><code>schema:workTranslation</code></td><td>Translation references</td></tr>
-    <tr><td><code>hasPart</code></td><td><code>schema:hasPart</code></td><td>Table of contents / constituent works</td></tr>
-    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td><td>Authority URIs &mdash; used for Stefan Zweig's Wikidata ID (Q78491) as author metadata. Place-of-publication links are carried by the dedicated <code>klawiter:locationSameAs</code> property (above), not by <code>schema:sameAs</code>, to avoid conflating the work with the place.</td></tr>
+    <tr><td><code><a href="entries/">klawiter:entries</a></code></td><td class="kind">Property</td><td>Bibliographic entries of the flat dataset.</td></tr>
+    <tr><td><code><a href="totalEntries/">klawiter:totalEntries</a></code></td><td class="kind">Property</td><td>Number of entries in a collection object.</td></tr>
+    <tr><td><code><a href="works/">klawiter:works</a></code></td><td class="kind">Property</td><td>Work nodes of the Work/Edition graph.</td></tr>
+    <tr><td><code><a href="editions/">klawiter:editions</a></code></td><td class="kind">Property</td><td>Edition nodes of the Work/Edition graph.</td></tr>
+    <tr><td><code><a href="annotations/">klawiter:annotations</a></code></td><td class="kind">Property</td><td>Web Annotations binding each edition to its exact source block.</td></tr>
+    <tr><td><code><a href="carriers/">klawiter:carriers</a></code></td><td class="kind">Property</td><td>Source-occurrence carrier volumes of the Work/Edition graph.</td></tr>
+    <tr><td><code><a href="contestedClaims/">klawiter:contestedClaims</a></code></td><td class="kind">Property</td><td>Contested claims of a dataset.</td></tr>
+    <tr><td><code><a href="candidateWorks/">klawiter:candidateWorks</a></code></td><td class="kind">Property</td><td>Unresolved candidate work identities of a dataset.</td></tr>
+    <tr><td><code><a href="pageSummaries/">klawiter:pageSummaries</a></code></td><td class="kind">Property</td><td>Per-page segmentation summaries of the Work/Edition graph.</td></tr>
+    <tr><td><code><a href="canonicalDataset/">klawiter:canonicalDataset</a></code></td><td class="kind">Property</td><td>Points from a derived projection to the canonical dataset that is authoritative for the shared subject matter.</td></tr>
+    <tr><td><code><a href="derivedProjection/">klawiter:derivedProjection</a></code></td><td class="kind">Property</td><td>Points from a canonical dataset to a derived convenience projection of it.</td></tr>
+    <tr><td><code><a href="authorityNote/">klawiter:authorityNote</a></code></td><td class="kind">Property</td><td>Human-readable statement of which dataset is authoritative for which question.</td></tr>
+    <tr><td><code><a href="decomposedAsWork/">klawiter:decomposedAsWork</a></code></td><td class="kind">Property</td><td>Links a flat multi-edition entry to its canonical work node in the Work/Edition graph.</td></tr>
   </tbody>
 </table>
 
-<h2>Dublin Core Properties Used</h2>
+<h2>Domain-specific entry properties</h2>
 <table>
   <thead>
-    <tr><th>Short Key</th><th>Maps To</th><th>Description</th></tr>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>bibliographicCitation</code></td><td><code>dcterms:bibliographicCitation</code></td><td>Full original bibliographic entry text (cleaned wiki markup)</td></tr>
+    <tr><td><code><a href="entryType/">klawiter:entryType</a></code></td><td class="kind">Property</td><td>Classification key: fiction, essay, poetry, drama, film, correspondence, collected-works, secondary-literature, historical-study, translation, foreword, symposium, dramatic-reading, newspaper, redirect, other, plus the wiki infrastructure namespaces category, mediawiki, template, help, file.</td></tr>
+    <tr><td><code><a href="timePeriod/">klawiter:timePeriod</a></code></td><td class="kind">Property</td><td>Historical period: pre-zweig (before 1881), lifetime (1881-1942), post-wwii (1943-1980), late-20c (1981-2000), contemporary (2001 onward).</td></tr>
+    <tr><td><code><a href="categories/">klawiter:categories</a></code></td><td class="kind">Property</td><td>MediaWiki categories from the original bibliography wiki, normalized like MediaWiki titles (sort keys stripped).</td></tr>
+    <tr><td><code><a href="contentItems/">klawiter:contentItems</a></code></td><td class="kind">Property</td><td>Table of contents for collected works.</td></tr>
+    <tr><td><code><a href="mainCategory/">klawiter:mainCategory</a></code></td><td class="kind">Property</td><td>Primary category used for entry type classification.</td></tr>
+    <tr><td><code><a href="originalTitle/">klawiter:originalTitle</a></code></td><td class="kind">Property</td><td>Original-language title, when the entry title differs, for example for translations.</td></tr>
+    <tr><td><code><a href="languageName/">klawiter:languageName</a></code></td><td class="kind">Property</td><td>Human-readable language name as the source states it, for example German, Chinese. The BCP-47 code lives in schema:inLanguage.</td></tr>
+    <tr><td><code><a href="languageCode/">klawiter:languageCode</a></code></td><td class="kind">Property</td><td>ISO 639-1 language code. Superseded in the published datasets: schema:inLanguage now carries the code. Retained for older exports.</td></tr>
+    <tr><td><code><a href="allYears/">klawiter:allYears</a></code></td><td class="kind">Property</td><td>All years mentioned in the entry, when multiple editions or reprints are listed.</td></tr>
+    <tr><td><code><a href="allLocations/">klawiter:allLocations</a></code></td><td class="kind">Property</td><td>All publication locations when multiple are mentioned.</td></tr>
+    <tr><td><code><a href="locationSameAs/">klawiter:locationSameAs</a></code></td><td class="kind">Property</td><td>Wikidata URI of the primary publication location, for example http://www.wikidata.org/entity/Q90 for Paris. In the published RDF the link sits as schema:sameAs on the Place node; this property remains for flat projections. A dedicated property, not schema:sameAs on the work, which would conflate the work with the place.</td></tr>
+    <tr><td><code><a href="seeAlsoText/">klawiter:seeAlsoText</a></code></td><td class="kind">Property</td><td>Unresolvable See-reference preserved as written: the referenced bibliography page was never created (a red link in the source wiki). Resolved references use dcterms:relation with entry IRIs.</td></tr>
+    <tr><td><code><a href="reprints/">klawiter:reprints</a></code></td><td class="kind">Property</td><td>References to reprint editions.</td></tr>
+  </tbody>
+</table>
+
+<h2>Source provenance properties</h2>
+<table>
+  <thead>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code><a href="sourcePageId/">klawiter:sourcePageId</a></code></td><td class="kind">Property</td><td>Original MediaWiki page ID (provenance).</td></tr>
+    <tr><td><code><a href="sourceTextId/">klawiter:sourceTextId</a></code></td><td class="kind">Property</td><td>MediaWiki text revision ID (provenance).</td></tr>
+    <tr><td><code><a href="sourceBlobId/">klawiter:sourceBlobId</a></code></td><td class="kind">Property</td><td>BLOB file number (0-7) containing the source text.</td></tr>
+    <tr><td><code><a href="pageNamespace/">klawiter:pageNamespace</a></code></td><td class="kind">Property</td><td>MediaWiki namespace, for example 0 for main, 14 for category.</td></tr>
+    <tr><td><code><a href="isRedirect/">klawiter:isRedirect</a></code></td><td class="kind">Property</td><td>True if the entry is a redirect alias.</td></tr>
+    <tr><td><code><a href="redirectTarget/">klawiter:redirectTarget</a></code></td><td class="kind">Property</td><td>Title of the target entry for redirects.</td></tr>
+    <tr><td><code><a href="headerLine/">klawiter:headerLine</a></code></td><td class="kind">Property</td><td>The unmodified source header line an edition was segmented from.</td></tr>
+    <tr><td><code><a href="yearRaw/">klawiter:yearRaw</a></code></td><td class="kind">Property</td><td>The year exactly as written in the source header, including ca. notation.</td></tr>
+    <tr><td><code><a href="pageCountRaw/">klawiter:pageCountRaw</a></code></td><td class="kind">Property</td><td>The page count exactly as written in the source, before notation normalization.</td></tr>
+    <tr><td><code><a href="sourceSliceSha256/">klawiter:sourceSliceSha256</a></code></td><td class="kind">Property</td><td>SHA-256 of the exact source text slice the offset selector addresses.</td></tr>
+    <tr><td><code><a href="sourceCorpusSha256/">klawiter:sourceCorpusSha256</a></code></td><td class="kind">Property</td><td>SHA-256 over the selected source corpus a dataset was built from.</td></tr>
+    <tr><td><code><a href="sourceCodeSha256/">klawiter:sourceCodeSha256</a></code></td><td class="kind">Property</td><td>SHA-256 over the LF-normalized generator code recorded in a PROV plan.</td></tr>
+    <tr><td><code><a href="sha256/">klawiter:sha256</a></code></td><td class="kind">Property</td><td>SHA-256 of a provenance input entity.</td></tr>
+    <tr><td><code><a href="algorithmVersion/">klawiter:algorithmVersion</a></code></td><td class="kind">Property</td><td>Version of the deterministic algorithm that produced a dataset.</td></tr>
+    <tr><td><code><a href="selectionRule/">klawiter:selectionRule</a></code></td><td class="kind">Property</td><td>Human-readable statement of the deterministic corpus selection rule.</td></tr>
+  </tbody>
+</table>
+
+<h2>Review and claim properties</h2>
+<table>
+  <thead>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code><a href="reviewStatus/">klawiter:reviewStatus</a></code></td><td class="kind">Property</td><td>Review state of an edition proposal: proposed, confirmed, rejected, or contested.</td></tr>
+    <tr><td><code><a href="reviewFlags/">klawiter:reviewFlags</a></code></td><td class="kind">Property</td><td>Machine-raised flags that prioritize an edition for review.</td></tr>
+    <tr><td><code><a href="claimSubject/">klawiter:claimSubject</a></code></td><td class="kind">Property</td><td>The resource whose identity a contested claim disputes.</td></tr>
+    <tr><td><code><a href="claimPredicate/">klawiter:claimPredicate</a></code></td><td class="kind">Property</td><td>The relation the contested claim would assert if resolved, for example schema:sameAs or schema:exampleOfWork.</td></tr>
+    <tr><td><code><a href="claimStatus/">klawiter:claimStatus</a></code></td><td class="kind">Property</td><td>State of the claim itself; contested claims stay contested until superseded.</td></tr>
+    <tr><td><code><a href="decisionStatus/">klawiter:decisionStatus</a></code></td><td class="kind">Property</td><td>State of the human decision on a claim; open until an authorized judgment.</td></tr>
+    <tr><td><code><a href="identityScope/">klawiter:identityScope</a></code></td><td class="kind">Property</td><td>What kind of identity a claim or carrier concerns, for example location, work, or source-occurrence.</td></tr>
+    <tr><td><code><a href="identityStatus/">klawiter:identityStatus</a></code></td><td class="kind">Property</td><td>State of a candidate work identity; contested until decided.</td></tr>
+    <tr><td><code><a href="interpretation/">klawiter:interpretation</a></code></td><td class="kind">Property</td><td>A competing interpretation attached to a contested claim.</td></tr>
+    <tr><td><code><a href="interpretationStatus/">klawiter:interpretationStatus</a></code></td><td class="kind">Property</td><td>State of one interpretation of a contested claim.</td></tr>
+    <tr><td><code><a href="proposedObject/">klawiter:proposedObject</a></code></td><td class="kind">Property</td><td>The object an interpretation proposes for the claim predicate. The fail-closed alternative omits it.</td></tr>
+    <tr><td><code><a href="candidateId/">klawiter:candidateId</a></code></td><td class="kind">Property</td><td>Identifier of the reconciliation candidate an interpretation is based on.</td></tr>
+    <tr><td><code><a href="candidateSource/">klawiter:candidateSource</a></code></td><td class="kind">Property</td><td>Where a reconciliation candidate came from, for example a legacy run, the frozen authority index, or the fail-closed alternative.</td></tr>
+    <tr><td><code><a href="reviewAction/">klawiter:reviewAction</a></code></td><td class="kind">Property</td><td>A review-trail step attached to a claim.</td></tr>
+    <tr><td><code><a href="reviewOutcome/">klawiter:reviewOutcome</a></code></td><td class="kind">Property</td><td>Outcome of one review action, for example match, mismatch, unresolved, confirm, correct.</td></tr>
+    <tr><td><code><a href="reviewBasis/">klawiter:reviewBasis</a></code></td><td class="kind">Property</td><td>Stated basis of a review judgment.</td></tr>
+    <tr><td><code><a href="decisionId/">klawiter:decisionId</a></code></td><td class="kind">Property</td><td>Stable identifier of a recorded decision in the decision files.</td></tr>
+    <tr><td><code><a href="decidedAt/">klawiter:decidedAt</a></code></td><td class="kind">Property</td><td>Timestamp of a recorded decision.</td></tr>
+    <tr><td><code><a href="evidence/">klawiter:evidence</a></code></td><td class="kind">Property</td><td>Evidence references supporting a review action.</td></tr>
+    <tr><td><code><a href="contestedClaim/">klawiter:contestedClaim</a></code></td><td class="kind">Property</td><td>Links a contested edition to the claim that keeps its work binding open.</td></tr>
+    <tr><td><code><a href="sourceEdition/">klawiter:sourceEdition</a></code></td><td class="kind">Property</td><td>The edition a source-occurrence carrier volume was observed on.</td></tr>
+  </tbody>
+</table>
+
+<h2>Source-occurrence evidence properties</h2>
+<table>
+  <thead>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code><a href="sourceEvidence/">klawiter:sourceEvidence</a></code></td><td class="kind">Property</td><td>Source-occurrence evidence attached to an authority reconciliation claim.</td></tr>
+    <tr><td><code><a href="sourceLine/">klawiter:sourceLine</a></code></td><td class="kind">Property</td><td>Line number of an occurrence in the classified source.</td></tr>
+    <tr><td><code><a href="sourceValue/">klawiter:sourceValue</a></code></td><td class="kind">Property</td><td>The value exactly as it occurs in the source.</td></tr>
+    <tr><td><code><a href="sourceTextSha256/">klawiter:sourceTextSha256</a></code></td><td class="kind">Property</td><td>SHA-256 of the source line an occurrence was found on.</td></tr>
+    <tr><td><code><a href="sourcePath/">klawiter:sourcePath</a></code></td><td class="kind">Property</td><td>Repository-relative path of the file an occurrence was found in.</td></tr>
+    <tr><td><code><a href="sourceTitle/">klawiter:sourceTitle</a></code></td><td class="kind">Property</td><td>Title of the source page an occurrence belongs to.</td></tr>
+    <tr><td><code><a href="sourceField/">klawiter:sourceField</a></code></td><td class="kind">Property</td><td>The extracted field an occurrence was observed in.</td></tr>
+  </tbody>
+</table>
+
+<h2>External context keys</h2>
+<p>Short keys of the emitted JSON-LD that resolve outside the <code>klawiter:</code> namespace:</p>
+<table>
+  <thead>
+    <tr><th>Short key</th><th>Maps to</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>name</code></td><td><code>schema:name</code></td></tr>
+    <tr><td><code>description</code></td><td><code>schema:description</code></td></tr>
+    <tr><td><code>creator</code></td><td><code>schema:creator</code></td></tr>
+    <tr><td><code>sourceOrganization</code></td><td><code>schema:sourceOrganization</code></td></tr>
+    <tr><td><code>datePublished</code></td><td><code>schema:datePublished</code></td></tr>
+    <tr><td><code>publisher</code></td><td><code>schema:publisher</code></td></tr>
+    <tr><td><code>inLanguage</code></td><td><code>schema:inLanguage</code></td></tr>
+    <tr><td><code>numberOfPages</code></td><td><code>schema:numberOfPages</code></td></tr>
+    <tr><td><code>translator</code></td><td><code>schema:translator</code></td></tr>
+    <tr><td><code>locationCreated</code></td><td><code>schema:locationCreated</code></td></tr>
+    <tr><td><code>sameAs</code></td><td><code>schema:sameAs</code></td></tr>
+    <tr><td><code>workTranslation</code></td><td><code>schema:workTranslation</code></td></tr>
+    <tr><td><code>hasPart</code></td><td><code>schema:hasPart</code></td></tr>
+    <tr><td><code>author</code></td><td><code>schema:author</code></td></tr>
+    <tr><td><code>bibliographicCitation</code></td><td><code>dcterms:bibliographicCitation</code></td></tr>
+    <tr><td><code>relation</code></td><td><code>dcterms:relation</code></td></tr>
+    <tr><td><code>license</code></td><td><code>dcterms:license</code></td></tr>
   </tbody>
 </table>
 
@@ -250,8 +267,9 @@
 <h3>Wikidata</h3>
 <p>
   Stefan Zweig is identified as <a href="https://www.wikidata.org/entity/Q78491">Q78491</a> in Wikidata.
-  This identifier is used as author metadata in the JSON-LD output. Reconciliation of individual entries
-  against external authority systems is out of scope for this project (see Data Integrity Principle).
+  Publication places, translators, and publishers are reconciled against Wikidata under Gate 2; only a
+  decided and evidenced match becomes a published link, a disputed one stays a
+  <a href="ContestedClaim/"><code>klawiter:ContestedClaim</code></a>.
 </p>
 
 <footer>

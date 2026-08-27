@@ -61,7 +61,7 @@ POSTPROCESSORS = (
     Step(
         "vocab",
         "build_vocab_pages.py",
-        "Generate dereferenceable vocabulary term pages",
+        "Generate the vocabulary index and dereferenceable term pages",
     ),
     Step(
         "gate2v", "validate_reconciliation.py", "Validate Gate 2 and public projections"
