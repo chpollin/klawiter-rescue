@@ -26,7 +26,7 @@ Diese Datei ist der Einstieg in das kanonische Projektwissen. Das Repository bes
 | [[data]] | Datenebenen, Modell, Provenienz, Reconciliation und Grenzen |
 | [[pipeline]] | ausführbare Transformation, Eingaben, Stufen und Wiederholbarkeit |
 | [[frontend]] | statische Rechercheoberfläche und Expert-in-the-Loop-Kuration |
-| [[production-readiness]] | ratifizierter Produktionsvertrag, Gate-Ergebnisse und Operator Point |
+| [[production-readiness]] | ratifizierter Produktionsvertrag, Gate-Ergebnisse, offene Punkte und Operator Points |
 | [[testing]] | Testschichten, Qualitätsnachweise und Aussagegrenzen |
 | [[journal]] | chronologische Entscheidungen und abgeschlossene Arbeitssitzungen |
 

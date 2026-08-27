@@ -6,10 +6,10 @@ project:
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
 language: de
-version: 1.0
+version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-08-21
+updated: 2026-08-27
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -41,6 +41,7 @@ Der Runner beendet sich beim ersten Fehler. Pfade stammen ausschließlich aus `p
 | Stufe | Eingabe | Aufgabe | Hauptausgabe |
 |---|---|---|---|
 | `01` | SQL und BLOBs | Seiten, Slots und Textadressen extrahieren | `01_extracted.csv` |
+| `01v` | Dump und Extrakt | Zeilenidentität Dump = Extrakt erzwingen (Stufe-01-Census, harter Fehler) | Census-Prüfung |
 | `02` | extrahierte Texte | UTF-8-als-Latin-1-Mojibake reparieren | `02_encoding_fixed.csv` |
 | `03` | reparierte Texte | Wiki-Markup und bibliographische Felder parsen | `03_parsed.csv` |
 | `03b` | Parsergebnis, eingefrorener Cache | ausschließlich fehlende Felder ergänzen | `03b_llm_enriched.csv` |
@@ -52,7 +53,7 @@ Der Runner beendet sich beim ersten Fehler. Pfade stammen ausschließlich aus `p
 | `05` | klassifizierte Daten, publizierbare Links | JSON-LD und Frontend-Daten erzeugen | `klawiter.jsonld`, `klawiter.json` |
 | `06` | JSON-LD | Schema- und Qualitätsbericht erzeugen | `quality-report.json` |
 
-Danach folgen Round-Trip-Verifikation, Census, Provenienzprojektion, Triage, Patch-Replay und die abschließende Gate-2-Prüfung.
+Danach folgen Round-Trip-Verifikation, Census, Provenienzprojektion, Triage, Patch-Replay, die Generierung der dereferenzierbaren Vokabular-Termseiten und die abschließende Gate-2-Prüfung.
 
 ## Extraktion und Encoding
 
@@ -76,7 +77,7 @@ Die 76-Fälle-Stichprobe wurde von zwei unabhängigen Agenten geprüft und durch
 
 ## Gate 2: Reconciliation
 
-`pipeline/lib/reconciliation.py` bildet Kandidaten aus drei eingefrorenen Quellen: historische Ortskandidaten, unabhängige Ortsprüfung und SZD-Werkindex. Entscheidungseingaben unter `data/reconciliation/` bleiben davon getrennt.
+`pipeline/lib/reconciliation.py` bildet Kandidaten aus vier eingefrorenen Quellen: historische Ortskandidaten, unabhängige Ortsprüfung, SZD-Werkindex und dem Wikidata-Abgleich für Übersetzer- und Verlagsnamen (`data/provenance/agent-reconciliation.json`, Schwelle fünf Vorkommen). Entscheidungseingaben unter `data/reconciliation/` bleiben davon getrennt. Die Refreezing-Werkzeuge `reconcile_locations.py` und `reconcile_agents.py` kontaktieren das Netz nur mit dem expliziten Schalter `--i-am-refreezing`; der Produktionslauf bleibt netzfrei.
 
 Die Publikationsregel lautet: Nur eine belegte `confirm`- oder `correct`-Entscheidung erzeugt eine Beziehung in `publishable-links.json`. `unresolved` erzeugt einen quellengebundenen `klawiter:ContestedClaim`. `reject` bewahrt die negative Entscheidung, veröffentlicht jedoch keinen Link.
 

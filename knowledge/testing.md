@@ -6,10 +6,10 @@ project:
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
 language: de
-version: 1.0
+version: 1.1
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
-updated: 2026-08-21
+updated: 2026-08-27
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
@@ -21,12 +21,13 @@ related: [data, pipeline, frontend, production-readiness]
 ```bash
 python -m uv run pytest -q
 python -m uv run pytest -q -m semantic
-python -m uv run ruff check .
-python -m uv run ruff format --check .
+python -m uv run pre-commit run --all-files
 python -m compileall -q pipeline tests
 node --test tests/*.test.js
 git diff --check
 ```
+
+Die statischen Prüfungen (ruff check, ruff format) sind in `.pre-commit-config.yaml` definiert; CI führt denselben Hook-Satz aus.
 
 Der Standard-Pytest-Satz schließt die diagnostischen Einzelassertionen mit Marker `semantic` aus. Ein aggregiertes Bound verhindert dennoch, dass die bekannte semantische Abweichungszahl unbemerkt steigt. Die semantische Suite wird separat ausgeführt und darf bekannte, exakt dokumentierte Abweichungen sichtbar melden.
 
@@ -44,7 +45,7 @@ Der Standard-Pytest-Satz schließt die diagnostischen Einzelassertionen mit Mark
 
 `tests/test_consistency.py`, `tests/test_heuristic.py` und `tests/test_regression.py` prüfen Querbeziehungen, Verteilungen und bekannte Fehlergrenzen. `.github/baseline-metrics.json` enthält die ratcheting-fähigen Bounds. Eine nachgewiesene Verbesserung senkt einen Fehlerbound oder erhöht die stabile Weiterleitungsauflösung; eine Verschlechterung darf nicht als neue Baseline eingefroren werden.
 
-Der aktuelle Titel-Fallback löst 1.310 Weiterleitungsnamen auf und begrenzt gebrochene `seeAlso`-Verweise auf 585. Die Änderung verwendet MediaWiki-Seitentitel anstelle von Ausgabe-Headern als Recordtitel.
+Der Titel-Fallback verwendet MediaWiki-Seitentitel anstelle von Ausgabe-Headern als Recordtitel; die Weiterleitungskarte enthält zusätzlich Seitentitel-Aliasse aus Stufe 05, wodurch die verbleibenden gebrochenen `seeAlso`-Verweise echte Rotlinks sind. Die eingefrorenen Zählungen stehen in `.github/baseline-metrics.json`.
 
 ### Extraktions- und Normalisierungseinheiten
 
@@ -78,7 +79,7 @@ Gate 2 prüft:
 
 ### Frontend-Logik
 
-Node-Tests prüfen exakte Fundstellen, Snippetbildung, Triagepriorität, pending/editor-Suppression, Reconciliation-Lookup und stabil sortierten Export. Syntaxprüfungen laufen für alle JavaScript-Module. Ein Browser-Smoke-Test bleibt eine ergänzende visuelle Prüfung.
+Node-Tests prüfen exakte Fundstellen, Snippetbildung, Triagepriorität, pending/editor-Suppression, Reconciliation-Lookup, stabil sortierten Export, den Routing-Guard samt Editiermodus-Gate und die Ordnung der Kandidaten-Queue der Datenqualitäts-Werkbank. Syntaxprüfungen laufen für alle JavaScript-Module. Ein Browser-Smoke-Test bleibt eine ergänzende visuelle Prüfung.
 
 ## Agentisches Review
 
@@ -110,4 +111,6 @@ Die per-Feld-Tests bleiben bewusst separat markiert. Das aggregierte Standardtes
 
 Automatisch belegt sind Record-Vollständigkeit, Schema, bekannte Bounds, Selektorintegrität, Entscheidungsseparation und Wiederholbarkeit des Datenkerns. Agentisch belegt sind die dokumentierten Sample- und Low-Score-Entscheidungen.
 
-Nicht belegt sind eine corpusweite fachliche Genauigkeitsquote, die institutionelle Werkidentität der Graphic-Novel-Adaption und die Richtigkeit ungeprüfter Kandidaten. Die vollständigen Queues halten diese Fälle sichtbar. [[production-readiness]] nennt den verbleibenden Operator Point.
+Zwei strukturelle Grenzen der Round-Trip-Verifikation sind zu benennen. Erstens die Zirkularität: `verify.py` prüft extrahierte Werte gegen denselben Rohtext, aus dem sie extrahiert wurden; eine systematisch falsche, aber im Text vorhandene Zeichenkette besteht die Prüfung. Der Abgleich belegt Quellentreue, keine fachliche Richtigkeit. Zweitens die Teilstring-Schwäche der `correct`-Definition: ein Wert gilt als belegt, sobald er als Teilzeichenkette im Rohtext vorkommt; ein verkürzter oder aus dem falschen Editionsblock stammender Wert kann so als korrekt zählen, besonders auf Mehrfachausgabenseiten. Die Fundstellen-Anzeige im Editiermodus macht Mehrfachvorkommen deshalb explizit.
+
+Nicht belegt sind eine corpusweite fachliche Genauigkeitsquote, die institutionelle Werkidentität der Graphic-Novel-Adaption und die Richtigkeit ungeprüfter Kandidaten (einschließlich des neuen Übersetzer- und Verlags-Prüfvorrats). Die vollständigen Queues halten diese Fälle sichtbar. [[production-readiness]] nennt die verbleibenden Operator Points.

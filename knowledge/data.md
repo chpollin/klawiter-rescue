@@ -6,10 +6,10 @@ project:
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
 language: de
-version: 1.0
+version: 1.1
 tags: [data, model, provenance, reconciliation]
 created: 2026-03-29
-updated: 2026-08-21
+updated: 2026-08-27
 authors: [Christopher Pollin]
 related: [about, pipeline, frontend, testing, production-readiness]
 ---
@@ -26,6 +26,10 @@ Das Repository bewahrt vier klar getrennte Ebenen:
 4. `data/output/editions/` und `data/output/reconciliation/` enthalten das strukturierte Editionsmodell, Reconciliation und Prüfartefakte.
 
 Entscheidungseingaben liegen unter `data/reconciliation/`. Eingefrorene externe und modellgestützte Eingaben liegen unter `data/provenance/`. Diese Verzeichnisse sind Quellen des Produktionslaufs und keine temporären Ausgaben.
+
+## Quellenumfang und bewusste Auslassungen
+
+Die Pipeline verarbeitet ausschließlich die jeweils letzte Fassung jeder Seite. Der Dump enthält daneben rund 45.200 historische Revisionen, die bewusst ungenutzt bleiben; sie liegen vollständig in `data/raw/` und stehen einer späteren Auswertung offen. Die MediaWiki-Archivtabelle verzeichnet 207 gelöschte Seiten; ihre Triage (welche davon bibliographischen Wert trugen) ist nicht beauftragt und als offener Punkt registriert, siehe [[production-readiness]].
 
 ## Record Census
 
@@ -73,9 +77,9 @@ Der offene Adaptionsfall `klawiter:claim/work-binding/4916-2016-b` bewahrt die D
 
 ## Reconciliation
 
-Gate 2 trennt Kandidaten, Entscheidungen, strittige Claims und publizierbare Links. Kandidaten entstehen für 382 Orts- und 443 Werk-Subjekte. Belegte Entscheidungen veröffentlichen 26 Ortslinks und drei SZD-Werklinks. Fünf Ortsentscheidungen bleiben als offene Claims erhalten.
+Gate 2 trennt Kandidaten, Entscheidungen, strittige Claims und publizierbare Links. Kandidaten entstehen für Orts-, Werk- sowie Übersetzer- und Verlagssubjekte (die Agent-Kandidaten aus dem eingefrorenen Wikidata-Abgleich `data/provenance/agent-reconciliation.json`, Schwelle fünf Vorkommen). Belegte Entscheidungen veröffentlichen die bestätigten Orts- und SZD-Werklinks; die aktuellen Zählungen stehen im Gate-2-Manifest `data/output/reconciliation/manifest.json`. Offene Ortsentscheidungen bleiben als strittige Claims erhalten.
 
-`pipeline/05_to_jsonld.py` liest ausschließlich `publishable-links.json`. Kandidaten und offene Claims können in Oberfläche und Export sichtbar sein, erscheinen aber nicht als `schema:sameAs`. Die priorisierte Gate-2-Prüfliste enthält 796 Fälle.
+`pipeline/05_to_jsonld.py` liest ausschließlich `publishable-links.json`. Kandidaten und offene Claims können in Oberfläche und Export sichtbar sein, erscheinen aber nicht als `schema:sameAs`. Die priorisierte Gate-2-Prüfliste umfasst alle offenen Orts-, Werk- und Agent-Fälle; ihre Größe steht im Manifest.
 
 ## Provenienz
 
@@ -94,7 +98,7 @@ Freigegebene Patches liegen unter `data/corrections/` und werden bei jedem Lauf 
 Die aktuellen Feldabdeckungen stehen ausschließlich in `data/output/quality-report.json`. Die wichtigsten bekannten Grenzen sind:
 
 - 1.810 Editionssegmente bleiben Vorschläge; 75 Segmente sind agentisch bestätigt und eine Bindung ist strittig.
-- 585 `seeAlso`-Referenzen sind nicht auflösbar; 1.310 Weiterleitungsnamen werden aufgelöst.
+- Die verbleibenden nicht auflösbaren `seeAlso`-Referenzen sind echte Rotlinks auf nie angelegte Seiten; die Weiterleitungskarte enthält zusätzlich die Seitentitel-Aliasse aus Stufe 05. Die eingefrorenen Zählungen stehen in `.github/baseline-metrics.json` (`known_issues`).
 - Die flache Schicht kann auf 443 Mehrfachausgabenseiten Werte verschiedener Ausgaben kombinieren.
 - Fehlende bibliographische Werte können quellenbedingt sein und werden nicht erfunden.
 - Der semantische Ground-Truth-Satz ist klein und misst keine corpusweite Fehlerrate.

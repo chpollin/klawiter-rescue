@@ -9,10 +9,10 @@ method:
   url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
 language: de
-version: 0.4
+version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-08-21
+updated: 2026-08-27
 ---
 
 # Journal
@@ -20,6 +20,15 @@ updated: 2026-08-21
 Arbeitsjournal der Klawiter Bibliography. Jede substantielle Sitzung dokumentiert Runde, Änderungen, Entscheidungen, offene Punkte und den nächsten belastbaren Wiedereinstieg.
 
 ---
+
+## 2026-08-26/27 — Session 26: Sanierungsprogramm zur Version 1.0
+
+**Runde.** Umsetzung des vom Operator genehmigten Fertigstellungsprogramms nach fünf unabhängigen Prüfungen (Modellierung, Datenvollständigkeit, Testlage, Architektur, Frontend). Acht Phasen von der Baseline-Sicherung bis zur Endverifikation, elf Milestone-Commits, jeder auf beiden CI-Jobs grün.
+**Geändert.** Baseline gesichert und der schwerste Befund behoben: sechs fehlende Container-Terme ließen den Editionsgraphen zu sechs RDF-Tripeln expandieren, SHACL prüfte einen leeren Graphen; nach dem Fix expandiert dieselbe Datei zu über 47.000 Tripeln und besteht real, dauerhaft abgesichert durch Tripel-Untergrenzen in Stufe 06. Neuer CI-Job `reproduce` beweist die byteidentische Reproduktion der deterministischen Artefaktmenge aus den committeten Rohquellen auf jedem Push; `.gitattributes` plus LF-normalisierte Code-Hashes machen die Provenienz plattformunabhängig. Sicherheitsnetz: Refreezing-Werkzeuge (`reconcile_locations.py`, neu `reconcile_agents.py`) kontaktieren das Netz nur mit `--i-am-refreezing`. Drei Datenverbesserungen mit dump-eigenen Orakeln: Kategorien exakt gegen `zweig_categorylinks` (Sortierschlüssel, Doppel-Leerzeichen, Erstbuchstaben-Versalierung), Querverweis-Reparatur über `zweig_pagelinks` und Seitentitel-Aliasse in der Weiterleitungskarte (gebrochene Verweise sind jetzt echte Rotlinks), harter Stufe-01-Census als Pipeline-Schritt `01v`. Volle Modellierungsrunde: Editionsgraph als kanonische Datenpublikation deklariert, flache Schicht als abgeleitete Projektion; Ressourcen-Knoten für Verlag, Übersetzer und Ort; eine Zweig-Entität mit kanonischer Wikidata-IRI; Sprach-Tags; vereinheitlichtes Contested-Claim-Modell über beide Gates; Vokabular v3 mit 90 dereferenzierbaren Termseiten; SHACL auch über die flache Schicht; eingefrorene Wikidata-Kandidaten für Übersetzer- und Verlagsnamen als neuer fail-closed-Prüfvorrat. Frontend saniert und um die Kurationssicht erweitert: Datenqualitäts-Werkbank `#quality` (Vollständigkeitsmatrix, Arbeitsvorräte, Kandidaten-Queue mit Tastatur und Subjekt-Reichweite), Connections als Rangliste der meistreferenzierten Einträge statt des Blasen-Graphen, kompakte Eintragskarten ohne Duplikate, Routing-Guard, Editiermodus-Gate im Setter, escaptes Playground-Highlighting, vendorte Kartengeometrie (kein externer Host mehr), einheitlich englisches Vokabular. Resthärtung: Pfade zentral in `lib/config.py`, Header-Grammatik mit einem Ursprung (`[ca. JAHR]` parst überall gleich, zwei Einträge präziser), Zeilen-Folding einmal statt je Subjekt, pre-commit in CI und README. Evidenz-Freeze auf gemessene Werte inklusive korrigierter Auflösungssemantik der Querverweis-Schranke und neuer Publisher-Mojibake-Schranke. Fresh-Clone-Probe fand die einzige Lücke der Reproduzierbarkeitsaussage: die handetikettierte Stichprobe `test_sample_20.json` lag nur untracked lokal; jetzt versioniert unter `tests/`.
+**Entschieden.** Editionsgraph primär (maschinenlesbar über die Dataset-Kopplung); alle vier Nutzerrollen gleichrangig, echte Zielkonflikte gehen an den Operator; Agent-Kandidaten ohne `unresolved`, bis ein Occurrence-Scan Quellenbelege liefert; 1.0 ist ein technischer Stand, externe Fachprüfung folgt danach; Publikations- und Zitierform erst nach vollständiger Operator-Abnahme.
+**Offen.** Die registrierten Punkte in [[production-readiness]] (Archiv-Triage, Frontend-Kosmetik-Runde, review-Feld-Projektion, Occurrence-Scan, Agent-Prüfvorrat, externe Fachprüfung) und die Operator Points (Werkidentität der Adaption, Abnahme 1.0, Publikationsform).
+
+**Der eine nächste Schritt.** Operator-Sichtung des Frontends und Abnahme der Version 1.0.
 
 ## 2026-08-21 — Session 25: Publikationslinien in kanonisches Projektwissen integriert
 

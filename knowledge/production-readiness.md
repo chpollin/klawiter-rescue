@@ -9,10 +9,10 @@ method:
   url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
 language: de
-version: 1.0
+version: 1.1
 tags: [eil, dia-xai, concept, provenance]
 created: 2026-07-18
-updated: 2026-08-21
+updated: 2026-08-27
 authors: [Christopher Pollin]
 related: [about, data, pipeline, testing, frontend, journal]
 ---
@@ -85,13 +85,13 @@ Die Ausgabe bleibt vollständig erhalten. Sie erscheint nicht in `schema:workExa
 
 ## Gate 2: Reconciliation
 
-Gate 2 erzeugt für 382 Orts- und 443 Werk-Subjekte deterministische Kandidaten. Der eingefrorene SZD-Werkindex ist durch Quellpfad, Repository-Commit und SHA-256 provenienziert. Ortsvorschläge bewahren die Ergebnisse des früheren Reconciliation-Laufs und die unabhängige Prüfung als Kandidaten.
+Gate 2 erzeugt für 382 Orts-, 443 Werk- sowie 101 Übersetzer- und Verlagssubjekte deterministische Kandidaten. Der eingefrorene SZD-Werkindex ist durch Quellpfad, Repository-Commit und SHA-256 provenienziert. Ortsvorschläge bewahren die Ergebnisse des früheren Reconciliation-Laufs und die unabhängige Prüfung als Kandidaten. Die Agent-Kandidaten stammen aus dem eingefrorenen Wikidata-Abgleich (`data/provenance/agent-reconciliation.json`, Schwelle fünf Vorkommen, 78 Subjekte mit mindestens einem Kandidaten); sie bilden einen neuen fail-closed-Prüfvorrat und publizieren nichts ohne belegte Entscheidung.
 
 Entscheidungen liegen getrennt unter `data/reconciliation/`. Der aktuelle Stand umfasst 31 Ortsentscheidungen und drei Werkentscheidungen. Daraus entstehen 26 publizierbare Wikidata-Ortslinks und drei publizierbare SZD-Werklinks. `pipeline/05_to_jsonld.py` liest ausschließlich diese publizierbare Schicht.
 
 Fünf Ortsentscheidungen bleiben offen. Jeder Fall besitzt einen stabilen `klawiter:ContestedClaim`, exakte Fundzeilen aus `04_classified.csv` mit Hash, konkurrierende Normdateninterpretationen, eine fail-closed-Alternative ohne Zuordnung und den Prüfverlauf. Offene Claims erzeugen kein `schema:sameAs`.
 
-Die Gate-2-Prüfliste enthält 796 Fälle. Sie umfasst jeden Kandidaten ohne akzeptierte Entscheidung und jeden strittigen Fall. Der Umfang bezeichnet Prüfbedarf und keine Fehlerquote.
+Die Gate-2-Prüfliste umfasst jeden Kandidaten ohne akzeptierte Entscheidung und jeden strittigen Fall über alle drei Subjektarten; ihre aktuelle Größe steht im Gate-2-Manifest. Der Umfang bezeichnet Prüfbedarf und keine Fehlerquote.
 
 ## Expert-in-the-Loop-Oberfläche
 
@@ -100,7 +100,8 @@ Der localhost-gebundene Editiermodus implementiert:
 - Accept, Correct und Add für provenienzgetrackte Felder;
 - Feldfundstellen oder den vollständigen Quelltext als Evidenz;
 - Triage-Hinweise aus Provenienz, Round-Trip-Verifikation und Census;
-- Normdatenkandidaten mit Confirm, Reject und Unresolved;
+- Ortskandidaten mit Confirm, Reject und Unresolved; Übersetzer- und Verlagskandidaten mit Confirm und Reject (Unresolved braucht Occurrence-Evidenz, die die Pipeline noch nicht erhebt);
+- subjektbezogene Entscheidungen mit ausgewiesener Reichweite, erreichbar am Eintrag und in der Kandidaten-Queue der Datenqualitäts-Werkbank (`#quality`, mit Tastatursteuerung);
 - Persistenz der laufenden Sitzung in `localStorage`;
 - einen kombinierten Export mit `patchVersion: 2` und `reconciliationPatchVersion: 1`.
 
@@ -127,11 +128,20 @@ Am 2026-08-21 ersetzte das agentische Review die externe Stichprobe als Startbed
 
 Ebenfalls am 2026-08-21 wurde entschieden, dass strittige Fälle Bestandteil der finalen Daten sind. Sie werden als offene Claims modelliert und bleiben von bestätigten Beziehungen unterscheidbar.
 
-## Grenzen und Operator Point
+## Grenzen, offene Punkte und Operator Points
 
-Die flache Kompatibilitätsschicht bleibt für Mehrfachausgabenseiten strukturell ungenau; der Gate-1-Graph ist dort die präzisere Darstellung. 1.810 Ausgaben und 796 Gate-2-Fälle sind weiterhin zu prüfen. Bekannte semantische Ground-Truth-Fehler stehen in [[testing]].
+Die flache Kompatibilitätsschicht bleibt für Mehrfachausgabenseiten strukturell ungenau; der Gate-1-Graph ist dort die präzisere Darstellung. Die vollständigen Prüfvorräte (unbestätigte Ausgaben, Gate-2-Fälle über Orte, Werke, Übersetzer und Verlage) stehen in den Queues und Manifesten. Bekannte semantische Ground-Truth-Fehler stehen in [[testing]].
 
-Der einzige institutionelle Operator Point betrifft die Werkidentität der Graphic-Novel-Adaption `klawiter:edition/4916-2016-b`. Der vorhandene Claim sichert den Fall vollständig; seine Offenheit blockiert den reproduzierbaren Produktionsstand nicht.
+Registrierte offene Punkte, die den reproduzierbaren Produktionsstand nicht blockieren:
+
+- Triage der 207 Seiten in der MediaWiki-Archivtabelle (nicht beauftragt; Entscheidung beim Operator).
+- Frontend-Kosmetik als eigene Runde nach der Operator-Feedback-Sichtung (RTL/lang-Attribute, Sortierung im URL-Hash, verbliebene Inline-Handler, Cross-View-Brushing).
+- Projektion des `review`-Felds aus dem Datenbestand in den Prüfstatus-Chip der Oberfläche.
+- Occurrence-Scan für Übersetzer- und Verlagsnamen, damit auch dort `unresolved`-Entscheidungen mit Quellenbelegen möglich werden.
+- Abarbeitung des Übersetzer- und Verlags-Prüfvorrats als Kurationsaufgabe.
+- Externe Fachprüfung als zusätzliche Validierung auf dem fertigen Werkzeug.
+
+Operator Points: die institutionelle Werkidentität der Graphic-Novel-Adaption `klawiter:edition/4916-2016-b` (der vorhandene Claim sichert den Fall vollständig), die Abnahme der Version 1.0 und, nach der Abnahme, die Publikations- und Zitierform (Release-Tag, Zenodo/DOI).
 
 ## Evidenzorte
 
