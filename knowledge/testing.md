@@ -1,11 +1,11 @@
 ---
-title: Qualitätssicherung
+title: Quality Assurance
 aliases: [testing, tests, validation, quality assurance]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
-language: de
+language: en
 version: 1.1
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
@@ -14,9 +14,9 @@ authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
 
-# Qualitätssicherung
+# Quality Assurance
 
-## Prüfkommandos
+## Check Commands
 
 ```bash
 python -m uv run pytest -q
@@ -27,91 +27,91 @@ node --test tests/*.test.js
 git diff --check
 ```
 
-Die statischen Prüfungen (ruff check, ruff format) sind in `.pre-commit-config.yaml` definiert; CI führt denselben Hook-Satz aus.
+The static checks (ruff check, ruff format) are defined in `.pre-commit-config.yaml`; CI runs the same hook set.
 
-Der Standard-Pytest-Satz schließt die diagnostischen Einzelassertionen mit Marker `semantic` aus. Ein aggregiertes Bound verhindert dennoch, dass die bekannte semantische Abweichungszahl unbemerkt steigt. Die semantische Suite wird separat ausgeführt und darf bekannte, exakt dokumentierte Abweichungen sichtbar melden.
+The default pytest set excludes the diagnostic individual assertions with the marker `semantic`. An aggregated bound nevertheless prevents the known semantic deviation count from rising unnoticed. The semantic suite is run separately and may report known, exactly documented deviations visibly.
 
-## Testschichten
+## Test Layers
 
-### Record-Vollständigkeit
+### Record Completeness
 
-`pipeline/census.py` und `tests/test_census.py` prüfen die Identitäten Quelle = JSON-LD und Frontend = JSON-LD minus Weiterleitungen. Fehlende, erfundene und doppelte Records führen zum Fehler. Die eine bibliographische Seite ohne Textkörper ist als benannter Stub explizit begrenzt.
+`pipeline/census.py` and `tests/test_census.py` check the identities source = JSON-LD and frontend = JSON-LD minus redirects. Missing, invented and duplicate records cause a failure. The one bibliographic page without a text body is explicitly bounded as a named stub.
 
-### Schema und Wertebereiche
+### Schema and Value Ranges
 
-`tests/test_schema.py` prüft alle Records auf Typen, Jahres- und Seitenbereiche, Sprachcodes, leere Werte, Wiki-Markup und bekannte Encoding-Artefakte. Diese Schicht erkennt strukturelle Fehler, kann jedoch plausible fachlich falsche Werte nicht allein beurteilen.
+`tests/test_schema.py` checks all records for types, year and page ranges, language codes, empty values, wiki markup and known encoding artifacts. This layer detects structural errors, yet cannot judge plausible but factually wrong values on its own.
 
-### Konsistenz und Regression
+### Consistency and Regression
 
-`tests/test_consistency.py`, `tests/test_heuristic.py` und `tests/test_regression.py` prüfen Querbeziehungen, Verteilungen und bekannte Fehlergrenzen. `.github/baseline-metrics.json` enthält die ratcheting-fähigen Bounds. Eine nachgewiesene Verbesserung senkt einen Fehlerbound oder erhöht die stabile Weiterleitungsauflösung; eine Verschlechterung darf nicht als neue Baseline eingefroren werden.
+`tests/test_consistency.py`, `tests/test_heuristic.py` and `tests/test_regression.py` check cross-relations, distributions and known error limits. `.github/baseline-metrics.json` contains the ratcheting-capable bounds. A demonstrated improvement lowers an error bound or raises the stable redirect resolution; a deterioration must not be frozen as a new baseline.
 
-Der Titel-Fallback verwendet MediaWiki-Seitentitel anstelle von Ausgabe-Headern als Recordtitel; die Weiterleitungskarte enthält zusätzlich Seitentitel-Aliasse aus Stufe 05, wodurch die verbleibenden gebrochenen `seeAlso`-Verweise echte Rotlinks sind. Die eingefrorenen Zählungen stehen in `.github/baseline-metrics.json`.
+The title fallback uses MediaWiki page titles instead of edition headers as record titles; the redirect map additionally contains page-title aliases from stage 05, whereby the remaining broken `seeAlso` references are genuine red links. The frozen counts are held in `.github/baseline-metrics.json`.
 
-### Extraktions- und Normalisierungseinheiten
+### Extraction and Normalization Units
 
-Unit- und Real-Entry-Tests decken Encoding, Wiki-Parser, Feldmuster, Vokabular, Normalisierung, Patch-Replay, Provenienz und den Produktionsrunner ab. Regressionstests bewahren den quellenbedingt leeren Stub und die Behandlung von `[ca. year]`-Headern.
+Unit and real-entry tests cover encoding, wiki parser, field patterns, vocabulary, normalization, patch replay, provenance and the production runner. Regression tests preserve the source-conditioned empty stub and the handling of `[ca. year]` headers.
 
-### Werk-/Ausgabe-Gate
+### Work/Edition Gate
 
-Gate 1 prüft den vollständigen Graphen:
+Gate 1 checks the complete graph:
 
-- SHACL für Werk, Ausgabe, Annotation, Träger, Claim, Interpretation, ReviewAction und Werkidentitätskandidat;
-- exakte Textselektoren und SHA-256;
-- stabile und eindeutige Identifikatoren;
-- vollständige priorisierte Queue;
-- Trennung bestätigter Beziehungen und strittiger Claims;
-- deterministischen Neuaufbau aus eingefrorenen Eingaben.
+- SHACL for work, edition, annotation, carrier, claim, interpretation, ReviewAction and work identity candidate;
+- exact text selectors and SHA-256;
+- stable and unique identifiers;
+- complete prioritized queue;
+- separation of confirmed relations and contested claims;
+- deterministic rebuild from frozen inputs.
 
-Die Ergebnisse werden in `validation-report.json` und EARL festgehalten.
+The results are recorded in `validation-report.json` and EARL.
 
-### Reconciliation-Gate
+### Reconciliation Gate
 
-Gate 2 prüft:
+Gate 2 checks:
 
-- vollständige Trennung von Kandidat, Entscheidung, offenem Claim und publizierbarem Link;
-- exakte Quellenbelege für jeden unresolved Fall;
-- Fundstellen oder einen ausformulierten Nullbefund für jedes Agentsubjekt mit Kandidat;
-- Supersessionsgeschichte bei Entscheidungspatches;
-- Eingabehashes für Editionsgraph, Ortsdaten, Review, Entscheidungen, SZD-Index und klassifizierte Quelle;
-- identische JSON-LD- und Frontendprojektion;
-- deterministischen Neuaufbau.
+- complete separation of candidate, decision, open claim and publishable link;
+- exact source evidence for every unresolved case;
+- occurrences or a spelled-out null finding for every agent subject with a candidate;
+- supersession history for decision patches;
+- input hashes for edition graph, location data, review, decisions, SZD index and classified source;
+- identical JSON-LD and frontend projection;
+- deterministic rebuild.
 
-`tests/test_reconciliation.py` sichert die Datenverträge, `tests/contested_claims.test.js` die Darstellung und den Export strittiger Aussagen.
+`tests/test_reconciliation.py` secures the data contracts, `tests/contested_claims.test.js` the display and export of contested statements.
 
-### Frontend-Logik
+### Frontend Logic
 
-Node-Tests prüfen exakte Fundstellen, Snippetbildung, Triagepriorität, pending/editor-Suppression, Reconciliation-Lookup, stabil sortierten Export, den Routing-Guard samt Editiermodus-Gate und die Ordnung der Kandidaten-Queue der Datenqualitäts-Werkbank. Syntaxprüfungen laufen für alle JavaScript-Module. Ein Browser-Smoke-Test bleibt eine ergänzende visuelle Prüfung.
+Node tests check exact occurrences, snippet formation, triage priority, pending/editor suppression, reconciliation lookup, stably sorted export, the routing guard together with the editing-mode gate and the ordering of the candidate queue of the data quality workbench. Syntax checks run for all JavaScript modules. A browser smoke test remains a complementary visual check.
 
-## Agentisches Review
+## Agentic Review
 
-Die Editionsstichprobe umfasst 76 Segmente aus drei komplexen Seiten. Zwei unabhängige Erstprüfungen arbeiteten gegen Schema, Quellausschnitt und Hash. Ein unabhängiger stärkerer Verifikations-Agent reconciliierte Abweichungen. Das Ergebnis bestätigt 75 Segmente und erhält eine Werkbindung als offenen Claim.
+The edition sample comprises 76 segments from three complex pages. Two independent initial reviews worked against schema, source excerpt and hash. An independent stronger verification agent reconciled the deviations. The result confirms 75 segments and preserves one work binding as an open claim.
 
-Die Ortsprüfung untersuchte die verbliebenen niedrig bewerteten Fälle unabhängig. Bestätigungen und Korrekturen wurden als Entscheidungen übernommen. Fünf Fälle blieben fachlich offen und wurden als strittige Claims materialisiert.
+The location review examined the remaining low-scored cases independently. Confirmations and corrections were adopted as decisions. Five cases stayed open in domain terms and were materialized as contested claims.
 
-Agentische Entscheidungen sind durch Reviewer, Eingabehash, Ergebnis und Evidenzdatei nachvollziehbar. Eine spätere externe Fachprüfung ist zusätzliche Validierung.
+Agentic decisions are traceable through reviewer, input hash, result and evidence file. A later external expert review is additional validation.
 
-## Semantische Stichprobe
+## Semantic Sample
 
-`tests/wiki_ground_truth.json` enthält zehn gegen die frühere Webdarstellung geprüfte Einträge mit sieben Feldern. Die Stichprobe macht konkrete Feldabweichungen sichtbar, misst aber keine corpusweite Fehlerrate. Mehrfachausgabenseiten dominieren ihre bekannten Fehler.
+`tests/wiki_ground_truth.json` contains ten entries with seven fields, checked against the earlier web presentation. The sample makes concrete field deviations visible, yet measures no corpus-wide error rate. Multi-edition pages dominate its known failures.
 
-Die per-Feld-Tests bleiben bewusst separat markiert. Das aggregierte Standardtest-Bound in `.github/baseline-metrics.json` verhindert eine stille Verschlechterung. Nach einer belegten Korrektur wird der Bound nach unten ratcheted.
+The per-field tests stay deliberately marked separately. The aggregated default-test bound in `.github/baseline-metrics.json` prevents a silent deterioration. After a documented correction, the bound is ratcheted downwards.
 
-## Produktionsnachweise
+## Production Evidence
 
-| Nachweis | Aussage |
+| Evidence | Statement |
 |---|---|
-| `data/output/quality-report.json` | Recordzahlen, Abdeckung und Schemahinweise |
-| `data/output/verification-report.json` | Fundstellenbasierte Feldverifikation |
-| `data/output/census-report.json` | verlustfreie Record-Kette |
-| `data/output/editions/validation-report.json` | Gate-1-Vertrag |
-| `data/output/reconciliation/validation-report.json` | Gate-2-Vertrag |
-| `data/output/*/earl.jsonld` | maschinenlesbare Prüfergebnisse |
-| `data/output/audits/` | Baseline, Wiederholbarkeit und unabhängige Schlussprüfung |
+| `data/output/quality-report.json` | record counts, coverage and schema notes |
+| `data/output/verification-report.json` | occurrence-based field verification |
+| `data/output/census-report.json` | lossless record chain |
+| `data/output/editions/validation-report.json` | Gate 1 contract |
+| `data/output/reconciliation/validation-report.json` | Gate 2 contract |
+| `data/output/*/earl.jsonld` | machine-readable check results |
+| `data/output/audits/` | baseline, repeatability and independent final check |
 
-## Aussagegrenzen
+## Limits of What Is Asserted
 
-Automatisch belegt sind Record-Vollständigkeit, Schema, bekannte Bounds, Selektorintegrität, Entscheidungsseparation und Wiederholbarkeit des Datenkerns. Agentisch belegt sind die dokumentierten Sample- und Low-Score-Entscheidungen.
+Automatically documented are record completeness, schema, known bounds, selector integrity, decision separation and repeatability of the data core. Agentically documented are the documented sample and low-score decisions.
 
-Zwei strukturelle Grenzen der Round-Trip-Verifikation sind zu benennen. Erstens die Zirkularität: `verify.py` prüft extrahierte Werte gegen denselben Rohtext, aus dem sie extrahiert wurden; eine systematisch falsche, aber im Text vorhandene Zeichenkette besteht die Prüfung. Der Abgleich belegt Quellentreue, keine fachliche Richtigkeit. Zweitens die Teilstring-Schwäche der `correct`-Definition: ein Wert gilt als belegt, sobald er als Teilzeichenkette im Rohtext vorkommt; ein verkürzter oder aus dem falschen Editionsblock stammender Wert kann so als korrekt zählen, besonders auf Mehrfachausgabenseiten. Die Fundstellen-Anzeige im Editiermodus macht Mehrfachvorkommen deshalb explizit.
+Two structural limits of the round-trip verification must be named. First, the circularity. `verify.py` checks extracted values against the same raw text from which they were extracted; a systematically wrong string that is present in the text passes the check. The comparison documents fidelity to the source, no factual correctness. Second, the substring weakness of the `correct` definition. A value counts as documented as soon as it occurs as a substring in the raw text; a shortened value, or one originating from the wrong edition block, can thereby count as correct, especially on multi-edition pages. For that reason the occurrence display in the editing mode makes multiple occurrences explicit.
 
-Nicht belegt sind eine corpusweite fachliche Genauigkeitsquote, die institutionelle Werkidentität der Graphic-Novel-Adaption und die Richtigkeit ungeprüfter Kandidaten (einschließlich des neuen Übersetzer- und Verlags-Prüfvorrats). Die vollständigen Queues halten diese Fälle sichtbar. [[production-readiness]] nennt die verbleibenden Operator Points.
+Not documented are a corpus-wide factual accuracy rate, the institutional work identity of the graphic novel adaptation and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[production-readiness]] names the remaining Operator Points.

@@ -1,11 +1,11 @@
 ---
-title: Daten und Modell
+title: Data and Model
 aliases: [data, dataset, data model, JSON-LD, work-edition extension]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
-language: de
+language: en
 version: 1.1
 tags: [data, model, provenance, reconciliation]
 created: 2026-03-29
@@ -14,122 +14,122 @@ authors: [Christopher Pollin]
 related: [about, pipeline, frontend, testing, production-readiness]
 ---
 
-# Daten und Modell
+# Data and Model
 
-## Datenebenen
+## Data Levels
 
-Das Repository bewahrt vier klar getrennte Ebenen:
+The repository preserves four clearly separated levels:
 
-1. `data/raw/` enthält den unveränderten MediaWiki-SQL-Dump und acht Textspeicher.
-2. `data/intermediate/` enthält regenerierbare tabellarische Stufen und wird nicht versioniert.
-3. `data/output/klawiter.jsonld` und `docs/data/klawiter.json` bilden die flache Kompatibilitätsschicht.
-4. `data/output/editions/` und `data/output/reconciliation/` enthalten das strukturierte Editionsmodell, Reconciliation und Prüfartefakte.
+1. `data/raw/` contains the unmodified MediaWiki SQL dump and eight text stores.
+2. `data/intermediate/` contains regenerable tabular stages and is not versioned.
+3. `data/output/klawiter.jsonld` and `docs/data/klawiter.json` form the flat compatibility layer.
+4. `data/output/editions/` and `data/output/reconciliation/` contain the structured edition model, reconciliation and validation artifacts.
 
-Entscheidungseingaben liegen unter `data/reconciliation/`. Eingefrorene externe und modellgestützte Eingaben liegen unter `data/provenance/`. Diese Verzeichnisse sind Quellen des Produktionslaufs und keine temporären Ausgaben.
+Decision inputs are held under `data/reconciliation/`. Frozen external and model-supported inputs are held under `data/provenance/`. These directories are sources of the production run and not temporary outputs.
 
-## Quellenumfang und bewusste Auslassungen
+## Source Scope and Deliberate Omissions
 
-Die Pipeline verarbeitet ausschließlich die jeweils letzte Fassung jeder Seite. Der Dump enthält daneben rund 45.200 historische Revisionen, die bewusst ungenutzt bleiben; sie liegen vollständig in `data/raw/` und stehen einer späteren Auswertung offen. Die MediaWiki-Archivtabelle verzeichnet 207 gelöschte Seiten; ihre Triage (welche davon bibliographischen Wert trugen) ist nicht beauftragt und als offener Punkt registriert, siehe [[production-readiness]].
+The pipeline processes exclusively the latest version of each page. Alongside these, the dump contains roughly 45,200 historical revisions that deliberately stay unused; they are held complete in `data/raw/` and remain available for later analysis. The MediaWiki archive table records 207 deleted pages; their triage (which of them carried bibliographic value) is not commissioned and is registered as an open point, see [[production-readiness]].
 
 ## Record Census
 
-Der Census gleicht die gesamte Record-Kette ab:
+The census reconciles the entire record chain:
 
-| Ebene | Anzahl |
+| Level | Count |
 |---|---:|
-| MediaWiki-Seiten | 6.725 |
-| JSON-LD-Einträge | 6.725 |
-| Weiterleitungen | 1.546 |
-| Frontend-Einträge | 5.179 |
-| Hauptnamensraum ohne Weiterleitungen | 4.751 |
+| MediaWiki pages | 6,725 |
+| JSON-LD entries | 6,725 |
+| Redirects | 1,546 |
+| Frontend entries | 5,179 |
+| Main namespace without redirects | 4,751 |
 
-Alle fünf Census-Invarianten bestehen. JSON-LD ist 1:1 zur Quelle, das Frontend entspricht JSON-LD abzüglich Weiterleitungen, und jeder sichtbare Eintrag besitzt einen Titel. Vier Seiten haben keinen gelieferten BLOB-Text; nur `page_id 2979` ist bibliographisch. Dieser quellenbedingt leere Datensatz bleibt als benannter Stub erhalten.
+All five census invariants hold. JSON-LD is 1:1 with the source, the frontend corresponds to JSON-LD minus redirects, and every visible entry has a title. Four pages have no delivered BLOB text; only `page_id 2979` is bibliographic. This source-conditioned empty record is retained as a named stub.
 
-## Flaches Kompatibilitätsmodell
+## Flat Compatibility Model
 
-Die flache Schicht bewahrt die historische MediaWiki-Seite als Datensatz. Sie verwendet Schema.org, Dublin Core und das projektspezifische Präfix `klawiter:`. Typische Felder sind Titel, Jahr, Verlag, Publikationsort, Sprache, Übersetzer, Seitenzahl, Kategorien, Querverweise, Quellkennungen und Feldprovenienz.
+The flat layer preserves the historical MediaWiki page as a record. It uses Schema.org, Dublin Core and the project-specific prefix `klawiter:`. Typical fields are title, year, publisher, place of publication, language, translator, page count, categories, cross-references, source identifiers and field provenance.
 
-Diese Darstellung bleibt für Suche, Zitation und bestehende Exporte erhalten. Bei Seiten mit mehreren Publikationsblöcken können Einzelwerte aus unterschiedlichen Ausgaben stammen. Das Editionsmodell ist für diese Seiten die strukturell präzisere Quelle.
+This representation is retained for search, citation and existing exports. On pages with several publication blocks, individual values may originate from different editions. For those pages, the edition model is the structurally more precise source.
 
-## Werk-/Ausgabe-Modell
+## Work/Edition Model
 
-Gate 1 erfasst jede Hauptnamensraumseite mit mindestens zwei ratifizierten Ausgabe-Headern. Der aktuelle Bestand umfasst 443 Werke, 1.886 Ausgaben, 1.886 Web Annotations und sechs belegte Träger-Vorkommen.
+Gate 1 captures every main-namespace page with at least two ratified edition headers. The current holdings comprise 443 works, 1,886 editions, 1,886 Web Annotations and six documented carrier occurrences.
 
-- `schema:CreativeWork` bezeichnet das Werk der Quellseite.
-- `schema:Book` bezeichnet den segmentierten Publikationsblock.
-- `oa:Annotation` verbindet die Ausgabe mit dem exakten Quellausschnitt.
-- `oa:TextPositionSelector` speichert Start, Ende und SHA-256 des Ausschnitts.
-- `schema:PublicationVolume` bezeichnet ausschließlich ein quellenbelegtes Träger-Vorkommen.
+- `schema:CreativeWork` denotes the work of the source page.
+- `schema:Book` denotes the segmented publication block.
+- `oa:Annotation` connects the edition to the exact source excerpt.
+- `oa:TextPositionSelector` stores start, end and SHA-256 of the excerpt.
+- `schema:PublicationVolume` denotes exclusively a source-documented carrier occurrence.
 
-Die Identifikatoren werden aus Quellseite, Jahr und stabiler Reihenfolge abgeleitet. Gleiche Eingaben erzeugen gleiche IDs, Selektoren und Graphknoten.
+The identifiers are derived from source page, year and stable ordering. Identical inputs produce identical IDs, selectors and graph nodes.
 
-## Aussagezustände
+## Statement States
 
-Fachliche Beziehungen besitzen einen expliziten Status:
+Domain relations have an explicit status:
 
-- `proposed`: deterministisch erzeugt und noch ungeprüft;
-- `confirmed`: quellengebunden geprüft und bestätigt;
-- `contested`: geprüft, weiterhin offen und mit konkurrierenden Deutungen erhalten.
+- `proposed`: deterministically produced and as yet unreviewed;
+- `confirmed`: source-bound, reviewed and confirmed;
+- `contested`: reviewed, still open and preserved with competing interpretations.
 
-Ein `klawiter:ContestedClaim` trägt eine stabile Claim-ID, Subjekt und Prädikat, exakte Quellenbelege, mindestens zwei Interpretationen, Review-Aktionen sowie `claimStatus = contested` und `decisionStatus = open`. Der Claim gehört zum finalen Datensatz. Sein Prädikat wird nicht zugleich als bestätigte Beziehung emittiert.
+A `klawiter:ContestedClaim` carries a stable claim ID, subject and predicate, exact source evidence, at least two interpretations, review actions as well as `claimStatus = contested` and `decisionStatus = open`. The claim belongs to the final dataset. Its predicate is not emitted as a confirmed relation at the same time.
 
-Der offene Adaptionsfall `klawiter:claim/work-binding/4916-2016-b` bewahrt die Deutung als Ausgabe der „Schachnovelle“ und die Deutung als eigenständiges Graphic-Novel-Adaptionswerk. Die Ausgabe selbst bleibt vollständig enthalten.
+The open adaptation case `klawiter:claim/work-binding/4916-2016-b` preserves the interpretation as an edition of the "Schachnovelle" and the interpretation as an independent graphic novel adaptation work. The edition itself remains fully contained.
 
 ## Reconciliation
 
-Gate 2 trennt Kandidaten, Entscheidungen, strittige Claims und publizierbare Links. Kandidaten entstehen für Orts-, Werk- sowie Übersetzer- und Verlagssubjekte (die Agent-Kandidaten aus dem eingefrorenen Wikidata-Abgleich `data/provenance/agent-reconciliation.json`, Schwelle fünf Vorkommen). Belegte Entscheidungen veröffentlichen die bestätigten Orts- und SZD-Werklinks; die aktuellen Zählungen stehen im Gate-2-Manifest `data/output/reconciliation/manifest.json`. Offene Ortsentscheidungen bleiben als strittige Claims erhalten.
+Gate 2 separates candidates, decisions, contested claims and publishable links. Candidates arise for location, work as well as translator and publisher subjects (the agent candidates from the frozen Wikidata comparison `data/provenance/agent-reconciliation.json`, threshold five occurrences). Documented decisions publish the confirmed location and SZD work links; the current counts are held in the Gate 2 manifest `data/output/reconciliation/manifest.json`. Open location decisions are preserved as contested claims.
 
-Jedes Subjekt trägt seine Fundstellen in der klassifizierten Quelle. Für einen Ort belegt der Scan jede Zeile, die den Ortsnamen oder seine Komponenten enthält. Für einen Übersetzer- oder Verlagsnamen bestimmt zuerst das Feld die Einträge, die den Namen tragen, und der Scan verankert ihn danach in den Zeilen genau dieser Einträge; wo keine Zeile ihn ausschreibt, weil er aus Anreicherung oder Normalisierung stammt, bleibt der Feldwert selbst der Beleg und die Fundstelle sagt das mit `sourceMatchMode: field-value`. Ein Agentsubjekt ohne jede Fundstelle trägt einen ausformulierten Nullbefund. Erst diese Evidenz macht eine unaufgelöste Agent-Entscheidung darstellbar, die dann wie bei Orten als offener Claim erhalten bleibt.
+Every subject carries its occurrences in the classified source. For a location, the scan documents every line that contains the place name or its components. For a translator or publisher name, the field first determines the entries carrying the name, and the scan then anchors it in the lines of exactly those entries; where no line spells it out, because it originates from enrichment or normalization, the field value itself remains the evidence and the occurrence says so with `sourceMatchMode: field-value`. An agent subject without any occurrence carries a spelled-out null finding. Only this evidence makes an unresolved agent decision representable, which then, as with locations, is preserved as an open claim.
 
-`pipeline/05_to_jsonld.py` liest ausschließlich `publishable-links.json`. Kandidaten und offene Claims können in Oberfläche und Export sichtbar sein, erscheinen aber nicht als `schema:sameAs`. Die priorisierte Gate-2-Prüfliste umfasst alle offenen Orts-, Werk- und Agent-Fälle; ihre Größe steht im Manifest.
+`pipeline/05_to_jsonld.py` reads exclusively `publishable-links.json`. Candidates and open claims may be visible in the interface and the export, yet do not appear as `schema:sameAs`. The prioritized Gate 2 review list comprises all open location, work and agent cases; its size is held in the manifest.
 
-## Provenienz
+## Provenance
 
-Feldwerte in der flachen Frontend-Schicht tragen `regex`, `llm`, `missing` oder nach einer bestätigten Korrektur `editor`. Der Standardlauf verwendet den versionierten Cache `data/provenance/llm-enrichment-cache.json`; ein lokaler Arbeitscache beeinflusst den Produktionslauf nicht.
+Field values in the flat frontend layer carry `regex`, `llm`, `missing` or, after a confirmed correction, `editor`. The default run uses the versioned cache `data/provenance/llm-enrichment-cache.json`; a local working cache does not affect the production run.
 
-Gate 1 und Gate 2 speichern Eingabehashes, Codehashes, PROV-O-Aktivitäten, SHACL- beziehungsweise Vertragsprüfungen und EARL-Ergebnisse. Agentische Reviews benennen Eingabe, Reviewer, Ergebnis und Reconciliation. Unsichere Fälle bleiben in der Queue und werden nicht zu sicheren Aussagen geglättet.
+Gate 1 and Gate 2 store input hashes, code hashes, PROV-O activities, SHACL respectively contract checks and EARL results. Agentic reviews name input, reviewer, result and reconciliation. Uncertain cases stay in the queue and are not smoothed into certain statements.
 
-## Prüfstatus je Eintrag
+## Review Status per Entry
 
-Die Frontend-Schicht trägt neben der Feldprovenienz einen Prüfstatus. Stufe 05 projiziert ihn als Feld `review` und setzt es ausschließlich dort, wo eine Gate-2-Entscheidung einen Feldwert des Eintrags abdeckt; ein ungeprüfter Eintrag führt das Feld nicht. Die Zuordnung läuft über den exakten Wert, den der Eintrag trägt, für den Publikationsort über den Ortsnamen und für Übersetzer und Verlag über den Agentnamen.
+Alongside the field provenance, the frontend layer carries a review status. Stage 05 projects it as the field `review` and sets it exclusively where a Gate 2 decision covers a field value of the entry; an unreviewed entry does not carry the field. The assignment runs via the exact value the entry carries, for the place of publication via the place name and for translator and publisher via the agent name.
 
-Das Feld führt vier Schlüssel:
+The field carries four keys:
 
-- `status` mit `agent_verified` für eine abgeschlossene Entscheidung (`confirm`, `correct`, `reject`), `contested` für eine unaufgelöste Entscheidung und `approved` für eine freigegebene Feldkorrektur aus `data/corrections/`;
-- `reviewed_by` mit der entscheidenden Rolle, etwa `independent-verification-agent` oder `repository-ground-truth-fixture`;
-- `reviewed_at` mit dem Entscheidungszeitpunkt, sofern die Entscheidung einen trägt;
-- `fields` mit der Aktion je geprüftem Feld.
+- `status` with `agent_verified` for a completed decision (`confirm`, `correct`, `reject`), `contested` for an unresolved decision and `approved` for a released field correction from `data/corrections/`;
+- `reviewed_by` with the deciding role, for example `independent-verification-agent` or `repository-ground-truth-fixture`;
+- `reviewed_at` with the time of the decision, where the decision carries one;
+- `fields` with the action per reviewed field.
 
-Der Status des Eintrags ist die stärkste Aussage seiner Felder, `approved` vor `agent_verified` vor `contested`. `apply_patches.py` hebt nach einer Feldkorrektur den Status und bewahrt dabei den projizierten Feldbefund. Die Feldprovenienz bleibt davon getrennt, denn sie sagt, woher ein Wert stammt, während der Prüfstatus sagt, wer ihn beurteilt hat.
+The status of the entry is the strongest statement of its fields, `approved` over `agent_verified` over `contested`. After a field correction, `apply_patches.py` raises the status while preserving the projected field finding. The field provenance stays separate from this, because it says where a value originates, while the review status says who judged it.
 
-## Korrekturprotokoll
+## Correction Protocol
 
-Die Oberfläche exportiert ein versioniertes Kurationsdokument. Feldkorrekturen bewahren den vorherigen Maschinenwert im `edit_history`; Reconciliation-Entscheidungen bewahren ersetzte Entscheidungen in einer `supersedes`-Kette. Der Browser schreibt nicht direkt in das Repository.
+The interface exports a versioned curation document. Field corrections preserve the previous machine value in the `edit_history`; reconciliation decisions preserve replaced decisions in a `supersedes` chain. The browser does not write into the repository directly.
 
-Freigegebene Patches liegen unter `data/corrections/` und werden bei jedem Lauf erneut angewendet. `confirm` und `correct` erzeugen publizierbare Beziehungen. `reject` verwirft den geprüften Kandidaten. `unresolved` erzeugt oder aktualisiert einen offenen Claim.
+Released patches are held under `data/corrections/` and are re-applied on every run. `confirm` and `correct` produce publishable relations. `reject` discards the reviewed candidate. `unresolved` produces or updates an open claim.
 
-## Qualitätsgrenzen
+## Quality Limits
 
-Die aktuellen Feldabdeckungen stehen ausschließlich in `data/output/quality-report.json`. Die wichtigsten bekannten Grenzen sind:
+The current field coverages are held exclusively in `data/output/quality-report.json`. The principal known limits are:
 
-- 1.810 Editionssegmente bleiben Vorschläge; 75 Segmente sind agentisch bestätigt und eine Bindung ist strittig.
-- Die verbleibenden nicht auflösbaren `seeAlso`-Referenzen sind echte Rotlinks auf nie angelegte Seiten; die Weiterleitungskarte enthält zusätzlich die Seitentitel-Aliasse aus Stufe 05. Die eingefrorenen Zählungen stehen in `.github/baseline-metrics.json` (`known_issues`).
-- Die flache Schicht kann auf 443 Mehrfachausgabenseiten Werte verschiedener Ausgaben kombinieren.
-- Fehlende bibliographische Werte können quellenbedingt sein und werden nicht erfunden.
-- Der semantische Ground-Truth-Satz ist klein und misst keine corpusweite Fehlerrate.
+- 1,810 edition segments remain proposals; 75 segments are agentically confirmed and one binding is contested.
+- The remaining unresolvable `seeAlso` references are genuine red links to pages never created; the redirect map additionally contains the page-title aliases from stage 05. The frozen counts are held in `.github/baseline-metrics.json` (`known_issues`).
+- On 443 multi-edition pages, the flat layer may combine values from different editions.
+- Missing bibliographic values may be source-conditioned and are not invented.
+- The semantic ground-truth set is small and measures no corpus-wide error rate.
 
-Die genaue Testreichweite und alle bekannten Grenzwerte stehen in [[testing]].
+The precise test reach and all known limit values are held in [[testing]].
 
-## Kanonische Artefakte
+## Canonical Artifacts
 
-| Artefakt | Funktion |
+| Artifact | Function |
 |---|---|
-| `data/output/klawiter.jsonld` | vollständige flache JSON-LD-Schicht |
-| `docs/data/klawiter.json` | Frontend-Daten mit Feldprovenienz |
-| `data/output/editions/work-editions.jsonld` | Werk-/Ausgabe-Graph und Editionsclaims |
-| `data/output/editions/review-queue.json` | priorisierte Editionsprüfung |
-| `data/output/reconciliation/candidates.json` | Normdatenkandidaten |
-| `data/output/reconciliation/decisions.json` | belegte Reconciliation-Entscheidungen |
-| `data/output/reconciliation/contested-claims.json` | offene Normdatenclaims |
-| `data/output/reconciliation/publishable-links.json` | bestätigte öffentliche Beziehungen |
-| `docs/data/reconciliation.json` | deterministische UI-Projektion |
+| `data/output/klawiter.jsonld` | complete flat JSON-LD layer |
+| `docs/data/klawiter.json` | frontend data with field provenance |
+| `data/output/editions/work-editions.jsonld` | work/edition graph and edition claims |
+| `data/output/editions/review-queue.json` | prioritized edition review |
+| `data/output/reconciliation/candidates.json` | authority-data candidates |
+| `data/output/reconciliation/decisions.json` | documented reconciliation decisions |
+| `data/output/reconciliation/contested-claims.json` | open authority-data claims |
+| `data/output/reconciliation/publishable-links.json` | confirmed public relations |
+| `docs/data/reconciliation.json` | deterministic UI projection |

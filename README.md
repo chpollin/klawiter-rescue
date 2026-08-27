@@ -1,72 +1,72 @@
 # Klawiter Bibliography
 
-Die Klawiter Bibliography erschließt die von Randolph J. Klawiter zusammengestellte Stefan-Zweig-Bibliographie aus einer stillgelegten MediaWiki-Datenbank. Das Repository enthält die reproduzierbare Extraktions- und Modellierungspipeline, die JSON-LD-Daten, eine statische Rechercheoberfläche und die beleggebundene Kurationsschicht.
+The Klawiter Bibliography opens up the Stefan Zweig bibliography compiled by Randolph J. Klawiter, drawn from a decommissioned MediaWiki database. The repository contains the reproducible extraction and modelling pipeline, the JSON-LD data, a static research interface and the evidence-bound curation layer.
 
-Die veröffentlichte Oberfläche liegt unter [chpollin.github.io/klawiter-rescue](https://chpollin.github.io/klawiter-rescue/).
+The published interface is available at [chpollin.github.io/klawiter-rescue](https://chpollin.github.io/klawiter-rescue/).
 
-## Gegenstand und Datenbestand
+## Subject and Data Holdings
 
-Die Quelldaten umfassen 6.725 MediaWiki-Seiten in mehreren Namensräumen. Davon sind 6.296 Bibliographieseiten im Hauptnamensraum. Eine Seite, `page_id 2979`, besitzt in den gelieferten BLOB-Dateien keinen Textkörper und bleibt deshalb als belegter Stub erhalten.
+The source data comprises 6,725 MediaWiki pages across several namespaces. Of these, 6,296 are bibliography pages in the main namespace. One page, `page_id 2979`, has no text body in the delivered BLOB files and is therefore retained as a documented stub.
 
-Der Produktionslauf erzeugt zwei komplementäre Darstellungen:
+The production run produces two complementary representations:
 
-- Der flache Kompatibilitätsbestand enthält 6.725 JSON-LD-Einträge einschließlich 1.546 Weiterleitungen. Die Oberfläche verwendet 5.179 Nicht-Weiterleitungen und zeigt 4.751 Einträge aus dem Hauptnamensraum.
-- Das Werk-/Ausgabe-Modell segmentiert alle 443 Hauptnamensraumseiten mit mindestens zwei ratifizierten Ausgabe-Headern in 443 Werke, 1.886 Ausgaben und 1.886 quellengebundene Web Annotations. 75 Ausgaben sind agentisch bestätigt, 1.810 bleiben Vorschläge und eine Werksbindung ist ausdrücklich strittig.
+- The flat compatibility holdings contain 6,725 JSON-LD entries including 1,546 redirects. The interface uses 5,179 non-redirects and displays 4,751 entries from the main namespace.
+- The work/edition model segments all 443 main-namespace pages with at least two ratified edition headers into 443 works, 1,886 editions and 1,886 source-bound Web Annotations. 75 editions are agentically confirmed, 1,810 remain proposals and one work binding is expressly contested.
 
-Aktuelle Kennzahlen stehen in `data/output/quality-report.json`, `data/output/editions/manifest.json` und `data/output/reconciliation/manifest.json`.
+Current figures are held in `data/output/quality-report.json`, `data/output/editions/manifest.json` and `data/output/reconciliation/manifest.json`.
 
-## Datenmodell
+## Data Model
 
-Der flache Bestand verwendet Schema.org, Dublin Core und das projektspezifische Präfix `klawiter:`. Quellkennungen, Klassifikation, Provenienz und Kurationsstatus bleiben am Eintrag erhalten. Das Vokabular ist unter `docs/vocab/` dokumentiert.
+The flat holdings use Schema.org, Dublin Core and the project-specific prefix `klawiter:`. Source identifiers, classification, provenance and curation status are retained on the entry. The vocabulary is documented under `docs/vocab/`.
 
-Das Editionsmodell trennt vier Ebenen:
+The edition model separates four levels:
 
-- `schema:CreativeWork` bezeichnet das Werk der jeweiligen MediaWiki-Seite.
-- `schema:Book` bezeichnet eine aus einem Ausgabe-Header segmentierte Publikation.
-- `oa:Annotation` verbindet jede Ausgabe über einen `oa:TextPositionSelector` mit ihrem exakten Quellausschnitt.
-- `schema:PublicationVolume` bezeichnet ausschließlich belegte Träger-Vorkommen. Diese Knoten behaupten keine globale Identität verschiedener Sammelbände.
+- `schema:CreativeWork` denotes the work of the respective MediaWiki page.
+- `schema:Book` denotes a publication segmented out of an edition header.
+- `oa:Annotation` connects each edition to its exact source excerpt via an `oa:TextPositionSelector`.
+- `schema:PublicationVolume` denotes documented carrier occurrences only. These nodes assert no global identity across different collected volumes.
 
-Strittige Beziehungen sind Teil des finalen Graphen. Ein `klawiter:ContestedClaim` besitzt eine stabile Kennung, den exakten Quellenbezug einschließlich SHA-256, mindestens zwei konkurrierende Deutungen, den Prüfverlauf und `klawiter:decisionStatus = open`. Eine strittige Bindung erscheint weder als `schema:exampleOfWork` noch als `schema:sameAs`. Damit bleiben bestätigte Beziehungen und offene Aussagen maschinell sowie visuell unterscheidbar.
+Contested relations are part of the final graph. A `klawiter:ContestedClaim` has a stable identifier, the exact source reference including SHA-256, at least two competing interpretations, the review history and `klawiter:decisionStatus = open`. A contested binding appears neither as `schema:exampleOfWork` nor as `schema:sameAs`. Confirmed relations and open statements therefore remain distinguishable both machine-readably and visually.
 
-Die Reconciliation trennt Kandidaten, Entscheidungen und publizierbare Links. Der aktuelle Stand umfasst 382 Orts- und 443 Werk-Subjekte. 26 Ortslinks und drei Werklinks beruhen auf belegten `confirm`- oder `correct`-Entscheidungen. Fünf offene Ortsentscheidungen werden als strittige Claims ausgegeben. Die vollständige priorisierte Prüfliste enthält 796 Fälle.
+Reconciliation separates candidates, decisions and publishable links. The current state comprises 382 location subjects and 443 work subjects. 26 location links and three work links rest on documented `confirm` or `correct` decisions. Five open location decisions are emitted as contested claims. The complete prioritized review list contains 796 cases.
 
-## Einrichtung
+## Setup
 
-Voraussetzungen sind Python 3.11 oder neuer, Node.js für die Frontend-Logiktests und die Quelldateien unter `data/raw/`.
+Prerequisites are Python 3.11 or newer, Node.js for the frontend logic tests and the source files under `data/raw/`.
 
 ```bash
 python -m pip install uv==0.12.5
 python -m uv sync --locked
 ```
 
-`uv.lock` fixiert die Produktions- und Entwicklungsabhängigkeiten. Die Standardausführung verwendet den versionierten LLM-Cache und benötigt weder Netzwerkzugriff noch einen API-Schlüssel.
+`uv.lock` pins the production and development dependencies. The default execution uses the versioned LLM cache and requires neither network access nor an API key.
 
-## Produktionslauf
+## Production Run
 
 ```bash
 python -m uv run python pipeline/run_pipeline.py
 ```
 
-Der Befehl führt fail-fast aus:
+The command runs fail-fast:
 
-1. SQL- und BLOB-Extraktion, Encoding-Reparatur und Wiki-Parsing;
-2. Anwendung des eingefrorenen LLM-Enrichments und regelgebundene Normalisierung;
-3. Klassifikation;
-4. Werk-/Ausgabe-Segmentierung mit SHACL-, Selektor-, ID-, Queue- und Determinismusprüfung;
-5. Entitäts-Reconciliation mit getrennter Kandidaten-, Entscheidungs-, Claim- und Publikationsschicht;
-6. JSON-LD- und Frontend-Export;
-7. Qualitätsbericht, Round-Trip-Verifikation, Census, Provenienzprojektion, Triage, Korrektur-Overlay und abschließende Reconciliation-Prüfung.
+1. SQL and BLOB extraction, encoding repair and wiki parsing;
+2. application of the frozen LLM enrichment and rule-bound normalization;
+3. classification;
+4. work/edition segmentation with SHACL, selector, ID, queue and determinism checks;
+5. entity reconciliation with separate candidate, decision, claim and publication layers;
+6. JSON-LD and frontend export;
+7. quality report, round-trip verification, census, provenance projection, triage, correction overlay and final reconciliation check.
 
-Teilbereiche lassen sich über stabile Stufenkennungen ausführen:
+Partial ranges can be run via stable stage identifiers:
 
 ```bash
 python -m uv run python pipeline/run_pipeline.py --from-stage 03 --to-stage gate2 --no-postprocess
 python -m uv run python pipeline/run_pipeline.py --llm-mode off
 ```
 
-Ein neuer API-Aufruf ist ausschließlich mit `--llm-mode live` möglich. Dafür muss `GEMINI_API_KEY` gesetzt sein. Live-Ergebnisse werden vor einer Übernahme als neuer eingefrorener Provenienzbestand geprüft.
+A new API call is possible only with `--llm-mode live`. This requires `GEMINI_API_KEY` to be set. Live results are reviewed before being adopted as new frozen provenance holdings.
 
-## Validierung
+## Validation
 
 ```bash
 python -m uv run pytest -q
@@ -75,60 +75,60 @@ python -m uv run pre-commit run --all-files
 git diff --check
 ```
 
-Die statischen Prüfungen (ruff check, ruff format) sind in `.pre-commit-config.yaml` definiert; `python -m uv run pre-commit install` richtet sie als Git-Hook ein, die CI führt denselben Hook-Satz aus.
+The static checks (ruff check, ruff format) are defined in `.pre-commit-config.yaml`; `python -m uv run pre-commit install` sets them up as a Git hook, and CI runs the same hook set.
 
-Der Standardsatz prüft Census, Schema, Konsistenz, Regression, Extraktionsregeln, Normalisierung, Provenienz, Korrekturverträge, Editionsmodell, Reconciliation, Produktionsrunner und Frontend-Logik. Die semantische Suite ist separat markiert; ihre verbleibenden bekannten Fehler sind als Grenzen dokumentiert und werden nicht durch gelockerte Assertions verdeckt.
+The default set checks census, schema, consistency, regression, extraction rules, normalization, provenance, correction contracts, edition model, reconciliation, production runner and frontend logic. The semantic suite is marked separately; its remaining known failures are documented as limits and are not masked by relaxed assertions.
 
-Gate 1 schreibt SHACL- und EARL-Nachweise nach `data/output/editions/`. Gate 2 schreibt Kandidaten, Entscheidungen, publizierbare Links, strittige Claims, Queue, PROV/EARL und Manifest nach `data/output/reconciliation/`. Beide Validatoren bauen ihre Ergebnisse aus den eingefrorenen Eingaben neu auf und vergleichen sie deterministisch.
+Gate 1 writes SHACL and EARL evidence to `data/output/editions/`. Gate 2 writes candidates, decisions, publishable links, contested claims, queue, PROV/EARL and manifest to `data/output/reconciliation/`. Both validators rebuild their results from the frozen inputs and compare them deterministically.
 
-## Kuration und Reconciliation
+## Curation and Reconciliation
 
-Der lokale Editiermodus der Oberfläche erzeugt ein kombiniertes Kurationsdokument. Feldänderungen verwenden `patchVersion: 2`; Reconciliation-Entscheidungen verwenden `reconciliationPatchVersion: 1`. Freigegebene Dateien liegen unter `data/corrections/` und werden bei jedem Produktionslauf erneut angewendet.
+The local editing mode of the interface produces a combined curation document. Field changes use `patchVersion: 2`; reconciliation decisions use `reconciliationPatchVersion: 1`. Released files are held under `data/corrections/` and are re-applied on every production run.
 
-Feldkorrekturen bewahren den Maschinenwert im `edit_history` und setzen die Feldprovenienz auf `editor`. Eine neue Normdatenentscheidung ersetzt die vorherige Entscheidung unter Erhalt der Supersessionskette. `unresolved` materialisiert einen offenen Claim. Erst `confirm` oder `correct` erzeugt einen publizierbaren Link.
+Field corrections preserve the machine value in the `edit_history` and set the field provenance to `editor`. A new authority-data decision replaces the previous decision while preserving the supersession chain. `unresolved` materializes an open claim. Only `confirm` or `correct` produces a publishable link.
 
-## Ausgaben und Export
+## Outputs and Export
 
-| Artefakt | Inhalt |
+| Artifact | Content |
 |---|---|
-| `data/output/klawiter.jsonld` | Vollständiger flacher JSON-LD-Bestand |
-| `data/output/entries/` | Regenerierbare JSON-LD-Einzeldateien |
-| `docs/data/klawiter.json` | Datengrundlage der statischen Oberfläche |
-| `data/output/editions/work-editions.jsonld` | Werk-/Ausgabe-Graph mit Quellenannotationen und strittigen Claims |
-| `data/output/editions/review-queue.json` | Vollständige Gate-1-Prüfliste |
-| `data/output/reconciliation/` | Kandidaten, Entscheidungen, Claims, publizierbare Links und Nachweise |
-| `docs/data/reconciliation.json` | Kompakte Reconciliation- und Claim-Daten für die Oberfläche |
+| `data/output/klawiter.jsonld` | complete flat JSON-LD holdings |
+| `data/output/entries/` | regenerable individual JSON-LD files |
+| `docs/data/klawiter.json` | data basis of the static interface |
+| `data/output/editions/work-editions.jsonld` | work/edition graph with source annotations and contested claims |
+| `data/output/editions/review-queue.json` | complete Gate 1 review list |
+| `data/output/reconciliation/` | candidates, decisions, claims, publishable links and evidence |
+| `docs/data/reconciliation.json` | compact reconciliation and claim data for the interface |
 
-Die Oberfläche exportiert BibTeX und RIS für Zitationszwecke. Der JSON-LD-Einzelexport bindet vorhandene strittige Editionsclaims mit ihren Deutungen und Prüfhandlungen ein. Der vollständige Frontend-Export enthält sowohl strittige Editions- als auch Normdatenclaims. Die kanonischen, vollständig validierten Graphartefakte bleiben die Dateien unter `data/output/`.
+The interface exports BibTeX and RIS for citation purposes. The single-entry JSON-LD export includes any contested edition claims with their interpretations and review actions. The complete frontend export contains both contested edition claims and contested authority-data claims. The canonical, fully validated graph artifacts remain the files under `data/output/`.
 
-## Bekannte Grenzen
+## Known Limits
 
-- Der flache Bestand bewahrt die historische Ein-Seite-ein-Eintrag-Sicht. Bei Mehrfachausgabenseiten können seine Einzelwerte verschiedene Publikationsblöcke repräsentieren. Für diese Seiten ist `data/output/editions/work-editions.jsonld` die strukturell präzisere Darstellung.
-- Fehlende Verlags-, Übersetzer- oder Seitenangaben sind häufig quellenbedingt. Die Pipeline ergänzt keine bibliographischen Werte ohne Fundstelle.
-- 1.810 segmentierte Ausgaben sind deterministische Vorschläge. Davon führt Gate 1 317 markierte oder offene Fälle in der priorisierten Prüfliste; die agentische Stichprobe bestätigt ausschließlich ihre 75 exakt geprüften Selektoren.
-- Die Bindung von `klawiter:edition/4916-2016-b` an das ursprüngliche Werk oder an ein eigenständiges Graphic-Novel-Adaptionswerk bleibt offen. Beide Deutungen sind im Claim `klawiter:claim/work-binding/4916-2016-b` erhalten.
-- Reconciliation-Kandidaten sind Vorschläge. Ungeprüfte und strittige Kandidaten werden in Daten und Oberfläche gezeigt, jedoch nicht als bestätigte Normdatenlinks publiziert.
-- Eine spätere externe Fachprüfung erweitert die agentische Evidenz. Sie ist keine Voraussetzung für die Reproduzierbarkeit des gegenwärtigen Stands.
+- The flat holdings preserve the historical one-page-one-entry view. On multi-edition pages, its individual values may represent different publication blocks. For those pages, `data/output/editions/work-editions.jsonld` is the structurally more precise representation.
+- Missing publisher, translator or pagination details are frequently a property of the source. The pipeline adds no bibliographic values without a documented occurrence.
+- 1,810 segmented editions are deterministic proposals. Of these, Gate 1 carries 317 flagged or open cases in the prioritized review list; the agentic sample confirms only its 75 exactly reviewed selectors.
+- The binding of `klawiter:edition/4916-2016-b` to the original work or to an independent graphic novel adaptation work remains open. Both interpretations are preserved in the claim `klawiter:claim/work-binding/4916-2016-b`.
+- Reconciliation candidates are proposals. Unreviewed and contested candidates are shown in the data and the interface, yet are not published as confirmed authority-data links.
+- A later external expert review extends the agentic evidence. It is not a prerequisite for the reproducibility of the present state.
 
-## Repository und Wiedereinstieg
+## Repository and Re-entry
 
-`CLAUDE.md` ist die einzige repository-spezifische Agentenanweisung. `knowledge/index.md` führt durch das kanonische Projektwissen; der jüngste Eintrag in `knowledge/journal.md` hält den terminalen Produktionsstand. Eine zusätzliche `AGENTS.md` ist nicht erforderlich.
+`CLAUDE.md` is the single repository-specific agent instruction. `knowledge/index.md` guides through the canonical project knowledge; the most recent entry in `knowledge/journal.md` holds the terminal production state. An additional `AGENTS.md` is not required.
 
-Die wichtigsten Verzeichnisse sind:
+The principal directories are:
 
 ```text
-pipeline/        Produktions- und Prüfcode
-tests/           automatisierte und semantische Prüfungen
-data/raw/        unveränderte MediaWiki-Quelle
-data/output/     erzeugte Daten und Evidenzartefakte
-data/provenance/ eingefrorene externe und LLM-Eingaben
-data/reconciliation/ belegte Modellierungs- und Normdatenentscheidungen
-docs/            statische Oberfläche
-knowledge/       kanonisches Projektwissen
+pipeline/        production and validation code
+tests/           automated and semantic checks
+data/raw/        unmodified MediaWiki source
+data/output/     generated data and evidence artifacts
+data/provenance/ frozen external and LLM inputs
+data/reconciliation/ documented modelling and authority-data decisions
+docs/            static interface
+knowledge/       canonical project knowledge
 ```
 
-## Zitation, Credits und Lizenz
+## Citation, Credits and License
 
-Randolph J. Klawiter erarbeitete die zugrunde liegende Bibliographie an der University of Notre Dame. Christopher Pollin verantwortet die digitale Edition. Die maschinenlesbaren Zitationsangaben stehen in `CITATION.cff`.
+Randolph J. Klawiter compiled the underlying bibliography at the University of Notre Dame. Christopher Pollin is responsible for the digital edition. The machine-readable citation details are held in `CITATION.cff`.
 
-Der Code steht unter MIT. Dokumentation und strukturierte Edition stehen unter CC BY 4.0. Die Quellbibliographie ist bei einer Nachnutzung gemäß `CITATION.cff` zu nennen; Einzelheiten stehen in `LICENSE`.
+The code is licensed under MIT. Documentation and the structured edition are licensed under CC BY 4.0. The source bibliography must be credited on reuse in accordance with `CITATION.cff`; details are given in `LICENSE`.

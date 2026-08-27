@@ -1,11 +1,11 @@
 ---
-title: Projektkontext
+title: Project Context
 aliases: [about, project context, klawiter, provenance]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
-language: de
+language: en
 version: 1.0
 tags: [project, context, provenance]
 created: 2026-03-29
@@ -14,37 +14,37 @@ authors: [Christopher Pollin]
 related: [data, pipeline, frontend, testing, production-readiness]
 ---
 
-# Projektkontext
+# Project Context
 
-## Gegenstand und Herkunft
+## Subject and Origin
 
-Randolph J. Klawiter erarbeitete an der University of Notre Dame eine internationale Stefan-Zweig-Bibliographie. Der überlieferte MediaWiki-Bestand enthält Erstausgaben, Übersetzungen, Sekundärliteratur, Verfilmungen, Korrespondenz und weitere Publikationsformen in mehr als 40 Sprachen. Nach der Stilllegung des Wikis blieben ein SQL-Dump und acht binäre Textspeicher erhalten.
+Randolph J. Klawiter compiled an international Stefan Zweig bibliography at the University of Notre Dame. The transmitted MediaWiki holdings contain first editions, translations, secondary literature, film adaptations, correspondence and further publication forms in more than 40 languages. After the wiki was decommissioned, an SQL dump and eight binary text stores remained.
 
-Das Projekt rekonstruiert daraus eine statische Rechercheoberfläche, einen vollständigen JSON-LD-Bestand und eine quellengebundene Kurationsschicht. Die Quelle bleibt unverändert. Alle Transformationen werden aus versioniertem Code, eingefrorenen Eingaben und nachvollziehbaren Entscheidungen erzeugt.
+From these the project reconstructs a static research interface, complete JSON-LD holdings and a source-bound curation layer. The source stays unmodified. All transformations are produced from versioned code, frozen inputs and traceable decisions.
 
-## Verantwortlichkeiten
+## Responsibilities
 
-- Randolph J. Klawiter ist Urheber der Bibliographie.
-- Christopher Pollin verantwortet digitale Edition, Datenmodell, Software und Dokumentation.
-- Stefan Zweig Digital liefert den fachlichen und institutionellen Bezug sowie den eingefrorenen SZD-Werkindex für Reconciliation-Kandidaten.
-- Automatische und agentische Prüfungen liefern Evidenz. Institutionell inhaltverändernde Werkentscheidungen bleiben beim zuständigen Fachpersonal.
+- Randolph J. Klawiter is the author of the bibliography.
+- Christopher Pollin is responsible for the digital edition, data model, software and documentation.
+- Stefan Zweig Digital supplies the scholarly and institutional context as well as the frozen SZD work index for reconciliation candidates.
+- Automated and agentic checks supply evidence. Institutionally content-changing work decisions remain with the responsible domain staff.
 
-## Datenintegrität
+## Data Integrity
 
-Bibliographische Aussagen müssen in der MediaWiki-Quelle belegt sein. Quellenbedingte Leerstellen bleiben leer. Regelbasierte und eingefrorene LLM-Extraktion dürfen nur vorhandene Werte strukturieren. Jeder bearbeitete Feldwert trägt eine Provenienzklasse; Normdatenbeziehungen entstehen ausschließlich aus belegten `confirm`- oder `correct`-Entscheidungen.
+Bibliographic statements must be documented in the MediaWiki source. Source-conditioned gaps stay empty. Rule-based and frozen LLM extraction may only structure existing values. Every processed field value carries a provenance class; authority-data relations arise exclusively from documented `confirm` or `correct` decisions.
 
-Unsicherheit ist ein eigener Datenzustand. Strittige Aussagen besitzen stabile Identität, Fundstelle, konkurrierende Deutungen, Prüfverlauf und offenen Entscheidungsstatus. Sie gehören zum finalen Bestand, erzeugen jedoch keine bestätigte Beziehung.
+Uncertainty is a data state of its own. Contested statements have a stable identity, a documented occurrence, competing interpretations, review history and an open decision status. They belong to the final holdings, yet produce no confirmed relation.
 
-## Forschungs- und Publikationsrahmen
+## Research and Publication Frame
 
-Die methodische Leistung besteht in einer verlustfreien Datenrettung mit zwei gekoppelten Kontrollschleifen: systematische Pipelineverbesserung durch aggregierte Prüfungen und objektbezogene Fachkuratierung durch versionierte Patches. [[production-readiness]] beschreibt den ratifizierten Vertrag, [[testing]] die Reichweite der Nachweise.
+The methodological contribution consists in a lossless data rescue with two coupled control loops, systematic pipeline improvement through aggregated checks and object-level expert curation through versioned patches. [[production-readiness]] describes the ratified contract, [[testing]] the reach of the evidence.
 
-Der auslieferbare Gegenstand umfasst Daten, Vokabular, Software, statische Oberfläche, Provenienz und Prüfartefakte. Ein eigenständiger Klawiter-Blogpost und eine neue Klawiter-Publikation gehören nicht zum Repository-Auftrag. Der Wiki-/Druck-Merge, externe Live-Rückschreibungen und institutionelle Werkentscheidungen bleiben spätere Optionen.
+The deliverable subject comprises data, vocabulary, software, static interface, provenance and validation artifacts. A separate Klawiter blog post and a new Klawiter publication are not part of the repository mandate. The wiki/print merge, external live write-backs and institutional work decisions remain later options.
 
-## Verbund und Gestaltung
+## Consortium and Design
 
-Die Oberfläche ist mit Stefan Zweig Digital verbunden und verwendet die etablierte Farb- und Typografiesprache des Forschungsverbunds. Der technische Bestand bleibt eigenständig deploybar. Details stehen in [[frontend]].
+The interface is connected with Stefan Zweig Digital and uses the established colour and typography language of the research consortium. The technical holdings stay independently deployable. Details are held in [[frontend]].
 
-## Lizenzen und Zitation
+## Licenses and Citation
 
-Der Code steht unter MIT. Dokumentation und strukturierte Edition stehen unter CC BY 4.0. `CITATION.cff` enthält die maschinenlesbaren Zitationsangaben; die bibliographische Quelle ist bei Nachnutzung ausdrücklich zu nennen.
+The code is licensed under MIT. Documentation and the structured edition are licensed under CC BY 4.0. `CITATION.cff` contains the machine-readable citation details; the bibliographic source must be credited expressly on reuse.

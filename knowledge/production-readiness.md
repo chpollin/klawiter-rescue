@@ -1,6 +1,6 @@
 ---
 title: Production Readiness
-aliases: [production-readiness, curation-tool, EIL production tool, edition-model, Werk-Ausgabe-Modell, work-edition split, PROV, SHACL]
+aliases: [production-readiness, curation-tool, EIL production tool, edition-model, work-edition model, work-edition split, PROV, SHACL]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
@@ -8,7 +8,7 @@ method:
   name: Promptotyping
   url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
-language: de
+language: en
 version: 1.1
 tags: [eil, dia-xai, concept, provenance]
 created: 2026-07-18
@@ -19,139 +19,139 @@ related: [about, data, pipeline, testing, frontend, journal]
 
 # Production Readiness
 
-Dieses Dokument beschreibt den ratifizierten und implementierten Produktionsstand. [[pipeline]] erklärt die Transformationen, [[data]] die Artefakte, [[frontend#EIL Curation Interface]] die Interaktion und [[testing]] die Qualitätsgrenzen. Der Verlauf der Entscheidungen steht in [[journal]].
+This document describes the ratified and implemented production state. [[pipeline]] explains the transformations, [[data]] the artifacts, [[frontend#EIL Curation Interface]] the interaction and [[testing]] the quality limits. The course of the decisions is held in [[journal]].
 
-## Publikationsrahmen
+## Publication Frame
 
-Der veröffentlichte Gegenstand besteht aus der digitalen Bibliographie, den JSON-LD-Daten, der Software, dem maschinenlesbaren Vokabular und den Provenienz- und Prüfartefakten. Ein eigenständiges Klawiter-Paper und ein separater Blogpost sind geschlossene Publikationslinien. Der Wiki-/Druck-Merge, externe Live-Rückschreibungen und institutionell inhaltverändernde Werkentscheidungen gehören nicht zu diesem Produktionsstand.
+The published subject consists of the digital bibliography, the JSON-LD data, the software, the machine-readable vocabulary and the provenance and validation artifacts. A separate Klawiter paper and a separate blog post are closed publication lines. The wiki/print merge, external live write-backs and institutionally content-changing work decisions are not part of this production state.
 
-## Definition des terminalen Stands
+## Definition of the Terminal State
 
-Produktionsreife bedeutet in diesem Repository:
+In this repository, production readiness means the following:
 
-- die MediaWiki-Quelle lässt sich ohne Datenbankserver und ohne Netzwerkanfrage reproduzierbar verarbeiten;
-- die vollständige Record-Kette von Quelle, JSON-LD und Frontend ist per Census abgeglichen;
-- das relevante Mehrfachausgaben-Korpus besitzt eine vollständige Werk-/Ausgabe-Segmentierung mit exakten Quellenbezügen;
-- Kandidaten, bestätigte Entscheidungen, strittige Aussagen und publizierte Beziehungen bleiben getrennt;
-- automatische und agentische Prüfschritte besitzen Provenienz, Eingabehashes und maschinenlesbare Resultate;
-- eine priorisierte Prüfliste bewahrt jeden ungeprüften oder offenen Fall;
-- Korrekturen und neue Reconciliation-Entscheidungen lassen sich als versionierte Expert-in-the-Loop-Patches erneut anwenden;
-- README, Einstiegsschicht und `knowledge/` beschreiben den ausführbaren Stand.
+- the MediaWiki source can be processed reproducibly without a database server and without a network request;
+- the complete record chain of source, JSON-LD and frontend is reconciled by census;
+- the relevant multi-edition corpus has a complete work/edition segmentation with exact source references;
+- candidates, confirmed decisions, contested statements and published relations stay separate;
+- automated and agentic review steps have provenance, input hashes and machine-readable results;
+- a prioritized review list preserves every unreviewed or open case;
+- corrections and new reconciliation decisions can be re-applied as versioned Expert-in-the-Loop patches;
+- README, entry layer and `knowledge/` describe the executable state.
 
-Eine externe Fachprüfung kann diesen Stand erweitern. Sie ist keine Voraussetzung für seine technische Reproduzierbarkeit.
+An external expert review can extend this state. It is not a prerequisite for its technical reproducibility.
 
-## Zwei Kontrollschleifen
+## Two Control Loops
 
-**Developer-in-the-Loop.** Aggregierte Tests und Datendiagnosen zeigen systematische Fehlerklassen. Eine Codeänderung wird gegen den gesamten Bestand, die Regressionsgrenzen und den Produktionslauf geprüft. Die Werk-/Ausgabe-Trennung löst den zentralen Ebenenfehler der früheren flachen Extraktion.
+**Developer-in-the-Loop.** Aggregated tests and data diagnostics reveal systematic error classes. A code change is checked against the entire holdings, the regression limits and the production run. The work/edition separation resolves the central level error of the earlier flat extraction.
 
-**Editor-in-the-Loop.** Fachpersonal prüft einzelne Felder, Ausgaben und Normdatenkandidaten gegen ihre Quellen. Der Browser exportiert typisierte Entscheidungen. Der Produktionslauf wendet freigegebene Patches erneut an und bewahrt Wertgeschichte oder Entscheidungssupersession.
+**Editor-in-the-Loop.** Domain staff review individual fields, editions and authority-data candidates against their sources. The browser exports typed decisions. The production run re-applies released patches and preserves value history or decision supersession.
 
-Beide Schleifen verwenden dieselbe Evidenzkette. Maschinenwerte tragen `regex`, `llm` oder `missing`; geprüfte Feldwerte tragen `editor`. Ausgaben und Reconciliation-Aussagen unterscheiden `proposed`, `confirmed` und `contested`.
+Both loops use the same evidence chain. Machine values carry `regex`, `llm` or `missing`; reviewed field values carry `editor`. Editions and reconciliation statements distinguish `proposed`, `confirmed` and `contested`.
 
-## Gate 1: Werk-/Ausgabe-Modell
+## Gate 1: Work/Edition Model
 
-### Auswahl und Identität
+### Selection and Identity
 
-Eine Seite gehört zum Gate-1-Korpus, wenn sie im Hauptnamensraum mindestens zwei fett markierte Publikationsheader mit vierstelligem oder `ca.`-Jahr besitzt. Diese Regel wählt 443 Seiten vollständig und deterministisch aus.
+A page belongs to the Gate 1 corpus where it holds, in the main namespace, at least two bold-marked publication headers with a four-digit or `ca.` year. This rule selects 443 pages completely and deterministically.
 
-Das Modell verwendet:
+The model uses:
 
-- `klawiter:work/{page_id}` für das Werk der Quellseite;
-- `klawiter:edition/{page_id}-{year}-{suffix}` für jede Ausgabe in stabiler Quellreihenfolge;
-- `klawiter:annotation/{page_id}-{year}-{suffix}` für die Web Annotation der Ausgabe;
-- `klawiter:carrier/source-{page_id}-{year}-{suffix}` ausschließlich für ein belegtes Träger-Vorkommen.
+- `klawiter:work/{page_id}` for the work of the source page;
+- `klawiter:edition/{page_id}-{year}-{suffix}` for each edition in stable source order;
+- `klawiter:annotation/{page_id}-{year}-{suffix}` for the Web Annotation of the edition;
+- `klawiter:carrier/source-{page_id}-{year}-{suffix}` exclusively for a documented carrier occurrence.
 
-Jede Ausgabe besitzt den unveränderten Header, `oa:start`, `oa:end` und den SHA-256 des ausgewählten Quellblocks. Derselbe Input erzeugt denselben Graphen und dieselben IDs.
+Every edition holds the unmodified header, `oa:start`, `oa:end` and the SHA-256 of the selected source block. The same input produces the same graph and the same IDs.
 
-### Ergebnis
+### Result
 
-Der aktuelle Graph enthält 443 Werke, 1.886 Ausgaben, 1.886 Annotationen und sechs Träger-Vorkommen. Die agentische Stichprobe umfasst 76 Fälle aus den Seiten 54, 56 und 4916. Zwei unabhängige Erstprüfungen wurden durch einen leistungsfähigeren, unabhängigen Verifikations-Agenten reconciliert. 75 Ausgaben sind innerhalb ihrer exakten Selektoren bestätigt. 1.810 weitere Ausgaben bleiben Vorschläge. Die vollständige Gate-1-Prüfliste enthält 317 aufgrund von Flags oder offenem Status priorisierte Fälle.
+The current graph contains 443 works, 1,886 editions, 1,886 annotations and six carrier occurrences. The agentic sample comprises 76 cases from pages 54, 56 and 4916. Two independent initial reviews were reconciled by a more capable, independent verification agent. 75 editions are confirmed within their exact selectors. 1,810 further editions remain proposals. The complete Gate 1 review list contains 317 cases prioritized on account of flags or open status.
 
-Die Test- und Entscheidungsartefakte liegen unter `data/output/edition-samples/`, `data/reconciliation/` und `data/output/editions/`.
+The test and decision artifacts are held under `data/output/edition-samples/`, `data/reconciliation/` and `data/output/editions/`.
 
-### Strittige Werksbindung
+### Contested Work Binding
 
-`klawiter:edition/4916-2016-b` beschreibt „Die Schachnovelle nach Stefan Zweig“, eine Graphic-Novel-Adaption. Die Quelle belegt die Publikation, entscheidet jedoch nicht die institutionelle Werkidentität.
+`klawiter:edition/4916-2016-b` describes "Die Schachnovelle nach Stefan Zweig", a graphic novel adaptation. The source documents the publication, yet does not decide the institutional work identity.
 
-Der Fall bleibt als `klawiter:claim/work-binding/4916-2016-b` im finalen Graphen. Der Claim enthält:
+The case remains in the final graph as `klawiter:claim/work-binding/4916-2016-b`. The claim contains:
 
-- den exakten Selektor `[6866, 7104)` und den SHA-256 des Quellblocks;
-- die konkurrierende Zuordnung zum Werk `klawiter:work/4916`;
-- die konkurrierende Deutung als eigenständiger Kandidat `klawiter:work-candidate/4916-2016-b-adaptation`;
-- die Urteile beider Erstprüfungen und der Reconciliation;
-- `claimStatus = contested` und `decisionStatus = open`.
+- the exact selector `[6866, 7104)` and the SHA-256 of the source block;
+- the competing assignment to the work `klawiter:work/4916`;
+- the competing interpretation as an independent candidate `klawiter:work-candidate/4916-2016-b-adaptation`;
+- the judgements of both initial reviews and of the reconciliation;
+- `claimStatus = contested` and `decisionStatus = open`.
 
-Die Ausgabe bleibt vollständig erhalten. Sie erscheint nicht in `schema:workExample` und trägt keine `schema:exampleOfWork`-Beziehung, solange die Fachentscheidung offen ist.
+The edition is preserved in full. It does not appear in `schema:workExample` and carries no `schema:exampleOfWork` relation for as long as the domain decision stays open.
 
 ## Gate 2: Reconciliation
 
-Gate 2 erzeugt für 382 Orts-, 443 Werk- sowie 101 Übersetzer- und Verlagssubjekte deterministische Kandidaten. Der eingefrorene SZD-Werkindex ist durch Quellpfad, Repository-Commit und SHA-256 provenienziert. Ortsvorschläge bewahren die Ergebnisse des früheren Reconciliation-Laufs und die unabhängige Prüfung als Kandidaten. Die Agent-Kandidaten stammen aus dem eingefrorenen Wikidata-Abgleich (`data/provenance/agent-reconciliation.json`, Schwelle fünf Vorkommen, 78 Subjekte mit mindestens einem Kandidaten); sie bilden einen neuen fail-closed-Prüfvorrat und publizieren nichts ohne belegte Entscheidung.
+Gate 2 produces deterministic candidates for 382 location, 443 work as well as 101 translator and publisher subjects. The frozen SZD work index is provenanced by source path, repository commit and SHA-256. Location proposals preserve the results of the earlier reconciliation run and the independent review as candidates. The agent candidates come from the frozen Wikidata comparison (`data/provenance/agent-reconciliation.json`, threshold five occurrences, 78 subjects with at least one candidate); they form a new fail-closed review stock and publish nothing without a documented decision.
 
-Entscheidungen liegen getrennt unter `data/reconciliation/`. Der aktuelle Stand umfasst 31 Ortsentscheidungen und drei Werkentscheidungen. Daraus entstehen 26 publizierbare Wikidata-Ortslinks und drei publizierbare SZD-Werklinks. `pipeline/05_to_jsonld.py` liest ausschließlich diese publizierbare Schicht.
+Decisions are held separately under `data/reconciliation/`. The current state comprises 31 location decisions and three work decisions. From these arise 26 publishable Wikidata location links and three publishable SZD work links. `pipeline/05_to_jsonld.py` reads exclusively this publishable layer.
 
-Fünf Ortsentscheidungen bleiben offen. Jeder Fall besitzt einen stabilen `klawiter:ContestedClaim`, exakte Fundzeilen aus `04_classified.csv` mit Hash, konkurrierende Normdateninterpretationen, eine fail-closed-Alternative ohne Zuordnung und den Prüfverlauf. Offene Claims erzeugen kein `schema:sameAs`.
+Five location decisions remain open. Every case has a stable `klawiter:ContestedClaim`, exact occurrence lines from `04_classified.csv` with hash, competing authority-data interpretations, a fail-closed alternative without an assignment and the review history. Open claims produce no `schema:sameAs`.
 
-Die Gate-2-Prüfliste umfasst jeden Kandidaten ohne akzeptierte Entscheidung und jeden strittigen Fall über alle drei Subjektarten; ihre aktuelle Größe steht im Gate-2-Manifest. Der Umfang bezeichnet Prüfbedarf und keine Fehlerquote.
+The Gate 2 review list comprises every candidate without an accepted decision and every contested case across all three subject kinds; its current size is held in the Gate 2 manifest. Its extent denotes review demand and no error rate.
 
-## Expert-in-the-Loop-Oberfläche
+## Expert-in-the-Loop Interface
 
-Der localhost-gebundene Editiermodus implementiert:
+The localhost-bound editing mode implements:
 
-- Accept, Correct und Add für provenienzgetrackte Felder;
-- Feldfundstellen oder den vollständigen Quelltext als Evidenz;
-- Triage-Hinweise aus Provenienz, Round-Trip-Verifikation und Census;
-- Ortskandidaten sowie Übersetzer- und Verlagskandidaten mit Confirm, Reject und Unresolved, wobei Unresolved in beiden Fällen auf den Fundstellen des Occurrence-Scans aufsitzt;
-- subjektbezogene Entscheidungen mit ausgewiesener Reichweite, erreichbar am Eintrag und in der Kandidaten-Queue der Datenqualitäts-Werkbank (`#quality`, mit Tastatursteuerung);
-- Persistenz der laufenden Sitzung in `localStorage`;
-- einen kombinierten Export mit `patchVersion: 2` und `reconciliationPatchVersion: 1`.
+- Accept, Correct and Add for provenance-tracked fields;
+- field occurrences or the complete source text as evidence;
+- triage hints from provenance, round-trip verification and census;
+- location candidates as well as translator and publisher candidates with Confirm, Reject and Unresolved, where Unresolved in both cases rests on the occurrences of the occurrence scan;
+- subject-level decisions with declared reach, reachable at the entry and in the candidate queue of the data quality workbench (`#quality`, with keyboard control);
+- persistence of the running session in `localStorage`;
+- a combined export with `patchVersion: 2` and `reconciliationPatchVersion: 1`.
 
-Die öffentliche Detailansicht kennzeichnet strittige Normdatenzuordnungen. Für Seite 4916 zeigt sie den offenen Werkbindungs-Claim, beide Deutungen, den Prüfverlauf und die Quellenkennung. Der JSON-LD-Einzelexport übernimmt diesen Claim; der Gesamtexport enthält die strittigen Editions- und Normdatenclaims.
+The public detail view marks contested authority-data assignments. For page 4916 it shows the open work binding claim, both interpretations, the review history and the source identifier. The single-entry JSON-LD export adopts this claim; the complete export contains the contested edition and authority-data claims.
 
-## Provenienz und Qualitätsnachweise
+## Provenance and Quality Evidence
 
-Gate 1 verwendet PROV-O für Quellkorpus, Software-Agent, Plan, Input-Hashes und erzeugte Knoten. SHACL prüft Werk, Ausgabe, Annotation, Träger, Claim, Interpretation, ReviewAction und Werkidentitätskandidat. EARL hält jedes automatische Prüfergebnis fest.
+Gate 1 uses PROV-O for source corpus, software agent, plan, input hashes and produced nodes. SHACL checks work, edition, annotation, carrier, claim, interpretation, ReviewAction and work identity candidate. EARL records every automated check result.
 
-Gate 2 bewahrt die Eingabehashes für Editionsgraph, Ortsdaten, Review-Evidenz, Entscheidungsdateien, SZD-Index, klassifizierte Quelle und Kurationspatches. Sein Validator prüft deterministischen Neuaufbau, Entscheidungsseparation, Claim-Vollständigkeit, Eingabehashes und die Projektion in JSON-LD und Frontend. Die Qualitäts- und Census-Berichte ergänzen diese objektbezogenen Verträge.
+Gate 2 preserves the input hashes for edition graph, location data, review evidence, decision files, SZD index, classified source and curation patches. Its validator checks deterministic rebuild, decision separation, claim completeness, input hashes and the projection into JSON-LD and frontend. The quality and census reports complement these object-level contracts.
 
-## Ratifikationsgeschichte
+## Ratification History
 
-### Operator-Entscheide (2026-07-18)
+### Operator Decisions (2026-07-18)
 
-Die Entscheidungen vom 2026-07-18 wurden am 2026-07-19 ratifiziert:
+The decisions of 2026-07-18 were ratified on 2026-07-19:
 
-1. Mehrfachausgabenseiten werden in Werk und Ausgabe dekomponiert.
-2. Reconciliation gehört zum produktionsreifen Auslieferungsstand.
-3. Der Wiki-/Druck-Merge bleibt eine spätere Ausbaustufe.
-4. Der versionierte Patch-Export ist der kanonische Write-Back-Weg.
+1. Multi-edition pages are decomposed into work and edition.
+2. Reconciliation belongs to the production-ready deliverable state.
+3. The wiki/print merge remains a later development stage.
+4. The versioned patch export is the canonical write-back route.
 
-Am 2026-08-21 ersetzte das agentische Review die externe Stichprobe als Startbedingung. Zwei unabhängige Erstprüfungen und eine stärkere Reconciliation bilden die aktuelle Evidenz. Eine spätere externe Prüfung ist zusätzliche Validierung.
+On 2026-08-21 the agentic review replaced the external sample as the starting condition. Two independent initial reviews and a stronger reconciliation form the current evidence. A later external review is additional validation.
 
-Ebenfalls am 2026-08-21 wurde entschieden, dass strittige Fälle Bestandteil der finalen Daten sind. Sie werden als offene Claims modelliert und bleiben von bestätigten Beziehungen unterscheidbar.
+Likewise on 2026-08-21 it was decided that contested cases are a component of the final data. They are modelled as open claims and stay distinguishable from confirmed relations.
 
-## Grenzen, offene Punkte und Operator Points
+## Limits, Open Points and Operator Points
 
-Die flache Kompatibilitätsschicht bleibt für Mehrfachausgabenseiten strukturell ungenau; der Gate-1-Graph ist dort die präzisere Darstellung. Die vollständigen Prüfvorräte (unbestätigte Ausgaben, Gate-2-Fälle über Orte, Werke, Übersetzer und Verlage) stehen in den Queues und Manifesten. Bekannte semantische Ground-Truth-Fehler stehen in [[testing]].
+The flat compatibility layer stays structurally imprecise for multi-edition pages; there the Gate 1 graph is the more precise representation. The complete review stocks (unconfirmed editions, Gate 2 cases across locations, works, translators and publishers) are held in the queues and manifests. Known semantic ground-truth failures are held in [[testing]].
 
-Registrierte offene Punkte, die den reproduzierbaren Produktionsstand nicht blockieren:
+Registered open points that do not block the reproducible production state:
 
-- Triage der 207 Seiten in der MediaWiki-Archivtabelle (nicht beauftragt; Entscheidung beim Operator).
-- Cross-View-Brushing in den Explore-Ansichten (bewusst zurückgestellt; der Nutzen einer verknüpften Selektion über die Views steht in keinem Verhältnis zur Komplexität eines geteilten Selektionszustands, Wiederaufnahme nur auf Operator-Entscheid). Die übrigen Punkte der Kosmetikrunde (Sprach- und Richtungsattribute, Sortierung im URL-Hash, Inline-Handler in home und facets) sind umgesetzt.
-- Abarbeitung des Übersetzer- und Verlags-Prüfvorrats als Kurationsaufgabe.
-- Externe Fachprüfung als zusätzliche Validierung auf dem fertigen Werkzeug.
-- Zwei Titel (Seiten 4775 und 5913) tragen ein verirrtes arabisches Diakritikum (U+0650) als Encoding-Rest; Kandidat für die Normalisierungsstufe, kosmetisch.
+- Triage of the 207 pages in the MediaWiki archive table (not commissioned; decision with the operator).
+- Cross-view brushing in the Explore views (deliberately deferred; the benefit of a linked selection across the views stands in no proportion to the complexity of a shared selection state, resumption only on operator decision). The remaining points of the cosmetics round (language and direction attributes, sorting in the URL hash, inline handlers in home and facets) are implemented.
+- Working through the translator and publisher review stock as a curation task.
+- External expert review as additional validation on the finished tool.
+- Two titles (pages 4775 and 5913) carry a stray Arabic diacritic (U+0650) as an encoding residue; a candidate for the normalization stage, cosmetic.
 
-Operator Points: die institutionelle Werkidentität der Graphic-Novel-Adaption `klawiter:edition/4916-2016-b` (der vorhandene Claim sichert den Fall vollständig), die Abnahme der Version 1.0 und, nach der Abnahme, die Publikations- und Zitierform (Release-Tag, Zenodo/DOI).
+Operator Points: the institutional work identity of the graphic novel adaptation `klawiter:edition/4916-2016-b` (the existing claim secures the case completely), the acceptance of version 1.0 and, after acceptance, the publication and citation form (release tag, Zenodo/DOI).
 
-## Evidenzorte
+## Evidence Locations
 
-| Aussage | Kanonischer Nachweis |
+| Statement | Canonical evidence |
 |---|---|
-| vollständiger Produktionslauf | `pipeline/run_pipeline.py` und finaler Audit unter `data/output/audits/` |
-| Werk-/Ausgabe-Graph | `data/output/editions/work-editions.jsonld` |
-| Gate-1-Vertrag | `data/schema/work-edition-shapes.ttl` und `data/output/editions/validation-report.json` |
-| agentisches Sample-Review | `data/output/edition-samples/reviews/` |
-| Reconciliation-Kandidaten und Entscheidungen | `data/output/reconciliation/` und `data/reconciliation/` |
-| strittige Normdatenclaims | `data/output/reconciliation/contested-claims.json` |
-| öffentlicher Link-Layer | `data/output/reconciliation/publishable-links.json` |
-| Expert-in-the-Loop-Vertrag | `data/corrections/README.md` und [[frontend#EIL Curation Interface]] |
-| Gesamtqualität | `data/output/quality-report.json`, Census- und Verifikationsbericht |
+| complete production run | `pipeline/run_pipeline.py` and final audit under `data/output/audits/` |
+| work/edition graph | `data/output/editions/work-editions.jsonld` |
+| Gate 1 contract | `data/schema/work-edition-shapes.ttl` and `data/output/editions/validation-report.json` |
+| agentic sample review | `data/output/edition-samples/reviews/` |
+| reconciliation candidates and decisions | `data/output/reconciliation/` and `data/reconciliation/` |
+| contested authority-data claims | `data/output/reconciliation/contested-claims.json` |
+| public link layer | `data/output/reconciliation/publishable-links.json` |
+| Expert-in-the-Loop contract | `data/corrections/README.md` and [[frontend#EIL Curation Interface]] |
+| overall quality | `data/output/quality-report.json`, census and verification report |
