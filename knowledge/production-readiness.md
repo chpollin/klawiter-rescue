@@ -23,7 +23,7 @@ This document describes the ratified and implemented production state. [[pipelin
 
 ## Publication Frame
 
-The published subject consists of the digital bibliography, the JSON-LD data, the software, the machine-readable vocabulary and the provenance and validation artifacts. A separate Klawiter paper and a separate blog post are closed publication lines. The wiki/print merge, external live write-backs and institutionally content-changing work decisions are not part of this production state.
+The current state is version 0.9, a technically complete release candidate; version 1.0 is declared by operator acceptance and carries the release tag (operator decision 2026-08-27). The published subject consists of the digital bibliography, the JSON-LD data, the software, the machine-readable vocabulary and the provenance and validation artifacts. A separate Klawiter paper and a separate blog post are closed publication lines. The wiki/print merge, external live write-backs and institutionally content-changing work decisions are not part of this production state.
 
 ## Definition of the Terminal State
 
