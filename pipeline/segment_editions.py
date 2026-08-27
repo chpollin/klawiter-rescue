@@ -120,7 +120,7 @@ def _review_queue(dataset: dict) -> dict:
                     "pageCountCandidate": edition.get("klawiter:pageCountCandidate"),
                     "series": edition.get("klawiter:headerSeries"),
                     "description": edition.get("schema:description"),
-                    "contestedClaim": edition.get("klawiter:contestedClaim"),
+                    "contestedClaim": edition.get("klawiter:hasContestedClaim"),
                 },
                 "evidence": annotations[edition["@id"]],
                 "sourceSliceSha256": edition["klawiter:sourceSliceSha256"],

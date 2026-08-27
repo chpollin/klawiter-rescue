@@ -75,10 +75,13 @@ jobs:
 
       # Timestamped artifacts (manifests, EARL, provenance, validation
       # reports carry generatedAt) are excluded; every other derived file
-      # must reproduce byte-identically.
+      # must reproduce byte-identically. docs/vocab/ joined the set once the
+      # register lost its case collisions (2026-08-27), so the term
+      # directories are identical on Linux and Windows.
       - name: Deterministic artifact reproduction check
         run: |
           git diff --exit-code -- \
+            docs/vocab/ \
             data/output/klawiter.jsonld \
             data/output/quality-report.json \
             data/output/census-report.json \

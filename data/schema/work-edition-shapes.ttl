@@ -63,7 +63,7 @@ klawiter:EditionShape
                 sh:hasValue "contested" ;
             ] ;
             sh:property [
-                sh:path klawiter:contestedClaim ;
+                sh:path klawiter:hasContestedClaim ;
                 sh:minCount 1 ;
                 sh:maxCount 1 ;
                 sh:class klawiter:ContestedClaim ;
@@ -108,7 +108,7 @@ klawiter:ContestedClaimShape
         sh:class klawiter:ClaimInterpretation ;
     ] ;
     sh:property [
-        sh:path klawiter:reviewAction ;
+        sh:path klawiter:hasReviewAction ;
         sh:minCount 1 ;
         sh:class klawiter:ReviewAction ;
     ] ;

@@ -7,10 +7,10 @@
     "klawiter:evidence": {
       "@container": "@set"
     },
-    "klawiter:interpretation": {
+    "klawiter:hasReviewAction": {
       "@container": "@set"
     },
-    "klawiter:reviewAction": {
+    "klawiter:interpretation": {
       "@container": "@set"
     },
     "klawiter:sourceEvidence": {
@@ -46,6 +46,20 @@
         "schema:name": "Tyresö"
       },
       "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/c2e71f5d9a751732",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Tyreso/unresolved",
+          "klawiter:evidence": [
+            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+          ],
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
       "klawiter:identityScope": "location",
       "klawiter:interpretation": [
         {
@@ -76,20 +90,6 @@
           "klawiter:candidateSource": "fail-closed-alternative",
           "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
-        }
-      ],
-      "klawiter:reviewAction": [
-        {
-          "@id": "klawiter:review/reconciliation/c2e71f5d9a751732",
-          "@type": "klawiter:ReviewAction",
-          "klawiter:decisionId": "location/Tyreso/unresolved",
-          "klawiter:evidence": [
-            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
-          ],
-          "klawiter:reviewOutcome": "unresolved",
-          "prov:wasAssociatedWith": {
-            "schema:name": "independent-verification-agent"
-          }
         }
       ],
       "klawiter:sourceEvidence": [
@@ -140,6 +140,20 @@
         "schema:name": "Sofija, Varna"
       },
       "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/2555757b78ef071e",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Sofija-Varna/unresolved",
+          "klawiter:evidence": [
+            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+          ],
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
       "klawiter:identityScope": "location",
       "klawiter:interpretation": [
         {
@@ -170,20 +184,6 @@
           "klawiter:candidateSource": "fail-closed-alternative",
           "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
-        }
-      ],
-      "klawiter:reviewAction": [
-        {
-          "@id": "klawiter:review/reconciliation/2555757b78ef071e",
-          "@type": "klawiter:ReviewAction",
-          "klawiter:decisionId": "location/Sofija-Varna/unresolved",
-          "klawiter:evidence": [
-            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
-          ],
-          "klawiter:reviewOutcome": "unresolved",
-          "prov:wasAssociatedWith": {
-            "schema:name": "independent-verification-agent"
-          }
         }
       ],
       "klawiter:sourceEvidence": [
@@ -311,6 +311,20 @@
         "schema:name": "Saint-Aignan"
       },
       "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/b5bc4dc8b99535b7",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Saint-Aignan/unresolved",
+          "klawiter:evidence": [
+            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+          ],
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
       "klawiter:identityScope": "location",
       "klawiter:interpretation": [
         {
@@ -330,20 +344,6 @@
           "klawiter:candidateSource": "fail-closed-alternative",
           "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
-        }
-      ],
-      "klawiter:reviewAction": [
-        {
-          "@id": "klawiter:review/reconciliation/b5bc4dc8b99535b7",
-          "@type": "klawiter:ReviewAction",
-          "klawiter:decisionId": "location/Saint-Aignan/unresolved",
-          "klawiter:evidence": [
-            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
-          ],
-          "klawiter:reviewOutcome": "unresolved",
-          "prov:wasAssociatedWith": {
-            "schema:name": "independent-verification-agent"
-          }
         }
       ],
       "klawiter:sourceEvidence": [
@@ -372,6 +372,20 @@
         "schema:name": "Bloemfontein, Kaapstad"
       },
       "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/55bfb7a5fa7f12fa",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Bloemfontein-Kaapstad/unresolved",
+          "klawiter:evidence": [
+            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+          ],
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
       "klawiter:identityScope": "location",
       "klawiter:interpretation": [
         {
@@ -402,20 +416,6 @@
           "klawiter:candidateSource": "fail-closed-alternative",
           "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
-        }
-      ],
-      "klawiter:reviewAction": [
-        {
-          "@id": "klawiter:review/reconciliation/55bfb7a5fa7f12fa",
-          "@type": "klawiter:ReviewAction",
-          "klawiter:decisionId": "location/Bloemfontein-Kaapstad/unresolved",
-          "klawiter:evidence": [
-            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
-          ],
-          "klawiter:reviewOutcome": "unresolved",
-          "prov:wasAssociatedWith": {
-            "schema:name": "independent-verification-agent"
-          }
         }
       ],
       "klawiter:sourceEvidence": [
@@ -455,6 +455,20 @@
         "schema:name": "Varna, Sofija"
       },
       "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/1a0a02215105f3e0",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Varna-Sofija/unresolved",
+          "klawiter:evidence": [
+            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+          ],
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
       "klawiter:identityScope": "location",
       "klawiter:interpretation": [
         {
@@ -485,20 +499,6 @@
           "klawiter:candidateSource": "fail-closed-alternative",
           "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
-        }
-      ],
-      "klawiter:reviewAction": [
-        {
-          "@id": "klawiter:review/reconciliation/1a0a02215105f3e0",
-          "@type": "klawiter:ReviewAction",
-          "klawiter:decisionId": "location/Varna-Sofija/unresolved",
-          "klawiter:evidence": [
-            "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
-          ],
-          "klawiter:reviewOutcome": "unresolved",
-          "prov:wasAssociatedWith": {
-            "schema:name": "independent-verification-agent"
-          }
         }
       ],
       "klawiter:sourceEvidence": [

@@ -371,7 +371,7 @@ def apply_review_reconciliation(
             )
             work_binding = edition.pop("schema:exampleOfWork")
             claim_id = specification["claim_id"]
-            edition["klawiter:contestedClaim"] = {"@id": claim_id}
+            edition["klawiter:hasContestedClaim"] = {"@id": claim_id}
             edition["klawiter:bindingStatus"] = "contested"
             work = works[work_binding["@id"]]
             work["schema:workExample"] = [
@@ -449,7 +449,7 @@ def apply_review_reconciliation(
                         {"@id": "klawiter:evidence/sample-reconciliation"},
                     ],
                     "klawiter:interpretation": interpretations,
-                    "klawiter:reviewAction": review_actions,
+                    "klawiter:hasReviewAction": review_actions,
                 }
             )
 

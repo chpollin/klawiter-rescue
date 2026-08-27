@@ -34075,29 +34075,7 @@
         "@id": "klawiter:edition/4916-2016-b"
       },
       "klawiter:decisionStatus": "open",
-      "klawiter:interpretation": [
-        {
-          "@id": "klawiter:interpretation/4916-2016-b/original-work",
-          "@type": "klawiter:ClaimInterpretation",
-          "klawiter:interpretationStatus": "contested",
-          "klawiter:proposedObject": {
-            "@id": "klawiter:work/4916"
-          },
-          "schema:description": "The bibliography places the publication on the Schachnovelle volume page.",
-          "schema:name": "Edition of the Schachnovelle work represented by source page 4916"
-        },
-        {
-          "@id": "klawiter:interpretation/4916-2016-b/adaptation-work",
-          "@type": "klawiter:ClaimInterpretation",
-          "klawiter:interpretationStatus": "contested",
-          "klawiter:proposedObject": {
-            "@id": "klawiter:work-candidate/4916-2016-b-adaptation"
-          },
-          "schema:description": "The exact source calls the publication a graphic novel after Stefan Zweig and names an adaptor.",
-          "schema:name": "Edition of a distinct graphic-novel adaptation work"
-        }
-      ],
-      "klawiter:reviewAction": [
+      "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/4916-2016-b/reviewer-a",
           "@type": "klawiter:ReviewAction",
@@ -34136,6 +34114,28 @@
           "prov:wasAssociatedWith": {
             "@id": "klawiter:agent/reconciliation-verifier"
           }
+        }
+      ],
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:interpretation/4916-2016-b/original-work",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "klawiter:work/4916"
+          },
+          "schema:description": "The bibliography places the publication on the Schachnovelle volume page.",
+          "schema:name": "Edition of the Schachnovelle work represented by source page 4916"
+        },
+        {
+          "@id": "klawiter:interpretation/4916-2016-b/adaptation-work",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "klawiter:work-candidate/4916-2016-b-adaptation"
+          },
+          "schema:description": "The exact source calls the publication a graphic novel after Stefan Zweig and names an adaptor.",
+          "schema:name": "Edition of a distinct graphic-novel adaptation work"
         }
       ],
       "klawiter:sourcePageId": 4916,
@@ -65026,7 +65026,7 @@
       "@id": "klawiter:edition/4916-2016-b",
       "@type": "schema:Book",
       "klawiter:bindingStatus": "contested",
-      "klawiter:contestedClaim": {
+      "klawiter:hasContestedClaim": {
         "@id": "klawiter:claim/work-binding/4916-2016-b"
       },
       "klawiter:headerLine": "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''",

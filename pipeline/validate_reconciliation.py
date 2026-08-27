@@ -116,7 +116,7 @@ def _check_contested_claims(result: dict) -> list[str]:
             errors.append(f"{claim_id}: competing interpretations are missing")
         if not claim["klawiter:sourceEvidence"]:
             errors.append(f"{claim_id}: exact source evidence is missing")
-        if not claim["klawiter:reviewAction"]:
+        if not claim["klawiter:hasReviewAction"]:
             errors.append(f"{claim_id}: review history is missing")
         for evidence in claim["klawiter:sourceEvidence"]:
             source_hash = evidence.get("sourceTextSha256")

@@ -18,7 +18,7 @@
         "@id": "https://creativecommons.org/licenses/by/4.0/"
       },
       "dcterms:title": "Klawiter Bibliography Vocabulary",
-      "http://www.w3.org/2002/07/owl#versionInfo": "3.0 (gate evidence terms, RDF resource modeling)",
+      "http://www.w3.org/2002/07/owl#versionInfo": "3.1 (gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)",
       "rdfs:seeAlso": {
         "@id": "klawiter:index.html"
       }
@@ -51,7 +51,8 @@
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
-      "rdfs:label": "Contested Claim"
+      "rdfs:label": "Contested Claim",
+      "skos:changeNote": "The property formerly published under this IRI in lowercase spelling, klawiter:contestedClaim, is named klawiter:hasContestedClaim since 2026-08-27; term pages are directories, so the two spellings collided on case-insensitive filesystems."
     },
     {
       "@id": "klawiter:CorrespondenceEntry",
@@ -204,7 +205,8 @@
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
-      "rdfs:label": "Review Action"
+      "rdfs:label": "Review Action",
+      "skos:changeNote": "The property formerly published under this IRI in lowercase spelling, klawiter:reviewAction, is named klawiter:hasReviewAction since 2026-08-27; term pages are directories, so the two spellings collided on case-insensitive filesystems."
     },
     {
       "@id": "klawiter:SecondaryLiteratureEntry",
@@ -426,15 +428,6 @@
       }
     },
     {
-      "@id": "klawiter:contestedClaim",
-      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "Links a contested edition to the claim that keeps its work binding open.",
-      "rdfs:isDefinedBy": {
-        "@id": "klawiter:"
-      },
-      "rdfs:label": "contested claim"
-    },
-    {
       "@id": "klawiter:contestedClaims",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Contested claims of a dataset.",
@@ -538,6 +531,32 @@
       "rdfs:range": {
         "@id": "xsd:string"
       }
+    },
+    {
+      "@id": "klawiter:hasContestedClaim",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Links a contested edition to the claim that keeps its work binding open.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "has contested claim",
+      "rdfs:range": {
+        "@id": "klawiter:ContestedClaim"
+      },
+      "skos:changeNote": "Renamed from klawiter:contestedClaim on 2026-08-27; the earlier IRI collided with the class klawiter:ContestedClaim on case-insensitive filesystems and is no longer published."
+    },
+    {
+      "@id": "klawiter:hasReviewAction",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "A review-trail step attached to a claim.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "has review action",
+      "rdfs:range": {
+        "@id": "klawiter:ReviewAction"
+      },
+      "skos:changeNote": "Renamed from klawiter:reviewAction on 2026-08-27; the earlier IRI collided with the class klawiter:ReviewAction on case-insensitive filesystems and is no longer published."
     },
     {
       "@id": "klawiter:headerLine",
@@ -734,15 +753,6 @@
       "rdfs:range": {
         "@id": "xsd:string"
       }
-    },
-    {
-      "@id": "klawiter:reviewAction",
-      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "A review-trail step attached to a claim.",
-      "rdfs:isDefinedBy": {
-        "@id": "klawiter:"
-      },
-      "rdfs:label": "review action"
     },
     {
       "@id": "klawiter:reviewBasis",

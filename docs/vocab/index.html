@@ -51,7 +51,7 @@
 <div class="namespace">
   <strong>Namespace URI:</strong> https://chpollin.github.io/klawiter-rescue/vocab/<br>
   <strong>Preferred prefix:</strong> klawiter:<br>
-  <strong>Version:</strong> 3.0 (gate evidence terms, RDF resource modeling)
+  <strong>Version:</strong> 3.1 (gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)
 </div>
 
 <p>Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/&lt;TermName&gt;/.</p>
@@ -201,13 +201,13 @@
     <tr><td><code><a href="proposedObject/">klawiter:proposedObject</a></code></td><td class="kind">Property</td><td>The object an interpretation proposes for the claim predicate. The fail-closed alternative omits it.</td></tr>
     <tr><td><code><a href="candidateId/">klawiter:candidateId</a></code></td><td class="kind">Property</td><td>Identifier of the reconciliation candidate an interpretation is based on.</td></tr>
     <tr><td><code><a href="candidateSource/">klawiter:candidateSource</a></code></td><td class="kind">Property</td><td>Where a reconciliation candidate came from, for example a legacy run, the frozen authority index, or the fail-closed alternative.</td></tr>
-    <tr><td><code><a href="reviewAction/">klawiter:reviewAction</a></code></td><td class="kind">Property</td><td>A review-trail step attached to a claim.</td></tr>
+    <tr><td><code><a href="hasReviewAction/">klawiter:hasReviewAction</a></code></td><td class="kind">Property</td><td>A review-trail step attached to a claim.</td></tr>
     <tr><td><code><a href="reviewOutcome/">klawiter:reviewOutcome</a></code></td><td class="kind">Property</td><td>Outcome of one review action, for example match, mismatch, unresolved, confirm, correct.</td></tr>
     <tr><td><code><a href="reviewBasis/">klawiter:reviewBasis</a></code></td><td class="kind">Property</td><td>Stated basis of a review judgment.</td></tr>
     <tr><td><code><a href="decisionId/">klawiter:decisionId</a></code></td><td class="kind">Property</td><td>Stable identifier of a recorded decision in the decision files.</td></tr>
     <tr><td><code><a href="decidedAt/">klawiter:decidedAt</a></code></td><td class="kind">Property</td><td>Timestamp of a recorded decision.</td></tr>
     <tr><td><code><a href="evidence/">klawiter:evidence</a></code></td><td class="kind">Property</td><td>Evidence references supporting a review action.</td></tr>
-    <tr><td><code><a href="contestedClaim/">klawiter:contestedClaim</a></code></td><td class="kind">Property</td><td>Links a contested edition to the claim that keeps its work binding open.</td></tr>
+    <tr><td><code><a href="hasContestedClaim/">klawiter:hasContestedClaim</a></code></td><td class="kind">Property</td><td>Links a contested edition to the claim that keeps its work binding open.</td></tr>
     <tr><td><code><a href="sourceEdition/">klawiter:sourceEdition</a></code></td><td class="kind">Property</td><td>The edition a source-occurrence carrier volume was observed on.</td></tr>
   </tbody>
 </table>

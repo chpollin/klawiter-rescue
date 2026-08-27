@@ -133,7 +133,7 @@ def _check_unique_ids(dataset: dict) -> list[str]:
     for claim in dataset["contestedClaims"]:
         identifiers.extend(
             item["@id"]
-            for key in ("klawiter:interpretation", "klawiter:reviewAction")
+            for key in ("klawiter:interpretation", "klawiter:hasReviewAction")
             for item in claim[key]
         )
     duplicates = sorted(
@@ -159,7 +159,7 @@ def _check_contested_claims(dataset: dict) -> list[str]:
     errors: list[str] = []
     for edition in dataset["editions"]:
         edition_id = edition["@id"]
-        claim_ref = edition.get("klawiter:contestedClaim")
+        claim_ref = edition.get("klawiter:hasContestedClaim")
         if edition["klawiter:reviewStatus"] != "contested":
             if claim_ref:
                 errors.append(f"{edition_id}: non-contested edition has a claim")
@@ -190,12 +190,12 @@ def _check_contested_claims(dataset: dict) -> list[str]:
             errors.append(
                 f"{claim['@id']}: missing candidate works {sorted(missing_candidates)}"
             )
-        if len(claim["klawiter:reviewAction"]) < 3:
+        if len(claim["klawiter:hasReviewAction"]) < 3:
             errors.append(f"{claim['@id']}: incomplete review history")
     referenced_claims = {
-        edition["klawiter:contestedClaim"]["@id"]
+        edition["klawiter:hasContestedClaim"]["@id"]
         for edition in dataset["editions"]
-        if edition.get("klawiter:contestedClaim")
+        if edition.get("klawiter:hasContestedClaim")
     }
     for claim_id in sorted(set(claims).difference(referenced_claims)):
         errors.append(f"{claim_id}: unreferenced contested claim")

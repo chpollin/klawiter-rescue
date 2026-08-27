@@ -117,7 +117,7 @@ CONTESTED_CONTEXT = {
         "prov": "http://www.w3.org/ns/prov#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "klawiter:interpretation": {"@container": "@set"},
-        "klawiter:reviewAction": {"@container": "@set"},
+        "klawiter:hasReviewAction": {"@container": "@set"},
         "klawiter:sourceEvidence": {"@container": "@set"},
         "klawiter:evidence": {"@container": "@set"},
         "klawiter:decidedAt": {"@type": "xsd:dateTime"},
@@ -175,7 +175,7 @@ def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
                         "decidedAt": item.get("klawiter:decidedAt"),
                         "evidence": item["klawiter:evidence"],
                     }
-                    for item in claim["klawiter:reviewAction"]
+                    for item in claim["klawiter:hasReviewAction"]
                 ],
             }
         )
@@ -225,7 +225,7 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
                         "outcome": item["klawiter:reviewOutcome"],
                         "basis": item.get("klawiter:reviewBasis"),
                     }
-                    for item in claim["klawiter:reviewAction"]
+                    for item in claim["klawiter:hasReviewAction"]
                 ],
             }
         )

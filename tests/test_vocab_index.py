@@ -12,6 +12,7 @@ import re
 from pathlib import Path
 
 import build_vocab_pages as bvp
+import pytest
 
 INDEX_PATH = Path(bvp.VOCAB_DIR) / "index.html"
 
@@ -69,6 +70,40 @@ def test_case_collisions_are_detected() -> None:
         ["ReviewAction", "reviewAction"]
     ]
     assert bvp.case_collisions(["ReviewAction", "evidence"]) == []
+
+
+def test_case_collision_is_a_hard_error() -> None:
+    """A collision publishes one term page under another term's IRI, so the
+    generator refuses to write instead of warning."""
+    with pytest.raises(ValueError, match="differ only in case"):
+        bvp.assert_no_case_collisions(["ReviewAction", "reviewAction"])
+    bvp.assert_no_case_collisions(["ReviewAction", "hasReviewAction"])
+
+
+def test_register_is_free_of_case_collisions() -> None:
+    terms, _ = build()
+    assert bvp.case_collisions(terms) == []
+
+
+def test_claim_properties_carry_the_has_prefix() -> None:
+    """Renamed 2026-08-27 so the property no longer collides with the
+    identically spelled class directory."""
+    terms, _ = build()
+    assert "hasContestedClaim" in terms
+    assert "hasReviewAction" in terms
+    assert "contestedClaim" not in terms
+    assert "reviewAction" not in terms
+
+
+def test_class_pages_note_the_renamed_property() -> None:
+    terms, _ = build()
+    for class_name, property_name in (
+        ("ContestedClaim", "hasContestedClaim"),
+        ("ReviewAction", "hasReviewAction"),
+    ):
+        kind, label, comment, links = terms[class_name]
+        page = bvp._term_page(class_name, kind, label, comment, links)
+        assert property_name in page
 
 
 def test_committed_index_matches_the_generated_page() -> None:

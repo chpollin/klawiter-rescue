@@ -832,7 +832,7 @@ def _contested_claims(
                     "klawiter:decisionStatus": "open",
                     "klawiter:sourceEvidence": source_evidence,
                     "klawiter:interpretation": interpretations,
-                    "klawiter:reviewAction": _decision_history(decision),
+                    "klawiter:hasReviewAction": _decision_history(decision),
                 }
             )
     claims.sort(key=lambda item: item["@id"])

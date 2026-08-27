@@ -155,7 +155,7 @@ def test_reviewed_sample_overlay_preserves_contested_claim() -> None:
     editions = {edition["@id"]: edition for edition in reviewed["editions"]}
     contested = editions["klawiter:edition/4916-2016-b"]
     assert "schema:exampleOfWork" not in contested
-    assert contested["klawiter:contestedClaim"] == {
+    assert contested["klawiter:hasContestedClaim"] == {
         "@id": "klawiter:claim/work-binding/4916-2016-b"
     }
     claim = reviewed["contestedClaims"][0]
@@ -170,7 +170,7 @@ def test_reviewed_sample_overlay_preserves_contested_claim() -> None:
         "klawiter:work/4916",
         "klawiter:work-candidate/4916-2016-b-adaptation",
     }
-    assert len(claim["klawiter:reviewAction"]) == 3
+    assert len(claim["klawiter:hasReviewAction"]) == 3
     work = next(
         work for work in reviewed["works"] if work["@id"] == "klawiter:work/4916"
     )

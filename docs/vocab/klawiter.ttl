@@ -18,7 +18,7 @@
     dcterms:title "Klawiter Bibliography Vocabulary"@en ;
     dcterms:description "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/<TermName>/."@en ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "3.0 (gate evidence terms, RDF resource modeling)" ;
+    owl:versionInfo "3.1 (gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)" ;
     rdfs:seeAlso <https://chpollin.github.io/klawiter-rescue/vocab/index.html> .
 
 #################################################################
@@ -152,6 +152,7 @@ klawiter:ContestedClaim
     a rdfs:Class ;
     rdfs:label "Contested Claim"@en ;
     rdfs:comment "A disputed identity assertion that stays part of the final dataset with its exact source evidence, all competing interpretations, the review trail, and an open decision status. Two evidence kinds exist: edition work-binding claims carry a Web Annotation offset selector, authority reconciliation claims carry source-occurrence evidence."@en ;
+    skos:changeNote "The property formerly published under this IRI in lowercase spelling, klawiter:contestedClaim, is named klawiter:hasContestedClaim since 2026-08-27; term pages are directories, so the two spellings collided on case-insensitive filesystems."@en ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:ClaimInterpretation
@@ -164,6 +165,7 @@ klawiter:ReviewAction
     a rdfs:Class ;
     rdfs:label "Review Action"@en ;
     rdfs:comment "One step of the review trail on a claim or edition: who reviewed, on what basis, with what outcome."@en ;
+    skos:changeNote "The property formerly published under this IRI in lowercase spelling, klawiter:reviewAction, is named klawiter:hasReviewAction since 2026-08-27; term pages are directories, so the two spellings collided on case-insensitive filesystems."@en ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:WorkIdentityCandidate
@@ -552,10 +554,12 @@ klawiter:candidateSource
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
-klawiter:reviewAction
+klawiter:hasReviewAction
     a rdf:Property ;
-    rdfs:label "review action"@en ;
+    rdfs:label "has review action"@en ;
     rdfs:comment "A review-trail step attached to a claim."@en ;
+    rdfs:range klawiter:ReviewAction ;
+    skos:changeNote "Renamed from klawiter:reviewAction on 2026-08-27; the earlier IRI collided with the class klawiter:ReviewAction on case-insensitive filesystems and is no longer published."@en ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:reviewOutcome
@@ -593,10 +597,12 @@ klawiter:evidence
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
-klawiter:contestedClaim
+klawiter:hasContestedClaim
     a rdf:Property ;
-    rdfs:label "contested claim"@en ;
+    rdfs:label "has contested claim"@en ;
     rdfs:comment "Links a contested edition to the claim that keeps its work binding open."@en ;
+    rdfs:range klawiter:ContestedClaim ;
+    skos:changeNote "Renamed from klawiter:contestedClaim on 2026-08-27; the earlier IRI collided with the class klawiter:ContestedClaim on case-insensitive filesystems and is no longer published."@en ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:sourceEdition

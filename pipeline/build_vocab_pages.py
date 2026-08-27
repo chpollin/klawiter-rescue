@@ -161,16 +161,31 @@ TERM_LINE = re.compile(r"^klawiter:(\w+)\b")
 def case_collisions(names) -> list:
     """Term names that share a directory on a case-insensitive filesystem.
 
-    Term pages are directories, so klawiter:ReviewAction and
-    klawiter:reviewAction resolve to one directory on Windows and macOS and
-    to two on the Linux host serving the site. A collision therefore
-    publishes one term page under the other term's IRI; it is reported, and
-    resolving it is a vocabulary decision, not a generator fix.
+    Term pages are directories, so two names differing only in case resolve
+    to one directory on Windows and macOS and to two on the Linux host
+    serving the site, which publishes one term page under the other term's
+    IRI.
     """
     by_lowercase: dict[str, list[str]] = {}
     for name in sorted(names):
         by_lowercase.setdefault(name.lower(), []).append(name)
     return [group for group in by_lowercase.values() if len(group) > 1]
+
+
+def assert_no_case_collisions(names) -> None:
+    """Refuse to generate while the register carries a case collision.
+
+    Resolving it is a vocabulary decision (rename one term), so the
+    generator stops rather than writing pages whose IRIs are wrong on the
+    published site.
+    """
+    groups = case_collisions(names)
+    if groups:
+        listed = "; ".join(", ".join(group) for group in groups)
+        raise ValueError(
+            f"Term names differ only in case and would share one page "
+            f"directory: {listed}"
+        )
 
 
 def _write_if_changed(path: Path, page: str) -> None:
@@ -358,6 +373,7 @@ def build_index(graph: Graph, terms: dict) -> str:
 def main() -> None:
     graph = load_graph()
     terms = collect_terms(graph)
+    assert_no_case_collisions(terms)
 
     # Remove stale term directories (recognizable by their generated
     # index.html), then write current ones.
@@ -405,11 +421,6 @@ def main() -> None:
     }
     write_json(str(VOCAB_DIR / "klawiter.vocab.jsonld"), document, indent=2)
 
-    for group in case_collisions(terms):
-        log.warning(
-            f"Term names differing only in case share one page directory on a "
-            f"case-insensitive filesystem: {', '.join(group)}"
-        )
     log.info(f"Vocabulary index and term pages written for {len(terms)} terms")
 
 
