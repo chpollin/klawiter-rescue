@@ -18,6 +18,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
     PARSED_FIELDS,
+    PIPELINE_DATA_DIR,
     STEP_03_OUTPUT,
     STEP_03B_OUTPUT,
     STEP_03C_OUTPUT,
@@ -29,7 +30,7 @@ from lib.encoding import fix_encoding, has_mojibake
 
 log = setup_logging("normalize")
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+DATA_DIR = PIPELINE_DATA_DIR
 
 
 # --- Mapping loaders ---

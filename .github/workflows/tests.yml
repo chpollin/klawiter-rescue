@@ -48,10 +48,10 @@ jobs:
           KLAWITER_REQUIRE_INTERMEDIATES: '1'
         run: python -m uv run python -m pytest -q
 
-      - name: Run static checks
-        run: |
-          python -m uv run ruff check pipeline tests
-          python -m uv run ruff format --check pipeline tests
+      # Same hook set developers install locally (pre-commit install); one
+      # definition of the static checks in .pre-commit-config.yaml.
+      - name: Run static checks (pre-commit)
+        run: python -m uv run pre-commit run --all-files --show-diff-on-failure
 
   # Authoritative reproduction: rebuild everything from the committed raw
   # sources, run both gate validators, and prove the committed deterministic

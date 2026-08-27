@@ -152436,9 +152436,9 @@
         "name": "Inko"
       },
       "locationCreated": {
-        "@id": "klawiter:place/Sweden",
+        "@id": "klawiter:place/Tyres%C3%B6",
         "@type": "schema:Place",
-        "name": "Sweden"
+        "name": "Tyresö"
       },
       "inLanguage": "eo",
       "languageName": "Esperanto",
@@ -152746,9 +152746,9 @@
       "datePublished": "1970",
       "timePeriod": "post-wwii",
       "locationCreated": {
-        "@id": "klawiter:place/Delhi",
+        "@id": "klawiter:place/Dill%C4%AB",
         "@type": "schema:Place",
-        "name": "Delhi"
+        "name": "Dillī"
       },
       "inLanguage": "hi",
       "languageName": "Hindi",

@@ -83,6 +83,16 @@ OUTPUT_RECONCILIATION_FRONTEND = os.path.join(
 )
 OUTPUT_FRONTEND_JSON = os.path.join(PROJECT_ROOT, "docs", "data", "klawiter.json")
 
+# Post-processor reports and artifacts (single definition site; the scripts
+# import these instead of re-deriving the paths)
+VERIFICATION_REPORT = os.path.join(OUTPUT_DIR, "verification-report.json")
+CENSUS_REPORT = os.path.join(OUTPUT_DIR, "census-report.json")
+CORRECTIONS_REPORT = os.path.join(OUTPUT_DIR, "corrections-report.json")
+TRIAGE_JSON = os.path.join(PROJECT_ROOT, "docs", "data", "triage.json")
+
+# Static mapping tables shipped with the pipeline (03c normalization)
+PIPELINE_DATA_DIR = os.path.join(PIPELINE_DIR, "data")
+
 # Frozen Wikidata candidates for translators and publishers
 # (produced by the gated refreezing tool reconcile_agents.py)
 AGENT_RECONCILIATION = os.path.join(

@@ -60,8 +60,13 @@ def _sha256(path: Path) -> str:
 
 def _code_hash() -> str:
     # LF-normalize so the recorded provenance hash is independent of the
-    # git eol settings that produced the working copy.
-    paths = (Path(__file__), Path(__file__).parent / "lib" / "editions.py")
+    # git eol settings that produced the working copy. patterns.py is included
+    # because editions.py builds its header grammar from it.
+    paths = (
+        Path(__file__),
+        Path(__file__).parent / "lib" / "editions.py",
+        Path(__file__).parent / "lib" / "patterns.py",
+    )
     digest = hashlib.sha256()
     for path in paths:
         digest.update(path.name.encode("utf-8"))

@@ -18,14 +18,23 @@ import re
 from dataclasses import dataclass
 from typing import Iterable
 
+from lib.patterns import EDITION_YEAR_PREFIX
+
 ALGORITHM_VERSION = "1.2"
+# Header grammar built from the shared year fragment in lib/patterns.py, so
+# '[ca. YEAR]' parses identically in the flat extraction and here. patterns.py
+# is part of segment_editions.py's provenance code hash for this reason.
 EDITION_HEADER_RE = re.compile(
-    r"^'''\s*\[(?:ca\.\s*)?\d{4}\]", re.MULTILINE | re.IGNORECASE
+    rf"^'''\s*\[{EDITION_YEAR_PREFIX}\]", re.MULTILINE | re.IGNORECASE
 )
 YEAR_RE = re.compile(r"(\d{4})")
-COMPOUND_HEADER_RE = re.compile(r"\s+/\s+(?=\[(?:ca\.\s*)?\d{4}\])")
+COMPOUND_HEADER_RE = re.compile(rf"\s+/\s+(?=\[{EDITION_YEAR_PREFIX}\])")
 HEADER_RE = re.compile(r"\s*\[([^\]]*)\]\s*[:.]?\s*(.*)$")
 SERIES_RE = re.compile(r"\s*(\[[^\]]+\])\s*$")
+# Edition-block page counts: N of 'N/(M)p.' is the numbered-page component,
+# deliberately NOT the summed total that verify.py derives with
+# lib/patterns.PARENS_PAGE_RE. Same notation, different question — kept as
+# separate grammars with this pointer instead of a false unification.
 STANDARD_PAGE_COUNT_RE = re.compile(r"(?<!\()\b(\d+)(?:/\(\d+\))?p\.")
 PAREN_PAGE_COUNT_RE = re.compile(r"\((\d+)\)p\.")
 MALFORMED_PAGE_COUNT_RE = re.compile(r"\b(\d+)/(\d+)\)p\.")

@@ -71,10 +71,11 @@ Ein neuer API-Aufruf ist ausschließlich mit `--llm-mode live` möglich. Dafür 
 ```bash
 python -m uv run pytest -q
 python -m uv run pytest -q -m semantic
-python -m uv run ruff check pipeline tests
-python -m uv run ruff format --check pipeline tests
+python -m uv run pre-commit run --all-files
 git diff --check
 ```
+
+Die statischen Prüfungen (ruff check, ruff format) sind in `.pre-commit-config.yaml` definiert; `python -m uv run pre-commit install` richtet sie als Git-Hook ein, die CI führt denselben Hook-Satz aus.
 
 Der Standardsatz prüft Census, Schema, Konsistenz, Regression, Extraktionsregeln, Normalisierung, Provenienz, Korrekturverträge, Editionsmodell, Reconciliation, Produktionsrunner und Frontend-Logik. Die semantische Suite ist separat markiert; ihre verbleibenden bekannten Fehler sind als Grenzen dokumentiert und werden nicht durch gelockerte Assertions verdeckt.
 

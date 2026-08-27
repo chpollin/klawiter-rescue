@@ -141,14 +141,22 @@ _loc_sorted = sorted(KNOWN_LOCATIONS, key=len, reverse=True)
 _loc_pattern = "|".join(re.escape(loc) for loc in _loc_sorted)
 LOCATION_RE = re.compile(rf"\[?\b({_loc_pattern})\b\]?")
 
+# Edition-header year grammar, the single origin shared with lib/editions.py:
+# a header year is '1943' or 'ca. 1943' (any case). Both layers build their
+# header regexes from this fragment so '[ca. YEAR]' parses identically in the
+# flat extraction and in the edition segmentation.
+EDITION_YEAR_PREFIX = r"(?:ca\.\s*)?\d{4}"
+
 # Publication line: the bold citation that opens an edition block,
 # '''[YEAR]: Publisher, Location'''. The separator after the year bracket is a
 # colon in most entries but a period in some ('''[1983]. Verlag, Stadt'''), so
 # both are accepted; this is a superset of the colon-only form and cannot change
 # the colon entries. Constraining location extraction to this header keeps a city
 # inside a chapter title (e.g. "Karlsbad und Weimar") from being taken as the
-# place of publication.
-PUBLICATION_LINE_RE = re.compile(r"'''\s*\[\d{4}[^\]]*\]\s*[:.]\s*(.+?)'''")
+# place of publication. IGNORECASE only affects the 'ca.' literal.
+PUBLICATION_LINE_RE = re.compile(
+    rf"'''\s*\[{EDITION_YEAR_PREFIX}[^\]]*\]\s*[:.]\s*(.+?)'''", re.IGNORECASE
+)
 # Headerless excerpt/review entries carry the place in a [City, year] reference.
 BRACKET_PLACE_RE = re.compile(r"\[([A-ZÀ-Ý][^\[\];]{1,38}?),\s*\d{4}")
 # A known city sitting right after an opening bracket, e.g. "[London]", "[Wien],".

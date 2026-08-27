@@ -25,13 +25,17 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.config import OUTPUT_DIR, PROJECT_ROOT, setup_logging, write_json
+from lib.config import (
+    CENSUS_REPORT,
+    TRIAGE_JSON,
+    VERIFICATION_REPORT,
+    setup_logging,
+    write_json,
+)
 
 log = setup_logging(__name__)
 
-VERIFICATION_REPORT = os.path.join(OUTPUT_DIR, "verification-report.json")
-CENSUS_REPORT = os.path.join(OUTPUT_DIR, "census-report.json")
-TRIAGE_PATH = os.path.join(PROJECT_ROOT, "docs", "data", "triage.json")
+TRIAGE_PATH = TRIAGE_JSON
 
 # verify.py speaks pipeline field names; the frontend speaks camelCase.
 FIELD_NAME_MAP = {"page_count": "pageCount"}

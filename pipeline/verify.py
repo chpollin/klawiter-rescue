@@ -16,9 +16,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    OUTPUT_DIR,
     OUTPUT_JSONLD,
     STEP_02_OUTPUT,
+    VERIFICATION_REPORT,
     load_csv,
     setup_logging,
     write_json,
@@ -38,7 +38,7 @@ from lib.wiki_parser import remove_wiki_markup
 
 log = setup_logging(__name__)
 
-REPORT_PATH = os.path.join(OUTPUT_DIR, "verification-report.json")
+REPORT_PATH = VERIFICATION_REPORT
 
 
 def load_raw_content_map():

@@ -179,6 +179,7 @@ def build_location_candidates(
 ) -> list[dict]:
     """Preserve every legacy reconciliation output as an unconfirmed candidate."""
     log_by_location = {item["location"]: item for item in reconciliation_log}
+    folded_rows = _folded_source_lines(source_rows or [])
     results = []
     for name in sorted(locations, key=str.casefold):
         info = locations[name]
@@ -218,9 +219,7 @@ def build_location_candidates(
                 "country": info.get("country"),
                 "legacyStatus": log_item.get("status"),
                 "candidates": candidates,
-                "sourceOccurrences": _location_source_occurrences(
-                    name, source_rows or []
-                ),
+                "sourceOccurrences": _location_source_occurrences(name, folded_rows),
             }
         )
     if review_evidence:
@@ -272,14 +271,13 @@ def build_location_candidates(
     return results
 
 
-def _location_source_occurrences(
-    location: str, source_rows: list[dict[str, str]]
-) -> list[dict]:
-    """Return stable, exact source-line references for a location string."""
-    occurrences: list[dict] = []
-    seen: set[tuple[int, int | None, int]] = set()
-    needle = location.casefold()
-    components = [item.strip().casefold() for item in location.split(",")]
+def _folded_source_lines(
+    source_rows: list[dict[str, str]],
+) -> list[tuple[int, int | None, list[tuple[int, str, str]]]]:
+    """Fold every source line exactly once. The occurrence scan runs per
+    location subject over the full source; folding inside that scan would
+    re-fold the corpus hundreds of times per build."""
+    folded = []
     for row in source_rows:
         text = (
             row.get("raw_content")
@@ -289,8 +287,25 @@ def _location_source_occurrences(
         )
         page_id = int(row["page_id"])
         text_id = int(row["text_id"]) if row.get("text_id") else None
-        for line_number, line in enumerate(text.splitlines(), start=1):
-            folded_line = line.casefold()
+        lines = [
+            (number, line, line.casefold())
+            for number, line in enumerate(text.splitlines(), start=1)
+        ]
+        folded.append((page_id, text_id, lines))
+    return folded
+
+
+def _location_source_occurrences(
+    location: str,
+    folded_rows: list[tuple[int, int | None, list[tuple[int, str, str]]]],
+) -> list[dict]:
+    """Return stable, exact source-line references for a location string."""
+    occurrences: list[dict] = []
+    seen: set[tuple[int, int | None, int]] = set()
+    needle = location.casefold()
+    components = [item.strip().casefold() for item in location.split(",")]
+    for page_id, text_id, lines in folded_rows:
+        for line_number, line, folded_line in lines:
             exact_match = needle in folded_line
             component_match = len(components) > 1 and all(
                 component in folded_line for component in components

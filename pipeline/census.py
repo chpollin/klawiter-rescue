@@ -38,7 +38,7 @@ from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    OUTPUT_DIR,
+    CENSUS_REPORT,
     OUTPUT_FRONTEND_JSON,
     OUTPUT_JSONLD,
     SQL_DUMP_PATH,
@@ -50,7 +50,7 @@ from lib.vocabulary import plain_value  # noqa: E402
 
 log = setup_logging(__name__)
 
-REPORT_PATH = os.path.join(OUTPUT_DIR, "census-report.json")
+REPORT_PATH = CENSUS_REPORT
 
 # Namespaces that carry bibliographic entries. Everything else (category,
 # template, file, mediawiki system pages) is structural, not a bibliography
@@ -219,7 +219,7 @@ def main():
         "all_checks_pass": all(c["pass"] for c in checks),
     }
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
     write_json(REPORT_PATH, report, indent=2)
 
     # --- Console summary --------------------------------------------------

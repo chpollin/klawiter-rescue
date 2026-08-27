@@ -35,18 +35,17 @@ from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
-    OUTPUT_DIR,
+    CORRECTIONS_DIR,
+    CORRECTIONS_REPORT,
     OUTPUT_FRONTEND_JSON,
     OUTPUT_PUBLISHABLE_LINKS,
-    PROJECT_ROOT,
     setup_logging,
     write_json,
 )
 
 log = setup_logging(__name__)
 
-CORRECTIONS_DIR = os.path.join(PROJECT_ROOT, "data", "corrections")
-REPORT_PATH = os.path.join(OUTPUT_DIR, "corrections-report.json")
+REPORT_PATH = CORRECTIONS_REPORT
 
 VALID_ACTIONS = {"accept", "correct", "add"}
 VALID_SOURCES = {"human", "agent"}
@@ -229,7 +228,7 @@ def main():
             f"{len(report['old_value_mismatch'])} (see report)"
         )
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
     write_json(REPORT_PATH, report, indent=2)
 
     # Only rewrite the dataset when something actually changed, so an empty
