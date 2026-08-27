@@ -452,8 +452,11 @@ const Pages = {
           <div class="jsonld-search-wrap">
             <input type="text" id="jsonld-search" class="jsonld-search"
                    placeholder="Search by title..." autocomplete="off"
+                   role="combobox" aria-expanded="false" aria-autocomplete="list"
+                   aria-controls="jsonld-suggestions"
                    aria-label="Search entries by title">
-            <div id="jsonld-suggestions" class="jsonld-suggestions hidden"></div>
+            <div id="jsonld-suggestions" class="jsonld-suggestions hidden"
+                 role="listbox" aria-label="Matching entries"></div>
           </div>
           <button class="action-btn" id="jsonld-random">Random Entry</button>
         </div>
@@ -461,9 +464,9 @@ const Pages = {
         <div id="jsonld-stats" class="jsonld-stats"></div>
 
         <div class="jsonld-tabs">
-          <button class="jsonld-tab active" data-tab="compact">Compact</button>
-          <button class="jsonld-tab" data-tab="expanded">Expanded</button>
-          <button class="jsonld-tab" data-tab="triples">Triples</button>
+          <button class="jsonld-tab active" data-tab="compact" aria-pressed="true">Compact</button>
+          <button class="jsonld-tab" data-tab="expanded" aria-pressed="false">Expanded</button>
+          <button class="jsonld-tab" data-tab="triples" aria-pressed="false">Triples</button>
         </div>
 
         <div id="jsonld-compact" class="jsonld-panel jsonld-code"></div>

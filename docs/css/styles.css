@@ -503,14 +503,14 @@ h1, h2, h3, h4 {
 .home-compact .home-title {
   margin-bottom: 0.25rem;
 }
-.home-subtitle-inline {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--sz-gold);
-  margin-left: 0.75rem;
-  vertical-align: middle;
+/* Subtitle on its own line: readable serif italic in the dark gold token,
+   no letterspaced uppercase, so the phrase never wraps apart from the title. */
+.home-subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--sz-gold-dark);
+  margin: 0 0 0.75rem;
 }
 .home-compact .home-text {
   max-width: 46rem;
@@ -1683,14 +1683,30 @@ h1, h2, h3, h4 {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 .jsonld-suggestion {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: inherit;
   padding: 0.5rem 0.75rem;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   cursor: pointer;
   border-bottom: 1px solid var(--sz-border-light);
 }
-.jsonld-suggestion:hover {
+.jsonld-suggestion:hover,
+.jsonld-suggestion.is-active {
   background: rgba(184, 150, 62, 0.1);
+}
+.jsonld-suggestion.is-active {
+  outline: 2px solid var(--sz-gold);
+  outline-offset: -2px;
+}
+.jsonld-suggestion-empty {
+  color: var(--sz-text-light);
+  font-style: italic;
+  cursor: default;
 }
 .jsonld-suggestion:last-child {
   border-bottom: none;
@@ -1934,6 +1950,32 @@ body.edit-mode .meta-table {
    Shares the blue styling that was previously keyed to the legacy "expert" class. */
 .prov-editor { background: #cce5ff; color: #004085; }
 
+/* The dataset value a pending correction replaced, kept beside the new one */
+.field-superseded {
+  color: var(--sz-text-light);
+  text-decoration: line-through;
+  font-size: 0.8rem;
+}
+
+/* Explicit control on an empty field: the placeholder alone is not operable */
+.field-add {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  border: 1px dashed var(--sz-gold);
+  background: var(--sz-cream);
+  color: var(--sz-text);
+  cursor: pointer;
+}
+.field-add:hover,
+.field-add:focus-visible {
+  background: var(--sz-white);
+  border-style: solid;
+  border-color: var(--sz-burgundy);
+}
+
 /* Empty editable field shows a placeholder so typing is recorded as Add */
 .editable-empty:empty::before {
   content: attr(data-placeholder);
@@ -1959,6 +2001,8 @@ body.edit-mode .meta-table {
 .review-agent { background: #fff3cd; color: #856404; border-color: #f0e0a8; }
 .review-contested { background: #fbe4e4; color: #8a2a2a; border-color: #eec6c6; }
 .review-approved { background: #d4edda; color: #155724; border-color: #b8dcc0; }
+/* Session state: edited in this browser, not yet exported or applied. */
+.review-edited { background: #e8e2f2; color: #46356b; border-color: #cfc3e4; }
 .review-pending {
   font-weight: 700;
   text-transform: none;
@@ -2536,6 +2580,43 @@ td.matrix-low { background: #F5E3E3; }
 .agent-queue-row.status-published .agent-queue-status { color: #4A6B3A; }
 .agent-queue-row.status-pending .agent-queue-status { color: var(--sz-burgundy); }
 .agent-queue-actions { flex: 0 0 auto; display: flex; gap: 0.3rem; }
+/* Candidates beyond the top one, kept reachable without widening the row */
+.agent-queue-more summary {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+  cursor: pointer;
+}
+.agent-queue-more ul {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0 0 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* An artifact that failed to load: distinct from a clean, empty result */
+.curate-load-error {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: #8a2a2a;
+  background: #fbe4e4;
+  border: 1px solid #eec6c6;
+  border-radius: 3px;
+  padding: 0.4rem 0.6rem;
+  margin: 0 0 0.75rem;
+}
+.curate-unavailable { color: var(--sz-text-light); font-style: italic; }
+
+/* Save badge note on a session restored from a previous sitting */
+.edit-resumed {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-left: 0.35rem;
+}
 @media (max-width: 800px) {
   .agent-queue-row { flex-wrap: wrap; }
   .agent-queue-name, .agent-queue-status { flex-basis: auto; }

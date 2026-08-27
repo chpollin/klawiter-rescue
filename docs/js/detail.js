@@ -38,13 +38,15 @@ const Detail = {
 
   // Review chip: the dataset projection (entry.review, built by the pipeline
   // from decided reconciliation subjects and applied patches) layered under
-  // the live session state, which wins because it is newer.
+  // the live session state, which wins because it is newer. "edited" is the
+  // session state alone; "approved" stays reserved for the dataset.
   _reviewChip(entry) {
     const map = {
       unreviewed: { label: 'Unreviewed', cls: 'review-unreviewed' },
       agent_verified: { label: 'Agent-verified', cls: 'review-agent' },
       contested: { label: 'Contested', cls: 'review-contested' },
       approved: { label: 'Expert-reviewed', cls: 'review-approved' },
+      edited: { label: 'Edited', cls: 'review-edited' },
     };
     const st = Edit.entryStatus(entry.sourcePageId);
     const dataset = entry.review && entry.review.status;
@@ -57,18 +59,31 @@ const Detail = {
     return `<div class="review-chip ${m.cls}"${by}>${m.label}${note}</div>`;
   },
 
-  // Editable cell for a provenance-tracked field (edit mode only). An empty
-  // field shows a placeholder so typing into it is recorded as Add, not Correct.
+  // Editable cell for a provenance-tracked field (edit mode only). A pending
+  // correction is the newer state and is what the field shows; the superseded
+  // dataset value stays visible beside it. An empty field shows a placeholder
+  // and an explicit Add control, so typing into it is recorded as Add.
   _editableValue(fieldName, entry) {
     const pid = entry.sourcePageId;
+    const pend = Edit.pending(pid, fieldName);
     const raw = entry[fieldName];
-    const has = raw != null && raw !== '';
-    const original = has ? String(raw) : '';
+    const original = raw != null && raw !== '' ? String(raw) : '';
+    const shown = pend && pend.action !== 'accept'
+      ? (pend.newValue == null ? '' : String(pend.newValue))
+      : original;
+    const has = shown !== '';
     const ph = has ? '' : ' data-placeholder="add value…"';
-    return `<span class="editable-field${has ? '' : ' editable-empty'}" contenteditable="true"
+    const label = Edit.FIELD_LABELS[fieldName] || fieldName;
+    const field = `<span class="editable-field${has ? '' : ' editable-empty'}" contenteditable="true"
+      role="textbox" aria-label="${esc(label)}"
       data-field="${fieldName}" data-pid="${pid}"
-      data-original="${esc(original)}"${ph}
-      onblur="Edit.trackChange(this)">${has ? esc(original) : ''}</span>`;
+      data-original="${esc(original)}" data-rendered="${esc(shown)}"${ph}>${has ? esc(shown) : ''}</span>`;
+    const superseded = pend && pend.action === 'correct' && pend.oldValue
+      ? ` <span class="field-superseded" title="Value before this correction">${esc(String(pend.oldValue))}</span>`
+      : '';
+    const add = has ? '' : ` <button class="field-btn field-add" data-act="add-focus"
+      data-field="${fieldName}" data-pid="${pid}">+ Add ${esc(label)}</button>`;
+    return field + superseded + add;
   },
 
   // Per-field action controls: Accept on a present value, Undo on a pending one.
@@ -79,9 +94,11 @@ const Detail = {
     let inner = '';
     if (pend) {
       inner += `<span class="field-action field-action-${pend.action}">${pend.action}</span>`;
-      inner += `<button class="field-btn field-revert" title="Undo" onclick="Edit.revert(${pid}, '${fieldName}')">↺</button>`;
+      inner += `<button class="field-btn field-revert" title="Undo" data-act="revert"
+        data-field="${fieldName}" data-pid="${pid}">↺</button>`;
     } else if (has) {
-      inner += `<button class="field-btn field-accept" title="Accept this value" onclick="Edit.accept(${pid}, '${fieldName}')">✓</button>`;
+      inner += `<button class="field-btn field-accept" title="Accept this value" data-act="accept"
+        data-field="${fieldName}" data-pid="${pid}">✓</button>`;
     }
     return inner ? ` <span class="field-controls">${inner}</span>` : '';
   },
@@ -129,10 +146,26 @@ const Detail = {
     return ` <span class="subject-reach" title="A decision on this name applies to every entry carrying it.">applies to ${count} entries</span>`;
   },
 
-  _reconciliationCell(entry) {
-    const review = Edit.locationReconciliation(entry);
-    if (!review) return '<span class="missing-value">No reconciliation record</span>';
-    const pending = Edit.pendingLocationDecision(entry.sourcePageId);
+  // Authority candidate block for the three reconciled subject kinds:
+  // 'location', 'person' (translator) and 'publisher'. Location and agent
+  // subjects differ only in the lookup and in how the reach is counted, so
+  // they share one renderer. "Keep unresolved" is available for every kind
+  // because each subject carries the source occurrences the pipeline requires
+  // as the evidence behind an unresolved decision.
+  _authorityCell(entry, kind) {
+    const pid = entry.sourcePageId;
+    const isLocation = kind === 'location';
+    const review = isLocation
+      ? Edit.locationReconciliation(entry)
+      : Edit.agentReconciliation(entry, kind);
+    if (!review) {
+      return isLocation
+        ? '<span class="missing-value">No reconciliation record</span>'
+        : '<span class="missing-value">No candidate record (below occurrence threshold)</span>';
+    }
+    const pending = isLocation
+      ? Edit.pendingLocationDecision(pid)
+      : Edit.pendingAgentDecision(kind, review.name);
     const decision = pending || review.decision;
     const status = pending
       ? 'pending editor decision'
@@ -140,59 +173,24 @@ const Detail = {
     const published = review.publishable
       ? ` <a class="wikidata-link" href="${esc(review.publishable.uri)}" target="_blank" rel="noopener">published link</a>`
       : '';
-    const reach = this._subjectReach(
-      App.entries.filter(e => e.location === entry.location).length
-    );
+    const reach = this._subjectReach(isLocation
+      ? App.entries.filter(e => e.location === entry.location).length
+      : review.occurrences);
+    const attrs = `data-pid="${pid}" data-kind="${esc(kind)}"`;
     const candidates = (review.candidates || []).map(candidate => {
       const score = candidate.score == null ? '' : `, score ${candidate.score}`;
       return `<li><a href="${esc(candidate.uri)}" target="_blank" rel="noopener">${esc(candidate.label)} (${esc(candidate.qid)})</a>${score}
-        <button class="reconciliation-btn" onclick="Edit.decideLocation(${entry.sourcePageId}, 'confirm', '${candidate.qid}')">Confirm</button></li>`;
+        <button class="reconciliation-btn" ${attrs} data-act="confirm" data-qid="${esc(candidate.qid)}">Confirm</button></li>`;
     }).join('');
     const revert = pending
-      ? `<button class="reconciliation-btn" onclick="Edit.revertLocationDecision(${entry.sourcePageId})">Undo pending</button>`
+      ? `<button class="reconciliation-btn" ${attrs} data-act="undo">Undo pending</button>`
       : '';
     return `<div class="reconciliation-block">
       <div><strong>${esc(status)}</strong>${published}${reach}</div>
       ${candidates ? `<ul>${candidates}</ul>` : '<div>No candidate available.</div>'}
       <div class="reconciliation-actions">
-        <button class="reconciliation-btn" onclick="Edit.decideLocation(${entry.sourcePageId}, 'reject')">Reject candidates</button>
-        <button class="reconciliation-btn" onclick="Edit.decideLocation(${entry.sourcePageId}, 'unresolved')">Keep unresolved</button>
-        ${revert}
-      </div>
-    </div>`;
-  },
-
-  // Candidate block for translator (kind 'person') and publisher names,
-  // reusing the location pattern. "Keep unresolved" is available because
-  // every agent subject now carries source occurrences, which the pipeline
-  // requires as the evidence behind an unresolved decision.
-  _agentReconciliationCell(entry, kind) {
-    const review = Edit.agentReconciliation(entry, kind);
-    if (!review) return '<span class="missing-value">No candidate record (below occurrence threshold)</span>';
-    const name = review.name;
-    const pending = Edit.pendingAgentDecision(kind, name);
-    const decision = pending || review.decision;
-    const status = pending
-      ? 'pending editor decision'
-      : (decision ? decision.action : 'proposal only');
-    const published = review.publishable
-      ? ` <a class="wikidata-link" href="${esc(review.publishable.uri)}" target="_blank" rel="noopener">published link</a>`
-      : '';
-    const reach = this._subjectReach(review.occurrences);
-    const candidates = (review.candidates || []).map(candidate => {
-      const score = candidate.score == null ? '' : `, score ${candidate.score}`;
-      return `<li><a href="${esc(candidate.uri)}" target="_blank" rel="noopener">${esc(candidate.label)} (${esc(candidate.qid)})</a>${score}
-        <button class="reconciliation-btn" onclick="Edit.decideAgent(${entry.sourcePageId}, '${kind}', 'confirm', '${candidate.qid}')">Confirm</button></li>`;
-    }).join('');
-    const revert = pending
-      ? `<button class="reconciliation-btn" onclick="Edit.revertAgentDecision(${entry.sourcePageId}, '${kind}')">Undo pending</button>`
-      : '';
-    return `<div class="reconciliation-block">
-      <div><strong>${esc(status)}</strong>${published}${reach}</div>
-      ${candidates ? `<ul>${candidates}</ul>` : '<div>No candidate available.</div>'}
-      <div class="reconciliation-actions">
-        <button class="reconciliation-btn" onclick="Edit.decideAgent(${entry.sourcePageId}, '${kind}', 'reject')">Reject candidates</button>
-        <button class="reconciliation-btn" onclick="Edit.decideAgent(${entry.sourcePageId}, '${kind}', 'unresolved')">Keep unresolved</button>
+        <button class="reconciliation-btn" ${attrs} data-act="reject">Reject candidates</button>
+        <button class="reconciliation-btn" ${attrs} data-act="unresolved">Keep unresolved</button>
         ${revert}
       </div>
     </div>`;
@@ -296,7 +294,7 @@ const Detail = {
     }
     if (entry.categories && entry.categories.length) {
       const catLinks = entry.categories.map(c =>
-        `<a href="#type=${encodeURIComponent(entry.entryType)}">${esc(c)}</a>`);
+        `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`);
       meta.push(`<span class="inline-meta-item"><span class="inline-meta-label">Categories</span> ${catLinks.join(', ')}</span>`);
     }
     if (meta.length) html += `<div class="detail-inline-meta">${meta.join('')}</div>`;
@@ -353,27 +351,39 @@ const Detail = {
     }
 
     // The full Klawiter entry is the source record: kept complete, collapsed.
+    // When it is the only thing the expansion has to show, a collapsed
+    // details row would make the expansion look empty, so it opens.
     if (entry.fullBibliographicEntry) {
+      const only = html === '' ? ' open' : '';
       html += `
-        <details class="detail-source-details">
+        <details class="detail-source-details"${only}>
           <summary>Full bibliographic entry (Klawiter source)</summary>
           <div class="detail-bibentry">${esc(entry.fullBibliographicEntry)}</div>
         </details>
       `;
     }
 
+    // The review state belongs to the published record, so the read layout
+    // carries the same chip as the adjudication table.
+    html = this._reviewChip(entry) + html;
     html += this._actionBar(entry);
     html += this._provenanceLine(entry);
     return html;
   },
 
   // Split a trailing page reference off a contents item for aligned display.
+  // A title that is itself an entry becomes a link to that entry.
   _contentItem(text) {
     const m = /^(.*?)[,.]?\s*(pp?\.\s*[\d\s()\/\-–.]+[a-z]?)\s*$/i.exec(text);
     if (m && m[1]) {
-      return `<li><span class="content-item-title">${esc(m[1])}</span><span class="content-item-pages">${esc(m[2])}</span></li>`;
+      return `<li><span class="content-item-title">${this._contentTitle(m[1])}</span><span class="content-item-pages">${esc(m[2])}</span></li>`;
     }
-    return `<li>${esc(text)}</li>`;
+    return `<li>${this._contentTitle(text)}</li>`;
+  },
+
+  _contentTitle(title) {
+    const pid = App.titleMap && App.titleMap.get(title.trim());
+    return pid ? `<a href="#entry=${pid}">${esc(title)}</a>` : esc(title);
   },
 
   // ---------------------------------------------------------------------------
@@ -399,12 +409,12 @@ const Detail = {
 
     rows.push(this.row('Publisher', this._editCell('publisher', entry), 'publisher', entry));
     if (entry.publisher) {
-      rows.push(this.row('Authority candidates', this._agentReconciliationCell(entry, 'publisher')));
+      rows.push(this.row('Authority candidates', this._authorityCell(entry, 'publisher')));
     }
 
     rows.push(this.row('Location', this._editCell('location', entry), 'location', entry));
     if (entry.location) {
-      rows.push(this.row('Authority candidates', this._reconciliationCell(entry)));
+      rows.push(this.row('Authority candidates', this._authorityCell(entry, 'location')));
     }
 
     if (contestedAuthority) {
@@ -420,12 +430,12 @@ const Detail = {
 
     rows.push(this.row('Translator', this._editCell('translator', entry), 'translator', entry));
     if (entry.translator) {
-      rows.push(this.row('Authority candidates', this._agentReconciliationCell(entry, 'person')));
+      rows.push(this.row('Authority candidates', this._authorityCell(entry, 'person')));
     }
 
     if (entry.categories && entry.categories.length) {
       const catLinks = entry.categories.map(c =>
-        `<a href="#type=${encodeURIComponent(entry.entryType)}">${esc(c)}</a>`);
+        `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`);
       rows.push(this.row('Categories', catLinks.join(', ')));
     }
 
@@ -472,19 +482,23 @@ const Detail = {
     const pid = entry.sourcePageId;
     return `
       <div class="action-bar">
-        <button class="action-btn" onclick="Export.bibtex(${pid})" title="Export BibTeX">
+        <button class="action-btn" data-export="bibtex" data-pid="${pid}" title="Export BibTeX">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Cite (BibTeX)
         </button>
-        <button class="action-btn" onclick="Export.ris(${pid})" title="Export RIS">
+        <button class="action-btn" data-export="ris" data-pid="${pid}" title="Export RIS">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Cite (RIS)
         </button>
-        <button class="action-btn" onclick="Export.jsonld(${pid})" title="Download JSON-LD">
+        <button class="action-btn" data-export="jsonld" data-pid="${pid}" title="Download JSON-LD">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           JSON-LD
         </button>
-        <button class="action-btn" onclick="Export.permalink(${pid})" data-permalink="${pid}" title="Copy permalink">
+        <a class="action-btn" href="#data/playground/${pid}" title="Open this entry in the JSON-LD playground">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          View as JSON-LD
+        </a>
+        <button class="action-btn" data-export="permalink" data-pid="${pid}" data-permalink="${pid}" title="Copy permalink">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           Permalink
         </button>
@@ -514,3 +528,72 @@ const Detail = {
     return esc(title);
   },
 };
+
+// Event delegation for everything the detail card renders. The card HTML is
+// rebuilt on every change, so handlers live on the document and read their
+// arguments from data attributes instead of being interpolated into markup.
+if (typeof document !== 'undefined' && document.addEventListener) {
+  document.addEventListener('click', (ev) => {
+    const target = ev.target.closest ? ev.target : null;
+    if (!target) return;
+
+    const exportBtn = target.closest('.action-bar .action-btn[data-export]');
+    if (exportBtn) {
+      const pid = Number(exportBtn.dataset.pid);
+      const fn = Export[exportBtn.dataset.export];
+      if (typeof fn === 'function') fn.call(Export, pid);
+      return;
+    }
+
+    const fieldBtn = target.closest('.meta-value .field-btn[data-act]');
+    if (fieldBtn) {
+      const pid = Number(fieldBtn.dataset.pid);
+      const field = fieldBtn.dataset.field;
+      if (fieldBtn.dataset.act === 'accept') Edit.accept(pid, field);
+      else if (fieldBtn.dataset.act === 'revert') Edit.revert(pid, field);
+      else if (fieldBtn.dataset.act === 'add-focus') {
+        const cell = fieldBtn.parentElement.querySelector(
+          `.editable-field[data-field="${field}"]`
+        );
+        if (cell) cell.focus();
+      }
+      return;
+    }
+
+    const authBtn = target.closest('.reconciliation-block .reconciliation-btn[data-act]');
+    if (authBtn) {
+      const pid = Number(authBtn.dataset.pid);
+      const kind = authBtn.dataset.kind;
+      const act = authBtn.dataset.act;
+      if (kind === 'location') {
+        if (act === 'undo') Edit.revertLocationDecision(pid);
+        else Edit.decideLocation(pid, act, authBtn.dataset.qid || null);
+      } else if (act === 'undo') {
+        Edit.revertAgentDecision(pid, kind);
+      } else {
+        Edit.decideAgent(pid, kind, act, authBtn.dataset.qid || null);
+      }
+    }
+  });
+
+  // contenteditable keys: Enter commits (a line break in a single-value field
+  // is never wanted), Escape restores the rendered value and leaves the field.
+  document.addEventListener('keydown', (ev) => {
+    const cell = ev.target.closest ? ev.target.closest('.editable-field') : null;
+    if (!cell) return;
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      cell.blur();
+    } else if (ev.key === 'Escape') {
+      ev.preventDefault();
+      cell.textContent = cell.dataset.rendered || '';
+      cell.blur();
+    }
+  });
+
+  // blur does not bubble; focusout is the delegated equivalent.
+  document.addEventListener('focusout', (ev) => {
+    const cell = ev.target.closest ? ev.target.closest('.editable-field') : null;
+    if (cell) Edit.trackChange(cell);
+  });
+}

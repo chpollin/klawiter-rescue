@@ -57,8 +57,8 @@ const Home = {
     // folded into the intro sentence.
     container.innerHTML = `
       <div class="home-intro home-compact">
-        <h1 class="home-title">Stefan Zweig Bibliography
-          <span class="home-subtitle-inline">The Klawiter Bibliography as Open Data</span></h1>
+        <h1 class="home-title">Stefan Zweig Bibliography</h1>
+        <p class="home-subtitle">The Klawiter Bibliography as Open Data</p>
         <p class="home-text">
           ${entries.length.toLocaleString('en')} publications by and about Stefan Zweig,
           from first editions and translations to secondary literature, films and

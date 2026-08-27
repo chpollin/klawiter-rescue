@@ -16,6 +16,7 @@ const Edit = {
   EDITOR_ROLE: 'Editor (SZD)',          // role, not a personal name (privacy convention)
   STORAGE_KEY: 'klawiter.pendingEdits.v2',
   RECONCILIATION_STORAGE_KEY: 'klawiter.pendingReconciliation.v1',
+  SAVED_AT_KEY: 'klawiter.pendingEdits.savedAt',
   TRIAGE_URL: 'data/triage.json',       // built by pipeline/build_triage.py (local file, no external request)
   RECONCILIATION_URL: 'data/reconciliation.json',
 
@@ -30,6 +31,11 @@ const Edit = {
   pendingReconciliation: {},
   _triageFetched: false,
   _reconciliationFetched: false,
+  // A failed load leaves the same empty structures as a clean dataset. The
+  // flags keep the two apart so the workbench can say "not available" instead
+  // of reporting zero open cases it never saw.
+  triageFailed: false,
+  reconciliationFailed: false,
 
   // Load the triage artifact once, on entering edit mode. On failure the
   // hints honestly degrade to what the entry itself carries (provenance).
@@ -37,25 +43,37 @@ const Edit = {
     if (this._triageFetched) return Promise.resolve();
     this._triageFetched = true;
     return fetch(this.TRIAGE_URL)
-      .then(r => (r.ok ? r.json() : null))
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then(doc => { this.triage = doc && doc.entries ? doc.entries : {}; })
-      .catch(() => { this.triage = {}; });
+      .catch(() => { this.triage = {}; this.triageFailed = true; });
   },
 
   loadReconciliation() {
     if (this._reconciliationFetched) return Promise.resolve();
     this._reconciliationFetched = true;
     return fetch(this.RECONCILIATION_URL)
-      .then(r => (r.ok ? r.json() : null))
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then(doc => {
         this.reconciliation = doc && doc.locations ? doc.locations : {};
         this.agents = doc && doc.agents ? doc.agents : {};
         this.editionClaims = doc && doc.editionClaims ? doc.editionClaims : {};
         this.contestedAuthorityClaims = doc && doc.contestedClaims ? doc.contestedClaims : [];
         this.summary = doc && doc.summary ? doc.summary : {};
+        this._authorityIndex = null;
       })
-      .catch(() => { this.reconciliation = {}; this.agents = {}; this.summary = {}; });
+      .catch(() => {
+        this.reconciliation = {}; this.agents = {}; this.summary = {};
+        this.reconciliationFailed = true;
+      });
   },
+
+  restoredAt: null,   // ISO timestamp of the session these edits were last written in
 
   // Restore pending edits from a previous session so in-progress work survives a reload.
   restore() {
@@ -70,6 +88,7 @@ const Edit = {
         const parsed = JSON.parse(reconciliationRaw);
         if (parsed && typeof parsed === 'object') this.pendingReconciliation = parsed;
       }
+      this.restoredAt = localStorage.getItem(this.SAVED_AT_KEY) || null;
     } catch (e) { /* corrupt or unavailable store: start clean */ }
     this.updateBadge();
   },
@@ -81,7 +100,23 @@ const Edit = {
         this.RECONCILIATION_STORAGE_KEY,
         JSON.stringify(this.pendingReconciliation)
       );
+      localStorage.setItem(this.SAVED_AT_KEY, this._now());
     } catch (e) { /* quota exceeded or disabled: stay in-memory for this session */ }
+  },
+
+  // Wipe the session after an export the editor declared final.
+  clearSession() {
+    App.state.pendingEdits = {};
+    this.pendingReconciliation = {};
+    this.restoredAt = null;
+    try {
+      localStorage.removeItem(this.STORAGE_KEY);
+      localStorage.removeItem(this.RECONCILIATION_STORAGE_KEY);
+      localStorage.removeItem(this.SAVED_AT_KEY);
+    } catch (e) { /* store unavailable: memory is already clear */ }
+    this.updateBadge();
+    if (typeof Curate !== 'undefined' && Curate.refreshQueue) Curate.refreshQueue();
+    if (typeof App.renderResults === 'function' && App.state.view === 'results') App.renderResults();
   },
 
   _prov(pid, field) {
@@ -166,17 +201,38 @@ const Edit = {
     return this.editionClaims[String(entry.sourcePageId)] || [];
   },
 
+  _authorityIndex: null,
+
+  // Two lookup tables over the contested claims, built once. Without them
+  // every card expansion scanned the whole claim list twice.
+  // Claim subject IRIs are percent-encoded; the display name is the stable
+  // match key.
+  _buildAuthorityIndex() {
+    const byPage = new Map();
+    const byName = new Map();
+    const push = (map, key, claim) => {
+      const bucket = map.get(key);
+      if (bucket) { if (!bucket.includes(claim)) bucket.push(claim); }
+      else map.set(key, [claim]);
+    };
+    for (const claim of this.contestedAuthorityClaims || []) {
+      if (claim.subject && claim.subject.name) push(byName, claim.subject.name, claim);
+      for (const evidence of (claim.sourceEvidence || [])) {
+        push(byPage, Number(evidence.sourcePageId), claim);
+      }
+    }
+    this._authorityIndex = { byPage, byName };
+    return this._authorityIndex;
+  },
+
   authorityClaimsFor(entry) {
     if (!entry) return [];
-    const pageId = Number(entry.sourcePageId);
-    // Claim subject IRIs are percent-encoded; the display name is the
-    // stable match key.
-    return this.contestedAuthorityClaims.filter(claim => {
-      if (entry.location && claim.subject && claim.subject.name === entry.location) return true;
-      return (claim.sourceEvidence || []).some(
-        evidence => Number(evidence.sourcePageId) === pageId
-      );
-    });
+    const idx = this._authorityIndex || this._buildAuthorityIndex();
+    const byName = entry.location ? (idx.byName.get(entry.location) || []) : [];
+    const byPage = idx.byPage.get(Number(entry.sourcePageId)) || [];
+    if (!byName.length) return byPage;
+    if (!byPage.length) return byName;
+    return byName.concat(byPage.filter(claim => !byName.includes(claim)));
   },
 
   pendingLocationDecision(pid) {
@@ -294,12 +350,14 @@ const Edit = {
     );
   },
 
-  // Review status has exactly two reachable states: an entry either has
-  // pending human edits in this session or it is unreviewed. A dataset
-  // review projection does not exist yet (registered extension).
+  // Session state of one entry. An unsaved field action makes the entry
+  // "edited", which is a state of this session only. "approved" is reserved
+  // for the dataset review projection (entry.review), which the pipeline
+  // writes after a patch has been applied; a single field correction in the
+  // browser must not claim it.
   entryStatus(pid) {
     if (App.state.pendingEdits[pid] && Object.keys(App.state.pendingEdits[pid]).length) {
-      return { status: 'approved', pending: true };
+      return { status: 'edited', pending: true };
     }
     return { status: 'unreviewed', pending: false };
   },
@@ -326,9 +384,19 @@ const Edit = {
     return count + Object.keys(this.pendingReconciliation).length;
   },
 
+  // Date part of the restore timestamp, for the "resumed from" note.
+  _restoredDate() {
+    return this.restoredAt ? String(this.restoredAt).slice(0, 10) : '';
+  },
+
   updateBadge() {
     const count = this.getPendingCount();
     let badge = document.getElementById('edit-badge');
+    // A restored session says which day it comes from, so pending decisions
+    // from an earlier sitting are not mistaken for this one's.
+    const resumed = this._restoredDate()
+      ? ` <span class="edit-resumed">resumed from ${this._restoredDate()}</span>`
+      : '';
 
     if (count > 0 && !badge) {
       const header = document.querySelector('.header-inner');
@@ -337,7 +405,7 @@ const Edit = {
       saveBtn.className = 'edit-save-btn';
       saveBtn.title = 'Export the pending decisions of this session as a patch file for pipeline replay';
       saveBtn.onclick = () => this.exportPatch();
-      saveBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Save <span id="edit-badge" class="edit-badge">${count}</span>`;
+      saveBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Save <span id="edit-badge" class="edit-badge">${count}</span>${resumed}`;
       header.appendChild(saveBtn);
     } else if (badge) {
       badge.textContent = count;
@@ -517,5 +585,16 @@ const Edit = {
       `klawiter-curation-${this._now().slice(0, 10)}.json`,
       'application/json'
     );
+
+    // The download does not say what happens to the session. Ask, because
+    // both answers are legitimate: keep editing, or start clean after a
+    // handover to the pipeline.
+    const total = patchDoc.totalChanges;
+    const keep = !confirm(
+      `${total} decision${total === 1 ? '' : 's'} exported.\n\n`
+      + 'OK: clear the session and start clean.\n'
+      + 'Cancel: keep working with the pending decisions.'
+    );
+    if (!keep) this.clearSession();
   },
 };

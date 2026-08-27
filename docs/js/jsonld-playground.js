@@ -67,14 +67,16 @@ const JsonldPlayground = {
     'sameAs': 'https://www.wikidata.org/entity/Q78491',
   },
 
-  /** Entry types that are ABOUT Zweig (no author field) */
-  ABOUT_ZWEIG_TYPES: new Set([
-    'secondary-literature', 'historical-study', 'symposium', 'other',
-  ]),
-
   currentEntry: null,
+  _bound: false,          // the document-level listener is registered once
+  _activeSuggestion: -1,  // keyboard cursor into the suggestion list
 
-  /** Initialize after page render */
+  /**
+   * The Data page renders the playground on every visit, so init() runs
+   * repeatedly. Element-bound listeners go on the freshly rendered nodes;
+   * the document-level dismissal listener is registered once and resolves
+   * its element at event time.
+   */
   init() {
     const searchInput = document.getElementById('jsonld-search');
     const randomBtn = document.getElementById('jsonld-random');
@@ -83,47 +85,119 @@ const JsonldPlayground = {
     if (!searchInput) return;
 
     searchInput.addEventListener('input', () => this._onSearch(searchInput, suggestions));
+    searchInput.addEventListener('keydown', (e) => this._onSearchKey(e, searchInput, suggestions));
     searchInput.addEventListener('focus', () => {
-      if (suggestions.children.length > 0) suggestions.classList.remove('hidden');
+      if (suggestions.children.length > 0) this._setListOpen(suggestions, true);
     });
     randomBtn.addEventListener('click', () => this._loadRandom());
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.jsonld-search-wrap')) suggestions.classList.add('hidden');
-    });
+
+    if (!this._bound) {
+      this._bound = true;
+      document.addEventListener('click', (e) => {
+        const list = document.getElementById('jsonld-suggestions');
+        if (list && !e.target.closest('.jsonld-search-wrap')) this._setListOpen(list, false);
+      });
+    }
 
     // Tab switching
     document.querySelectorAll('.jsonld-tab').forEach(tab => {
       tab.addEventListener('click', () => this._switchTab(tab.dataset.tab));
     });
 
-    // Load a random entry on init
-    this._loadRandom();
+    // '#data/playground/<pageId>' addresses one entry; without it, a random one.
+    const entry = this._entryFromHash();
+    if (entry) {
+      searchInput.value = entry.title || '';
+      this._loadEntry(entry);
+    } else {
+      this._loadRandom();
+    }
+  },
+
+  /** The page id of a '#data/playground/<pageId>' route, resolved to an entry. */
+  _entryFromHash() {
+    const parts = (location.hash || '').replace(/^#/, '').split('/');
+    if (parts[0] !== 'data' || parts[1] !== 'playground' || !parts[2]) return null;
+    const pid = parseInt(parts[2], 10);
+    return Number.isFinite(pid) && App.entryMap ? (App.entryMap.get(pid) || null) : null;
   },
 
   /** Search entries by title */
   _onSearch(input, suggestions) {
     const q = input.value.trim().toLowerCase();
     suggestions.innerHTML = '';
-    if (q.length < 2) { suggestions.classList.add('hidden'); return; }
+    this._activeSuggestion = -1;
+    if (q.length < 2) { this._setListOpen(suggestions, false); return; }
 
     const matches = App.entries
       .filter(e => e.title && e.title.toLowerCase().includes(q))
       .slice(0, 8);
 
-    if (matches.length === 0) { suggestions.classList.add('hidden'); return; }
+    if (matches.length === 0) {
+      // An empty list that simply stays hidden reads as a broken field.
+      suggestions.innerHTML = '<div class="jsonld-suggestion jsonld-suggestion-empty" role="status">No matches</div>';
+      this._setListOpen(suggestions, true);
+      return;
+    }
 
-    matches.forEach(e => {
-      const li = document.createElement('div');
-      li.className = 'jsonld-suggestion';
-      li.textContent = `${e.title} (${e.year || '?'})`;
-      li.addEventListener('click', () => {
-        input.value = e.title;
-        suggestions.classList.add('hidden');
-        this._loadEntry(e);
-      });
-      suggestions.appendChild(li);
+    matches.forEach((e, i) => {
+      const option = document.createElement('button');
+      option.type = 'button';
+      option.className = 'jsonld-suggestion';
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', 'false');
+      option.id = `jsonld-suggestion-${i}`;
+      option.textContent = `${e.title} (${e.year || '?'})`;
+      option.addEventListener('click', () => this._pick(e, input, suggestions));
+      suggestions.appendChild(option);
     });
-    suggestions.classList.remove('hidden');
+    this._setListOpen(suggestions, true);
+  },
+
+  /** Open state of the suggestion list, mirrored onto the combobox. */
+  _setListOpen(suggestions, open) {
+    suggestions.classList.toggle('hidden', !open);
+    const input = document.getElementById('jsonld-search');
+    if (input) input.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (!open && input) input.removeAttribute('aria-activedescendant');
+  },
+
+  _pick(entry, input, suggestions) {
+    input.value = entry.title;
+    this._setListOpen(suggestions, false);
+    this._activeSuggestion = -1;
+    this._loadEntry(entry);
+  },
+
+  /** Arrow keys walk the suggestions, Enter takes the marked one, Escape closes. */
+  _onSearchKey(ev, input, suggestions) {
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    const options = [...suggestions.querySelectorAll('.jsonld-suggestion[role="option"]')];
+    if (ev.key === 'Escape') {
+      this._setListOpen(suggestions, false);
+      this._activeSuggestion = -1;
+      return;
+    }
+    if (!options.length || suggestions.classList.contains('hidden')) return;
+    if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+      ev.preventDefault();
+      const step = ev.key === 'ArrowDown' ? 1 : -1;
+      // From "nothing marked", Down opens at the first and Up at the last.
+      const from = this._activeSuggestion < 0 ? (step === 1 ? -1 : 0) : this._activeSuggestion;
+      this._activeSuggestion = (from + step + options.length) % options.length;
+      options.forEach((el, i) => {
+        const on = i === this._activeSuggestion;
+        el.setAttribute('aria-selected', on ? 'true' : 'false');
+        el.classList.toggle('is-active', on);
+        if (on) {
+          el.scrollIntoView({ block: 'nearest' });
+          input.setAttribute('aria-activedescendant', el.id);
+        }
+      });
+    } else if (ev.key === 'Enter' && this._activeSuggestion >= 0) {
+      ev.preventDefault();
+      options[this._activeSuggestion].click();
+    }
   },
 
   /** Load a random ns-0 entry */
@@ -184,7 +258,7 @@ const JsonldPlayground = {
     }
 
     // Add author for primary works
-    if (!this.ABOUT_ZWEIG_TYPES.has(entry.entryType) && entry.entryType !== 'redirect') {
+    if (!ABOUT_ZWEIG_TYPES.includes(entry.entryType) && entry.entryType !== 'redirect') {
       jsonld['author'] = this.STEFAN_ZWEIG;
     }
 
@@ -368,11 +442,13 @@ const JsonldPlayground = {
     </table>`;
   },
 
-  /** Switch active tab */
+  /** Switch the active view. Three toggle buttons, not a tab widget. */
   _switchTab(tabId) {
-    document.querySelectorAll('.jsonld-tab').forEach(t =>
-      t.classList.toggle('active', t.dataset.tab === tabId)
-    );
+    document.querySelectorAll('.jsonld-tab').forEach(t => {
+      const on = t.dataset.tab === tabId;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
     document.querySelectorAll('.jsonld-panel').forEach(p =>
       p.classList.toggle('hidden', p.id !== `jsonld-${tabId}`)
     );
