@@ -1,8 +1,8 @@
 /**
  * Explore Network — Connections between entries.
  *
- * Sub-mode 1 (Cross-References): ranked list of the most-referenced entries.
- * A bibliography answers "which works are referenced most, and from where";
+ * Sub-mode 1 (Cross-References): ranked list of the most-referenced pages.
+ * A bibliography answers "which pages are referenced most, and from where";
  * the earlier global bubble graph answered neither (its largest node was the
  * small-cluster aggregate), so it was replaced by this ranking. Each row
  * expands to the referencing entries; entry-level neighborhood stays on the
@@ -35,15 +35,17 @@ const ExploreNetwork = {
     if (!container) return;
     container.innerHTML = '';
 
-    // Cross-view filter listener
-    this._bindFilterListener();
+    // Reconcile this view when a filter changes elsewhere
+    Explore.bindModeFilterListener('network', (filtered) => this.render(filtered));
 
     // Sub-mode toggle
     const toggle = document.createElement('div');
     toggle.className = 'network-submode-tabs';
     toggle.innerHTML = `
-      <button class="geo-toggle ${this.subMode === 'references' ? 'active' : ''}" data-sub="references">Cross-References</button>
-      <button class="geo-toggle ${this.subMode === 'translators' ? 'active' : ''}" data-sub="translators">Translators</button>
+      <button type="button" class="geo-toggle ${this.subMode === 'references' ? 'active' : ''}"
+        aria-pressed="${this.subMode === 'references'}" data-sub="references">Cross-References</button>
+      <button type="button" class="geo-toggle ${this.subMode === 'translators' ? 'active' : ''}"
+        aria-pressed="${this.subMode === 'translators'}" data-sub="translators">Translators</button>
     `;
     container.appendChild(toggle);
     toggle.querySelectorAll('.geo-toggle').forEach(btn => {
@@ -72,7 +74,7 @@ const ExploreNetwork = {
         <div class="ov-empty" style="text-align:center;padding:3rem">
           <p>No cross-references found in the current dataset.</p>
           <p style="font-size:0.8rem;color:var(--sz-text-light)">
-            ${entries.filter(e => e.seeAlso && e.seeAlso.length).length} entries have cross-references,
+            ${fmt(entries.filter(e => e.seeAlso && e.seeAlso.length).length)} entries have cross-references,
             but not enough could be resolved to build a ranking.
           </p>
         </div>
@@ -83,17 +85,22 @@ const ExploreNetwork = {
     const ranked = this._rankTargets();
     const referencing = new Set(this.links.map(l => l.source));
 
-    // Info bar
-    const totalEntries = this._lastEntries ? this._lastEntries.length : this.nodes.length;
-    const coveragePct = totalEntries > 0
-      ? (this.nodes.length / totalEntries * 100).toFixed(1) : '0.0';
+    // Coverage over one and the same set: how many of the entries in view take
+    // part in the reference graph. Targets resolved outside the current view
+    // are counted separately, because they are not in the denominator.
+    const inView = new Set(entries.map(e => e.sourcePageId));
+    const connectedInView = this.nodes.filter(n => inView.has(n.id)).length;
+    const external = this.nodes.length - connectedInView;
+    const coveragePct = entries.length > 0
+      ? (connectedInView / entries.length * 100).toFixed(1) : '0.0';
+
     const info = document.createElement('div');
     info.className = 'network-info';
     info.innerHTML = `
-      <span class="ov-title" style="margin-bottom:0">Most Referenced Entries</span>
+      <span class="ov-title" style="margin-bottom:0">Most referenced pages</span>
       <span style="font-size:0.75rem;color:var(--sz-text-light)">
-        ${this.nodes.length.toLocaleString('en')} of ${totalEntries.toLocaleString('en')} entries connected (${coveragePct}%) ·
-        ${this.links.length.toLocaleString('en')} resolved reference links
+        ${fmt(connectedInView)} of ${fmt(entries.length)} entries in view are connected (${coveragePct}%) ·
+        ${fmt(this.links.length)} resolved reference links${external ? ` · ${fmt(external)} targets outside the current filter` : ''}
       </span>
     `;
     container.appendChild(info);
@@ -123,7 +130,7 @@ const ExploreNetwork = {
           </span>
           <span class="reference-rank-count" title="Referenced by ${row.sources.length} entries">
             <span class="reference-rank-bar" style="width:${barWidth}%"></span>
-            ${row.sources.length}
+            ${fmt(row.sources.length)}
           </span>
         </summary>
         <ul class="reference-rank-sources">${sourceList}</ul>
@@ -134,7 +141,7 @@ const ExploreNetwork = {
     if (ranked.length > 50) {
       const more = document.createElement('p');
       more.className = 'detail-more';
-      more.textContent = `and ${(ranked.length - 50).toLocaleString('en')} more referenced entries with fewer links`;
+      more.textContent = `and ${fmt(ranked.length - 50)} more referenced pages with fewer links`;
       container.appendChild(more);
     }
 
@@ -165,10 +172,10 @@ const ExploreNetwork = {
       <div class="detail-summary">
         <h3 class="detail-summary-title">Reference Network</h3>
         <div class="network-stats-grid">
-          <div class="network-stat"><strong>${this.links.length.toLocaleString('en')}</strong><span>Resolved links</span></div>
-          <div class="network-stat"><strong>${ranked.length.toLocaleString('en')}</strong><span>Referenced entries</span></div>
-          <div class="network-stat"><strong>${referencing.size.toLocaleString('en')}</strong><span>Referencing entries</span></div>
-          <div class="network-stat"><strong>${ranked.length ? ranked[0].sources.length : 0}</strong><span>Top in-degree</span></div>
+          <div class="network-stat"><strong>${fmt(this.links.length)}</strong><span>Resolved links</span></div>
+          <div class="network-stat"><strong>${fmt(ranked.length)}</strong><span>Referenced pages</span></div>
+          <div class="network-stat"><strong>${fmt(referencing.size)}</strong><span>Referencing entries</span></div>
+          <div class="network-stat"><strong>${fmt(ranked.length ? ranked[0].sources.length : 0)}</strong><span>Top in-degree</span></div>
         </div>
         <p class="detail-summary-hint">Expand a row for the entries citing it; open any entry for its own See-Also neighborhood. Unresolvable references are listed under Data Quality.</p>
       </div>
@@ -198,19 +205,17 @@ const ExploreNetwork = {
         if (!nodeMap.has(sourceId)) {
           nodeMap.set(sourceId, {
             id: sourceId, title: entry.title, entryType: entry.entryType,
-            year: entry.year, language: entry.language, degree: 0,
+            year: entry.year, language: entry.language,
           });
         }
         const target = App.entryMap.get(targetId);
         if (!nodeMap.has(targetId)) {
           nodeMap.set(targetId, {
             id: targetId, title: target.title, entryType: target.entryType,
-            year: target.year, language: target.language, degree: 0,
+            year: target.year, language: target.language,
           });
         }
         links.push({ source: sourceId, target: targetId });
-        nodeMap.get(sourceId).degree++;
-        nodeMap.get(targetId).degree++;
       }
     }
 
@@ -249,7 +254,8 @@ const ExploreNetwork = {
     const filterBar = document.createElement('div');
     filterBar.className = 'network-toolbar';
     filterBar.innerHTML = periods.map(p =>
-      `<button class="geo-toggle ${this._activePeriod === p.key ? 'active' : ''}" data-period="${p.key}">${p.label}</button>`
+      `<button type="button" class="geo-toggle ${this._activePeriod === p.key ? 'active' : ''}"
+        aria-pressed="${this._activePeriod === p.key}" data-period="${p.key}">${p.label}</button>`
     ).join('');
     container.appendChild(filterBar);
 
@@ -284,7 +290,7 @@ const ExploreNetwork = {
     info.innerHTML = `
       <span class="ov-title" style="margin-bottom:0">Translation Flows</span>
       <span style="font-size:0.75rem;color:var(--sz-text-light)">
-        ${filtered.length.toLocaleString('en')} translations by ${sankeyData.translatorCount} translators into ${sankeyData.langCount} languages (${coveragePct}% coverage)
+        ${fmt(filtered.length)} translations by ${fmt(sankeyData.translatorCount)} translators into ${fmt(sankeyData.langCount)} languages (${coveragePct}% coverage)
       </span>
     `;
     container.appendChild(info);
@@ -300,26 +306,28 @@ const ExploreNetwork = {
     // Count: type → language, language → translator
     const typeLangCounts = new Map();  // "type|lang" → count
     const langTransCounts = new Map(); // "lang|translator" → count
-    const translatorNames = new Map(); // normalized → display name
     const translatorTotals = new Map();
 
     for (const e of entries) {
       const type = e.entryType || 'other';
-      const lang = e.language || 'Unknown';
-      const normName = normalizeTranslator(e.translator);
-      if (!normName || normName.length < 2) continue;
+      const lang = e.language || Explore.NOT_RECORDED;
+      // A joint credit names two people; counting the whole string invents a
+      // translator, and a value cut off mid-name is no evidence at all.
+      const names = translatorKeys(e);
+      if (!names.length) continue;
 
       const tlKey = `${type}|${lang}`;
       typeLangCounts.set(tlKey, (typeLangCounts.get(tlKey) || 0) + 1);
 
-      const ltKey = `${lang}|${normName}`;
-      langTransCounts.set(ltKey, (langTransCounts.get(ltKey) || 0) + 1);
-
-      if (!translatorNames.has(normName)) translatorNames.set(normName, e.translator.trim());
-      translatorTotals.set(normName, (translatorTotals.get(normName) || 0) + 1);
+      for (const name of names) {
+        const ltKey = `${lang}|${name}`;
+        langTransCounts.set(ltKey, (langTransCounts.get(ltKey) || 0) + 1);
+        translatorTotals.set(name, (translatorTotals.get(name) || 0) + 1);
+      }
     }
 
-    // Top languages (by entry count)
+    // Top languages — capped at the ten the palette can tell apart, so no two
+    // language bands share a color.
     const langTotals = new Map();
     for (const [key, count] of typeLangCounts) {
       const lang = key.split('|')[1];
@@ -327,7 +335,7 @@ const ExploreNetwork = {
     }
     const topLangs = [...langTotals.entries()]
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 12)
+      .slice(0, 10)
       .map(([l]) => l);
     const topLangSet = new Set(topLangs);
 
@@ -366,9 +374,7 @@ const ExploreNetwork = {
     addNode('Other types', 0, '_other_type');
     for (const l of topLangs) addNode(l, 1, l);
     addNode('Other languages', 1, '_other_lang');
-    for (const t of topTranslators) {
-      addNode(translatorNames.get(t) || t, 2, t);
-    }
+    for (const t of topTranslators) addNode(t, 2, t);
     addNode('Other translators', 2, '_other_trans');
 
     // Build links
@@ -400,83 +406,114 @@ const ExploreNetwork = {
 
     // Language → Translator links
     for (const [key, count] of langTransCounts) {
-      const [lang, trans] = key.split('|');
+      const sep = key.indexOf('|');
+      const lang = key.slice(0, sep);
+      const trans = key.slice(sep + 1);
       const langNode = topLangSet.has(lang)
         ? nodeIndex.get(lang + '|1')
         : nodeIndex.get('Other languages|1');
       const transNode = topTransSet.has(trans)
-        ? nodeIndex.get((translatorNames.get(trans) || trans) + '|2')
+        ? nodeIndex.get(trans + '|2')
         : nodeIndex.get('Other translators|2');
       addLink(langNode, transNode, count);
     }
 
-    // Filter out zero-value links and orphan nodes
-    const validLinks = links.filter(l => l.value > 0);
-
     return {
-      nodes, links: validLinks,
+      nodes, links: links.filter(l => l.value > 0),
       translatorCount: translatorTotals.size,
       langCount: langTotals.size,
-      topTranslators: topTranslators.map(t => ({
-        id: t, name: translatorNames.get(t) || t, count: translatorTotals.get(t),
-      })),
+      topLangs,
+      topTranslators: topTranslators.map(t => ({ id: t, name: t, count: translatorTotals.get(t) })),
     };
+  },
+
+  /**
+   * Fold a set of node indices into a catch-all node and reindex.
+   * Used after the first layout pass to collect translator bands too thin to
+   * carry a label; an unlabelled sliver states nothing the reader can use.
+   */
+  _foldNodes(data, foldIdx, targetIdx) {
+    const keep = data.nodes.map((_, i) => i).filter(i => !foldIdx.has(i));
+    const remap = new Map();
+    keep.forEach((oldIdx, newIdx) => remap.set(oldIdx, newIdx));
+    for (const i of foldIdx) remap.set(i, remap.get(targetIdx));
+
+    const nodes = keep.map(i => ({ ...data.nodes[i] }));
+    const merged = new Map();
+    for (const l of data.links) {
+      const s = remap.get(l.source), t = remap.get(l.target);
+      if (s == null || t == null || s === t) continue;
+      const key = `${s}->${t}`;
+      if (merged.has(key)) merged.get(key).value += l.value;
+      else merged.set(key, { source: s, target: t, value: l.value });
+    }
+    return { ...data, nodes, links: [...merged.values()] };
   },
 
   _renderSankey(container, sankeyData, entries) {
     const rect = container.getBoundingClientRect();
     const width = rect.width || 700;
     const height = CHART_DIMS.network.height;
-    const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+    const margin = { top: 16, right: 10, bottom: 10, left: 10 };
 
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
-    // d3-sankey layout
-    const sankey = d3.sankey()
+    const layout = (data) => d3.sankey()
       .nodeId(d => d.index)
       .nodeAlign(d3.sankeyLeft)
       .nodeWidth(18)
       .nodePadding(6)
-      .extent([[0, 0], [innerW, innerH]]);
+      .extent([[0, 0], [innerW, innerH]])({
+        nodes: data.nodes.map(d => ({ ...d })),
+        links: data.links.map(d => ({ ...d })),
+      });
 
-    const graph = sankey({
-      nodes: sankeyData.nodes.map(d => ({ ...d })),
-      links: sankeyData.links.map(d => ({ ...d })),
-    });
+    let data = sankeyData;
+    let graph = layout(data);
+
+    // Second pass: anything under 8px in the translator column cannot show a
+    // name, so it joins "Other translators".
+    const otherIdx = data.nodes.findIndex(n => n.category === '_other_trans');
+    if (otherIdx >= 0) {
+      const tiny = new Set(graph.nodes
+        .filter(n => n.col === 2 && n.category !== '_other_trans' && (n.y1 - n.y0) < 8)
+        .map(n => n.index));
+      if (tiny.size) {
+        data = this._foldNodes(data, tiny, otherIdx);
+        graph = layout(data);
+      }
+    }
 
     // Language color for links
-    const langColor = (name) => {
-      return Explore.colors.languages[name] || Explore.colors.languages['Other'] || '#9E9585';
-    };
+    const langColor = (name) =>
+      Explore.colors.languages[name] || Explore.colors.languages['Other'] || '#9E9585';
 
     // Node color by column
     const nodeColor = (d) => {
-      if (d.col === 0) {
-        // Entry type column
-        return Explore.colors.types[d.category] || COLORS.burgundy;
-      }
-      if (d.col === 1) {
-        // Language column
-        return langColor(d.category === '_other_lang' ? 'Other' : d.name);
-      }
+      if (d.col === 0) return Explore.colors.types[d.category] || COLORS.burgundy;
+      if (d.col === 1) return langColor(d.category === '_other_lang' ? 'Other' : d.name);
       // Translator column — color by their dominant source language
       const inLinks = graph.links.filter(l => l.target === d);
       if (inLinks.length > 0) {
         const biggest = inLinks.reduce((a, b) => a.value > b.value ? a : b);
-        const langNode = graph.nodes[biggest.source.index || biggest.source];
+        const langNode = biggest.source;
         return langColor(langNode ? langNode.name : 'Other');
       }
       return '#9E9585';
     };
 
-    // SVG
     this.svg = d3.select(container).append('svg')
       .attr('class', 'explore-svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMidYMid meet')
-      .attr('role', 'img')
-      .attr('aria-label', 'Translator flow diagram');
+      .attr('role', 'group')
+      .attr('aria-labelledby', 'sankey-title sankey-desc');
+    this.svg.append('title').attr('id', 'sankey-title').text('Translation flows');
+    this.svg.append('desc').attr('id', 'sankey-desc').text(
+      'Flow from work type through language to translator. The same figures are ' +
+      'listed as keyboard-reachable rankings in the panel beside the diagram.'
+    );
 
     const g = this.svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -520,20 +557,17 @@ const ExploreNetwork = {
       .attr('y', d => (d.y0 + d.y1) / 2)
       .attr('dy', '0.35em')
       .attr('text-anchor', d => d.col === 2 ? 'end' : 'start')
-      .attr('font-size', d => {
-        const h = d.y1 - d.y0;
-        return h > 14 ? '10px' : h > 8 ? '8px' : '0px'; // hide tiny labels
-      })
-      .attr('font-family', 'system-ui, sans-serif')
+      .attr('font-size', d => (d.y1 - d.y0) > 14 ? '10px' : '8px')
+      .attr('font-family', 'var(--font-sans)')
       .attr('fill', '#333')
       .attr('paint-order', 'stroke')
       .attr('stroke', 'white')
       .attr('stroke-width', 2)
       .text(d => {
-        const v = d.value || 0;
+        if ((d.y1 - d.y0) <= 8) return '';
         const maxChars = d.col === 1 ? 15 : 25;
         const name = d.name.length > maxChars ? d.name.slice(0, maxChars - 1) + '…' : d.name;
-        return d.y1 - d.y0 > 8 ? `${name} (${v})` : '';
+        return `${name} (${fmt(d.value || 0)})`;
       });
 
     // Column headers
@@ -544,29 +578,23 @@ const ExploreNetwork = {
       .attr('x', col => {
         const colNodes = graph.nodes.filter(n => n.col === col);
         if (colNodes.length === 0) return 0;
-        return col === 2
-          ? colNodes[0].x0 - 6
-          : colNodes[0].x1 + 6;
+        return col === 2 ? colNodes[0].x0 - 6 : colNodes[0].x1 + 6;
       })
-      .attr('y', -2)
+      .attr('y', -4)
       .attr('text-anchor', col => col === 2 ? 'end' : 'start')
       .attr('font-size', '10px')
-      .attr('font-family', 'system-ui, sans-serif')
+      .attr('font-family', 'var(--font-sans)')
       .attr('font-weight', '600')
       .attr('fill', COLORS.burgundy)
       .text(col => colLabels[col]);
 
     // Hover interactions
     node.on('mouseenter', (event, d) => {
-      // Highlight connected links
-      link.attr('stroke-opacity', l =>
-        (l.source === d || l.target === d) ? 0.7 : 0.08
-      );
+      link.attr('stroke-opacity', l => (l.source === d || l.target === d) ? 0.7 : 0.08);
       node.attr('opacity', n => {
         if (n === d) return 1;
         const connected = graph.links.some(l =>
-          (l.source === d && l.target === n) || (l.target === d && l.source === n)
-        );
+          (l.source === d && l.target === n) || (l.target === d && l.source === n));
         return connected ? 1 : 0.3;
       });
 
@@ -575,9 +603,9 @@ const ExploreNetwork = {
 
       Explore.showTooltip(
         `<strong>${esc(d.name)}</strong><br>` +
-        `${d.value || 0} entries<br>` +
-        (inflow ? `<small>← ${inflow} inflow</small><br>` : '') +
-        (outflow ? `<small>→ ${outflow} outflow</small>` : ''),
+        `${fmt(d.value || 0)} entries<br>` +
+        (inflow ? `<small>← ${fmt(inflow)} inflow</small><br>` : '') +
+        (outflow ? `<small>→ ${fmt(outflow)} outflow</small>` : ''),
         event
       );
     })
@@ -586,25 +614,13 @@ const ExploreNetwork = {
       node.attr('opacity', 1);
       Explore.hideTooltip();
     })
-    .on('click', (event, d) => {
-      // Show entries for this node
-      let filtered;
-      if (d.col === 0) {
-        filtered = entries.filter(e => (ENTRY_TYPE_LABELS[e.entryType] || e.entryType) === d.name || e.entryType === d.category);
-      } else if (d.col === 1) {
-        filtered = entries.filter(e => e.language === d.name || (d.category === '_other_lang' && !d.name.includes(e.language)));
-      } else {
-        filtered = entries.filter(e => e.translator && normalizeTranslator(e.translator) === d.category);
-      }
-      if (filtered.length) Explore.updateSelection(filtered.slice(0, 50));
-    });
+    .on('click', (event, d) => this._selectSankeyNode(d, entries, sankeyData));
 
     // Link hover
     link.on('mouseenter', (event, d) => {
       link.attr('stroke-opacity', l => l === d ? 0.7 : 0.08);
       Explore.showTooltip(
-        `<strong>${esc(d.source.name)} → ${esc(d.target.name)}</strong><br>` +
-        `${d.value} entries`,
+        `<strong>${esc(d.source.name)} → ${esc(d.target.name)}</strong><br>${fmt(d.value)} entries`,
         event
       );
     })
@@ -612,6 +628,36 @@ const ExploreNetwork = {
       link.attr('stroke-opacity', 0.35);
       Explore.hideTooltip();
     });
+  },
+
+  /**
+   * A node click sets the matching Explore filter where one exists. The three
+   * catch-all nodes stand for a complement rather than a value, so they select
+   * their records instead. The selection carries the whole match set; only the
+   * rendering of it is capped, so the count on screen is the real count.
+   */
+  _selectSankeyNode(d, entries, sankeyData) {
+    if (d.col === 0) {
+      if (d.category !== '_other_type') { Explore.toggleFilter('types', d.category); return; }
+      const top = new Set(sankeyData.nodes.filter(n => n.col === 0 && n.category !== '_other_type')
+        .map(n => n.category));
+      Explore.updateSelection(entries.filter(e => !top.has(e.entryType || 'other')));
+      return;
+    }
+    if (d.col === 1) {
+      if (d.category !== '_other_lang') { Explore.toggleFilter('languages', d.name); return; }
+      // "Other languages" is the complement of the drawn top languages;
+      // testing the label text matched almost every record.
+      const top = new Set(sankeyData.topLangs);
+      Explore.updateSelection(entries.filter(e => !top.has(e.language || Explore.NOT_RECORDED)));
+      return;
+    }
+    if (d.category !== '_other_trans') { Explore.toggleFilter('translator', d.category); return; }
+    const top = new Set(sankeyData.topTranslators.map(t => t.id));
+    Explore.updateSelection(entries.filter(e => {
+      const names = translatorKeys(e);
+      return names.length && names.every(n => !top.has(n));
+    }));
   },
 
   _renderTranslatorStats(entries, sankeyData) {
@@ -629,7 +675,7 @@ const ExploreNetwork = {
     // Language ranking
     const langCounts = new Map();
     for (const e of entries) {
-      const lang = e.language || 'Unknown';
+      const lang = e.language || Explore.NOT_RECORDED;
       langCounts.set(lang, (langCounts.get(lang) || 0) + 1);
     }
     const topLangs = [...langCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
@@ -638,9 +684,9 @@ const ExploreNetwork = {
       <div class="detail-summary">
         <h3 class="detail-summary-title">Translation Flows</h3>
         <div class="network-stats-grid">
-          <div class="network-stat"><strong>${entries.length.toLocaleString('en')}</strong><span>Translations</span></div>
-          <div class="network-stat"><strong>${sankeyData.translatorCount}</strong><span>Translators</span></div>
-          <div class="network-stat"><strong>${sankeyData.langCount}</strong><span>Languages</span></div>
+          <div class="network-stat"><strong>${fmt(entries.length)}</strong><span>Translations</span></div>
+          <div class="network-stat"><strong>${fmt(sankeyData.translatorCount)}</strong><span>Translators</span></div>
+          <div class="network-stat"><strong>${fmt(sankeyData.langCount)}</strong><span>Languages</span></div>
           <div class="network-stat"><strong>${coveragePct}%</strong><span>Coverage</span></div>
         </div>
         <div class="detail-group-section" style="margin-top:0.75rem">
@@ -648,10 +694,10 @@ const ExploreNetwork = {
           <ul class="detail-entry-list">
             ${topLangs.map(([lang, count]) => `
               <li class="detail-entry-item">
-                <span class="detail-entry-link">
-                  <span class="badge" style="background:${Explore.colors.languages[lang] || '#9E9585'};color:white">${count}</span>
+                <button type="button" class="rank-filter-btn" data-kind="language" data-value="${esc(lang)}">
+                  <span class="count-badge" style="background:${Explore.colors.languages[lang] || '#9E9585'}">${fmt(count)}</span>
                   ${esc(lang)}
-                </span>
+                </button>
               </li>
             `).join('')}
           </ul>
@@ -661,34 +707,24 @@ const ExploreNetwork = {
           <ul class="detail-entry-list">
             ${sankeyData.topTranslators.slice(0, 8).map(t => `
               <li class="detail-entry-item">
-                <span class="detail-entry-link">
-                  <span class="badge badge-fiction">${t.count}</span>
+                <button type="button" class="rank-filter-btn" data-kind="translator" data-value="${esc(t.id)}">
+                  <span class="count-badge">${fmt(t.count)}</span>
                   ${esc(t.name)}
-                </span>
+                </button>
               </li>
             `).join('')}
           </ul>
         </div>
-        <p class="detail-summary-hint">Hover flows for details. Click nodes for entries.</p>
+        <p class="detail-summary-hint">Hover a flow for its figures; the two rankings above filter from the keyboard.</p>
       </div>
     `;
+
+    // The rankings are the keyboard path into the Sankey.
+    detail.querySelectorAll('.rank-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.kind === 'language') Explore.toggleFilter('languages', btn.dataset.value);
+        else Explore.toggleFilter('translator', btn.dataset.value);
+      });
+    });
   },
-
-  // =========================================================================
-  // Brushed Linking
-  // =========================================================================
-
-  _bindFilterListener() {
-    if (this._filterHandler) {
-      document.removeEventListener('explore:filterChange', this._filterHandler);
-    }
-    this._filterHandler = (event) => {
-      if (Explore.mode !== 'network') return;
-      if (event.detail && event.detail.mode === 'network') return;
-      const data = Explore.hasActiveFilters() ? Explore.getFiltered() : Explore.entries;
-      this.render(data);
-    };
-    document.addEventListener('explore:filterChange', this._filterHandler);
-  },
-
 };

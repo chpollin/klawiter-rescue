@@ -64,3 +64,16 @@ def test_curation_queue_ordering():
         cwd=PROJECT_ROOT,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_explore_logic():
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node not available")
+    result = subprocess.run(
+        [node, "--test", str(PROJECT_ROOT / "tests" / "explore_logic.test.js")],
+        capture_output=True,
+        text=True,
+        cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

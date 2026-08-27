@@ -2,16 +2,13 @@
  * Explore Geography — Interactive map with bubble overlay.
  *
  * Two projection modes:
- * - Flat (default): d3.geoNaturalEarth1() — all data visible, pan/zoom via d3.zoom
- * - Globe: d3.geoOrthographic() — one hemisphere, drag-to-rotate, scroll-to-zoom
+ * - Globe (default): d3.geoOrthographic() — one hemisphere, drag-to-rotate, scroll-to-zoom
+ * - Flat: d3.geoNaturalEarth1() — all data visible, pan/zoom via d3.zoom
  *
- * Features:
- * 1. Projection toggle (flat ↔ globe)
- * 2. Brushed Linking: reacts to explore:filterChange from Timeline
- * 3. Animated Playback: iterates through decades with transitions
- * 4. Semantic Zoom: country-level → city-level as you zoom in
- * 5. Selection Feedback: gold highlight + dimming, filter chip integration
- * 6. Interactive legend: click language/period to filter
+ * Semantic zoom moves between a country view and a city view. A click filters
+ * at the level it is made on: a country bubble sets the country filter, a city
+ * bubble sets the place filter, so the chip, the selection and the drawn
+ * bubbles always describe the same set of records.
  */
 const ExploreGeography = {
   svg: null,
@@ -27,6 +24,7 @@ const ExploreGeography = {
   allBubbles: [],
   countryBubbles: [],
   selectedLocation: null,
+  selectedCountry: null,
   animationTimer: null,
   animationDecade: null,
   isPlaying: false,
@@ -34,10 +32,13 @@ const ExploreGeography = {
   height: 560,
   radius: null,
   projectionMode: 'globe',     // 'globe' (default) | 'flat' (all data visible)
+  _container: null,
   _zoomBehavior: null,         // d3.zoom instance for flat mode
   _rotation: [-10, -45, 0],   // initial rotation: centered on Europe [λ, φ, γ]
   _scale: null,                // current projection scale
   _baseScale: null,            // default scale (fit to container)
+  _mergeKeys: null,            // location name → canonical merge key
+  _mergeCanon: null,           // merge key → representative geo record
 
   // =========================================================================
   // Render
@@ -46,9 +47,11 @@ const ExploreGeography = {
   async render(entries) {
     const container = document.getElementById('viz-geography');
     if (!container) return;
+    this._container = container;
     container.innerHTML = '';
     this.currentEntries = entries;
     this.selectedLocation = Explore.filters.location || null;
+    this.selectedCountry = Explore.filters.country || null;
 
     // Load geodata (cached)
     if (!this.locationData) {
@@ -61,6 +64,7 @@ const ExploreGeography = {
         container.innerHTML = '<div class="ov-empty">Could not load location data.</div>';
         return;
       }
+      this._buildMergeIndex();
     }
     if (!this.worldData) {
       try {
@@ -77,7 +81,7 @@ const ExploreGeography = {
     }
 
     // Controls
-    this._drawControls(container, entries);
+    this._drawControls(container);
 
     // Set up projection (globe or flat depending on projectionMode)
     const rect = container.getBoundingClientRect();
@@ -90,36 +94,79 @@ const ExploreGeography = {
     this.countryBubbles = this._buildCountryBubbles(this.allBubbles);
 
     // Draw globe
-    this._drawGlobe(container, entries.length);
+    this._drawGlobe(container, entries);
 
-    // Filter listener
-    this._bindFilterListener();
+    // Reconcile this view when a filter changes elsewhere
+    Explore.bindModeFilterListener('geography', (filtered) => {
+      this.currentEntries = filtered;
+      this.allBubbles = this._buildCityBubbles(filtered);
+      this.countryBubbles = this._buildCountryBubbles(this.allBubbles);
+      this._updateBubbles(motionMs(300));
+      this._renderCoverageNote(this._container, filtered.length);
+      this._drawLegend(this._container);
+    });
+  },
+
+  /** ISO country code a record's place resolves to, or null. */
+  countryOfEntry(entry) {
+    if (!entry || !entry.location || !this.locationData) return null;
+    const geo = this.locationData[entry.location];
+    return (geo && geo.country) || null;
   },
 
   // =========================================================================
   // Controls
   // =========================================================================
 
-  _drawControls(container, entries) {
+  /** The earliest decade carrying enough records for the slider to start on. */
+  _sliderBounds() {
+    const counts = new Map();
+    for (const e of Explore.entries) {
+      if (!e.year) continue;
+      const d = Math.floor(e.year / 10) * 10;
+      counts.set(d, (counts.get(d) || 0) + 1);
+    }
+    const occupied = [...counts.entries()]
+      .filter(([, n]) => n >= 10)
+      .map(([d]) => d)
+      .sort((a, b) => a - b);
+    const fallbackMin = Math.floor(Explore.yearExtent[0] / 10) * 10;
+    const fallbackMax = Math.floor(Explore.yearExtent[1] / 10) * 10;
+    return occupied.length
+      ? [occupied[0], occupied[occupied.length - 1]]
+      : [fallbackMin, fallbackMax];
+  },
+
+  _drawControls(container) {
     const controls = document.createElement('div');
     controls.className = 'geo-controls';
     controls.id = 'geo-controls';
+    const [minD, maxD] = this._sliderBounds();
+    const playing = this.isPlaying;
     controls.innerHTML = `
-      <span class="ov-title" style="margin-bottom:0">Color:</span>
-      <button class="geo-toggle ${this.colorMode === 'language' ? 'active' : ''}" data-cmode="language">Language</button>
-      <button class="geo-toggle ${this.colorMode === 'period' ? 'active' : ''}" data-cmode="period">Period</button>
+      <span class="ov-title" style="margin-bottom:0" id="geo-color-label">Color:</span>
+      <button type="button" class="geo-toggle ${this.colorMode === 'language' ? 'active' : ''}"
+        aria-pressed="${this.colorMode === 'language'}" data-cmode="language">Language</button>
+      <button type="button" class="geo-toggle ${this.colorMode === 'period' ? 'active' : ''}"
+        aria-pressed="${this.colorMode === 'period'}" data-cmode="period">Period</button>
       <span style="flex:1"></span>
-      <button class="geo-toggle" id="geo-reset-btn" title="Reset globe rotation and zoom">&#8634;</button>
-      <button class="geo-toggle${this.projectionMode === 'flat' ? ' active' : ''}" id="geo-projection-btn" title="Toggle globe / flat map">&#127760;</button>
-      <button class="geo-toggle geo-play-btn" id="geo-play-btn" title="Animate through decades">
-        <span id="geo-play-icon">&#9654;</span>
+      <button type="button" class="geo-toggle" id="geo-reset-btn"
+        aria-label="Reset map view and clear place filters"
+        title="Reset map view and clear place filters">&#8634;</button>
+      <button type="button" class="geo-toggle${this.projectionMode === 'flat' ? ' active' : ''}"
+        id="geo-projection-btn" aria-pressed="${this.projectionMode === 'flat'}"
+        aria-label="Flat map projection" title="Toggle globe / flat map">&#127760;</button>
+      <button type="button" class="geo-toggle geo-play-btn" id="geo-play-btn"
+        aria-pressed="${playing}" aria-label="${playing ? 'Pause decade playback' : 'Start decade playback'}"
+        title="Animate through decades">
+        <span id="geo-play-icon" aria-hidden="true">${playing ? '&#9646;&#9646;' : '&#9654;'}</span>
       </button>
+      <label class="geo-slider-label" for="geo-decade-slider">Decade</label>
       <input type="range" id="geo-decade-slider" class="geo-slider"
-        min="${Math.floor(Explore.yearExtent[0] / 10) * 10}"
-        max="${Math.floor(Explore.yearExtent[1] / 10) * 10}"
-        step="10"
-        value="${this.animationDecade || Math.floor(Explore.yearExtent[0] / 10) * 10}">
-      <span id="geo-decade-label" class="geo-decade-label">${this.animationDecade ? this.animationDecade + 's' : 'All'}</span>
+        aria-label="Show a single decade"
+        min="${minD}" max="${maxD}" step="10"
+        value="${this.animationDecade || minD}">
+      <span id="geo-decade-label" class="geo-decade-label" aria-live="polite">${this.animationDecade ? this.animationDecade + 's' : 'All'}</span>
     `;
     container.appendChild(controls);
 
@@ -127,8 +174,12 @@ const ExploreGeography = {
       btn.addEventListener('click', () => {
         this.colorMode = btn.dataset.cmode;
         this._updateBubbles();
-        controls.querySelectorAll('[data-cmode]').forEach(b =>
-          b.classList.toggle('active', b.dataset.cmode === this.colorMode));
+        this._drawLegend(this._container);
+        controls.querySelectorAll('[data-cmode]').forEach(b => {
+          const active = b.dataset.cmode === this.colorMode;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', String(active));
+        });
       });
     });
 
@@ -137,6 +188,9 @@ const ExploreGeography = {
       this._scale = this._baseScale;
       this.zoomLevel = 'country';
       this.selectedLocation = null;
+      this.selectedCountry = null;
+      Explore.filters.location = null;
+      Explore.filters.country = null;
       if (this.projectionMode === 'flat' && this._zoomBehavior) {
         this.svg.call(this._zoomBehavior.transform, d3.zoomIdentity);
         this.globeG.attr('transform', null);
@@ -149,7 +203,9 @@ const ExploreGeography = {
 
     document.getElementById('geo-projection-btn').addEventListener('click', () => {
       this.projectionMode = this.projectionMode === 'globe' ? 'flat' : 'globe';
-      document.getElementById('geo-projection-btn').classList.toggle('active', this.projectionMode === 'flat');
+      const btn = document.getElementById('geo-projection-btn');
+      btn.classList.toggle('active', this.projectionMode === 'flat');
+      btn.setAttribute('aria-pressed', String(this.projectionMode === 'flat'));
       this._rebuildProjection();
     });
 
@@ -160,8 +216,7 @@ const ExploreGeography = {
 
     document.getElementById('geo-decade-slider').addEventListener('input', (e) => {
       if (this.isPlaying) this._stopAnimation();
-      const val = parseInt(e.target.value);
-      this._setDecade(val);
+      this._setDecade(parseInt(e.target.value, 10));
     });
 
     // Double-click slider to reset to "All"
@@ -171,16 +226,26 @@ const ExploreGeography = {
     });
   },
 
+  /** Keep the playback button's name and state in step with what it does. */
+  _syncPlayButton() {
+    const btn = document.getElementById('geo-play-btn');
+    const icon = document.getElementById('geo-play-icon');
+    if (icon) icon.innerHTML = this.isPlaying ? '&#9646;&#9646;' : '&#9654;';
+    if (btn) {
+      btn.setAttribute('aria-pressed', String(this.isPlaying));
+      btn.setAttribute('aria-label', this.isPlaying ? 'Pause decade playback' : 'Start decade playback');
+    }
+  },
+
   // =========================================================================
   // Animation
   // =========================================================================
 
   _startAnimation() {
     this.isPlaying = true;
-    const icon = document.getElementById('geo-play-icon');
-    if (icon) icon.innerHTML = '&#9646;&#9646;';
+    this._syncPlayButton();
     const slider = document.getElementById('geo-decade-slider');
-    const minD = parseInt(slider.min), maxD = parseInt(slider.max);
+    const minD = parseInt(slider.min, 10), maxD = parseInt(slider.max, 10);
     let decade = this.animationDecade || minD;
     if (decade >= maxD) decade = minD;
 
@@ -198,30 +263,27 @@ const ExploreGeography = {
     this.isPlaying = false;
     if (this.animationTimer) clearTimeout(this.animationTimer);
     this.animationTimer = null;
-    const icon = document.getElementById('geo-play-icon');
-    if (icon) icon.innerHTML = '&#9654;';
+    this._syncPlayButton();
   },
 
-  /** Set globe to show a single decade. Always filters from the FULL dataset. */
+  /**
+   * Show a single decade. The decade narrows whatever the other chips already
+   * select, so it filters the current set rather than the whole corpus.
+   */
   _setDecade(decade) {
     this.animationDecade = decade;
     const label = document.getElementById('geo-decade-label');
     if (label) label.textContent = decade + 's';
 
-    // Always filter from full dataset (not the current filtered view)
-    const allEntries = Explore.entries;
     Explore.filters.yearRange = [decade, decade + 9];
     Explore._renderFilterChips();
-    const filtered = allEntries.filter(e => e.year >= decade && e.year <= decade + 9);
+    const filtered = Explore.getFiltered();
 
     this.allBubbles = this._buildCityBubbles(filtered);
     this.countryBubbles = this._buildCountryBubbles(this.allBubbles);
-    this._updateBubbles(800);
-    Explore.updateSelection(filtered.length < allEntries.length ? filtered : []);
-
-    document.dispatchEvent(new CustomEvent('explore:filterChange', {
-      detail: { filters: { ...Explore.filters }, mode: 'geography' },
-    }));
+    this._updateBubbles(motionMs(800));
+    Explore.updateSelection(filtered.length < Explore.entries.length ? filtered : []);
+    this._fireFilterEvent();
   },
 
   /** Reset to show all decades (remove yearRange filter). */
@@ -234,59 +296,73 @@ const ExploreGeography = {
 
     Explore.filters.yearRange = [null, null];
     Explore._renderFilterChips();
-    const allEntries = Explore.entries;
+    const filtered = Explore.visibleEntries();
 
-    this.allBubbles = this._buildCityBubbles(allEntries);
+    this.allBubbles = this._buildCityBubbles(filtered);
     this.countryBubbles = this._buildCountryBubbles(this.allBubbles);
-    this._updateBubbles(500);
-    Explore.updateSelection([]);
-
-    document.dispatchEvent(new CustomEvent('explore:filterChange', {
-      detail: { filters: { ...Explore.filters }, mode: 'geography' },
-    }));
+    this._updateBubbles(motionMs(500));
+    Explore.updateSelection(filtered.length < Explore.entries.length ? filtered : []);
+    this._fireFilterEvent();
   },
 
   // =========================================================================
   // Bubble builders
   // =========================================================================
 
-  _buildCityBubbles(entries) {
-    const locationCounts = new Map();
-    for (const e of entries) {
-      if (!e.location) continue;
-      if (!locationCounts.has(e.location)) locationCounts.set(e.location, { count: 0, entries: [] });
-      const c = locationCounts.get(e.location);
-      c.count++;
-      c.entries.push(e);
-    }
-
-    const bubbles = [];
-    let geocoded = 0;
-    for (const [loc, data] of locationCounts) {
-      const geo = this.locationData[loc];
-      if (!geo) continue;
-      geocoded += data.count;
-
-      // Merge variant spellings at nearby coordinates
-      const existing = bubbles.find(b =>
-        Math.abs(b.lat - geo.lat) < 0.15 && Math.abs(b.lng - geo.lng) < 0.15
-      );
-      if (existing) {
-        existing.count += data.count;
-        existing.entries.push(...data.entries);
-        if (!existing.locations.includes(loc)) existing.locations.push(loc);
+  /**
+   * Variant spellings that sit within 0.15° of each other are one place. The
+   * pairing depends only on the geodata, so it is resolved once instead of
+   * re-scanning the growing bubble list on every filter change.
+   */
+  _buildMergeIndex() {
+    this._mergeKeys = new Map();
+    this._mergeCanon = new Map();
+    const anchors = [];
+    for (const [name, geo] of Object.entries(this.locationData)) {
+      if (!geo || typeof geo.lat !== 'number' || typeof geo.lng !== 'number') continue;
+      const hit = anchors.find(a =>
+        Math.abs(a.lat - geo.lat) < 0.15 && Math.abs(a.lng - geo.lng) < 0.15);
+      if (hit) {
+        this._mergeKeys.set(name, hit.key);
       } else {
-        bubbles.push({
-          count: data.count, entries: [...data.entries],
-          locations: [loc],
-          lat: geo.lat, lng: geo.lng,
-          country: geo.country || null,
-          type: 'city',
-        });
+        anchors.push({ key: name, lat: geo.lat, lng: geo.lng });
+        this._mergeKeys.set(name, name);
+        this._mergeCanon.set(name, { lat: geo.lat, lng: geo.lng, country: geo.country || null });
       }
     }
+  },
+
+  _buildCityBubbles(entries) {
+    if (!this._mergeKeys) this._buildMergeIndex();
+    const byKey = new Map();
+    let geocoded = 0;
+    const ungeocoded = new Map();
+
+    for (const e of entries) {
+      if (!e.location) continue;
+      const key = this._mergeKeys.get(e.location);
+      if (!key) {
+        ungeocoded.set(e.location, (ungeocoded.get(e.location) || 0) + 1);
+        continue;
+      }
+      geocoded++;
+      let b = byKey.get(key);
+      if (!b) {
+        const canon = this._mergeCanon.get(key);
+        b = {
+          key, count: 0, entries: [], locations: [],
+          lat: canon.lat, lng: canon.lng, country: canon.country, type: 'city',
+        };
+        byKey.set(key, b);
+      }
+      b.count++;
+      b.entries.push(e);
+      if (!b.locations.includes(e.location)) b.locations.push(e.location);
+    }
+
     this._geocodedEntries = geocoded;
-    return bubbles;
+    this._ungeocoded = [...ungeocoded.entries()].sort((a, b) => b[1] - a[1]);
+    return [...byKey.values()];
   },
 
   _buildCountryBubbles(cityBubbles) {
@@ -295,7 +371,7 @@ const ExploreGeography = {
       const cc = b.country || 'XX';
       if (!countryMap.has(cc)) {
         countryMap.set(cc, {
-          count: 0, entries: [], locations: [],
+          key: cc, count: 0, entries: [], locations: [],
           latSum: 0, lngSum: 0, cityCount: 0,
           country: cc, type: 'country',
         });
@@ -312,11 +388,7 @@ const ExploreGeography = {
     const result = [];
     for (const [cc, cb] of countryMap) {
       if (cc === 'XX') continue;
-      result.push({
-        ...cb,
-        lat: cb.latSum / cb.cityCount,
-        lng: cb.lngSum / cb.cityCount,
-      });
+      result.push({ ...cb, lat: cb.latSum / cb.cityCount, lng: cb.lngSum / cb.cityCount });
     }
     for (const b of cityBubbles) {
       if (!b.country) result.push({ ...b, type: 'city-orphan' });
@@ -399,7 +471,7 @@ const ExploreGeography = {
           const newLevel = event.transform.k >= 2.0 ? 'city' : 'country';
           if (newLevel !== self.zoomLevel) {
             self.zoomLevel = newLevel;
-            self._updateBubbles(200);
+            self._updateBubbles(motionMs(200));
           }
         });
       this.svg.call(this._zoomBehavior);
@@ -418,20 +490,26 @@ const ExploreGeography = {
     this._initProjection();
     this._redrawGlobe();
     this._initInteractions();
-    this._updateBubbles(300);
+    this._updateBubbles(motionMs(300));
   },
 
   // =========================================================================
   // Globe drawing
   // =========================================================================
 
-  _drawGlobe(container, totalEntries) {
+  _drawGlobe(container, entries) {
+    const totalEntries = entries.length;
     this.svg = d3.select(container).append('svg')
       .attr('class', 'explore-svg')
       .attr('viewBox', `0 0 ${this.width} ${this.height}`)
       .attr('preserveAspectRatio', 'xMidYMid meet')
-      .attr('role', 'img')
-      .attr('aria-label', 'Interactive globe showing publication locations');
+      .attr('role', 'group')
+      .attr('aria-labelledby', 'geo-title geo-desc');
+    this.svg.append('title').attr('id', 'geo-title').text('Publication places');
+    this.svg.append('desc').attr('id', 'geo-desc').text(
+      'Map of publication places; bubble area is the number of entries. ' +
+      'The legend below filters by language or period from the keyboard.'
+    );
 
     this.globeG = this.svg.append('g');
 
@@ -469,8 +547,8 @@ const ExploreGeography = {
 
     // Click on ocean/land to deselect
     const self = this;
-    this.globeG.selectAll('.geo-ocean, .geo-land').on('click', function() {
-      if (self.selectedLocation) self._deselectLocation();
+    this.globeG.selectAll('.geo-ocean, .geo-land').on('click', function () {
+      if (self.selectedLocation || self.selectedCountry) self._deselectPlace();
     });
 
     // Bind interaction handlers (drag/wheel for globe, d3.zoom for flat)
@@ -479,16 +557,50 @@ const ExploreGeography = {
     // Initial bubble render
     this._updateBubbles(0);
 
-    // Coverage note
+    // Coverage note plus the places the geocoding could not resolve
+    this._renderCoverageNote(container, totalEntries);
+
+    // Legend
+    this._drawLegend(container);
+  },
+
+  /**
+   * States how much of the current set the map can show, and makes the
+   * remainder reachable: an unresolved place name is a curation task, not a
+   * rounding error, so each one opens its own records.
+   */
+  _renderCoverageNote(container, totalEntries) {
+    const old = container.querySelector('.geo-note');
+    if (old) old.remove();
     const note = document.createElement('div');
     note.className = 'geo-note';
     const geocoded = this._geocodedEntries || 0;
     const pct = totalEntries > 0 ? Math.round(geocoded / totalEntries * 100) : 0;
-    note.textContent = `${geocoded.toLocaleString('en')} of ${totalEntries.toLocaleString('en')} entries (${pct}%). Drag to rotate, scroll to zoom (countries \u2192 cities).`;
+    const missing = this._ungeocoded || [];
+    const missingTotal = missing.reduce((s, [, n]) => s + n, 0);
+
+    let html = `${fmt(geocoded)} of ${fmt(totalEntries)} entries (${pct}%) placed. `
+      + `Drag to rotate, scroll to zoom (countries → cities).`;
+    if (missing.length) {
+      html += `<div class="geo-missing"><span>${fmt(missingTotal)} entries name a place the geocoding could not resolve:</span> `
+        + missing.slice(0, 25).map(([name, n]) =>
+          `<button type="button" class="link-btn geo-missing-item" data-loc="${esc(name)}">${esc(name)} (${fmt(n)})</button>`
+        ).join(' ')
+        + (missing.length > 25 ? ` <span>and ${fmt(missing.length - 25)} more names</span>` : '')
+        + `</div>`;
+    }
+    note.innerHTML = html;
     container.appendChild(note);
 
-    // Legend
-    this._drawLegend(container);
+    note.querySelectorAll('.geo-missing-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const loc = btn.dataset.loc;
+        App.showCustomResults(
+          this.currentEntries.filter(e => e.location === loc),
+          `Unresolved place: ${loc}`
+        );
+      });
+    });
   },
 
   /** Re-render all globe paths and bubbles after rotation or zoom. */
@@ -511,7 +623,7 @@ const ExploreGeography = {
 
   _updateBubbles(transitionMs) {
     if (!this.bubblesG) return;
-    const duration = transitionMs || 0;
+    const duration = motionMs(transitionMs || 0);
     const data = this.zoomLevel === 'city' ? this.allBubbles : this.countryBubbles;
 
     const maxCount = d3.max(data, d => d.count) || 1;
@@ -520,7 +632,9 @@ const ExploreGeography = {
 
     data.sort((a, b) => b.count - a.count);
 
-    const key = d => `${Math.round(d.lat * 100)}_${Math.round(d.lng * 100)}_${d.type}`;
+    // Identity is the place, not its current weighted position: keying on the
+    // coordinate made every filter change tear down and rebuild every bubble.
+    const key = d => `${d.type}:${d.key}`;
     const self = this;
 
     const circles = this.bubblesG.selectAll('.geo-bubble').data(data, key);
@@ -540,79 +654,82 @@ const ExploreGeography = {
     // Position + style all bubbles
     const all = enter.merge(circles);
 
-    all.each(function(d) {
+    all.each(function (d) {
       const projected = self.projection([d.lng, d.lat]);
       const visible = self._isVisible(d);
-      const el = d3.select(this);
-
-      if (duration > 0) {
-        el.transition().duration(duration)
-          .attr('cx', projected ? projected[0] : 0)
-          .attr('cy', projected ? projected[1] : 0)
-          .attr('r', visible ? self.radius(d.count) : 0)
-          .attr('fill', self._getBubbleColor(d))
-          .attr('fill-opacity', self._bubbleOpacity(d))
-          .attr('stroke', self._isSelected(d) ? Explore.colors.gold : 'rgba(255,255,255,0.7)')
-          .attr('stroke-width', self._isSelected(d) ? 2.5 : 1);
-      } else {
-        el.attr('cx', projected ? projected[0] : 0)
-          .attr('cy', projected ? projected[1] : 0)
-          .attr('r', visible ? self.radius(d.count) : 0)
-          .attr('fill', self._getBubbleColor(d))
-          .attr('fill-opacity', self._bubbleOpacity(d))
-          .attr('stroke', self._isSelected(d) ? Explore.colors.gold : 'rgba(255,255,255,0.7)')
-          .attr('stroke-width', self._isSelected(d) ? 2.5 : 1);
-      }
+      const base = d3.select(this);
+      const el = duration > 0 ? base.transition().duration(duration) : base;
+      el.attr('cx', projected ? projected[0] : 0)
+        .attr('cy', projected ? projected[1] : 0)
+        .attr('r', visible ? self.radius(d.count) : 0)
+        .attr('fill', self._getBubbleColor(d))
+        .attr('fill-opacity', self._bubbleOpacity(d))
+        .attr('stroke', self._isSelected(d) ? Explore.colors.gold : 'rgba(255,255,255,0.7)')
+        .attr('stroke-width', self._isSelected(d) ? 2.5 : 1);
     });
 
     // Event handlers
     all
-      .on('mouseenter', function(event, d) {
+      .on('mouseenter', function (event, d) {
         if (!self._isVisible(d)) return;
         d3.select(this).attr('stroke', Explore.colors.gold).attr('stroke-width', 2.5);
-        const topLangs = topN(d.entries, 'language', 3);
-        const langList = topLangs.map(([l, c]) => `${l}: ${c}`).join(', ');
-        const countryName = d.type === 'country' && d.country
-          ? (ExploreGeography._countryNames[d.country] || d.country) : '';
-        const name = d.type === 'country'
-          ? `${countryName}: ${d.locations.length} cities`
-          : d.locations[0] + (d.locations.length > 1 ? ` (+${d.locations.length - 1})` : '');
-        Explore.showTooltip(
-          `<strong>${esc(name)}</strong><br>${d.count} entries<br><small>${langList}</small>`,
-          event
-        );
+        Explore.showTooltip(self._bubbleTooltip(d), event);
       })
-      .on('mouseleave', function(event, d) {
+      .on('mouseleave', function (event, d) {
         const sel = self._isSelected(d);
         d3.select(this)
           .attr('stroke', sel ? Explore.colors.gold : 'rgba(255,255,255,0.7)')
           .attr('stroke-width', sel ? 2.5 : 1);
         Explore.hideTooltip();
       })
-      .on('click', function(event, d) {
+      .on('click', function (event, d) {
         if (!self._isVisible(d)) return;
-        const loc = d.locations[0];
-
-        if (self.selectedLocation === loc) {
-          self._deselectLocation();
-        } else {
-          self.selectedLocation = loc;
-          Explore.filters.location = loc;
-          Explore._renderFilterChips();
-          self._updateBubbles(200);
-          Explore.updateSelection(d.entries);
-          self._fireFilterEvent();
-        }
+        self._selectBubble(d);
       });
 
     // Update city labels
     this._updateLabels();
   },
 
+  _bubbleTooltip(d) {
+    const topLangs = topN(d.entries, 'language', 3);
+    const langList = topLangs.map(([l, c]) => `${esc(l)}: ${fmt(c)}`).join(', ');
+    const name = d.type === 'country'
+      ? `${this._countryNames[d.country] || d.country} · ${d.locations.length} places`
+      : d.locations[0] + (d.locations.length > 1 ? ` (+${d.locations.length - 1})` : '');
+    return `<strong>${esc(name)}</strong><br>${fmt(d.count)} entries<br><small>${langList}</small>`;
+  },
+
+  /**
+   * Filter at the level the click was made on. A country bubble stands for
+   * every place in that country, so it sets the country filter; a city bubble
+   * sets the place filter for the spelling it is drawn under.
+   */
+  _selectBubble(d) {
+    if (d.type === 'country') {
+      if (this.selectedCountry === d.country) { this._deselectPlace(); return; }
+      this.selectedCountry = d.country;
+      this.selectedLocation = null;
+      Explore.filters.country = d.country;
+      Explore.filters.location = null;
+    } else {
+      const loc = d.locations[0];
+      if (this.selectedLocation === loc) { this._deselectPlace(); return; }
+      this.selectedLocation = loc;
+      this.selectedCountry = null;
+      Explore.filters.location = loc;
+      Explore.filters.country = null;
+    }
+    Explore._renderFilterChips();
+    this._updateBubbles(motionMs(200));
+    Explore.updateSelection(Explore.getFiltered());
+    this._fireFilterEvent();
+  },
+
   /** Fast position + visibility update after rotate/zoom (no data-join). */
   _updateBubblePositions() {
     const self = this;
-    this.bubblesG.selectAll('.geo-bubble').each(function(d) {
+    this.bubblesG.selectAll('.geo-bubble').each(function (d) {
       const projected = self.projection([d.lng, d.lat]);
       const visible = self._isVisible(d);
       d3.select(this)
@@ -637,7 +754,7 @@ const ExploreGeography = {
 
     const self = this;
     const labels = this.labelsG.selectAll('.geo-city-label')
-      .data(topBubbles, d => d.locations[0]);
+      .data(topBubbles, d => d.key);
 
     labels.exit().remove();
 
@@ -645,7 +762,7 @@ const ExploreGeography = {
       .append('text')
       .attr('class', 'geo-city-label')
       .merge(labels)
-      .each(function(d) {
+      .each(function (d) {
         const projected = self.projection([d.lng, d.lat]);
         if (!projected) return;
         const r = self.radius ? self.radius(d.count) : 5;
@@ -663,12 +780,14 @@ const ExploreGeography = {
       });
   },
 
-  /** Clear location selection, filter chip, and notify other views. */
-  _deselectLocation() {
+  /** Clear the place selection, its chip, and notify other views. */
+  _deselectPlace() {
     this.selectedLocation = null;
+    this.selectedCountry = null;
     Explore.filters.location = null;
+    Explore.filters.country = null;
     Explore._renderFilterChips();
-    this._updateBubbles(200);
+    this._updateBubbles(motionMs(200));
     Explore.updateSelection([]);
     this._fireFilterEvent();
   },
@@ -678,13 +797,14 @@ const ExploreGeography = {
     document.dispatchEvent(new CustomEvent('explore:filterChange', {
       detail: { filters: { ...Explore.filters }, mode: 'geography' },
     }));
+    Explore.updateExploreURL(false);
   },
 
   /** Compute bubble opacity based on visibility and selection state. */
   _bubbleOpacity(d) {
     if (!this._isVisible(d)) return 0;
-    if (!this.selectedLocation) return 0.78;
-    return d.locations.includes(this.selectedLocation) ? 0.95 : 0.35;
+    if (!this.selectedLocation && !this.selectedCountry) return 0.78;
+    return this._isSelected(d) ? 0.95 : 0.35;
   },
 
   /** Check if a point is on the visible side (globe: hemisphere check, flat: always visible). */
@@ -696,8 +816,9 @@ const ExploreGeography = {
   },
 
   _isSelected(bubble) {
-    if (!this.selectedLocation) return false;
-    return bubble.locations.includes(this.selectedLocation);
+    if (this.selectedCountry) return bubble.country === this.selectedCountry;
+    if (this.selectedLocation) return bubble.locations.includes(this.selectedLocation);
+    return false;
   },
 
   // =========================================================================
@@ -708,7 +829,7 @@ const ExploreGeography = {
     if (this.colorMode === 'language') {
       const langCounts = {};
       for (const e of bubble.entries) {
-        const lang = e.language || 'Unknown';
+        const lang = e.language || Explore.NOT_RECORDED;
         langCounts[lang] = (langCounts[lang] || 0) + 1;
       }
       const dominant = Object.entries(langCounts).sort((a, b) => b[1] - a[1])[0];
@@ -725,57 +846,43 @@ const ExploreGeography = {
   },
 
   // =========================================================================
-  // Brushed Linking
-  // =========================================================================
-
-  _bindFilterListener() {
-    if (this._filterHandler) {
-      document.removeEventListener('explore:filterChange', this._filterHandler);
-    }
-    this._filterHandler = (event) => {
-      if (Explore.mode !== 'geography') return;
-      if (event.detail && event.detail.mode === 'geography') return;
-      const filtered = Explore.hasActiveFilters() ? Explore.getFiltered() : Explore.entries;
-      this.currentEntries = filtered;
-      this.allBubbles = this._buildCityBubbles(filtered);
-      this.countryBubbles = this._buildCountryBubbles(this.allBubbles);
-      this._updateBubbles(300);
-    };
-    document.addEventListener('explore:filterChange', this._filterHandler);
-  },
-
-  // =========================================================================
-  // Helpers
+  // Legend — the keyboard path into the map
   // =========================================================================
 
   _drawLegend(container) {
+    if (!container) return;
     const old = container.querySelector('.geo-legend');
     if (old) old.remove();
     const legendDiv = document.createElement('div');
     legendDiv.className = 'geo-legend';
+    legendDiv.setAttribute('role', 'group');
+    legendDiv.setAttribute('aria-label', 'Map legend, filters the entries');
 
     if (this.colorMode === 'language') {
       const allLangs = {};
       for (const b of this.allBubbles) {
-        for (const e of b.entries) allLangs[e.language || 'Unknown'] = (allLangs[e.language || 'Unknown'] || 0) + 1;
+        for (const e of b.entries) {
+          const lang = e.language || Explore.NOT_RECORDED;
+          allLangs[lang] = (allLangs[lang] || 0) + 1;
+        }
       }
       const topLangs = Object.entries(allLangs).sort((a, b) => b[1] - a[1]).slice(0, 8);
-      legendDiv.innerHTML = topLangs.map(([lang]) => {
+      legendDiv.innerHTML = topLangs.map(([lang, count]) => {
         const color = Explore.colors.languages[lang] || Explore.colors.languages['Other'];
         const active = Explore.filters.languages.includes(lang);
-        return `<span class="geo-legend-item${active ? ' active' : ''}" data-key="languages" data-value="${esc(lang)}">` +
-          `<span class="geo-legend-dot" style="background:${color}"></span>${esc(lang)}</span>`;
+        return `<button type="button" class="geo-legend-item${active ? ' active' : ''}" ` +
+          `aria-pressed="${active}" data-key="languages" data-value="${esc(lang)}">` +
+          `<span class="geo-legend-dot" style="background:${color}"></span>${esc(lang)} (${fmt(count)})</button>`;
       }).join('');
     } else {
-      const self = this;
       legendDiv.innerHTML = Object.entries(PERIOD_LABELS).map(([key, label]) => {
-        const color = self._getPeriodColor(key);
+        const color = this._getPeriodColor(key);
         const active = Explore.filters.period === key;
-        return `<span class="geo-legend-item${active ? ' active' : ''}" data-key="period" data-value="${key}">` +
-          `<span class="geo-legend-dot" style="background:${color}"></span>${label}</span>`;
+        return `<button type="button" class="geo-legend-item${active ? ' active' : ''}" ` +
+          `aria-pressed="${active}" data-key="period" data-value="${key}">` +
+          `<span class="geo-legend-dot" style="background:${color}"></span>${esc(label)}</button>`;
       }).join('');
     }
-    // Interactive legend: click to filter
     legendDiv.querySelectorAll('.geo-legend-item').forEach(item => {
       item.addEventListener('click', () => {
         Explore.toggleFilter(item.dataset.key, item.dataset.value);

@@ -47,6 +47,12 @@ function topN(entries, field, n) {
     .slice(0, n);
 }
 
+/** Locale-consistent integer formatting, shared by every Explore surface. */
+function fmt(n) {
+  const v = Number(n);
+  return Number.isFinite(v) ? v.toLocaleString('en') : String(n);
+}
+
 /** Normalize translator name: strip trailing location/edition info */
 function normalizeTranslator(raw) {
   if (!raw) return '';
@@ -55,6 +61,61 @@ function normalizeTranslator(raw) {
   name = name.replace(/\.\s+[A-Z][a-zà-ÿ]+(\s+[a-zà-ÿ]+)*\s*$/, '');
   name = name.replace(/\.\s+[xivlc]+\s*$/i, '');
   return name.trim();
+}
+
+/**
+ * Final tokens that cannot end a personal name. A value ending on one of them
+ * was cut off in the source, not spelled that way.
+ */
+const NAME_TRUNCATION_STOPWORDS = new Set([
+  'and', 'und', 'by', 'de', 'del', 'della', 'di', 'da', 'du', 'van', 'von',
+  'der', 'den', 'dem', 'des', 'of', 'with', 'aus', 'the', 'le', 'la', 'et',
+]);
+
+/**
+ * Conservative truncation probe. Only unambiguous signals count, because a
+ * false positive silently drops a real translator from the analysis: a
+ * dangling hyphen or ellipsis, or a final token that cannot end a name.
+ */
+function isTruncatedName(name) {
+  const s = String(name == null ? '' : name).trim();
+  if (!s) return true;
+  if (/[-‐-―]$/.test(s)) return true;
+  if (/(\.\.\.|…)$/.test(s)) return true;
+  const last = s.split(/\s+/).pop().replace(/[.,;:]+$/, '').toLowerCase();
+  return NAME_TRUNCATION_STOPWORDS.has(last);
+}
+
+/**
+ * Split a translator field into the individual people it names.
+ * Klawiter records joint translations as "Eden and Cedar Paul" or "X & Y";
+ * counting that string as one agent invents a translator who never existed.
+ * Each part is normalized and recognizably truncated parts are dropped.
+ */
+function splitTranslators(raw) {
+  if (!raw) return [];
+  return String(raw)
+    .split(/\s+(?:and|und)\s+|\s*&\s*/i)
+    .map(part => normalizeTranslator(part))
+    .filter(part => part.length >= 2 && !isTruncatedName(part));
+}
+
+/** Translator keys an entry contributes to (multi-name aware). */
+function translatorKeys(entry) {
+  return entry && entry.translator ? splitTranslators(entry.translator) : [];
+}
+
+/**
+ * Whether the viewer asked for reduced motion. Evaluated once: the media
+ * query result is read on every chart redraw and does not change mid-session
+ * often enough to justify a live listener.
+ */
+const PREFERS_REDUCED_MOTION = typeof matchMedia === 'function'
+  && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Transition duration honouring the reduced-motion preference. */
+function motionMs(ms) {
+  return PREFERS_REDUCED_MOTION ? 0 : ms;
 }
 
 // Basic Latin through Combining Diacritics, Latin Extended Additional,

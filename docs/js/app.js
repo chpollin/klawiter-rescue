@@ -268,7 +268,7 @@ const App = {
     this.state.query = params.get('q') || '';
     this.state.filters = {};
     for (const [key, val] of params) {
-      if (['type', 'language', 'period', 'location', 'category'].includes(key)) {
+      if (App.FILTER_KEYS.includes(key)) {
         this.state.filters[key] = val;
       }
     }
@@ -283,6 +283,32 @@ const App = {
       this.showView('home');
       Home.render(this.entries);
     }
+  },
+
+  // Filter keys the results route reads from the hash. `publisher`,
+  // `translator` and the two year forms exist so that a selection made in
+  // Explore can be handed over as an addressable result list.
+  FILTER_KEYS: ['type', 'language', 'period', 'location', 'category',
+    'publisher', 'translator', 'years', 'decade'],
+
+  FILTER_LABELS: {
+    type: 'Type', language: 'Language', period: 'Period', location: 'Location',
+    category: 'Category', publisher: 'Publisher', translator: 'Translator',
+    years: 'Years', decade: 'Decade',
+  },
+
+  /** Inclusive [min, max] a `years` or `decade` filter value stands for. */
+  yearBounds(filters) {
+    if (filters.decade != null && filters.decade !== '') {
+      const d = parseInt(filters.decade, 10);
+      return Number.isFinite(d) ? [d, d + 9] : null;
+    }
+    if (!filters.years) return null;
+    const [a, b] = String(filters.years).split('-');
+    const lo = a ? parseInt(a, 10) : null;
+    const hi = b ? parseInt(b, 10) : null;
+    if (lo == null && hi == null) return null;
+    return [Number.isFinite(lo) ? lo : -Infinity, Number.isFinite(hi) ? hi : Infinity];
   },
 
   // Sort values the hash may carry. 'triage' orders by data signal and needs
@@ -336,6 +362,7 @@ const App = {
       indices = this.entries.map((_, i) => i);
     }
 
+    const bounds = this.yearBounds(this.state.filters);
     this.filtered = indices
       .map(i => this.entries[i])
       .filter(e => {
@@ -344,6 +371,9 @@ const App = {
         if (f.language && e.language !== f.language) return false;
         if (f.period && e.timePeriod !== f.period) return false;
         if (f.location && e.location !== f.location) return false;
+        if (f.publisher && e.publisher !== f.publisher) return false;
+        if (f.translator && !translatorKeys(e).includes(f.translator)) return false;
+        if (bounds && !(e.year >= bounds[0] && e.year <= bounds[1])) return false;
         if (f.category && !(e.categories || []).includes(f.category)) return false;
         return true;
       });
@@ -536,10 +566,11 @@ const App = {
     const container = document.getElementById('filter-chips');
     const chips = [];
     for (const [key, val] of Object.entries(this.state.filters)) {
-      const label = key === 'type' ? 'Type' : key === 'language' ? 'Language' :
-                    key === 'period' ? 'Period' : key === 'category' ? 'Category' : 'Location';
+      const label = this.FILTER_LABELS[key] || key;
       const display = key === 'type' ? (ENTRY_TYPE_LABELS[val] || val) :
-                      key === 'period' ? (PERIOD_LABELS[val] || val) : val;
+                      key === 'period' ? (PERIOD_LABELS[val] || val) :
+                      key === 'decade' ? `${val}s` :
+                      key === 'years' ? String(val).replace('-', '–') : val;
       chips.push(`<span class="chip" data-filter-key="${key}">${esc(label)}: ${esc(display)}
         <button>&times;</button></span>`);
     }
@@ -557,6 +588,10 @@ const App = {
     if (f.language) parts.push(f.language);
     if (f.period) parts.push(f.period);
     if (f.location) parts.push(f.location);
+    if (f.publisher) parts.push(f.publisher);
+    if (f.translator) parts.push(f.translator);
+    if (f.decade) parts.push(`${f.decade}s`);
+    else if (f.years) parts.push(String(f.years).replace('-', '\u2013'));
     if (this.state.query) parts.push(`\u201c${this.state.query}\u201d`);
     const count = `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
     return parts.length ? `${parts.join(' \u00b7 ')} \u2014 ${count}` : count;

@@ -12,18 +12,27 @@ const Explore = {
     yearRange: [null, null],
     decade: null,
     location: null,
+    country: null,
     publisher: null,
+    translator: null,
     period: null,
     showProvenance: false,
   },
 
+  /**
+   * Label for a record whose language field is empty. Kept apart from
+   * "Other languages", which means a recorded language outside the top ranks:
+   * merging the two would read as evidence about translation history where it
+   * is in fact a gap in the source.
+   */
+  NOT_RECORDED: 'Not recorded',
+
   // Precomputed indices
-  byYear: new Map(),
   byLanguage: new Map(),
-  byType: new Map(),
-  byPublisher: new Map(),
+  typeCount: 0,
   topLanguages: [],
   yearExtent: null,   // [min, max]; derived in _preprocess, never hardcoded
+  yearlessCount: 0,   // entries carrying no year at all
 
   // Color palette — base values from shared COLORS constant, language palette local
   colors: {
@@ -32,6 +41,7 @@ const Explore = {
       'English': '#5B5040', 'Spanish': '#8B5C3A', 'Arabic': '#5B3A7A',
       'Bulgarian': '#3A5B6B', 'Albanian': '#7A4A1B', 'Russian': '#3A3A5B',
       'Croatian': '#6B3A4A', 'Other': '#9E9585',
+      'Not recorded': '#CFC8BB',
     },
     types: {
       'fiction': '#631a34', 'essay': '#8B5C3A', 'poetry': '#6B7A3A',
@@ -68,7 +78,14 @@ const Explore = {
     return (App.data && App.data._meta && App.data._meta.yearRange) || null;
   },
 
+  /**
+   * Derive the static structure of the corpus. The result depends on the full
+   * record set only, so it is computed once per dataset; filtering changes the
+   * drawn subset, never the language ranking or the year extent that the
+   * scales are built from.
+   */
   _preprocess() {
+    if (this._preprocessedFor === this.entries) return;
     const e = this.entries;
 
     // Year extent — from the entries in hand, falling back to the shipped
@@ -78,45 +95,45 @@ const Explore = {
     this.yearExtent = years.length
       ? [Math.min(...years), Math.max(...years)]
       : (range ? [range.min, range.max] : [0, 0]);
+    this.yearlessCount = e.length - years.length;
 
-    // Index by year
-    this.byYear = new Map();
-    for (const entry of e) {
-      if (!entry.year) continue;
-      if (!this.byYear.has(entry.year)) this.byYear.set(entry.year, []);
-      this.byYear.get(entry.year).push(entry);
-    }
-
-    // Index by language
+    // Index by language; a missing value is its own category
     this.byLanguage = new Map();
     for (const entry of e) {
-      const lang = entry.language || 'Unknown';
+      const lang = entry.language || this.NOT_RECORDED;
       if (!this.byLanguage.has(lang)) this.byLanguage.set(lang, []);
       this.byLanguage.get(lang).push(entry);
     }
 
-    // Top 10 languages (exclude Unknown — those go into "Other")
-    const langCounts = [...this.byLanguage.entries()]
-      .filter(([lang]) => lang !== 'Unknown')
-      .map(([lang, arr]) => ({ lang, count: arr.length }))
-      .sort((a, b) => b.count - a.count);
-    this.topLanguages = langCounts.slice(0, 10).map(x => x.lang);
+    // Top 10 languages — the palette carries exactly ten named languages, so
+    // every ranked language keeps a distinguishable color.
+    this.topLanguages = [...this.byLanguage.entries()]
+      .filter(([lang]) => lang !== this.NOT_RECORDED)
+      .sort((a, b) => b[1].length - a[1].length)
+      .slice(0, 10)
+      .map(([lang]) => lang);
 
-    // Index by type
-    this.byType = new Map();
-    for (const entry of e) {
-      const t = entry.entryType || 'other';
-      if (!this.byType.has(t)) this.byType.set(t, []);
-      this.byType.get(t).push(entry);
-    }
+    this.typeCount = new Set(e.map(x => x.entryType || 'other')).size;
 
-    // Index by publisher
-    this.byPublisher = new Map();
-    for (const entry of e) {
-      if (!entry.publisher) continue;
-      if (!this.byPublisher.has(entry.publisher)) this.byPublisher.set(entry.publisher, []);
-      this.byPublisher.get(entry.publisher).push(entry);
-    }
+    this._preprocessedFor = e;
+  },
+
+  /** The visualization module backing a mode, or null when not yet loaded. */
+  _module(mode) {
+    if (mode === 'timeline') return typeof ExploreTimeline !== 'undefined' ? ExploreTimeline : null;
+    if (mode === 'geography') return typeof ExploreGeography !== 'undefined' ? ExploreGeography : null;
+    if (mode === 'network') return typeof ExploreNetwork !== 'undefined' ? ExploreNetwork : null;
+    return null;
+  },
+
+  _renderActiveMode(data) {
+    const mod = this._module(this.mode);
+    if (mod) mod.render(data);
+  },
+
+  /** The record set the active view should draw. */
+  visibleEntries() {
+    return this.hasActiveFilters() ? this.getFiltered() : this.entries;
   },
 
   // -------------------------------------------------------------------------
@@ -138,13 +155,13 @@ const Explore = {
       <div class="explore-header">
         <h2 class="section-heading">Explore the Bibliography</h2>
         <div class="explore-header-meta">
-          ${e.length.toLocaleString('en')} entries &middot; ${languages.size} languages &middot;
-          ${this.byType.size} types &middot; ${headerYears}
+          ${fmt(e.length)} entries &middot; ${languages.size} languages &middot;
+          ${this.typeCount} types &middot; ${headerYears}
         </div>
-        <div class="explore-mode-tabs" role="tablist">
-          <button role="tab" class="mode-tab active" data-mode="timeline">Timeline</button>
-          <button role="tab" class="mode-tab" data-mode="geography">Geography</button>
-          <button role="tab" class="mode-tab" data-mode="network">Connections</button>
+        <div class="explore-mode-tabs">
+          <button type="button" class="mode-tab active" data-mode="timeline" aria-pressed="true">Timeline</button>
+          <button type="button" class="mode-tab" data-mode="geography" aria-pressed="false">Geography</button>
+          <button type="button" class="mode-tab" data-mode="network" aria-pressed="false">Connections</button>
         </div>
       </div>
 
@@ -163,7 +180,7 @@ const Explore = {
 
       <div class="stats-export">
         <button class="action-btn" onclick="Export.fullDataset()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
@@ -173,11 +190,14 @@ const Explore = {
       </div>
     `;
 
-    // Shared tooltip
+    // Shared tooltip — announced as a live region so the keyboard path
+    // conveys the same reading the pointer path does.
     if (!document.getElementById('explore-tooltip')) {
       const tip = document.createElement('div');
       tip.id = 'explore-tooltip';
       tip.className = 'explore-tooltip';
+      tip.setAttribute('role', 'status');
+      tip.setAttribute('aria-live', 'polite');
       document.body.appendChild(tip);
     }
   },
@@ -195,10 +215,10 @@ const Explore = {
   setMode(mode) {
     this.mode = mode;
 
-    // Update tab active state
     document.querySelectorAll('.mode-tab').forEach(tab => {
-      tab.classList.toggle('active', tab.dataset.mode === mode);
-      tab.setAttribute('aria-selected', tab.dataset.mode === mode);
+      const active = tab.dataset.mode === mode;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-pressed', String(active));
     });
 
     // Show/hide panels
@@ -209,17 +229,8 @@ const Explore = {
     // Reset selection (visual highlight is mode-specific) but preserve filters
     this.selection = [];
     this._renderFilterChips();
-    const data = this.hasActiveFilters() ? this.getFiltered() : this.entries;
     this.updateSelection([]);
-
-    // Render the active mode with current filtered data
-    if (mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
-      ExploreTimeline.render(data);
-    } else if (mode === 'geography' && typeof ExploreGeography !== 'undefined') {
-      ExploreGeography.render(data);
-    } else if (mode === 'network' && typeof ExploreNetwork !== 'undefined') {
-      ExploreNetwork.render(data);
-    }
+    this._renderActiveMode(this.visibleEntries());
     this.updateExploreURL(true);
   },
 
@@ -231,13 +242,16 @@ const Explore = {
     const f = this.filters;
     return f.languages.length > 0 || f.types.length > 0 ||
       f.yearRange[0] != null || f.yearRange[1] != null ||
-      f.decade != null || f.location != null || f.publisher != null || f.period != null;
+      f.decade != null || f.location != null || f.country != null ||
+      f.publisher != null || f.translator != null || f.period != null;
   },
 
   getFiltered() {
     let filtered = this.entries;
     const f = this.filters;
-    if (f.languages.length) filtered = filtered.filter(e => f.languages.includes(e.language));
+    if (f.languages.length) {
+      filtered = filtered.filter(e => f.languages.includes(e.language || this.NOT_RECORDED));
+    }
     if (f.types.length) filtered = filtered.filter(e => f.types.includes(e.entryType));
     if (f.yearRange[0] != null) filtered = filtered.filter(e => e.year >= f.yearRange[0]);
     if (f.yearRange[1] != null) filtered = filtered.filter(e => e.year <= f.yearRange[1]);
@@ -246,7 +260,14 @@ const Explore = {
       filtered = filtered.filter(e => e.year >= d0 && e.year <= d1);
     }
     if (f.location) filtered = filtered.filter(e => e.location === f.location);
+    if (f.country) {
+      // The location → country mapping lives with the geodata, which only the
+      // map view loads; without it the filter cannot be honoured and is a no-op.
+      const geo = this._module('geography');
+      if (geo && geo.countryOfEntry) filtered = filtered.filter(e => geo.countryOfEntry(e) === f.country);
+    }
     if (f.publisher) filtered = filtered.filter(e => e.publisher === f.publisher);
+    if (f.translator) filtered = filtered.filter(e => translatorKeys(e).includes(f.translator));
     if (f.period) filtered = filtered.filter(e => e.timePeriod === f.period);
     return filtered;
   },
@@ -274,7 +295,8 @@ const Explore = {
   clearAllFilters() {
     this.filters = {
       languages: [], types: [], yearRange: [null, null],
-      decade: null, location: null, publisher: null, period: null,
+      decade: null, location: null, country: null,
+      publisher: null, translator: null, period: null,
       showProvenance: false,
     };
     this._onFilterChange();
@@ -282,9 +304,10 @@ const Explore = {
 
   setProvenance(enabled) {
     this.filters.showProvenance = enabled;
-    if (this.mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
-      ExploreTimeline.showProvenance = enabled;
-      if (ExploreTimeline.entries) ExploreTimeline.render(ExploreTimeline.entries);
+    const timeline = this._module('timeline');
+    if (this.mode === 'timeline' && timeline) {
+      timeline.showProvenance = enabled;
+      if (timeline.entries) timeline.render(timeline.entries);
     }
     // Geography/Network: no provenance rendering yet — toggle state persists via filters
     this.updateExploreURL(false);
@@ -292,19 +315,35 @@ const Explore = {
 
   _onFilterChange() {
     this._renderFilterChips();
-    const data = this.hasActiveFilters() ? this.getFiltered() : this.entries;
-    if (this.mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
-      ExploreTimeline.render(data);
-    } else if (this.mode === 'geography' && typeof ExploreGeography !== 'undefined') {
-      ExploreGeography.render(data);
-    } else if (this.mode === 'network' && typeof ExploreNetwork !== 'undefined') {
-      ExploreNetwork.render(data);
-    }
+    const data = this.visibleEntries();
+    this._renderActiveMode(data);
     this.updateSelection(data.length < this.entries.length ? data : []);
+    // The active mode has just been redrawn; marking it as the source keeps
+    // its own listener from redrawing it a second time.
     document.dispatchEvent(new CustomEvent('explore:filterChange', {
-      detail: { filters: { ...this.filters }, filtered: data.length },
+      detail: { filters: { ...this.filters }, filtered: data.length, mode: this.mode },
     }));
     this.updateExploreURL(false);
+  },
+
+  /**
+   * Register a mode's reconciliation handler for filter changes raised
+   * elsewhere. Only one view is on screen at a time, so this is a state
+   * reconciliation hook rather than live cross-view linking: it fires when a
+   * filter changes without the active mode having drawn itself already.
+   */
+  bindModeFilterListener(mode, fn) {
+    this._modeListeners = this._modeListeners || {};
+    if (this._modeListeners[mode]) {
+      document.removeEventListener('explore:filterChange', this._modeListeners[mode]);
+    }
+    const handler = (event) => {
+      if (this.mode !== mode) return;
+      if (event.detail && event.detail.mode === mode) return;
+      fn(this.visibleEntries(), event);
+    };
+    this._modeListeners[mode] = handler;
+    document.addEventListener('explore:filterChange', handler);
   },
 
   _renderFilterChips() {
@@ -313,31 +352,36 @@ const Explore = {
     const f = this.filters;
     const chips = [];
 
+    const chip = (label, value, onclick) =>
+      `<span class="chip">${label}: ${value} <button type="button" aria-label="Remove filter ${label}" onclick="${onclick}">&times;</button></span>`;
+
     for (const lang of f.languages) {
-      chips.push(`<span class="chip">Language: ${esc(lang)} <button onclick="Explore.toggleFilter('languages','${lang.replace(/'/g, "\\'")}')">&times;</button></span>`);
+      chips.push(chip('Language', esc(lang),
+        `Explore.toggleFilter('languages','${lang.replace(/'/g, "\\'")}')`));
     }
     for (const type of f.types) {
-      chips.push(`<span class="chip">Type: ${esc(ENTRY_TYPE_LABELS[type] || type)} <button onclick="Explore.toggleFilter('types','${type}')">&times;</button></span>`);
+      chips.push(chip('Type', esc(ENTRY_TYPE_LABELS[type] || type),
+        `Explore.toggleFilter('types','${type}')`));
     }
     if (f.yearRange[0] != null || f.yearRange[1] != null) {
-      const label = `${f.yearRange[0] || '?'}\u2013${f.yearRange[1] || '?'}`;
-      chips.push(`<span class="chip">Years: ${label} <button onclick="Explore.clearFilter('yearRange')">&times;</button></span>`);
+      chips.push(chip('Years', `${f.yearRange[0] || '?'}–${f.yearRange[1] || '?'}`,
+        `Explore.clearFilter('yearRange')`));
     }
-    if (f.decade != null) {
-      chips.push(`<span class="chip">Decade: ${f.decade}s <button onclick="Explore.clearFilter('decade')">&times;</button></span>`);
+    if (f.decade != null) chips.push(chip('Decade', `${f.decade}s`, `Explore.clearFilter('decade')`));
+    if (f.location) chips.push(chip('Location', esc(f.location), `Explore.clearFilter('location')`));
+    if (f.country) {
+      const geo = this._module('geography');
+      const name = (geo && geo._countryNames[f.country]) || f.country;
+      chips.push(chip('Country', esc(name), `Explore.clearFilter('country')`));
     }
-    if (f.location) {
-      chips.push(`<span class="chip">Location: ${esc(f.location)} <button onclick="Explore.clearFilter('location')">&times;</button></span>`);
-    }
-    if (f.publisher) {
-      chips.push(`<span class="chip">Publisher: ${esc(f.publisher)} <button onclick="Explore.clearFilter('publisher')">&times;</button></span>`);
-    }
+    if (f.publisher) chips.push(chip('Publisher', esc(f.publisher), `Explore.clearFilter('publisher')`));
+    if (f.translator) chips.push(chip('Translator', esc(f.translator), `Explore.clearFilter('translator')`));
     if (f.period) {
-      chips.push(`<span class="chip">Period: ${esc(PERIOD_LABELS[f.period] || f.period)} <button onclick="Explore.clearFilter('period')">&times;</button></span>`);
+      chips.push(chip('Period', esc(PERIOD_LABELS[f.period] || f.period), `Explore.clearFilter('period')`));
     }
 
     if (chips.length) {
-      chips.push(`<button class="chip-clear" onclick="Explore.clearAllFilters()">Clear all</button>`);
+      chips.push(`<button type="button" class="chip-clear" onclick="Explore.clearAllFilters()">Clear all</button>`);
     }
 
     // Provenance toggle — always visible, not a removable chip
@@ -362,6 +406,7 @@ const Explore = {
     } else {
       // Show detail panel alongside chart
       panel.classList.remove('hidden');
+      this._selectedEntries = entries;
       if (entries.length === 1) {
         detail.innerHTML = Detail.renderInline(entries[0]);
       } else {
@@ -393,13 +438,16 @@ const Explore = {
     }
     if (f.decade != null) params.set('decade', f.decade);
     if (f.location) params.set('location', f.location);
+    if (f.country) params.set('country', f.country);
     if (f.publisher) params.set('publisher', f.publisher);
+    if (f.translator) params.set('translator', f.translator);
     if (f.period) params.set('period', f.period);
     if (f.showProvenance) params.set('provenance', 'true');
     // Timeline-specific state
-    if (this.mode === 'timeline' && typeof ExploreTimeline !== 'undefined') {
-      if (ExploreTimeline.layerMode !== 'language') params.set('layers', ExploreTimeline.layerMode);
-      if (ExploreTimeline.chartMode !== 'bars') params.set('chart', ExploreTimeline.chartMode);
+    const timeline = this._module('timeline');
+    if (this.mode === 'timeline' && timeline) {
+      if (timeline.layerMode !== 'language') params.set('layers', timeline.layerMode);
+      if (timeline.chartMode !== 'bars') params.set('chart', timeline.chartMode);
     }
     const paramStr = params.toString();
     const hash = `stats/${this.mode}${paramStr ? '?' + paramStr : ''}`;
@@ -424,17 +472,22 @@ const Explore = {
     if (decade) this.filters.decade = parseInt(decade, 10);
     const loc = params.get('location');
     if (loc) this.filters.location = loc;
+    const country = params.get('country');
+    if (country) this.filters.country = country;
     const pub = params.get('publisher');
     if (pub) this.filters.publisher = pub;
+    const trans = params.get('translator');
+    if (trans) this.filters.translator = trans;
     const period = params.get('period');
     if (period) this.filters.period = period;
     if (params.get('provenance') === 'true') this.filters.showProvenance = true;
     // Timeline-specific state
-    if (typeof ExploreTimeline !== 'undefined') {
+    const timeline = this._module('timeline');
+    if (timeline) {
       const layers = params.get('layers');
-      if (layers) ExploreTimeline.layerMode = layers;
+      if (layers) timeline.layerMode = layers;
       const chart = params.get('chart');
-      if (chart) ExploreTimeline.chartMode = chart;
+      if (chart) timeline.chartMode = chart;
     }
     // Apply: switch to the requested mode (re-renders with filters)
     // Suppress pushState during restore — use replaceState instead
@@ -449,6 +502,22 @@ const Explore = {
   // Tooltip
   // -------------------------------------------------------------------------
 
+  /**
+   * Anchor for the tooltip. A pointer event carries its own page position; a
+   * focus event does not, so the focused element's box stands in for it.
+   */
+  _tooltipAnchor(event) {
+    if (event && typeof event.pageX === 'number' && event.pageX !== 0) {
+      return { x: event.pageX, y: event.pageY };
+    }
+    const el = event && (event.currentTarget || event.target);
+    if (el && typeof el.getBoundingClientRect === 'function') {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + window.scrollX, y: r.top + window.scrollY };
+    }
+    return { x: 0, y: 0 };
+  },
+
   showTooltip(html, event) {
     const tip = document.getElementById('explore-tooltip');
     if (!tip) return;
@@ -456,10 +525,11 @@ const Explore = {
     tip.style.display = 'block';
 
     const rect = tip.getBoundingClientRect();
-    const x = Math.min(event.pageX + 12, window.innerWidth - rect.width - 20);
-    const y = event.pageY - rect.height - 8;
+    const anchor = this._tooltipAnchor(event);
+    const x = Math.min(anchor.x + 12, window.innerWidth - rect.width - 20);
+    const y = anchor.y - rect.height - 8;
     tip.style.left = x + 'px';
-    tip.style.top = (y > 0 ? y : event.pageY + 12) + 'px';
+    tip.style.top = (y > 0 ? y : anchor.y + 12) + 'px';
   },
 
   hideTooltip() {
@@ -494,12 +564,12 @@ const Explore = {
     ).join('');
 
     const moreHtml = entries.length > 20
-      ? `<p class="detail-more">and ${(entries.length - 20).toLocaleString('en')} more</p>`
+      ? `<p class="detail-more">and ${fmt(entries.length - 20)} more</p>`
       : '';
 
     return `
       <div class="detail-group">
-        <h3 class="detail-group-title">${entries.length.toLocaleString('en')} entries selected</h3>
+        <h3 class="detail-group-title">${fmt(entries.length)} entries selected</h3>
         <div class="detail-group-meta">
           <span>${minY}&ndash;${maxY}</span>
         </div>
@@ -510,7 +580,7 @@ const Explore = {
             ${topLangs.map(([lang, count]) =>
               `<div class="mini-bar-row">
                 <span class="mini-bar-label">${esc(lang)}</span>
-                <span class="mini-bar-count">${count}</span>
+                <span class="mini-bar-count">${fmt(count)}</span>
               </div>`
             ).join('')}
           </div>
@@ -521,8 +591,8 @@ const Explore = {
           <div class="detail-mini-bars">
             ${topTypes.map(([type, count]) =>
               `<div class="mini-bar-row">
-                <span class="mini-bar-label">${ENTRY_TYPE_LABELS[type] || type}</span>
-                <span class="mini-bar-count">${count}</span>
+                <span class="mini-bar-label">${esc(ENTRY_TYPE_LABELS[type] || type)}</span>
+                <span class="mini-bar-count">${fmt(count)}</span>
               </div>`
             ).join('')}
           </div>
@@ -534,21 +604,47 @@ const Explore = {
           ${moreHtml}
         </div>
 
-        <button class="action-btn explore-view-btn" onclick="Explore._navigateFromFilters()">
-          View all ${entries.length.toLocaleString('en')} entries
+        <button type="button" class="action-btn explore-view-btn" onclick="Explore._navigateFromFilters()">
+          View all ${fmt(entries.length)} entries
         </button>
       </div>
     `;
   },
 
-  _navigateFromFilters() {
+  /**
+   * Filter keys the results route can reproduce from the hash. `country` is
+   * absent on purpose: it resolves through the geodata, which the results
+   * route does not load, so a country selection is handed over as a
+   * session-scoped list instead.
+   */
+  _resultParams() {
     const f = this.filters;
     const params = {};
     if (f.languages.length) params.language = f.languages[0];
     if (f.types.length) params.type = f.types[0];
     if (f.location) params.location = f.location;
     if (f.publisher) params.publisher = f.publisher;
+    if (f.translator) params.translator = f.translator;
     if (f.period) params.period = f.period;
+    if (f.decade != null) params.decade = String(f.decade);
+    else if (f.yearRange[0] != null || f.yearRange[1] != null) {
+      params.years = `${f.yearRange[0] || ''}-${f.yearRange[1] || ''}`;
+    }
+    return params;
+  },
+
+  _navigateFromFilters() {
+    if (this.filters.country) {
+      const geo = this._module('geography');
+      const name = (geo && geo._countryNames[this.filters.country]) || this.filters.country;
+      App.showCustomResults(this._selectedEntries || this.getFiltered(), name);
+      return;
+    }
+    const params = this._resultParams();
+    if (!Object.keys(params).length && this._selectedEntries) {
+      App.showCustomResults(this._selectedEntries, 'Selection');
+      return;
+    }
     this.navigateToResults(params);
   },
 };
