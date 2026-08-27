@@ -11,7 +11,7 @@ tags: [index]
 created: 2026-04-12
 updated: 2026-08-21
 authors: [Christopher Pollin]
-related: [about, data, pipeline, frontend, production-readiness, testing, journal]
+related: [about, data, pipeline, frontend, production-readiness, review-0.9, testing, journal]
 ---
 
 # Klawiter Bibliography – Project Knowledge
@@ -27,6 +27,7 @@ This file is the entry point into the canonical project knowledge. Here the repo
 | [[pipeline]] | executable transformation, inputs, stages and repeatability |
 | [[frontend]] | static research interface and Expert-in-the-Loop curation |
 | [[production-readiness]] | ratified production contract, gate results, open points and Operator Points |
+| [[review-0.9]] | verified finding list of the 0.9 release review, work list toward acceptance |
 | [[testing]] | test layers, quality evidence and limits of what is asserted |
 | [[journal]] | chronological decisions and completed working sessions |
 

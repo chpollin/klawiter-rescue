@@ -21,6 +21,15 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-08-27 — Session 29: External review of the 0.9 release candidate
+
+**Round.** Review round, four parallel agents over pipeline, frontend, data model and tests/CI plus a CSS deep audit; read-only, nothing changed in code or data.
+**Changed.** [[review-0.9]] created as the consolidated, verified finding list and registered in the index; no other file touched.
+**Decided.** The findings split into a pre-acceptance package (real defects, publication metadata, trust chain, frontend robustness and accessibility) and a 1.1 stock (load-path split assessed as not worth it, pipeline consolidation, data-model honesty, broader reproducibility proof, CSS and documentation sweep); the weightiest pre-acceptance items are the redirect decoration in stage 04, the missing RDF provenance and the manifest comparison the reproduce job claims but does not perform. The test suite ran green locally during the review (497 passed, semantic failures exactly matching the baseline).
+**Open.** Implementation of the pre-acceptance package awaits the operator's go; the publisher decision in finding 8 is an existing operator point.
+
+---
+
 ## 2026-08-27 — Session 28: Frontend audit, redesign and versioning
 
 **Round.** A four-agent audit of the whole frontend (texts and figures, core-view UX, explore views, code/performance/accessibility, together about 160 findings) followed by operator-steered implementation rounds, plus a versioning decision.
