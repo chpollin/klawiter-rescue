@@ -358,11 +358,9 @@ h1, h2, h3, h4 {
   flex-direction: column;
 }
 
-.category-row {
-  border-bottom: 1px solid var(--sz-border-light);
-}
-.category-row:last-child {
-  border-bottom: none;
+/* Rows separate through spacing and hover, not through rules. */
+.category-row-header:hover {
+  background: var(--sz-white);
 }
 
 .category-row-header {
@@ -517,14 +515,46 @@ h1, h2, h3, h4 {
   text-decoration: underline;
 }
 
-/* Stats summary line */
-.home-stats-line {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--sz-border);
+/* Compact one-screen home layout */
+.home-compact .home-title {
+  margin-bottom: 0.25rem;
+}
+.home-subtitle-inline {
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  color: var(--sz-text-light);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sz-gold);
+  margin-left: 0.75rem;
+  vertical-align: middle;
+}
+.home-compact .home-text {
+  max-width: 46rem;
+  margin-bottom: 0.85rem;
+}
+.home-search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.home-search-row .home-search {
+  flex: 1 1 320px;
+  margin: 0;
+}
+.home-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 0 2.5rem;
+  align-items: start;
+}
+.home-groups .section-heading {
+  font-size: 0.9375rem;
+  margin: 0.9rem 0 0.15rem;
+}
+.home-groups .category-row-header {
+  padding: 0.3rem 0.25rem;
 }
 /* --- Results --- */
 .results-header {
@@ -747,11 +777,10 @@ h1, h2, h3, h4 {
 
 .meta-row {
   display: flex;
-  border-bottom: 1px solid var(--sz-border-light);
-  padding: 0.625rem 1rem;
+  padding: 0.5rem 1rem;
 }
-.meta-row:last-child {
-  border-bottom: none;
+.meta-row:nth-child(even) {
+  background: var(--sz-white);
 }
 
 .meta-label {
@@ -839,9 +868,8 @@ h1, h2, h3, h4 {
 .action-bar {
   display: flex;
   gap: 0.5rem;
-  padding-top: 1rem;
-  margin-top: 1.5rem;
-  border-top: 1px solid var(--sz-border);
+  padding-top: 0.5rem;
+  margin-top: 1.25rem;
 }
 
 .action-btn {
@@ -1100,7 +1128,6 @@ h1, h2, h3, h4 {
 }
 .detail-entry-item {
   padding: 0.25rem 0;
-  border-bottom: 1px solid var(--sz-border);
 }
 .detail-entry-link {
   font-size: 0.8125rem;
@@ -1526,8 +1553,6 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--sz-border);
 }
 
 .page-content h2 {
@@ -2307,7 +2332,6 @@ body.edit-mode .meta-table {
   flex-wrap: wrap;
   gap: 0.35rem 1.25rem;
   padding: 0.5rem 0 0.75rem;
-  border-bottom: 1px solid var(--sz-border-light);
   margin-bottom: 0.75rem;
   font-size: 0.875rem;
 }

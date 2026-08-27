@@ -52,35 +52,37 @@ const Home = {
       `;
     }
 
+    // One-screen layout: intro, search and entry points in the top block,
+    // the category groups side by side below. The former stats footer is
+    // folded into the intro sentence.
     container.innerHTML = `
-      <div class="home-intro">
-        <h1 class="home-title">Stefan Zweig Bibliography</h1>
-        <h2 class="home-subtitle">Digital Edition</h2>
+      <div class="home-intro home-compact">
+        <h1 class="home-title">Stefan Zweig Bibliography
+          <span class="home-subtitle-inline">Digital Edition</span></h1>
         <p class="home-text">
-          The Klawiter Bibliography catalogues over ${entries.length.toLocaleString('en')}
-          publications by and about Stefan Zweig in ${languages.size} languages.
-          Compiled by Dr.&nbsp;Randolph&nbsp;J.&nbsp;Klawiter (University of Notre Dame),
-          this digital edition makes the data available as a searchable, structured collection.
+          ${entries.length.toLocaleString('en')} publications by and about Stefan Zweig,
+          from first editions and translations to secondary literature, films and
+          correspondence, in ${languages.size} languages and ${locations.size.toLocaleString('en')}
+          publication places (${minYear}&ndash;${maxYear}). Compiled by
+          Dr.&nbsp;Randolph&nbsp;J.&nbsp;Klawiter (University of Notre Dame) and published
+          here as a searchable, structured open dataset.
         </p>
-        <div class="home-search">
-          <input type="search" id="home-search-input"
-                 placeholder="Search ${entries.length.toLocaleString('en')} entries\u2026 (press Enter)">
-          <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-        </div>
-        <div class="home-actions">
+        <div class="home-search-row">
+          <div class="home-search">
+            <input type="search" id="home-search-input"
+                   placeholder="Search ${entries.length.toLocaleString('en')} entries\u2026 (press Enter)">
+            <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
           <button class="browse-btn" onclick="location.hash='browse'">Browse Catalogue</button>
-          <a href="#stats" class="explore-link">Explore the Bibliography &rarr;</a>
+          <a href="#stats" class="explore-link">Explore &rarr;</a>
         </div>
       </div>
 
-      ${groupsHtml}
-      ${otherHtml}
-
-      <div class="home-stats-line">
-        ${entries.length.toLocaleString('en')} entries &middot; ${languages.size} languages &middot;
-        ${locations.size} locations &middot; ${minYear}&ndash;${maxYear}
+      <div class="home-groups">
+        ${groupsHtml}
+        ${otherHtml}
       </div>
     `;
 

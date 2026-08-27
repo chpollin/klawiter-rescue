@@ -656,6 +656,7 @@ const App = {
       const toggle = document.createElement('button');
       toggle.id = 'edit-toggle';
       toggle.className = 'edit-toggle-btn';
+      toggle.title = 'Curation mode (available on localhost only): review fields against the source, decide authority candidates, export decisions as a patch file';
       toggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
       toggle.onclick = () => this.toggleEditMode();
       header.appendChild(toggle);
