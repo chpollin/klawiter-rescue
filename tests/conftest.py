@@ -67,12 +67,6 @@ def all_titles(ns0_entries):
 
 
 @pytest.fixture(scope="session")
-def redirect_targets(frontend_data):
-    """Set of all redirect target values."""
-    return set(frontend_data.get("redirects", {}).values())
-
-
-@pytest.fixture(scope="session")
 def baseline():
     """Load baseline metrics once."""
     if not BASELINE_PATH.exists():

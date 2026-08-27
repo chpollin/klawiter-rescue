@@ -3,7 +3,7 @@ Cross-field consistency tests — validate that fields make sense together.
 
 These tests answer: "Does each record tell a coherent story?"
 They test relationships BETWEEN fields, not individual field values.
-Fixtures (ns0_entries, all_titles, redirect_targets) are defined in conftest.py.
+Fixtures (ns0_entries, all_titles, redirects) are defined in conftest.py.
 """
 
 from lib.vocabulary import TIME_PERIODS
@@ -146,14 +146,17 @@ class TestSeeAlsoIntegrity:
     # Frozen value lives in baseline known_issues.broken_see_also_refs.
 
     def test_broken_references_bounded(
-        self, ns0_entries, all_titles, redirect_targets, baseline
+        self, ns0_entries, all_titles, redirects, baseline
     ):
-        """Count of broken seeAlso references must not increase."""
+        """Count of broken seeAlso references must not increase. A reference
+        resolves when it names an entry title or a redirect NAME (the app
+        follows the redirect map by key); the earlier check against redirect
+        VALUES (page ids) could never match a string reference and overcounted."""
         known = baseline["known_issues"]["broken_see_also_refs"]
         broken = []
         for entry in ns0_entries:
             for ref in entry.get("seeAlso") or []:
-                if ref not in all_titles and ref not in redirect_targets:
+                if ref not in all_titles and ref not in redirects:
                     broken.append((entry["sourcePageId"], ref))
 
         assert len(broken) <= known, (

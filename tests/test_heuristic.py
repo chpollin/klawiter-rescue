@@ -104,6 +104,24 @@ class TestPublisherHeuristics:
             f"Examples: {[(e['sourcePageId'], e['publisher'][:60]) for e in bad[:5]]}"
         )
 
+    def test_publisher_mojibake_bounded(self, ns0_entries, baseline):
+        """Publisher names carrying UTF-8-as-Latin-1 mojibake (e.g. 'PÃ¼').
+        The known cases are double-encoded rows the dump itself carries and
+        03c cannot repair without a source-side fix; lower is better — update
+        the frozen count when normalization improves."""
+        from lib.encoding import has_mojibake
+
+        known = baseline["known_issues"]["publisher_mojibake"]
+        bad = [
+            e
+            for e in ns0_entries
+            if e.get("publisher") and has_mojibake(e["publisher"])
+        ]
+        assert len(bad) <= known, (
+            f"Publisher mojibake: {len(bad)} (threshold {known}). "
+            f"Examples: {[(e['sourcePageId'], e['publisher'][:60]) for e in bad[:5]]}"
+        )
+
     def test_publisher_not_metadata(self, ns0_entries, baseline):
         """Publisher should not be metadata phrases like 'comments concerning this series'.
         Root cause: regex grabs text after location comma that happens to be
