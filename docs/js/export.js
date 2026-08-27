@@ -125,12 +125,16 @@ const Export = {
     downloadBlob(bibs.join('\n\n'), 'klawiter-results.bib', 'application/x-bibtex');
   },
 
+  // The flat frontend projection, not the JSON-LD serialization: its keys are
+  // the frontend names and it carries no @context. Attaching one would claim a
+  // mapping that does not hold, so the export is named for what it is; the
+  // canonical JSON-LD lives in the repository under data/output/.
   fullDataset() {
     const payload = {
       ...App.data,
       contestedEditionClaims: Object.values(Edit.editionClaims).flat(),
       contestedAuthorityClaims: Edit.contestedAuthorityClaims,
     };
-    downloadBlob(JSON.stringify(payload, null, 2), 'klawiter-bibliography.jsonld', 'application/ld+json');
+    downloadBlob(JSON.stringify(payload, null, 2), 'klawiter-bibliography.json', 'application/json');
   },
 };

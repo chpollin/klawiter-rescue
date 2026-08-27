@@ -16,7 +16,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-function loadApp() {
+function loadAppCtx() {
   const location = { hash: '', pathname: '/', hostname: 'localhost' };
   const ctx = {
     window: { location, addEventListener() {} },
@@ -33,7 +33,12 @@ function loadApp() {
   );
   // Top-level `const App` never reaches the context object; evaluate the
   // identifier as the script's completion value instead.
-  return vm.runInContext(source + '\nApp', ctx);
+  const App = vm.runInContext(source + '\nApp', ctx);
+  return { App, ctx };
+}
+
+function loadApp() {
+  return loadAppCtx().App;
 }
 
 // constants.js and utils.js are plain script files sharing one global scope;
@@ -154,6 +159,66 @@ test('only a hash-addressable result list writes the sort back to the URL', () =
   assert.strictEqual(App.isAddressableResults(), true);
   App.state.view = 'stats';
   assert.strictEqual(App.isAddressableResults(), false);
+});
+
+test('the old deep links still resolve to their merged section', () => {
+  const App = loadApp();
+  // The four static pages were merged into #about and #data; the hashes that
+  // were published before must keep working.
+  assert.strictEqual(App.LEGACY_ROUTES.methodology, 'about/methodology');
+  assert.strictEqual(App.LEGACY_ROUTES.help, 'about/help');
+  assert.strictEqual(App.LEGACY_ROUTES.imprint, 'about/imprint');
+  assert.strictEqual(App.LEGACY_ROUTES.jsonld, 'data/playground');
+  // #data itself is a page of its own and must not redirect.
+  assert.strictEqual(App.LEGACY_ROUTES.data, undefined);
+  assert.strictEqual(App.LEGACY_ROUTES.quality, undefined);
+});
+
+test('a legacy hash is rewritten rather than rendered', () => {
+  const { App, ctx } = loadAppCtx();
+  App._lastHash = null;
+  ctx.location.hash = '#methodology';
+  App.handleRoute();
+  assert.strictEqual(ctx.location.hash, 'about/methodology');
+});
+
+test('a page hash carries an optional section suffix', () => {
+  const { App, ctx } = loadAppCtx();
+  const seen = [];
+  App.showView = (v) => { App.state.view = v; };
+  App._scrollToSection = (s) => seen.push(`scroll:${s}`);
+  ctx.Pages = { render(slug) { seen.push(slug); } };
+
+  App._lastHash = null;
+  ctx.location.hash = '#about/help';
+  App.handleRoute();
+  assert.deepStrictEqual(seen, ['about', 'scroll:help']);
+
+  seen.length = 0;
+  App._lastHash = null;
+  ctx.location.hash = '#data';
+  App.handleRoute();
+  assert.deepStrictEqual(seen, ['data']);
+});
+
+test('the edit toggle shows only where entry cards can be edited', () => {
+  const { App, ctx } = loadAppCtx();
+  const btn = { style: {} };
+  ctx.document.getElementById = () => btn;
+
+  for (const [hash, view, visible] of [
+    ['', 'home', true],
+    ['#q=zweig', 'results', true],
+    ['#quality', 'page', true],
+    ['#about/help', 'page', false],
+    ['#data', 'page', false],
+    ['#stats', 'stats', false],
+  ]) {
+    ctx.location.hash = hash;
+    App.state.view = view;
+    App._updateEditToggleVisibility();
+    assert.strictEqual(btn.style.display, visible ? '' : 'none', `${hash} / ${view}`);
+  }
 });
 
 test('edit mode cannot be entered on the published site', () => {

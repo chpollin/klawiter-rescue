@@ -58,14 +58,13 @@ const Home = {
     container.innerHTML = `
       <div class="home-intro home-compact">
         <h1 class="home-title">Stefan Zweig Bibliography
-          <span class="home-subtitle-inline">Digital Edition</span></h1>
+          <span class="home-subtitle-inline">The Klawiter Bibliography as Open Data</span></h1>
         <p class="home-text">
           ${entries.length.toLocaleString('en')} publications by and about Stefan Zweig,
           from first editions and translations to secondary literature, films and
           correspondence, in ${languages.size} languages and ${locations.size.toLocaleString('en')}
-          publication places (${minYear}&ndash;${maxYear}). Compiled by
-          Dr.&nbsp;Randolph&nbsp;J.&nbsp;Klawiter (University of Notre Dame) and published
-          here as a searchable, structured open dataset.
+          publication places (${minYear}&ndash;${maxYear}), searchable and
+          downloadable as a structured dataset.
         </p>
         <div class="home-search-row">
           <div class="home-search">
@@ -76,7 +75,6 @@ const Home = {
             </svg>
           </div>
           <button class="browse-btn" data-act="browse">Browse Catalogue</button>
-          <a href="#stats" class="explore-link">Explore &rarr;</a>
         </div>
       </div>
 

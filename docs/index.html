@@ -4,12 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Klawiter — Stefan Zweig Bibliography</title>
-  <meta name="description" content="Digital edition of the Klawiter Bibliography: 4,751 publications by and about Stefan Zweig, searchable and structured.">
+  <meta name="description" content="The Klawiter Bibliography as open data: publications by and about Stefan Zweig, searchable, structured and downloadable.">
   <meta property="og:title" content="Klawiter — Stefan Zweig Bibliography">
-  <meta property="og:description" content="4,751 publications by and about Stefan Zweig. Compiled by Dr. Randolph J. Klawiter (University of Notre Dame).">
+  <meta property="og:description" content="The Klawiter Bibliography as open data: publications by and about Stefan Zweig, compiled by Dr. Randolph J. Klawiter (University of Notre Dame).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chpollin.github.io/klawiter-rescue/">
+  <meta property="og:site_name" content="Klawiter Bibliography">
+  <meta property="og:locale" content="en_US">
+  <link rel="canonical" href="https://chpollin.github.io/klawiter-rescue/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "Klawiter Bibliography — Stefan Zweig",
+    "description": "Bibliographic records of publications by and about Stefan Zweig, compiled by Dr. Randolph J. Klawiter and republished as structured open data.",
+    "url": "https://chpollin.github.io/klawiter-rescue/",
+    "creator": {
+      "@type": "Person",
+      "name": "Randolph J. Klawiter",
+      "affiliation": { "@type": "Organization", "name": "University of Notre Dame" }
+    },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "isAccessibleForFree": true,
+    "distribution": [{
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://chpollin.github.io/klawiter-rescue/data/klawiter.json"
+    }]
+  }
+  </script>
   <link rel="stylesheet" href="fonts/fonts.css">
   <!-- defer: the visualization stack is needed only on the Explore route
        and must not block first paint; deferred scripts keep their order. -->
@@ -45,23 +69,8 @@
       <nav class="site-nav">
         <a href="#" id="nav-home">Overview</a>
         <a href="#stats" id="nav-stats">Explore</a>
+        <a href="#data" id="nav-data">Data</a>
         <a href="#about" id="nav-about">About</a>
-        <div class="nav-dropdown" id="nav-more">
-          <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-            More
-            <svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.5" width="10" height="8">
-              <path d="M1 1.5L6 6.5L11 1.5"/>
-            </svg>
-          </button>
-          <div class="nav-dropdown-menu" role="menu">
-            <a href="#methodology" role="menuitem">Methodology</a>
-            <a href="#help" role="menuitem">Help</a>
-            <a href="#data" role="menuitem">Data Access</a>
-            <a href="#quality" role="menuitem">Data Quality</a>
-            <a href="#jsonld" role="menuitem">JSON-LD Playground</a>
-            <a href="#imprint" role="menuitem">Imprint</a>
-          </div>
-        </div>
       </nav>
       <div class="header-search">
         <input type="search" id="search-input" placeholder="Search..." aria-label="Search bibliography">
@@ -119,7 +128,7 @@
               Export BibTeX
             </button>
             <select id="sort-select" class="sort-select" aria-label="Sort results by">
-            <option value="relevance">Relevance</option>
+            <option value="relevance" title="Ranked by search score; without a query, source order">Relevance</option>
             <option value="year-asc">Year ascending</option>
             <option value="year-desc">Year descending</option>
             <option value="title">Title A–Z</option>
@@ -132,10 +141,10 @@
         </div>
       </div>
 
-      <!-- View: Statistics -->
+      <!-- View: Explore -->
       <div id="view-stats" class="hidden"></div>
 
-      <!-- View: Static pages (About, Methodology, Help, Data, Imprint) -->
+      <!-- View: Static pages (About, Data, Data Quality) -->
       <div id="view-page" class="hidden"></div>
 
     </main>
@@ -163,36 +172,20 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
-        <div class="footer-heading">Project</div>
-        <div class="footer-text">
-          4,751 publications by and about Stefan Zweig in 41 languages,
-          compiled by Dr. Randolph J. Klawiter and published here as a
-          searchable, structured open dataset.
-        </div>
-      </div>
-      <div>
         <div class="footer-heading">Credits</div>
         <div class="footer-text">
-          Compiled by Dr. Randolph J. Klawiter<br>
-          University of Notre Dame<br>
-          Stefan Zweig Centre Salzburg
+          Compiled by Dr. Randolph J. Klawiter (University of Notre Dame),
+          published with the Stefan Zweig Centre Salzburg.<br>
+          Code MIT &middot; Data CC BY 4.0
         </div>
       </div>
       <div>
         <div class="footer-heading">Information</div>
         <div class="footer-text">
           <a href="#about">About</a><br>
-          <a href="#methodology">Methodology</a><br>
-          <a href="#help">Help</a><br>
-          <a href="#data">Data Access</a><br>
+          <a href="#data">Data</a><br>
           <a href="#quality">Data Quality</a><br>
-          <a href="#jsonld">JSON-LD Playground</a><br>
-          <a href="#imprint">Imprint</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-heading">Links</div>
-        <div class="footer-text">
+          <a href="#about/imprint">Imprint</a><br>
           <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a><br>
           <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub</a>
         </div>

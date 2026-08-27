@@ -35,7 +35,7 @@ const Curate = {
   _build(container) {
     container.innerHTML = `
       <div class="page-content curate-page">
-        <h2 class="section-heading">Data Quality</h2>
+        <h1 class="section-heading">Data Quality</h1>
         <p class="curate-intro">
           The processing state of the dataset, computed live from the published
           artifacts. Every list opens the affected entries.

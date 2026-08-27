@@ -6,7 +6,7 @@ project:
   repository: https://github.com/chpollin/klawiter-rescue
 status: complete
 language: de
-version: 1.1
+version: 1.2
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
 updated: 2026-08-27
@@ -37,14 +37,31 @@ Die öffentliche Anwendung unterstützt Suche, Facetten, Zeitverlauf, Sprach- un
 | `edit.js` | lokale Feld- und Reconciliation-Kuration, Triage-Hinweise, Fundstellen, Patch-Export |
 | `curate.js` | Datenqualitäts-Werkbank (`#quality`): Vollständigkeitsmatrix, Arbeitsvorräte, Kandidaten-Queue |
 | `export.js` | BibTeX-, RIS-, Einzel- und Gesamtexport, Permalink |
-| `pages.js` | statische Seiten (About, Methodology, Help, Data Access, Imprint) |
-| `jsonld-playground.js` | interaktive JSON-LD-Ansicht mit escaptem Syntax-Highlighting |
+| `pages.js` | die beiden statischen Seiten About und Data, Zahlen dynamisch aus `_meta` |
+| `jsonld-playground.js` | interaktive JSON-LD-Ansicht mit escaptem Syntax-Highlighting, als Abschnitt der Data-Seite gerendert |
 | `explore.js` | Explore-Rahmen: Modi, geteilte Filter, URL-Zustand, Detailpanel |
 | `explore-timeline.js` | Zeitverlauf mit Sprach-, Typ- und Provenienz-Schichten |
 | `explore-geography.js` | Globus- und Kartenansicht aus der vendorten Geometrie |
 | `explore-network.js` | Referenz-Rangliste (meistreferenzierte Einträge) und Übersetzer-Sankey |
 
 Die Anwendung lädt `docs/data/klawiter.json` (blockierend, mit `resp.ok`-Prüfung und escapter Fehlermeldung), `reconciliation.json` (nicht blockierend, additive Kurationsdaten) und `triage.json` (erst beim Betreten des Editiermodus). Der Suchindex wird lazy bei der ersten Suche gebaut. Fehlende Reconciliation-Daten führen nicht zu erfundenen Links; die betroffenen UI-Bereiche bleiben leer.
+
+## Navigation, Routen und Seitenzuschnitt
+
+Die Kopfnavigation führt vier Ziele, Overview, Explore, Data und About. Ein Dropdown gibt es nicht mehr; alles, was dort lag, ist in die beiden Textseiten eingegangen oder steht im Footer. Der Footer trägt zwei Spalten, links Kompilator, herausgebendes Umfeld und die Lizenzzeile, rechts die Verweise.
+
+| Route | Inhalt |
+|---|---|
+| `#` | Startseite mit Suche, Browse-Einstieg und den Kategoriengruppen als Karten |
+| `#stats`, `#stats/<modus>` | Explore mit Zeit-, Karten- und Verbindungsansicht |
+| `#data`, `#data/<abschnitt>` | Datenmodell, Spezifikation und Vokabular, Downloads, JSON-LD-Playground, Verweis auf die Werkbank |
+| `#about`, `#about/<abschnitt>` | Projekt, Methodik, Hilfe, Impressum als Abschnitte einer Seite mit Anker-Navigation |
+| `#quality` | Datenqualitäts-Werkbank |
+| `#browse`, `#q=…`, `#entry=…`, Facettenparameter | Ergebnisliste |
+
+Eine statische Seite adressiert ihre Abschnitte über ein Suffix im Hash (`#about/imprint`); der Router rendert die Seite und scrollt anschließend auf `sec-<abschnitt>`. Die vier Deep-Links der früheren Seitenaufteilung bleiben gültig und werden im Router auf ihren Abschnitt umgeschrieben, `#methodology` und `#help` und `#imprint` nach `#about/…`, `#jsonld` nach `#data/playground`. Der Dokumenttitel wird ausschließlich in `App._updateTitle` gesetzt, Basistitel „Klawiter — Stefan Zweig Bibliography" wie im ausgelieferten HTML.
+
+Die About-Seite führt die Zahlen des Bestands dynamisch aus `_meta` (Bestandsgröße, Sprachen, Jahresspanne, Feldabdeckung, Typenzahl), damit Prosa und Datenstand nicht auseinanderlaufen. Die Data-Seite benennt die ausgelieferten Dateien unter `docs/data/` mit ihrer Rolle und weist die kanonischen Graphen unter `data/output/` als nur über das Repository erreichbar aus. Der Gesamtexport heißt „Download dataset (JSON)", weil er die flache Projektion in Frontend-Schlüsseln liefert und keinen `@context` trägt.
 
 ## Gestaltungs- und Zugänglichkeitsvertrag
 
@@ -73,7 +90,7 @@ Die Werkbank-Listen sind Sitzungsansichten ohne eigene Hash-Adresse, weil sie au
 
 ## EIL Curation Interface
 
-Der Editiermodus ist ausschließlich auf `localhost` aktiv; der Schalter prüft `isLocal` im Setter, die publizierte Site kann den Modus auch über die Konsole nicht betreten. Bearbeitet werden Verlag, Publikationsort, Übersetzer und Seitenzahl. Jede Feldaktion ist typisiert:
+Der Editiermodus ist ausschließlich auf `localhost` aktiv; der Schalter prüft `isLocal` im Setter, die publizierte Site kann den Modus auch über die Konsole nicht betreten. Der Schalter im Kopf ist zusätzlich viewabhängig sichtbar und erscheint nur dort, wo Edieren tatsächlich ansetzt, auf Startseite, Ergebnisliste und Werkbank; auf den Textseiten und in Explore ist er ausgeblendet. Der Modus-Zustand selbst bleibt über den Viewwechsel erhalten. Bearbeitet werden Verlag, Publikationsort, Übersetzer und Seitenzahl. Jede Feldaktion ist typisiert:
 
 - `accept` bestätigt einen vorhandenen Wert;
 - `correct` ersetzt einen Wert und bewahrt den Vorgänger;
@@ -102,7 +119,7 @@ Ein Claim mit Prädikat `schema:exampleOfWork` wird exportiert, ohne gleichzeiti
 
 ## Validierung
 
-Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export, die Trennung strittiger Claims, den Routing-Guard samt Editiermodus-Gate und die Ordnung der Kandidaten-Queue. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge (inklusive Frontend-Projektionsvertrag) und ruft die Node-Tests über die gemeinsame Testbrücke auf.
+Node-Tests prüfen Fundstellenlogik, Triage-Reihenfolge, Reconciliation-Lookup, stabilen Patch-Export, die Trennung strittiger Claims, den Routing-Guard samt Editiermodus-Gate, die Redirects der alten Deep-Links, den Abschnitts-Suffix statischer Seiten, die Sichtbarkeitsregel des Edit-Schalters und die Ordnung der Kandidaten-Queue. `node --check` validiert jedes Modul syntaktisch. Die Python-Suite prüft die erzeugten Datenverträge (inklusive Frontend-Projektionsvertrag) und ruft die Node-Tests über die gemeinsame Testbrücke auf.
 
 Ein lokaler Smoke-Test läuft mit einem statischen Server über `docs/`:
 

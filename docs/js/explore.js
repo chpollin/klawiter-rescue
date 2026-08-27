@@ -23,7 +23,7 @@ const Explore = {
   byType: new Map(),
   byPublisher: new Map(),
   topLanguages: [],
-  yearExtent: [1815, 2020],
+  yearExtent: null,   // [min, max]; derived in _preprocess, never hardcoded
 
   // Color palette — base values from shared COLORS constant, language palette local
   colors: {
@@ -63,12 +63,21 @@ const Explore = {
     this._initializing = false;
   },
 
+  /** The dataset-wide year range published in the data baseline. */
+  _metaYearRange() {
+    return (App.data && App.data._meta && App.data._meta.yearRange) || null;
+  },
+
   _preprocess() {
     const e = this.entries;
 
-    // Year extent
+    // Year extent — from the entries in hand, falling back to the shipped
+    // baseline when none of them carries a year.
     const years = e.map(x => x.year).filter(Boolean);
-    this.yearExtent = [Math.min(...years), Math.max(...years)];
+    const range = this._metaYearRange();
+    this.yearExtent = years.length
+      ? [Math.min(...years), Math.max(...years)]
+      : (range ? [range.min, range.max] : [0, 0]);
 
     // Index by year
     this.byYear = new Map();
@@ -118,13 +127,19 @@ const Explore = {
     const container = document.getElementById('view-stats');
     const e = this.entries;
     const languages = new Set(e.map(x => x.language).filter(Boolean));
+    // The header describes the whole dataset, so it states the published
+    // baseline range rather than the extent of the entries in hand.
+    const range = this._metaYearRange();
+    const headerYears = range
+      ? `${range.min}–${range.max}`
+      : `${this.yearExtent[0]}–${this.yearExtent[1]}`;
 
     container.innerHTML = `
       <div class="explore-header">
         <h2 class="section-heading">Explore the Bibliography</h2>
         <div class="explore-header-meta">
           ${e.length.toLocaleString('en')} entries &middot; ${languages.size} languages &middot;
-          ${this.byType.size} types &middot; ${this.yearExtent[0]}&ndash;${this.yearExtent[1]}
+          ${this.byType.size} types &middot; ${headerYears}
         </div>
         <div class="explore-mode-tabs" role="tablist">
           <button role="tab" class="mode-tab active" data-mode="timeline">Timeline</button>

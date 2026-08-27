@@ -68,7 +68,7 @@ const ExploreTimeline = {
       : this.chartMode === 'ranks' ? 'Language rank chart' : 'Stacked bar chart';
     this.svg.append('title').attr('id', 'timeline-title').text('Publication timeline');
     this.svg.append('desc').attr('id', 'timeline-desc')
-      .text(`${modeLabel} showing ${entries.length} publications from ${this.fullExtent[0]} to ${this.fullExtent[1]}, colored by ${this.layerMode}`);
+      .text(`${modeLabel} showing ${entries.length} entries from ${this.fullExtent[0]} to ${this.fullExtent[1]}, colored by ${this.layerMode}`);
 
     this.g = this.svg.append('g')
       .attr('transform', `translate(${m.left},${m.top})`);
@@ -593,7 +593,7 @@ const ExploreTimeline = {
           const d = d3.select(this).datum();
           const label = self.layerMode === 'type' ? (ENTRY_TYPE_LABELS[key] || key) : key;
           Explore.showTooltip(
-            `<strong>${label}</strong><br>${d.decade}s: #${d.rank} (${d.count} publications)`,
+            `<strong>${label}</strong><br>${d.decade}s: #${d.rank} (${d.count} entries)`,
             event
           );
         })

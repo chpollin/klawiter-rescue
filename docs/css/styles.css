@@ -10,6 +10,9 @@
   --sz-burgundy-light: #7A2D45;
   --sz-gold: #C2A360;
   --sz-gold-light: #D4B87A;
+  /* Same hue as --sz-gold, darkened to clear 4.5:1 against white and cream
+     wherever the gold carries text rather than decoration. */
+  --sz-gold-dark: #7A5E18;
   --sz-cream: #FAF8F3;
   --sz-white: #FFFFFF;
   --sz-text: #2D2D2D;
@@ -62,7 +65,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-serif);
   font-size: 1.25rem;
   font-weight: 400;
-  color: var(--sz-gold);
+  color: var(--sz-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 1rem;
@@ -505,16 +508,6 @@ h1, h2, h3, h4 {
   background: var(--sz-burgundy-dark);
 }
 
-.explore-link {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  color: var(--sz-burgundy);
-  text-decoration: none;
-}
-.explore-link:hover {
-  text-decoration: underline;
-}
-
 /* Compact one-screen home layout */
 .home-compact .home-title {
   margin-bottom: 0.25rem;
@@ -546,15 +539,27 @@ h1, h2, h3, h4 {
 .home-groups {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 0 2.5rem;
+  gap: 1.25rem;
   align-items: start;
+}
+.home-groups .category-section {
+  background: var(--sz-white);
+  border: 1px solid var(--sz-border);
+  border-radius: 4px;
+  padding: 0.85rem 1rem 0.6rem;
+  margin-bottom: 0;
 }
 .home-groups .section-heading {
   font-size: 0.9375rem;
-  margin: 0.9rem 0 0.15rem;
+  color: var(--sz-gold-dark);
+  margin: 0 0 0.35rem;
 }
 .home-groups .category-row-header {
   padding: 0.3rem 0.25rem;
+}
+/* The rows already sit on white inside the card. */
+.home-groups .category-row-header:hover {
+  background: var(--sz-cream);
 }
 /* --- Results --- */
 .results-header {
@@ -1383,7 +1388,7 @@ h1, h2, h3, h4 {
   margin: 0 auto;
   padding: 2rem 1.5rem;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
 }
 
@@ -1472,74 +1477,29 @@ h1, h2, h3, h4 {
   to { transform: rotate(360deg); }
 }
 
-/* --- Nav Dropdown --- */
-.nav-dropdown {
-  position: relative;
-}
-
-.nav-dropdown-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: rgba(250, 248, 243, 0.75);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 0.25rem 0;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-}
-.nav-dropdown-toggle:hover,
-.nav-dropdown.open .nav-dropdown-toggle {
-  color: var(--sz-cream);
-  border-bottom-color: var(--sz-gold);
-}
-.nav-dropdown-toggle svg {
-  transition: transform 0.2s;
-}
-.nav-dropdown.open .nav-dropdown-toggle svg {
-  transform: rotate(180deg);
-}
-
-.nav-dropdown-menu {
-  display: none;
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  background: var(--sz-burgundy-dark);
-  border-radius: 0 0 4px 4px;
-  padding: 0.375rem 0;
-  min-width: 170px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  z-index: 31;
-}
-.nav-dropdown.open .nav-dropdown-menu {
-  display: block;
-}
-.nav-dropdown-menu a {
-  display: block;
-  padding: 0.5rem 1rem;
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: rgba(250, 248, 243, 0.75);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  transition: color 0.15s, background 0.15s;
-}
-.nav-dropdown-menu a:hover {
-  color: var(--sz-cream);
-  background: rgba(250, 248, 243, 0.08);
-  text-decoration: none;
-}
-
 /* --- Static Page Content --- */
+.page-anchors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0.6rem 0 0.9rem;
+  border-bottom: 1px solid var(--sz-border);
+  margin-bottom: 1rem;
+}
+.page-anchors a {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--sz-burgundy);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.page-anchors a:hover {
+  border-bottom-color: var(--sz-burgundy);
+}
+
+
 .page-content {
   max-width: 720px;
   padding-bottom: 2rem;
@@ -1559,7 +1519,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-serif);
   font-size: 1.25rem;
   font-weight: 400;
-  color: var(--sz-gold);
+  color: var(--sz-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin: 2.5rem 0 0.75rem;
@@ -2312,8 +2272,7 @@ body.edit-mode .meta-table {
 }
 
 @media (max-width: 640px) {
-  .site-nav,
-  .nav-dropdown {
+  .site-nav {
     display: none;
   }
   .header-search {

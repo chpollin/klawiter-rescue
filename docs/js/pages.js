@@ -1,728 +1,520 @@
 /**
- * Static content pages — About, Methodology, Help, Data, Imprint.
+ * Static content pages — About (project, methodology, help, imprint) and
+ * Data (model, specification, downloads, playground, quality pointer).
  * Each method returns an HTML string rendered into #view-page.
+ *
+ * Counts come from App.data._meta so the prose cannot drift away from the
+ * shipped dataset. The document title is set by App._updateTitle alone.
  */
 const Pages = {
 
   render(slug) {
     const container = document.getElementById('view-page');
     const renderer = this[slug];
-    if (renderer) {
-      container.innerHTML = renderer.call(this);
-      window.scrollTo(0, 0);
-    }
-    document.title = this.titles[slug] || 'Klawiter Bibliography';
+    if (!renderer) return;
+    container.innerHTML = renderer.call(this);
+    window.scrollTo(0, 0);
   },
 
-  titles: {
-    about: 'About — Klawiter Bibliography',
-    methodology: 'Methodology — Klawiter Bibliography',
-    help: 'Help — Klawiter Bibliography',
-    data: 'Data Access — Klawiter Bibliography',
-    jsonld: 'JSON-LD Playground — Klawiter Bibliography',
-    imprint: 'Imprint — Klawiter Bibliography',
+  // --- Shared helpers ---------------------------------------------------
+
+  _meta() {
+    return (App.data && App.data._meta) || {};
+  },
+
+  _num(value) {
+    return typeof value === 'number' ? value.toLocaleString('en') : '—';
+  },
+
+  /** Coverage percentage of a field, from the shipped baseline. */
+  _cov(field) {
+    const cov = this._meta().fieldCoverage || {};
+    return cov[field] ? `${cov[field].pct}%` : '—';
+  },
+
+  _typeCount() {
+    const types = this._meta().entryTypes;
+    return types ? Object.keys(types).length : Object.keys(ENTRY_TYPE_LABELS).length;
+  },
+
+  _yearRange() {
+    const r = this._meta().yearRange;
+    return r ? `${r.min}–${r.max}` : '';
+  },
+
+  /** In-page anchor navigation; hrefs are real routes ('#about/help'). */
+  _anchorNav(slug, items) {
+    const links = items.map(([id, label]) =>
+      `<a href="#${slug}${id ? '/' + id : ''}">${esc(label)}</a>`).join('');
+    return `<nav class="page-anchors" aria-label="Sections">${links}</nav>`;
   },
 
   // ---------------------------------------------------------------------------
-  // About
+  // About — project, methodology, help, imprint in one page
   // ---------------------------------------------------------------------------
   about() {
+    const m = this._meta();
+    const entries = this._num(m.ns0Count);
     return `<div class="page-content">
-      <h1>About the Klawiter Bibliography</h1>
+      <h1>About</h1>
+      ${this._anchorNav('about', [
+        ['', 'About the project'],
+        ['methodology', 'Methodology'],
+        ['help', 'Help'],
+        ['imprint', 'Imprint'],
+      ])}
 
-      <p>
-        The Klawiter Bibliography is one of the most comprehensive reference works
-        on Stefan Zweig (1881&ndash;1942). It documents ${App.data._meta.ns0Count.toLocaleString('en')}
-        bibliographic records of publications by and about the Austrian author &mdash;
-        spanning fiction, essays, poetry, drama, correspondence, secondary literature,
-        translations, and collected editions in more than 40 languages.
-      </p>
+      <section id="sec-about">
+        <h2>About the project</h2>
+        <p>
+          The Klawiter Bibliography is one of the most comprehensive reference
+          works on Stefan Zweig (1881&ndash;1942). It holds ${entries}
+          bibliographic records of publications by and about the Austrian author,
+          covering fiction, essays, poetry, drama, correspondence, secondary
+          literature, translations and collected editions in
+          ${this._num(m.languageCount)} languages
+          (${this._yearRange()}).
+        </p>
+        <p>
+          It was compiled by Dr. Randolph J. Klawiter, Professor Emeritus of
+          German at the University of Notre Dame (Indiana, USA), over several
+          decades, and published online as a MediaWiki instance. That wiki held
+          6,725 pages: the bibliography entries republished here, 1,546 redirect
+          pages for cross-references and title variants, and a few hundred
+          category descriptions.
+        </p>
+        <p>
+          When the hosting infrastructure was discontinued, the wiki went
+          offline. An SQL database dump and eight binary content files survived
+          as the sole remaining record in digital form. This site is the result
+          of the rescue: the raw files were parsed, cleaned and transformed into
+          a structured dataset that is both readable and machine-processable.
+          How that was done is described under
+          <a href="#about/methodology">Methodology</a>; the published files and
+          the vocabulary are documented on the <a href="#data">Data</a> page.
+        </p>
+        <p>
+          The project is connected to
+          <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>,
+          a research initiative at the Stefan Zweig Centre Salzburg providing
+          digital access to Zweig&rsquo;s literary estate. The bibliography
+          complements that collection by documenting the publication history the
+          estate materials produced, and the visual design follows the Stefan
+          Zweig Digital design language to signal the affiliation.
+        </p>
+      </section>
 
-      <h2>The Compiler</h2>
-      <p>
-        The bibliography was compiled by Dr. Randolph J. Klawiter, Professor Emeritus
-        of German at the University of Notre Dame (Indiana, USA). Over the course of
-        several decades, Klawiter assembled a systematic record of Zweig&rsquo;s published
-        works and the scholarly literature about them. The result is a reference work
-        that covers Zweig&rsquo;s entire publishing history from the earliest editions
-        to contemporary reprints and translations.
-      </p>
+      <section id="sec-methodology">
+        <h2>Methodology</h2>
+        <p>
+          The source material is a MediaWiki SQL database dump and eight binary
+          content files holding the full content of the original wiki. The
+          database stores content in a four-layer chain
+          (page &rarr; revision &rarr; slot &rarr; content &rarr; text ID in a
+          BLOB file); the pipeline resolves that chain per page and takes the
+          latest revision. It is written in Python and needs no database server.
+        </p>
+        <ol>
+          <li>
+            <strong>Extract</strong> &mdash; parse the SQL INSERT statements and
+            the BLOB files directly and retrieve the latest text of every
+            main-namespace page.
+          </li>
+          <li>
+            <strong>Fix encoding</strong> &mdash; detect and repair Mojibake
+            (character corruption from Latin-1/UTF-8 misinterpretation), which
+            brings the measured Mojibake rate to zero.
+          </li>
+          <li>
+            <strong>Parse</strong> &mdash; extract title, year, publisher,
+            location, language, translator, page count, categories,
+            cross-references, reprints and table-of-contents items from the wiki
+            markup with regular expressions.
+          </li>
+          <li>
+            <strong>LLM enrichment</strong> &mdash; fill remaining gaps in
+            publisher, location, translator and page count with
+            <code>gemini-3.1-flash-lite-preview</code>, replayed from a frozen
+            cache; the production run makes no network calls. Every derived
+            value passes a Mojibake validation filter and is marked as
+            model-derived in the provenance layer.
+          </li>
+          <li>
+            <strong>Classify</strong> &mdash; assign each entry one of
+            ${this._typeCount()} entry types from its wiki categories and one of
+            five time periods from its publication year.
+          </li>
+          <li>
+            <strong>Convert</strong> &mdash; emit the canonical JSON-LD graphs
+            and the flat frontend projection this site loads.
+          </li>
+          <li>
+            <strong>Validate</strong> &mdash; produce a quality report with
+            field coverage, distributions and the entries carrying open signals.
+          </li>
+        </ol>
+        <p>
+          Quality assurance runs as an automated suite over encoding repair,
+          regex patterns, markup parsing, classification and real-data
+          extraction, plus SHACL contracts over both published graphs. A
+          round-trip verification compares the final output against the original
+          wiki text for every entry, a source census proves that every wiki page
+          reaches the published data, and an LLM-as-a-judge evaluation assesses
+          extraction quality on a stratified sample.
+        </p>
+        <h3>Known limitations</h3>
+        <p>
+          Field coverage in the shipped dataset: year ${this._cov('year')},
+          location ${this._cov('location')}, language ${this._cov('language')},
+          page count ${this._cov('pageCount')}, publisher
+          ${this._cov('publisher')}, translator ${this._cov('translator')}. In
+          most cases the missing value is genuinely absent from the source text
+          rather than missed by the extraction; shorter entries and journal
+          articles often name no publisher, and German-language originals name
+          no translator.
+        </p>
+        <ul>
+          <li>
+            One entry (page ID 2979, &ldquo;A unidade espiritual do
+            mundo&rdquo;) could not be extracted because its text is present in
+            none of the BLOB files.
+          </li>
+          <li>
+            Some cross-references point to titles that no entry and no redirect
+            carries. They remain unresolvable red links and are listed
+            individually in the <a href="#quality">Data Quality</a> workbench.
+          </li>
+          <li>
+            The flat entry layer cannot fully separate edition-specific fields
+            on pages that describe several editions. The edition graph is
+            authoritative for those cases.
+          </li>
+        </ul>
+      </section>
 
-      <h2>The Original Wiki</h2>
-      <p>
-        Klawiter&rsquo;s bibliography was made available online as a MediaWiki instance,
-        allowing researchers to browse the entries by category and search across the
-        full dataset. Over time, the wiki accumulated 6,725 pages, including 6,296
-        bibliography entries, 1,546 redirect pages (cross-references and title
-        variants), and 420 category descriptions.
-      </p>
-      <p>
-        When the hosting infrastructure was discontinued, the wiki went offline.
-        The underlying data &mdash; an SQL database dump and eight binary content files
-        totalling 363&nbsp;MB &mdash; survived as the sole remaining record of the
-        bibliography in digital form.
-      </p>
+      <section id="sec-help">
+        <h2>Help</h2>
+        <p>
+          All files are static; there is no server-side processing. Search,
+          filtering and export run in the browser.
+        </p>
+        <h3>Search, browse, filter</h3>
+        <p>
+          The search field in the header and on the start page searches titles,
+          publishers, locations, languages, translators and the full
+          bibliographic text through a client-side index with prefix matching,
+          so <em>Schach</em> matches <em>Schachnovelle</em>. The start page
+          lists the entry types as groups; a click opens all entries of a type.
+          In the result view the sidebar filters by type, language, period and
+          location; filters combine with each other and with a query, appear as
+          chips above the results and are removed individually. On small screens
+          the filter button in the lower right opens the same panel. Results
+          sort by relevance, year or title.
+        </p>
+        <h3>Entry details and export</h3>
+        <p>
+          A click on a result card expands it to the structured metadata, the
+          original Klawiter entry, reprints, translations, table of contents and
+          cross-references. From there an entry exports as BibTeX or RIS for
+          reference managers, as JSON-LD for Linked Data workflows, or as a
+          permalink of the form <code>#entry=&lt;pageId&gt;</code>. The result
+          header exports the whole filtered set as one BibTeX file, which is the
+          quickest way to build a working bibliography: filter to the subset,
+          then import the file in Zotero through
+          <strong>File &rarr; Import&hellip;</strong>. The full dataset is on the
+          <a href="#data">Data</a> page.
+        </p>
+        <h3>Explore and data quality</h3>
+        <p>
+          <a href="#stats">Explore</a> offers a timeline, a geographic view and a
+          Connections view with a ranked list of the most-referenced entries and
+          a translator flow diagram. <a href="#quality">Data Quality</a> shows
+          the processing state: field completeness per entry type, open review
+          queues, unresolvable cross-references and the authority candidate
+          queue for translators and publishers. Every list opens the affected
+          entries directly.
+        </p>
+        <h3>Reporting an error</h3>
+        <p>
+          Please open an issue in the
+          <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub repository</a>
+          with the entry title or page ID and a description of the problem.
+        </p>
+      </section>
 
-      <h2>The Rescue Project</h2>
-      <p>
-        This digital edition is the result of a data rescue effort: the raw database
-        files were parsed, cleaned, and transformed into structured
-        <a href="#data">JSON-LD</a> using a custom extraction pipeline. The goal
-        was to make the Klawiter Bibliography openly accessible again, in a format
-        that is both human-readable and machine-processable.
-      </p>
-      <p>
-        The pipeline extracts structured metadata (title, year, publisher, location,
-        language, translator, page count) from the wiki markup of each entry, repairs
-        character encoding errors, classifies entries into 16 types and 5 time periods,
-        and produces a JSON-LD dataset with a vocabulary based on Schema.org, Dublin Core,
-        and a domain-specific extension namespace.
-      </p>
-      <p>
-        For a detailed description of the extraction process, see the
-        <a href="#methodology">Methodology</a> page.
-      </p>
-
-      <h2>Stefan Zweig Digital</h2>
-      <p>
-        This project is connected to
-        <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>,
-        a research initiative at the Stefan Zweig Centre Salzburg that provides
-        digital access to Zweig&rsquo;s literary estate (Nachlass). The Klawiter
-        Bibliography complements the SZD collection by documenting the publication
-        history that the Nachlass materials produced.
-      </p>
-      <p>
-        The visual design of this site follows the SZD design language to signal
-        its affiliation with the broader Zweig research ecosystem.
-      </p>
+      <section id="sec-imprint">
+        <h2>Imprint</h2>
+        <p>
+          This digital edition preserves and reopens the Stefan Zweig
+          bibliography compiled by Dr. Randolph J. Klawiter. It is a scholarly
+          resource for academic research and non-commercial use.
+        </p>
+        <ul>
+          <li>
+            <strong>Bibliography</strong> &mdash; Dr. Randolph J. Klawiter,
+            Professor Emeritus of German, University of Notre Dame, Indiana, USA
+          </li>
+          <li>
+            <strong>Stefan Zweig Centre Salzburg</strong> &mdash; institutional
+            context and connection to the
+            <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>
+            research infrastructure
+          </li>
+          <li>
+            <strong>Digital edition</strong> &mdash; data extraction pipeline,
+            frontend development and publication
+          </li>
+        </ul>
+        <h3>Citation</h3>
+        <p>
+          When referencing this resource in academic publications, please use:
+        </p>
+        <blockquote>
+          Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
+          Bibliography.</em> Digital edition, 2026.
+          URL: <code>https://chpollin.github.io/klawiter-rescue/</code>
+        </blockquote>
+        <p>
+          To cite a single entry, use its permalink
+          (e.g. <code>https://chpollin.github.io/klawiter-rescue/#entry=3</code>).
+        </p>
+        <h3>License and contact</h3>
+        <p>
+          The bibliographic dataset and the documentation are licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>,
+          the source code of the extraction pipeline and this website under the
+          MIT License. Source code, pipeline and documentation are in the
+          <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub repository</a>;
+          questions, corrections and collaboration inquiries go to its
+          <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">issue tracker</a>.
+        </p>
+      </section>
     </div>`;
   },
 
   // ---------------------------------------------------------------------------
-  // Methodology
-  // ---------------------------------------------------------------------------
-  methodology() {
-    return `<div class="page-content">
-      <h1>Methodology</h1>
-
-      <p>
-        This page documents how the digital edition was produced from the raw
-        database files. Transparency about the extraction process, its tools, and
-        its limitations is essential for assessing the reliability of the data.
-      </p>
-
-      <h2>Source Data</h2>
-      <p>
-        The source material consists of a MediaWiki SQL database dump
-        (<code>zweig_part_01.sql</code>, 33&nbsp;MB) and eight binary content files
-        (<code>zt_00</code> to <code>zt_07</code>, 363&nbsp;MB combined). Together,
-        they contain the full content of the original Klawiter wiki: 6,725 pages
-        with 53,016 text revisions.
-      </p>
-      <p>
-        The database stores content in a four-layer chain
-        (page &rarr; revision &rarr; slot &rarr; content &rarr; text ID in BLOB file).
-        The pipeline resolves this chain for each page and retrieves the latest
-        revision of each entry.
-      </p>
-
-      <h2>Extraction Pipeline</h2>
-      <p>
-        The pipeline is implemented in Python and runs without external database
-        software. It processes the raw files in seven steps:
-      </p>
-      <ol>
-        <li>
-          <strong>Extract</strong> &mdash;
-          Parse SQL INSERT statements and binary BLOB files directly. Resolve the
-          page&ndash;revision&ndash;slot&ndash;content chain to retrieve the latest
-          text for each of the 6,296 main-namespace pages.
-        </li>
-        <li>
-          <strong>Fix Encoding</strong> &mdash;
-          Detect and repair Mojibake (character encoding errors caused by
-          Latin-1/UTF-8 misinterpretation). This step corrected 61% of all entries
-          and reduced the Mojibake rate to zero.
-        </li>
-        <li>
-          <strong>Parse</strong> &mdash;
-          Extract structured metadata from MediaWiki markup using regular expressions:
-          title, year, publisher, location, language, translator, page count,
-          categories, cross-references, reprints, and table-of-contents items.
-        </li>
-        <li>
-          <strong>LLM Enrichment</strong> (optional) &mdash;
-          Fill gaps in publisher, location, translator, and page count fields using
-          a large language model (Gemini 3.1 Flash Lite). The model reads the
-          bibliographic text and extracts metadata that the regex patterns missed.
-          All LLM-generated values pass a Mojibake validation filter.
-        </li>
-        <li>
-          <strong>Classify</strong> &mdash;
-          Assign each entry one of 16 types (fiction, essay, poetry, drama, etc.)
-          based on its MediaWiki categories, and one of 5 time periods based on
-          the publication year.
-        </li>
-        <li>
-          <strong>Convert to JSON-LD</strong> &mdash;
-          Transform the tabular data into a JSON-LD document using a vocabulary
-          that blends Schema.org, Dublin Core, and a domain-specific
-          <code>klawiter:</code> namespace.
-        </li>
-        <li>
-          <strong>Validate</strong> &mdash;
-          Generate a quality report with field coverage statistics, distribution
-          analyses, and a list of entries with potential issues.
-        </li>
-      </ol>
-
-      <h2>LLM-Assisted Metadata Extraction</h2>
-      <p>
-        Step 4 of the pipeline uses a large language model to supplement the
-        regex-based extraction. This step is optional; the pipeline produces valid
-        output without it, but with lower field coverage.
-      </p>
-      <p>
-        The LLM processes entries in batches, receiving the raw bibliographic text
-        and returning structured JSON with publisher, location, translator, and
-        page count fields. A validation layer rejects values that contain Mojibake
-        characters or other encoding artifacts. The enrichment improved coverage as
-        follows:
-      </p>
-      <table class="page-table">
-        <thead>
-          <tr><th>Field</th><th>Before (regex only)</th><th>After (regex + LLM)</th><th>Improvement</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Publisher</td><td>34.5%</td><td>55.6%</td><td>+21.1 pp.</td></tr>
-          <tr><td>Location</td><td>67.8%</td><td>87.5%</td><td>+19.7 pp.</td></tr>
-          <tr><td>Translator</td><td>35.1%</td><td>41.9%</td><td>+6.8 pp.</td></tr>
-          <tr><td>Page count</td><td>51.0%</td><td>54.1%</td><td>+3.1 pp.</td></tr>
-        </tbody>
-      </table>
-
-      <h2>Quality Assurance</h2>
-      <p>
-        The pipeline is validated by an automated test suite covering
-        encoding repair, regex patterns, wiki markup parsing, entry classification,
-        and real-data extraction, plus SHACL contracts over both published
-        graphs. Additionally, a round-trip verification script compares the
-        final JSON-LD output against the original wiki content for every entry,
-        and a source census proves that every wiki page reaches the published
-        data.
-      </p>
-      <p>
-        An LLM-as-a-Judge evaluation uses a language model to assess extraction
-        quality on a stratified sample of entries, identifying both false positives
-        (incorrectly extracted values) and false negatives (missed information).
-      </p>
-
-      <h2>Known Limitations</h2>
-      <p>
-        The dataset has the following known coverage gaps. In many cases, the
-        missing information is genuinely absent from the source text, not a
-        failure of extraction.
-      </p>
-      <ul>
-        <li>
-          <strong>Publisher</strong> (55.6% coverage): Many entries in the original
-          bibliography do not include publisher information, particularly shorter
-          entries and journal articles.
-        </li>
-        <li>
-          <strong>Translator</strong> (41.9% coverage): A large portion of entries
-          are German-language originals or editions that do not name a translator.
-        </li>
-        <li>
-          <strong>Location</strong> (87.5% coverage): Good coverage overall.
-          Remaining gaps are mostly entries without publication location in the
-          source text.
-        </li>
-        <li>
-          <strong>Year</strong> (93.2% coverage): A small number of entries lack
-          a publication year in the source data.
-        </li>
-        <li>
-          One entry (page ID 2979, &ldquo;A unidade espiritual do mundo&rdquo;) could
-          not be extracted because its text content is not present in any of the
-          BLOB files.
-        </li>
-        <li>
-          Approximately 20% of redirect entries (314 of 1,545) cannot be resolved
-          because the target title does not exactly match an existing entry.
-        </li>
-      </ul>
-
-      <h2>Data Model</h2>
-      <p>
-        Each bibliography entry is represented as a JSON-LD node with a type drawn
-        from a controlled vocabulary of 16 entry types (fiction, essay, poetry, drama,
-        correspondence, historical study, secondary literature, collected works,
-        foreword, translation, film/opera, symposium, dramatic reading, newspaper
-        article, other). The vocabulary is documented at
-        <a href="vocab/index.html">the namespace resolution page</a>.
-      </p>
-      <p>
-        For full details on the data format, fields, and download options, see the
-        <a href="#data">Data Access</a> page.
-      </p>
-    </div>`;
-  },
-
-  // ---------------------------------------------------------------------------
-  // Help
-  // ---------------------------------------------------------------------------
-  help() {
-    return `<div class="page-content">
-      <h1>How to Use This Site</h1>
-
-      <p>
-        This site provides access to the Klawiter Bibliography through search,
-        filtering, and export functions. All data is loaded client-side; no
-        server requests are needed after the initial page load.
-      </p>
-
-      <h2>Searching</h2>
-      <p>
-        Use the search field in the header or on the home page to search across
-        all entry fields: titles, publishers, locations, languages, translators,
-        and the full bibliographic text. Search results are ranked by relevance.
-      </p>
-      <p>
-        The search uses a client-side full-text index (FlexSearch) that supports
-        prefix matching. Typing <em>Schach</em> will match entries containing
-        <em>Schachnovelle</em>, <em>Schachspieler</em>, etc.
-      </p>
-
-      <h2>Browsing by Category</h2>
-      <p>
-        The <a href="#">home page</a> displays entry types as tiles, grouped
-        into Works, Reception &amp; Impact, and Editions. Click any tile to
-        see all entries of that type. The number on each tile indicates how many
-        entries belong to that category.
-      </p>
-
-      <h2>Filtering</h2>
-      <p>
-        In the results view, the sidebar offers faceted filters for:
-      </p>
-      <ul>
-        <li><strong>Type</strong> &mdash; Entry type (fiction, essay, secondary literature, etc.)</li>
-        <li><strong>Language</strong> &mdash; Publication language</li>
-        <li><strong>Period</strong> &mdash; Time period (pre-Zweig, lifetime, post-WWII, late 20th century, contemporary)</li>
-        <li><strong>Location</strong> &mdash; Publication location</li>
-      </ul>
-      <p>
-        Filters can be combined with each other and with a search query. Active
-        filters appear as chips above the results and can be removed individually
-        by clicking the &times; button.
-      </p>
-      <p>
-        On mobile devices, filters are accessible via the filter button in the
-        bottom-right corner of the screen.
-      </p>
-
-      <h2>Sorting</h2>
-      <p>
-        Results can be sorted by relevance (default for search queries), year
-        (ascending or descending), or title (alphabetical). Use the sort dropdown
-        in the results header.
-      </p>
-
-      <h2>Entry Details</h2>
-      <p>
-        Click any result card to expand it and see the full entry details:
-      </p>
-      <ul>
-        <li>Structured metadata (title, year, publisher, location, language, translator, page count)</li>
-        <li>Full bibliographic entry as recorded in the original Klawiter wiki</li>
-        <li>Reprints and later editions (where available)</li>
-        <li>Translations (where available)</li>
-        <li>Table of contents for anthologies and collected works</li>
-        <li>Cross-references to related entries (&ldquo;See also&rdquo;)</li>
-      </ul>
-
-      <h2>Exporting</h2>
-      <p>
-        Several export options are available from the expanded entry view:
-      </p>
-      <ul>
-        <li>
-          <strong>BibTeX</strong> &mdash; Export a single entry or all filtered results
-          as a <code>.bib</code> file for use in reference managers.
-        </li>
-        <li>
-          <strong>RIS</strong> &mdash; Export a single entry in RIS format, compatible
-          with EndNote, Mendeley, and other reference management software.
-        </li>
-        <li>
-          <strong>JSON-LD</strong> &mdash; Download the structured data for a single
-          entry in JSON-LD format for use in Linked Data workflows.
-        </li>
-        <li>
-          <strong>Permalink</strong> &mdash; Copy a stable URL for any entry to your
-          clipboard. Permalinks use the format <code>#entry=&lt;pageId&gt;</code>
-          and remain valid as long as this site is hosted.
-        </li>
-      </ul>
-      <p>
-        For the full dataset download, see the <a href="#data">Data Access</a> page
-        or the <a href="#stats">Statistics</a> page.
-      </p>
-
-      <h2>Exploring and Data Quality</h2>
-      <p>
-        The <a href="#stats">Explore</a> view offers a timeline, a geographic
-        view, and a Connections view: a ranked list of the most-referenced
-        entries (expand a row for the citing entries) and a translator flow
-        diagram. The <a href="#quality">Data Quality</a> page shows the
-        processing state of the dataset: field completeness by entry type,
-        open review queues, unresolved cross-references, and the authority
-        candidate queue for translators and publishers. Every list opens the
-        affected entries directly.
-      </p>
-
-      <h2>Using with Zotero</h2>
-      <p>
-        The BibTeX and RIS export formats are directly compatible with
-        <a href="https://www.zotero.org/" target="_blank" rel="noopener">Zotero</a>
-        and other reference managers. To import entries into your Zotero library:
-      </p>
-      <ol>
-        <li>
-          <strong>Single entry:</strong> Expand an entry card, click
-          <em>Export BibTeX</em> or <em>Export RIS</em>. A file will be downloaded.
-        </li>
-        <li>
-          <strong>Multiple entries:</strong> Filter the results to the set you need
-          (e.g. all Fiction in French), then click <em>Export BibTeX</em> in the
-          results header to download all filtered entries as one file.
-        </li>
-        <li>
-          In Zotero, go to <strong>File &rarr; Import&hellip;</strong> and select the
-          downloaded <code>.bib</code> or <code>.ris</code> file.
-        </li>
-        <li>
-          Zotero will create entries with title, author, year, publisher, location,
-          language, and page count pre-filled.
-        </li>
-      </ol>
-      <p>
-        <strong>Tip:</strong> The batch BibTeX export is particularly useful for
-        building a Zweig research bibliography. Use the type and language filters
-        to select a coherent subset, then export everything at once.
-      </p>
-
-      <h2>Frequently Asked Questions</h2>
-
-      <h3>Why are some fields missing for certain entries?</h3>
-      <p>
-        Not all entries in the original bibliography include complete metadata.
-        Many shorter entries or journal articles do not specify a publisher or
-        location. German-language originals typically do not name a translator.
-        The coverage rates are documented on the <a href="#methodology">Methodology</a> page.
-      </p>
-
-      <h3>Can I download the entire dataset?</h3>
-      <p>
-        Yes. The full dataset is available as a JSON-LD file from the
-        <a href="#data">Data Access</a> page or via the download button on the
-        <a href="#stats">Statistics</a> page.
-      </p>
-
-      <h3>How should I cite this resource?</h3>
-      <p>
-        Citation recommendations are provided on the <a href="#imprint">Imprint</a> page.
-      </p>
-
-      <h3>I found an error. How can I report it?</h3>
-      <p>
-        Please open an issue on the
-        <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub repository</a>.
-        Include the entry title or page ID and a description of the problem.
-      </p>
-    </div>`;
-  },
-
-  // ---------------------------------------------------------------------------
-  // Data
+  // Data — model, specification, downloads, playground, quality
   // ---------------------------------------------------------------------------
   data() {
-    const entryCount = App.entries ? App.entries.length.toLocaleString('en') : '4,700+';
-    return `<div class="page-content">
-      <h1>Data Access &amp; Reuse</h1>
-
-      <p>
-        The Klawiter Bibliography dataset is available for download in structured
-        formats. It is intended for use in scholarly research, digital humanities
-        projects, and library cataloguing.
-      </p>
-
-      <h2>Dataset Download</h2>
-      <p>
-        The complete dataset contains ${entryCount} bibliography entries with
-        structured metadata in JSON-LD format.
-      </p>
-      <div class="page-actions">
-        <button class="action-btn page-download-btn" onclick="Export.fullDataset()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Download Full Dataset (JSON-LD)
-        </button>
-      </div>
-
-      <h2>Data Format</h2>
-      <p>
-        Each entry is a JSON-LD node with the following core fields:
-      </p>
-      <table class="page-table">
-        <thead>
-          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>title</code></td><td>String</td><td>Work title (cleaned of wiki markup)</td></tr>
-          <tr><td><code>year</code></td><td>Integer</td><td>Publication year</td></tr>
-          <tr><td><code>publisher</code></td><td>String</td><td>Publisher name</td></tr>
-          <tr><td><code>location</code></td><td>String</td><td>Publication location</td></tr>
-          <tr><td><code>language</code></td><td>String</td><td>Language (English name)</td></tr>
-          <tr><td><code>languageCode</code></td><td>String</td><td>ISO 639-1 code</td></tr>
-          <tr><td><code>translator</code></td><td>String</td><td>Translator name</td></tr>
-          <tr><td><code>pageCount</code></td><td>Integer</td><td>Number of pages</td></tr>
-          <tr><td><code>entryType</code></td><td>String</td><td>One of 16 entry types</td></tr>
-          <tr><td><code>timePeriod</code></td><td>String</td><td>Historical period classification</td></tr>
-          <tr><td><code>categories</code></td><td>Array</td><td>MediaWiki categories</td></tr>
-          <tr><td><code>fullBibliographicEntry</code></td><td>String</td><td>Original text from the wiki</td></tr>
-        </tbody>
-      </table>
-      <p>
-        Additional fields include <code>reprints</code>, <code>translations</code>,
-        <code>contentItems</code> (table of contents), <code>seeAlso</code>
-        (cross-references), and provenance fields (<code>sourcePageId</code>,
-        <code>sourceTextId</code>).
-      </p>
-
-      <h2>Vocabulary</h2>
-      <p>
-        The JSON-LD context uses a blend of established vocabularies and a
-        domain-specific namespace:
-      </p>
-      <ul>
-        <li><strong>Schema.org</strong> &mdash; Standard bibliographic properties (name, datePublished, publisher, inLanguage)</li>
-        <li><strong>Dublin Core</strong> &mdash; Provenance and identifier fields (source, identifier)</li>
-        <li><strong><code>klawiter:</code></strong> &mdash; Domain-specific types and fields for the Zweig bibliography</li>
-      </ul>
-      <p>
-        The <code>klawiter:</code> namespace resolves to
-        <a href="vocab/index.html">the vocabulary documentation</a>.
-      </p>
-
-      <h2>Direct Access</h2>
-      <p>
-        The frontend data file can be accessed directly at
-        <a href="data/klawiter.json"><code>data/klawiter.json</code></a>.
-        This is a single JSON file containing all entries and the redirect map.
-        The file is approximately 9&nbsp;MB.
-      </p>
-
-      <h2>License</h2>
-      <p>
-        The bibliographic dataset and the documentation are licensed under
-        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>;
-        the source code of the extraction pipeline and this website is
-        licensed under the MIT License. Both are available on
-        <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub</a>.
-      </p>
-
-      <h2>Citation</h2>
-      <p>
-        When citing the dataset, please credit both the original compiler and
-        this digital edition:
-      </p>
-      <blockquote>
-        Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
-        Bibliography.</em> Digital edition, 2026.
-        Available at: <code>https://chpollin.github.io/klawiter-rescue/</code>
-      </blockquote>
-    </div>`;
-  },
-
-  // ---------------------------------------------------------------------------
-  // JSON-LD Playground
-  // ---------------------------------------------------------------------------
-  jsonld() {
-    // Render HTML first, then init interactive parts after DOM update
+    // The playground binds its own controls once the markup is in the DOM.
     setTimeout(() => JsonldPlayground.init(), 0);
 
+    const gh = 'https://github.com/chpollin/klawiter-rescue/blob/main';
     return `<div class="page-content page-content-wide">
-      <h1>JSON-LD Playground</h1>
+      <h1>Data</h1>
+      ${this._anchorNav('data', [
+        ['', 'The data model'],
+        ['spec', 'Specification & vocabulary'],
+        ['downloads', 'Downloads'],
+        ['playground', 'JSON-LD Playground'],
+        ['quality', 'Data quality'],
+      ])}
 
-      <p>
-        Explore the Linked Data structure of the Klawiter Bibliography. Each entry
-        is a JSON-LD node combining
-        <a href="https://schema.org" target="_blank" rel="noopener">Schema.org</a>,
-        <a href="http://purl.org/dc/terms/" target="_blank" rel="noopener">Dublin Core</a>,
-        and the domain-specific
-        <a href="vocab/index.html"><code>klawiter:</code> namespace</a>.
-      </p>
+      <section id="sec-model">
+        <h2>The data model</h2>
+        <p>
+          The dataset has two layers. The <strong>edition graph</strong> is the
+          canonical publication: a work node carries its editions, an edition
+          carries the publication facts of one concrete issue, and an annotation
+          binds each asserted value to the source text slice it comes from.
+          The <strong>flat entry layer</strong> is a declared projection of that
+          graph, one record per wiki page, and it is what this site loads. The
+          projection is lossy by design: where a wiki page describes several
+          editions, the flat record cannot separate their fields, and the
+          edition graph stays authoritative.
+        </p>
+        <p>
+          Cases where the source text supports more than one reading are not
+          silently resolved. A <strong>contested claim</strong> keeps the source
+          value, the competing interpretations, the review history and the open
+          status side by side, and it is exported as such. A candidate that has
+          not been decided never becomes a confirmed authority link in the
+          interface.
+        </p>
+        <p>
+          Every asserted field carries its <strong>provenance</strong>: whether
+          it was read from the markup by a regular expression, derived by the
+          language model, or set by an editor. The interface shows this as an
+          R/L/E badge, and the <a href="#quality">Data Quality</a> workbench
+          lists the model-derived values as their own work queue.
+        </p>
+      </section>
 
-      <h2>Select an Entry</h2>
-      <div class="jsonld-controls">
-        <div class="jsonld-search-wrap">
-          <input type="text" id="jsonld-search" class="jsonld-search"
-                 placeholder="Search by title..." autocomplete="off">
-          <div id="jsonld-suggestions" class="jsonld-suggestions hidden"></div>
+      <section id="sec-spec">
+        <h2>Specification &amp; vocabulary</h2>
+        <p>
+          The <code>klawiter:</code> namespace resolves to
+          <a href="vocab/index.html">the vocabulary documentation</a>, which
+          publishes 91 terms, each with its own resolvable page: the entry type
+          classes, the bibliographic and provenance properties, and the terms of
+          the contested-claim model. Alongside it the entries use
+          <a href="https://schema.org" target="_blank" rel="noopener">Schema.org</a>
+          for standard bibliographic properties and
+          <a href="http://purl.org/dc/terms/" target="_blank" rel="noopener">Dublin Core</a>
+          for the full citation text; the JSON-LD <code>@context</code> maps the
+          short property names onto these IRIs and travels with the canonical
+          graphs.
+        </p>
+        <p>
+          Both published graphs are constrained by SHACL shapes in the
+          repository:
+          <a href="${gh}/data/schema/flat-shapes.ttl" target="_blank" rel="noopener"><code>data/schema/flat-shapes.ttl</code></a>
+          for the flat entry layer and
+          <a href="${gh}/data/schema/work-edition-shapes.ttl" target="_blank" rel="noopener"><code>data/schema/work-edition-shapes.ttl</code></a>
+          for the edition graph. Validation runs as part of the pipeline test
+          suite.
+        </p>
+      </section>
+
+      <section id="sec-downloads">
+        <h2>Downloads</h2>
+        <p>
+          These files are served by this site and can be fetched directly:
+        </p>
+        <table class="page-table">
+          <thead><tr><th>File</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><a href="data/klawiter.json"><code>data/klawiter.json</code></a></td>
+              <td>The flat entry layer this site runs on: all entries, the
+                  redirect map and the coverage baseline in
+                  <code>_meta</code>. Frontend key names, no
+                  <code>@context</code>. About 10&nbsp;MB.</td>
+            </tr>
+            <tr>
+              <td><a href="data/reconciliation.json"><code>data/reconciliation.json</code></a></td>
+              <td>Authority work: location, translator and publisher
+                  candidates with their source occurrences, the decisions taken
+                  so far, and the contested claims left open.</td>
+            </tr>
+            <tr>
+              <td><a href="data/locations.json"><code>data/locations.json</code></a></td>
+              <td>Publication places with their Wikidata reconciliation.</td>
+            </tr>
+            <tr>
+              <td><a href="data/triage.json"><code>data/triage.json</code></a></td>
+              <td>Per-entry review signals: round-trip deviations, census
+                  anomalies, missing or model-derived provenance.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="page-actions">
+          <button class="action-btn page-download-btn" data-page-act="download-dataset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download dataset (JSON)
+          </button>
         </div>
-        <button class="action-btn" id="jsonld-random">Random Entry</button>
-      </div>
+        <p>
+          The button downloads the loaded flat dataset together with the
+          contested edition and authority claims of the current session. It is
+          the frontend projection in frontend key names, not the JSON-LD
+          serialization.
+        </p>
+        <p>
+          The canonical graphs are <strong>not</strong> served by this site;
+          they live in the repository and are reachable through GitHub only:
+        </p>
+        <ul>
+          <li>
+            <a href="${gh}/data/output/klawiter.jsonld" target="_blank" rel="noopener"><code>data/output/klawiter.jsonld</code></a>
+            &mdash; the flat entry layer as JSON-LD, with <code>@context</code>
+          </li>
+          <li>
+            <a href="${gh}/data/output/editions/work-editions.jsonld" target="_blank" rel="noopener"><code>data/output/editions/work-editions.jsonld</code></a>
+            &mdash; the canonical work/edition/annotation graph
+          </li>
+          <li>
+            <a href="https://github.com/chpollin/klawiter-rescue/tree/main/data/output/reconciliation" target="_blank" rel="noopener"><code>data/output/reconciliation/</code></a>
+            &mdash; candidates, decisions, contested claims, provenance and
+            validation reports of the authority work
+          </li>
+        </ul>
+        <p>
+          The dataset is licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>,
+          the code under MIT. The citation recommendation is in the
+          <a href="#about/imprint">Imprint</a>.
+        </p>
+      </section>
 
-      <div id="jsonld-stats" class="jsonld-stats"></div>
+      <section id="sec-playground">
+        <h2>Try it: JSON-LD Playground</h2>
+        <p>
+          Pick an entry and see it as a JSON-LD processor would: compact with
+          the <code>@context</code> applied, expanded with all IRIs resolved,
+          and as the RDF triples a processor extracts.
+        </p>
+        <div class="jsonld-controls">
+          <div class="jsonld-search-wrap">
+            <input type="text" id="jsonld-search" class="jsonld-search"
+                   placeholder="Search by title..." autocomplete="off"
+                   aria-label="Search entries by title">
+            <div id="jsonld-suggestions" class="jsonld-suggestions hidden"></div>
+          </div>
+          <button class="action-btn" id="jsonld-random">Random Entry</button>
+        </div>
 
-      <div class="jsonld-tabs">
-        <button class="jsonld-tab active" data-tab="compact">Compact</button>
-        <button class="jsonld-tab" data-tab="expanded">Expanded</button>
-        <button class="jsonld-tab" data-tab="triples">Triples</button>
-      </div>
+        <div id="jsonld-stats" class="jsonld-stats"></div>
 
-      <div id="jsonld-compact" class="jsonld-panel jsonld-code"></div>
-      <div id="jsonld-expanded" class="jsonld-panel jsonld-code hidden"></div>
-      <div id="jsonld-triples" class="jsonld-panel hidden"></div>
+        <div class="jsonld-tabs">
+          <button class="jsonld-tab active" data-tab="compact">Compact</button>
+          <button class="jsonld-tab" data-tab="expanded">Expanded</button>
+          <button class="jsonld-tab" data-tab="triples">Triples</button>
+        </div>
 
-      <h2>Vocabulary</h2>
-      <table class="page-table">
-        <thead><tr><th>Prefix</th><th>Namespace</th><th>Usage</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><code>schema:</code></td>
-            <td><code>https://schema.org/</code></td>
-            <td>Standard bibliographic properties (name, datePublished, publisher, inLanguage, numberOfPages, translator, locationCreated, author)</td>
-          </tr>
-          <tr>
-            <td><code>dcterms:</code></td>
-            <td><code>http://purl.org/dc/terms/</code></td>
-            <td>Full bibliographic citation text (bibliographicCitation)</td>
-          </tr>
-          <tr>
-            <td><code>klawiter:</code></td>
-            <td><code>chpollin.github.io/klawiter-rescue/vocab/</code></td>
-            <td>Domain-specific: entryType, timePeriod, categories, sourcePageId, and 16 entry type classes</td>
-          </tr>
-          <tr>
-            <td><code>xsd:</code></td>
-            <td><code>w3.org/2001/XMLSchema#</code></td>
-            <td>Typed literals: integer (page counts, IDs), gYear (publication dates)</td>
-          </tr>
-        </tbody>
-      </table>
+        <div id="jsonld-compact" class="jsonld-panel jsonld-code"></div>
+        <div id="jsonld-expanded" class="jsonld-panel jsonld-code hidden"></div>
+        <div id="jsonld-triples" class="jsonld-panel hidden"></div>
 
-      <h2>@context Explained</h2>
-      <p>
-        The <code>@context</code> maps short property names to full IRIs. For example,
-        <code>"name"</code> expands to <code>https://schema.org/name</code>, and
-        <code>"entryType"</code> expands to
-        <code>https://chpollin.github.io/klawiter-rescue/vocab/entryType</code>.
-        This means the same JSON data is both human-readable and machine-processable
-        as RDF.
-      </p>
-      <p>
-        The <strong>Compact</strong> tab shows the entry as a JSON-LD processor would
-        receive it. The <strong>Expanded</strong> tab shows all URIs fully resolved.
-        The <strong>Triples</strong> tab shows the RDF statements a processor would
-        extract.
-      </p>
-      <p>
-        The full dataset (${App.entries ? App.entries.length.toLocaleString('en') : '5,000+'} entries)
-        is available as <a href="data/klawiter.json">JSON</a> (frontend format) and as
-        <a href="https://github.com/chpollin/klawiter-rescue/blob/main/data/output/klawiter.jsonld" target="_blank" rel="noopener">JSON-LD</a>
-        (semantic format with @context).
-      </p>
-    </div>`;
-  },
+        <table class="page-table">
+          <thead><tr><th>Prefix</th><th>Namespace</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>schema:</code></td>
+              <td><code>https://schema.org/</code></td>
+              <td>Standard bibliographic properties (name, datePublished, publisher, inLanguage, numberOfPages, translator, locationCreated, author)</td>
+            </tr>
+            <tr>
+              <td><code>dcterms:</code></td>
+              <td><code>http://purl.org/dc/terms/</code></td>
+              <td>Full bibliographic citation text (bibliographicCitation)</td>
+            </tr>
+            <tr>
+              <td><code>klawiter:</code></td>
+              <td><code>chpollin.github.io/klawiter-rescue/vocab/</code></td>
+              <td>Domain-specific: entryType, timePeriod, categories, sourcePageId, the entry type classes and the contested-claim terms</td>
+            </tr>
+            <tr>
+              <td><code>xsd:</code></td>
+              <td><code>w3.org/2001/XMLSchema#</code></td>
+              <td>Typed literals: integer (page counts, IDs), gYear (publication dates)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-  // ---------------------------------------------------------------------------
-  // Imprint
-  // ---------------------------------------------------------------------------
-  imprint() {
-    return `<div class="page-content">
-      <h1>Imprint</h1>
-
-      <h2>Project</h2>
-      <p>
-        This digital edition of the Klawiter Bibliography was produced as part of
-        a data rescue effort to preserve and make accessible the Stefan Zweig
-        bibliography compiled by Dr. Randolph J. Klawiter. It is a scholarly
-        resource intended for academic research and non-commercial use.
-      </p>
-
-      <h2>Credits</h2>
-      <ul>
-        <li>
-          <strong>Bibliography</strong> &mdash;
-          Dr. Randolph J. Klawiter, Professor Emeritus of German,
-          University of Notre Dame, Indiana, USA
-        </li>
-        <li>
-          <strong>Stefan Zweig Centre Salzburg</strong> &mdash;
-          Institutional context and connection to the
-          <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>
-          research infrastructure
-        </li>
-        <li>
-          <strong>Digital Edition</strong> &mdash;
-          Data extraction pipeline, frontend development, and publication
-        </li>
-      </ul>
-
-      <h2>Citation</h2>
-      <p>
-        When referencing this resource in academic publications, please use the
-        following citation:
-      </p>
-      <blockquote>
-        Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
-        Bibliography.</em> Digital edition, 2026.
-        URL: <code>https://chpollin.github.io/klawiter-rescue/</code>
-      </blockquote>
-      <p>
-        To cite a specific entry, use its permalink URL
-        (e.g. <code>https://chpollin.github.io/klawiter-rescue/#entry=3</code>).
-      </p>
-
-      <h2>License</h2>
-      <p>
-        The bibliographic dataset and the documentation are licensed under
-        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>;
-        the source code for the extraction pipeline and this website is
-        licensed under the MIT License.
-      </p>
-      <ul>
-        <li>
-          <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">GitHub Repository</a>
-          &mdash; Source code, pipeline scripts, documentation
-        </li>
-        <li>
-          <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">Issue Tracker</a>
-          &mdash; Report errors or suggest improvements
-        </li>
-      </ul>
-
-      <h2>Contact</h2>
-      <p>
-        For questions, corrections, or collaboration inquiries, please use the
-        <a href="https://github.com/chpollin/klawiter-rescue/issues" target="_blank" rel="noopener">GitHub issue tracker</a>.
-      </p>
-
-      <h2>Technical Information</h2>
-      <p>
-        This site is a static web application deployed on GitHub Pages. It uses
-        no server-side processing; all data is loaded and rendered in the browser.
-        The extraction pipeline is written in Python. The full technical
-        documentation is available in the
-        <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">project repository</a>.
-      </p>
+      <section id="sec-quality">
+        <h2>Data quality</h2>
+        <p>
+          The <a href="#quality">Data Quality</a> workbench answers what is still
+          open in the data: field completeness per entry type, the entries whose
+          values are unverified or model-derived, the unresolvable
+          cross-references and the undecided authority candidates, each list
+          opening the affected entries directly.
+        </p>
+      </section>
     </div>`;
   },
 };
+
+// Delegated actions inside the static pages. Scoped to its own attribute so it
+// cannot collide with the workbench dispatcher on the same container.
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('#view-page [data-page-act]');
+  if (!el) return;
+  if (el.dataset.pageAct === 'download-dataset') Export.fullDataset();
+});

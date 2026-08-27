@@ -142,6 +142,23 @@ const App = {
   },
 
   // --- Routing ---
+  /** Hashes that render into #view-page through Pages.render. */
+  STATIC_PAGES: ['about', 'data'],
+
+  /** Old hashes of the pre-merge layout, mapped to their new section. */
+  LEGACY_ROUTES: {
+    methodology: 'about/methodology',
+    help: 'about/help',
+    imprint: 'about/imprint',
+    jsonld: 'data/playground',
+  },
+
+  /** Scroll a rendered page section into view; the id is set by Pages. */
+  _scrollToSection(section) {
+    const el = document.getElementById(`sec-${section}`);
+    if (el) el.scrollIntoView({ block: 'start' });
+  },
+
   handleRoute() {
     const hash = location.hash.slice(1);
     // Guard: skip if hash unchanged (avoids double-processing from popstate + hashchange)
@@ -150,6 +167,14 @@ const App = {
     const params = new URLSearchParams(hash);
     this.state.browse = false;
 
+    // Legacy deep links from the four-page layout. The pages were merged into
+    // #about and #data; the old hashes stay valid and land on their section.
+    const legacy = this.LEGACY_ROUTES[hash];
+    if (legacy) {
+      location.hash = legacy;
+      return;
+    }
+
     // Data-quality workbench (curation view)
     if (hash === 'quality') {
       this.showView('page');
@@ -157,11 +182,12 @@ const App = {
       return;
     }
 
-    // Static content pages
-    const staticPages = ['about', 'methodology', 'help', 'data', 'jsonld', 'imprint'];
-    if (staticPages.includes(hash)) {
+    // Static content pages, optionally with a section anchor: '#about/help'.
+    const [slug, section] = hash.split('/');
+    if (this.STATIC_PAGES.includes(slug)) {
       this.showView('page');
-      Pages.render(hash);
+      Pages.render(slug);
+      if (section) this._scrollToSection(section);
       return;
     }
 
@@ -366,14 +392,15 @@ const App = {
     if (view !== 'results') chips.innerHTML = '';
 
     // Nav active state
+    const slug = location.hash.slice(1).split('/')[0];
     document.getElementById('nav-home').classList.toggle('active', view === 'home');
     document.getElementById('nav-stats').classList.toggle('active', view === 'stats');
+    document.getElementById('nav-data').classList.toggle('active',
+      view === 'page' && slug === 'data');
     document.getElementById('nav-about').classList.toggle('active',
-      view === 'page' && location.hash === '#about');
+      view === 'page' && slug === 'about');
 
-    // Close dropdown when navigating
-    const dropdown = document.getElementById('nav-more');
-    if (dropdown) dropdown.classList.remove('open');
+    this._updateEditToggleVisibility();
 
     // Update search placeholder
     const input = document.getElementById('search-input');
@@ -383,16 +410,31 @@ const App = {
     this._updateTitle(view);
   },
 
+  // Edit is a card-level action: only the views that actually show entry
+  // cards (or lead straight to them) offer the toggle.
+  EDIT_VIEWS: ['home', 'results'],
+
+  _updateEditToggleVisibility() {
+    const btn = document.getElementById('edit-toggle');
+    if (!btn) return;
+    const slug = location.hash.slice(1).split('/')[0];
+    const usable = this.EDIT_VIEWS.includes(this.state.view)
+      || (this.state.view === 'page' && slug === 'quality');
+    btn.style.display = usable ? '' : 'none';
+  },
+
+  // The single place that sets document.title; Pages must not set it too,
+  // or the two sources drift apart.
   _updateTitle(view) {
-    const base = 'Klawiter Bibliography';
+    const base = 'Klawiter \u2014 Stefan Zweig Bibliography';
     const titles = {
       home: base,
       stats: `Explore \u2014 ${base}`,
     };
     if (titles[view]) { document.title = titles[view]; return; }
     if (view === 'page') {
-      const page = location.hash.slice(1);
-      const labels = { about: 'About', methodology: 'Methodology', help: 'Help', data: 'Data Access', imprint: 'Imprint', quality: 'Data Quality' };
+      const page = location.hash.slice(1).split('/')[0];
+      const labels = { about: 'About', data: 'Data', quality: 'Data Quality' };
       document.title = labels[page] ? `${labels[page]} \u2014 ${base}` : base;
       return;
     }
@@ -650,22 +692,6 @@ const App = {
       location.hash = '';
     });
 
-    // Nav "More" dropdown
-    const dropdownToggle = document.querySelector('#nav-more .nav-dropdown-toggle');
-    if (dropdownToggle) {
-      dropdownToggle.addEventListener('click', (ev) => {
-        ev.stopPropagation();
-        const dropdown = document.getElementById('nav-more');
-        const isOpen = dropdown.classList.toggle('open');
-        dropdownToggle.setAttribute('aria-expanded', isOpen);
-      });
-      document.addEventListener('click', () => {
-        const dropdown = document.getElementById('nav-more');
-        dropdown.classList.remove('open');
-        dropdownToggle.setAttribute('aria-expanded', 'false');
-      });
-    }
-
     // Mobile filter
     document.getElementById('mobile-filter-btn').addEventListener('click', () => {
       document.getElementById('mobile-facets').classList.remove('hidden');
@@ -695,8 +721,9 @@ const App = {
       toggle.className = 'edit-toggle-btn';
       toggle.title = 'Curation mode (available on localhost only): review fields against the source, decide authority candidates, export decisions as a patch file';
       toggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
-      toggle.onclick = () => this.toggleEditMode();
+      toggle.addEventListener('click', () => this.toggleEditMode());
       header.appendChild(toggle);
+      this._updateEditToggleVisibility();
     }
   },
 
@@ -724,7 +751,7 @@ const App = {
     }
   },
 
-  // The "Prüfbedarf" sort exists only while edit mode is on.
+  // The "needs review" sort exists only while edit mode is on.
   _setTriageSortOption(on) {
     const sel = document.getElementById('sort-select');
     if (!sel) return;
