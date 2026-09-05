@@ -4,13 +4,7 @@ Compares current quality-report.json against .github/baseline-metrics.json.
 Fixtures (quality_report, baseline) are defined in conftest.py.
 """
 
-import json
-from pathlib import Path
-
 import pytest
-
-PROJECT_ROOT = Path(__file__).parent.parent
-
 
 # ---------------------------------------------------------------------------
 # Entry count stability
@@ -75,8 +69,6 @@ class TestFieldCoverage:
     @pytest.mark.parametrize("field", TRACKED_FIELDS)
     def test_tracked_field_coverage_stable(self, quality_report, baseline, field):
         """No tracked field drops more than 1pp from baseline."""
-        if field not in baseline["field_coverage"]:
-            pytest.skip(f"{field} not in baseline")
         baseline_pct = baseline["field_coverage"][field]["percentage"]
         current_pct = quality_report["field_coverage"][field]["percentage"]
         drop = baseline_pct - current_pct
@@ -140,22 +132,15 @@ class TestDataIntegrity:
             f"Only {year_range['count']} entries have year data — expected ≥ 4000"
         )
 
-    def test_frontend_json_exists(self):
-        """Frontend JSON file exists and is valid."""
-        frontend_path = PROJECT_ROOT / "docs" / "data" / "klawiter.json"
-        if not frontend_path.exists():
-            pytest.skip("Frontend JSON not found")
-        with open(frontend_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        assert "entries" in data, "Missing 'entries' key in frontend JSON"
-        assert len(data["entries"]) > 4000, (
-            f"Frontend JSON has only {len(data['entries'])} entries"
+    def test_frontend_json_structure(self, frontend_data):
+        """The required frontend export has an entry collection."""
+        assert "entries" in frontend_data, "Missing 'entries' key in frontend JSON"
+        assert len(frontend_data["entries"]) > 4000, (
+            f"Frontend JSON has only {len(frontend_data['entries'])} entries"
         )
 
     def test_entry_type_distribution_stable(self, quality_report, baseline):
         """No entry type disappears entirely; each stays within ±2% of baseline share."""
-        if "entry_type_distribution" not in baseline:
-            pytest.skip("entry_type_distribution not in baseline")
         baseline_dist = baseline["entry_type_distribution"]
         current_dist = quality_report["entry_type_distribution"]
         baseline_total = sum(baseline_dist.values())
@@ -187,19 +172,14 @@ class TestDataIntegrity:
             f"  {d}" for d in drifted
         )
 
-    def test_frontend_entries_have_required_fields(self):
+    def test_frontend_entries_have_required_fields(self, frontend_data):
         """Every entry has sourcePageId and entryType (not just first 100)."""
-        frontend_path = PROJECT_ROOT / "docs" / "data" / "klawiter.json"
-        if not frontend_path.exists():
-            pytest.skip("Frontend JSON not found")
-        with open(frontend_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
         missing_pid = [
-            i for i, e in enumerate(data["entries"]) if "sourcePageId" not in e
+            i for i, e in enumerate(frontend_data["entries"]) if "sourcePageId" not in e
         ]
         missing_type = [
             e.get("sourcePageId", f"index-{i}")
-            for i, e in enumerate(data["entries"])
+            for i, e in enumerate(frontend_data["entries"])
             if "entryType" not in e
         ]
         assert len(missing_pid) == 0, f"{len(missing_pid)} entries missing sourcePageId"

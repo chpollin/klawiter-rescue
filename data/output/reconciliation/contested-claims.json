@@ -23,11 +23,17 @@
       "@id": "klawiter:sourceLine",
       "@type": "xsd:integer"
     },
+    "sourceMatchMode": "klawiter:sourceMatchMode",
     "sourcePageId": {
       "@id": "klawiter:sourcePageId",
       "@type": "xsd:integer"
     },
     "sourcePath": "klawiter:sourcePath",
+    "sourceText": "klawiter:sourceText",
+    "sourceTextId": {
+      "@id": "klawiter:sourceTextId",
+      "@type": "xsd:integer"
+    },
     "sourceTextSha256": "klawiter:sourceTextSha256",
     "sourceTitle": "klawiter:sourceTitle",
     "sourceValue": "klawiter:sourceValue",

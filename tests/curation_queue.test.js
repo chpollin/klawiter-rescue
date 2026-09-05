@@ -11,10 +11,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-function loadCurate() {
+function loadCurate(overrides = {}) {
   const ctx = {
     document: { addEventListener() {}, getElementById() { return null; } },
     console,
+    ...overrides,
   };
   vm.createContext(ctx);
   const source = fs.readFileSync(
@@ -58,4 +59,37 @@ test('equal status and reach fall back to the name for a stable order', () => {
   };
   const rows = Curate.agentQueue(agents, {});
   assert.strictEqual(JSON.stringify(rows.map(r => r.name)), JSON.stringify(['M', 'Z']));
+});
+
+test('one queue key event is handled once after repeated render, decision and undo', () => {
+  const persistentListeners = [];
+  let currentList;
+  const row = { dataset: { kind: 'person', name: 'A' }, classList: { contains() { return true; } } };
+  const host = {
+    set innerHTML(value) {
+      currentList = { listeners: [], addEventListener(type, fn) { this.listeners.push(fn); } };
+    },
+    querySelector() { return currentList; },
+    querySelectorAll() { return [row]; },
+    addEventListener(type, fn) { persistentListeners.push(fn); },
+  };
+  const hint = {};
+  const Edit = {
+    agents: { 'person/A': { kind: 'person', name: 'A', occurrences: 2, candidates: [] } },
+    pendingReconciliation: {},
+  };
+  const Curate = loadCurate({
+    document: { addEventListener() {}, getElementById(id) { return id === 'agent-queue' ? host : hint; } },
+    Edit, App: { state: { isLocal: true, editMode: true } },
+  });
+  Curate._agentRow = () => '<div class="agent-queue-row"></div>';
+  let handled = 0;
+  Curate._queueKey = () => { handled++; };
+  for (const pending of [{}, { 'agent:person/A': { action: 'reject' } }, {}, {}]) {
+    Edit.pendingReconciliation = pending;
+    Curate._renderAgentQueue();
+  }
+  const event = { key: 'j', target: { closest() { return row; } } };
+  for (const fn of [...currentList.listeners, ...persistentListeners]) fn(event);
+  assert.strictEqual(handled, 1);
 });

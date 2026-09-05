@@ -1,0 +1,136 @@
+{
+  "date": "2026-09-05",
+  "repository_head": "1902abc",
+  "purpose": "Independent review evidence; not ratified production decisions or a corpus-wide accuracy estimate.",
+  "origin": "Historical blind-review inputs are preserved alongside the later source-reviewed remediation evidence. In-artifact paths identify the original review workspace; current copies are inventoried here.",
+  "source_input": {
+    "unique_page_ids": 20,
+    "full_text_matches_current_test_fixture": true,
+    "test_fixture_path": "tests/test_sample_20.json",
+    "test_fixture_sha256": "dab5a4dc1c59915e88243ea112c8e859ff9ffd154c553da51726765354503fb6"
+  },
+  "verification": [
+    {
+      "file": "source-review-a.json",
+      "unique_page_ids": 20,
+      "required_fields_per_page": 5,
+      "literal_evidence_snippets_verified": 113,
+      "literal_evidence_mismatches": 0
+    },
+    {
+      "file": "source-review-b.json",
+      "unique_page_ids": 20,
+      "required_fields_per_page": 5,
+      "literal_evidence_snippets_verified": 137,
+      "literal_evidence_mismatches": 0
+    }
+  ],
+  "files": [
+    {
+      "path": "browser-before-dashboard.json",
+      "bytes": 6398,
+      "sha256": "08b86282a19fdce7016f33ba743cac20aff5d83de3f2ae6fb28d2bb7404fdd42"
+    },
+    {
+      "path": "dashboard-1440.png",
+      "bytes": 177872,
+      "sha256": "574ff03966dc8b864661fa508e28a1a34415db66cdcd6ffa6cbc31424da4f321"
+    },
+    {
+      "path": "dashboard-320.png",
+      "bytes": 172126,
+      "sha256": "88475049a3ae7cc739209c7a1e4190d128159cbaaca64203d75172aad0f9aed6"
+    },
+    {
+      "path": "dashboard-browser-qa.json",
+      "bytes": 996,
+      "sha256": "aa4f997eb4f2c4ad17db0879e9e70dcdc7b409ab2208d93a49b654fd7ceab16f"
+    },
+    {
+      "path": "dashboard-selected.png",
+      "bytes": 179914,
+      "sha256": "6dd2dfe34f5e0d8ff301e1d9e0150df9f26420b68fc99f43edc7fc4df3893174"
+    },
+    {
+      "path": "documentation-check.json",
+      "bytes": 1341,
+      "sha256": "68f382e57806435fc7104ccb77774a7c3376f9a9d4b6ea12c5c45c18c43939f8"
+    },
+    {
+      "path": "owner-evaluation.md",
+      "bytes": 5079,
+      "sha256": "89f05cdd2d2ca4344b656b6c82573a98db6634855b43105b49115bce11b70ece"
+    },
+    {
+      "path": "parser-changes.json",
+      "bytes": 889966,
+      "sha256": "d821fce085710d2917843c81d367f1f557665a4d70474406c4eceed64b3be5ff"
+    },
+    {
+      "path": "parser-review.json",
+      "bytes": 7041,
+      "sha256": "1a2c662a5b44ade2bb137ffbb4c872ce9ed8632525b2a8faa4d27bc87242d5ab"
+    },
+    {
+      "path": "parser-summary.json",
+      "bytes": 1029,
+      "sha256": "34be5d93d98e7089bd40d9e9196b919882336b83802e49a2f640e5b6605460e8"
+    },
+    {
+      "path": "pinned-reproduction.json",
+      "bytes": 225,
+      "sha256": "468f45eec904339ddd5878c71eb2dad551def1b22c2999a54c9a3e1d99cc3aa6"
+    },
+    {
+      "path": "published-change-review.json",
+      "bytes": 66994,
+      "sha256": "e8bdef4c9631d2afd06f4a62869985b0e7030fab4f5d115105d034457ad77fdd"
+    },
+    {
+      "path": "published-changes.json",
+      "bytes": 58386,
+      "sha256": "cf72142078ea1d5287b623641095104cf150db2d27321ef35f9f325028d45bcc"
+    },
+    {
+      "path": "reproduction-hashes.json",
+      "bytes": 12735,
+      "sha256": "76b4b9277306f9c7e3fb92e95f71af61fdc027ed1ddfb842756e0529ef760d47"
+    },
+    {
+      "path": "rule-vs-frontend.json",
+      "bytes": 3935,
+      "sha256": "479185012efda2cffe857e8ae8be43f8af150cff953a1db30ea7a581a6f7690a"
+    },
+    {
+      "path": "source-only.json",
+      "bytes": 18772,
+      "sha256": "296d28983fbafc59798f1ab966af7a038df89029da2a2f1efdae09872deebc03"
+    },
+    {
+      "path": "source-review-a.json",
+      "bytes": 58877,
+      "sha256": "68d5c67a4175ade9cd06e39dd5ced12ea0d6d18407d8a0ec151eed6ca539b297"
+    },
+    {
+      "path": "source-review-b.json",
+      "bytes": 89227,
+      "sha256": "49a056a22f13935a317733b2a258428c61137de7dbf35ec760c192b931c8e885"
+    },
+    {
+      "path": "test-review.md",
+      "bytes": 14065,
+      "sha256": "b42c446dc4e87b95cec73740fcfb914dc035fd177afa464b9f2328575a9243a5"
+    },
+    {
+      "path": "unresolved-references.json",
+      "bytes": 967,
+      "sha256": "4e4efae8b347058d6fa33a0ebb4a910c598b9c6988abd36d28120bfcf67d8b13"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 3292,
+      "sha256": "5102db0ca017f10788c67d30df387a66a6602b045f6c02b2c36d4d916e68bc45"
+    }
+  ],
+  "text_encoding": "UTF-8 with LF line endings; historical report text is unchanged except explicit follow-up banners. Hashes describe these portable versioned bytes."
+}

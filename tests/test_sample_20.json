@@ -1,331 +1,814 @@
 [
   {
     "page_id": 4303,
-    "needed": [
-      "publisher"
-    ],
-    "text": "'''[1934]: Binoza, Zagreb'''\n\n''Mariia Antoaneta'' [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Iso VelikanoviÄ. 496p. Illustrated. [Svjetski pisci, 26]. See: [[Mariia Antoaneta. Slika jednog osrednjeg karaktera]]\n\n\n[[Category:Historical Studies / Volumes (Serbo-Croatian)]]",
-    "label": "1a: publisher only (non-DE)",
-    "existing": {
-      "publisher": "",
+    "page_title": "Mariia Antoaneta / Serbo-Croatian",
+    "label": "Mariia Antoaneta / Serbo-Croatian",
+    "text": "'''[1934]: Binoza, Zagreb'''\n\n''Mariia Antoaneta'' [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Iso Velikanović. 496p. Illustrated. [Svjetski pisci, 26]. See: [[Mariia Antoaneta. Slika jednog osrednjeg karaktera]]\n\n\n[[Category:Historical Studies / Volumes (Serbo-Croatian)]]",
+    "source": {
+      "path": "data/raw/zt_03",
+      "textId": 31254,
+      "rawTextSha256": "2a911f00fc58d5930703f4fd08af5c21452e88c9615f23000ed40cada728f231",
+      "textSha256": "2adb0720fbf269758b436a2d96d95ce2b979615b0e37a9379351086f63ae6306",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Binoza",
       "location": "Zagreb",
-      "translator": "Iso VelikanoviÄ",
-      "page_count": "496",
-      "language": ""
-    }
+      "translator": "Iso Velikanović",
+      "page_count": 496,
+      "language": "Serbo-Croatian"
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 28,
+        "exact": "'''[1934]: Binoza, Zagreb'''"
+      },
+      "location": {
+        "start": 0,
+        "end": 28,
+        "exact": "'''[1934]: Binoza, Zagreb'''"
+      },
+      "translator": {
+        "start": 30,
+        "end": 238,
+        "exact": "''Mariia Antoaneta'' [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Iso Velikanović. 496p. Illustrated. [Svjetski pisci, 26]. See: [[Mariia Antoaneta. Slika jednog osrednjeg karaktera]]"
+      },
+      "page_count": {
+        "start": 30,
+        "end": 238,
+        "exact": "''Mariia Antoaneta'' [Marie Antoinette. Bildnis eines mittleren Charakters]. Translated by Iso Velikanović. 496p. Illustrated. [Svjetski pisci, 26]. See: [[Mariia Antoaneta. Slika jednog osrednjeg karaktera]]"
+      },
+      "language": {
+        "start": 241,
+        "end": 299,
+        "exact": "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      }
+    },
+    "notes": "The imprint names Binoza; preserve the final ć in Velikanović. The category explicitly names Serbo-Croatian."
   },
   {
     "page_id": 1800,
-    "needed": [
-      "location"
-    ],
-    "text": "'''[1947]: Pechat Far, Sofija'''\n\n''RomanÅ­t na edin zhivot. Balzak'' [Balzac]. Translated by DimitÅ­r Stoevski. 1st edition. 500p. Illustrated. [Series: Biblioteka Zlatni zÅ­rna. Godina XII, premiia]\n\n\n'''[1960]: Narodna Kultura, Sofija'''\n\n''RomanÅ­t na edin zhivot. Balzak'' [Balzac]. Translated by DimitÅ­r Stoevski. 2nd revised edition. 383/(1)p. Illustrated [Series: Biblioteka  Svetovni obrazi]\n\n\n\n[[Category:Historical Studies / Volumes (Bulgarian)]]",
-    "label": "1b: location only",
-    "existing": {
-      "publisher": "r Stoevski. 1st edition",
-      "location": "",
-      "translator": "DimitÅ",
-      "page_count": "500",
+    "page_title": "Romanŭt na edin zhivot. Balzak",
+    "label": "Romanŭt na edin zhivot. Balzak",
+    "text": "'''[1947]: Pechat Far, Sofija'''\n\n''Romanŭt na edin zhivot. Balzak'' [Balzac]. Translated by Dimitŭr Stoevski. 1st edition. 500p. Illustrated. [Series: Biblioteka Zlatni zŭrna. Godina XII, premiia]\n\n\n'''[1960]: Narodna Kultura, Sofija'''\n\n''Romanŭt na edin zhivot. Balzak'' [Balzac]. Translated by Dimitŭr Stoevski. 2nd revised edition. 383/(1)p. Illustrated [Series: Biblioteka  Svetovni obrazi]\n\n\n\n[[Category:Historical Studies / Volumes (Bulgarian)]]",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 38039,
+      "rawTextSha256": "4e4dca861729487ad4d70857d18cd7610513c0e7ea7a61dd9e2ca46ce71eadef",
+      "textSha256": "1b622654a5ceb77038a58a344dd9ef88573dbaa31429c6043081fe6c73fa2333",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Pechat Far",
+      "location": "Sofija",
+      "translator": "Dimitŭr Stoevski",
+      "page_count": 500,
       "language": "Bulgarian"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 32,
+        "exact": "'''[1947]: Pechat Far, Sofija'''"
+      },
+      "location": {
+        "start": 0,
+        "end": 32,
+        "exact": "'''[1947]: Pechat Far, Sofija'''"
+      },
+      "translator": {
+        "start": 34,
+        "end": 197,
+        "exact": "''Romanŭt na edin zhivot. Balzak'' [Balzac]. Translated by Dimitŭr Stoevski. 1st edition. 500p. Illustrated. [Series: Biblioteka Zlatni zŭrna. Godina XII, premiia]"
+      },
+      "page_count": {
+        "start": 34,
+        "end": 197,
+        "exact": "''Romanŭt na edin zhivot. Balzak'' [Balzac]. Translated by Dimitŭr Stoevski. 1st edition. 500p. Illustrated. [Series: Biblioteka Zlatni zŭrna. Godina XII, premiia]"
+      },
+      "language": {
+        "start": 400,
+        "end": 453,
+        "exact": "[[Category:Historical Studies / Volumes (Bulgarian)]]"
+      }
+    },
+    "notes": "Bibliographic fields refer to the first, 1947 edition. The second edition has a different publisher and extent. Neither translator prose nor an edition label is a publisher."
   },
   {
     "page_id": 72,
-    "needed": [
-      "translator"
-    ],
-    "text": "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''\n\n''Ausgewählte Prosa. 1. Bändchen''. Edited with a foreword and notes by H(erman) Wolf. 142p. [Reprinted 1935, 1939] [Meulenhoffs Sammlung deutscher Schriftsteller, 53]\n\n'''Contents:'''\n<lst type=bracket start=1>\nStefan Zweig [H. Wolf], pp. 9-11\nDie Weltminute von Waterloo. Napoleon, 18. Juni 1815, pp. 13-30\nDie Entdeckung Eldorados. J. A. Suter,  Kalifornien, Januar 1848, pp. 31-42\nDer Kampf um den Südpol. Kapitän Scott, 90. Breitengrad, 16. Janu",
-    "label": "1c: translator only (non-DE)",
-    "existing": {
+    "page_title": "Ausgewählte Prosa. I. Bändchen",
+    "label": "Ausgewählte Prosa. I. Bändchen",
+    "text": "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''\n\n''Ausgewählte Prosa. 1. Bändchen''. Edited with a foreword and notes by H(erman) Wolf. 142p. [Reprinted 1935, 1939] [Meulenhoffs Sammlung deutscher Schriftsteller, 53]\n\n'''Contents:'''\n<lst type=bracket start=1>\nStefan Zweig [H. Wolf], pp. 9-11\nDie Weltminute von Waterloo. Napoleon, 18. Juni 1815, pp. 13-30\nDie Entdeckung Eldorados. J. A. Suter,  Kalifornien, Januar 1848, pp. 31-42\nDer Kampf um den Südpol. Kapitän Scott, 90. Breitengrad, 16. Januar 1912,  pp. (43)-65\nEpisode am Genfer See, pp. (66)-76\nDie unsichtbare Sammlung, pp. (77)-96\nFouchés Endkampf mit Napoleon [Excerpts from the chapter “Der Endkampf mit Napoleon 1815, die hundert Tage”. See [[Joseph Fouché. Bildnis eines politischen Menschen]]], pp. (97)-140\nAnmerkungen [H. Wolf], pp. (141)-142\n</lst>\n\n[[Category:Collected and Selected Works]]",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 45859,
+      "rawTextSha256": "d84dcf7d732765a7d0aa0cf78ff19d2cc2e8965d5afb4a833c4fd01e367e4b24",
+      "textSha256": "f86a1fae9ed31f61886406b9ddfe69be5e3d6582ba7128f00fccbc4dff7e1734",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
       "publisher": "J. M. Meulenhoff Verlag",
       "location": "Amsterdam",
-      "translator": "",
-      "page_count": "142",
-      "language": ""
-    }
+      "translator": null,
+      "page_count": 142,
+      "language": null
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 48,
+        "exact": "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''"
+      },
+      "location": {
+        "start": 0,
+        "end": 48,
+        "exact": "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''"
+      },
+      "translator": null,
+      "page_count": {
+        "start": 50,
+        "end": 217,
+        "exact": "''Ausgewählte Prosa. 1. Bändchen''. Edited with a foreword and notes by H(erman) Wolf. 142p. [Reprinted 1935, 1939] [Meulenhoffs Sammlung deutscher Schriftsteller, 53]"
+      },
+      "language": null
+    },
+    "notes": "Herman Wolf is an editor, not a translator. The complete category has no language suffix; language here tests category extraction only."
   },
   {
     "page_id": 5746,
-    "needed": [
-      "page_count"
-    ],
-    "text": "\\\"Franz/Francisco Masereel\\\" [Frans  Masereel. Der Mann und Bildner] in:\n<lst type=bracket start=1>\n[[Hombres, libros y ciudades]] [Barcelona, 1963], No. 13, pp. (120)-127 [Translated by the Editorial Juventud].  Here entitled: \\\"Franz Masereel. El hombre y el escultor\\\"\n[[Prohombres del espíritu]] [Buenos Aires, 1940], No. 11, pp. (161)-173 [Translated by Alfredo Cahn]. Here entitled: \\\"Francisco Masereel. El hombre y artista\\\"\n</lst>\n\nSee: [[Begegnungen mit Menschen, Büchern, Städten]] [Wien/L",
-    "label": "1d: page_count only",
-    "existing": {
-      "publisher": "Juventud",
+    "page_title": "Masereel, Frans / Spanish",
+    "label": "Masereel, Frans / Spanish",
+    "text": "\\\"Franz/Francisco Masereel\\\" [Frans  Masereel. Der Mann und Bildner] in:\n<lst type=bracket start=1>\n[[Hombres, libros y ciudades]] [Barcelona, 1963], No. 13, pp. (120)-127 [Translated by the Editorial Juventud].  Here entitled: \\\"Franz Masereel. El hombre y el escultor\\\"\n[[Prohombres del espíritu]] [Buenos Aires, 1940], No. 11, pp. (161)-173 [Translated by Alfredo Cahn]. Here entitled: \\\"Francisco Masereel. El hombre y artista\\\"\n</lst>\n\nSee: [[Begegnungen mit Menschen, Büchern, Städten]] [Wien/Leipzig/Zürich, 1937], No. 13, pp. (136)-145\n\n[[Category:Essays / Individual Essays (Spanish)]]",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 40639,
+      "rawTextSha256": "c8073dabb43ef0b2e2f54df542c7bbffd28ac4099c222d868be5ed890fc5df48",
+      "textSha256": "1afcf685bdb94bcbdbc7d4a3cbbe555c78f786a9fc6909a85a7cb85abc6afc2d",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
       "location": "Barcelona",
-      "translator": "Alfredo Cahn",
-      "page_count": "",
+      "translator": "the Editorial Juventud",
+      "page_count": null,
       "language": "Spanish"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": {
+        "start": 100,
+        "end": 271,
+        "exact": "[[Hombres, libros y ciudades]] [Barcelona, 1963], No. 13, pp. (120)-127 [Translated by the Editorial Juventud].  Here entitled: \\\"Franz Masereel. El hombre y el escultor\\\""
+      },
+      "translator": {
+        "start": 100,
+        "end": 271,
+        "exact": "[[Hombres, libros y ciudades]] [Barcelona, 1963], No. 13, pp. (120)-127 [Translated by the Editorial Juventud].  Here entitled: \\\"Franz Masereel. El hombre y el escultor\\\""
+      },
+      "page_count": null,
+      "language": {
+        "start": 545,
+        "end": 594,
+        "exact": "[[Category:Essays / Individual Essays (Spanish)]]"
+      }
+    },
+    "notes": "The first listed translation names the Editorial Juventud as translator, not as an imprint publisher. Alfredo Cahn belongs to the second reference. All page numbers are locators, not an extent."
   },
   {
     "page_id": 4473,
-    "needed": [
-      "publisher",
-      "location",
-      "translator",
-      "page_count"
-    ],
+    "page_title": "Sach mat",
+    "label": "Sach mat",
     "text": "'''[1984]: Czechoslovakia'''\n\n''Sach mat'' [Schachnovelle]\n<lst type=bracket start=1>\nLanguage: Chechen\nDirector: Ladislav Rychman\nWriter: Pavel Grym\nCast: Therese Herz, Gustav Bubnik, Stanislav Fiser, Miro Grisa and Otto Simánek\nCinematography: Petr Cepický\nRuntime: 32 minutes\n</lst>\n\n\n\n[[Category:Films / Plays / Operas]]\n{{DEFAULTSORTKEY:Sach-mat}}",
-    "label": "1e: 3+ fields missing",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "",
-      "language": ""
-    }
+    "source": {
+      "path": "data/raw/zt_06",
+      "textId": 59067,
+      "rawTextSha256": "a10fee8d76795da819a1766708fcdec4be4f8b2ed8d8a9ec7ca600bf3364b206",
+      "textSha256": "ba0347fa36347d32af2e9a38ff56478f4657070dbfab776b0968a84f2289b9c5",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
+      "language": null
+    },
+    "evidence": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
+      "language": null
+    },
+    "notes": "A film has runtime, not a book extent. No publisher, publication city or translator is named. Chechen occurs in the body, but the category has no language suffix; this category-only test does not assert the film has no language."
   },
   {
     "page_id": 2866,
-    "needed": [
-      "publisher",
-      "location",
-      "translator",
-      "page_count"
-    ],
+    "page_title": "Steiman, Lionel Bradley",
+    "label": "Steiman, Lionel Bradley",
     "text": "\\\"The Agony of Humanism in World War I: The Case of Stefan Zweig\\\" in ''Journal of European Studies. Literature and Ideas from the Renaissance to the Present'' [Halfpenny Furze, Mill Lane, Chalfont St Giles, Buckinghamshire HP8 4NR], 6:2 [June 1976], pp. (100)-124\n\n[[Category:Secondary Literature / Authors (English)]]",
-    "label": "2a: English",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "",
+    "source": {
+      "path": "data/raw/zt_01",
+      "textId": 17040,
+      "rawTextSha256": "5609933dd49a2df6eda7e487e40e1f60134fe1aa9c3f6fd735fc13c5bde8669c",
+      "textSha256": "5609933dd49a2df6eda7e487e40e1f60134fe1aa9c3f6fd735fc13c5bde8669c",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": "Chalfont St Giles",
+      "translator": null,
+      "page_count": null,
       "language": "English"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": {
+        "start": 0,
+        "end": 264,
+        "exact": "\\\"The Agony of Humanism in World War I: The Case of Stefan Zweig\\\" in ''Journal of European Studies. Literature and Ideas from the Renaissance to the Present'' [Halfpenny Furze, Mill Lane, Chalfont St Giles, Buckinghamshire HP8 4NR], 6:2 [June 1976], pp. (100)-124"
+      },
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 266,
+        "end": 319,
+        "exact": "[[Category:Secondary Literature / Authors (English)]]"
+      }
+    },
+    "notes": "The journal address explicitly includes Chalfont St Giles. The cited article has a page range; no total extent, translator or publisher is named."
   },
   {
     "page_id": 5082,
-    "needed": [
-      "publisher",
-      "location",
-      "translator"
-    ],
+    "page_title": "Pauls, Georg",
+    "label": "Pauls, Georg",
     "text": "'''[1994]: Bibliothèque principale de la Ville de Namur, Namur'''\n\n''Stefan Zweig: exposition du 20 avril au 14 mai 1994''. Foreword by Michel Gilles.  42p. Illustrated. Contains a portrait of Stefan Zweig\n\n\n\n\n[[Category:Secondary Literature / Authors (French)]]",
-    "label": "2b: French",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "42",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 35954,
+      "rawTextSha256": "950b914c0a19b689b2c4197584f19a44f4c7f6dcf7e6b341c156d7329a467b31",
+      "textSha256": "e65237cb517a289db35db91be92ef6055bfb70d80257fe5e34c9090c1c237ed0",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Bibliothèque principale de la Ville de Namur",
+      "location": "Namur",
+      "translator": null,
+      "page_count": 42,
       "language": "French"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 65,
+        "exact": "'''[1994]: Bibliothèque principale de la Ville de Namur, Namur'''"
+      },
+      "location": {
+        "start": 0,
+        "end": 65,
+        "exact": "'''[1994]: Bibliothèque principale de la Ville de Namur, Namur'''"
+      },
+      "translator": null,
+      "page_count": {
+        "start": 67,
+        "end": 205,
+        "exact": "''Stefan Zweig: exposition du 20 avril au 14 mai 1994''. Foreword by Michel Gilles.  42p. Illustrated. Contains a portrait of Stefan Zweig"
+      },
+      "language": {
+        "start": 210,
+        "end": 262,
+        "exact": "[[Category:Secondary Literature / Authors (French)]]"
+      }
+    },
+    "notes": "The complete imprint names the Bibliothèque principale de la Ville de Namur; Michel Gilles supplies a foreword, not a translation."
   },
   {
     "page_id": 1891,
-    "needed": [
-      "publisher",
-      "location",
-      "page_count"
-    ],
-    "text": "'''[1993]: KavkazskiÄ­ Krai, Stavropolâ''' \n\n''Mariia Stiuart * Kazanova'' [Maria Stuart * Casanova]. Edited by N. Vysotskaia. Illustrated by I. L. Prostitov. 444/(3)p. [Istoricheskie romani]\n\n'''Contents:'''\n<lst type=bracket start=1>\nMariia Stiuart [Maria Stuart. Translated by  R. Galâperina. Verses translated by V. Levik], pp. (7)-(370)\nKazanova [Casanova. Translated by P. S. BernshteÄ­n], pp. (371)-(445)\n</lst>\n\n[[Category:Historical Studies / Volumes (Russian)]]",
-    "label": "2c: Russian",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "R. Galâ",
-      "page_count": "",
+    "page_title": "Mariia Stiuart * Kazanova",
+    "label": "Mariia Stiuart * Kazanova",
+    "text": "'''[1993]: Kavkazskiĭ Krai, Stavropol’''' \n\n''Mariia Stiuart * Kazanova'' [Maria Stuart * Casanova]. Edited by N. Vysotskaia. Illustrated by I. L. Prostitov. 444/(3)p. [Istoricheskie romani]\n\n'''Contents:'''\n<lst type=bracket start=1>\nMariia Stiuart [Maria Stuart. Translated by  R. Gal’perina. Verses translated by V. Levik], pp. (7)-(370)\nKazanova [Casanova. Translated by P. S. Bernshteĭn], pp. (371)-(445)\n</lst>\n\n[[Category:Historical Studies / Volumes (Russian)]]",
+    "source": {
+      "path": "data/raw/zt_03",
+      "textId": 29798,
+      "rawTextSha256": "770e57c03c60c94e036fc2c8d0fa8b13093b40e970e9b969ed9d8c37c44fc40e",
+      "textSha256": "3481f9484361ea7325f134543a8caf23a52d16a6493c195a0aea4fac5de4214c",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Kavkazskiĭ Krai",
+      "location": "Stavropol’",
+      "translator": null,
+      "page_count": 444,
       "language": "Russian"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 42,
+        "exact": "'''[1993]: Kavkazskiĭ Krai, Stavropol’''' "
+      },
+      "location": {
+        "start": 0,
+        "end": 42,
+        "exact": "'''[1993]: Kavkazskiĭ Krai, Stavropol’''' "
+      },
+      "translator": null,
+      "page_count": {
+        "start": 44,
+        "end": 190,
+        "exact": "''Mariia Stiuart * Kazanova'' [Maria Stuart * Casanova]. Edited by N. Vysotskaia. Illustrated by I. L. Prostitov. 444/(3)p. [Istoricheskie romani]"
+      },
+      "language": {
+        "start": 418,
+        "end": 469,
+        "exact": "[[Category:Historical Studies / Volumes (Russian)]]"
+      }
+    },
+    "notes": "The book has 444 numbered pages. Its contents assign distinct translators to Maria Stuart, verses and Casanova; there is no single translator of the entire volume."
   },
   {
     "page_id": 634,
-    "needed": [
-      "publisher",
-      "translator"
-    ],
+    "page_title": "Shi ta ma?",
+    "label": "Shi ta ma?",
     "text": "\\\"Shi ta ma?\\\" [War er es? / Jupiter] in:\n<lst type=bracket start=1>\n[[Ciweige ji]] [Beijing, 2000], No. 10, pp. 289-325\n[[Ciweige jingdian xiaoshuo]] [Yanji, 2000], Vol. 3, No. 22, pp. 890-931\n[[Ciweige wenji]] [Taiyuan/Xi'an, 1998], Vol. 2, No. 8, pp. 310-343 \n[[Ciweige xiaoshuo ji]] [Beijing, 1997], Vol. 3, No. 29, pp. 315-347\n[[Xiangqi de gushi]] [Beijing, 2000/2], No. 10, pp. 289-325 \n</lst>\n\n[[Category:Fiction / Individual Stories (Chinese)]]",
-    "label": "2d: Chinese",
-    "existing": {
-      "publisher": "",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 43576,
+      "rawTextSha256": "62bcda822d1445e5d11ecc97a000f06b8ae42c13f3ca12975c8fc09196294556",
+      "textSha256": "62bcda822d1445e5d11ecc97a000f06b8ae42c13f3ca12975c8fc09196294556",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
       "location": "Beijing",
-      "translator": "",
-      "page_count": "289",
+      "translator": null,
+      "page_count": null,
       "language": "Chinese"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": {
+        "start": 69,
+        "end": 120,
+        "exact": "[[Ciweige ji]] [Beijing, 2000], No. 10, pp. 289-325"
+      },
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 401,
+        "end": 452,
+        "exact": "[[Category:Fiction / Individual Stories (Chinese)]]"
+      }
+    },
+    "notes": "The first reference is Beijing 2000. All five extents are locators within collections; no standalone page count, publisher or translator is named."
   },
   {
     "page_id": 7263,
-    "needed": [
-      "publisher",
-      "location",
-      "translator",
-      "page_count"
-    ],
+    "page_title": "Amok / Individual Stories (Japanese)",
+    "label": "Amok / Individual Stories (Japanese)",
     "text": "\\\"Amoku\\\" [Der Amokläufer]. '''See:''' [[Der Amokläufer]] [Translations: Japanese)]\n\n\n[[Category:Fiction / Individual Stories (Japanese)]]",
-    "label": "2e: Japanese",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "",
+    "source": {
+      "path": "data/raw/zt_06",
+      "textId": 56953,
+      "rawTextSha256": "f1656c716dc0cb2a57fa34fb80c8ce61ad8e33b95947d29de8b3ca018d72fce0",
+      "textSha256": "3d153cf900476ed14e4de4dbbcbf18359e34a9e32752c43c72307a288ae3e2ad",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
       "language": "Japanese"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 86,
+        "end": 138,
+        "exact": "[[Category:Fiction / Individual Stories (Japanese)]]"
+      }
+    },
+    "notes": "A see-reference with no imprint, translator or extent. The category supplies Japanese."
   },
   {
     "page_id": 4445,
-    "needed": [
-      "publisher",
-      "translator"
-    ],
-    "text": "'''German'''\n\n'''[2000]: Hochschulverl., Freiburg im Breisgau'''\n\n''Frauen- und Männerbilder in den Novellen von Stefan Zweig''. 168p. [Hochschulsammlung Philosophie. Literaturwissenschaft, 16]. This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau\n\n'''Arabic'''\n\n'''[2015]'''\n\n\\\"á¹¢Å«rat al-marÊ¾ah waÊ¾l-rajul fÄ« uqá¹£Å«á¹£at StÄ«fÄn TsfÄygh 'ArbaÊ¿ wa-Ê¿ishrÅ«n sÄÊ¿ah min á¸¥ayÄt imraÊ¾ah'\\\" [The Image of Woman and Man in Stefan Zwe",
-    "label": "2f: Arabic",
-    "existing": {
-      "publisher": "",
-      "location": "Freiburg",
-      "translator": "",
-      "page_count": "168",
+    "page_title": "Al-Bāḥ, Muḥammad / El-bah, Mohammed",
+    "label": "Al-Bāḥ, Muḥammad / El-bah, Mohammed",
+    "text": "'''German'''\n\n'''[2000]: Hochschulverl., Freiburg im Breisgau'''\n\n''Frauen- und Männerbilder in den Novellen von Stefan Zweig''. 168p. [Hochschulsammlung Philosophie. Literaturwissenschaft, 16]. This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau\n\n'''Arabic'''\n\n'''[2015]'''\n\n\\\"Ṣūrat al-marʾah waʾl-rajul fī uqṣūṣat Stīfān Tsfāygh 'Arbaʿ wa-ʿishrūn sāʿah min ḥayāt imraʾah'\\\" [The Image of Woman and Man in Stefan Zweig's Novel 'Twenty-four Hours in the Life of a Woman'] in ''Al-Balāghah waʾl-naqd al-ʿarabī'' [Arabic Rhetoric and Criticism] [Rabat], 3 [2015], pp. 71-79\n\nPublished online [shortened preview version]:\n\nhttp://platform.almanhal.com/Article/Preview.aspx?ID=60445\n\n[[Category:Secondary Literature / Authors (Arabic)]]\n[[Category:Secondary Literature / Authors (German)]]\n{{DEFAULTSORTKEY:Bah, Muḥammad}}",
+    "source": {
+      "path": "data/raw/zt_03",
+      "textId": 34327,
+      "rawTextSha256": "6e9b9c3a9ea3c90a261b0700021ae7937402928aed595380271dd06054149672",
+      "textSha256": "11dfc481465af03cb6c840b45e0b4c178df7ed08da465e7e382a1632de7d560c",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Hochschulverl.",
+      "location": "Freiburg im Breisgau",
+      "translator": null,
+      "page_count": 168,
       "language": "Arabic"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 14,
+        "end": 64,
+        "exact": "'''[2000]: Hochschulverl., Freiburg im Breisgau'''"
+      },
+      "location": {
+        "start": 14,
+        "end": 64,
+        "exact": "'''[2000]: Hochschulverl., Freiburg im Breisgau'''"
+      },
+      "translator": null,
+      "page_count": {
+        "start": 66,
+        "end": 306,
+        "exact": "''Frauen- und Männerbilder in den Novellen von Stefan Zweig''. 168p. [Hochschulsammlung Philosophie. Literaturwissenschaft, 16]. This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau"
+      },
+      "language": {
+        "start": 740,
+        "end": 792,
+        "exact": "[[Category:Secondary Literature / Authors (Arabic)]]"
+      }
+    },
+    "notes": "Bibliographic fields refer to the first, German thesis edition. The language function independently returns the first language-bearing category, Arabic; this scalar is not an edition-language assertion. The second category is German."
   },
   {
     "page_id": 5892,
-    "needed": [
-      "publisher",
-      "location",
-      "translator",
-      "page_count"
-    ],
+    "page_title": "El pensamiento europeo en su evolución histórica",
+    "label": "El pensamiento europeo en su evolución histórica",
     "text": "\\\"El pensamiento europeo en su evolución histórica\\\". '''See:'''  [[El pensamiento europeo en su desarrollo histórico]]\n\n\n[[Category:Essays / Individual Essays (Spanish)]]\n{{DEFAULTSORTKEY:Pensamiento europeo en su evolución histórica}}",
-    "label": "2g: Spanish",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 40676,
+      "rawTextSha256": "b893ef78ed6632efce927164c7c53aeda19af4d040338d935d32d80f76033f6d",
+      "textSha256": "50654e3a43e1c17d5459d8a2361ed101f2c90ec004a33be16fe71079c20a7f9d",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
       "language": "Spanish"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 122,
+        "end": 171,
+        "exact": "[[Category:Essays / Individual Essays (Spanish)]]"
+      }
+    },
+    "notes": "A see-reference with no imprint, translator or extent; language is Spanish from its category."
   },
   {
     "page_id": 4376,
-    "needed": [
-      "publisher",
-      "page_count"
-    ],
-    "text": "'''[1943]: Skoglunds Bokförlag, Stockholm'''\n\nSchack, Amok och andra noveller [Schachnovelle, Der Amokläufer und andere Novellen]. Translated by Hugo Hultenberg. 347/(1)p. \n\n'''Contents:'''\n<lst type=bracket start=1>\nSchack [Schachnovelle], pp. (7)-79\nAmoklöparen [Der Amokläufer], pp. (81)-155\nKvinnan och landskapet [Die Frau und die Landschaft], pp. (157)-187\nEn fantastisk natt [Phantastische Nacht], pp. (189)-267\nEtt brev från en okänd [Brief einer Unbekannten], pp. (269)-321\nMånskensgränden [",
-    "label": "3a: standard header format",
-    "existing": {
-      "publisher": "",
+    "page_title": "Schack, Amok och andra noveller",
+    "label": "Schack, Amok och andra noveller",
+    "text": "'''[1943]: Skoglunds Bokförlag, Stockholm'''\n\nSchack, Amok och andra noveller [Schachnovelle, Der Amokläufer und andere Novellen]. Translated by Hugo Hultenberg. 347/(1)p. \n\n'''Contents:'''\n<lst type=bracket start=1>\nSchack [Schachnovelle], pp. (7)-79\nAmoklöparen [Der Amokläufer], pp. (81)-155\nKvinnan och landskapet [Die Frau und die Landschaft], pp. (157)-187\nEn fantastisk natt [Phantastische Nacht], pp. (189)-267\nEtt brev från en okänd [Brief einer Unbekannten], pp. (269)-321\nMånskensgränden [Die Mondscheingasse], pp. (323)-(348)\n</lst>\n\n\n[[Category:Fiction / Volumes (Swedish)]]",
+    "source": {
+      "path": "data/raw/zt_06",
+      "textId": 57058,
+      "rawTextSha256": "72c5a98783ed2a0b6d99efd77bb81f4a63926ccd0ba0b32125d45d49abf21245",
+      "textSha256": "2af938a5223c82909b699ec93aa998fc234e78348085727bfa60281673ec8c55",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Skoglunds Bokförlag",
       "location": "Stockholm",
       "translator": "Hugo Hultenberg",
-      "page_count": "",
+      "page_count": 347,
       "language": "Swedish"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 44,
+        "exact": "'''[1943]: Skoglunds Bokförlag, Stockholm'''"
+      },
+      "location": {
+        "start": 0,
+        "end": 44,
+        "exact": "'''[1943]: Skoglunds Bokförlag, Stockholm'''"
+      },
+      "translator": {
+        "start": 46,
+        "end": 172,
+        "exact": "Schack, Amok och andra noveller [Schachnovelle, Der Amokläufer und andere Novellen]. Translated by Hugo Hultenberg. 347/(1)p. "
+      },
+      "page_count": {
+        "start": 46,
+        "end": 172,
+        "exact": "Schack, Amok och andra noveller [Schachnovelle, Der Amokläufer und andere Novellen]. Translated by Hugo Hultenberg. 347/(1)p. "
+      },
+      "language": {
+        "start": 547,
+        "end": 587,
+        "exact": "[[Category:Fiction / Volumes (Swedish)]]"
+      }
+    },
+    "notes": "The complete source supplies the Swedish category and 347 numbered plus one unnumbered page. The contents ranges do not replace the volume extent."
   },
   {
     "page_id": 584,
-    "needed": [
-      "publisher",
-      "location",
-      "translator"
-    ],
+    "page_title": "Jueze",
+    "label": "Jueze",
     "text": "\\\"Jueze\\\" [Brennendes Geheimnis] in:\n<lst type=bracket start=1>\n[[Ciweige xiaoshuo]] [T'aipei, 1975], Part III, No. 18, pp. 115-188\n[[Pa]] [T'aipei, 1968], No. 4, pp. 47-114\n[[Tongqing de zui]] [Jinan, 1982], No. 11, pp. 422-479\n</lst>\n\n'''See also:''' '''[1]'''. [[Baoshou buzhu de mimi]]; '''[2]'''. [[Huoxiao huoliao de mimi]]; '''[3]'''. [[Rewang de mimi]]; '''[4]'''. [[Yan'gai buzhu de mimi]]; '''[5]'''. [[Zhuoren de mimi]]\n\n\n[[Category:Fiction / Individual Stories (Chinese)]]",
-    "label": "3b: no header, embedded info",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "115",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 43812,
+      "rawTextSha256": "a18a108bca29104245e4fb29a2115e8c01e4ce413cacd6794251ad2bf43178ba",
+      "textSha256": "a18a108bca29104245e4fb29a2115e8c01e4ce413cacd6794251ad2bf43178ba",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": "T'aipei",
+      "translator": null,
+      "page_count": null,
       "language": "Chinese"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": {
+        "start": 64,
+        "end": 131,
+        "exact": "[[Ciweige xiaoshuo]] [T'aipei, 1975], Part III, No. 18, pp. 115-188"
+      },
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 433,
+        "end": 484,
+        "exact": "[[Category:Fiction / Individual Stories (Chinese)]]"
+      }
+    },
+    "notes": "The first reference supplies T’aipei, transcribed with its source ASCII apostrophe. The ranges are locators, not book extents."
   },
   {
     "page_id": 533,
-    "needed": [
-      "publisher",
-      "location",
-      "translator"
-    ],
+    "page_title": "Hirm",
+    "label": "Hirm",
     "text": "[Angst. F 2] in [[Novelle]] [3], pp. 84-125\n\n\n[[Category:Fiction / Individual Stories (Estonian)]]",
-    "label": "3c: very short text",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "84",
-      "language": ""
-    }
+    "source": {
+      "path": "data/raw/zt_00",
+      "textId": 2122,
+      "rawTextSha256": "8cf3ec33339619e2c4bc9604046abee2d95bf62593a8700924e0b6bffae7ea85",
+      "textSha256": "8cf3ec33339619e2c4bc9604046abee2d95bf62593a8700924e0b6bffae7ea85",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
+      "language": "Estonian"
+    },
+    "evidence": {
+      "publisher": null,
+      "location": null,
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 46,
+        "end": 98,
+        "exact": "[[Category:Fiction / Individual Stories (Estonian)]]"
+      }
+    },
+    "notes": "The source gives only pp. 84-125; 84 is not a page count. The category explicitly names Estonian."
   },
   {
     "page_id": 162,
-    "needed": [
-      "translator"
-    ],
-    "text": "'''Essays / Volumes (German)'''\n\n'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''\n\n''Die Monotonisierung der Welt. Aufsätze und Vorträge''. Compiled with an afterword by Volker Michels. 254/(1)p. Frontispiece portait of Zweig [Suhrkamp Bibliothek, 493]\n\n*1st edition 3,000 copies. 1976\n*2nd edition. 2,000 copies. 1978\n*3rd edition. 1,000 copies. 1982\n*4th edition. 3,000 copies. 1988\n\n'''Contents:'''\n\n'''I.  Die Monotonisierung der Welt'''\n<lst type=bracket start=1>\nDie Monotonisierung der Welt, ",
-    "label": "4a: German (should return null translator)",
-    "existing": {
+    "page_title": "Die Monotonisierung der Welt. Aufsätze und Vorträge",
+    "label": "Die Monotonisierung der Welt. Aufsätze und Vorträge",
+    "text": "'''Essays / Volumes (German)'''\n\n'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''\n\n''Die Monotonisierung der Welt. Aufsätze und Vorträge''. Compiled with an afterword by Volker Michels. 254/(1)p. Frontispiece portait of Zweig [Suhrkamp Bibliothek, 493]\n\n*1st edition 3,000 copies. 1976\n*2nd edition. 2,000 copies. 1978\n*3rd edition. 1,000 copies. 1982\n*4th edition. 3,000 copies. 1988\n\n'''Contents:'''\n\n'''I.  Die Monotonisierung der Welt'''\n<lst type=bracket start=1>\nDie Monotonisierung der Welt, pp. 7-15\nGeschichtsschreibung von morgen, pp. 16-36\nIst die Geschichte gerecht?, pp. 37-39\nBei den Sorglosen, pp. 40-46\nDer europäische Gedanke in seiner historischen Entwicklung, pp. 47-71\nDie Tragik der Vergeßlichkeit, pp. 72-77\nDie Kunst des Briefes, pp. 78-80\nReisen oder Gereist-Werden, pp. 81-85\nReise nach Rußland, pp. 86-124\n</lst>\n\n'''II. Das Buch als Eingang zur Welt'''\n<lst type=bracket start=10>\nDas Buch als Eingang zur Welt, pp. 127-137\nSinn und Schönheit der Autographen, pp. 138-146\nBen Jonson, pp. 147-152\nTolstoi als religiöser und sozialer Denker, pp. 153-173\nMarcel Prousts tragischer Lebenslauf, pp. 174-182\nRomain Rolland, pp. 183-202\nAnmerkung zu James Joyce’s ‘Ulysses’, pp. 203-207\nThomas Mann: ‘Lotte in Weimar’, pp. 208-210\nRainer Maria Rilke, pp. 211-217\nDer Weg Hermann Hesses, pp. 218-225\nJoseph Roth, pp. 226-239\nNachwort [Volker Michels], pp. 241-251]\nEditorische Notiz, p. 252\nQuellennachweis, pp. 253-254\n</lst>\n\n'''Reviewed by''':  Egon Schwarz in the ''Frankfurter (Allgemeine) Zeitung'' [Frankfurt am Main], 7 August 1976\n\n\n[[Category:Essays / Volumes (German)]]\n{{DEFAULTSORTKEY:Monotonisierung der Welt: Aufsätze und Vorträge}}",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 44262,
+      "rawTextSha256": "c6a012115a801fba9279111cadbf396597f0d1a3e930a4a5b040dac1f48af15b",
+      "textSha256": "315e31a5763be680637cad64224ba30ed5c3a82e797e06c8829894336f03ca6a",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
       "publisher": "Suhrkakmp Verlag",
       "location": "Frankfurt am Main",
-      "translator": "",
-      "page_count": "7",
+      "translator": null,
+      "page_count": 254,
       "language": "German"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 33,
+        "end": 82,
+        "exact": "'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''"
+      },
+      "location": {
+        "start": 33,
+        "end": 82,
+        "exact": "'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''"
+      },
+      "translator": null,
+      "page_count": {
+        "start": 84,
+        "end": 253,
+        "exact": "''Die Monotonisierung der Welt. Aufsätze und Vorträge''. Compiled with an afterword by Volker Michels. 254/(1)p. Frontispiece portait of Zweig [Suhrkamp Bibliothek, 493]"
+      },
+      "language": {
+        "start": 1562,
+        "end": 1600,
+        "exact": "[[Category:Essays / Volumes (German)]]"
+      }
+    },
+    "notes": "254/(1)p. is an explicit extent, so the old range-only exception was wrong. Keep the source spelling Suhrkakmp; Volker Michels is an editor. The full text includes the German category."
   },
   {
     "page_id": 1999,
-    "needed": [
-      "translator"
-    ],
+    "page_title": "Adel, Kurt",
+    "label": "Adel, Kurt",
     "text": "<lst type=bracket>\n''Geist der Wirklichkeit. Vom Werden der österreichischen Dichtung''. Wien: Österreichische Verlagsanstalt, 1967. Zweig references, pp. 223-224, Note 224, p. 425\n\n''Die Literatur  Österreichs  an der Jahrtausendwende''. Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien: Peter Lang Verlag, 2001. Zweig reference, p. 255, 288. 2nd, expanded edition. 2003. Zweig references, pp. 222, 252, 284\n</lst>\n\n[[Category:Secondary Literature / Authors (German)]]",
-    "label": "4b: German with publisher (negative test)",
-    "existing": {
-      "publisher": "Peter Lang Verlag",
+    "source": {
+      "path": "data/raw/zt_00",
+      "textId": 9524,
+      "rawTextSha256": "211004c4a70ef4976b5b262205a5ba6a01c6ff179a70708b4dff67382bd7c8e6",
+      "textSha256": "07af831c853782312ea8c0f14998757a5cb7944325b9edadeb6e58e55b4da60d",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Österreichische Verlagsanstalt",
       "location": "Wien",
-      "translator": "",
-      "page_count": "223",
+      "translator": null,
+      "page_count": null,
       "language": "German"
-    }
+    },
+    "evidence": {
+      "publisher": {
+        "start": 19,
+        "end": 180,
+        "exact": "''Geist der Wirklichkeit. Vom Werden der österreichischen Dichtung''. Wien: Österreichische Verlagsanstalt, 1967. Zweig references, pp. 223-224, Note 224, p. 425"
+      },
+      "location": {
+        "start": 19,
+        "end": 180,
+        "exact": "''Geist der Wirklichkeit. Vom Werden der österreichischen Dichtung''. Wien: Österreichische Verlagsanstalt, 1967. Zweig references, pp. 223-224, Note 224, p. 425"
+      },
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 429,
+        "end": 481,
+        "exact": "[[Category:Secondary Literature / Authors (German)]]"
+      }
+    },
+    "notes": "Imprint fields refer to the first listed book, Wien: Österreichische Verlagsanstalt, 1967. Peter Lang belongs to the second book. Every p./pp. number is a Zweig-reference locator, not an extent."
   },
   {
     "page_id": 4209,
-    "needed": [
-      "publisher",
-      "location",
-      "translator"
-    ],
-    "text": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''\n\n''Vreemdes in 'n vreemde wêreld'' [Vier Erzählungen]. Translated with a foreword and preface by Hymne Weiss. 160p. \n\n'''Contents:'''\n<lst type=bracket start=1>\nVoorwoord [Hymme Weiss, Pretoria, 25 January, 1944], p. (5)\nInleiding [Preface, Hymme Weiss], pp. 7-9\nDie onsigbare Versameling [Die unsichtbare Sammlung], pp. 10-37\nDie Voorval by die Meer van Genève [Episode vom (am) Genfer See], pp. 38-52\nLeporella [Leporella], pp.",
-    "label": "4c: unknown language, many gaps",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "160",
-      "language": ""
-    }
+    "page_title": "Vreemdes in 'n vreemde wêreld",
+    "label": "Vreemdes in 'n vreemde wêreld",
+    "text": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''\n\n''Vreemdes in 'n vreemde wêreld'' [Vier Erzählungen]. Translated with a foreword and preface by Hymne Weiss. 160p. \n\n'''Contents:'''\n<lst type=bracket start=1>\nVoorwoord [Hymme Weiss, Pretoria, 25 January, 1944], p. (5)\nInleiding [Preface, Hymme Weiss], pp. 7-9\nDie onsigbare Versameling [Die unsichtbare Sammlung], pp. 10-37\nDie Voorval by die Meer van Genève [Episode vom (am) Genfer See], pp. 38-52\nLeporella [Leporella], pp. 53-105\nBoekmendel [Buchmendel], pp. 106-160\n</lst>\n\n[[Category:Fiction / Volumes (Afrikaans)]]",
+    "source": {
+      "path": "data/raw/zt_04",
+      "textId": 42182,
+      "rawTextSha256": "fcfbaa4b3719cb7efcd869196c82166a9cf811e8a2fd424d0beed03667f2a968",
+      "textSha256": "25e93fdbdbd298e79280e3ea59915fd23b51aeb9ce309906dea386116ac0cba2",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": "Nasionale Pers Beperk",
+      "location": "Kaapstad (Capetown)",
+      "translator": "Hymne Weiss",
+      "page_count": 160,
+      "language": "Afrikaans"
+    },
+    "evidence": {
+      "publisher": {
+        "start": 0,
+        "end": 70,
+        "exact": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''"
+      },
+      "location": {
+        "start": 0,
+        "end": 70,
+        "exact": "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''"
+      },
+      "translator": {
+        "start": 72,
+        "end": 187,
+        "exact": "''Vreemdes in 'n vreemde wêreld'' [Vier Erzählungen]. Translated with a foreword and preface by Hymne Weiss. 160p. "
+      },
+      "page_count": {
+        "start": 72,
+        "end": 187,
+        "exact": "''Vreemdes in 'n vreemde wêreld'' [Vier Erzählungen]. Translated with a foreword and preface by Hymne Weiss. 160p. "
+      },
+      "language": {
+        "start": 553,
+        "end": 595,
+        "exact": "[[Category:Fiction / Volumes (Afrikaans)]]"
+      }
+    },
+    "notes": "The imprint names two publication places; the location extractor contract selects the final comma-separated place, Kaapstad (Capetown). Hymne Weiss is explicitly the translator. The full category names Afrikaans."
   },
   {
     "page_id": 6005,
-    "needed": [
-      "publisher",
-      "location",
-      "translator",
-      "page_count"
-    ],
+    "page_title": "Vrapuesi i amoku",
+    "label": "Vrapuesi i amoku",
     "text": "\\\"Vrapuesi i amoku\\\" [Der Amokläufer] in:\n<lst type=bracket start=1>\n[[Novela]] [Tiranë/Tirana, 2014], Vol. 2, No. 4, pp. ??  \n</lst>\n\n'''See:''' [[Amok / Albanian]];  [[Amoku / Albanian]]   and [[Der Amokläufer]] [Translation: Albanian]\n\n[[Category:Fiction / Individual Stories (Albanian)]]",
-    "label": "5: random diverse",
-    "existing": {
-      "publisher": "",
-      "location": "",
-      "translator": "",
-      "page_count": "",
+    "source": {
+      "path": "data/raw/zt_06",
+      "textId": 57092,
+      "rawTextSha256": "dc2084fa44e059be25459fe342d15f1f5675042ae6907812e8130c76969685e0",
+      "textSha256": "c8bc66cabd61018408ea874fa16b83443376f9bfcc506baea48f6716064a3f1b",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
+      "location": "Tiranë/Tirana",
+      "translator": null,
+      "page_count": null,
       "language": "Albanian"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": {
+        "start": 69,
+        "end": 126,
+        "exact": "[[Novela]] [Tiranë/Tirana, 2014], Vol. 2, No. 4, pp. ??  "
+      },
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 239,
+        "end": 291,
+        "exact": "[[Category:Fiction / Individual Stories (Albanian)]]"
+      }
+    },
+    "notes": "The first reference supplies Tiranë/Tirana. pp. ?? remains unknown; do not manufacture a count, publisher or translator."
   },
   {
     "page_id": 7140,
-    "needed": [
-      "publisher",
-      "translator"
-    ],
+    "page_title": "Florence, ville de fêtes",
+    "label": "Florence, ville de fêtes",
     "text": "\\\"Florence, ville de fêtes\\\" in [[Voyages]] [Paris, 2002/2009], No. 12, pp. 111-118 [Le Livre de Poche, 15372]\n\n'''See:''' [[Festliches Florenz]]\n\n\n[[Category:Essays / Individual Essays (French)]]",
-    "label": "5: random diverse",
-    "existing": {
-      "publisher": "",
+    "source": {
+      "path": "data/raw/zt_06",
+      "textId": 53857,
+      "rawTextSha256": "eff7a0092d59f53a45cb016fd64e0514e0047c80723cc1da954bbcf6e56edf03",
+      "textSha256": "ccde6e7e839713fdc986b7e3d18bb9844bc53ac3182482c7deae8c3c479e9d1b",
+      "normalization": "lib.encoding.fix_encoding; full stage-02 text, no truncation"
+    },
+    "reviewed_date": "2026-09-05",
+    "expected": {
+      "publisher": null,
       "location": "Paris",
-      "translator": "",
-      "page_count": "111",
+      "translator": null,
+      "page_count": null,
       "language": "French"
-    }
+    },
+    "evidence": {
+      "publisher": null,
+      "location": {
+        "start": 0,
+        "end": 110,
+        "exact": "\\\"Florence, ville de fêtes\\\" in [[Voyages]] [Paris, 2002/2009], No. 12, pp. 111-118 [Le Livre de Poche, 15372]"
+      },
+      "translator": null,
+      "page_count": null,
+      "language": {
+        "start": 148,
+        "end": 196,
+        "exact": "[[Category:Essays / Individual Essays (French)]]"
+      }
+    },
+    "notes": "Paris is the collection publication place; Florence is the article subject. pp. 111-118 is a range, not an extent. Le Livre de Poche, 15372 is a series reference, not an explicit publisher statement."
   }
 ]

@@ -15,7 +15,10 @@
       "translator": null,
       "pageCount": null
     },
-    "notes": "pp. (153)-(274) is a page range within the collection, not a page count. Translator (Alzir Hella) belongs to the French edition section only, not the German original."
+    "notes": "pp. (153)-(274) is a page range within the collection, not a page count. Translator (Alzir Hella) belongs to the French edition section only, not the German original. Title comparison also accepts the exact source page title with the (VIST) disambiguator, verified against stage-02 page 285 / text 61167 on 2026-09-05; arbitrary suffixes are not accepted.",
+    "accepted_title_variants": [
+      "Verwirrung der Gefühle (VIST)"
+    ]
   },
   {
     "page_id": 33,

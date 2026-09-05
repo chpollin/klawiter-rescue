@@ -311,7 +311,8 @@ const Curate = {
       this._lastSubject = null;
     }
 
-    host.addEventListener('keydown', ev => {
+    // The inner list is replaced on every render; its handler goes with it.
+    host.querySelector('.agent-queue').addEventListener('keydown', ev => {
       const row = ev.target.closest && ev.target.closest('.agent-queue-row');
       if (row) this._queueKey(ev, row);
     });

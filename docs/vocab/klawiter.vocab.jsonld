@@ -323,6 +323,18 @@
       }
     },
     {
+      "@id": "klawiter:bindingStatus",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "State of an edition's work binding; contested when the binding remains an open claim.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "binding status",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
       "@id": "klawiter:candidateId",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Identifier of the reconciliation candidate an interpretation is based on.",
@@ -491,6 +503,18 @@
       "rdfs:label": "derived projection"
     },
     {
+      "@id": "klawiter:editionCount",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Number of segmented edition candidates in a page summary.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "edition count",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
       "@id": "klawiter:editions",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Edition nodes of the Work/Edition graph.",
@@ -559,6 +583,18 @@
       "skos:changeNote": "Renamed from klawiter:reviewAction on 2026-08-27; the earlier IRI collided with the class klawiter:ReviewAction on case-insensitive filesystems and is no longer published."
     },
     {
+      "@id": "klawiter:headerCount",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Number of source lines matching the edition-header rule in a page summary.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "header count",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
       "@id": "klawiter:headerLine",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "The unmodified source header line an edition was segmented from.",
@@ -566,6 +602,18 @@
         "@id": "klawiter:"
       },
       "rdfs:label": "header line",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:headerSeries",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Series notation retained from an edition header, including its source brackets.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "header series",
       "rdfs:range": {
         "@id": "xsd:string"
       }
@@ -767,6 +815,54 @@
       }
     },
     {
+      "@id": "klawiter:reviewContract",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Statement of the scope and limits of review decisions applied to a dataset.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review contract",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewDecision",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Disposition recorded by the sample review decision applied to an edition.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review decision",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewEvidenceSha256",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "SHA-256 of the sample reconciliation evidence recorded when review decisions are applied to a dataset.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review evidence SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewFlagCount",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Number of segmented editions carrying at least one review flag in a page summary, not the number of individual flags.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review flag count",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
       "@id": "klawiter:reviewFlags",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Machine-raised flags that prioritize an edition for review.",
@@ -917,6 +1013,18 @@
       }
     },
     {
+      "@id": "klawiter:sourceMatchMode",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Method used to identify a source occurrence, such as exact-string, component-set, field-value-line, or field-value.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source match mode",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
       "@id": "klawiter:sourcePageId",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Original MediaWiki page ID (provenance).",
@@ -948,6 +1056,18 @@
         "@id": "klawiter:"
       },
       "rdfs:label": "source slice SHA-256",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:sourceText",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Exact source line retained as evidence for a reconciliation occurrence.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source text",
       "rdfs:range": {
         "@id": "xsd:string"
       }

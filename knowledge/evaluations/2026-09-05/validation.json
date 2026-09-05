@@ -1,0 +1,95 @@
+{
+  "date": "2026-09-05",
+  "source_commit": "1902abc",
+  "state": "Uncommitted reviewed working tree; no push, release or remote CI run.",
+  "runtime": {
+    "python": "3.11.9",
+    "uv": "0.12.5",
+    "dependencies": "uv sync --locked succeeded",
+    "node": "22.14.0",
+    "ruff": "0.16.4"
+  },
+  "default": {
+    "command": "python -m uv run pytest -q --require-test-inputs --junitxml=test-results/default-pinned-final.xml",
+    "exit_code": 0,
+    "tests": 615,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 615,
+    "deselected": 174
+  },
+  "semantic": {
+    "command": "python -m uv run pytest -q -m semantic --require-test-inputs --junitxml=test-results/semantic-pinned-final.xml",
+    "exit_code": 1,
+    "tests": 170,
+    "failures": 31,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 139,
+    "interpretation": "31 retained page/field disagreements: 14 rule and17 frontend; not a corpus error rate."
+  },
+  "node": {
+    "passed": 53,
+    "module_syntax_checks": 15,
+    "skipped": 0
+  },
+  "static": {
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "pre_commit_all_files": "passed",
+    "compileall_pipeline_tests": "passed"
+  },
+  "production": {
+    "command": "python -m uv run python pipeline/run_pipeline.py",
+    "llm_mode": "frozen",
+    "exit_code": 0,
+    "seconds": 176.4,
+    "gate1": {
+      "contestedClaims": true,
+      "deterministicRebuild": true,
+      "reviewQueue": true,
+      "selectors": true,
+      "shacl": true,
+      "stableIdentifiers": true
+    },
+    "gate2": {
+      "agentOccurrenceEvidence": true,
+      "contestedClaims": true,
+      "decisionSeparation": true,
+      "deterministicRebuild": true,
+      "frontendProjection": true,
+      "inputHashes": true,
+      "jsonldProjection": true,
+      "shacl": true
+    }
+  },
+  "reproduction": {
+    "artifact_count": 117,
+    "all_identical": true,
+    "changed": [],
+    "comparison": "System-runtime dependent rebuild versus full locked-uv source rebuild; includes ignored candidate/queue artifacts and vocabulary files."
+  },
+  "reviewed_manifest_check": {
+    "command": "python -m uv run python pipeline/verify_committed_evidence.py --reference-dir test-results/committed-evidence-reference",
+    "exit_code": 0,
+    "mutation_tests": 22,
+    "ci_reference": "Git HEAD blobs; current reviewed manifests and matching changes need to be committed together."
+  },
+  "dashboard_independent_review": {
+    "real_corpus_filter_combinations": 120,
+    "final_date_url_probes": 3,
+    "final_focus_probes": 2,
+    "findings_resolved": true,
+    "browser_errors": 0
+  },
+  "input_hashes": {
+    "tests/test_sample_20.json": "dab5a4dc1c59915e88243ea112c8e859ff9ffd154c553da51726765354503fb6",
+    "tests/wiki_ground_truth.json": "3df3b3fed77096df2bd0ce5b9d6529e31b475246a7f3c2da32fb059db1f217ea",
+    "data/intermediate/02_encoding_fixed.csv": "ccad2060a7cb26a4133c1263c86937ed7017f0edada29803c37e343e8d6c7304",
+    "docs/data/klawiter.json": "7b5d6b6506c0777e1494ee070518f593a987d79c5dbd77346308ad056c5397e1",
+    "data/output/editions/manifest.json": "d3dc8b2c29f0abdb9d8ea9dacd1ca4b9f3df190d559b42ebb804175af1af182e",
+    "data/output/reconciliation/manifest.json": "cca945882b5cadae02568f4181689bf6e069665ddfebbf69d9a9c956b0f94c44"
+  },
+  "raw_changed": false
+}

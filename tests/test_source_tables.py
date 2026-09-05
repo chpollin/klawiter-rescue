@@ -9,26 +9,34 @@ cannot provide.
 
 from __future__ import annotations
 
+import hashlib
 import importlib
-import json
 
 import pytest
-from lib.config import OUTPUT_JSONLD, SQL_DUMP_PATH
+from lib.config import SQL_DUMP_PATH
 from lib.encoding import fix_encoding
 
 extract = importlib.import_module("01_extract")
+
+
+def test_extraction_fixtures_match_complete_sources(real_entries, source_rows):
+    by_id = {int(row["page_id"]): row for row in source_rows}
+    for entry in real_entries:
+        row = by_id[entry["page_id"]]
+        assert entry["text"] == row["content"], entry["page_id"]
+        assert entry["page_title"] == row["page_title"]
+        assert entry["source"]["textId"] == int(row["text_id"])
+        assert entry["source"]["path"] == f"data/raw/zt_0{row['blob_id']}"
+        assert (
+            entry["source"]["textSha256"]
+            == hashlib.sha256(row["content"].encode("utf-8")).hexdigest()
+        )
 
 
 @pytest.fixture(scope="module")
 def sql_text() -> str:
     with open(SQL_DUMP_PATH, "rb") as f:
         return f.read().decode("latin-1")
-
-
-@pytest.fixture(scope="module")
-def jsonld_entries() -> list[dict]:
-    with open(OUTPUT_JSONLD, encoding="utf-8") as f:
-        return json.load(f)["entries"]
 
 
 def _table_rows(sql_text: str, table: str, min_columns: int) -> list[list[str]]:
@@ -44,7 +52,7 @@ def _table_rows(sql_text: str, table: str, min_columns: int) -> list[list[str]]:
     return rows
 
 
-def test_categories_match_the_categorylinks_table(sql_text, jsonld_entries) -> None:
+def test_categories_match_the_categorylinks_table(sql_text, canonical_entries) -> None:
     """Every parsed category must equal MediaWiki's own category assignment.
 
     The category link syntax [[Category:Name|sort key]] carries a sort key
@@ -61,7 +69,7 @@ def test_categories_match_the_categorylinks_table(sql_text, jsonld_entries) -> N
         expected.setdefault(page_id, set()).add(name)
 
     actual: dict[int, set[str]] = {}
-    for entry in jsonld_entries:
+    for entry in canonical_entries:
         cats = entry.get("categories")
         if cats:
             actual[entry["sourcePageId"]] = set(cats)
@@ -83,16 +91,11 @@ def test_categories_match_the_categorylinks_table(sql_text, jsonld_entries) -> N
     )
 
 
-# Measured after the pagelinks repair and page-title aliasing (2026-08-26):
-# 120 of 1213 references point to never-created bibliography pages (red
-# links in the source wiki). The bound is a ratchet: improvements pass,
-# regressions fail.
-BROKEN_SEE_ALSO_CEILING = 120
-
-
-def test_see_references_resolve_after_pagelinks_repair() -> None:
-    with open("docs/data/klawiter.json", encoding="utf-8") as f:
-        doc = json.load(f)
+# Unresolved targets are diagnostics, not proof of absent source pages.
+# Keep the source-table check on the shared, reviewed regression ratchet.
+def test_see_references_resolve_after_pagelinks_repair(frontend_data, baseline) -> None:
+    ceiling = baseline["known_issues"]["broken_see_also_refs"]
+    doc = frontend_data
     anchors = {e["title"] for e in doc["entries"] if e.get("title")}
     anchors |= set(doc["redirects"].keys())
     broken = [
@@ -101,7 +104,7 @@ def test_see_references_resolve_after_pagelinks_repair() -> None:
         for ref in entry.get("seeAlso") or []
         if ref not in anchors
     ]
-    assert len(broken) <= BROKEN_SEE_ALSO_CEILING, (
+    assert len(broken) <= ceiling, (
         f"{len(broken)} unresolved See-references exceed the ratchet of "
-        f"{BROKEN_SEE_ALSO_CEILING}; sample: {broken[:5]}"
+        f"{ceiling}; sample: {broken[:5]}"
     )

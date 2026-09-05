@@ -38,22 +38,28 @@ const Facets = {
     if (!container) return;
 
     const counts = countByField(entries, field);
+    if (field === 'language') {
+      const missing = entries.filter(entry => !entry.language).length;
+      if (missing) counts[App.NOT_RECORDED] = missing;
+    }
     const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     const total = sorted.length;
     const active = App.state.filters[filterKey];
+    const selected = Array.isArray(active) ? active : (active ? [active] : []);
     const cap = limit || 50;
     const collapsed = total > cap && !this.expanded[filterKey];
     const shown = collapsed ? sorted.slice(0, cap) : sorted;
     // The selected value stays visible even when it sits outside the top of
     // the ranking, or the sidebar would show no trace of the active filter.
-    if (active && !shown.some(([val]) => val === active)) {
-      const hit = sorted.find(([val]) => val === active);
-      shown.push(hit || [active, 0]);
+    for (const value of selected) {
+      if (shown.some(([val]) => val === value)) continue;
+      const hit = sorted.find(([val]) => val === value);
+      shown.push(hit || [value, 0]);
     }
 
     let html = shown.map(([val, count]) => {
       const label = labels ? (labels[val] || val) : val;
-      const isActive = active === val;
+      const isActive = selected.includes(val);
       return `<div class="facet-item ${isActive ? 'active' : ''}" tabindex="0" role="button"
                    aria-pressed="${isActive}"
                    data-facet-key="${esc(filterKey)}" data-facet-value="${esc(val)}">
@@ -71,7 +77,12 @@ const Facets = {
   },
 
   toggle(filterKey, value) {
-    if (App.state.filters[filterKey] === value) {
+    const active = App.state.filters[filterKey];
+    if (Array.isArray(active)) {
+      const next = active.includes(value) ? active.filter(v => v !== value) : [...active, value];
+      if (next.length) App.setFilter(filterKey, next);
+      else App.removeFilter(filterKey);
+    } else if (active === value) {
       App.removeFilter(filterKey);
     } else {
       App.setFilter(filterKey, value);

@@ -29,7 +29,7 @@ jobs:
           import glob, json, sys
           from pathlib import Path
           sys.path.insert(0, 'pipeline')
-          from apply_patches import validate_patch
+          from apply_patches import field_patches, validate_patch
           from lib.reconciliation import load_reconciliation_patches
           errors = []
           files = sorted(glob.glob('data/corrections/*.json'))
@@ -38,9 +38,11 @@ jobs:
           for path in files:
               with open(path, encoding='utf-8') as fh:
                   doc = json.load(fh)
-              patches = doc.get('patches', [])
-              if patches and doc.get('patchVersion') != 2:
-                  errors.append(f"{path}: patchVersion is {doc.get('patchVersion')!r}, expected 2")
+              try:
+                  patches = field_patches(doc)
+              except ValueError as exc:
+                  errors.append(f'{path}: {exc}')
+                  continue
               for p in patches:
                   for problem in validate_patch(p):
                       errors.append(f'{path}: {problem}')

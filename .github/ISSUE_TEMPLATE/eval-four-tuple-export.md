@@ -5,6 +5,10 @@ title: "[antrag-eval] Four-tuple protocol export for <scope>"
 labels: antrag-eval
 ---
 
+## Proposal status
+
+This template proposes additional evaluation work. It does not describe an implemented feature or an approved release requirement. See [current status](../../knowledge/status.md) and [acceptance scope](../../knowledge/production-readiness.md).
+
 ## What this issue is for
 
 The editing surface already logs typed episodes (Accept / Correct / Add) with field, previous provenance and entry type. This hook asks for an export that turns those episodes into the four-tuple the evaluation reads:
@@ -21,7 +25,7 @@ Criterion-independent: the export carries the tuple, no score, no rate, no ranki
 - `docs/js/edit.js` — episode capture and the exported patch document
 - `pipeline/apply_patches.py` — `edit_history` records the overlay writes back
 - `data/corrections/` — the patch store whose git history is the audit trail
-- `knowledge/production-readiness.md` — EIL increment 5, "Protocol-Read-out"
+- `knowledge/data.md` — current correction and review-scope contract
 
 ## Open before implementation
 

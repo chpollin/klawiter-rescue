@@ -1,0 +1,162 @@
+[
+  {
+    "page_id": 4303,
+    "field": "publisher",
+    "expected": "Binoza",
+    "rule": null,
+    "frontend": "Binoza",
+    "frontend_matches_current_expectation": true
+  },
+  {
+    "page_id": 4303,
+    "field": "translator",
+    "expected": "Iso Velikanović",
+    "rule": "Iso Velikanovi",
+    "frontend": "Iso Velikanovi",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 4303,
+    "field": "language",
+    "expected": "Serbo-Croatian",
+    "rule": null,
+    "frontend": null,
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 1800,
+    "field": "publisher",
+    "expected": "Pechat Far",
+    "rule": "Translated by Dimitŭr Stoevski. 1st edition",
+    "frontend": "Translated by Dimitŭr Stoevski. 1st edition",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 1800,
+    "field": "translator",
+    "expected": "Dimitŭr Stoevski",
+    "rule": "Dimit",
+    "frontend": "Dimit",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 5746,
+    "field": "publisher",
+    "expected": null,
+    "rule": "Juventud",
+    "frontend": "Juventud",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 5746,
+    "field": "translator",
+    "expected": "the Editorial Juventud",
+    "rule": "Alfredo Cahn",
+    "frontend": "Alfredo Cahn",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 2866,
+    "field": "location",
+    "expected": "Chalfont St Giles",
+    "rule": null,
+    "frontend": null,
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 5082,
+    "field": "publisher",
+    "expected": "Bibliothèque principale de la Ville de Namur",
+    "rule": null,
+    "frontend": "Bibliothèque principale de la Ville de Namur",
+    "frontend_matches_current_expectation": true
+  },
+  {
+    "page_id": 1891,
+    "field": "publisher",
+    "expected": "Kavkazskiĭ Krai",
+    "rule": null,
+    "frontend": "KavkazskiÄ­ Krai",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 1891,
+    "field": "translator",
+    "expected": null,
+    "rule": "R. Gal",
+    "frontend": "R. Gal",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 4445,
+    "field": "publisher",
+    "expected": "Hochschulverl.",
+    "rule": null,
+    "frontend": "Hochschulverl",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 4445,
+    "field": "location",
+    "expected": "Freiburg im Breisgau",
+    "rule": "Freiburg",
+    "frontend": "Freiburg",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 4376,
+    "field": "publisher",
+    "expected": "Skoglunds Bokförlag",
+    "rule": null,
+    "frontend": "Skoglunds Bokförlag",
+    "frontend_matches_current_expectation": true
+  },
+  {
+    "page_id": 533,
+    "field": "language",
+    "expected": "Estonian",
+    "rule": null,
+    "frontend": null,
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 1999,
+    "field": "publisher",
+    "expected": "Österreichische Verlagsanstalt",
+    "rule": "Peter Lang Verlag",
+    "frontend": "Peter Lang Verlag",
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 1999,
+    "field": "page_count",
+    "expected": null,
+    "rule": 425,
+    "frontend": 425,
+    "frontend_matches_current_expectation": false
+  },
+  {
+    "page_id": 4209,
+    "field": "publisher",
+    "expected": "Nasionale Pers Beperk",
+    "rule": null,
+    "frontend": "Nasionale Pers Beperk",
+    "frontend_matches_current_expectation": true
+  },
+  {
+    "page_id": 4209,
+    "field": "translator",
+    "expected": "Hymne Weiss",
+    "rule": null,
+    "frontend": "Hymne Weiss",
+    "frontend_matches_current_expectation": true
+  },
+  {
+    "page_id": 4209,
+    "field": "language",
+    "expected": "Afrikaans",
+    "rule": null,
+    "frontend": null,
+    "frontend_matches_current_expectation": false
+  }
+]

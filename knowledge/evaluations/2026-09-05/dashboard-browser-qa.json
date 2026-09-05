@@ -1,0 +1,38 @@
+{
+  "layouts": [
+    {
+      "viewport": 1440,
+      "client": 1440,
+      "scroll": 1440,
+      "h1": "Explore the bibliography"
+    },
+    {
+      "viewport": 390,
+      "client": 390,
+      "scroll": 390,
+      "h1": "Explore the bibliography"
+    },
+    {
+      "viewport": 320,
+      "client": 320,
+      "scroll": 320,
+      "h1": "Explore the bibliography"
+    }
+  ],
+  "missingSelection": 442,
+  "multiSelection": 670,
+  "undatedSelection": 103,
+  "nontextContrast": 3.2790798434843054,
+  "errors": [],
+  "checks": [
+    "missing-language exact ID handover",
+    "multiple language/type exact ID handover and reload",
+    "reversed range rejected and corrected",
+    "upper-bound range excludes undated",
+    "Enter and Space chart activation with preserved focus",
+    "year input retains keyboard focus after submit",
+    "undated card opens exact matching IDs and keyboard Back returns to selection",
+    "Map and Connections reachable",
+    "320/390/1440 no horizontal overflow"
+  ]
+}

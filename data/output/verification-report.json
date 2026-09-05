@@ -52,12 +52,12 @@
     },
     "page_count": {
       "total_entries": 4751,
-      "extracted": 2530,
-      "correct": 2529,
+      "extracted": 2435,
+      "correct": 2434,
       "correct_fallback": 0,
       "false_positive": 1,
       "false_negative": 0,
-      "coverage": 53.3,
+      "coverage": 51.3,
       "precision": 100.0
     }
   },
@@ -513,7 +513,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Zweig. Leipzig",
+          "extracted": "Stefan Zweig",
           "in_raw": true,
           "status": "correct"
         },
@@ -1689,7 +1689,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Christobel Fowler. London",
+          "extracted": "Christobel Fowler",
           "in_raw": true,
           "status": "correct"
         },
@@ -2643,7 +2643,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xxii",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -2828,7 +2828,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "N. Shul",
+          "extracted": "N. Shul’govskii",
           "in_raw": true,
           "status": "correct"
         },
@@ -2976,7 +2976,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "P. S. Bernshte",
+          "extracted": "P. S. Bernshteĭn",
           "in_raw": true,
           "status": "correct"
         },
@@ -3831,11 +3831,6 @@
           "extracted": "Wien",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 151,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -4262,7 +4257,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ep. Kaour",
+          "extracted": "Ep. Kaourē",
           "in_raw": true,
           "status": "correct"
         },
@@ -5470,7 +5465,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Pe",
+          "extracted": "Stefan Peĭkov",
           "in_raw": true,
           "status": "correct"
         },
@@ -5866,11 +5861,6 @@
           "extracted": "Mien Labberton",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1366,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -6182,7 +6172,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bournac. Revised translation by Brigi",
+          "extracted": "Alzir Hella and Olivier Bournac",
           "in_raw": true,
           "status": "correct"
         },
@@ -6642,11 +6632,6 @@
           "extracted": "Vladislav",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 722,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -6671,7 +6656,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitūr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -6740,7 +6725,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mahmut Bobrati. Reprinted in",
+          "extracted": "Mahmut Bobrati",
           "in_raw": true,
           "status": "correct"
         },
@@ -6772,7 +6757,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -6893,11 +6878,6 @@
           "extracted": "Wien",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 2,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -6952,11 +6932,6 @@
           "extracted": "Laure Bernardi",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1177,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -7008,7 +6983,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella.  Revised translation by Brigitte Vergne-Cain and",
+          "extracted": "Alzir Hella",
           "in_raw": true,
           "status": "correct"
         },
@@ -7068,11 +7043,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 13,
           "in_raw": true,
           "status": "correct"
         }
@@ -7164,11 +7134,6 @@
         },
         "translator": {
           "extracted": "Liliana Scalero",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1181,
           "in_raw": true,
           "status": "correct"
         }
@@ -7274,11 +7239,6 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 30,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -7309,11 +7269,6 @@
         },
         "translator": {
           "extracted": "Ramon Monton",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1492,
           "in_raw": true,
           "status": "correct"
         }
@@ -8266,7 +8221,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Theodor Duquesnoy. Illustrated with engravings by Kurt Löb",
+          "extracted": "Theodor Duquesnoy",
           "in_raw": true,
           "status": "correct"
         },
@@ -8303,7 +8258,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Axel Tórgar",
+          "extracted": "Axel Tórgarđ",
           "in_raw": true,
           "status": "correct"
         },
@@ -8652,7 +8607,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zhongfu Gao et al. Illustrated by Hu Meng. Endnotes by Nuan H",
+          "extracted": "Zhongfu Gao et al",
           "in_raw": true,
           "status": "correct"
         },
@@ -8800,7 +8755,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Xiaoye. Illustrated by Edda Skibbe",
+          "extracted": "Xiaoye",
           "in_raw": true,
           "status": "correct"
         },
@@ -9576,7 +9531,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Ŝariĉ",
           "in_raw": true,
           "status": "correct"
         },
@@ -9650,7 +9605,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -11198,7 +11153,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. Dust jacket illustration by Duncan Ward",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -11309,7 +11264,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. Benjamin W. Huebsch translated",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -15006,7 +14961,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella. Nos",
+          "extracted": "Alzir Hella",
           "in_raw": true,
           "status": "correct"
         },
@@ -15154,7 +15109,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bournac. Drawings on the cover and in",
+          "extracted": "Alzir Hella and Olivier Bournac",
           "in_raw": true,
           "status": "correct"
         },
@@ -15496,11 +15451,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1365,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -15589,11 +15539,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1360,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -15619,11 +15564,6 @@
         },
         "translator": {
           "extracted": "Alzir Hella",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1384,
           "in_raw": true,
           "status": "correct"
         }
@@ -15719,11 +15659,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1507,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -15761,11 +15696,6 @@
         },
         "translator": {
           "extracted": "Alzir Hella",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1383,
           "in_raw": true,
           "status": "correct"
         }
@@ -15880,11 +15810,6 @@
           "extracted": "Alzir Hella",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1181,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -15910,11 +15835,6 @@
         },
         "translator": {
           "extracted": "Alzir Hella",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1181,
           "in_raw": true,
           "status": "correct"
         }
@@ -16022,11 +15942,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1381,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -16078,7 +15993,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tak",
+          "extracted": "Takēs Apostolopoulou",
           "in_raw": true,
           "status": "correct"
         },
@@ -16226,7 +16141,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Marianna Ant",
+          "extracted": "Marianna Antōnopoulou and Irmchild Stainer",
           "in_raw": true,
           "status": "correct"
         },
@@ -16300,7 +16215,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Polyvios Vovolin",
+          "extracted": "Polyvios Vovolinēs",
           "in_raw": true,
           "status": "correct"
         },
@@ -16337,7 +16252,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tatiana Lian",
+          "extracted": "Tatiana Lianē",
           "in_raw": true,
           "status": "correct"
         },
@@ -16907,7 +16822,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vijaya Chauhan and Shivdan Singh Chauhan. ii",
+          "extracted": "Vijaya Chauhan and Shivdan Singh Chauhan",
           "in_raw": true,
           "status": "correct"
         },
@@ -16939,7 +16854,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bournac.  Extract adapted by Denis La",
+          "extracted": "Alzir Hella and Olivier Bournac",
           "in_raw": true,
           "status": "correct"
         }
@@ -16971,7 +16886,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Olivier Bournac and Alzir Hella. Revised by Brigitte Vergne-C",
+          "extracted": "Olivier Bournac and Alzir Hella",
           "in_raw": true,
           "status": "correct"
         },
@@ -17421,7 +17336,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -17761,7 +17676,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Zweig. Leipzig",
+          "extracted": "Stefan Zweig",
           "in_raw": true,
           "status": "correct"
         },
@@ -17798,7 +17713,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Norman R. Shapiro. Chicago",
+          "extracted": "Norman R. Shapiro",
           "in_raw": true,
           "status": "correct"
         },
@@ -18046,7 +17961,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Joan Fontcuberta. Artistic format by Marta Serrano",
+          "extracted": "Joan Fontcuberta",
           "in_raw": true,
           "status": "correct"
         },
@@ -18519,7 +18434,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zhongpu Shu. Illutsrated edition",
+          "extracted": "Zhongpu Shu",
           "in_raw": true,
           "status": "correct"
         },
@@ -18704,7 +18619,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tai",
+          "extracted": "Tai’an Zhao",
           "in_raw": true,
           "status": "correct"
         },
@@ -18741,7 +18656,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Huan'gong Hou from the Russian version of Zweig",
+          "extracted": "Huan'gong Hou",
           "in_raw": true,
           "status": "correct"
         },
@@ -19174,7 +19089,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Berta Vias Mahou. The cover is a fragment of",
+          "extracted": "Berta Vias Mahou",
           "in_raw": true,
           "status": "correct"
         },
@@ -19285,7 +19200,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Valija Brut",
+          "extracted": "Valija Brutāne",
           "in_raw": true,
           "status": "correct"
         },
@@ -19322,7 +19237,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Roberts Kroders.  Artistic designer Arnis Zari",
+          "extracted": "Roberts Kroders",
           "in_raw": true,
           "status": "correct"
         },
@@ -19613,7 +19528,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Véra Machá",
+          "extracted": "Véra Macháčková-Riegerová",
           "in_raw": true,
           "status": "correct"
         },
@@ -19687,7 +19602,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Josef Hrdli",
+          "extracted": "Josef Hrdlička and Klement Králik",
           "in_raw": true,
           "status": "correct"
         },
@@ -19835,7 +19750,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden  and Cedar Paul. xxiii",
+          "extracted": "Eden  and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -19945,7 +19860,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xv",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -19982,7 +19897,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xiii",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -20019,7 +19934,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xi",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -20451,7 +20366,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jean Longeville. New pref. Alain Mangin",
+          "extracted": "Jean Longeville",
           "in_raw": true,
           "status": "correct"
         },
@@ -20673,7 +20588,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xv",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -20969,7 +20884,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -21117,7 +21032,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Pe",
+          "extracted": "Stefan Peĭkov",
           "in_raw": true,
           "status": "correct"
         },
@@ -21302,7 +21217,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "M. Nenova and I. Ra",
+          "extracted": "M. Nenova and I. Raĭnov",
           "in_raw": true,
           "status": "correct"
         },
@@ -21339,7 +21254,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Teodora Pe",
+          "extracted": "Teodora Peĭkova",
           "in_raw": true,
           "status": "correct"
         },
@@ -21408,7 +21323,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Simidov",
           "in_raw": true,
           "status": "correct"
         },
@@ -21593,7 +21508,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Er Guan and Ning Wang. Editorial foreword",
+          "extracted": "Er Guan and Ning Wang",
           "in_raw": true,
           "status": "correct"
         },
@@ -21778,7 +21693,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kâs",
+          "extracted": "Kâsım Eğit",
           "in_raw": true,
           "status": "correct"
         },
@@ -21889,7 +21804,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Marion Sonnenfeld. Reader",
+          "extracted": "Marion Sonnenfeld",
           "in_raw": true,
           "status": "correct"
         }
@@ -22486,7 +22401,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "D. M. Gorfinkel",
+          "extracted": "D. M. Gorfinkel’",
           "in_raw": true,
           "status": "correct"
         },
@@ -22634,7 +22549,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "D. Gorfinkel",
+          "extracted": "D. Gorfinkel’",
           "in_raw": true,
           "status": "correct"
         },
@@ -24459,7 +24374,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Chunqi Qian et al. Endnotes by Chunqi Qian",
+          "extracted": "Chunqi Qian et al",
           "in_raw": true,
           "status": "correct"
         },
@@ -30148,7 +30063,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kas",
+          "extracted": "Kasım Eğit",
           "in_raw": true,
           "status": "correct"
         },
@@ -30298,7 +30213,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Aleksa",
+          "extracted": "Aleksa Šantić",
           "in_raw": true,
           "status": "correct"
         },
@@ -30330,7 +30245,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Aleksa",
+          "extracted": "Aleksa Šantić",
           "in_raw": true,
           "status": "correct"
         },
@@ -30394,7 +30309,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Marijana Cvitanovi",
+          "extracted": "Marijana Cvitanović",
           "in_raw": true,
           "status": "correct"
         },
@@ -30490,7 +30405,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mirko Feren",
+          "extracted": "Mirko Ferenčak",
           "in_raw": true,
           "status": "correct"
         },
@@ -31245,7 +31160,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mojca Kranjc. Verses translated by Fran Albreht",
+          "extracted": "Mojca Kranjc",
           "in_raw": true,
           "status": "correct"
         },
@@ -31658,7 +31573,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Branko",
+          "extracted": "Branko  Žužek",
           "in_raw": true,
           "status": "correct"
         },
@@ -31838,11 +31753,6 @@
           "extracted": "Theodore Wesley Koch",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 30,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -31930,7 +31840,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jill Sutcliff. Directed by Gavin Hodge. Cinematographer Dermo",
+          "extracted": "Jill Sutcliff",
           "in_raw": true,
           "status": "correct"
         }
@@ -32307,7 +32217,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bournac. Paris",
+          "extracted": "Alzir Hella and Olivier Bournac",
           "in_raw": true,
           "status": "correct"
         },
@@ -33220,7 +33130,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Marijana Cvitanovi",
+          "extracted": "Marijana Cvitanovič",
           "in_raw": true,
           "status": "correct"
         }
@@ -33446,7 +33356,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alena Bláhová. Praha",
+          "extracted": "Alena Bláhová",
           "in_raw": true,
           "status": "correct"
         },
@@ -33483,7 +33393,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Renpian Yang. Shanghai",
+          "extracted": "Renpian Yang",
           "in_raw": true,
           "status": "correct"
         },
@@ -33839,7 +33749,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Zweig. Leipzig",
+          "extracted": "Stefan Zweig",
           "in_raw": true,
           "status": "correct"
         },
@@ -33909,11 +33819,6 @@
         },
         "translator": {
           "extracted": "Mattia Mantovani",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 499,
           "in_raw": true,
           "status": "correct"
         }
@@ -34525,7 +34430,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kal",
+          "extracted": "Kalīm Abū Sayf",
           "in_raw": true,
           "status": "correct"
         },
@@ -34804,7 +34709,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "June Barrows Mussey. Selections from the Nathan Haskell Dole",
+          "extracted": "June Barrows Mussey",
           "in_raw": true,
           "status": "correct"
         },
@@ -34841,7 +34746,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimitrije Mitrinovi",
+          "extracted": "Dimitrije Mitrinović",
           "in_raw": true,
           "status": "correct"
         },
@@ -34947,7 +34852,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alka",
+          "extracted": "Alka   Škiljan",
           "in_raw": true,
           "status": "correct"
         }
@@ -34974,7 +34879,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alka",
+          "extracted": "Alka   Škiljan",
           "in_raw": true,
           "status": "correct"
         }
@@ -35028,7 +34933,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alka",
+          "extracted": "Alka Škiljan",
           "in_raw": true,
           "status": "correct"
         }
@@ -35055,7 +34960,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alka",
+          "extracted": "Alka Škiljan",
           "in_raw": true,
           "status": "correct"
         }
@@ -35315,7 +35220,7 @@
           "title_source": "wiki_extract"
         },
         "translator": {
-          "extracted": "Strashimir Dzhamdzhiev. See",
+          "extracted": "Strashimir Dzhamdzhiev",
           "in_raw": true,
           "status": "correct"
         }
@@ -35457,7 +35362,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -35748,7 +35653,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         },
@@ -35785,7 +35690,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -35859,7 +35764,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -35970,7 +35875,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Margarita Dilova. Compiled with a foreword by Ventseslav Kons",
+          "extracted": "Margarita Dilova",
           "in_raw": true,
           "status": "correct"
         },
@@ -36007,7 +35912,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         },
@@ -36039,7 +35944,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "A. Podv",
+          "extracted": "A. Podvŭrzachova",
           "in_raw": true,
           "status": "correct"
         },
@@ -36204,7 +36109,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -36499,7 +36404,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -36721,7 +36626,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -36906,7 +36811,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Andre",
+          "extracted": "Andreĭ Andreev",
           "in_raw": true,
           "status": "correct"
         },
@@ -36943,7 +36848,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -37192,7 +37097,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ksenija Gavri",
+          "extracted": "Ksenija Gavriš",
           "in_raw": true,
           "status": "correct"
         },
@@ -37229,7 +37134,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Iso Velikanovi",
+          "extracted": "Iso Velikanović",
           "in_raw": true,
           "status": "correct"
         },
@@ -37330,7 +37235,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mirjana Lali",
+          "extracted": "Mirjana Lalić",
           "in_raw": true,
           "status": "correct"
         }
@@ -37362,7 +37267,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Otto Frederick Theis. Frontispiece",
+          "extracted": "Otto Frederick Theis",
           "in_raw": true,
           "status": "correct"
         },
@@ -37468,7 +37373,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladan Jojki",
+          "extracted": "Vladan Jojkić",
           "in_raw": true,
           "status": "correct"
         },
@@ -37712,7 +37617,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -38109,7 +38014,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nika Mili",
+          "extracted": "Nika Milićević",
           "in_raw": true,
           "status": "correct"
         },
@@ -38289,7 +38194,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nika Mili",
+          "extracted": "Nika Milićević",
           "in_raw": true,
           "status": "correct"
         }
@@ -38321,7 +38226,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ol'ga Gajdo",
+          "extracted": "Ol'ga Gajdošová-Toscanová",
           "in_raw": true,
           "status": "correct"
         },
@@ -38532,7 +38437,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "D. M. Gorfinkel",
+          "extracted": "D. M. Gorfinkel’",
           "in_raw": true,
           "status": "correct"
         },
@@ -38674,7 +38579,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "P. S. Bernshte",
+          "extracted": "P. S. Bernshteĭn",
           "in_raw": true,
           "status": "correct"
         },
@@ -38812,7 +38717,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. M. Gal",
+          "extracted": "R. M. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -38950,7 +38855,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -38982,7 +38887,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39014,7 +38919,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39046,7 +38951,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39078,7 +38983,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39184,7 +39089,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39221,7 +39126,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39253,7 +39158,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -39518,7 +39423,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "P. S. Bernshte",
+          "extracted": "P. S. Bernshteĭn",
           "in_raw": true,
           "status": "correct"
         },
@@ -40214,7 +40119,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal'perina. Verses translated by V. Levik",
+          "extracted": "R. Gal'perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -40766,11 +40671,6 @@
           "extracted": "Köln",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 27,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -41095,7 +40995,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Max Knight. Berkeley",
+          "extracted": "Max Knight",
           "in_raw": true,
           "status": "correct"
         }
@@ -41258,11 +41158,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 425,
           "in_raw": true,
           "status": "correct"
         }
@@ -41442,11 +41337,6 @@
           "extracted": "München",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 136,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -41493,7 +41383,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Phyllis and Trevor Blewitt. xxxiv",
+          "extracted": "Phyllis and Trevor Blewitt",
           "in_raw": true,
           "status": "correct"
         },
@@ -41587,11 +41477,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 6,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -41649,11 +41534,6 @@
         },
         "location": {
           "extracted": "Bielefeld",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 17,
           "in_raw": true,
           "status": "correct"
         }
@@ -41801,11 +41681,6 @@
           "extracted": "Stuttgart",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 668,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -41929,11 +41804,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 18,
           "in_raw": true,
           "status": "correct"
         }
@@ -42073,11 +41943,6 @@
         },
         "location": {
           "extracted": "Frankfurt am Main",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 343,
           "in_raw": true,
           "status": "correct"
         }
@@ -42247,11 +42112,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 35,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -42299,11 +42159,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 50,
           "in_raw": true,
           "status": "correct"
         }
@@ -42531,7 +42386,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Benjamin Huebsch and Helmut Ripperger. London",
+          "extracted": "Benjamin Huebsch and Helmut Ripperger",
           "in_raw": true,
           "status": "correct"
         },
@@ -42568,7 +42423,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Christobel Fowler. London",
+          "extracted": "Christobel Fowler",
           "in_raw": true,
           "status": "correct"
         },
@@ -42669,7 +42524,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Christobel Fowler. With contributions by Walter Bauer et al",
+          "extracted": "Christobel Fowler",
           "in_raw": true,
           "status": "correct"
         },
@@ -42815,11 +42670,6 @@
         },
         "location": {
           "extracted": "Berlin",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 230,
           "in_raw": true,
           "status": "correct"
         }
@@ -43200,11 +43050,6 @@
           "extracted": "Stuttgart",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 124,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -43364,7 +43209,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Hanns Winter. Wien",
+          "extracted": "Hanns Winter",
           "in_raw": true,
           "status": "correct"
         },
@@ -43460,7 +43305,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Gisella Hauer and Didier Plassard. Notes by Hans-Ulrich Lindk",
+          "extracted": "Gisella Hauer and Didier Plassard",
           "in_raw": true,
           "status": "correct"
         },
@@ -43711,11 +43556,6 @@
           "extracted": "Marburg",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 15,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -43830,7 +43670,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. New York",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -44002,11 +43842,6 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 256,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -44103,11 +43938,6 @@
         },
         "location": {
           "extracted": "Wiesbaden",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 66,
           "in_raw": true,
           "status": "correct"
         }
@@ -44235,11 +44065,6 @@
           "extracted": "Wien",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 188,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -44265,11 +44090,6 @@
         },
         "location": {
           "extracted": "Leipzig",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 837,
           "in_raw": true,
           "status": "correct"
         }
@@ -44584,11 +44404,6 @@
         },
         "location": {
           "extracted": "Moskva",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 186,
           "in_raw": true,
           "status": "correct"
         }
@@ -45467,11 +45282,6 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 106,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -45971,7 +45781,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Pierre-Emmanuel Dauzat. XVII",
+          "extracted": "Pierre-Emmanuel Dauzat",
           "in_raw": true,
           "status": "correct"
         },
@@ -46146,7 +45956,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Herminia Dauer. Barcelona",
+          "extracted": "Herminia Dauer",
           "in_raw": true,
           "status": "correct"
         },
@@ -46658,11 +46468,6 @@
           "extracted": "Leipzig",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 62,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -46747,11 +46552,6 @@
         },
         "location": {
           "extracted": "Stuttgart",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 298,
           "in_raw": true,
           "status": "correct"
         }
@@ -47181,7 +46981,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xvi",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -47596,7 +47396,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Erwin Rieger into German as ''Ein Spiel von Liebe und Tod''",
+          "extracted": "Erwin Rieger",
           "in_raw": true,
           "status": "correct"
         },
@@ -47633,7 +47433,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nicola",
+          "extracted": "Nicolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         },
@@ -47892,11 +47692,6 @@
           "extracted": "Zürich",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 113,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -47987,11 +47782,6 @@
           "extracted": "Wien",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 21,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -48056,11 +47846,6 @@
           "extracted": "New York",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 27,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -48090,7 +47875,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Marlen Eckl. Translation of the",
+          "extracted": "Marlen Eckl",
           "in_raw": true,
           "status": "correct"
         },
@@ -48159,12 +47944,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alfredo Foelkel. Milano",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 52,
+          "extracted": "Alfredo Foelkel",
           "in_raw": true,
           "status": "correct"
         }
@@ -48233,7 +48013,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Gottfried Ippisch. Wien",
+          "extracted": "Gottfried Ippisch",
           "in_raw": true,
           "status": "correct"
         },
@@ -48265,11 +48045,6 @@
         },
         "location": {
           "extracted": "Zürich",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 307,
           "in_raw": true,
           "status": "correct"
         }
@@ -48331,11 +48106,6 @@
           "extracted": "New York",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 113,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -48361,11 +48131,6 @@
         },
         "location": {
           "extracted": "Lecture, Los Angeles",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 460,
           "in_raw": true,
           "status": "correct"
         }
@@ -48397,7 +48162,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Christobel Fowler. London",
+          "extracted": "Christobel Fowler",
           "in_raw": true,
           "status": "correct"
         },
@@ -48464,11 +48229,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 75,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -48498,7 +48258,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "James Whitall. New York",
+          "extracted": "James Whitall",
           "in_raw": true,
           "status": "correct"
         },
@@ -48887,7 +48647,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vasili  Bobins'kii. Stories edited by Ievgen Popovich. Art ed",
+          "extracted": "Vasili  Bobins'kii",
           "in_raw": true,
           "status": "correct"
         },
@@ -49186,7 +48946,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Zweig. Leipzig",
+          "extracted": "Stefan Zweig",
           "in_raw": true,
           "status": "correct"
         }
@@ -49574,7 +49334,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bornac. Paris",
+          "extracted": "Alzir Hella and Olivier Bornac",
           "in_raw": true,
           "status": "correct"
         },
@@ -49771,7 +49531,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bournac. Paris",
+          "extracted": "Alzir Hella and Olivier Bournac",
           "in_raw": true,
           "status": "correct"
         }
@@ -50010,11 +49770,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 80,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -50099,11 +49854,6 @@
         },
         "translator": {
           "extracted": "Georges Lomné",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 9,
           "in_raw": true,
           "status": "correct"
         }
@@ -50197,11 +49947,6 @@
         },
         "location": {
           "extracted": "Paris",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 257,
           "in_raw": true,
           "status": "correct"
         }
@@ -50862,11 +50607,6 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 7,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -51001,7 +50741,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Anthea Bell. xix",
+          "extracted": "Anthea Bell",
           "in_raw": true,
           "status": "correct"
         },
@@ -51034,11 +50774,6 @@
         },
         "location": {
           "extracted": "London",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 30,
           "in_raw": true,
           "status": "correct"
         }
@@ -51250,11 +50985,6 @@
         },
         "location": {
           "extracted": "Berlin",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 47,
           "in_raw": true,
           "status": "correct"
         }
@@ -51531,7 +51261,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. With a new introduction by Laurence Mint",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -51568,7 +51298,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Zweig from the original manuscript before its publicat",
+          "extracted": "Stefan Zweig",
           "in_raw": true,
           "status": "correct"
         },
@@ -52110,7 +51840,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. With a new introduction by Laurence Mint",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -53206,7 +52936,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jean-Pierre Lefebvre et al. xc",
+          "extracted": "Jean-Pierre Lefebvre et al",
           "in_raw": true,
           "status": "correct"
         },
@@ -53350,7 +53080,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nona",
+          "extracted": "Nona Ķalandarišvili",
           "in_raw": true,
           "status": "correct"
         },
@@ -53382,7 +53112,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Giann",
+          "extracted": "Giannē Asteriadē",
           "in_raw": true,
           "status": "correct"
         },
@@ -53455,7 +53185,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ferenc Kelen and Zoltán Horváth. Verses translated by György",
+          "extracted": "Ferenc Kelen and Zoltán Horváth",
           "in_raw": true,
           "status": "correct"
         },
@@ -53528,7 +53258,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lavinia Mazzucchetti. Illustrated",
+          "extracted": "Lavinia Mazzucchetti",
           "in_raw": true,
           "status": "correct"
         },
@@ -53737,7 +53467,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Maria Wis",
+          "extracted": "Maria Wisłowska",
           "in_raw": true,
           "status": "correct"
         },
@@ -53848,7 +53578,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "R. Gal",
+          "extracted": "R. Gal’perina",
           "in_raw": true,
           "status": "correct"
         },
@@ -53885,7 +53615,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Anton Skácel. Verses translated by Lubomír Feldek",
+          "extracted": "Anton Skácel",
           "in_raw": true,
           "status": "correct"
         },
@@ -54059,7 +53789,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jean-Pierre Lefebvre et al. xc",
+          "extracted": "Jean-Pierre Lefebvre et al",
           "in_raw": true,
           "status": "correct"
         },
@@ -54670,11 +54400,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 17,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -54721,7 +54446,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. New York",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -56214,7 +55939,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xxvi",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -56458,7 +56183,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. xviii",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -56586,7 +56311,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Marlen Eckl. Translation of the",
+          "extracted": "Marlen Eckl",
           "in_raw": true,
           "status": "correct"
         },
@@ -57158,11 +56883,6 @@
           "extracted": "Wien",
           "in_raw": false,
           "status": "false_positive"
-        },
-        "page_count": {
-          "extracted": 268,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -58191,7 +57911,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. Volume",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         },
@@ -58941,11 +58661,6 @@
           "extracted": "Wien",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 289,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -59064,11 +58779,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 292,
           "in_raw": true,
           "status": "correct"
         }
@@ -59769,7 +59479,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Oscar A. Riveira. Introductory note by the editor concerning",
+          "extracted": "Oscar A. Riveira",
           "in_raw": true,
           "status": "correct"
         },
@@ -60086,7 +59796,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Naj",
+          "extracted": "Najāḥ al-Jubaylī",
           "in_raw": true,
           "status": "correct"
         }
@@ -60704,7 +60414,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella. xi",
+          "extracted": "Alzir Hella",
           "in_raw": true,
           "status": "correct"
         },
@@ -60852,7 +60562,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kornelios Kastoriad",
+          "extracted": "Kornelios Kastoriadē",
           "in_raw": true,
           "status": "correct"
         },
@@ -61478,7 +61188,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladimír",
+          "extracted": "Vladimír Žabkay",
           "in_raw": true,
           "status": "correct"
         },
@@ -61662,7 +61372,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tràn V",
+          "extracted": "Tràn Văn Nuôi",
           "in_raw": true,
           "status": "correct"
         },
@@ -62254,7 +61964,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Hugo Moss. Graphic Design by Victor Burton",
+          "extracted": "Hugo Moss",
           "in_raw": true,
           "status": "correct"
         },
@@ -62527,7 +62237,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ch. Kastri",
+          "extracted": "Ch. Kastriōtes",
           "in_raw": true,
           "status": "correct"
         },
@@ -63111,7 +62821,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Anthea Bell. London",
+          "extracted": "Anthea Bell",
           "in_raw": true,
           "status": "correct"
         },
@@ -63180,7 +62890,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Anthea Bell. London",
+          "extracted": "Anthea Bell",
           "in_raw": true,
           "status": "correct"
         }
@@ -63505,7 +63215,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Fritz Brügel. Konstanz",
+          "extracted": "Fritz Brügel",
           "in_raw": true,
           "status": "correct"
         }
@@ -63611,11 +63321,6 @@
           "extracted": "Salzburg",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 109,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -63641,11 +63346,6 @@
         },
         "location": {
           "extracted": "Salzburg",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 109,
           "in_raw": true,
           "status": "correct"
         }
@@ -64594,7 +64294,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ré Soupault. Stuttgart",
+          "extracted": "Ré Soupault",
           "in_raw": true,
           "status": "correct"
         },
@@ -65355,11 +65055,6 @@
           "extracted": "Wien",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 9,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -65433,7 +65128,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Patrick Thursfield and Katalin Bánffy-Jelen. London",
+          "extracted": "Patrick Thursfield and Katalin Bánffy-Jelen",
           "in_raw": true,
           "status": "correct"
         },
@@ -65634,7 +65329,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Friderike Maria von Winternitz. Revised translation by Stefan",
+          "extracted": "Friderike Maria von Winternitz",
           "in_raw": true,
           "status": "correct"
         },
@@ -65708,7 +65403,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Franti",
+          "extracted": "František Götz",
           "in_raw": true,
           "status": "correct"
         },
@@ -65886,11 +65581,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 182,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -65974,7 +65664,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vidhayak Bhattacharya. iv",
+          "extracted": "Vidhayak Bhattacharya",
           "in_raw": true,
           "status": "correct"
         },
@@ -66011,7 +65701,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Helge Kjaergaard. Illustrated by Bjarne Nielsen",
+          "extracted": "Helge Kjaergaard",
           "in_raw": true,
           "status": "correct"
         },
@@ -66203,7 +65893,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Otar Xuci",
+          "extracted": "Otar Xucišvili",
           "in_raw": true,
           "status": "correct"
         },
@@ -66240,7 +65930,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Leli J",
+          "extracted": "Leli J̌apariǰe",
           "in_raw": true,
           "status": "correct"
         },
@@ -66676,7 +66366,7 @@
           "status": "false_positive"
         },
         "translator": {
-          "extracted": "Maria Topal",
+          "extracted": "Maria Topalē",
           "in_raw": true,
           "status": "correct"
         },
@@ -66713,7 +66403,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Giann",
+          "extracted": "Giannēs Kaliphatidēs",
           "in_raw": true,
           "status": "correct"
         },
@@ -67216,7 +66906,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mimika I. Kranak",
+          "extracted": "Mimika I. Kranakē",
           "in_raw": true,
           "status": "correct"
         },
@@ -67364,7 +67054,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Sophia K. Spanoud",
+          "extracted": "Sophia K. Spanoudē",
           "in_raw": true,
           "status": "correct"
         },
@@ -67396,7 +67086,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Andreas I. Gki",
+          "extracted": "Andreas I. Gkiōn",
           "in_raw": true,
           "status": "correct"
         },
@@ -67561,7 +67251,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kost",
+          "extracted": "Kostēs Meranaios",
           "in_raw": true,
           "status": "correct"
         },
@@ -67625,7 +67315,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Giann",
+          "extracted": "Giannēs Beratēs",
           "in_raw": true,
           "status": "correct"
         },
@@ -67795,7 +67485,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "P. I. Sp",
+          "extracted": "P. I. Spēliōtopoulos",
           "in_raw": true,
           "status": "correct"
         },
@@ -67827,7 +67517,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nik",
+          "extracted": "Nikēphoros Vrettakos",
           "in_raw": true,
           "status": "correct"
         },
@@ -67891,7 +67581,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kost",
+          "extracted": "Kostēs Meranaios",
           "in_raw": true,
           "status": "correct"
         },
@@ -68076,7 +67766,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Louis Charles Baudouin. Revised by Brigitte Vergne-Cain and G",
+          "extracted": "Louis Charles Baudouin",
           "in_raw": true,
           "status": "correct"
         },
@@ -68893,7 +68583,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lya Luft and Pedro Süssekind. Copy editing by  Rosélis Pereir",
+          "extracted": "Lya Luft and Pedro Süssekind",
           "in_raw": true,
           "status": "correct"
         },
@@ -69195,7 +68885,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Iván Fónagy and Erszébet Gergely. Epilogue by Illés Jenö",
+          "extracted": "Iván Fónagy and Erszébet Gergely",
           "in_raw": true,
           "status": "correct"
         },
@@ -69608,7 +69298,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Rudolf Vápeki. Illustrated by Joseph Liesler",
+          "extracted": "Rudolf Vápeki",
           "in_raw": true,
           "status": "correct"
         },
@@ -70346,7 +70036,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zorica Vinkovi",
+          "extracted": "Zorica Vinković",
           "in_raw": true,
           "status": "correct"
         },
@@ -71745,12 +71435,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladimír Karafiát. Praha",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 302,
+          "extracted": "Vladimír Karafiát",
           "in_raw": true,
           "status": "correct"
         }
@@ -71777,7 +71462,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jan Jeli",
+          "extracted": "Jan Jeliński",
           "in_raw": true,
           "status": "correct"
         }
@@ -72064,7 +71749,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kal",
+          "extracted": "Kalīm Abū Sayf and Anṭūn al-ʿUbaydī",
           "in_raw": true,
           "status": "correct"
         },
@@ -73163,11 +72848,6 @@
         },
         "translator": {
           "extracted": "Ronald Taylor",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 311,
           "in_raw": true,
           "status": "correct"
         }
@@ -75251,11 +74931,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 148,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -75313,11 +74988,6 @@
         },
         "location": {
           "extracted": "Leipzig",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 168,
           "in_raw": true,
           "status": "correct"
         }
@@ -75396,11 +75066,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 150,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -75460,11 +75125,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 152,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -75492,11 +75152,6 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 153,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -75517,11 +75172,6 @@
         },
         "location": {
           "extracted": "Berlin",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 153,
           "in_raw": true,
           "status": "correct"
         }
@@ -75575,11 +75225,6 @@
         },
         "location": {
           "extracted": "Berlin",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 154,
           "in_raw": true,
           "status": "correct"
         }
@@ -75897,11 +75542,6 @@
           "extracted": "Krems an der Donau",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 87,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -75971,11 +75611,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 254,
           "in_raw": true,
           "status": "correct"
         }
@@ -76671,7 +76306,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Silvin Ko",
+          "extracted": "Silvin Košak",
           "in_raw": true,
           "status": "correct"
         },
@@ -77219,7 +76854,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Benjamin W. Huebsch and Helmut Rippergar. London",
+          "extracted": "Benjamin W. Huebsch and Helmut Rippergar",
           "in_raw": true,
           "status": "correct"
         },
@@ -77425,7 +77060,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Bed",
+          "extracted": "Bedřich Vaníček",
           "in_raw": true,
           "status": "correct"
         },
@@ -77536,7 +77171,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Niq",
+          "extracted": "Niqūlā Qurbān and Nadīm Marʿashlī",
           "in_raw": true,
           "status": "correct"
         },
@@ -77875,7 +77510,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lavinia Mazzucchetti. xv",
+          "extracted": "Lavinia Mazzucchetti",
           "in_raw": true,
           "status": "correct"
         },
@@ -77980,7 +77615,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nad",
+          "extracted": "Nadīm Marʿashlī",
           "in_raw": true,
           "status": "correct"
         },
@@ -78054,7 +77689,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Valdem",
+          "extracted": "Valdemārs Kārkliņš",
           "in_raw": true,
           "status": "correct"
         },
@@ -78128,7 +77763,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jens Poulsen into Kalaallisut",
+          "extracted": "Jens Poulsen",
           "in_raw": true,
           "status": "correct"
         },
@@ -78268,7 +77903,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zofia Petersowa. xii",
+          "extracted": "Zofia Petersowa",
           "in_raw": true,
           "status": "correct"
         },
@@ -78406,7 +78041,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Anj",
+          "extracted": "Anjīl 'Abbūd",
           "in_raw": true,
           "status": "correct"
         },
@@ -78517,7 +78152,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Gérard Cornillet. Stefan Zweig portrait",
+          "extracted": "Gérard Cornillet",
           "in_raw": true,
           "status": "correct"
         },
@@ -78628,7 +78263,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Shukr",
+          "extracted": "Shukrī Muḥammed",
           "in_raw": true,
           "status": "correct"
         },
@@ -79310,7 +78945,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kal",
+          "extracted": "Kalīm Abū Sayf and Anṭūn al-ʿUbaydī",
           "in_raw": true,
           "status": "correct"
         },
@@ -79384,7 +79019,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Grete Breunlich. Revised by Karl Beckmann",
+          "extracted": "Grete Breunlich",
           "in_raw": true,
           "status": "correct"
         },
@@ -79421,7 +79056,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vinko O",
+          "extracted": "Vinko Oŝlak",
           "in_raw": true,
           "status": "correct"
         },
@@ -79681,7 +79316,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Suhayl Ayy",
+          "extracted": "Suhayl Ayyūb",
           "in_raw": true,
           "status": "correct"
         },
@@ -79879,7 +79514,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Iso Velikanovi",
+          "extracted": "Iso Velikanović",
           "in_raw": true,
           "status": "correct"
         },
@@ -80012,7 +79647,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ondrej Mrlian. Verses translated by Július Lenko. Notes by Mi",
+          "extracted": "Ondrej Mrlian",
           "in_raw": true,
           "status": "correct"
         },
@@ -80395,7 +80030,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Far",
+          "extracted": "Farīd Anṭūniyūs",
           "in_raw": true,
           "status": "correct"
         },
@@ -80427,7 +80062,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stig Torsslow. Produced by C. A. Dymling. Presented by the Sw",
+          "extracted": "Stig Torsslow",
           "in_raw": true,
           "status": "correct"
         },
@@ -80496,7 +80131,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Gunnar Klintberg. Prestened by the Borås Stadsteater",
+          "extracted": "Gunnar Klintberg",
           "in_raw": true,
           "status": "correct"
         },
@@ -80529,11 +80164,6 @@
         },
         "translator": {
           "extracted": "Brita Edfeldt",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 7,
           "in_raw": true,
           "status": "correct"
         }
@@ -80937,7 +80567,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Uriel Shela",
+          "extracted": "Uriel Shelaḥ",
           "in_raw": true,
           "status": "correct"
         },
@@ -81190,7 +80820,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ce. Ka",
+          "extracted": "Ce. Kaṇēcaliṅkaṉ",
           "in_raw": true,
           "status": "correct"
         },
@@ -81227,7 +80857,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lat",
+          "extracted": "Latā Rāmakiruṣṇaṉ",
           "in_raw": true,
           "status": "correct"
         },
@@ -81391,7 +81021,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ali Audah from the English version ''Marie Antoinette. The Po",
+          "extracted": "Ali Audah",
           "in_raw": true,
           "status": "correct"
         },
@@ -81465,7 +81095,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jean-Jacques Lafaye and François Brugier. Revised by Jean-Lou",
+          "extracted": "Jean-Jacques Lafaye and François Brugier",
           "in_raw": true,
           "status": "correct"
         },
@@ -83490,7 +83120,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Farh",
+          "extracted": "Farhād",
           "in_raw": true,
           "status": "correct"
         },
@@ -83559,7 +83189,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Far",
+          "extracted": "Farāmarz Tabrīzī",
           "in_raw": true,
           "status": "correct"
         },
@@ -83628,7 +83258,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Far",
+          "extracted": "Farāmarz Tabrīzī",
           "in_raw": true,
           "status": "correct"
         },
@@ -83754,7 +83384,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mañju",
+          "extracted": "Mañju Ḍagalī",
           "in_raw": true,
           "status": "correct"
         },
@@ -84132,7 +83762,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jav",
+          "extracted": "Javād Shaykh al-Islāmī",
           "in_raw": true,
           "status": "correct"
         },
@@ -84201,7 +83831,7 @@
           "status": "false_positive"
         },
         "translator": {
-          "extracted": "Farh",
+          "extracted": "Farhād Dādsitān",
           "in_raw": true,
           "status": "correct"
         },
@@ -85757,7 +85387,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zaur S",
+          "extracted": "Zaur Səttarlı and Namiq Hüseynli",
           "in_raw": true,
           "status": "correct"
         },
@@ -85794,7 +85424,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zaur S",
+          "extracted": "Zaur Səttarli and Yasəmən Abbasova",
           "in_raw": true,
           "status": "correct"
         },
@@ -85831,7 +85461,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zaur S",
+          "extracted": "Zaur Səttarli",
           "in_raw": true,
           "status": "correct"
         },
@@ -86064,7 +85694,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zahid L",
+          "extracted": "Zahid Lətif oğlu Məmmədov and Həmid Arzulu",
           "in_raw": true,
           "status": "correct"
         },
@@ -86251,7 +85881,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vur",
+          "extracted": "Vurğun Maşiyev",
           "in_raw": true,
           "status": "correct"
         },
@@ -86288,7 +85918,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Qabil",
+          "extracted": "Qabil İsmayıl oğlu Əhmədov",
           "in_raw": true,
           "status": "correct"
         },
@@ -86489,7 +86119,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zahid M",
+          "extracted": "Zahid Məmmədov",
           "in_raw": true,
           "status": "correct"
         },
@@ -86945,7 +86575,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Joel Rotenberg. New York",
+          "extracted": "Joel Rotenberg",
           "in_raw": true,
           "status": "correct"
         }
@@ -87090,7 +86720,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Naj",
+          "extracted": "Najāḥ al-Jubaylī",
           "in_raw": true,
           "status": "correct"
         }
@@ -87282,7 +86912,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dominique Tassel. Paris",
+          "extracted": "Dominique Tassel",
           "in_raw": true,
           "status": "correct"
         }
@@ -87314,7 +86944,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dominique Tassel. Paris",
+          "extracted": "Dominique Tassel",
           "in_raw": true,
           "status": "correct"
         }
@@ -87458,7 +87088,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dominique Tassel. Paris",
+          "extracted": "Dominique Tassel",
           "in_raw": true,
           "status": "correct"
         }
@@ -87712,7 +87342,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ali Audah from the English intermediate translation",
+          "extracted": "Ali Audah",
           "in_raw": true,
           "status": "correct"
         },
@@ -89245,7 +88875,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tamara Lipovec. Project coordination by Feliciano Medeot. Edi",
+          "extracted": "Tamara Lipovec",
           "in_raw": true,
           "status": "correct"
         },
@@ -89671,7 +89301,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ali Audah from the English intermediate translation ''Marie A",
+          "extracted": "Ali Audah",
           "in_raw": true,
           "status": "correct"
         },
@@ -91296,7 +90926,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "J. Fontcuberta and A. Orzeszek. Barcelona",
+          "extracted": "J. Fontcuberta and A. Orzeszek",
           "in_raw": true,
           "status": "correct"
         }
@@ -91522,7 +91152,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Far",
+          "extracted": "Farīd Anṭūniyūs",
           "in_raw": true,
           "status": "correct"
         },
@@ -91633,7 +91263,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Liesbeth van Nes. Followed by the original German text",
+          "extracted": "Liesbeth van Nes",
           "in_raw": true,
           "status": "correct"
         },
@@ -91930,7 +91560,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ebdulmumin De",
+          "extracted": "Ebdulmumin Deştî",
           "in_raw": true,
           "status": "correct"
         },
@@ -92736,7 +92366,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jana",
+          "extracted": "Jana Šimulčiková",
           "in_raw": true,
           "status": "correct"
         },
@@ -92921,7 +92551,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Irena Li",
+          "extracted": "Irena Liščáková",
           "in_raw": true,
           "status": "correct"
         },
@@ -92958,7 +92588,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kornel Földvári. Illustrated by Jozef Szabó",
+          "extracted": "Kornel Földvári",
           "in_raw": true,
           "status": "correct"
         },
@@ -93032,7 +92662,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Perla B",
+          "extracted": "Perla Bžochová",
           "in_raw": true,
           "status": "correct"
         },
@@ -93069,7 +92699,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Perla B",
+          "extracted": "Perla Bžochová",
           "in_raw": true,
           "status": "correct"
         },
@@ -94051,7 +93681,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Yits",
+          "extracted": "Yitsḥaḳ Hirshberg",
           "in_raw": true,
           "status": "correct"
         },
@@ -94088,7 +93718,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Barukh",
+          "extracted": "Barukh Ḳupniḳ",
           "in_raw": true,
           "status": "correct"
         },
@@ -95190,7 +94820,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Phùng-",
+          "extracted": "Phùng-Đê",
           "in_raw": true,
           "status": "correct"
         },
@@ -95332,7 +94962,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Phát Lê and and D",
+          "extracted": "Phát Lê and and Dương Tường",
           "in_raw": true,
           "status": "correct"
         },
@@ -95658,7 +95288,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Phùng",
+          "extracted": "Phùng Đệ",
           "in_raw": true,
           "status": "correct"
         },
@@ -95695,7 +95325,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Phùng",
+          "extracted": "Phùng Đệ and Trần Nam Lương",
           "in_raw": true,
           "status": "correct"
         },
@@ -95731,7 +95361,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tràn V",
+          "extracted": "Tràn Văn Nuôi",
           "in_raw": true,
           "status": "correct"
         }
@@ -95799,7 +95429,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Hans Thomsen. Photos by Ingi Joensen",
+          "extracted": "Hans Thomsen",
           "in_raw": true,
           "status": "correct"
         },
@@ -96357,7 +95987,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Joseph Buloff - various drafts",
+          "extracted": "Joseph Buloff",
           "in_raw": true,
           "status": "correct"
         }
@@ -96795,7 +96425,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Changshan Shu. Enlarged edition",
+          "extracted": "Changshan Shu",
           "in_raw": true,
           "status": "correct"
         },
@@ -100128,7 +99758,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Oriana Tamburi in ''Fjala''",
+          "extracted": "Oriana Tamburi",
           "in_raw": true,
           "status": "correct"
         },
@@ -100160,7 +99790,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Oriana Tamburi in ''Fjala''",
+          "extracted": "Oriana Tamburi",
           "in_raw": true,
           "status": "correct"
         },
@@ -100622,7 +100252,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Pe",
+          "extracted": "Stefan Peĭkov",
           "in_raw": true,
           "status": "correct"
         },
@@ -100654,7 +100284,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Pe",
+          "extracted": "Stefan Peĭkov",
           "in_raw": true,
           "status": "correct"
         }
@@ -100681,7 +100311,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Stefan Pe",
+          "extracted": "Stefan Peĭkov",
           "in_raw": true,
           "status": "correct"
         }
@@ -100769,7 +100399,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -100796,7 +100426,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -100823,7 +100453,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -100850,7 +100480,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -100877,7 +100507,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -100904,7 +100534,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nikola",
+          "extracted": "Nikolaĭ Donchev",
           "in_raw": true,
           "status": "correct"
         }
@@ -100931,7 +100561,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -100985,7 +100615,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101012,7 +100642,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101039,7 +100669,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101130,7 +100760,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101184,7 +100814,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101238,7 +100868,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101265,7 +100895,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101292,7 +100922,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101319,7 +100949,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101346,7 +100976,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101373,7 +101003,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101554,7 +101184,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         }
@@ -101608,7 +101238,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "M. Nenova and I. Ra",
+          "extracted": "M. Nenova and I. Raĭnov",
           "in_raw": true,
           "status": "correct"
         }
@@ -101689,7 +101319,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Simidov",
           "in_raw": true,
           "status": "correct"
         }
@@ -104894,7 +104524,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lat",
+          "extracted": "Latā Rāmakiruṣṇaṉ",
           "in_raw": true,
           "status": "correct"
         },
@@ -105446,11 +105076,6 @@
         },
         "translator": {
           "extracted": "Alfredo Cahn",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 56,
           "in_raw": true,
           "status": "correct"
         }
@@ -106502,7 +106127,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Reinier P. Sterkenburg. Illustrations by Aaart van Ewijk",
+          "extracted": "Reinier P. Sterkenburg",
           "in_raw": true,
           "status": "correct"
         },
@@ -107691,7 +107316,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ponug",
+          "extracted": "Ponugōṭi Kr̥ṣṇā Reḍḍi",
           "in_raw": true,
           "status": "correct"
         },
@@ -108700,7 +108325,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Shantiranjan Bandy-Opadhyay from the English intermediate tra",
+          "extracted": "Shantiranjan Bandy-Opadhyay",
           "in_raw": true,
           "status": "correct"
         }
@@ -108829,7 +108454,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mais",
+          "extracted": "Maisāʾ al-ʿArfāwī",
           "in_raw": true,
           "status": "correct"
         },
@@ -109184,7 +108809,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mais",
+          "extracted": "Maisāʾ al-ʿArfāwī",
           "in_raw": true,
           "status": "correct"
         },
@@ -110670,7 +110295,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         },
@@ -110707,7 +110332,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         },
@@ -110739,7 +110364,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110766,7 +110391,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110793,7 +110418,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110820,7 +110445,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110847,7 +110472,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110874,7 +110499,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110901,7 +110526,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110940,7 +110565,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110967,7 +110592,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -110994,7 +110619,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111021,7 +110646,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111080,7 +110705,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šariċ",
           "in_raw": true,
           "status": "correct"
         }
@@ -111405,7 +111030,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111432,7 +111057,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111459,7 +111084,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111486,7 +111111,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111513,7 +111138,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111540,7 +111165,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111567,7 +111192,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111594,7 +111219,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav",
+          "extracted": "Vladislav Šarić",
           "in_raw": true,
           "status": "correct"
         }
@@ -111702,7 +111327,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "M. Nenova and I. Ra",
+          "extracted": "M. Nenova and I. Raĭnov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111756,7 +111381,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111783,7 +111408,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111810,7 +111435,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111837,7 +111462,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111864,7 +111489,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111891,7 +111516,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -111918,7 +111543,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Kapitonov",
           "in_raw": true,
           "status": "correct"
         }
@@ -112136,7 +111761,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nika Mili",
+          "extracted": "Nika Milićević",
           "in_raw": true,
           "status": "correct"
         },
@@ -113262,7 +112887,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alfred Brieger. Berlin",
+          "extracted": "Alfred Brieger",
           "in_raw": true,
           "status": "correct"
         }
@@ -113610,7 +113235,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Arthur Schurig. Leipzig",
+          "extracted": "Arthur Schurig",
           "in_raw": true,
           "status": "correct"
         }
@@ -113664,7 +113289,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alfred Brieger. Berlin",
+          "extracted": "Alfred Brieger",
           "in_raw": true,
           "status": "correct"
         },
@@ -113723,7 +113348,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Otto Hauser. Berlin",
+          "extracted": "Otto Hauser",
           "in_raw": true,
           "status": "correct"
         },
@@ -114056,7 +113681,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Erna Grautoff. Contributions by Stefan Zweig and Ernst Robert",
+          "extracted": "Erna Grautoff",
           "in_raw": true,
           "status": "correct"
         },
@@ -114807,7 +114432,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Jean Engel from the French version",
+          "extracted": "Jean Engel",
           "in_raw": true,
           "status": "correct"
         },
@@ -117167,7 +116792,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "G. H. Carlsen. Illustrations by Audun Hetland",
+          "extracted": "G. H. Carlsen",
           "in_raw": true,
           "status": "correct"
         },
@@ -118039,7 +117664,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Michel Delines. Music by Nadia Boulanger",
+          "extracted": "Michel Delines",
           "in_raw": true,
           "status": "correct"
         },
@@ -118203,7 +117828,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Shaf",
+          "extracted": "Shafīq Maqqār",
           "in_raw": true,
           "status": "correct"
         },
@@ -118596,7 +118221,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ren Sang. Abridged version",
+          "extracted": "Ren Sang",
           "in_raw": true,
           "status": "correct"
         },
@@ -120058,7 +119683,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alfredo Cahn. Buenos Aires",
+          "extracted": "Alfredo Cahn",
           "in_raw": true,
           "status": "correct"
         }
@@ -120596,7 +120221,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Norman R. Shapiro. Chicago",
+          "extracted": "Norman R. Shapiro",
           "in_raw": true,
           "status": "correct"
         },
@@ -121334,11 +120959,6 @@
           "extracted": "Spring",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 3,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -121597,7 +121217,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Rienier Pieter Sterkenburg. Gravenhage",
+          "extracted": "Rienier Pieter Sterkenburg",
           "in_raw": true,
           "status": "correct"
         }
@@ -121934,11 +121554,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 37,
           "in_raw": true,
           "status": "correct"
         }
@@ -122386,11 +122001,6 @@
         },
         "location": {
           "extracted": "New York",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 551,
           "in_raw": true,
           "status": "correct"
         }
@@ -123023,11 +122633,6 @@
         },
         "location": {
           "extracted": "Wien",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 260,
           "in_raw": true,
           "status": "correct"
         }
@@ -123730,7 +123335,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Alzir Hella and Olivier Bournac. Revised translation",
+          "extracted": "Alzir Hella and Olivier Bournac",
           "in_raw": true,
           "status": "correct"
         },
@@ -124045,11 +123650,6 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 144,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -124218,11 +123818,6 @@
         },
         "location": {
           "extracted": "Paris",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1354,
           "in_raw": true,
           "status": "correct"
         }
@@ -124896,11 +124491,6 @@
         },
         "location": {
           "extracted": "April",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 254,
           "in_raw": true,
           "status": "correct"
         }
@@ -126052,11 +125642,6 @@
         },
         "location": {
           "extracted": "Berlin",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 21,
           "in_raw": true,
           "status": "correct"
         }
@@ -128174,11 +127759,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1363,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -128199,11 +127779,6 @@
         },
         "location": {
           "extracted": "Paris",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1366,
           "in_raw": true,
           "status": "correct"
         }
@@ -128294,11 +127869,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1377,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -128324,11 +127894,6 @@
         },
         "translator": {
           "extracted": "Laure Bernardi",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1380,
           "in_raw": true,
           "status": "correct"
         }
@@ -128436,11 +128001,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1174,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -128461,11 +128021,6 @@
         },
         "location": {
           "extracted": "Paris",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1406,
           "in_raw": true,
           "status": "correct"
         }
@@ -128923,11 +128478,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1492,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -129021,11 +128571,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1515,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -129068,11 +128613,6 @@
         },
         "location": {
           "extracted": "Paris",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1537,
           "in_raw": true,
           "status": "correct"
         }
@@ -130790,7 +130330,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Mariano Orta Manzano and Tomás Lamarca. Illustrated with",
+          "extracted": "Mariano Orta Manzano and Tomás Lamarca",
           "in_raw": true,
           "status": "correct"
         },
@@ -130893,7 +130433,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Eden and Cedar Paul. Also contains Zweig's eulogy of Freud. C",
+          "extracted": "Eden and Cedar Paul",
           "in_raw": true,
           "status": "correct"
         }
@@ -131058,7 +130598,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Klara Brauner. Berlin",
+          "extracted": "Klara Brauner",
           "in_raw": true,
           "status": "correct"
         }
@@ -131176,7 +130716,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Giann",
+          "extracted": "Giannēs Beratēs",
           "in_raw": true,
           "status": "correct"
         },
@@ -131257,7 +130797,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lajos  Bálint.  Verlaine's",
+          "extracted": "Lajos  Bálint",
           "in_raw": true,
           "status": "correct"
         },
@@ -134111,7 +133651,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Oriana Tamburi in ''Fjala''",
+          "extracted": "Oriana Tamburi",
           "in_raw": true,
           "status": "correct"
         },
@@ -134542,11 +134082,6 @@
           "extracted": "Brigitte Vergne-Cain and Gérard Rudert",
           "in_raw": true,
           "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1174,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -134604,11 +134139,6 @@
         },
         "translator": {
           "extracted": "Brigitte Vergne-Cain and Gérard Rudent",
-          "in_raw": true,
-          "status": "correct"
-        },
-        "page_count": {
-          "extracted": 1177,
           "in_raw": true,
           "status": "correct"
         }
@@ -135069,11 +134599,6 @@
           "extracted": "Göttingen",
           "in_raw": false,
           "status": "false_positive"
-        },
-        "page_count": {
-          "extracted": 25,
-          "in_raw": true,
-          "status": "correct"
         }
       }
     },
@@ -135416,7 +134941,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dimit",
+          "extracted": "Dimitŭr Stoevski",
           "in_raw": true,
           "status": "correct"
         },
@@ -135490,7 +135015,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Maria Wis",
+          "extracted": "Maria Wisłowska",
           "in_raw": true,
           "status": "correct"
         },

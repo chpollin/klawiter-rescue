@@ -32,6 +32,7 @@ import json
 import os
 import sys
 from collections import defaultdict
+from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
@@ -56,12 +57,30 @@ EDITABLE_FIELDS = {"publisher", "location", "translator", "pageCount"}
 REQUIRED_KEYS = ("pageId", "field", "action", "edited_by", "edited_at", "source")
 
 
+def _patch_timestamp(value):
+    """Compare actual instants, including patches made in different time zones."""
+    if not isinstance(value, str):
+        raise ValueError("edited_at must be an ISO-8601 timestamp with a timezone")
+    timestamp = datetime.fromisoformat(value)
+    if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+        raise ValueError("edited_at must include a timezone")
+    return timestamp
+
+
 def validate_patch(patch):
     """Return a list of problems with a patch; empty list means valid."""
     problems = []
+    if not isinstance(patch, dict):
+        return ["patch must be an object"]
     for key in REQUIRED_KEYS:
         if key not in patch:
             problems.append(f"missing key '{key}'")
+    if type(patch.get("pageId")) is not int or patch["pageId"] <= 0:
+        problems.append("pageId must be a positive integer")
+    try:
+        _patch_timestamp(patch.get("edited_at"))
+    except ValueError as exc:
+        problems.append(f"invalid edited_at: {exc}")
     if patch.get("action") not in VALID_ACTIONS:
         problems.append(
             f"action '{patch.get('action')}' not in {sorted(VALID_ACTIONS)}"
@@ -72,7 +91,7 @@ def validate_patch(patch):
         )
     if "field" in patch and patch["field"] not in EDITABLE_FIELDS:
         problems.append(f"field '{patch['field']}' not in {sorted(EDITABLE_FIELDS)}")
-    if patch.get("action") == "add" and (patch.get("oldValue") or "").strip():
+    if patch.get("action") == "add" and _norm(patch.get("oldValue")).strip():
         problems.append("action 'add' but oldValue is non-empty")
     if patch.get("action") == "correct" and patch.get("newValue") in (
         None,
@@ -125,7 +144,7 @@ def apply_patches(entries, patches, location_links=None):
     touched = 0
     mismatches = []
     for pid, plist in by_page.items():
-        plist.sort(key=lambda p: p["edited_at"])  # chronological; last wins
+        plist.sort(key=lambda p: _patch_timestamp(p["edited_at"]))
         entry = index[pid]
         provenance = entry.setdefault("_provenance", {})
         history = []
@@ -201,8 +220,25 @@ def load_corrections(corrections_dir=CORRECTIONS_DIR):
             continue
         with open(os.path.join(corrections_dir, name), encoding="utf-8") as f:
             doc = json.load(f)
-        patches.extend(doc.get("patches", []))
+        patches.extend(field_patches(doc))
     return patches
+
+
+def field_patches(doc):
+    """Validate the envelope without consuming reconciliation-only decisions."""
+    if not isinstance(doc, dict):
+        raise ValueError("correction document must be an object")
+    if "patches" not in doc:
+        if doc.get("reconciliationPatchVersion") == 1 and isinstance(
+            doc.get("reconciliationPatches"), list
+        ):
+            return []
+        raise ValueError("correction document has no patch collection")
+    if doc.get("patchVersion") != 2:
+        raise ValueError("field corrections require patchVersion 2")
+    if not isinstance(doc["patches"], list):
+        raise ValueError("patches must be an array")
+    return doc["patches"]
 
 
 def main():
@@ -211,7 +247,9 @@ def main():
 
     with open(OUTPUT_FRONTEND_JSON, encoding="utf-8") as f:
         data = json.load(f)
-    entries = data.get("entries", [])
+    entries = data["entries"]
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("frontend entries must be a non-empty array")
 
     if os.path.exists(OUTPUT_PUBLISHABLE_LINKS):
         with open(OUTPUT_PUBLISHABLE_LINKS, encoding="utf-8") as f:
@@ -236,6 +274,10 @@ def main():
 
     os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
     write_json(REPORT_PATH, report, indent=2)
+
+    if report["invalid"] or report["not_found"]:
+        log.error("Correction batch rejected; frontend dataset was not written")
+        return 1
 
     # Only rewrite the dataset when something actually changed, so an empty
     # corrections store is a true no-op and leaves the file byte-identical.

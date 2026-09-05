@@ -99,10 +99,19 @@ def build_reference_targets(rows):
             if value:
                 direct.setdefault(value, pid)
     targets = dict(direct)
+    redirects = {
+        row["page_title"]: row.get("redirect_target") or row.get("title", "")
+        for row in rows
+        if csv_bool(row.get("is_redirect")) and row.get("page_title")
+    }
     for row in rows:
         if not csv_bool(row.get("is_redirect")):
             continue
         target = row.get("redirect_target", "") or row.get("title", "")
+        seen = set()
+        while target not in direct and target in redirects and target not in seen:
+            seen.add(target)
+            target = redirects[target]
         pid = direct.get(target)
         if pid:
             for key in ("page_title", "title"):
@@ -564,15 +573,13 @@ def main():
             if title and pid:
                 title_to_pid[title] = pid
 
-    for e in entries:
+    for row, e in zip(rows, entries, strict=True):
         if e.get("isRedirect"):
-            target_title = e.get("name", "")
-            source_title = e.get("redirectTarget", "") or target_title
-            target_pid = title_to_pid.get(target_title)
-            if target_pid:
-                redirect_map[target_title] = target_pid
-                if source_title != target_title:
-                    redirect_map[source_title] = target_pid
+            for key in ("page_title", "title"):
+                alias = row.get(key, "")
+                target_pid = reference_targets.get(alias)
+                if target_pid and alias not in title_to_pid:
+                    redirect_map[alias] = target_pid
 
     # Wiki page titles are the keys the source's See-references and its
     # resolved link graph use. Where a page title differs from the parsed

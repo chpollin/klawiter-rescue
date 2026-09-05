@@ -1,6 +1,6 @@
 {
   "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json and the frontend dataset. Direction-sensitive: tests fail when a count increases and warn when it decreases; a decrease is frozen here in the next evidence-freeze commit.",
-  "date": "2026-08-27-v1.0-freeze",
+  "date": "2026-09-05-source-reviewed-remediation",
   "summary": {
     "total_entries": 6725,
     "redirects": 1546,
@@ -30,16 +30,16 @@
       "percentage": 89.8
     },
     "inLanguage": {
-      "count": 4254,
-      "percentage": 89.5
+      "count": 4309,
+      "percentage": 90.7
     },
     "languageCode": {
       "count": 0,
       "percentage": 0.0
     },
     "numberOfPages": {
-      "count": 2530,
-      "percentage": 53.3
+      "count": 2435,
+      "percentage": 51.3
     },
     "translator": {
       "count": 1920,
@@ -58,8 +58,8 @@
       "percentage": 99.3
     },
     "relation": {
-      "count": 610,
-      "percentage": 12.8
+      "count": 680,
+      "percentage": 14.3
     },
     "reprints": {
       "count": 418,
@@ -111,11 +111,11 @@
   },
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better; when extraction improves, update the value in an evidence-freeze commit.",
-    "redirect_map_size": 3389,
+    "redirect_map_size": 3549,
     "german_translator_fp": 110,
     "film_pagecount": 9,
     "publisher_equals_location": 2,
-    "broken_see_also_refs": 120,
+    "broken_see_also_refs": 12,
     "wiki_markup_in_fields": 0,
     "section_header_titles": 0,
     "long_titles": 0,
@@ -124,5 +124,12 @@
     "publisher_metadata": 0,
     "publisher_mojibake": 75,
     "semantic_field_mismatches": 17
-  }
+  },
+  "reviewedUpdates": [
+    {
+      "date": "2026-09-05",
+      "evidence": "knowledge/technical-remediation-2026-09-05.md",
+      "reason": "Removed 95 explicit reference/annotation or discontinuous page locators misclassified as volume extents; lower numberOfPages coverage is a source-correctness improvement. Added source-category language fallbacks and literal redirect-chain resolution. Threshold tolerances are unchanged; unresolved-reference ceiling tightened from 120 to 12."
+    }
+  ]
 }

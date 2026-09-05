@@ -4,12 +4,12 @@ aliases: [frontend, interface, EIL, curation tool]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
-status: complete
+status: maintained
 language: en
 version: 1.5
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
-updated: 2026-08-27
+updated: 2026-09-05
 authors: [Christopher Pollin]
 related: [data, pipeline, testing, production-readiness]
 ---
@@ -20,7 +20,7 @@ related: [data, pipeline, testing, production-readiness]
 
 The static application under `docs/` makes the rescued holding searchable and provides a local Expert-in-the-Loop curation surface. It needs no build step and no server process beyond a static localhost server for edit mode.
 
-The public application supports search, facets, a timeline, language and place analysis, reference rankings, detail cards, a data-quality workbench and citation exports. The local curation layer adds source evidence, provenance, triage, subject-level authority decisions and a versioned patch export. The interface language is English throughout, edit mode included.
+The public application supports search, facets, a linked exploration dashboard, map and reference views, detail cards, a data-quality workbench and citation exports. The local curation layer adds source evidence, provenance, triage, subject-level authority decisions and a versioned patch export. The interface language is English throughout, edit mode included.
 
 ## Architecture
 
@@ -40,7 +40,7 @@ The public application supports search, facets, a timeline, language and place a
 | `pages.js` | the two static pages About and Data, figures taken from `_meta` |
 | `jsonld-playground.js` | interactive JSON-LD view with escaped syntax highlighting, rendered as a section of the Data page; addressable through `#data/playground/<pageId>`, suggestion list as a `listbox` with arrow and Enter operation and its own empty state, view buttons carrying `aria-pressed`, document listener registered once, entry types read from `constants.js` |
 | `explore.js` | Explore frame: modes, the shared filter set, URL state, detail panel |
-| `explore-timeline.js` | timeline with language, type and provenance layers |
+| `explore-timeline.js` | linked dashboard: coverage, neutral decade histogram, ranked language/type filters and entry preview |
 | `explore-geography.js` | globe and map view from the vendored geometry |
 | `explore-network.js` | reference ranking (most-referenced entries) and translator Sankey |
 
@@ -53,7 +53,7 @@ The header navigation carries four destinations, Overview, Explore, Data and Abo
 | Route | Content |
 |---|---|
 | `#` | start page with search, browse entry point and the category groups as cards |
-| `#stats`, `#stats/<mode>` | Explore with timeline, map and connections view |
+| `#stats`, `#stats/<mode>` | Explore dashboard overview, map and connections view; `timeline` remains the compatible overview route |
 | `#data`, `#data/<section>` | data model, specification and vocabulary, downloads, JSON-LD playground, pointer to the workbench |
 | `#data/playground/<pageId>` | playground with a preloaded entry; the action bar of an entry card links there as "View as JSON-LD" |
 | `#data/quality` | data-quality workbench, a sub-page of Data |
@@ -88,17 +88,23 @@ Semantic HTML, visible keyboard focus, labelled forms, ARIA labels for iconic co
 
 ## Explore
 
-Explore is one frame for three visualizations. The mode choice sits above the frame as a group of buttons carrying `aria-pressed`; `#stats` opens the mode last used in the session and the first one otherwise, because there is no overview layer above the visualizations. A persistent sidebar on the left carries the filters, and the drawing surface takes the whole remaining width. On a narrow viewport the sidebar stacks above the surface rather than disappearing, because it holds the only filter path of that view.
+`#stats/timeline` is the dashboard overview. The route name remains compatible with existing links; the visible tabs are Overview, Map and Connections. `#stats` resumes the last mode in the session. The overview replaces the former dense multicolour stacked timeline, chart-mode switches and overlapping milestone annotations.
 
-One filter set serves all three modes. The sidebar offers language, type and decade as facet groups, counted against every other active filter the way the result sidebar counts, so a group does not collapse to its own selection. Below the groups the active filters stand as chips, and a filter set from inside a view (the timeline brush, the decade playback of the map) redraws chips and facet lists through the same entry point, so the two stay in step. A decade and a brushed year range address the same axis, so choosing one clears the other.
+The dashboard counts **source-page bibliography entries**, not distinct publications. One page may contain several editions, and a recorded year may still need semantic review. Four summary cards report selected entries, entries with/without a recorded year and recorded languages. The missing-year card opens the affected entries. Missing language stays a visible “Not recorded” group, distinct from any aggregation of recorded languages.
 
-What a view cannot draw is stated once in the sidebar instead of on the drawing surface. The timeline names the undated entries, the map names the entries without a mapped place and the place names that the geocoding could not resolve, each as a control that opens the affected records as a result list. Pointer instructions for the globe live in its tooltip and in the SVG description rather than as a caption. The selection detail sits under the filters in the same sidebar.
+The neutral decade histogram supplies context across the current non-date filters; the selected date range is highlighted. Every populated decade is a labelled keyboard-operable button with its exact count. Explicit From/To fields provide a second selection path. Reversed ranges fail validation. Choosing a decade replaces a year range and vice versa; a date filter excludes entries without a finite positive recorded year. “All years” clears that axis.
 
-Timeline, map and connections view derive their data from the same filtered record set. Missing language reads as "Not recorded" in all three views and stays separate from "Other languages", which means a recorded language outside the top ranks. The connections view is a ranking of the most-referenced pages with expandable reference lists; the former global community graph is gone, because its largest node was the residual aggregation and it answered no bibliographic question. The translator Sankey stays; multiple mentions are split at conjunctions, truncated values are excluded, and the smallest nodes are bundled into "Other translators". The provenance overlay is a strip of its own under the timeline axis. Legends are real filtering buttons and serve as the keyboard path, the SVGs carry `role="group"`, and `prefers-reduced-motion` zeroes every d3 transition duration. Click paths hand their filters over to the result route in full, which for that purpose also knows `publisher`, `translator` and year ranges; only the country filter of the map stays bound to the session, because the result route does not load `locations.json`.
+Language and entry-type rankings are linked filters with counts and `aria-pressed` state. Each ranking ignores its own selected axis when calculating alternatives, while retaining the other filters, so neighbouring choices remain available. Multiple values within an axis use OR; different axes combine with AND. Selected values and the missing-language group remain reachable beyond the top ranks. “Show all” expands the relevant ranking.
+
+The active-filter bar names the selection and offers reset. The preview lists the first five matching entries in source order, each linked to its record, and “View all” transfers the complete selection to Results. Repeated URL keys preserve multiple languages/types through handover, reload and back navigation. Filtered country and undated custom lists remain session views with a return path; they are not independently shareable persistent filter URLs.
+
+Map and Connections retain the shared filter set and their sidebar controls. The map reports unlocated/unmapped records separately from displayed locations. Connections offers reference rankings and translator flows; its names and edges derive from the flat page data and are not complete edition-level translation relations. Referring links may reproduce a source error even when technically resolved, as documented in [Status](status.md).
+
+Overview uses a full-width panel layout rather than duplicating ranked chart filters in a second sidebar. Summary cards and rankings reflow on narrow screens. Meaningful controls remain buttons/forms, while the timeline avoids drag-only selection. The [dashboard evidence](evaluations/2026-09-05/dashboard-browser-qa.json) and [testing guide](testing.md) define the paths actually checked; these checks do not establish comprehensive accessibility or usability acceptance.
 
 ## Data Quality Workbench (`#data/quality`)
 
-The workbench answers the curation question whether all data is cleanly processed, out of the published artifacts themselves:
+The workbench prioritizes curation from the published artifacts; its counters do not establish that all data is correct:
 
 - A status panel with three figures that direct the work, open authority candidates, contested claims and pending decisions of the current session. Everything the panel used to count as well stands in the matrix and the queues below, where it is also clickable.
 - A completeness matrix of field against entry type; every cell with gaps opens the affected entries as a result list.
@@ -129,7 +135,7 @@ Session state is separate from the data state. An unsecured field action makes t
 
 Place reconciliation offers `confirm`, `reject` and `unresolved`; `unresolved` records competing readings as an open claim. Translator and publisher candidates offer the same actions, and since Gate 2 the source occurrences per agent subject are collected from the classified source and published under `sourceOccurrences` in `docs/data/reconciliation.json`, so an unresolved agent decision is evidenced against the source. Both kinds of candidate are subject-level; the interface states the reach ("applies to N entries"). Candidates stay proposals; nothing is published without a decision. The combined export uses `patchVersion: 2` and `reconciliationPatchVersion: 1`.
 
-The review-status chip reads the `review` field of the entry, whose semantics are in [[data]]. An entry without that field stays unchecked, and an unsecured edit of the running session remains a state of the interface.
+The review-status chip reads the `review` field of the entry, whose semantics and field-scope limitation are in [[data]]. A place decision alone does not certify the year or translator. An entry without that field stays unchecked, and an unsecured edit of the running session remains a state of the interface.
 
 ## Rendering of Contested Statements
 
@@ -150,7 +156,7 @@ The playground shows one entry in three views, compact, expanded and as triples.
 - Copying the permalink catches a denied clipboard and then offers the address in a selectable field.
 - The single-entry JSON-LD export adds existing edition claims as graph nodes of their own, under the properties `klawiter:hasContestedClaim` and `klawiter:hasReviewAction` of the current vocabulary; the class names `ContestedClaim` and `ReviewAction` are unchanged.
 - The full export carries contested edition and authority claims alongside the confirmed relations.
-- The canonical complete graphs remain `data/output/editions/work-editions.jsonld` and the Gate 2 artifacts under `data/output/reconciliation/`.
+- The canonical edition and reconciliation graphs remain under `data/output/editions/` and `data/output/reconciliation/`. They have broader structure than a browser record export but do not yet carry every edition-specific bibliographic field.
 
 A claim with the predicate `schema:exampleOfWork` is exported without setting the corresponding confirmed relation on the edition node at the same time.
 
@@ -170,4 +176,4 @@ The application is then reachable at `http://localhost:8000/`; the curation surf
 
 GitHub Pages publishes the content of `docs/`. The application performs no live write-back. Exports are downloaded locally and then integrated as reviewed repository patches.
 
-The flat detail page cannot fully separate edition-specific fields on multi-edition pages. The edition graph and its queue stay authoritative for those cases. Title editing and institutional work decisions are outside the current local editor.
+The flat detail page cannot fully separate edition-specific fields on multi-edition pages or independently browse the complete edition graph. Field provenance, review metadata and released frontend corrections are not uniformly present in canonical/export/playground representations. The edition graph and its queue stay authoritative for those cases. Title editing and institutional work decisions are outside the current local editor.

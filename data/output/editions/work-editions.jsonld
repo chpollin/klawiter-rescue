@@ -17,9 +17,17 @@
       "@id": "klawiter:contestedClaims"
     },
     "dcterms": "http://purl.org/dc/terms/",
+    "editionCount": {
+      "@id": "klawiter:editionCount",
+      "@type": "xsd:integer"
+    },
     "editions": {
       "@container": "@set",
       "@id": "klawiter:editions"
+    },
+    "headerCount": {
+      "@id": "klawiter:headerCount",
+      "@type": "xsd:integer"
     },
     "klawiter": "https://chpollin.github.io/klawiter-rescue/vocab/",
     "oa": "http://www.w3.org/ns/oa#",
@@ -28,9 +36,21 @@
       "@id": "klawiter:pageSummaries"
     },
     "prov": "http://www.w3.org/ns/prov#",
+    "reviewFlagCount": {
+      "@id": "klawiter:reviewFlagCount",
+      "@type": "xsd:integer"
+    },
     "schema": "https://schema.org/",
     "schema:datePublished": {
       "@type": "xsd:gYear"
+    },
+    "sourcePageId": {
+      "@id": "klawiter:sourcePageId",
+      "@type": "xsd:integer"
+    },
+    "sourceTextId": {
+      "@id": "klawiter:sourceTextId",
+      "@type": "xsd:integer"
     },
     "works": {
       "@container": "@set",

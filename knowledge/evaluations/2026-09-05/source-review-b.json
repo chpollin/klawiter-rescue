@@ -1,0 +1,2316 @@
+{
+  "review_id": "source-review-b",
+  "review_type": "Independent blind bibliographic review",
+  "validation": {
+    "json_parse": "passed",
+    "reviewed_unique_page_ids": 20,
+    "required_fields_per_page": 5,
+    "exact_evidence_snippets_checked_against_source": 137,
+    "evidence_mismatches": 0
+  },
+  "source_file": "test-results/evaluation/source-only.json",
+  "language": "English",
+  "source_count": 20,
+  "method": [
+    "Read all 20 complete supplied source texts, CLAUDE.md, repository entry index, current git status and recent commit subjects.",
+    "Did not read tests, expected values, baselines, project reviews, journal, production extraction results, or other reviewers' outputs.",
+    "No network lookup, external authority matching, live model call, or production edit.",
+    "Preserve literal spellings, names, source pagination and bibliographic roles. Distinguish primary records, contained contributions, reference locators, reviews and cross-references.",
+    "A page-level scalar is offered only when one atomic value adequately represents the described bibliographic subject. A null scalar does not by itself mean the information is absent.",
+    "Page-span arithmetic is recorded separately from source-asserted numbered-page counts. It is an inclusive span calculation, not a verified physical extent or a whole-volume page count.",
+    "For slash pagination such as 347/(1)p., the first component is recorded as the stated numbered-page component; the parenthesized supplement is retained separately and not silently added.",
+    "Language classifications describe the cited work or source category, not the language of the English cataloguing prose. Category evidence is not represented as an explicit edition-level language declaration."
+  ],
+  "status_legend": {
+    "supported_single": "One source-supported atomic value at the stated scope.",
+    "multiple_scoped_values": "Several supported values belong to distinct editions, contributions, languages or joint publication places; a single atomic page-level value loses information.",
+    "partially_stated": "A value is stated for one record but is not supplied for other records on the page.",
+    "not_stated": "The supplied text does not state a value in the requested bibliographic role.",
+    "explicit_unknown": "The source explicitly marks the field unknown.",
+    "uncertain_scope": "A source string exists, but its role or inheritance does not establish the requested field without a further interpretation.",
+    "range_only": "A contribution has a source page range; no source-asserted numbered-page count or volume extent is supplied.",
+    "reference_locators_only": "Pages identify discussions or mentions within works, not their extent."
+  },
+  "representation_notes": {
+    "page_level_scalar": "A convenience assessment for the bibliographic subject; null is explained by no_scalar_reason and status.",
+    "language_values": "Language scope and evidence basis appear on every value; category-only evidence is explicitly identified.",
+    "numbered_page_extent": "Use scope and kind to distinguish a whole-volume numbered component, contribution span and reference locator.",
+    "evidence": "Every evidence string is intended to be an exact contiguous substring of the corresponding supplied source text. Absence conclusions rest on examination of the complete supplied text."
+  },
+  "entries": [
+    {
+      "page_id": 4303,
+      "page_title": "Mariia Antoaneta / Serbo-Croatian",
+      "record_type": "Single translated volume with a cross-reference",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "Binoza",
+          "conclusion": "Binoza is the publisher in the 1934 imprint.",
+          "values": [
+            {
+              "value": "Binoza",
+              "scope": "1934 volume",
+              "evidence": [
+                "'''[1934]: Binoza, Zagreb'''"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Zagreb",
+          "conclusion": "Zagreb is the publication place in the 1934 imprint.",
+          "values": [
+            {
+              "value": "Zagreb",
+              "scope": "1934 volume",
+              "evidence": [
+                "'''[1934]: Binoza, Zagreb'''"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "supported_single",
+          "page_level_scalar": "Iso Velikanović",
+          "conclusion": "Iso Velikanović is explicitly credited as translator.",
+          "values": [
+            {
+              "value": "Iso Velikanović",
+              "scope": "1934 volume",
+              "evidence": [
+                "Translated by Iso Velikanović."
+              ]
+            }
+          ]
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 496,
+          "conclusion": "The volume's stated numbered extent is 496 pages.",
+          "values": [
+            {
+              "value": 496,
+              "scope": "1934 volume",
+              "evidence": [
+                "496p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "496p."
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Serbo-Croatian",
+          "conclusion": "Serbo-Croatian is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Serbo-Croatian",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "The German bracketed source title does not establish a second edition language. The cross-reference supplies no further imprint or extent on this page."
+      ]
+    },
+    {
+      "page_id": 1800,
+      "page_title": "Romanŭt na edin zhivot. Balzak",
+      "record_type": "Two editions of a translated volume",
+      "fields": {
+        "publisher": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values",
+          "conclusion": "Different publishers are stated for the 1947 and 1960 editions.",
+          "values": [
+            {
+              "value": "Pechat Far",
+              "scope": "1947 first edition",
+              "evidence": [
+                "'''[1947]: Pechat Far, Sofija'''"
+              ]
+            },
+            {
+              "value": "Narodna Kultura",
+              "scope": "1960 second revised edition",
+              "evidence": [
+                "'''[1960]: Narodna Kultura, Sofija'''"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Sofija",
+          "conclusion": "Both imprints name Sofija.",
+          "values": [
+            {
+              "value": "Sofija",
+              "scope": "1947 first edition",
+              "evidence": [
+                "'''[1947]: Pechat Far, Sofija'''"
+              ]
+            },
+            {
+              "value": "Sofija",
+              "scope": "1960 second revised edition",
+              "evidence": [
+                "'''[1960]: Narodna Kultura, Sofija'''"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "supported_single",
+          "page_level_scalar": "Dimitŭr Stoevski",
+          "conclusion": "Both editions explicitly credit Dimitŭr Stoevski.",
+          "values": [
+            {
+              "value": "Dimitŭr Stoevski",
+              "scope": "1947 first edition",
+              "evidence": [
+                "Translated by Dimitŭr Stoevski. 1st edition."
+              ]
+            },
+            {
+              "value": "Dimitŭr Stoevski",
+              "scope": "1960 second revised edition",
+              "evidence": [
+                "Translated by Dimitŭr Stoevski. 2nd revised edition."
+              ]
+            }
+          ]
+        },
+        "numbered_page_extent": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values",
+          "conclusion": "The editions state different numbered-page components: 500 and 383. The second also records a parenthesized supplement of 1.",
+          "values": [
+            {
+              "value": 500,
+              "scope": "1947 first edition",
+              "evidence": [
+                "1st edition. 500p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "500p."
+            },
+            {
+              "value": 383,
+              "scope": "1960 second revised edition",
+              "evidence": [
+                "2nd revised edition. 383/(1)p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "383/(1)p.",
+              "parenthesized_supplement": 1
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Bulgarian",
+          "conclusion": "Bulgarian is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Bulgarian",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Historical Studies / Volumes (Bulgarian)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "A scalar publisher or page count selecting either edition would omit the other edition. The common place and common translator can each be summarized by one value."
+      ]
+    },
+    {
+      "page_id": 72,
+      "page_title": "Ausgewählte Prosa. I. Bändchen",
+      "record_type": "One selected-prose volume with reprint years and contents",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "J. M. Meulenhoff Verlag",
+          "conclusion": "The primary volume imprint names J. M. Meulenhoff Verlag.",
+          "values": [
+            {
+              "value": "J. M. Meulenhoff Verlag",
+              "scope": "1931 volume; 1935 and 1939 are described only as reprints",
+              "evidence": [
+                "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''",
+                "[Reprinted 1935, 1939]"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Amsterdam",
+          "conclusion": "Amsterdam is the primary volume's imprint place.",
+          "values": [
+            {
+              "value": "Amsterdam",
+              "scope": "1931 volume",
+              "evidence": [
+                "'''[1931]: J. M. Meulenhoff Verlag, Amsterdam'''"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is credited. H(erman) Wolf is explicitly an editor and author of foreword/notes, which does not establish a translation role.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 142,
+          "conclusion": "The stated volume extent is 142 pages; contents ranges describe components of that volume.",
+          "values": [
+            {
+              "value": 142,
+              "scope": "1931 selected-prose volume",
+              "evidence": [
+                "142p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "142p."
+            }
+          ]
+        },
+        "language": {
+          "status": "uncertain_scope",
+          "page_level_scalar": null,
+          "no_scalar_reason": "edition_language_not_explicit",
+          "conclusion": "The category supplies no language. German is strongly suggested by the German titles and the series described as a collection of German writers, but an explicit edition-language statement is absent.",
+          "values": [
+            {
+              "value": "German",
+              "scope": "Inference about the 1931 edition, not an explicit category or edition-language statement",
+              "evidence": [
+                "Ausgewählte Prosa. 1. Bändchen",
+                "[Meulenhoffs Sammlung deutscher Schriftsteller, 53]"
+              ],
+              "basis": "title_and_series_inference",
+              "edition_language_explicit": false,
+              "certainty": "inferred"
+            },
+            {
+              "value": null,
+              "scope": "Source category",
+              "evidence": [
+                "[[Category:Collected and Selected Works]]"
+              ],
+              "basis": "category_without_language"
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "H(erman) Wolf has an editing role, not a stated translator role.",
+          "evidence": [
+            "Edited with a foreword and notes by H(erman) Wolf."
+          ]
+        },
+        "The reprint years do not carry separately repeated imprint or pagination statements. Contents page endpoints must not displace the stated volume extent."
+      ]
+    },
+    {
+      "page_id": 5746,
+      "page_title": "Masereel, Frans / Spanish",
+      "record_type": "Two Spanish essay occurrences and a separate source-work cross-reference",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publisher is explicitly identified. Editorial Juventud appears in a translation credit; that credit alone does not establish the host volume's publisher.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values_and_distinct_reference_scopes",
+          "conclusion": "The two Spanish hosts have distinct places. A separate German source-work cross-reference has three place labels and must remain separate.",
+          "values": [
+            {
+              "value": "Barcelona",
+              "scope": "Hombres, libros y ciudades, 1963; Spanish essay occurrence",
+              "evidence": [
+                "[[Hombres, libros y ciudades]] [Barcelona, 1963]"
+              ]
+            },
+            {
+              "value": "Buenos Aires",
+              "scope": "Prohombres del espíritu, 1940; Spanish essay occurrence",
+              "evidence": [
+                "[[Prohombres del espíritu]] [Buenos Aires, 1940]"
+              ]
+            },
+            {
+              "value": [
+                "Wien",
+                "Leipzig",
+                "Zürich"
+              ],
+              "scope": "Begegnungen mit Menschen, Büchern, Städten, 1937; source-work cross-reference",
+              "evidence": [
+                "[Wien/Leipzig/Zürich, 1937]"
+              ],
+              "raw": "Wien/Leipzig/Zürich",
+              "role": "source_reference_places"
+            }
+          ]
+        },
+        "translator": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values",
+          "conclusion": "Two distinct translation credits attach to two Spanish essay occurrences. Editorial Juventud is an organizational translator credit.",
+          "values": [
+            {
+              "value": "Editorial Juventud",
+              "scope": "Essay occurrence in Hombres, libros y ciudades, Barcelona 1963",
+              "evidence": [
+                "[Translated by the Editorial Juventud]"
+              ],
+              "agent_type": "organization"
+            },
+            {
+              "value": "Alfredo Cahn",
+              "scope": "Essay occurrence in Prohombres del espíritu, Buenos Aires 1940",
+              "evidence": [
+                "[Translated by Alfredo Cahn]"
+              ],
+              "agent_type": "person"
+            }
+          ]
+        },
+        "numbered_page_extent": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_contribution_ranges_and_no_whole_volume_extent",
+          "conclusion": "The source gives contribution page ranges, not host-volume numbered extents; the two Spanish occurrences and source cross-reference have different ranges.",
+          "values": [
+            {
+              "value": {
+                "start": 120,
+                "end": 127,
+                "raw": "pp. (120)-127",
+                "inclusive_span_pages": 8
+              },
+              "scope": "Essay in Hombres, libros y ciudades, Barcelona 1963",
+              "evidence": [
+                "No. 13, pp. (120)-127"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 161,
+                "end": 173,
+                "raw": "pp. (161)-173",
+                "inclusive_span_pages": 13
+              },
+              "scope": "Essay in Prohombres del espíritu, Buenos Aires 1940",
+              "evidence": [
+                "No. 11, pp. (161)-173"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 136,
+                "end": 145,
+                "raw": "pp. (136)-145",
+                "inclusive_span_pages": 10
+              },
+              "scope": "Essay in source-work cross-reference, Wien/Leipzig/Zürich 1937",
+              "evidence": [
+                "No. 13, pp. (136)-145"
+              ],
+              "kind": "source_reference_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Spanish",
+          "conclusion": "Spanish is explicitly the page's essay category. The separately cited source-work title is German, but this page contains no explicit source-edition language label.",
+          "values": [
+            {
+              "value": "Spanish",
+              "scope": "The two target essay occurrences; source category",
+              "evidence": [
+                "[[Category:Essays / Individual Essays (Spanish)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "The phrase containing Editorial Juventud assigns the translation role only.",
+          "evidence": [
+            "[Translated by the Editorial Juventud]"
+          ]
+        },
+        "The category is Spanish for the target essays; it does not turn the separate 1937 source reference into a Spanish edition."
+      ]
+    },
+    {
+      "page_id": 4473,
+      "page_title": "Sach mat",
+      "record_type": "Film/adaptation record",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publisher or production company is named. Director, writer, cast and cinematographer are other roles.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "uncertain_scope",
+          "page_level_scalar": null,
+          "no_scalar_reason": "country_context_does_not_explicitly_state_publication_place",
+          "conclusion": "Czechoslovakia is a country in the film's date heading. The text does not explicitly label it a publication place; it is safest to retain it as the film's country context.",
+          "values": [
+            {
+              "value": "Czechoslovakia",
+              "scope": "1984 film heading",
+              "evidence": [
+                "'''[1984]: Czechoslovakia'''"
+              ],
+              "stated_role": "unlabelled_country_context",
+              "publication_place_role_explicit": false
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is credited. Pavel Grym is identified as writer, not translator.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No page extent is stated for this film. Runtime is 32 minutes and must not be converted into pages.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Chechen",
+          "conclusion": "Chechen is explicitly stated as the film's language and must be preserved as the source claim, even if it might prompt a later factual check.",
+          "values": [
+            {
+              "value": "Chechen",
+              "scope": "Film",
+              "evidence": [
+                "Language: Chechen"
+              ],
+              "basis": "explicit_body_language_statement",
+              "edition_language_explicit": true
+            },
+            {
+              "value": null,
+              "scope": "Source category",
+              "evidence": [
+                "[[Category:Films / Plays / Operas]]"
+              ],
+              "basis": "category_without_language"
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "Runtime is a duration, not pagination.",
+          "evidence": [
+            "Runtime: 32 minutes"
+          ]
+        },
+        {
+          "conclusion": "The writer role does not establish translation.",
+          "evidence": [
+            "Writer: Pavel Grym"
+          ]
+        },
+        "No external correction to the stated film language was attempted."
+      ]
+    },
+    {
+      "page_id": 2866,
+      "page_title": "Steiman, Lionel Bradley",
+      "record_type": "Single secondary-literature journal article",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publisher is named. The journal title and its bracketed address identify a host and address, not a publisher.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "uncertain_scope",
+          "page_level_scalar": null,
+          "no_scalar_reason": "journal_address_role_requires_interpretation",
+          "conclusion": "A full postal address is associated with the journal. Chalfont St Giles is an explicit locality inside that address, but its role as formal publication place is not separately established.",
+          "values": [
+            {
+              "value": "Halfpenny Furze, Mill Lane, Chalfont St Giles, Buckinghamshire HP8 4NR",
+              "scope": "Journal of European Studies; address following the host title",
+              "evidence": [
+                "[Halfpenny Furze, Mill Lane, Chalfont St Giles, Buckinghamshire HP8 4NR]"
+              ],
+              "kind": "postal_address",
+              "locality_in_address": "Chalfont St Giles",
+              "region_in_address": "Buckinghamshire",
+              "publication_place_role_explicit": false
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "range_only",
+          "page_level_scalar": null,
+          "no_scalar_reason": "contribution_range_not_a_source_asserted_count",
+          "conclusion": "The article occupies a stated range from 100 to 124. The inclusive span is 25 pages arithmetically; no journal-volume extent or source-asserted count is supplied.",
+          "values": [
+            {
+              "value": {
+                "start": 100,
+                "end": 124,
+                "raw": "pp. (100)-124",
+                "inclusive_span_pages": 25
+              },
+              "scope": "The Agony of Humanism in World War I: The Case of Stefan Zweig, Journal of European Studies 6:2, June 1976",
+              "evidence": [
+                "6:2 [June 1976], pp. (100)-124"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ],
+          "scalar_if_defined_as_inclusive_contribution_span": 25
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "English",
+          "conclusion": "English is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "English",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Secondary Literature / Authors (English)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "A bibliography page headed by an author's name is not itself a monograph record. A page range is not the total pagination of its host journal."
+      ]
+    },
+    {
+      "page_id": 5082,
+      "page_title": "Pauls, Georg",
+      "record_type": "One exhibition-catalogue volume",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "Bibliothèque principale de la Ville de Namur",
+          "conclusion": "Bibliothèque principale de la Ville de Namur is named in the imprint.",
+          "values": [
+            {
+              "value": "Bibliothèque principale de la Ville de Namur",
+              "scope": "1994 exhibition-catalogue volume",
+              "evidence": [
+                "'''[1994]: Bibliothèque principale de la Ville de Namur, Namur'''"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Namur",
+          "conclusion": "Namur is the publication place in the imprint.",
+          "values": [
+            {
+              "value": "Namur",
+              "scope": "1994 exhibition-catalogue volume",
+              "evidence": [
+                "'''[1994]: Bibliothèque principale de la Ville de Namur, Namur'''"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is named. Michel Gilles is credited with the foreword only.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 42,
+          "conclusion": "The volume's stated numbered extent is 42 pages.",
+          "values": [
+            {
+              "value": 42,
+              "scope": "1994 exhibition-catalogue volume",
+              "evidence": [
+                "42p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "42p."
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "French",
+          "conclusion": "French is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "French",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Secondary Literature / Authors (French)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "Foreword authorship is distinct from translation.",
+          "evidence": [
+            "Foreword by Michel Gilles."
+          ]
+        }
+      ]
+    },
+    {
+      "page_id": 1891,
+      "page_title": "Mariia Stiuart * Kazanova",
+      "record_type": "One volume containing two translated works and a separately credited verse translation",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "Kavkazskiĭ Krai",
+          "conclusion": "Kavkazskiĭ Krai is named in the 1993 imprint.",
+          "values": [
+            {
+              "value": "Kavkazskiĭ Krai",
+              "scope": "1993 combined volume",
+              "evidence": [
+                "[1993]: Kavkazskiĭ Krai, Stavropol’"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Stavropol’",
+          "conclusion": "Stavropol’ is the publication place in the 1993 imprint.",
+          "values": [
+            {
+              "value": "Stavropol’",
+              "scope": "1993 combined volume",
+              "evidence": [
+                "[1993]: Kavkazskiĭ Krai, Stavropol’"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values_with_component_roles",
+          "conclusion": "The source credits different translators for Maria Stuart, its verses, and Casanova. None alone represents the complete volume.",
+          "values": [
+            {
+              "value": "R. Gal’perina",
+              "scope": "Mariia Stiuart / Maria Stuart, prose translation",
+              "evidence": [
+                "Mariia Stiuart [Maria Stuart. Translated by  R. Gal’perina."
+              ]
+            },
+            {
+              "value": "V. Levik",
+              "scope": "Verses within Mariia Stiuart / Maria Stuart",
+              "evidence": [
+                "Verses translated by V. Levik"
+              ]
+            },
+            {
+              "value": "P. S. Bernshteĭn",
+              "scope": "Kazanova / Casanova",
+              "evidence": [
+                "Kazanova [Casanova. Translated by P. S. Bernshteĭn]"
+              ]
+            }
+          ]
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 444,
+          "conclusion": "The volume states 444 as its numbered-page component and records a parenthesized supplement of 3. Contents endpoints are separate source facts and do not justify replacing this number.",
+          "values": [
+            {
+              "value": 444,
+              "scope": "1993 combined volume",
+              "evidence": [
+                "444/(3)p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "444/(3)p.",
+              "parenthesized_supplement": 3
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Russian",
+          "conclusion": "Russian is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Russian",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Historical Studies / Volumes (Russian)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "The contents locate the two contributions; the terminal supplied page label 445 is not a replacement for the volume's stated numbered component 444.",
+          "evidence": [
+            "pp. (7)-(370)",
+            "pp. (371)-(445)",
+            "444/(3)p."
+          ]
+        },
+        {
+          "conclusion": "N. Vysotskaia is the editor and I. L. Prostitov the illustrator.",
+          "evidence": [
+            "Edited by N. Vysotskaia. Illustrated by I. L. Prostitov."
+          ]
+        }
+      ]
+    },
+    {
+      "page_id": 634,
+      "page_title": "Shi ta ma?",
+      "record_type": "Five occurrences of one story in different host records",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publishers are stated for any of the five host records.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values",
+          "conclusion": "The host records state Beijing, Yanji and a joint Taiyuan/Xi'an label. The places must remain attached to their host records.",
+          "values": [
+            {
+              "value": "Beijing",
+              "scope": "Ciweige ji, 2000",
+              "evidence": [
+                "[[Ciweige ji]] [Beijing, 2000]"
+              ]
+            },
+            {
+              "value": "Yanji",
+              "scope": "Ciweige jingdian xiaoshuo, 2000, volume 3",
+              "evidence": [
+                "[[Ciweige jingdian xiaoshuo]] [Yanji, 2000]"
+              ]
+            },
+            {
+              "value": [
+                "Taiyuan",
+                "Xi'an"
+              ],
+              "scope": "Ciweige wenji, 1998, volume 2",
+              "evidence": [
+                "[[Ciweige wenji]] [Taiyuan/Xi'an, 1998]"
+              ],
+              "raw": "Taiyuan/Xi'an",
+              "kind": "joint_place_label"
+            },
+            {
+              "value": "Beijing",
+              "scope": "Ciweige xiaoshuo ji, 1997, volume 3",
+              "evidence": [
+                "[[Ciweige xiaoshuo ji]] [Beijing, 1997]"
+              ]
+            },
+            {
+              "value": "Beijing",
+              "scope": "Xiangqi de gushi, date label 2000/2",
+              "evidence": [
+                "[[Xiangqi de gushi]] [Beijing, 2000/2]"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated for any occurrence.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_contribution_ranges_and_no_whole_volume_extent",
+          "conclusion": "Five occurrence-specific page ranges are stated, with four distinct numerical ranges. No whole-volume extent is supplied.",
+          "values": [
+            {
+              "value": {
+                "start": 289,
+                "end": 325,
+                "raw": "pp. 289-325",
+                "inclusive_span_pages": 37
+              },
+              "scope": "Story in Ciweige ji, Beijing 2000",
+              "evidence": [
+                "[[Ciweige ji]] [Beijing, 2000], No. 10, pp. 289-325"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 890,
+                "end": 931,
+                "raw": "pp. 890-931",
+                "inclusive_span_pages": 42
+              },
+              "scope": "Story in Ciweige jingdian xiaoshuo, Yanji 2000, volume 3",
+              "evidence": [
+                "Vol. 3, No. 22, pp. 890-931"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 310,
+                "end": 343,
+                "raw": "pp. 310-343",
+                "inclusive_span_pages": 34
+              },
+              "scope": "Story in Ciweige wenji, Taiyuan/Xi'an 1998, volume 2",
+              "evidence": [
+                "Vol. 2, No. 8, pp. 310-343"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 315,
+                "end": 347,
+                "raw": "pp. 315-347",
+                "inclusive_span_pages": 33
+              },
+              "scope": "Story in Ciweige xiaoshuo ji, Beijing 1997, volume 3",
+              "evidence": [
+                "Vol. 3, No. 29, pp. 315-347"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 289,
+                "end": 325,
+                "raw": "pp. 289-325",
+                "inclusive_span_pages": 37
+              },
+              "scope": "Story in Xiangqi de gushi, Beijing, date label 2000/2",
+              "evidence": [
+                "[[Xiangqi de gushi]] [Beijing, 2000/2], No. 10, pp. 289-325"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Chinese",
+          "conclusion": "Chinese is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Chinese",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Chinese)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "Neither the first listed occurrence nor a maximum page endpoint represents all five occurrences. The bracketed German title identifies the source work, not another stated language of these editions."
+      ]
+    },
+    {
+      "page_id": 7263,
+      "page_title": "Amok / Individual Stories (Japanese)",
+      "record_type": "Referral-only story page",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publication imprint is supplied; this is a cross-reference.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publication place is supplied.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is supplied.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No page count or page range is supplied.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Japanese",
+          "conclusion": "Japanese is both the source category and the explicitly identified translation destination in the cross-reference. No concrete Japanese edition is described.",
+          "values": [
+            {
+              "value": "Japanese",
+              "scope": "Translation cross-reference to Der Amokläufer",
+              "evidence": [
+                "[Translations: Japanese)]"
+              ],
+              "basis": "explicit_translation_pointer",
+              "edition_language_explicit": false
+            },
+            {
+              "value": "Japanese",
+              "scope": "Source category",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Japanese)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "The linked page was not consulted. Its possible publisher, translator, place or pagination cannot be transferred into this source-only record."
+      ]
+    },
+    {
+      "page_id": 4445,
+      "page_title": "Al-Bāḥ, Muḥammad / El-bah, Mohammed",
+      "record_type": "Author bibliography containing a German book and an Arabic article with an online preview",
+      "fields": {
+        "publisher": {
+          "status": "partially_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "publisher_stated_for_one_record_only",
+          "conclusion": "Hochschulverl. is the publisher of the German book. No publisher is stated for the Arabic journal article or its shortened online preview.",
+          "values": [
+            {
+              "value": "Hochschulverl.",
+              "scope": "Frauen- und Männerbilder in den Novellen von Stefan Zweig, German volume, 2000",
+              "evidence": [
+                "'''[2000]: Hochschulverl., Freiburg im Breisgau'''"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values",
+          "conclusion": "The German book has Freiburg im Breisgau in its imprint; the Arabic article's host is associated with Rabat. The thesis-origin institution and online platform are different contexts.",
+          "values": [
+            {
+              "value": "Freiburg im Breisgau",
+              "scope": "German book, 2000 imprint",
+              "evidence": [
+                "'''[2000]: Hochschulverl., Freiburg im Breisgau'''"
+              ]
+            },
+            {
+              "value": "Rabat",
+              "scope": "Al-Balāghah waʾl-naqd al-ʿarabī, host of Arabic article, 2015",
+              "evidence": [
+                "[Arabic Rhetoric and Criticism] [Rabat], 3 [2015]"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is named and no translation relationship is asserted between the German book and Arabic article.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "distinct_work_scopes_and_extent_types_with_unpaginated_preview",
+          "conclusion": "The German book states 168 pages. The Arabic article has a contribution range of 71–79; the shortened online preview has no stated pagination.",
+          "values": [
+            {
+              "value": 168,
+              "scope": "German book, 2000",
+              "evidence": [
+                "168p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "168p."
+            },
+            {
+              "value": {
+                "start": 71,
+                "end": 79,
+                "raw": "pp. 71-79",
+                "inclusive_span_pages": 9
+              },
+              "scope": "Arabic journal article, 2015",
+              "evidence": [
+                "3 [2015], pp. 71-79"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ]
+        },
+        "language": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_languages_for_distinct_works",
+          "conclusion": "German and Arabic are explicit section headings and are also both source categories. Each language belongs to its own cited work; there is no single language for all records.",
+          "values": [
+            {
+              "value": "German",
+              "scope": "2000 book under German heading",
+              "evidence": [
+                "'''German'''",
+                "[[Category:Secondary Literature / Authors (German)]]"
+              ],
+              "basis": "explicit_section_heading_and_category",
+              "edition_language_explicit": true
+            },
+            {
+              "value": "Arabic",
+              "scope": "2015 journal article under Arabic heading",
+              "evidence": [
+                "'''Arabic'''",
+                "[[Category:Secondary Literature / Authors (Arabic)]]"
+              ],
+              "basis": "explicit_section_heading_and_category",
+              "edition_language_explicit": true
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "The 1999 thesis origin is provenance of the German book, not a second stated publisher.",
+          "evidence": [
+            "This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau"
+          ]
+        },
+        {
+          "conclusion": "The linked item is explicitly a shortened preview. Its host name is not a source-assigned publisher.",
+          "evidence": [
+            "Published online [shortened preview version]:",
+            "http://platform.almanhal.com/Article/Preview.aspx?ID=60445"
+          ]
+        }
+      ]
+    },
+    {
+      "page_id": 5892,
+      "page_title": "El pensamiento europeo en su evolución histórica",
+      "record_type": "Referral-only essay title variant",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "The page provides a title cross-reference only, with no publisher.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publication place is supplied.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is supplied.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No page count or range is supplied.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Spanish",
+          "conclusion": "Spanish is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Spanish",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Essays / Individual Essays (Spanish)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "The linked title supplies a referral target, not locally stated edition metadata.",
+          "evidence": [
+            "[[El pensamiento europeo en su desarrollo histórico]]"
+          ]
+        }
+      ]
+    },
+    {
+      "page_id": 4376,
+      "page_title": "Schack, Amok och andra noveller",
+      "record_type": "Single translated fiction volume with contents",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "Skoglunds Bokförlag",
+          "conclusion": "Skoglunds Bokförlag is the named publisher.",
+          "values": [
+            {
+              "value": "Skoglunds Bokförlag",
+              "scope": "1943 volume",
+              "evidence": [
+                "'''[1943]: Skoglunds Bokförlag, Stockholm'''"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Stockholm",
+          "conclusion": "Stockholm is the named publication place.",
+          "values": [
+            {
+              "value": "Stockholm",
+              "scope": "1943 volume",
+              "evidence": [
+                "'''[1943]: Skoglunds Bokförlag, Stockholm'''"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "supported_single",
+          "page_level_scalar": "Hugo Hultenberg",
+          "conclusion": "Hugo Hultenberg is explicitly credited for the volume's translation.",
+          "values": [
+            {
+              "value": "Hugo Hultenberg",
+              "scope": "1943 volume",
+              "evidence": [
+                "Translated by Hugo Hultenberg."
+              ]
+            }
+          ]
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 347,
+          "conclusion": "The numbered-page component is 347, with a parenthesized supplement of 1 retained separately.",
+          "values": [
+            {
+              "value": 347,
+              "scope": "1943 volume",
+              "evidence": [
+                "347/(1)p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "347/(1)p.",
+              "parenthesized_supplement": 1
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Swedish",
+          "conclusion": "Swedish is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Swedish",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Fiction / Volumes (Swedish)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "The final contribution reaches supplied page label 348; this is separate from the stated numbered component 347 and supplement.",
+          "evidence": [
+            "Månskensgränden [Die Mondscheingasse], pp. (323)-(348)",
+            "347/(1)p."
+          ]
+        },
+        "The six contents ranges locate stories within the volume; they do not describe six editions or replace its stated extent."
+      ]
+    },
+    {
+      "page_id": 584,
+      "page_title": "Jueze",
+      "record_type": "Three story occurrences followed by title cross-references",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publisher is stated for any host volume.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values",
+          "conclusion": "Two hosts are associated with T'aipei and one with Jinan.",
+          "values": [
+            {
+              "value": "T'aipei",
+              "scope": "Ciweige xiaoshuo, 1975",
+              "evidence": [
+                "[[Ciweige xiaoshuo]] [T'aipei, 1975]"
+              ]
+            },
+            {
+              "value": "T'aipei",
+              "scope": "Pa, 1968",
+              "evidence": [
+                "[[Pa]] [T'aipei, 1968]"
+              ]
+            },
+            {
+              "value": "Jinan",
+              "scope": "Tongqing de zui, 1982",
+              "evidence": [
+                "[[Tongqing de zui]] [Jinan, 1982]"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_contribution_ranges_and_no_whole_volume_extent",
+          "conclusion": "The three occurrences have different contribution ranges; no host-volume extent is supplied.",
+          "values": [
+            {
+              "value": {
+                "start": 115,
+                "end": 188,
+                "raw": "pp. 115-188",
+                "inclusive_span_pages": 74
+              },
+              "scope": "Story in Ciweige xiaoshuo, T'aipei 1975",
+              "evidence": [
+                "Part III, No. 18, pp. 115-188"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 47,
+                "end": 114,
+                "raw": "pp. 47-114",
+                "inclusive_span_pages": 68
+              },
+              "scope": "Story in Pa, T'aipei 1968",
+              "evidence": [
+                "No. 4, pp. 47-114"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            },
+            {
+              "value": {
+                "start": 422,
+                "end": 479,
+                "raw": "pp. 422-479",
+                "inclusive_span_pages": 58
+              },
+              "scope": "Story in Tongqing de zui, Jinan 1982",
+              "evidence": [
+                "No. 11, pp. 422-479"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Chinese",
+          "conclusion": "Chinese is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Chinese",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Chinese)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "The five See also title links provide no publisher, place, translator or extent in this source. Part III and item numbers are not page counts."
+      ]
+    },
+    {
+      "page_id": 533,
+      "page_title": "Hirm",
+      "record_type": "One story occurrence identified through a linked host",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publisher is stated.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No publication place is stated. The bracketed 3 following the host title is not a place.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "range_only",
+          "page_level_scalar": null,
+          "no_scalar_reason": "contribution_range_not_a_source_asserted_count",
+          "conclusion": "The story has a stated page range of 84–125. Its inclusive arithmetic span is 42 pages; no source-asserted count or host-volume extent is given.",
+          "values": [
+            {
+              "value": {
+                "start": 84,
+                "end": 125,
+                "raw": "pp. 84-125",
+                "inclusive_span_pages": 42
+              },
+              "scope": "Hirm / Angst in Novelle, identifier [3]",
+              "evidence": [
+                "in [[Novelle]] [3], pp. 84-125"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ],
+          "scalar_if_defined_as_inclusive_contribution_span": 42
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Estonian",
+          "conclusion": "Estonian is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Estonian",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Estonian)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "The linked Novelle record was not opened. Its publisher, place, translator or total extent cannot be inferred from the local citation."
+      ]
+    },
+    {
+      "page_id": 162,
+      "page_title": "Die Monotonisierung der Welt. Aufsätze und Vorträge",
+      "record_type": "One essay collection with subsequent edition notes, contents and a review citation",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "Suhrkakmp Verlag",
+          "conclusion": "The primary 1976 imprint literally states Suhrkakmp Verlag. Preserve that spelling in the source-bound value; a normalized correction would be a separate decision.",
+          "values": [
+            {
+              "value": "Suhrkakmp Verlag",
+              "scope": "Primary 1976 collection imprint; later edition notes do not separately restate a publisher",
+              "evidence": [
+                "'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''"
+              ],
+              "normalization_applied": false
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Frankfurt am Main",
+          "conclusion": "Frankfurt am Main is the collection's imprint place. The review citation separately names the same locality; that review is not the collection's imprint evidence.",
+          "values": [
+            {
+              "value": "Frankfurt am Main",
+              "scope": "Primary 1976 collection imprint",
+              "evidence": [
+                "'''[1976]: Suhrkakmp Verlag, Frankfurt am Main'''"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated. Volker Michels compiled the volume and wrote an afterword.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 254,
+          "conclusion": "The primary volume states a numbered-page component of 254 with a parenthesized supplement of 1. Later edition notes give copy quantities, not new extents.",
+          "values": [
+            {
+              "value": 254,
+              "scope": "Primary collection record under the 1976 heading",
+              "evidence": [
+                "254/(1)p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "254/(1)p.",
+              "parenthesized_supplement": 1
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "German",
+          "conclusion": "German is explicitly stated in the volume heading and source category.",
+          "values": [
+            {
+              "value": "German",
+              "scope": "Essay collection",
+              "evidence": [
+                "'''Essays / Volumes (German)'''",
+                "[[Category:Essays / Volumes (German)]]"
+              ],
+              "basis": "explicit_body_classification_and_category",
+              "edition_language_explicit": true
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "Michels' compilation and afterword credits are not translation credits.",
+          "evidence": [
+            "Compiled with an afterword by Volker Michels."
+          ]
+        },
+        {
+          "conclusion": "Copy counts and edition years are not pagination.",
+          "evidence": [
+            "*1st edition 3,000 copies. 1976",
+            "*2nd edition. 2,000 copies. 1978",
+            "*3rd edition. 1,000 copies. 1982",
+            "*4th edition. 3,000 copies. 1988"
+          ]
+        },
+        {
+          "conclusion": "The source's series spelling differs from the publisher spelling; it suggests a possible typo without authorizing silent correction.",
+          "evidence": [
+            "Suhrkakmp Verlag",
+            "[Suhrkamp Bibliothek, 493]"
+          ]
+        },
+        {
+          "conclusion": "The newspaper is the host of a review, not the collection's publisher.",
+          "evidence": [
+            "'''Reviewed by''':  Egon Schwarz in the ''Frankfurter (Allgemeine) Zeitung'' [Frankfurt am Main], 7 August 1976"
+          ]
+        },
+        "The primary record's publisher, place and extent are clear. Assigning them independently to every later numbered edition requires a policy for inheritance from the encompassing bibliographic record."
+      ]
+    },
+    {
+      "page_id": 1999,
+      "page_title": "Adel, Kurt",
+      "record_type": "Author bibliography with two books, the second in two editions, and Zweig-reference locators",
+      "fields": {
+        "publisher": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values_with_unrestated_later_edition_imprint",
+          "conclusion": "Two distinct publishers are explicitly attached to two book records. The 2003 second edition follows the Peter Lang book but does not repeat its imprint.",
+          "values": [
+            {
+              "value": "Österreichische Verlagsanstalt",
+              "scope": "Geist der Wirklichkeit. Vom Werden der österreichischen Dichtung, 1967",
+              "evidence": [
+                "Wien: Österreichische Verlagsanstalt, 1967."
+              ]
+            },
+            {
+              "value": "Peter Lang Verlag",
+              "scope": "Die Literatur Österreichs an der Jahrtausendwende, 2001",
+              "evidence": [
+                "Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien: Peter Lang Verlag, 2001."
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "multiple_values_and_joint_publication_places",
+          "conclusion": "The 1967 book is published at Wien; the 2001 imprint lists seven places jointly. The 2003 edition does not independently repeat these places.",
+          "values": [
+            {
+              "value": "Wien",
+              "scope": "Geist der Wirklichkeit, 1967",
+              "evidence": [
+                "Wien: Österreichische Verlagsanstalt, 1967."
+              ]
+            },
+            {
+              "value": [
+                "Frankfurt am Main",
+                "Berlin",
+                "Bern",
+                "Bruxelles",
+                "New York",
+                "Oxford",
+                "Wien"
+              ],
+              "scope": "Die Literatur Österreichs an der Jahrtausendwende, 2001",
+              "evidence": [
+                "Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien: Peter Lang Verlag, 2001."
+              ],
+              "raw": "Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien",
+              "kind": "joint_imprint_places"
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated for any book or edition.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "reference_locators_only",
+          "page_level_scalar": null,
+          "no_scalar_reason": "whole_volume_extent_not_stated_and_reference_locators_have_different_scopes",
+          "conclusion": "All page statements locate Zweig references, including a note. They do not state either book's extent and must not be converted into volume counts.",
+          "values": [
+            {
+              "value": {
+                "pages": [
+                  223,
+                  224
+                ],
+                "note_number": 224,
+                "note_page": 425,
+                "raw": "pp. 223-224, Note 224, p. 425"
+              },
+              "scope": "Zweig references in Geist der Wirklichkeit, 1967",
+              "evidence": [
+                "Zweig references, pp. 223-224, Note 224, p. 425"
+              ],
+              "kind": "reference_locator"
+            },
+            {
+              "value": {
+                "pages": [
+                  255,
+                  288
+                ],
+                "raw": "p. 255, 288"
+              },
+              "scope": "Zweig references in Die Literatur Österreichs an der Jahrtausendwende, 2001",
+              "evidence": [
+                "Zweig reference, p. 255, 288."
+              ],
+              "kind": "reference_locator"
+            },
+            {
+              "value": {
+                "pages": [
+                  222,
+                  252,
+                  284
+                ],
+                "raw": "pp. 222, 252, 284"
+              },
+              "scope": "Zweig references in the second expanded edition, 2003",
+              "evidence": [
+                "2nd, expanded edition. 2003. Zweig references, pp. 222, 252, 284"
+              ],
+              "kind": "reference_locator"
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "German",
+          "conclusion": "German is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "German",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Secondary Literature / Authors (German)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "The maximum cited page, 425, is not a stated total page count. Discontinuous reference pages are not a contiguous article extent.",
+        "Inheriting the 2001 imprint for the 2003 edition is plausible from the citation structure but remains distinct from an explicitly repeated 2003 imprint."
+      ]
+    },
+    {
+      "page_id": 4209,
+      "page_title": "Vreemdes in 'n vreemde wêreld",
+      "record_type": "One translated fiction volume with a joint-place imprint and contents",
+      "fields": {
+        "publisher": {
+          "status": "supported_single",
+          "page_level_scalar": "Nasionale Pers Beperk",
+          "conclusion": "Nasionale Pers Beperk is the named publisher.",
+          "values": [
+            {
+              "value": "Nasionale Pers Beperk",
+              "scope": "1947 volume",
+              "evidence": [
+                "'''[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)'''"
+              ]
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "multiple_scoped_values",
+          "page_level_scalar": null,
+          "no_scalar_reason": "two_joint_publication_places",
+          "conclusion": "The imprint names Bloemfontein and Kaapstad, with Capetown supplied parenthetically as a name for Kaapstad. Pretoria belongs to the dated foreword, not the imprint.",
+          "values": [
+            {
+              "value": "Bloemfontein",
+              "scope": "1947 volume joint imprint",
+              "evidence": [
+                "Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)"
+              ]
+            },
+            {
+              "value": "Kaapstad",
+              "scope": "1947 volume joint imprint",
+              "evidence": [
+                "Kaapstad (Capetown)"
+              ],
+              "source_alternative_name": "Capetown",
+              "raw": "Kaapstad (Capetown)"
+            }
+          ]
+        },
+        "translator": {
+          "status": "supported_single",
+          "page_level_scalar": "Hymne Weiss",
+          "conclusion": "Hymne Weiss is explicitly credited in the volume-level translation statement. The contents spell the foreword/preface name Hymme Weiss; the translator value preserves the translation statement.",
+          "values": [
+            {
+              "value": "Hymne Weiss",
+              "scope": "1947 volume translation",
+              "evidence": [
+                "Translated with a foreword and preface by Hymne Weiss."
+              ]
+            }
+          ]
+        },
+        "numbered_page_extent": {
+          "status": "supported_single",
+          "page_level_scalar": 160,
+          "conclusion": "The stated whole-volume extent is 160 pages.",
+          "values": [
+            {
+              "value": 160,
+              "scope": "1947 volume",
+              "evidence": [
+                "160p."
+              ],
+              "kind": "whole_volume_numbered_component",
+              "raw": "160p."
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Afrikaans",
+          "conclusion": "Afrikaans is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "Afrikaans",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Fiction / Volumes (Afrikaans)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        {
+          "conclusion": "Pretoria occurs in the foreword attribution and date, so it is not an additional publication place.",
+          "evidence": [
+            "Voorwoord [Hymme Weiss, Pretoria, 25 January, 1944], p. (5)"
+          ]
+        },
+        {
+          "conclusion": "The source has a name-spelling discrepancy between the main translation credit and contents; no authority-based resolution is attempted.",
+          "evidence": [
+            "Hymne Weiss",
+            "Inleiding [Preface, Hymme Weiss]"
+          ]
+        }
+      ]
+    },
+    {
+      "page_id": 6005,
+      "page_title": "Vrapuesi i amoku",
+      "record_type": "One story occurrence with an explicitly unknown page range",
+      "fields": {
+        "publisher": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "The host citation gives no publisher.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Tiranë/Tirana",
+          "conclusion": "The host citation supplies the location label Tiranë/Tirana. Preserve the complete label; the apparent alternative names should not automatically be treated as two distinct publication places.",
+          "values": [
+            {
+              "value": "Tiranë/Tirana",
+              "scope": "Novela, 2014, volume 2",
+              "evidence": [
+                "[[Novela]] [Tiranë/Tirana, 2014]"
+              ],
+              "raw": "Tiranë/Tirana",
+              "components": [
+                "Tiranë",
+                "Tirana"
+              ],
+              "interpretation": "apparent_alternative_names_in_one_location_label",
+              "authority_identity_verified": false
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated. The Albanian translation pointer names a language, not a translator.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "explicit_unknown",
+          "page_level_scalar": null,
+          "no_scalar_reason": "explicit_unknown_in_source",
+          "conclusion": "The contribution's pages are explicitly marked unknown by pp. ??. No numeric extent or range can be recovered from this text.",
+          "values": [
+            {
+              "value": null,
+              "scope": "Vrapuesi i amoku in Novela, volume 2, item 4",
+              "evidence": [
+                "Vol. 2, No. 4, pp. ??"
+              ],
+              "kind": "unknown_contribution_page_range",
+              "raw": "pp. ??"
+            }
+          ]
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "Albanian",
+          "conclusion": "Albanian is the source category and is explicitly named as the translation destination of the source-work cross-reference.",
+          "values": [
+            {
+              "value": "Albanian",
+              "scope": "Source category for the story",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Albanian)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            },
+            {
+              "value": "Albanian",
+              "scope": "Cross-reference to Der Amokläufer",
+              "evidence": [
+                "[Translation: Albanian]"
+              ],
+              "basis": "explicit_translation_pointer",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "Volume 2 and item number 4 are not pagination. The See links were not opened and supply no further local imprint or translation credit."
+      ]
+    },
+    {
+      "page_id": 7140,
+      "page_title": "Florence, ville de fêtes",
+      "record_type": "One essay occurrence with a combined date label and a numbered series or imprint label",
+      "fields": {
+        "publisher": {
+          "status": "uncertain_scope",
+          "page_level_scalar": null,
+          "no_scalar_reason": "series_or_imprint_label_not_an_explicit_publisher_credit",
+          "conclusion": "Le Livre de Poche appears as a numbered bracketed series or imprint label. The source does not explicitly assign it the publisher role, so a publisher scalar requires interpretation.",
+          "values": [
+            {
+              "value": "Le Livre de Poche",
+              "scope": "Voyages, Paris, date label 2002/2009",
+              "evidence": [
+                "[Le Livre de Poche, 15372]"
+              ],
+              "stated_role": "numbered_series_or_imprint_label",
+              "publisher_role_explicit": false,
+              "series_or_imprint_number": "15372"
+            }
+          ]
+        },
+        "publication_place": {
+          "status": "supported_single",
+          "page_level_scalar": "Paris",
+          "conclusion": "Paris is the place given for the Voyages host record.",
+          "values": [
+            {
+              "value": "Paris",
+              "scope": "Voyages, combined date label 2002/2009",
+              "evidence": [
+                "[[Voyages]] [Paris, 2002/2009]"
+              ]
+            }
+          ]
+        },
+        "translator": {
+          "status": "not_stated",
+          "page_level_scalar": null,
+          "no_scalar_reason": "not_stated",
+          "conclusion": "No translator is stated.",
+          "scope": "Complete supplied source text.",
+          "values": [],
+          "evidence": []
+        },
+        "numbered_page_extent": {
+          "status": "range_only",
+          "page_level_scalar": null,
+          "no_scalar_reason": "contribution_range_not_a_source_asserted_count",
+          "conclusion": "The essay has a page range of 111–118. Its inclusive arithmetic span is 8 pages; the host volume's extent is not stated.",
+          "values": [
+            {
+              "value": {
+                "start": 111,
+                "end": 118,
+                "raw": "pp. 111-118",
+                "inclusive_span_pages": 8
+              },
+              "scope": "Florence, ville de fêtes in Voyages, Paris, combined date label 2002/2009",
+              "evidence": [
+                "No. 12, pp. 111-118"
+              ],
+              "kind": "contribution_page_range",
+              "count_basis": "arithmetic_only"
+            }
+          ],
+          "scalar_if_defined_as_inclusive_contribution_span": 8
+        },
+        "language": {
+          "status": "supported_single",
+          "page_level_scalar": "French",
+          "conclusion": "French is the source category's classification; the cataloguing prose does not separately declare the edition's language.",
+          "values": [
+            {
+              "value": "French",
+              "scope": "Source category for the page",
+              "evidence": [
+                "[[Category:Essays / Individual Essays (French)]]"
+              ],
+              "basis": "category",
+              "edition_language_explicit": false
+            }
+          ]
+        }
+      },
+      "scope_notes": [
+        "The combined date label 2002/2009 is retained without inventing distinct imprint facts for two editions.",
+        "The source-work title Festliches Florenz is a cross-reference, not an additional explicit edition-language statement."
+      ]
+    }
+  ],
+  "summary": {
+    "unambiguous_facts": [
+      {
+        "page_ids": [
+          4303,
+          5082,
+          4376,
+          4209
+        ],
+        "conclusion": "The main volume numbered-page components are respectively 496, 42, 347 and 160, with clear primary imprints. Page 4376 separately records a parenthesized supplement of 1."
+      },
+      {
+        "page_ids": [
+          1800
+        ],
+        "conclusion": "The 1947 and 1960 editions have different publishers (Pechat Far; Narodna Kultura) and numbered-page components (500; 383), but share Sofija and translator Dimitŭr Stoevski."
+      },
+      {
+        "page_ids": [
+          1891
+        ],
+        "conclusion": "The volume has three explicit translation credits with distinct component roles: R. Gal’perina, V. Levik for verses, and P. S. Bernshteĭn. Its stated numbered-page component is 444, followed by a parenthesized supplement of 3."
+      },
+      {
+        "page_ids": [
+          5746
+        ],
+        "conclusion": "Editorial Juventud and Alfredo Cahn are translation credits for different Spanish occurrences. Editorial Juventud is not explicitly identified as publisher in this source."
+      },
+      {
+        "page_ids": [
+          4445
+        ],
+        "conclusion": "The page contains a German book (Hochschulverl., Freiburg im Breisgau, 168 pages) and an Arabic article (Rabat, pages 71–79), plus a shortened online preview. Both languages are explicit section headings and categories."
+      },
+      {
+        "page_ids": [
+          4473
+        ],
+        "conclusion": "The film's body explicitly says Language: Chechen. Its 32-minute runtime is not a page extent, and its country heading is Czechoslovakia."
+      },
+      {
+        "page_ids": [
+          7263,
+          5892
+        ],
+        "conclusion": "Both pages are referrals with no local publisher, place, translator or pagination. Their source language classifications are Japanese and Spanish."
+      },
+      {
+        "page_ids": [
+          634,
+          584
+        ],
+        "conclusion": "The sources contain five and three story occurrences respectively, with distinct host places and contribution page ranges. No publisher, translator or whole-volume extent is stated."
+      },
+      {
+        "page_ids": [
+          1999
+        ],
+        "conclusion": "Two publishers and several publication places are explicit, but every pagination statement is a Zweig-reference locator; no total extent is stated."
+      },
+      {
+        "page_ids": [
+          4209
+        ],
+        "conclusion": "The publication places are Bloemfontein and Kaapstad (Capetown). Pretoria occurs only in the foreword's attribution and date."
+      },
+      {
+        "page_ids": [
+          6005
+        ],
+        "conclusion": "The host location is written Tiranë/Tirana; pp. ?? explicitly marks the contribution pagination unknown."
+      },
+      {
+        "page_ids": [
+          72,
+          162
+        ],
+        "conclusion": "The main volume extents are 142 and 254 numbered pages. Editors H(erman) Wolf and Volker Michels are not credited as translators."
+      }
+    ],
+    "owner_evaluation_decisions": [
+      {
+        "topic": "Scalar scope and multi-value representation",
+        "page_ids": [
+          1800,
+          5746,
+          1891,
+          634,
+          4445,
+          584,
+          1999,
+          4209
+        ],
+        "decision_needed": "Choose an explicit field contract for multiple editions, contributions and joint imprints. Do not treat the absence of one adequate scalar as evidence that no values were stated."
+      },
+      {
+        "topic": "Numbered extent versus contribution span",
+        "page_ids": [
+          2866,
+          533,
+          7140
+        ],
+        "decision_needed": "Decide whether the field accepts inclusive contribution spans as derived extents. These sources each give one clear range, whose arithmetic spans are 25, 42 and 8 pages respectively; the review preserves these separately from a source-asserted page-count scalar."
+      },
+      {
+        "topic": "Category language versus edition-language statement",
+        "page_ids": [
+          72,
+          4303,
+          5082,
+          5746,
+          1891,
+          634,
+          5892,
+          4376,
+          584,
+          533,
+          1999,
+          4209,
+          7140
+        ],
+        "decision_needed": "Decide whether source category languages may populate an edition-language field, with provenance. Page 72 has no language category; German is an inference from titles and series wording, not an explicit language declaration."
+      },
+      {
+        "topic": "Address and country context",
+        "page_ids": [
+          2866,
+          4473
+        ],
+        "decision_needed": "Decide whether the journal's full postal address may be represented as publication place and whether the film's Czechoslovakia country heading belongs in a publication-place field. Their source strings are clear; the requested role mapping is interpretive."
+      },
+      {
+        "topic": "Publisher versus series or imprint label",
+        "page_ids": [
+          7140
+        ],
+        "decision_needed": "Decide whether the numbered label Le Livre de Poche establishes a publisher in the intended model. The local source does not expressly identify that role."
+      },
+      {
+        "topic": "Literal spelling versus normalized authority form",
+        "page_ids": [
+          162,
+          4209,
+          6005
+        ],
+        "decision_needed": "Retain source strings unless a separately provenanced normalization is approved: Suhrkakmp Verlag; Hymne Weiss versus contents Hymme Weiss; and the Tiranë/Tirana co-designation."
+      },
+      {
+        "topic": "Edition inheritance",
+        "page_ids": [
+          72,
+          162,
+          1999
+        ],
+        "decision_needed": "Specify whether an encompassing book imprint and extent may be inherited by later reprints or editions when those facts are not repeated. Preserve the distinction between literal source statement and inherited assignment."
+      },
+      {
+        "topic": "Slash pagination and supplied terminal labels",
+        "page_ids": [
+          1800,
+          1891,
+          4376,
+          162
+        ],
+        "decision_needed": "Confirm the field's handling of numbered components and parenthesized supplements. Preserve the raw forms 383/(1)p., 444/(3)p., 347/(1)p. and 254/(1)p.; do not silently add supplements or replace the stated component with the final contents endpoint."
+      },
+      {
+        "topic": "Source claim versus factual correction",
+        "page_ids": [
+          4473
+        ],
+        "decision_needed": "Treat Chechen as the explicit source claim. Any correction of the film language needs a separate source-revision or reconciliation decision rather than a blind extraction override."
+      }
+    ],
+    "absent_scalar_reasons_observed": [
+      "No value stated in the requested role.",
+      "Explicit unknown marker in the source.",
+      "Several different values or jointly stated publication places.",
+      "Value stated for only one of several bibliographic records.",
+      "Source string present but role mapping or inheritance uncertain.",
+      "Only a contribution range, rather than a source-asserted count.",
+      "Only reference locators, rather than an extent.",
+      "A language inference exists, but the category and body do not explicitly name an edition language."
+    ]
+  }
+}

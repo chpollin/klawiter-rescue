@@ -7,7 +7,7 @@ This file is the single repository-specific agent instruction. Do not create a p
 Before making changes:
 
 1. Run `git status -sb` and check the current branch and the most recent commits. Preserve unknown changes as foreign or parallel work.
-2. Read `knowledge/index.md` and use the reading path it specifies for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
+2. Read `knowledge/index.md` and `knowledge/status.md`, and use the reading path for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
 3. Check the current code and the generated manifests against documentation statements. Take volatile figures exclusively from `data/output/quality-report.json`, `data/output/editions/manifest.json`, `data/output/reconciliation/manifest.json` and `docs/data/klawiter.json`.
 
 ## Data Integrity
@@ -34,7 +34,7 @@ python -m uv sync --locked
 python -m uv run python pipeline/run_pipeline.py
 ```
 
-The runner executes the stages `01`, `02`, `03`, `03b`, `03c`, `04`, `gate1`, `gate1v`, `gate2`, `05`, `06` and thereafter `verify`, `census`, `provenance`, `triage`, `patches`, `gate2v` fail-fast. Partial ranges are selected with `--from-stage`, `--to-stage` and, where the run ends before `06`, with `--no-postprocess`. Numeric positional arguments are not supported.
+The runner executes the stages `01`, `01v`, `02`, `03`, `03b`, `03c`, `04`, `gate1`, `gate1v`, `gate2`, `05`, `06` and thereafter `verify`, `census`, `provenance`, `triage`, `patches`, `vocab`, `gate2v` fail-fast. Partial ranges are selected with `--from-stage`, `--to-stage` and, where the run ends before `06`, with `--no-postprocess`. Numeric positional arguments are not supported.
 
 Relevant layers:
 
@@ -70,6 +70,6 @@ Gate 1 must pass SHACL, exact selectors and hashes, stable IDs, complete queue, 
 
 ## Known Limits
 
-The flat holdings still model one MediaWiki page as one entry. For the 443 pages of the ratified multi-edition corpus, `data/output/editions/work-editions.jsonld` is the more precise representation. The agentic sample confirms 75 concrete editions; 1,810 editions remain proposals, of which Gate 1 prioritizes 317 flagged or open cases. The adaptation case `klawiter:claim/work-binding/4916-2016-b` remains open in domain terms. Five open location assignments are held as contested reconciliation claims.
+The flat holdings still model one MediaWiki page as one entry. The work/edition graph covers the ratified header-selected corpus; it does not fully model every compound page or every edition field. The frontend does not yet expose the complete edition graph, and field corrections/provenance are not propagated into every canonical artifact. Current counts, verified repairs and prioritized gaps belong in `knowledge/status.md`; the acceptance contract belongs in `knowledge/production-readiness.md`.
 
 New publication formats, the Gate 3 wiki/print merge, institutionally content-changing decisions and live write-backs into external systems are not part of the production run.

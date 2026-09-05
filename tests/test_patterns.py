@@ -189,6 +189,32 @@ class TestExtractPageCount:
         # 347/(1)p. — N/(M)p. notation: N numbered + M unnumbered pages
         assert extract_page_count("Hugo Hultenberg. 347/(1)p.") == 347
 
+    def test_numbered_extent_keeps_unnumbered_supplement_separate(self):
+        for extent, expected in (("383/(1)p.", 383), ("444/(3)p.", 444)):
+            assert extract_page_count(extent) == expected
+
+    def test_reference_locator_is_not_volume_extent(self):
+        text = (
+            "Wien: Österreichische Verlagsanstalt, 1967. "
+            "Zweig references, pp. 223-224, Note 224, p. 425"
+        )
+        assert extract_page_count(text) is None
+        assert extract_page_count("Zweig reference, p. 106") is None
+
+    def test_annotation_locator_is_not_volume_extent(self):
+        text = "No. 13, pp. (187)-198. Commentary, pp. 1363-1364. Annotations, p. 1365"
+        assert extract_page_count(text) is None
+
+    def test_noncontiguous_locators_are_not_volume_extent(self):
+        assert extract_page_count("pp. 30, 66-68") is None
+        assert extract_page_count("pp. 3; 5; 7 & note 10") is None
+
+    def test_explicit_extent_survives_reference_locators(self):
+        assert extract_page_count("168p. Zweig reference, p. 80") == 168
+        assert extract_page_count("Zweig reference, p. 80\n168p.") == 168
+        assert extract_page_count("444/(3)p. Contents: pp. (371)-(445)") == 444
+        assert extract_page_count("pp. 254, 2nd edition") == 254
+
     def test_rejects_page_ranges(self):
         """pp. N-M is a page range (start-end), not a page count."""
         assert extract_page_count("pp. 111-118") is None
@@ -221,6 +247,78 @@ class TestExtractTranslator:
             extract_translator("Translated by Hugo Hultenberg.,;:") == "Hugo Hultenberg"
         )
 
+    def test_unicode_names_are_not_truncated(self):
+        for name in (
+            "Iso Velikanović",
+            "Dimitŭr Stoevski",
+            "R. Gal’perina",
+            "P. S. Bernshteĭn",
+            "Vladislav Šarić",
+            "Karlo J̌orǰaneli",
+        ):
+            assert extract_translator(f"Translated by {name}. 496p.") == name
+
+    def test_abbreviated_and_apostrophized_names_survive(self):
+        for name in (
+            "Andrew St. James",
+            "Ep. Kaourē",
+            "An. Liubenova",
+            "Ch. Kastriōtes",
+            "Th. Fransen",
+            "Ce. Kaṇēcaliṅkaṉ",
+            "A'. Salykbai'",
+            "Pesah Ben 'Amram",
+        ):
+            assert extract_translator(f"Translated by {name}. 96p.") == name
+
+    def test_credit_stops_at_sentence_boundary(self):
+        text = "Translated by Iso Velikanović. Illustrated by Another Person."
+        assert extract_translator(text) == "Iso Velikanović"
+
+    def test_irregular_period_before_initial_remains_for_source_review(self):
+        text = "Translated by Anna. S. Kulisher. Afterword by Evgeniĭ Necheporuk."
+        # Preserve the legacy value instead of truncating the credited name to Anna.
+        assert extract_translator(text) == "Anna. S. Kulisher. Afterword by Evgeni"
+
+    def test_final_initial_preserved_before_next_credit(self):
+        text = "Translated by Sandra S. Cover design by Cîrţu Lucia. 95p."
+        assert extract_translator(text) == "Sandra S."
+
+    def test_short_surname_is_not_an_initial(self):
+        assert extract_translator("Translated by Shushe An. 128p.") == "Shushe An"
+
+    def test_wiki_markup_is_not_part_of_name(self):
+        assert extract_translator("'''Translated by Stefan Zweig'''") == "Stefan Zweig"
+
+    def test_intermediate_translation_note_is_not_a_name(self):
+        text = "Translated by Farāmarz Tabrīzī from Eden and Cedar Paul's translation"
+        assert extract_translator(text) == "Farāmarz Tabrīzī"
+
+    def test_publication_intro_is_not_a_name(self):
+        text = "Translated by Najāḥ al-Jubaylī in ''Al-Madā'' [Baghdad]"
+        assert extract_translator(text) == "Najāḥ al-Jubaylī"
+
+    def test_contribution_and_verse_credits_do_not_merge(self):
+        text = (
+            "Mariia Stiuart [Maria Stuart. Translated by R. Gal’perina. "
+            "Verses translated by V. Levik], pp. (7)-(370)"
+        )
+        # This checks name boundaries within a contribution, not volume scope.
+        assert extract_translator(text) == "R. Gal’perina"
+        assert extract_translator("Verses translated by V. Levik") == "V. Levik"
+
+    def test_skipped_non_name_credit_does_not_hide_later_credit(self):
+        text = "[Translated by the Editorial Juventud]\n[Translated by Alfredo Cahn]"
+        # Retain the existing scalar behavior; organizational scope is unresolved.
+        assert extract_translator(text) == "Alfredo Cahn"
+
+    def test_unicode_repair_does_not_switch_selected_credit(self):
+        text = "Translated by Kaćuša Maletin.\nTranslated by Vladislav Šarić."
+        assert extract_translator(text) == "Vladislav Šarić"
+
+    def test_missing_credit_requires_separate_scope_review(self):
+        assert extract_translator("Translated by Ḳarlo J̌orǰaneli. 192p.") is None
+
     def test_name_must_start_uppercase(self):
         assert extract_translator("Translated by someone unknown") is None
 
@@ -247,6 +345,20 @@ class TestExtractLanguageFromCategory:
             == "English"
         )
         assert extract_language_from_category(["Fiction (Japanese)"]) == "Japanese"
+
+    def test_source_documented_category_languages(self):
+        for language in ("Serbo-Croatian", "Estonian", "Afrikaans"):
+            assert (
+                extract_language_from_category([f"Fiction / Volumes ({language})"])
+                == language
+            )
+
+    def test_new_language_does_not_switch_existing_multilingual_choice(self):
+        categories = [
+            "Secondary Literature (Estonian)",
+            "Secondary Literature (German)",
+        ]
+        assert extract_language_from_category(categories) == "German"
 
     def test_unknown_language_rejected(self):
         assert extract_language_from_category(["Fiction (Klingon)"]) is None

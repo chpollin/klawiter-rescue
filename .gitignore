@@ -23,6 +23,7 @@ pipeline/.env
 __pycache__/
 *.pyc
 .venv/
+test-results/
 
 # Obsidian (user-specific workspace state)
 knowledge/.obsidian/

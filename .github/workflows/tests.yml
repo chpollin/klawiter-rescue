@@ -6,9 +6,8 @@ on:
   pull_request:
 
 jobs:
-  # Fast feedback: full suite against cached (or regenerated) stage
-  # intermediates. KLAWITER_REQUIRE_INTERMEDIATES=1 turns the local
-  # friendly skip into a hard failure, so nothing is skipped silently in CI.
+  # Fast feedback against cached (or regenerated) stage intermediates.
+  # Missing required inputs fail, including drift in the reviewed semantic oracle.
   tests:
     runs-on: ubuntu-latest
     steps:
@@ -19,8 +18,7 @@ jobs:
           python-version: '3.11'
 
       # Node runs the frontend-logic bridge (tests/test_frontend_logic.py
-      # executes the tests/*.test.js files); without it those tests
-      # skip silently.
+      # discovers every tests/*.test.js file and checks every docs/js/*.js).
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -44,9 +42,21 @@ jobs:
         run: python -m uv run python pipeline/run_pipeline.py --to-stage 04 --no-postprocess
 
       - name: Run test suite
-        env:
-          KLAWITER_REQUIRE_INTERMEDIATES: '1'
-        run: python -m uv run python -m pytest -q
+        run: python -m uv run python -m pytest -q --require-test-inputs --junitxml=test-results/default.xml
+
+      # Known source/field mismatches stay red and visible in their own report.
+      # The default gate rejects new, relocated or changed mismatch values.
+      - name: Run semantic diagnostics
+        continue-on-error: true
+        run: python -m uv run python -m pytest -q -m semantic --require-test-inputs --junitxml=test-results/semantic.xml
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          if-no-files-found: ignore
 
       # Same hook set developers install locally (pre-commit install); one
       # definition of the static checks in .pre-commit-config.yaml.
@@ -73,9 +83,15 @@ jobs:
       - name: Full deterministic pipeline run
         run: python -m uv run python pipeline/run_pipeline.py
 
-      # Timestamped artifacts (manifests, EARL, provenance, validation
-      # reports carry generatedAt) are excluded; every other derived file
-      # must reproduce byte-identically. docs/vocab/ joined the set once the
+      # HEAD preserves the reviewed reference even after the runner rewrites
+      # manifests. This also checks ignored Gate-2 candidates and review queues.
+      - name: Reviewed gate evidence reproduction check
+        run: python -m uv run python pipeline/verify_committed_evidence.py
+
+      # Manifests are compared above except for generatedAt and the hashes of
+      # timestamped EARL, provenance and validation reports. These explicit
+      # tracked deterministic paths additionally require byte identity.
+      # docs/vocab/ joined the set once the
       # register lost its case collisions (2026-08-27), so the term
       # directories are identical on Linux and Windows.
       - name: Deterministic artifact reproduction check

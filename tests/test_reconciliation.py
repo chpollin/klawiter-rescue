@@ -15,10 +15,8 @@ from lib.config import (
     LOCATION_REVIEW_EVIDENCE,
     LOCATIONS_JSON,
     OUTPUT_EDITIONS_DIR,
-    STEP_04_OUTPUT,
     SZD_WORK_INDEX,
     WORK_DECISIONS,
-    load_csv,
 )
 from lib.reconciliation import (
     build_reconciliation,
@@ -29,7 +27,7 @@ from lib.reconciliation import (
 
 
 @pytest.fixture(scope="session")
-def reconciliation(required_intermediates) -> dict:
+def reconciliation(classified_rows) -> dict:
     def read(path: str | Path) -> dict | list:
         return json.loads(Path(path).read_text(encoding="utf-8"))
 
@@ -41,7 +39,7 @@ def reconciliation(required_intermediates) -> dict:
         read(LOCATION_DECISIONS),
         read(WORK_DECISIONS),
         parse_szd_work_index(Path(SZD_WORK_INDEX)),
-        load_csv(STEP_04_OUTPUT),
+        classified_rows,
         read(AGENT_RECONCILIATION),
         read(AGENT_DECISIONS),
     )
@@ -237,10 +235,10 @@ def test_agent_subjects_carry_source_occurrence_evidence(reconciliation: dict) -
 
 
 def test_agent_occurrence_pages_match_the_classified_source(
-    reconciliation: dict,
+    reconciliation: dict, classified_rows
 ) -> None:
-    rows = load_csv(STEP_04_OUTPUT)
-    for subject in reconciliation["candidates"]["agents"][:5]:
+    rows = classified_rows
+    for subject in reconciliation["candidates"]["agents"]:
         field = AGENT_OCCURRENCE_FIELDS[subject["entityType"]]
         expected = {
             int(row["page_id"]) for row in rows if row[field] == subject["sourceName"]
@@ -266,46 +264,52 @@ def test_agent_occurrences_are_deterministically_ordered(reconciliation: dict) -
         assert len(ids) == len(set(ids))
 
 
-def _rebuild_with_agent_decision(decision: dict) -> dict:
-    def read(path: str | Path) -> dict | list:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
-
-    agent_decisions = read(AGENT_DECISIONS)
-    agent_decisions = {**agent_decisions, "decisions": [decision]}
-    return build_reconciliation(
-        read(Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld"),
-        read(LOCATIONS_JSON),
-        read(LOCATION_RECONCILIATION_LOG),
-        read(LOCATION_REVIEW_EVIDENCE),
-        read(LOCATION_DECISIONS),
-        read(WORK_DECISIONS),
-        parse_szd_work_index(Path(SZD_WORK_INDEX)),
-        load_csv(STEP_04_OUTPUT),
-        read(AGENT_RECONCILIATION),
-        agent_decisions,
-    )
-
-
+@pytest.mark.parametrize("entity_type", ["person", "publisher"])
 def test_unresolved_agent_decision_becomes_a_contested_claim(
-    reconciliation: dict,
+    reconciliation: dict, classified_rows, entity_type
 ) -> None:
     """The occurrence scan is what makes an unresolved agent decision
     representable: it supplies the source evidence the claim requires."""
     subject = next(
         item
         for item in reconciliation["candidates"]["agents"]
-        if item["candidates"] and item["sourceOccurrences"]
+        if item["entityType"] == entity_type
+        and item["candidates"]
+        and item["sourceOccurrences"]
     )
-    rebuilt = _rebuild_with_agent_decision(
-        {
-            "entityType": subject["entityType"],
-            "subject": subject["sourceName"],
-            "action": "unresolved",
-            "decisionId": f"agent/{subject['sourceName']}/unresolved",
-            "decidedBy": "independent-verification-agent",
-            "decidedAt": "2026-08-27T10:00:00Z",
-            "evidence": ["source-imprint"],
-        }
+    decision = {
+        "entityType": subject["entityType"],
+        "subject": subject["sourceName"],
+        "action": "unresolved",
+        "decisionId": f"agent/{subject['sourceName']}/unresolved",
+        "decidedBy": "independent-verification-agent",
+        "decidedAt": "2026-08-27T10:00:00Z",
+        "evidence": ["source-imprint"],
+    }
+    frozen_agents = json.loads(Path(AGENT_RECONCILIATION).read_text(encoding="utf-8"))
+    agent = next(
+        item
+        for item in frozen_agents["agents"]
+        if item["kind"] == subject["entityType"]
+        and item["name"] == subject["sourceName"]
+    )
+    field = AGENT_OCCURRENCE_FIELDS[subject["entityType"]]
+    source_rows = [
+        row for row in classified_rows if row[field] == subject["sourceName"]
+    ]
+    # Keep every occurrence of this real subject. The session fixture covers
+    # the complete corpus; this decision needs no unrelated work/location scan.
+    rebuilt = build_reconciliation(
+        {"works": []},
+        {},
+        [],
+        {},
+        {"decisions": []},
+        {"decisions": []},
+        [],
+        source_rows,
+        {"agents": [agent]},
+        {"decisions": [decision]},
     )
     claim = next(
         item

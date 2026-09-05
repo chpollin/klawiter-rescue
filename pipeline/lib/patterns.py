@@ -179,20 +179,42 @@ PAGE_COUNT_PATTERNS = [
     re.compile(r"(\d{1,5})\s*p\b"),  # 38p
 ]
 
+# These labels introduce citation locators, including a single referenced page.
+_PAGE_LOCATOR_LABEL_RE = re.compile(
+    r"\b(?:Zweig\s+references?|references?|annotations?|commentary|notes?)"
+    r"(?:\s+\d+)?\s*,\s*(?:pp?\.\s*[^\n]*,\s*)?$",
+    re.IGNORECASE,
+)
+
 # Translator patterns — only match explicit "Translated by Name" patterns.
-# The last pattern (Tr./Trans.) was too greedy and matched word fragments.
+# Unicode letters preserve names; initials and abbreviated name parts keep periods.
+_NAME_LETTER = r"[^\W\d_]"
+_NAME_WORD = rf"[’']?{_NAME_LETTER}(?:{_NAME_LETTER}|[\u0300-\u036f’-]|'(?!'))*"
+_NAME_INITIALS = (
+    rf"(?:(?:{_NAME_LETTER}[’']?\.)+|"
+    rf"(?:St|Ep|An|Ch|Th|Ce)\.(?=[ \t]+{_NAME_LETTER}))"
+)
+_NAME_TOKEN = rf"(?:{_NAME_INITIALS}|{_NAME_WORD})"
+_TRANSLATOR_NAME = rf"({_NAME_TOKEN}(?:[ \t]+{_NAME_TOKEN})*)"
+_TRANSLATOR_NAME_RE = re.compile(_TRANSLATOR_NAME)
+# Keep the existing credit selection; repair only the name at that same anchor.
 TRANSLATOR_PATTERNS = [
-    re.compile(r"[Tt]ranslated\s+by\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
-    re.compile(r"[Tt]ranslation\s+by\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
-    re.compile(r"[Üü]bersetzt\s+von\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
-    re.compile(r"[Üü]bertragen\s+von\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
-    re.compile(r"[Tt]raduit\s+par\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
-    re.compile(
-        r"[Tt]raducción\s+(?:de|por)\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE
-    ),
-    re.compile(r"[Tt]raduzione\s+di\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
-    re.compile(r"[Tt]rans\.\s+([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})", re.UNICODE),
+    re.compile(prefix + r"([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})")
+    for prefix in (
+        r"[Tt]ranslated\s+by\s+",
+        r"[Tt]ranslation\s+by\s+",
+        r"[Üü]bersetzt\s+von\s+",
+        r"[Üü]bertragen\s+von\s+",
+        r"[Tt]raduit\s+par\s+",
+        r"[Tt]raducción\s+(?:de|por)\s+",
+        r"[Tt]raduzione\s+di\s+",
+        r"[Tt]rans\.\s+",
+    )
 ]
+_TRANSLATOR_NOTE_RE = re.compile(
+    r"\s+(?:from|into)\s+|\s+in$|"
+    r"(?<=\.)\s+(?=Cover\b|Edited\b|Illustrated\b|Foreword\b|Preface\b|Afterword\b)"
+)
 
 # Page range patterns (shared by verify.py and 03b_llm_enrich.py)
 # N/(M)p. — numbered + unnumbered pages (e.g. 285/(3)p. → 288 total)
@@ -201,7 +223,7 @@ PARENS_PAGE_RE = re.compile(r"(\d+)/\((\d+)\)\s*p", re.IGNORECASE)
 PAGE_RANGE_RE = re.compile(r"pp?\.\s*\(?(\d+)\)?[-–](\d+)")
 
 # Language detection from category names
-CATEGORY_LANGUAGE_RE = re.compile(r"\((\w+)\)\s*$")
+CATEGORY_LANGUAGE_RE = re.compile(r"\(([\w-]+)\)\s*$")
 
 
 def extract_year(text):
@@ -336,6 +358,13 @@ def extract_page_count(text):
     for pattern in PAGE_COUNT_PATTERNS:
         m = pattern.search(text)
         if m:
+            if re.match(r"pp?\.", m.group(0), re.IGNORECASE):
+                before = text[text.rfind("\n", 0, m.start()) + 1 : m.start()]
+                after = text[m.end() :]
+                if _PAGE_LOCATOR_LABEL_RE.search(before) or re.match(
+                    r"\s*[,;]\s*\(?\d+\b", after
+                ):
+                    continue
             count = int(m.group(1))
             if 1 <= count <= 10000:
                 return count
@@ -343,18 +372,27 @@ def extract_page_count(text):
 
 
 def extract_translator(text):
-    """Extract translator name from text."""
+    """Extract a credit's name; this compatibility scalar does not resolve scope."""
     if not text:
         return None
     for pattern in TRANSLATOR_PATTERNS:
         m = pattern.search(text)
         if m:
-            name = m.group(1).strip().rstrip(".,;:")
-            # Remove trailing wiki markup that leaked into the name
-            name = re.sub(r"\s*'''.*$", "", name)
-            name = name.strip().rstrip(".,;:")
-            if len(name) >= 3:
-                return name
+            legacy_name = m.group(1).strip().rstrip(".,;:")
+            legacy_name = re.sub(r"\s*'''.*$", "", legacy_name)
+            legacy_name = legacy_name.strip().rstrip(".,;:")
+            if len(legacy_name) < 3:
+                continue
+            name_match = _TRANSLATOR_NAME_RE.match(text, m.start(1))
+            if name_match:
+                # A stray period before an initial can be internal name punctuation.
+                if re.match(r"\.[ \t]+[A-Z]\.", text[name_match.end() :]):
+                    return legacy_name
+                name = _TRANSLATOR_NOTE_RE.split(name_match.group(1), maxsplit=1)[0]
+                name = name.strip()
+                if len(name) >= 3:
+                    return name
+            return legacy_name
     return None
 
 
@@ -362,10 +400,14 @@ def extract_language_from_category(categories):
     """Infer language from category names like 'Poetry / Individual Poems (German)'."""
     if not categories:
         return None
+    missing_language = None
     for cat in categories:
         m = CATEGORY_LANGUAGE_RE.search(cat)
         if m:
             lang = m.group(1)
+            # Fill gaps without changing an existing multilingual scalar choice.
+            if lang in ("Serbo-Croatian", "Estonian", "Afrikaans"):
+                missing_language = missing_language or lang
             # Common language names in categories
             if lang in (
                 "German",
@@ -413,4 +455,4 @@ def extract_language_from_category(categories):
                 "Latin",
             ):
                 return lang
-    return None
+    return missing_language

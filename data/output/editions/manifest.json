@@ -1,11 +1,11 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "earl.jsonld": "5d7fd33f3e58885a026ff3143f664ffc5d27f10dd9f437db8da577454ac0fe67",
-    "provenance.jsonld": "43b4057147fc9d15da3cd9bc1107745bd2f47dd2341b240c56abc5525785a142",
+    "earl.jsonld": "ad8fa3ea15dd6ab12b0a72d5a09123c54bff1d81d9bee9e08ece890aea0da766",
+    "provenance.jsonld": "5f6a600d83da4e7e9fc999da19d9ffc473cdc5a5e48a7bf03ba16f3c916d86ed",
     "review-queue.json": "6a615f4aff822128b507aed9ea76455923f3b484a4fb2d118b34bbb6b0a193c2",
-    "validation-report.json": "47a2a98be02b778d58d897f7cc8ad47fad90720741aa7ef0d89b29e822723d0d",
-    "work-editions.jsonld": "5a6bffc828f152bfa35156636d4cde868462da800765a2b5283327c36392160b"
+    "validation-report.json": "7d73012bee846da017088abb83f738ca0e7792a239f3b302b9baf0b6a9d4df0e",
+    "work-editions.jsonld": "5199fe655fd2d9f4118a25466eef44c4f161f171f599f0486e1d69ec0bee6568"
   },
   "authorityEvidence": {
     "szdWorkIndex": {
@@ -17,7 +17,7 @@
       "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
     }
   },
-  "codeSha256": "bc90c8d04593af61fd1e93825614898fd5825b55a768655e897d37b9e6d2e689",
+  "codeSha256": "ab0f47a80b25275a94710a171aeb353d52cb6c64f0590decd9758a52cf30e86a",
   "counts": {
     "annotations": 1886,
     "candidateWorks": 1,
@@ -29,7 +29,7 @@
     "reviewCases": 317,
     "works": 443
   },
-  "generatedAt": "2026-08-27T11:02:55.045219+00:00",
+  "generatedAt": "2026-09-05T16:27:09.649967+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

@@ -7,6 +7,23 @@ Fixtures (frontend_data, all_entries, ns0_entries, redirects, baseline)
 are defined in conftest.py and shared across all data test files.
 """
 
+from collections import Counter
+
+
+def test_frontend_is_exactly_the_canonical_non_redirects(
+    all_entries, canonical_entries
+):
+    """Equal counts must not conceal a lost page replaced by another record."""
+    expected = Counter(
+        e["sourcePageId"]
+        for e in canonical_entries
+        if not e.get("isRedirect") and e["entryType"] != "redirect"
+    )
+    actual = Counter(e["sourcePageId"] for e in all_entries)
+    assert actual == expected, (
+        f"Missing IDs/counts: {expected - actual}; unexpected IDs/counts: {actual - expected}"
+    )
+
 
 # ---------------------------------------------------------------------------
 # Entry count exactness
@@ -17,7 +34,7 @@ class TestEntryCounts:
     """Verify exact entry counts match baseline — not just loose minimums."""
 
     def test_total_entries_exact(self, all_entries, baseline):
-        """Total entries within 0.5% of baseline (stricter than old 1% threshold)."""
+        """Total non-redirect entries match the frozen baseline exactly."""
         # Entries in frontend JSON = non-redirects only
         expected_non_redirects = baseline["summary"]["non_redirects_all"]
         actual = len(all_entries)

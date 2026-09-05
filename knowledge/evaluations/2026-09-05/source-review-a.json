@@ -1,0 +1,1842 @@
+{
+  "review": "Independent blind assessment of all 20 complete source texts",
+  "source_input": "test-results/evaluation/source-only.json",
+  "methodology": {
+    "access": "Read only the assigned source texts, repository instructions, git status and recent commit titles. Did not inspect tests, current expected values, baselines, project reviews, the journal, or other review outputs.",
+    "status_definitions": {
+      "single": "One source-supported value for the stated scope.",
+      "multiple": "More than one source-supported value; retain the stated publication, contribution or location scope.",
+      "absent": "The supplied source does not document the requested field.",
+      "unclear": "A relevant candidate is present but the source does not clearly establish the requested field or its scope."
+    },
+    "extent_rule": "Numbered page extent records the leading numbered sequence in an explicit volume extent, preserving separate parenthesized unnumbered pages. Citation and contents page locators are not book extents.",
+    "language_rule": "Report page-category language separately from an explicit body language label. Category-supported publication language does not establish a direct language statement in the body. German original titles in brackets do not make translated publications German.",
+    "scope_rule": "No default selection of the first publication, translator or place. A scalar field may require an explicit policy even when every candidate value is clear.",
+    "errors_statement": "Because the review is blind to extracted values and expectations, the summary identifies source contradictions and extraction pitfalls, not observed implementation failures."
+  },
+  "pages": [
+    {
+      "page_id": 4303,
+      "page_title": "Mariia Antoaneta / Serbo-Croatian",
+      "page_type": "Single translated volume",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Binoza",
+              "scope": "1934 volume",
+              "evidence": [
+                "[1934]: Binoza, Zagreb"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Zagreb",
+              "scope": "1934 volume",
+              "evidence": [
+                "[1934]: Binoza, Zagreb"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Iso Velikanović",
+              "scope": "1934 volume",
+              "evidence": [
+                "Translated by Iso Velikanović."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 496,
+              "scope": "1934 volume",
+              "evidence": [
+                "496p."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Serbo-Croatian",
+              "scope": "Page/volume categorization",
+              "evidence": [
+                "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Serbo-Croatian"
+            ],
+            "evidence": [
+              "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The body does not explicitly name the target language."
+        }
+      }
+    },
+    {
+      "page_id": 1800,
+      "page_title": "Romanŭt na edin zhivot. Balzak",
+      "page_type": "Two editions of one translated title",
+      "fields": {
+        "publisher": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Pechat Far",
+              "scope": "1947 first edition",
+              "evidence": [
+                "[1947]: Pechat Far, Sofija"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Narodna Kultura",
+              "scope": "1960 second revised edition",
+              "evidence": [
+                "[1960]: Narodna Kultura, Sofija"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "A page-level scalar publisher is ambiguous without an edition-selection policy."
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Sofija",
+              "scope": "Both 1947 and 1960 editions",
+              "evidence": [
+                "[1947]: Pechat Far, Sofija",
+                "[1960]: Narodna Kultura, Sofija"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Dimitŭr Stoevski",
+              "scope": "Both 1947 and 1960 editions",
+              "evidence": [
+                "Translated by Dimitŭr Stoevski."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": 500,
+              "scope": "1947 first edition",
+              "evidence": [
+                "1st edition. 500p."
+              ],
+              "notes": ""
+            },
+            {
+              "value": 383,
+              "scope": "1960 second revised edition",
+              "evidence": [
+                "2nd revised edition. 383/(1)p."
+              ],
+              "notes": "The extent also states one unnumbered page; do not silently replace 383 with 384."
+            }
+          ],
+          "notes": "A page-level scalar extent is ambiguous; retain the edition association."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Bulgarian",
+              "scope": "Both editions by page categorization",
+              "evidence": [
+                "[[Category:Historical Studies / Volumes (Bulgarian)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Bulgarian"
+            ],
+            "evidence": [
+              "[[Category:Historical Studies / Volumes (Bulgarian)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The body does not explicitly name the target language."
+        }
+      }
+    },
+    {
+      "page_id": 72,
+      "page_title": "Ausgewählte Prosa. I. Bändchen",
+      "page_type": "Selected prose volume with contents and reprint dates",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "J. M. Meulenhoff Verlag",
+              "scope": "1931 volume",
+              "evidence": [
+                "[1931]: J. M. Meulenhoff Verlag, Amsterdam"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Amsterdam",
+              "scope": "1931 volume",
+              "evidence": [
+                "[1931]: J. M. Meulenhoff Verlag, Amsterdam"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": "H(erman) Wolf is the editor and author of the foreword/notes, not a stated translator."
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 142,
+              "scope": "1931 volume",
+              "evidence": [
+                "142p. [Reprinted 1935, 1939]"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "Contents locators ending at 142 do not establish separate volume extents. The reprints have no separately stated extent."
+        },
+        "language": {
+          "status": "unclear",
+          "values": [
+            {
+              "value": "German",
+              "scope": "Strong contextual candidate for volume language",
+              "evidence": [
+                "Ausgewählte Prosa. 1. Bändchen",
+                "Meulenhoffs Sammlung deutscher Schriftsteller, 53",
+                "Die unsichtbare Sammlung"
+              ],
+              "notes": "German titles and series wording support the inference; there is no explicit publication-language label."
+            }
+          ],
+          "category_observation": {
+            "values": [],
+            "evidence": [
+              "[[Category:Collected and Selected Works]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The category carries no language. A German scalar requires an inference policy; it is not directly category-derived or explicitly declared in the body."
+        }
+      },
+      "role_evidence": [
+        "Edited with a foreword and notes by H(erman) Wolf."
+      ]
+    },
+    {
+      "page_id": 5746,
+      "page_title": "Masereel, Frans / Spanish",
+      "page_type": "Individual essay with two translated publication citations and one cross-reference",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": "Editorial Juventud is explicitly credited as translator in this text. The name alone does not document a publisher role for the cited volume."
+        },
+        "publication_place": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Barcelona",
+              "scope": "Hombres, libros y ciudades, 1963",
+              "evidence": [
+                "[[Hombres, libros y ciudades]] [Barcelona, 1963]"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Buenos Aires",
+              "scope": "Prohombres del espíritu, 1940",
+              "evidence": [
+                "[[Prohombres del espíritu]] [Buenos Aires, 1940]"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Wien/Leipzig/Zürich",
+              "scope": "Cross-reference to Begegnungen mit Menschen, Büchern, Städten, 1937",
+              "evidence": [
+                "See: [[Begegnungen mit Menschen, Büchern, Städten]] [Wien/Leipzig/Zürich, 1937]"
+              ],
+              "notes": "This cross-reference is a different publication scope and should not be merged into the Spanish essay's publication place."
+            }
+          ],
+          "notes": "The two Spanish publication places are both supported; no unique scalar follows from the page."
+        },
+        "translator": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Editorial Juventud",
+              "scope": "Essay in Hombres, libros y ciudades, Barcelona, 1963",
+              "evidence": [
+                "[Translated by the Editorial Juventud]"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Alfredo Cahn",
+              "scope": "Essay in Prohombres del espíritu, Buenos Aires, 1940",
+              "evidence": [
+                "[Translated by Alfredo Cahn]"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "These are distinct contribution/publication credits, not a joint whole-page translation."
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "The page gives only essay locators: (120)-127, (161)-173, and the cross-reference (136)-145. None is a volume extent."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Spanish",
+              "scope": "The individual essay's translated manifestations by category",
+              "evidence": [
+                "[[Category:Essays / Individual Essays (Spanish)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Spanish"
+            ],
+            "evidence": [
+              "[[Category:Essays / Individual Essays (Spanish)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "German title wording and the German-title cross-reference do not change the category-supported Spanish language."
+        }
+      },
+      "locator_evidence": [
+        "No. 13, pp. (120)-127",
+        "No. 11, pp. (161)-173",
+        "No. 13, pp. (136)-145"
+      ]
+    },
+    {
+      "page_id": 4473,
+      "page_title": "Sach mat",
+      "page_type": "Film entry",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": "No publisher or production company is named."
+        },
+        "publication_place": {
+          "status": "unclear",
+          "values": [
+            {
+              "value": "Czechoslovakia",
+              "scope": "Film heading / country associated with the 1984 film",
+              "evidence": [
+                "[1984]: Czechoslovakia"
+              ],
+              "notes": "This is a country statement for a film, not an explicitly labelled publication place or city."
+            }
+          ],
+          "notes": "Whether a publication-place field accepts a film country is a modeling policy."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": "The listed director, writer, cast and cinematographer are not translator credits."
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "Runtime is a duration, not pagination."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Chechen",
+              "scope": "Film language explicitly stated in the body",
+              "evidence": [
+                "Language: Chechen"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [],
+            "evidence": [
+              "[[Category:Films / Plays / Operas]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "single",
+            "values": [
+              "Chechen"
+            ],
+            "evidence": [
+              "Language: Chechen"
+            ]
+          },
+          "notes": "Preserve the source's Chechen statement. This source alone does not authorize correction to another language."
+        }
+      },
+      "nonpage_extent_evidence": [
+        "Runtime: 32 minutes"
+      ]
+    },
+    {
+      "page_id": 2866,
+      "page_title": "Steiman, Lionel Bradley",
+      "page_type": "Secondary-literature journal article citation",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": "Neither the journal title nor its bracketed address names a publisher."
+        },
+        "publication_place": {
+          "status": "unclear",
+          "values": [
+            {
+              "value": "Chalfont St Giles",
+              "scope": "Locality within the cited journal address",
+              "evidence": [
+                "[Halfpenny Furze, Mill Lane, Chalfont St Giles, Buckinghamshire HP8 4NR]"
+              ],
+              "notes": "The bracket supplies a postal address; Chalfont St Giles is the locality candidate, Buckinghamshire the county, HP8 4NR the postcode, and Halfpenny Furze/Mill Lane address components."
+            }
+          ],
+          "notes": "The address documents a journal-associated location but does not explicitly label the place of publication. Scalar extraction versus preserving the complete address requires policy."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "The journal article's page range is a locator, not a volume extent."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "English",
+              "scope": "Secondary-literature page categorization",
+              "evidence": [
+                "[[Category:Secondary Literature / Authors (English)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "English"
+            ],
+            "evidence": [
+              "[[Category:Secondary Literature / Authors (English)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The English title is consistent with the category; the body has no explicit language label."
+        }
+      },
+      "locator_evidence": [
+        "6:2 [June 1976], pp. (100)-124"
+      ]
+    },
+    {
+      "page_id": 5082,
+      "page_title": "Pauls, Georg",
+      "page_type": "Exhibition publication",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Bibliothèque principale de la Ville de Namur",
+              "scope": "1994 exhibition publication",
+              "evidence": [
+                "[1994]: Bibliothèque principale de la Ville de Namur, Namur"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Namur",
+              "scope": "1994 exhibition publication",
+              "evidence": [
+                "[1994]: Bibliothèque principale de la Ville de Namur, Namur"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": "Michel Gilles is credited only for the foreword."
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 42,
+              "scope": "1994 exhibition publication",
+              "evidence": [
+                "42p."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "French",
+              "scope": "Secondary-literature page categorization",
+              "evidence": [
+                "[[Category:Secondary Literature / Authors (French)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "French"
+            ],
+            "evidence": [
+              "[[Category:Secondary Literature / Authors (French)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "role_evidence": [
+        "Foreword by Michel Gilles."
+      ]
+    },
+    {
+      "page_id": 1891,
+      "page_title": "Mariia Stiuart * Kazanova",
+      "page_type": "One volume containing two translated works and a verse-specific translation credit",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Kavkazskiĭ Krai",
+              "scope": "1993 combined volume",
+              "evidence": [
+                "[1993]: Kavkazskiĭ Krai, Stavropol’"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Stavropol’",
+              "scope": "1993 combined volume",
+              "evidence": [
+                "[1993]: Kavkazskiĭ Krai, Stavropol’"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "R. Gal’perina",
+              "scope": "Mariia Stiuart contribution",
+              "evidence": [
+                "Mariia Stiuart [Maria Stuart. Translated by  R. Gal’perina."
+              ],
+              "notes": ""
+            },
+            {
+              "value": "V. Levik",
+              "scope": "Verses in Mariia Stiuart",
+              "evidence": [
+                "Verses translated by V. Levik"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "P. S. Bernshteĭn",
+              "scope": "Kazanova contribution",
+              "evidence": [
+                "Kazanova [Casanova. Translated by P. S. Bernshteĭn]"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "No single whole-volume translator is stated. N. Vysotskaia is editor, and I. L. Prostitov is illustrator. Flattening all three translator names loses their roles and contribution scopes."
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 444,
+              "scope": "1993 combined volume",
+              "evidence": [
+                "444/(3)p."
+              ],
+              "notes": "The source additionally gives three unnumbered pages. Retain the stated numbered extent despite the last contents locator reaching (445)."
+            }
+          ],
+          "notes": "The contents end at (445); that is a source-level pagination tension, not permission to substitute 445 or 447 for the explicit numbered extent."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Russian",
+              "scope": "Combined volume by page categorization",
+              "evidence": [
+                "[[Category:Historical Studies / Volumes (Russian)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Russian"
+            ],
+            "evidence": [
+              "[[Category:Historical Studies / Volumes (Russian)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The body does not explicitly name the target language."
+        }
+      },
+      "role_evidence": [
+        "Edited by N. Vysotskaia. Illustrated by I. L. Prostitov."
+      ],
+      "locator_evidence": [
+        "pp. (7)-(370)",
+        "pp. (371)-(445)"
+      ]
+    },
+    {
+      "page_id": 634,
+      "page_title": "Shi ta ma?",
+      "page_type": "Individual story with five publication citations",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Beijing",
+              "scope": "Ciweige ji, 2000; Ciweige xiaoshuo ji, 1997; Xiangqi de gushi, 2000/2",
+              "evidence": [
+                "[[Ciweige ji]] [Beijing, 2000]",
+                "[[Ciweige xiaoshuo ji]] [Beijing, 1997]",
+                "[[Xiangqi de gushi]] [Beijing, 2000/2]"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Yanji",
+              "scope": "Ciweige jingdian xiaoshuo, 2000",
+              "evidence": [
+                "[[Ciweige jingdian xiaoshuo]] [Yanji, 2000]"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Taiyuan/Xi'an",
+              "scope": "Ciweige wenji, 1998",
+              "evidence": [
+                "[[Ciweige wenji]] [Taiyuan/Xi'an, 1998]"
+              ],
+              "notes": "A two-place string is documented for this publication."
+            }
+          ],
+          "notes": "The page does not support one unique scalar place across the five citations."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "All page ranges are contribution locators; no volume extent is stated."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Chinese",
+              "scope": "Story manifestations by page categorization",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Chinese)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Chinese"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Individual Stories (Chinese)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "locator_evidence": [
+        "pp. 289-325",
+        "pp. 890-931",
+        "pp. 310-343",
+        "pp. 315-347"
+      ]
+    },
+    {
+      "page_id": 7263,
+      "page_title": "Amok / Individual Stories (Japanese)",
+      "page_type": "Translation cross-reference stub",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Japanese",
+              "scope": "Translation cross-reference and story categorization",
+              "evidence": [
+                "[Translations: Japanese)]",
+                "[[Category:Fiction / Individual Stories (Japanese)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Japanese"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Individual Stories (Japanese)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "single",
+            "values": [
+              "Japanese"
+            ],
+            "evidence": [
+              "[Translations: Japanese)]"
+            ]
+          },
+          "notes": "The body explicitly labels the linked translation language but provides no concrete edition."
+        }
+      }
+    },
+    {
+      "page_id": 4445,
+      "page_title": "Al-Bāḥ, Muḥammad / El-bah, Mohammed",
+      "page_type": "Author page with German monograph and Arabic journal article",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Hochschulverl.",
+              "scope": "2000 German monograph",
+              "evidence": [
+                "[2000]: Hochschulverl., Freiburg im Breisgau"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "No publisher is stated for the 2015 Arabic article. The single documented publisher does not apply automatically to the whole page."
+        },
+        "publication_place": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Freiburg im Breisgau",
+              "scope": "2000 German monograph",
+              "evidence": [
+                "[2000]: Hochschulverl., Freiburg im Breisgau"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Rabat",
+              "scope": "2015 Arabic article's journal",
+              "evidence": [
+                "[Arabic Rhetoric and Criticism] [Rabat], 3 [2015]"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "The university location in the thesis-origin note is not a separate publication. There is no unique page-level scalar place."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": "The presence of two language sections does not itself establish a translation relationship or translator."
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 168,
+              "scope": "2000 German monograph",
+              "evidence": [
+                "168p."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "The Arabic article has a citation locator, pp. 71-79, and no book extent. Do not apply 168 to the Arabic article."
+        },
+        "language": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "German",
+              "scope": "2000 monograph under the German section",
+              "evidence": [
+                "'''German'''"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Arabic",
+              "scope": "2015 article under the Arabic section",
+              "evidence": [
+                "'''Arabic'''"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Arabic",
+              "German"
+            ],
+            "evidence": [
+              "[[Category:Secondary Literature / Authors (Arabic)]]\n[[Category:Secondary Literature / Authors (German)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "multiple",
+            "values": [
+              "German",
+              "Arabic"
+            ],
+            "evidence": [
+              "'''German'''",
+              "'''Arabic'''"
+            ]
+          },
+          "notes": "Both publication languages are explicit in separate body sections and both categories are present. A page-level scalar language is ambiguous."
+        }
+      },
+      "locator_evidence": [
+        "3 [2015], pp. 71-79"
+      ]
+    },
+    {
+      "page_id": 5892,
+      "page_title": "El pensamiento europeo en su evolución histórica",
+      "page_type": "Alternate-title cross-reference stub",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Spanish",
+              "scope": "Essay page categorization",
+              "evidence": [
+                "[[Category:Essays / Individual Essays (Spanish)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Spanish"
+            ],
+            "evidence": [
+              "[[Category:Essays / Individual Essays (Spanish)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The title and cross-reference do not explicitly label a target language in the body."
+        }
+      }
+    },
+    {
+      "page_id": 4376,
+      "page_title": "Schack, Amok och andra noveller",
+      "page_type": "One translated fiction collection",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Skoglunds Bokförlag",
+              "scope": "1943 collection",
+              "evidence": [
+                "[1943]: Skoglunds Bokförlag, Stockholm"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Stockholm",
+              "scope": "1943 collection",
+              "evidence": [
+                "[1943]: Skoglunds Bokförlag, Stockholm"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Hugo Hultenberg",
+              "scope": "1943 collection",
+              "evidence": [
+                "Translated by Hugo Hultenberg."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 347,
+              "scope": "1943 collection",
+              "evidence": [
+                "347/(1)p."
+              ],
+              "notes": "One additional unnumbered page is separately reported; the numbered extent is 347."
+            }
+          ],
+          "notes": "The final story locator ends at (348), which does not replace the volume's stated extent."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Swedish",
+              "scope": "Collection categorization",
+              "evidence": [
+                "[[Category:Fiction / Volumes (Swedish)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Swedish"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Volumes (Swedish)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "locator_evidence": [
+        "pp. (323)-(348)"
+      ]
+    },
+    {
+      "page_id": 584,
+      "page_title": "Jueze",
+      "page_type": "Individual story with three publication citations",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "T'aipei",
+              "scope": "Ciweige xiaoshuo, 1975, and Pa, 1968",
+              "evidence": [
+                "[[Ciweige xiaoshuo]] [T'aipei, 1975]",
+                "[[Pa]] [T'aipei, 1968]"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Jinan",
+              "scope": "Tongqing de zui, 1982",
+              "evidence": [
+                "[[Tongqing de zui]] [Jinan, 1982]"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "No unique scalar place is documented across the three cited publications."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "The page supplies only contribution locators, not volume extents."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Chinese",
+              "scope": "Story page categorization",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Chinese)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Chinese"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Individual Stories (Chinese)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "locator_evidence": [
+        "pp. 115-188",
+        "pp. 47-114",
+        "pp. 422-479"
+      ]
+    },
+    {
+      "page_id": 533,
+      "page_title": "Hirm",
+      "page_type": "Minimal individual-story citation",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "The 84-125 range is the story locator in Novelle; neither 125 nor a computed 42 is a source-stated book extent."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Estonian",
+              "scope": "Story page categorization",
+              "evidence": [
+                "[[Category:Fiction / Individual Stories (Estonian)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Estonian"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Individual Stories (Estonian)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "locator_evidence": [
+        "in [[Novelle]] [3], pp. 84-125"
+      ]
+    },
+    {
+      "page_id": 162,
+      "page_title": "Die Monotonisierung der Welt. Aufsätze und Vorträge",
+      "page_type": "Essay volume with four edition/copy-count lines, contents and review citation",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Suhrkakmp Verlag",
+              "scope": "1976 volume heading",
+              "evidence": [
+                "[1976]: Suhrkakmp Verlag, Frankfurt am Main"
+              ],
+              "notes": "Preserve the source spelling Suhrkakmp. The series spells Suhrkamp, but that alone does not authorize silently normalizing the publisher."
+            }
+          ],
+          "notes": "Later editions in 1978, 1982 and 1988 have no separate publisher statements."
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Frankfurt am Main",
+              "scope": "1976 volume heading",
+              "evidence": [
+                "[1976]: Suhrkakmp Verlag, Frankfurt am Main"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": "The newspaper review also cites Frankfurt am Main, but that is a separate journalistic publication."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": "Volker Michels is credited as compiler and afterword author; Egon Schwarz is the reviewer."
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 254,
+              "scope": "1976 essay volume",
+              "evidence": [
+                "254/(1)p."
+              ],
+              "notes": "The explicit volume extent states 254 numbered plus one unnumbered page."
+            }
+          ],
+          "notes": "Copy counts such as 3,000 and the contents/review references are not page extents. Later edition lines do not separately restate extent."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "German",
+              "scope": "Essay volume, explicit body heading and category",
+              "evidence": [
+                "'''Essays / Volumes (German)'''",
+                "[[Category:Essays / Volumes (German)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "German"
+            ],
+            "evidence": [
+              "[[Category:Essays / Volumes (German)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "single",
+            "values": [
+              "German"
+            ],
+            "evidence": [
+              "'''Essays / Volumes (German)'''"
+            ]
+          },
+          "notes": "The body language appears in a category-like heading rather than a dedicated Language: label."
+        }
+      },
+      "role_evidence": [
+        "Compiled with an afterword by Volker Michels."
+      ]
+    },
+    {
+      "page_id": 1999,
+      "page_title": "Adel, Kurt",
+      "page_type": "Author page with two book titles and a later expanded edition",
+      "fields": {
+        "publisher": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Österreichische Verlagsanstalt",
+              "scope": "Geist der Wirklichkeit, 1967",
+              "evidence": [
+                "Wien: Österreichische Verlagsanstalt, 1967."
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Peter Lang Verlag",
+              "scope": "Die Literatur Österreichs an der Jahrtausendwende, 2001",
+              "evidence": [
+                "Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien: Peter Lang Verlag, 2001."
+              ],
+              "notes": "The subsequent 2003 expanded edition does not separately restate publisher."
+            }
+          ],
+          "notes": "No unique scalar publisher follows from the page."
+        },
+        "publication_place": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Wien",
+              "scope": "Geist der Wirklichkeit, 1967",
+              "evidence": [
+                "Wien: Österreichische Verlagsanstalt, 1967."
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien",
+              "scope": "Die Literatur Österreichs an der Jahrtausendwende, 2001",
+              "evidence": [
+                "Frankfurt am Main/Berlin/Bern/Bruxelles/New York/Oxford/Wien: Peter Lang Verlag, 2001."
+              ],
+              "notes": "The complete seven-place imprint is source-supported; selecting only Frankfurt am Main drops other places."
+            }
+          ],
+          "notes": "The 2003 edition has no separately restated place. Preserve publication scope and the multi-place imprint."
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "Every number attached to p./pp. is a Zweig-reference or note locator, not a total book extent. In particular p. 425 and pp. 222, 252, 284 are not extents."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "German",
+              "scope": "Author's secondary-literature page categorization",
+              "evidence": [
+                "[[Category:Secondary Literature / Authors (German)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "German"
+            ],
+            "evidence": [
+              "[[Category:Secondary Literature / Authors (German)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "The German titles are consistent with the category, but the body has no explicit publication-language label."
+        }
+      },
+      "locator_evidence": [
+        "Zweig references, pp. 223-224, Note 224, p. 425",
+        "Zweig reference, p. 255, 288.",
+        "Zweig references, pp. 222, 252, 284"
+      ]
+    },
+    {
+      "page_id": 4209,
+      "page_title": "Vreemdes in 'n vreemde wêreld",
+      "page_type": "One translated fiction volume with two imprint places",
+      "fields": {
+        "publisher": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Nasionale Pers Beperk",
+              "scope": "1947 volume",
+              "evidence": [
+                "[1947]: Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "multiple",
+          "values": [
+            {
+              "value": "Bloemfontein",
+              "scope": "1947 volume imprint",
+              "evidence": [
+                "Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)"
+              ],
+              "notes": ""
+            },
+            {
+              "value": "Kaapstad (Capetown)",
+              "scope": "1947 volume imprint",
+              "evidence": [
+                "Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)"
+              ],
+              "notes": "Kaapstad and Capetown are presented as alternative names within one place expression."
+            }
+          ],
+          "notes": "Both imprint places belong to the same volume. Pretoria appears only in the foreword attribution and is not an imprint place."
+        },
+        "translator": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Hymne Weiss",
+              "scope": "Whole volume; also credited with foreword and preface",
+              "evidence": [
+                "Translated with a foreword and preface by Hymne Weiss."
+              ],
+              "notes": "The contents spell the foreword/preface name Hymme Weiss; the explicit translation credit spells Hymne Weiss."
+            }
+          ],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "single",
+          "values": [
+            {
+              "value": 160,
+              "scope": "1947 volume",
+              "evidence": [
+                "160p."
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Afrikaans",
+              "scope": "Volume categorization",
+              "evidence": [
+                "[[Category:Fiction / Volumes (Afrikaans)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Afrikaans"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Volumes (Afrikaans)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "location_role_evidence": [
+        "Voorwoord [Hymme Weiss, Pretoria, 25 January, 1944]"
+      ]
+    },
+    {
+      "page_id": 6005,
+      "page_title": "Vrapuesi i amoku",
+      "page_type": "Individual story citation with missing pagination and translation cross-references",
+      "fields": {
+        "publisher": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Tiranë/Tirana",
+              "scope": "Novela, 2014",
+              "evidence": [
+                "[[Novela]] [Tiranë/Tirana, 2014]"
+              ],
+              "notes": "The source gives a slash-separated alternative-name expression; retain it rather than infer two distinct cities or silently normalize."
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "No book extent is stated. The contribution locator is explicitly unknown, pp. ??."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Albanian",
+              "scope": "Translation cross-reference and story categorization",
+              "evidence": [
+                "[Translation: Albanian]",
+                "[[Category:Fiction / Individual Stories (Albanian)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "Albanian"
+            ],
+            "evidence": [
+              "[[Category:Fiction / Individual Stories (Albanian)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "single",
+            "values": [
+              "Albanian"
+            ],
+            "evidence": [
+              "[Translation: Albanian]"
+            ]
+          },
+          "notes": "The body explicitly labels the linked translation language, not an individual translator."
+        }
+      },
+      "locator_evidence": [
+        "Vol. 2, No. 4, pp. ??"
+      ]
+    },
+    {
+      "page_id": 7140,
+      "page_title": "Florence, ville de fêtes",
+      "page_type": "Individual essay citation to a volume with two dates",
+      "fields": {
+        "publisher": {
+          "status": "unclear",
+          "values": [
+            {
+              "value": "Le Livre de Poche",
+              "scope": "Bracketed series/imprint label attached to Voyages citation",
+              "evidence": [
+                "[Le Livre de Poche, 15372]"
+              ],
+              "notes": "The numbered bracket reads as a series/imprint citation; it does not explicitly state a publisher role."
+            }
+          ],
+          "notes": "A publisher value cannot be confirmed from this label without a policy treating this series/imprint as publisher."
+        },
+        "publication_place": {
+          "status": "single",
+          "values": [
+            {
+              "value": "Paris",
+              "scope": "Voyages, 2002/2009",
+              "evidence": [
+                "[[Voyages]] [Paris, 2002/2009]"
+              ],
+              "notes": ""
+            }
+          ],
+          "notes": ""
+        },
+        "translator": {
+          "status": "absent",
+          "values": [],
+          "notes": ""
+        },
+        "numbered_page_extent": {
+          "status": "absent",
+          "values": [],
+          "notes": "111-118 is the essay locator. 15372 is the series number, not pagination."
+        },
+        "language": {
+          "status": "single",
+          "values": [
+            {
+              "value": "French",
+              "scope": "Essay page categorization",
+              "evidence": [
+                "[[Category:Essays / Individual Essays (French)]]"
+              ],
+              "notes": ""
+            }
+          ],
+          "category_observation": {
+            "values": [
+              "French"
+            ],
+            "evidence": [
+              "[[Category:Essays / Individual Essays (French)]]"
+            ]
+          },
+          "explicit_body_observation": {
+            "status": "absent",
+            "values": [],
+            "evidence": []
+          },
+          "notes": "No explicit body language label."
+        }
+      },
+      "locator_evidence": [
+        "No. 12, pp. 111-118 [Le Livre de Poche, 15372]"
+      ]
+    }
+  ],
+  "summary": {
+    "reviewed_pages": 20,
+    "clear_source_constraints": [
+      {
+        "page_ids": [
+          1800,
+          5746,
+          634,
+          4445,
+          584,
+          1999
+        ],
+        "finding": "Multiple publications supply distinct field values. Selecting the first source occurrence as uniquely correct erases documented alternatives."
+      },
+      {
+        "page_ids": [
+          1891
+        ],
+        "finding": "Three translator credits have different scopes: R. Gal’perina for Mariia Stiuart, V. Levik for its verses, and P. S. Bernshteĭn for Kazanova. The editor is not a translator."
+      },
+      {
+        "page_ids": [
+          5746
+        ],
+        "finding": "Editorial Juventud is explicitly a translator credit here. Alfredo Cahn is the translator of a different cited publication. Publisher attribution to Editorial Juventud is not directly stated."
+      },
+      {
+        "page_ids": [
+          72,
+          5082,
+          162
+        ],
+        "finding": "Editor, foreword author and compiler credits do not state translators."
+      },
+      {
+        "page_ids": [
+          5746,
+          2866,
+          634,
+          584,
+          533,
+          1999,
+          7140
+        ],
+        "finding": "The supplied pagination is citation/contribution/reference location data, not a numbered book extent."
+      },
+      {
+        "page_ids": [
+          1800,
+          1891,
+          4376,
+          162
+        ],
+        "finding": "383/(1), 444/(3), 347/(1), and 254/(1) preserve separate numbered and unnumbered portions; the numbered values are 383, 444, 347, and 254 respectively."
+      },
+      {
+        "page_ids": [
+          4473
+        ],
+        "finding": "The body explicitly says Language: Chechen. The source alone cannot justify replacing it with Czech. Czechoslovakia is a film-country heading and 32 minutes is runtime."
+      },
+      {
+        "page_ids": [
+          4445
+        ],
+        "finding": "German and Arabic are explicitly separate body language sections, and both page categories are present."
+      },
+      {
+        "page_ids": [
+          4209
+        ],
+        "finding": "The volume has both Bloemfontein and Kaapstad (Capetown) in its imprint. Pretoria belongs to a foreword attribution."
+      },
+      {
+        "page_ids": [
+          162,
+          4209
+        ],
+        "finding": "Preserve source spelling and role-specific spelling: publisher Suhrkakmp Verlag; translator Hymne Weiss despite Hymme Weiss in contents."
+      }
+    ],
+    "policy_dependent_ambiguities": [
+      {
+        "page_ids": [
+          1800,
+          5746,
+          634,
+          4445,
+          584,
+          1999,
+          4209
+        ],
+        "issue": "How a flat page entry represents multiple publishers, publication places, translators, extents or publication languages. The source supports scoped alternatives rather than one universally correct scalar."
+      },
+      {
+        "page_ids": [
+          72
+        ],
+        "issue": "Whether German may be inferred from title, German contents and series wording when neither the page category nor an explicit body label states the publication language."
+      },
+      {
+        "page_ids": [
+          4473
+        ],
+        "issue": "Whether film country Czechoslovakia belongs in a general publication-place field."
+      },
+      {
+        "page_ids": [
+          2866
+        ],
+        "issue": "Whether to preserve the full journal postal address, extract locality Chalfont St Giles, or leave publication place unconfirmed because the address is not explicitly labelled as such."
+      },
+      {
+        "page_ids": [
+          7140
+        ],
+        "issue": "Whether the numbered Le Livre de Poche bracket is admissible as publisher metadata; the source directly establishes only a series/imprint label."
+      },
+      {
+        "page_ids": [
+          6005,
+          4209,
+          1999,
+          634
+        ],
+        "issue": "Place normalization must distinguish alternative names from multiple imprint cities while preserving the original source expression."
+      },
+      {
+        "page_ids": [
+          72,
+          162,
+          4445,
+          1999
+        ],
+        "issue": "Metadata inheritance across reprints/later editions and page-level aggregation of fields that are supplied for only one publication require an explicit rule."
+      },
+      {
+        "page_ids": [
+          1891
+        ],
+        "issue": "The explicit 444/(3)p. extent coexists with a contents locator ending at (445). Preserve both source statements; resolving physical pagination would require evidence beyond this source."
+      }
+    ],
+    "absent_or_unsupported_is_valid": "The cross-reference stubs and article/story citations often lack publishers, translators and book extents. These gaps should remain gaps unless separately sourced.",
+    "actual_extraction_error_count": null,
+    "actual_extraction_error_count_reason": "No extracted values or expectations were inspected in this blind review."
+  }
+}

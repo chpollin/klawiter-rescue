@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 2,
+  "recordedAt": "2026-09-05",
+  "sourceCommit": "1902abc",
+  "groundTruthSha256": "3df3b3fed77096df2bd0ce5b9d6529e31b475246a7f3c2da32fb059db1f217ea",
+  "contract": "Known failures remain red in the semantic suite. The default gate permits only these exact page/field/value deviations; new failures cannot replace corrected ones. Remove resolved cases after source review.",
+  "knownMismatches": [
+    {
+      "pageId": 285,
+      "field": "location",
+      "actual": "Stockholm"
+    },
+    {
+      "pageId": 285,
+      "field": "pageCount",
+      "actual": 100
+    },
+    {
+      "pageId": 285,
+      "field": "translator",
+      "actual": "Alzir Hella and Olivier Bournac"
+    },
+    {
+      "pageId": 409,
+      "field": "publisher",
+      "actual": "Bilingual edition"
+    },
+    {
+      "pageId": 1166,
+      "field": "title",
+      "actual": "\"Huatielu jueding shengfu de yi shun\" [Die Weltminute von Waterloo: Napoleon, 18. Juni 1815] in:"
+    },
+    {
+      "pageId": 1166,
+      "field": "year",
+      "actual": 1815
+    },
+    {
+      "pageId": 1308,
+      "field": "pageCount",
+      "actual": 23
+    },
+    {
+      "pageId": 1308,
+      "field": "title",
+      "actual": "[Du!] in Yin xian ji. Zaonian de huahuan. Xin de lücheng [Beijing 2000], No. 18, p. 23 [Translated by Yan Zhu]"
+    },
+    {
+      "pageId": 1667,
+      "field": "location",
+      "actual": "Wien"
+    },
+    {
+      "pageId": 1667,
+      "field": "pageCount",
+      "actual": 54
+    },
+    {
+      "pageId": 1667,
+      "field": "publisher",
+      "actual": "Armando Dadò Editore"
+    },
+    {
+      "pageId": 1667,
+      "field": "year",
+      "actual": 1919
+    },
+    {
+      "pageId": 4133,
+      "field": "title",
+      "actual": "Ghanim, Emad M. / Ġānim, ʿImād M."
+    },
+    {
+      "pageId": 4535,
+      "field": "language",
+      "actual": null
+    },
+    {
+      "pageId": 5487,
+      "field": "title",
+      "actual": "\"Leporella\" [Leporella] in Petita crònica : quatre narracions [Girona, 2015], No. 5, pp. 55-92. Translated by Marc Jiménez Buzzi"
+    },
+    {
+      "pageId": 6342,
+      "field": "location",
+      "actual": "Berlin"
+    },
+    {
+      "pageId": 6342,
+      "field": "publisher",
+      "actual": "Insel Verlag"
+    }
+  ],
+  "groundTruthPageIds": [
+    33,
+    285,
+    409,
+    1166,
+    1308,
+    1667,
+    4133,
+    4535,
+    5487,
+    6342
+  ],
+  "groundTruthFields": [
+    "title",
+    "year",
+    "publisher",
+    "location",
+    "language",
+    "translator",
+    "pageCount"
+  ],
+  "reviewedUpdates": [
+    {
+      "date": "2026-09-05",
+      "evidence": "knowledge/technical-remediation-2026-09-05.md",
+      "partialImprovements": [
+        {
+          "pageId": 285,
+          "field": "translator",
+          "before": "Alzir Hella and Olivier Bournac. Revised translation by Brigi",
+          "after": "Alzir Hella and Olivier Bournac",
+          "expectedRemains": null,
+          "reason": "Removes trailing revised-translation prose from the same French credit. The German-publication scope of the fixture remains a failing expectation."
+        }
+      ]
+    }
+  ]
+}

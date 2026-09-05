@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Step 4: Classify entry types and resolve relationships.
-Maps categories to entry types, assigns time periods, resolves redirects.
+Step 4: Classify entry types and preserve source relationships.
+Maps categories to entry types and assigns time periods.
 Handles all namespaces: ns 0 = bibliography, ns 14 = category pages, etc.
 
 Input:  data/intermediate/03c_normalized.csv (explicit via --input)
@@ -79,16 +79,6 @@ def classify_entry(row):
     return "other"
 
 
-def build_redirect_map(rows):
-    """Build a map of redirect targets to page_ids for relationship resolution."""
-    title_to_page = {}
-    for row in rows:
-        title = row.get("title", "") or row.get("page_title", "")
-        if title:
-            title_to_page[title] = row["page_id"]
-    return title_to_page
-
-
 def _parse_args():
     parser = argparse.ArgumentParser(
         description="Classify entry types and periods from an explicit input."
@@ -118,8 +108,6 @@ def main():
     rows = load_csv(input_path)
     log.info(f"Loaded {len(rows)} entries, classifying...")
 
-    title_to_page = build_redirect_map(rows)
-
     type_counts = {}
     period_counts = {}
 
@@ -140,12 +128,6 @@ def main():
                 row["time_period"] = ""
         else:
             row["time_period"] = ""
-
-        if row.get("redirect_target"):
-            target = row["redirect_target"]
-            target_page_id = title_to_page.get(target)
-            if target_page_id:
-                row["redirect_target"] = f"{target} (→ {target_page_id})"
 
     log.info("Entry type distribution:")
     for t, count in sorted(type_counts.items(), key=lambda x: -x[1]):

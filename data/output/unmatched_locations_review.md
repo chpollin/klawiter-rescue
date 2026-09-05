@@ -1,3 +1,5 @@
+> Historical location-review artifact. Its direct-edit instructions are superseded by the [current reconciliation and patch contract](../corrections/README.md) and [data model](../../knowledge/data.md). Do not use this snapshot as the current production procedure.
+
 # Unmatched Publication Locations — Editor Review Template
 
 This is a **review template for human (editor-in-the-loop) decisions**. Nothing here is applied

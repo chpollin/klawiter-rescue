@@ -1,0 +1,6 @@
+{
+  "artifact_count": 117,
+  "all_identical": true,
+  "changed": [],
+  "comparison": "System-runtime dependent rebuild versus full locked-uv source rebuild; includes ignored candidate/queue artifacts and vocabulary files."
+}

@@ -1,16 +1,16 @@
 {
   "algorithmVersion": "1.1",
   "artifacts": {
-    "candidates.json": "b98e1f18e9e752b8eb26fd0e67dcf00dd06dbb11bef138f8695a721ae9ce7dce",
-    "contested-claims.json": "c6dc9b6325c350ab03c1294088dc886e7df1eb5c704f849abc0474082b55e183",
+    "candidates.json": "e92883b9a00a267787bf87eba3430d32958efb1d8e8f6b7b0e90bf31adc726cd",
+    "contested-claims.json": "1f4ae52905b3e080f3bb045649f5f30efc8c0307a80aa0c24574e7c232ed6ef0",
     "decisions.json": "bde3864bc41507a0e96c018e02ae44667ce54cf1133932f47c80d0b35118c78f",
-    "earl.jsonld": "078a91eb4e7349daf6bd3aaacd8bad56cc7bcbec830fd6c05c79dd0ba5162744",
-    "provenance.jsonld": "d0e6dfe3a77a7b67d20a929dbef4c94eff39f5383ddd98767c9005d011cf1f7e",
+    "earl.jsonld": "141ce872a30dbcd0f77e65c7a95ba62019aa1e3d19e0dff75de4505c59da94f5",
+    "provenance.jsonld": "e373f62ade98162a2b253db0951839b98963d17250aa2820032166195e1b9e8f",
     "publishable-links.json": "49d645b6d689e1c23e8f2088d22f98e4b5f0e32c04d4c28c19c694d7a1b6577b",
-    "review-queue.json": "5becfe7619b7f5552ddda50c354489759ac23c98c50f61667a8cdb7537616adb",
-    "validation-report.json": "95442d20774d9df2afb6456ca9c91eaf890d045a29b7a5c548c6126eeed6f45e"
+    "review-queue.json": "d5bde00937cb322f9314564293ac1ee0842abb25d4bb99a80da5b0db6f6d5c56",
+    "validation-report.json": "4329a268901bf1303eb90c3341124732f9d0804915370db993f38134cbc069f8"
   },
-  "codeSha256": "33bbabdb0dd3e4671d576dab08577c1ad685ec55de800c8f24c91da467dfb6f3",
+  "codeSha256": "7a0469f2debe2cd457dcb26514a45837580f7366486f5c1b15e9b31327d638bf",
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
@@ -29,9 +29,9 @@
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "3a6cb6a5b301933deb8845e4ad73febcd6b5ef4bfa2ee78f8c43e7c3db4851db"
+    "sha256": "2c9367db0b8c2218f07b992ad944f13223a8b4695d212948495efd3e4bedd3b0"
   },
-  "generatedAt": "2026-08-27T11:03:08.914601+00:00",
+  "generatedAt": "2026-09-05T16:27:32.834500+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -43,7 +43,7 @@
     },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
-      "sha256": "1d9a9d597d68e8e326555e4a89d011b3e130135ad45e4aa401ffa21837e54198"
+      "sha256": "67da71117489ae9ad3431a87270aae1372ff228eb67197e1f9cc8ac7400fd85a"
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
@@ -51,7 +51,7 @@
     },
     "editions": {
       "path": "data/output/editions/work-editions.jsonld",
-      "sha256": "5a6bffc828f152bfa35156636d4cde868462da800765a2b5283327c36392160b"
+      "sha256": "5199fe655fd2d9f4118a25466eef44c4f161f171f599f0486e1d69ec0bee6568"
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",
@@ -59,7 +59,7 @@
     },
     "location-log": {
       "path": "data/provenance/locations-reconciliation-log.json",
-      "sha256": "299f1dfb6fe8c6fbf5c69f952c3803f01227d6ecba9efe4c38a66b70c7c67afd"
+      "sha256": "0e69f047e57fe0d202b1b13bd70715d13091f9902a3b3e226774ee99711cbe2d"
     },
     "location-review": {
       "path": "data/output/reconciliation/location-low-score-review.json",

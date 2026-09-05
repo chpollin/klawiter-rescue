@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
 from lib.config import (
     EDITION_MODELING_DECISIONS,
     EDITION_SAMPLE_RECONCILIATION,
-    STEP_02_OUTPUT,
-    load_csv,
 )
 from lib.editions import (
     _letter_suffix,
@@ -22,6 +21,17 @@ from lib.editions import (
 )
 
 SAMPLES = Path("data/output/edition-samples")
+
+
+@pytest.fixture(scope="module")
+def _edition_corpus(source_rows):
+    return build_corpus(source_rows)
+
+
+@pytest.fixture
+def edition_corpus(_edition_corpus):
+    """Share the expensive build, but isolate tests that apply review overlays."""
+    return deepcopy(_edition_corpus)
 
 
 @pytest.mark.parametrize(
@@ -121,9 +131,8 @@ def test_sample_boundaries_and_selectors(
         assert annotation["oa:hasBody"]["@id"] == edition["@id"]
 
 
-@pytest.mark.usefixtures("required_intermediates")
-def test_real_corpus_selection_and_output_counts() -> None:
-    corpus = build_corpus(load_csv(STEP_02_OUTPUT))
+def test_real_corpus_selection_and_output_counts(edition_corpus) -> None:
+    corpus = edition_corpus
     assert len(corpus["works"]) == 443
     assert len(corpus["editions"]) == 1886
     assert len(corpus["annotations"]) == 1886
@@ -132,9 +141,8 @@ def test_real_corpus_selection_and_output_counts() -> None:
     )
 
 
-@pytest.mark.usefixtures("required_intermediates")
-def test_reviewed_sample_overlay_preserves_contested_claim() -> None:
-    corpus = build_corpus(load_csv(STEP_02_OUTPUT))
+def test_reviewed_sample_overlay_preserves_contested_claim(edition_corpus) -> None:
+    corpus = edition_corpus
     reconciliation = json.loads(
         Path(EDITION_SAMPLE_RECONCILIATION).read_text(encoding="utf-8")
     )
@@ -186,11 +194,10 @@ def test_reviewed_sample_overlay_preserves_contested_claim() -> None:
         ("klawiter:edition/56-2010-a", 463, "463/1)p."),
     ],
 )
-@pytest.mark.usefixtures("required_intermediates")
 def test_reviewed_page_count_repairs(
-    edition_id: str, page_count: int, raw: str
+    edition_corpus, edition_id: str, page_count: int, raw: str
 ) -> None:
-    corpus = build_corpus(load_csv(STEP_02_OUTPUT))
+    corpus = edition_corpus
     edition = next(item for item in corpus["editions"] if item["@id"] == edition_id)
     assert edition["schema:numberOfPages"] == page_count
     assert edition["klawiter:pageCountRaw"] == raw

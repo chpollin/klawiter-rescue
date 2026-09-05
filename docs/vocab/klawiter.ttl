@@ -233,6 +233,27 @@ klawiter:pageSummaries
     rdfs:comment "Per-page segmentation summaries of the Work/Edition graph."@en ;
     rdfs:isDefinedBy klawiter: .
 
+klawiter:headerCount
+    a rdf:Property ;
+    rdfs:label "header count"@en ;
+    rdfs:comment "Number of source lines matching the edition-header rule in a page summary."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:editionCount
+    a rdf:Property ;
+    rdfs:label "edition count"@en ;
+    rdfs:comment "Number of segmented edition candidates in a page summary."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewFlagCount
+    a rdf:Property ;
+    rdfs:label "review flag count"@en ;
+    rdfs:comment "Number of segmented editions carrying at least one review flag in a page summary, not the number of individual flags."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
 klawiter:canonicalDataset
     a rdf:Property ;
     rdfs:label "canonical dataset"@en ;
@@ -407,6 +428,13 @@ klawiter:headerLine
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
+klawiter:headerSeries
+    a rdf:Property ;
+    rdfs:label "header series"@en ;
+    rdfs:comment "Series notation retained from an edition header, including its source brackets."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
 klawiter:yearRaw
     a rdf:Property ;
     rdfs:label "year raw"@en ;
@@ -466,6 +494,34 @@ klawiter:selectionRule
 #################################################################
 #    Review and claim properties
 #################################################################
+
+klawiter:bindingStatus
+    a rdf:Property ;
+    rdfs:label "binding status"@en ;
+    rdfs:comment "State of an edition's work binding; contested when the binding remains an open claim."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewContract
+    a rdf:Property ;
+    rdfs:label "review contract"@en ;
+    rdfs:comment "Statement of the scope and limits of review decisions applied to a dataset."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewDecision
+    a rdf:Property ;
+    rdfs:label "review decision"@en ;
+    rdfs:comment "Disposition recorded by the sample review decision applied to an edition."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewEvidenceSha256
+    a rdf:Property ;
+    rdfs:label "review evidence SHA-256"@en ;
+    rdfs:comment "SHA-256 of the sample reconciliation evidence recorded when review decisions are applied to a dataset."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
 
 klawiter:reviewStatus
     a rdf:Property ;
@@ -632,6 +688,20 @@ klawiter:sourceValue
     a rdf:Property ;
     rdfs:label "source value"@en ;
     rdfs:comment "The value exactly as it occurs in the source."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceText
+    a rdf:Property ;
+    rdfs:label "source text"@en ;
+    rdfs:comment "Exact source line retained as evidence for a reconciliation occurrence."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceMatchMode
+    a rdf:Property ;
+    rdfs:label "source match mode"@en ;
+    rdfs:comment "Method used to identify a source occurrence, such as exact-string, component-set, field-value-line, or field-value."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 

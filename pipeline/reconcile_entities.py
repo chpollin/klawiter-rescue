@@ -123,8 +123,11 @@ CONTESTED_CONTEXT = {
         "klawiter:decidedAt": {"@type": "xsd:dateTime"},
         # Source-occurrence evidence keys
         "sourcePageId": {"@id": "klawiter:sourcePageId", "@type": "xsd:integer"},
+        "sourceTextId": {"@id": "klawiter:sourceTextId", "@type": "xsd:integer"},
         "sourceLine": {"@id": "klawiter:sourceLine", "@type": "xsd:integer"},
         "sourceValue": "klawiter:sourceValue",
+        "sourceText": "klawiter:sourceText",
+        "sourceMatchMode": "klawiter:sourceMatchMode",
         "sourceTextSha256": "klawiter:sourceTextSha256",
         "sourcePath": "klawiter:sourcePath",
         "sourceTitle": "klawiter:sourceTitle",

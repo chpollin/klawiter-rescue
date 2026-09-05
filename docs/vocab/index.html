@@ -129,6 +129,9 @@
     <tr><td><code><a href="contestedClaims/">klawiter:contestedClaims</a></code></td><td class="kind">Property</td><td>Contested claims of a dataset.</td></tr>
     <tr><td><code><a href="candidateWorks/">klawiter:candidateWorks</a></code></td><td class="kind">Property</td><td>Unresolved candidate work identities of a dataset.</td></tr>
     <tr><td><code><a href="pageSummaries/">klawiter:pageSummaries</a></code></td><td class="kind">Property</td><td>Per-page segmentation summaries of the Work/Edition graph.</td></tr>
+    <tr><td><code><a href="headerCount/">klawiter:headerCount</a></code></td><td class="kind">Property</td><td>Number of source lines matching the edition-header rule in a page summary.</td></tr>
+    <tr><td><code><a href="editionCount/">klawiter:editionCount</a></code></td><td class="kind">Property</td><td>Number of segmented edition candidates in a page summary.</td></tr>
+    <tr><td><code><a href="reviewFlagCount/">klawiter:reviewFlagCount</a></code></td><td class="kind">Property</td><td>Number of segmented editions carrying at least one review flag in a page summary, not the number of individual flags.</td></tr>
     <tr><td><code><a href="canonicalDataset/">klawiter:canonicalDataset</a></code></td><td class="kind">Property</td><td>Points from a derived projection to the canonical dataset that is authoritative for the shared subject matter.</td></tr>
     <tr><td><code><a href="derivedProjection/">klawiter:derivedProjection</a></code></td><td class="kind">Property</td><td>Points from a canonical dataset to a derived convenience projection of it.</td></tr>
     <tr><td><code><a href="authorityNote/">klawiter:authorityNote</a></code></td><td class="kind">Property</td><td>Human-readable statement of which dataset is authoritative for which question.</td></tr>
@@ -171,6 +174,7 @@
     <tr><td><code><a href="isRedirect/">klawiter:isRedirect</a></code></td><td class="kind">Property</td><td>True if the entry is a redirect alias.</td></tr>
     <tr><td><code><a href="redirectTarget/">klawiter:redirectTarget</a></code></td><td class="kind">Property</td><td>Title of the target entry for redirects.</td></tr>
     <tr><td><code><a href="headerLine/">klawiter:headerLine</a></code></td><td class="kind">Property</td><td>The unmodified source header line an edition was segmented from.</td></tr>
+    <tr><td><code><a href="headerSeries/">klawiter:headerSeries</a></code></td><td class="kind">Property</td><td>Series notation retained from an edition header, including its source brackets.</td></tr>
     <tr><td><code><a href="yearRaw/">klawiter:yearRaw</a></code></td><td class="kind">Property</td><td>The year exactly as written in the source header, including ca. notation.</td></tr>
     <tr><td><code><a href="pageCountRaw/">klawiter:pageCountRaw</a></code></td><td class="kind">Property</td><td>The page count exactly as written in the source, before notation normalization.</td></tr>
     <tr><td><code><a href="sourceSliceSha256/">klawiter:sourceSliceSha256</a></code></td><td class="kind">Property</td><td>SHA-256 of the exact source text slice the offset selector addresses.</td></tr>
@@ -188,6 +192,10 @@
     <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
   </thead>
   <tbody>
+    <tr><td><code><a href="bindingStatus/">klawiter:bindingStatus</a></code></td><td class="kind">Property</td><td>State of an edition&#x27;s work binding; contested when the binding remains an open claim.</td></tr>
+    <tr><td><code><a href="reviewContract/">klawiter:reviewContract</a></code></td><td class="kind">Property</td><td>Statement of the scope and limits of review decisions applied to a dataset.</td></tr>
+    <tr><td><code><a href="reviewDecision/">klawiter:reviewDecision</a></code></td><td class="kind">Property</td><td>Disposition recorded by the sample review decision applied to an edition.</td></tr>
+    <tr><td><code><a href="reviewEvidenceSha256/">klawiter:reviewEvidenceSha256</a></code></td><td class="kind">Property</td><td>SHA-256 of the sample reconciliation evidence recorded when review decisions are applied to a dataset.</td></tr>
     <tr><td><code><a href="reviewStatus/">klawiter:reviewStatus</a></code></td><td class="kind">Property</td><td>Review state of an edition proposal: proposed, confirmed, rejected, or contested.</td></tr>
     <tr><td><code><a href="reviewFlags/">klawiter:reviewFlags</a></code></td><td class="kind">Property</td><td>Machine-raised flags that prioritize an edition for review.</td></tr>
     <tr><td><code><a href="claimSubject/">klawiter:claimSubject</a></code></td><td class="kind">Property</td><td>The resource whose identity a contested claim disputes.</td></tr>
@@ -221,6 +229,8 @@
     <tr><td><code><a href="sourceEvidence/">klawiter:sourceEvidence</a></code></td><td class="kind">Property</td><td>Source-occurrence evidence attached to an authority reconciliation claim.</td></tr>
     <tr><td><code><a href="sourceLine/">klawiter:sourceLine</a></code></td><td class="kind">Property</td><td>Line number of an occurrence in the classified source.</td></tr>
     <tr><td><code><a href="sourceValue/">klawiter:sourceValue</a></code></td><td class="kind">Property</td><td>The value exactly as it occurs in the source.</td></tr>
+    <tr><td><code><a href="sourceText/">klawiter:sourceText</a></code></td><td class="kind">Property</td><td>Exact source line retained as evidence for a reconciliation occurrence.</td></tr>
+    <tr><td><code><a href="sourceMatchMode/">klawiter:sourceMatchMode</a></code></td><td class="kind">Property</td><td>Method used to identify a source occurrence, such as exact-string, component-set, field-value-line, or field-value.</td></tr>
     <tr><td><code><a href="sourceTextSha256/">klawiter:sourceTextSha256</a></code></td><td class="kind">Property</td><td>SHA-256 of the source line an occurrence was found on.</td></tr>
     <tr><td><code><a href="sourcePath/">klawiter:sourcePath</a></code></td><td class="kind">Property</td><td>Repository-relative path of the file an occurrence was found in.</td></tr>
     <tr><td><code><a href="sourceTitle/">klawiter:sourceTitle</a></code></td><td class="kind">Property</td><td>Title of the source page an occurrence belongs to.</td></tr>

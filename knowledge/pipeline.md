@@ -4,12 +4,12 @@ aliases: [pipeline, extraction, transformation, production runner]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
-status: complete
+status: maintained
 language: en
 version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-08-27
+updated: 2026-09-05
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -71,7 +71,7 @@ Stage 03c normalizes places of publication, translators and pagination. It disca
 
 ## Gate 1: Segmentation
 
-`pipeline/lib/editions.py` selects the 443 multi-edition pages via the ratified header schema. Each block begins at an edition header and ends at the next header or at the end of the page. `pipeline/segment_editions.py` produces works, editions, exact text selectors, annotations, documented carriers and statement states.
+`pipeline/lib/editions.py` selects the ratified multi-edition corpus via the supported header schema. Each block begins at an edition header and ends at the next header or at the end of the page. `pipeline/segment_editions.py` produces works, editions, exact text selectors, annotations, documented carriers and statement states.
 
 The 76-case sample was reviewed by two independent agents and reconciled by an independent stronger verification agent. Corrections and the open adaptation case are held under `data/reconciliation/edition-modeling-decisions.json`. No uncertain case is confirmed automatically.
 
@@ -85,25 +85,25 @@ Source occurrences are documented from `04_classified.csv` with page ID, text ID
 
 ## Export and Interface
 
-Stage 05 adopts from Gate 2 exclusively confirmed links. The flat JSON-LD file contains all 6,725 records. The frontend file removes redirects and adds a redirect map. `inject_provenance.py` adds field provenance from exactly the selected LLM mode.
+Stage 05 adopts from Gate 2 exclusively confirmed links. The flat JSON-LD file preserves all current page records. The frontend file removes redirects and adds a redirect map. `inject_provenance.py` adds field provenance from exactly the selected LLM mode.
 
 `docs/data/reconciliation.json` is a deterministic projection of candidates, decisions, open claims and edition claims. Run timestamps are held only in audit and manifest artifacts and do not alter this public data file.
 
 ## Patch Replay
 
-`pipeline/apply_patches.py` applies released field corrections from `data/corrections/`. Reconciliation patches are read in during the Gate 2 rebuild. Both patch kinds validate version, subject, action, evidence and permitted fields. The production run thereby stays fully reconstructible from source holdings and decisions.
+`pipeline/apply_patches.py` applies released field corrections from `data/corrections/`. Reconciliation patches are read in during the Gate 2 rebuild. Field replay checks the versioned envelope, permitted fields/actions, positive integer targets and timezone-aware timestamps. Malformed inputs or unknown targets fail before frontend persistence; old-value drift is reported but remains authoritative replay. It does not independently verify a field patch against source evidence. Reconciliation has its separate subject/evidence contract. See the [patch-store contract](../data/corrections/README.md). Canonical field-correction propagation remains open.
 
 ## Repeatability
 
-Gate 1 and Gate 2 rebuild their core documents inside the validators and compare the results. In addition, two complete production runs were executed with identical SHA-256 for the edition graph, both queues, all reconciliation core documents and the flat JSON-LD holdings. The UI reconciliation projection is likewise byte-identical across separate rebuilds.
+Gate 1 and Gate 2 rebuild their core documents inside the validators. CI then runs `pipeline/verify_committed_evidence.py`, reading the reviewed manifests directly from Git HEAD so regeneration cannot replace the reference. Every stable key/value must match, including source/input/code hashes, counts, validation and operator points. Only the run timestamp and hashes of the explicitly timestamped EARL/PROV/validation artifacts may differ; their files must still exist and match the current manifest hashes. All referenced input and artifact bytes are checked, including the ignored reconciliation candidates and review queue. The existing explicit Git-diff artifact list remains an additional comparison.
 
-Time-dependent fields are limited to manifests, PROV activities, EARL reports and run audits. They document the time of execution and are not part of the deterministic data core.
+Historical repeated-run evidence remains in the journal and run audits. [Status](status.md) records the runtime and checks actually verified in this session. The latest full locked-uv rebuild reproduced all 117 compared deterministic files, including the ignored candidate/queue artifacts and vocabulary files. A local success is not a claim that remote CI has already run.
 
 ## Limits
 
 - Four source pages have no delivered text body; one of them is bibliographic.
-- The flat holdings stay structurally imprecise for 443 multi-edition pages.
-- 19 entries without a parser value have no LLM result in the frozen cache.
+- Flat fields can mix publications, including compound pages outside Gate 1 selection.
+- Frozen enrichment coverage is reported in `data/output/llm-enrichment-report.json`; it is not a guarantee of semantic completeness.
 - Live enrichment is deliberately not a component of the default run.
 - External expert review can extend the agentic evidence, yet does not change the technical repeatability.
 

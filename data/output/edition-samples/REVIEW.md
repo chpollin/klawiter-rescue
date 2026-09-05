@@ -1,3 +1,5 @@
+> Historical completed edition-sample review. The original German record is preserved below. Current model, acceptance scope and counts are maintained in [Data](../../../knowledge/data.md), [Production readiness](../../../knowledge/production-readiness.md) and [Status](../../../knowledge/status.md).
+
 # Stichprobenprüfung der Werk-/Ausgaben-Segmentierung
 
 ## Status und Prüfumfang

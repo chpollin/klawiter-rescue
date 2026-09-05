@@ -129,3 +129,69 @@ test('the results route accepts every filter key Explore hands over', () => {
     assert.ok(App.FILTER_LABELS[key], `${key} has no chip label`);
   }
 });
+
+function loadHandover() {
+  const location = { hash: '', pathname: '/', hostname: 'localhost' };
+  const elements = new Map();
+  const ctx = {
+    window: { location, addEventListener() {} }, location, URLSearchParams, console,
+    history: { replaceState() {}, pushState() {} },
+    document: { addEventListener() {}, getElementById(id) { return elements.get(id) || null; } },
+  };
+  vm.createContext(ctx);
+  for (const file of ['constants.js', 'utils.js', 'app.js', 'explore.js', 'facets.js']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'docs', 'js', file), 'utf8'), ctx);
+  }
+  return { ...vm.runInContext('({ App, Explore, Facets })', ctx), location, elements };
+}
+
+test('Explore selection survives the results URL and reload with identical entry IDs', () => {
+  const { App, Explore, location } = loadHandover();
+  const entries = [
+    { sourcePageId: 1, language: null, entryType: 'fiction', year: 1930 },
+    { sourcePageId: 2, language: 'German', entryType: 'essay', year: 1935 },
+    { sourcePageId: 3, language: 'French', entryType: 'fiction', year: 1940 },
+    { sourcePageId: 4, entryType: 'essay', year: 1950 },
+    { sourcePageId: 5, language: '', entryType: 'poetry', year: 1934 },
+    { sourcePageId: 6, language: 'German', entryType: 'essay', year: null },
+  ].map(entry => ({ ...entry, location: 'Wien', publisher: 'Insel',
+    translator: 'Eden and Cedar Paul', timePeriod: 'interwar' }));
+  const ids = rows => JSON.stringify(rows.map(entry => entry.sourcePageId).sort());
+  for (const languages of [[], ['Not recorded'], ['German', 'French'], ['Not recorded', 'German']]) {
+    for (const types of [[], ['fiction'], ['fiction', 'essay']]) {
+      for (const dates of [{}, { yearRange: [1930, 1940] }, { yearRange: [null, 1940] }, { decade: 1930 }]) {
+        Explore.filters = { languages, types, yearRange: [null, null], decade: null,
+          location: 'Wien', publisher: 'Insel', translator: 'Cedar Paul', period: 'interwar', ...dates };
+        const selected = Explore._applyFilters(entries, Explore.filters);
+        if (dates.yearRange || dates.decade != null) assert.ok(selected.every(entry => entry.year != null));
+        Explore.navigateToResults(Explore._resultParams());
+        const filters = App.filtersFromParams(new URLSearchParams(location.hash));
+        assert.strictEqual(ids(App._applyFilterSet(entries, filters)), ids(selected), location.hash);
+        App.state.filters = filters;
+        App.updateURL();
+        const restored = App.filtersFromParams(new URLSearchParams(App._lastHash));
+        assert.strictEqual(ids(App._applyFilterSet(entries, restored)), ids(selected), App._lastHash);
+      }
+    }
+  }
+});
+
+test('result facets keep every imported selection visible and remove one at a time', () => {
+  const { App, Facets, elements } = loadHandover();
+  const host = { innerHTML: '' };
+  elements.set('languages', host);
+  App.state.filters = { language: ['German', 'Not recorded'] };
+  Facets.renderFacet('languages', [{ language: 'German' }, {}, { language: null },
+    { language: 'French' }, { language: 'French' }], 'language', 'language', null, 1);
+  assert.match(host.innerHTML, /aria-pressed="true"\s+data-facet-key="language" data-facet-value="German"/);
+  assert.match(host.innerHTML, /aria-pressed="true"\s+data-facet-key="language" data-facet-value="Not recorded"/);
+  assert.match(host.innerHTML, /<span>Not recorded<\/span>\s*<span class="facet-count">2<\/span>/);
+  assert.strictEqual(App._filterDisplay('language', App.state.filters.language), 'German or Not recorded');
+  App.setFilter = (key, value) => { App.state.filters[key] = value; };
+  App.removeFilter = key => { delete App.state.filters[key]; };
+  App.closeMobileFacets = () => {};
+  Facets.toggle('language', 'German');
+  assert.strictEqual(JSON.stringify(App.state.filters.language), '["Not recorded"]');
+  Facets.toggle('language', 'Not recorded');
+  assert.strictEqual(App.state.filters.language, undefined);
+});

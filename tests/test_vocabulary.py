@@ -87,6 +87,11 @@ class TestLanguageToIso:
         assert language_to_iso("german") == "de"
         assert language_to_iso("ENGLISH") == "en"
 
+    def test_source_category_languages_retain_registered_subtags(self):
+        assert language_to_iso("Afrikaans") == "af"
+        assert language_to_iso("Serbo-Croatian") == "sh"
+        assert language_to_iso("Estonian") == "et"
+
     def test_already_iso_code(self):
         assert language_to_iso("de") == "de"
         assert language_to_iso("en") == "en"

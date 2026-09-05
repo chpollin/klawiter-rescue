@@ -1,135 +1,88 @@
 ---
 title: Data and Model
-aliases: [data, dataset, data model, JSON-LD, work-edition extension]
-project:
-  name: Klawiter Bibliography
-  repository: https://github.com/chpollin/klawiter-rescue
-status: complete
+status: maintained
 language: en
-version: 1.1
-tags: [data, model, provenance, reconciliation]
-created: 2026-03-29
-updated: 2026-08-27
-authors: [Christopher Pollin]
-related: [about, pipeline, frontend, testing, production-readiness]
+updated: 2026-09-05
+related: [about, pipeline, frontend, testing, production-readiness, status]
 ---
 
-# Data and Model
+# Data and model
 
-## Data Levels
+## Source scope
 
-The repository preserves four clearly separated levels:
+The rescue selects `page_latest`, preserving every current MediaWiki page ID. It does not extract every historical bibliographic statement into an entity. The delivered dump also contains earlier revisions and archived material; historical revision recovery and the triage of archived main-namespace titles absent from the current table remain separately scoped work. The archive's revision rows, distinct namespace/title pairs and absent bibliography titles are different populations; do not call all of them “deleted pages”. The [completion review](project-review-2026-09-05.md) documents their census.
 
-1. `data/raw/` contains the unmodified MediaWiki SQL dump and eight text stores.
-2. `data/intermediate/` contains regenerable tabular stages and is not versioned.
-3. `data/output/klawiter.jsonld` and `docs/data/klawiter.json` form the flat compatibility layer.
-4. `data/output/editions/` and `data/output/reconciliation/` contain the structured edition model, reconciliation and validation artifacts.
+Four current pages lack a delivered text body. Only page `2979`, *A unidade espiritual do mundo*, is bibliographic; its named stub preserves the source identity. Uploaded image metadata does not imply that the image bytes were delivered. Raw originals remain unchanged. A separately reviewed public source package is still required; an archival directory is not a publication allowlist.
 
-Decision inputs are held under `data/reconciliation/`. Frozen external and model-supported inputs are held under `data/provenance/`. These directories are sources of the production run and not temporary outputs.
+## Data levels and ownership
 
-## Source Scope and Deliberate Omissions
+| Level | Location | Contract |
+|---|---|---|
+| Archival source | `data/raw/` | preserve original bytes |
+| Frozen external/model evidence | `data/provenance/` | versioned inputs; live refresh is separate |
+| Reviewed decisions | `data/reconciliation/`, `data/corrections/` | explicit evidence, action and history |
+| Intermediate stages | `data/intermediate/` | regenerable CSVs, not canonical decisions |
+| Flat canonical graph | `data/output/klawiter.jsonld` | one record per current wiki page, including redirects |
+| Structured graphs | `data/output/editions/`, `data/output/reconciliation/` | selected edition structures and authority claims |
+| Interface projection | `docs/data/` | non-redirect records, evidence, review and curation views |
 
-The pipeline processes exclusively the latest version of each page. Alongside these, the dump contains roughly 45,200 historical revisions that deliberately stay unused; they are held complete in `data/raw/` and remain available for later analysis. The MediaWiki archive table records 207 deleted pages; their triage (which of them carried bibliographic value) is not commissioned and is registered as an open point, see [[production-readiness]].
+The current census and coverage are in [Status](status.md). The exact source/canonical ID multisets agree; the frontend contains the canonical non-redirect IDs. Structural namespaces remain in its dataset but outside the bibliography views. This establishes record preservation, not field recall.
 
-## Record Census
+## Flat compatibility model
 
-The census reconciles the entire record chain:
+The flat record uses Schema.org, Dublin Core and `klawiter:` terms. It retains title, year, publisher, place, language, translator, extent, categories, cross-references and source identifiers. A populated field can belong to a different publication block from another field on the same page. A first match is a compatibility choice, not a universal scholarly rule.
 
-| Level | Count |
-|---|---:|
-| MediaWiki pages | 6,725 |
-| JSON-LD entries | 6,725 |
-| Redirects | 1,546 |
-| Frontend entries | 5,179 |
-| Main namespace without redirects | 4,751 |
+Language is category-derived under the existing selection precedence. Its human label is retained separately from its registered BCP-47 subtag. The historical source label “Serbo-Croatian” uses the registered macrolanguage `sh`; it is not silently narrowed to Serbian or Croatian. See the [IANA registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry). Publication- or contribution-specific language still needs scoped modelling.
 
-All five census invariants hold. JSON-LD is 1:1 with the source, the frontend corresponds to JSON-LD minus redirects, and every visible entry has a title. Four pages have no delivered BLOB text; only `page_id 2979` is bibliographic. This source-conditioned empty record is retained as a named stub.
+`pageCount` / `schema:numberOfPages` means numbered extent. A citation locator such as “References: p. 425” is not a 425-page book. Translator name transcription and the association of that translator with a publication are separate assertions. Missing, not applicable, not yet extracted and ambiguous values are not yet represented as distinct states throughout the flat layer.
 
-## Flat Compatibility Model
+Redirect targets preserve their source title. Stage 05 resolves literal aliases and redirect chains with cycle protection. An unresolved `seeAlso` is a diagnostic: it may reflect whitespace, link syntax or source absence, and must not automatically be described as a genuine red link.
 
-The flat layer preserves the historical MediaWiki page as a record. It uses Schema.org, Dublin Core and the project-specific prefix `klawiter:`. Typical fields are title, year, publisher, place of publication, language, translator, page count, categories, cross-references, source identifiers and field provenance.
+## Work/edition model
 
-This representation is retained for search, citation and existing exports. On pages with several publication blocks, individual values may originate from different editions. For those pages, the edition model is the structurally more precise source.
+The ratified Gate 1 corpus consists of main-namespace pages with at least two supported bold publication headers containing a four-digit or approximate year. This grammar selects a bounded corpus; compound pages outside it remain unresolved by this graph.
 
-## Work/Edition Model
+| Entity | Identity and meaning |
+|---|---|
+| `schema:CreativeWork` | `klawiter:work/{page_id}`, work of the source page |
+| `schema:Book` | `klawiter:edition/{page_id}-{year}-{suffix}`, segmented publication block |
+| `oa:Annotation` | edition's exact source block, start/end selector and SHA-256 |
+| `schema:PublicationVolume` | source-documented carrier occurrence; no global collected-volume identity inferred |
 
-Gate 1 captures every main-namespace page with at least two ratified edition headers. The current holdings comprise 443 works, 1,886 editions, 1,886 Web Annotations and six documented carrier occurrences.
+Source order stabilizes edition suffixes and selectors. The graph improves segmentation and evidence; it does not yet model every translator, language, contribution, imprint and pagination relation for every publication. The flat interface does not yet offer full edition navigation. Those are acceptance gaps, not reasons to reapprove the already ratified separation.
 
-- `schema:CreativeWork` denotes the work of the source page.
-- `schema:Book` denotes the segmented publication block.
-- `oa:Annotation` connects the edition to the exact source excerpt.
-- `oa:TextPositionSelector` stores start, end and SHA-256 of the excerpt.
-- `schema:PublicationVolume` denotes exclusively a source-documented carrier occurrence.
+## Statement states
 
-The identifiers are derived from source page, year and stable ordering. Identical inputs produce identical IDs, selectors and graph nodes.
+- `proposed`: deterministic, unreviewed statement.
+- `confirmed`: source-bound reviewed statement.
+- `contested`: open statement with competing interpretations and review history.
 
-## Statement States
+A `klawiter:ContestedClaim` has a stable ID, subject/predicate, source evidence, interpretations, review actions, `claimStatus = contested` and `decisionStatus = open`. It remains in the final graph while the disputed relation is withheld.
 
-Domain relations have an explicit status:
-
-- `proposed`: deterministically produced and as yet unreviewed;
-- `confirmed`: source-bound, reviewed and confirmed;
-- `contested`: reviewed, still open and preserved with competing interpretations.
-
-A `klawiter:ContestedClaim` carries a stable claim ID, subject and predicate, exact source evidence, at least two interpretations, review actions as well as `claimStatus = contested` and `decisionStatus = open`. The claim belongs to the final dataset. Its predicate is not emitted as a confirmed relation at the same time.
-
-The open adaptation case `klawiter:claim/work-binding/4916-2016-b` preserves the interpretation as an edition of the "Schachnovelle" and the interpretation as an independent graphic novel adaptation work. The edition itself remains fully contained.
+The adaptation `klawiter:edition/4916-2016-b` remains preserved. Claim `klawiter:claim/work-binding/4916-2016-b` distinguishes an edition of *Schachnovelle* from an independent graphic-novel work. It publishes no confirmed `schema:exampleOfWork` while the work identity is open.
 
 ## Reconciliation
 
-Gate 2 separates candidates, decisions, contested claims and publishable links. Candidates arise for location, work as well as translator and publisher subjects (the agent candidates from the frozen Wikidata comparison `data/provenance/agent-reconciliation.json`, threshold five occurrences). Documented decisions publish the confirmed location and SZD work links; the current counts are held in the Gate 2 manifest `data/output/reconciliation/manifest.json`. Open location decisions are preserved as contested claims.
+Gate 2 separates candidates, decisions, claims and `publishable-links.json`. Location candidates, the SZD work index, and translator/publisher candidates are frozen inputs. The agent candidate stock uses a minimum occurrence threshold; absence from that stock is not evidence of absence from the bibliography.
 
-Every subject carries its occurrences in the classified source. For a location, the scan documents every line that contains the place name or its components. For a translator or publisher name, the field first determines the entries carrying the name, and the scan then anchors it in the lines of exactly those entries; where no line spells it out, because it originates from enrichment or normalization, the field value itself remains the evidence and the occurrence says so with `sourceMatchMode: field-value`. An agent subject without any occurrence carries a spelled-out null finding. Only this evidence makes an unresolved agent decision representable, which then, as with locations, is preserved as an open claim.
+Only `confirm` and `correct` publish authority links. `reject` retains the negative decision. `unresolved` retains alternatives as an open claim. Superseding decisions preserve their predecessor. Stage 05 consumes the publishable layer, never promotes a candidate itself.
 
-`pipeline/05_to_jsonld.py` reads exclusively `publishable-links.json`. Candidates and open claims may be visible in the interface and the export, yet do not appear as `schema:sameAs`. The prioritized Gate 2 review list comprises all open location, work and agent cases; its size is held in the manifest.
+Occurrence evidence includes page/text IDs, source lines and hashes. Multi-part place matches retain component information. Agent occurrences are tied to entries carrying that field; a `sourceMatchMode: field-value` fallback or a spelled-out null finding is weaker than a literal line match and remains distinguishable. RDF contexts preserve nested page-summary and contested source-evidence fields; the RDF tests assert literal preservation, beyond JSON object presence.
 
-## Provenance
+## Provenance and review scope
 
-Field values in the flat frontend layer carry `regex`, `llm`, `missing` or, after a confirmed correction, `editor`. The default run uses the versioned cache `data/provenance/llm-enrichment-cache.json`; a local working cache does not affect the production run.
+The frontend field layer uses `regex`, `llm`, `missing` and `editor`. Its provenance injection and patch overlay currently happen after canonical JSON-LD export. They are not fully propagated into the flat canonical graph, edition graph and all quality reports. Browser exports and playground projections also have distinct scopes; see [Frontend](frontend.md).
 
-Gate 1 and Gate 2 store input hashes, code hashes, PROV-O activities, SHACL respectively contract checks and EARL results. Agentic reviews name input, reviewer, result and reconciliation. Uncertain cases stay in the queue and are not smoothed into certain statements.
+Gate artifacts carry input/code hashes, PROV activities and EARL/validation results. Occurrence matching establishes that a string is present, not that it belongs to the intended publication.
 
-## Review Status per Entry
-
-Alongside the field provenance, the frontend layer carries a review status. Stage 05 projects it as the field `review` and sets it exclusively where a Gate 2 decision covers a field value of the entry; an unreviewed entry does not carry the field. The assignment runs via the exact value the entry carries, for the place of publication via the place name and for translator and publisher via the agent name.
-
-The field carries four keys:
-
-- `status` with `agent_verified` for a completed decision (`confirm`, `correct`, `reject`), `contested` for an unresolved decision and `approved` for a released field correction from `data/corrections/`;
-- `reviewed_by` with the deciding role, for example `independent-verification-agent` or `repository-ground-truth-fixture`;
-- `reviewed_at` with the time of the decision, where the decision carries one;
-- `fields` with the action per reviewed field.
-
-The status of the entry is the strongest statement of its fields, `approved` over `agent_verified` over `contested`. After a field correction, `apply_patches.py` raises the status while preserving the projected field finding. The field provenance stays separate from this, because it says where a value originates, while the review status says who judged it.
+The frontend `review` object carries status, reviewer, time where present, and per-field actions. Current entry-level precedence is `approved` over `agent_verified` over `contested`. Therefore a badge does not certify all fields or remove an open claim on another field. Field-scoped review meaning needs clearer publication and interface treatment.
 
 ## Correction Protocol
 
-The interface exports a versioned curation document. Field corrections preserve the previous machine value in the `edit_history`; reconciliation decisions preserve replaced decisions in a `supersedes` chain. The browser does not write into the repository directly.
+The browser saves a local session and exports decisions; it does not write into this repository. Released field patches replay into the frontend and preserve `edit_history`; released reconciliation patches enter the Gate 2 rebuild and preserve `supersedes`.
 
-Released patches are held under `data/corrections/` and are re-applied on every run. `confirm` and `correct` produce publishable relations. `reject` discards the reviewed candidate. `unresolved` produces or updates an open claim.
+Field replay validates positive integer IDs, timezone-aware timestamps, actions and permitted fields. Invalid patches or unknown targets abort the batch before frontend persistence. A differing `oldValue` currently produces a warning; it does not veto the authoritative patch. Exact examples and maintenance instructions belong in the [patch-store contract](../data/corrections/README.md).
 
-## Quality Limits
+## Canonical evidence
 
-The current field coverages are held exclusively in `data/output/quality-report.json`. The principal known limits are:
-
-- 1,810 edition segments remain proposals; 75 segments are agentically confirmed and one binding is contested.
-- The remaining unresolvable `seeAlso` references are genuine red links to pages never created; the redirect map additionally contains the page-title aliases from stage 05. The frozen counts are held in `.github/baseline-metrics.json` (`known_issues`).
-- On 443 multi-edition pages, the flat layer may combine values from different editions.
-- Missing bibliographic values may be source-conditioned and are not invented.
-- The semantic ground-truth set is small and measures no corpus-wide error rate.
-
-The precise test reach and all known limit values are held in [[testing]].
-
-## Canonical Artifacts
-
-| Artifact | Function |
-|---|---|
-| `data/output/klawiter.jsonld` | complete flat JSON-LD layer |
-| `docs/data/klawiter.json` | frontend data with field provenance |
-| `data/output/editions/work-editions.jsonld` | work/edition graph and edition claims |
-| `data/output/editions/review-queue.json` | prioritized edition review |
-| `data/output/reconciliation/candidates.json` | authority-data candidates |
-| `data/output/reconciliation/decisions.json` | documented reconciliation decisions |
-| `data/output/reconciliation/contested-claims.json` | open authority-data claims |
-| `data/output/reconciliation/publishable-links.json` | confirmed public relations |
-| `docs/data/reconciliation.json` | deterministic UI projection |
+[Status](status.md) links current counts and open work; [Testing](testing.md) defines what the evidence proves. Quality population, source occurrence, semantic correctness, complete modelling and user acceptance are separate measurements. A selected sample gives no corpus-wide accuracy estimate.

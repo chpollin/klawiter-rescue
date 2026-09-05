@@ -1,0 +1,2972 @@
+[
+  {
+    "pageId": 11,
+    "field": "translator",
+    "before": "Stefan Zweig. Leipzig",
+    "after": "Stefan Zweig"
+  },
+  {
+    "pageId": 56,
+    "field": "translator",
+    "before": "Christobel Fowler. London",
+    "after": "Christobel Fowler"
+  },
+  {
+    "pageId": 94,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xxii",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 105,
+    "field": "translator",
+    "before": "N. Shul",
+    "after": "N. Shul’govskii"
+  },
+  {
+    "pageId": 122,
+    "field": "translator",
+    "before": "P. S. Bernshte",
+    "after": "P. S. Bernshteĭn"
+  },
+  {
+    "pageId": 174,
+    "field": "pageCount",
+    "before": 151,
+    "after": null
+  },
+  {
+    "pageId": 187,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 189,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 195,
+    "field": "translator",
+    "before": "Ep. Kaour",
+    "after": "Ep. Kaourē"
+  },
+  {
+    "pageId": 259,
+    "field": "translator",
+    "before": "Stefan Pe",
+    "after": "Stefan Peĭkov"
+  },
+  {
+    "pageId": 272,
+    "field": "pageCount",
+    "before": 1366,
+    "after": null
+  },
+  {
+    "pageId": 285,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bournac. Revised translation by Brigi",
+    "after": "Alzir Hella and Olivier Bournac"
+  },
+  {
+    "pageId": 306,
+    "field": "pageCount",
+    "before": 722,
+    "after": null
+  },
+  {
+    "pageId": 307,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitūr Stoevski"
+  },
+  {
+    "pageId": 310,
+    "field": "translator",
+    "before": "Mahmut Bobrati. Reprinted in",
+    "after": "Mahmut Bobrati"
+  },
+  {
+    "pageId": 311,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 315,
+    "field": "pageCount",
+    "before": 2,
+    "after": null
+  },
+  {
+    "pageId": 317,
+    "field": "pageCount",
+    "before": 1177,
+    "after": null
+  },
+  {
+    "pageId": 319,
+    "field": "translator",
+    "before": "Alzir Hella.  Revised translation by Brigitte Vergne-Cain and",
+    "after": "Alzir Hella"
+  },
+  {
+    "pageId": 321,
+    "field": "pageCount",
+    "before": 13,
+    "after": null
+  },
+  {
+    "pageId": 324,
+    "field": "pageCount",
+    "before": 1181,
+    "after": null
+  },
+  {
+    "pageId": 328,
+    "field": "pageCount",
+    "before": 30,
+    "after": null
+  },
+  {
+    "pageId": 329,
+    "field": "pageCount",
+    "before": 1492,
+    "after": null
+  },
+  {
+    "pageId": 373,
+    "field": "translator",
+    "before": "Theodor Duquesnoy. Illustrated with engravings by Kurt Löb",
+    "after": "Theodor Duquesnoy"
+  },
+  {
+    "pageId": 374,
+    "field": "translator",
+    "before": "Axel Tórgar",
+    "after": "Axel Tórgarđ"
+  },
+  {
+    "pageId": 396,
+    "field": "translator",
+    "before": "Zhongfu Gao et al. Illustrated by Hu Meng. Endnotes by Nuan H",
+    "after": "Zhongfu Gao et al"
+  },
+  {
+    "pageId": 401,
+    "field": "translator",
+    "before": "Xiaoye. Illustrated by Edda Skibbe",
+    "after": "Xiaoye"
+  },
+  {
+    "pageId": 426,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Ŝariĉ"
+  },
+  {
+    "pageId": 429,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 494,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. Dust jacket illustration by Duncan Ward",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 497,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. Benjamin W. Huebsch translated",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 525,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 527,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 528,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 529,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 530,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 531,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 533,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 534,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 535,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 536,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 537,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 538,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 539,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 540,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 680,
+    "field": "translator",
+    "before": "Alzir Hella. Nos",
+    "after": "Alzir Hella"
+  },
+  {
+    "pageId": 684,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bournac. Drawings on the cover and in",
+    "after": "Alzir Hella and Olivier Bournac"
+  },
+  {
+    "pageId": 697,
+    "field": "pageCount",
+    "before": 1365,
+    "after": null
+  },
+  {
+    "pageId": 701,
+    "field": "pageCount",
+    "before": 1360,
+    "after": null
+  },
+  {
+    "pageId": 702,
+    "field": "pageCount",
+    "before": 1384,
+    "after": null
+  },
+  {
+    "pageId": 706,
+    "field": "pageCount",
+    "before": 1507,
+    "after": null
+  },
+  {
+    "pageId": 709,
+    "field": "pageCount",
+    "before": 1383,
+    "after": null
+  },
+  {
+    "pageId": 715,
+    "field": "pageCount",
+    "before": 1181,
+    "after": null
+  },
+  {
+    "pageId": 716,
+    "field": "pageCount",
+    "before": 1181,
+    "after": null
+  },
+  {
+    "pageId": 721,
+    "field": "pageCount",
+    "before": 1381,
+    "after": null
+  },
+  {
+    "pageId": 723,
+    "field": "translator",
+    "before": "Tak",
+    "after": "Takēs Apostolopoulou"
+  },
+  {
+    "pageId": 728,
+    "field": "translator",
+    "before": "Marianna Ant",
+    "after": "Marianna Antōnopoulou and Irmchild Stainer"
+  },
+  {
+    "pageId": 730,
+    "field": "translator",
+    "before": "Polyvios Vovolin",
+    "after": "Polyvios Vovolinēs"
+  },
+  {
+    "pageId": 731,
+    "field": "translator",
+    "before": "Tatiana Lian",
+    "after": "Tatiana Lianē"
+  },
+  {
+    "pageId": 761,
+    "field": "translator",
+    "before": "Vijaya Chauhan and Shivdan Singh Chauhan. ii",
+    "after": "Vijaya Chauhan and Shivdan Singh Chauhan"
+  },
+  {
+    "pageId": 762,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bournac.  Extract adapted by Denis La",
+    "after": "Alzir Hella and Olivier Bournac"
+  },
+  {
+    "pageId": 763,
+    "field": "translator",
+    "before": "Olivier Bournac and Alzir Hella. Revised by Brigitte Vergne-C",
+    "after": "Olivier Bournac and Alzir Hella"
+  },
+  {
+    "pageId": 782,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 796,
+    "field": "translator",
+    "before": "Stefan Zweig. Leipzig",
+    "after": "Stefan Zweig"
+  },
+  {
+    "pageId": 797,
+    "field": "translator",
+    "before": "Norman R. Shapiro. Chicago",
+    "after": "Norman R. Shapiro"
+  },
+  {
+    "pageId": 809,
+    "field": "translator",
+    "before": "Joan Fontcuberta. Artistic format by Marta Serrano",
+    "after": "Joan Fontcuberta"
+  },
+  {
+    "pageId": 829,
+    "field": "translator",
+    "before": "Zhongpu Shu. Illutsrated edition",
+    "after": "Zhongpu Shu"
+  },
+  {
+    "pageId": 835,
+    "field": "translator",
+    "before": "Tai",
+    "after": "Tai’an Zhao"
+  },
+  {
+    "pageId": 836,
+    "field": "translator",
+    "before": "Huan'gong Hou from the Russian version of Zweig",
+    "after": "Huan'gong Hou"
+  },
+  {
+    "pageId": 849,
+    "field": "translator",
+    "before": "Berta Vias Mahou. The cover is a fragment of",
+    "after": "Berta Vias Mahou"
+  },
+  {
+    "pageId": 853,
+    "field": "translator",
+    "before": "Valija Brut",
+    "after": "Valija Brutāne"
+  },
+  {
+    "pageId": 854,
+    "field": "translator",
+    "before": "Roberts Kroders.  Artistic designer Arnis Zari",
+    "after": "Roberts Kroders"
+  },
+  {
+    "pageId": 878,
+    "field": "translator",
+    "before": "Véra Machá",
+    "after": "Véra Macháčková-Riegerová"
+  },
+  {
+    "pageId": 880,
+    "field": "translator",
+    "before": "Josef Hrdli",
+    "after": "Josef Hrdlička and Klement Králik"
+  },
+  {
+    "pageId": 886,
+    "field": "translator",
+    "before": "Eden  and Cedar Paul. xxiii",
+    "after": "Eden  and Cedar Paul"
+  },
+  {
+    "pageId": 890,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xv",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 891,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xiii",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 892,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xi",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 893,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 895,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 896,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 897,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 898,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 899,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 900,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 901,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 902,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 903,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 904,
+    "field": "language",
+    "before": null,
+    "after": "Estonian"
+  },
+  {
+    "pageId": 905,
+    "field": "translator",
+    "before": "Jean Longeville. New pref. Alain Mangin",
+    "after": "Jean Longeville"
+  },
+  {
+    "pageId": 912,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xv",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 921,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 926,
+    "field": "translator",
+    "before": "Stefan Pe",
+    "after": "Stefan Peĭkov"
+  },
+  {
+    "pageId": 939,
+    "field": "translator",
+    "before": "M. Nenova and I. Ra",
+    "after": "M. Nenova and I. Raĭnov"
+  },
+  {
+    "pageId": 940,
+    "field": "translator",
+    "before": "Teodora Pe",
+    "after": "Teodora Peĭkova"
+  },
+  {
+    "pageId": 944,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Simidov"
+  },
+  {
+    "pageId": 952,
+    "field": "translator",
+    "before": "Er Guan and Ning Wang. Editorial foreword",
+    "after": "Er Guan and Ning Wang"
+  },
+  {
+    "pageId": 961,
+    "field": "translator",
+    "before": "Kâs",
+    "after": "Kâsım Eğit"
+  },
+  {
+    "pageId": 966,
+    "field": "translator",
+    "before": "Marion Sonnenfeld. Reader",
+    "after": "Marion Sonnenfeld"
+  },
+  {
+    "pageId": 997,
+    "field": "translator",
+    "before": "D. M. Gorfinkel",
+    "after": "D. M. Gorfinkel’"
+  },
+  {
+    "pageId": 1002,
+    "field": "translator",
+    "before": "D. Gorfinkel",
+    "after": "D. Gorfinkel’"
+  },
+  {
+    "pageId": 1110,
+    "field": "translator",
+    "before": "Chunqi Qian et al. Endnotes by Chunqi Qian",
+    "after": "Chunqi Qian et al"
+  },
+  {
+    "pageId": 1388,
+    "field": "translator",
+    "before": "Kas",
+    "after": "Kasım Eğit"
+  },
+  {
+    "pageId": 1396,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 1396,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1407,
+    "field": "translator",
+    "before": "Aleksa",
+    "after": "Aleksa Šantić"
+  },
+  {
+    "pageId": 1408,
+    "field": "translator",
+    "before": "Aleksa",
+    "after": "Aleksa Šantić"
+  },
+  {
+    "pageId": 1417,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1428,
+    "field": "translator",
+    "before": "Marijana Cvitanovi",
+    "after": "Marijana Cvitanović"
+  },
+  {
+    "pageId": 1438,
+    "field": "translator",
+    "before": "Mirko Feren",
+    "after": "Mirko Ferenčak"
+  },
+  {
+    "pageId": 1495,
+    "field": "translator",
+    "before": "A. S. Kulisher. Moskva",
+    "after": "A. S. Kulisher"
+  },
+  {
+    "pageId": 1521,
+    "field": "translator",
+    "before": "Mojca Kranjc. Verses translated by Fran Albreht",
+    "after": "Mojca Kranjc"
+  },
+  {
+    "pageId": 1522,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1548,
+    "field": "translator",
+    "before": "Branko",
+    "after": "Branko  Žužek"
+  },
+  {
+    "pageId": 1555,
+    "field": "pageCount",
+    "before": 30,
+    "after": null
+  },
+  {
+    "pageId": 1565,
+    "field": "translator",
+    "before": "Jill Sutcliff. Directed by Gavin Hodge. Cinematographer Dermo",
+    "after": "Jill Sutcliff"
+  },
+  {
+    "pageId": 1586,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bournac. Paris",
+    "after": "Alzir Hella and Olivier Bournac"
+  },
+  {
+    "pageId": 1637,
+    "field": "translator",
+    "before": "Marijana Cvitanovi",
+    "after": "Marijana Cvitanovič"
+  },
+  {
+    "pageId": 1645,
+    "field": "translator",
+    "before": "Alena Bláhová. Praha",
+    "after": "Alena Bláhová"
+  },
+  {
+    "pageId": 1646,
+    "field": "translator",
+    "before": "Renpian Yang. Shanghai",
+    "after": "Renpian Yang"
+  },
+  {
+    "pageId": 1661,
+    "field": "translator",
+    "before": "Stefan Zweig. Leipzig",
+    "after": "Stefan Zweig"
+  },
+  {
+    "pageId": 1664,
+    "field": "pageCount",
+    "before": 499,
+    "after": null
+  },
+  {
+    "pageId": 1685,
+    "field": "translator",
+    "before": "Kal",
+    "after": "Kalīm Abū Sayf"
+  },
+  {
+    "pageId": 1700,
+    "field": "translator",
+    "before": "June Barrows Mussey. Selections from the Nathan Haskell Dole",
+    "after": "June Barrows Mussey"
+  },
+  {
+    "pageId": 1701,
+    "field": "translator",
+    "before": "Dimitrije Mitrinovi",
+    "after": "Dimitrije Mitrinović"
+  },
+  {
+    "pageId": 1704,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1706,
+    "field": "translator",
+    "before": "Alka",
+    "after": "Alka   Škiljan"
+  },
+  {
+    "pageId": 1707,
+    "field": "translator",
+    "before": "Alka",
+    "after": "Alka   Škiljan"
+  },
+  {
+    "pageId": 1709,
+    "field": "translator",
+    "before": "Alka",
+    "after": "Alka Škiljan"
+  },
+  {
+    "pageId": 1710,
+    "field": "translator",
+    "before": "Alka",
+    "after": "Alka Škiljan"
+  },
+  {
+    "pageId": 1726,
+    "field": "translator",
+    "before": "Strashimir Dzhamdzhiev. See",
+    "after": "Strashimir Dzhamdzhiev"
+  },
+  {
+    "pageId": 1738,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1750,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 1751,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1754,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1762,
+    "field": "translator",
+    "before": "Margarita Dilova. Compiled with a foreword by Ventseslav Kons",
+    "after": "Margarita Dilova"
+  },
+  {
+    "pageId": 1766,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 1767,
+    "field": "translator",
+    "before": "A. Podv",
+    "after": "A. Podvŭrzachova"
+  },
+  {
+    "pageId": 1776,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1787,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1800,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1805,
+    "field": "translator",
+    "before": "Andre",
+    "after": "Andreĭ Andreev"
+  },
+  {
+    "pageId": 1806,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1814,
+    "field": "translator",
+    "before": "Ksenija Gavri",
+    "after": "Ksenija Gavriš"
+  },
+  {
+    "pageId": 1815,
+    "field": "translator",
+    "before": "Iso Velikanovi",
+    "after": "Iso Velikanović"
+  },
+  {
+    "pageId": 1815,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1821,
+    "field": "translator",
+    "before": "Mirjana Lali",
+    "after": "Mirjana Lalić"
+  },
+  {
+    "pageId": 1822,
+    "field": "translator",
+    "before": "Otto Frederick Theis. Frontispiece",
+    "after": "Otto Frederick Theis"
+  },
+  {
+    "pageId": 1825,
+    "field": "translator",
+    "before": "Vladan Jojki",
+    "after": "Vladan Jojkić"
+  },
+  {
+    "pageId": 1827,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1836,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1837,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 1838,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1840,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1841,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1843,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1844,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1845,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1848,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1851,
+    "field": "translator",
+    "before": "Nika Mili",
+    "after": "Nika Milićević"
+  },
+  {
+    "pageId": 1851,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1852,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1853,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1855,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1857,
+    "field": "translator",
+    "before": "Nika Mili",
+    "after": "Nika Milićević"
+  },
+  {
+    "pageId": 1857,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 1858,
+    "field": "translator",
+    "before": "Ol'ga Gajdo",
+    "after": "Ol'ga Gajdošová-Toscanová"
+  },
+  {
+    "pageId": 1872,
+    "field": "translator",
+    "before": "D. M. Gorfinkel",
+    "after": "D. M. Gorfinkel’"
+  },
+  {
+    "pageId": 1878,
+    "field": "translator",
+    "before": "P. S. Bernshte",
+    "after": "P. S. Bernshteĭn"
+  },
+  {
+    "pageId": 1887,
+    "field": "translator",
+    "before": "R. M. Gal",
+    "after": "R. M. Gal’perina"
+  },
+  {
+    "pageId": 1891,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1892,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1893,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1894,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1895,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1900,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1901,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1902,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 1917,
+    "field": "translator",
+    "before": "P. S. Bernshte",
+    "after": "P. S. Bernshteĭn"
+  },
+  {
+    "pageId": 1962,
+    "field": "translator",
+    "before": "R. Gal'perina. Verses translated by V. Levik",
+    "after": "R. Gal'perina"
+  },
+  {
+    "pageId": 1981,
+    "field": "pageCount",
+    "before": 27,
+    "after": null
+  },
+  {
+    "pageId": 1993,
+    "field": "translator",
+    "before": "Max Knight. Berkeley",
+    "after": "Max Knight"
+  },
+  {
+    "pageId": 1999,
+    "field": "pageCount",
+    "before": 425,
+    "after": null
+  },
+  {
+    "pageId": 2005,
+    "field": "pageCount",
+    "before": 136,
+    "after": null
+  },
+  {
+    "pageId": 2009,
+    "field": "translator",
+    "before": "Phyllis and Trevor Blewitt. xxxiv",
+    "after": "Phyllis and Trevor Blewitt"
+  },
+  {
+    "pageId": 2013,
+    "field": "pageCount",
+    "before": 6,
+    "after": null
+  },
+  {
+    "pageId": 2015,
+    "field": "pageCount",
+    "before": 17,
+    "after": null
+  },
+  {
+    "pageId": 2020,
+    "field": "pageCount",
+    "before": 668,
+    "after": null
+  },
+  {
+    "pageId": 2025,
+    "field": "pageCount",
+    "before": 18,
+    "after": null
+  },
+  {
+    "pageId": 2031,
+    "field": "pageCount",
+    "before": 343,
+    "after": null
+  },
+  {
+    "pageId": 2038,
+    "field": "pageCount",
+    "before": 35,
+    "after": null
+  },
+  {
+    "pageId": 2040,
+    "field": "pageCount",
+    "before": 50,
+    "after": null
+  },
+  {
+    "pageId": 2049,
+    "field": "translator",
+    "before": "Benjamin Huebsch and Helmut Ripperger. London",
+    "after": "Benjamin Huebsch and Helmut Ripperger"
+  },
+  {
+    "pageId": 2050,
+    "field": "translator",
+    "before": "Christobel Fowler. London",
+    "after": "Christobel Fowler"
+  },
+  {
+    "pageId": 2053,
+    "field": "translator",
+    "before": "Christobel Fowler. With contributions by Walter Bauer et al",
+    "after": "Christobel Fowler"
+  },
+  {
+    "pageId": 2058,
+    "field": "pageCount",
+    "before": 230,
+    "after": null
+  },
+  {
+    "pageId": 2076,
+    "field": "pageCount",
+    "before": 124,
+    "after": null
+  },
+  {
+    "pageId": 2083,
+    "field": "translator",
+    "before": "Hanns Winter. Wien",
+    "after": "Hanns Winter"
+  },
+  {
+    "pageId": 2088,
+    "field": "translator",
+    "before": "Gisella Hauer and Didier Plassard. Notes by Hans-Ulrich Lindk",
+    "after": "Gisella Hauer and Didier Plassard"
+  },
+  {
+    "pageId": 2097,
+    "field": "pageCount",
+    "before": 15,
+    "after": null
+  },
+  {
+    "pageId": 2103,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. New York",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2110,
+    "field": "pageCount",
+    "before": 256,
+    "after": null
+  },
+  {
+    "pageId": 2115,
+    "field": "pageCount",
+    "before": 66,
+    "after": null
+  },
+  {
+    "pageId": 2120,
+    "field": "pageCount",
+    "before": 188,
+    "after": null
+  },
+  {
+    "pageId": 2121,
+    "field": "pageCount",
+    "before": 837,
+    "after": null
+  },
+  {
+    "pageId": 2135,
+    "field": "pageCount",
+    "before": 186,
+    "after": null
+  },
+  {
+    "pageId": 2173,
+    "field": "pageCount",
+    "before": 106,
+    "after": null
+  },
+  {
+    "pageId": 2193,
+    "field": "translator",
+    "before": "Pierre-Emmanuel Dauzat. XVII",
+    "after": "Pierre-Emmanuel Dauzat"
+  },
+  {
+    "pageId": 2205,
+    "field": "translator",
+    "before": "Herminia Dauer. Barcelona",
+    "after": "Herminia Dauer"
+  },
+  {
+    "pageId": 2228,
+    "field": "pageCount",
+    "before": 62,
+    "after": null
+  },
+  {
+    "pageId": 2234,
+    "field": "pageCount",
+    "before": 298,
+    "after": null
+  },
+  {
+    "pageId": 2260,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xvi",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2276,
+    "field": "translator",
+    "before": "Erwin Rieger into German as ''Ein Spiel von Liebe und Tod''",
+    "after": "Erwin Rieger"
+  },
+  {
+    "pageId": 2277,
+    "field": "translator",
+    "before": "Nicola",
+    "after": "Nicolaĭ Donchev"
+  },
+  {
+    "pageId": 2290,
+    "field": "pageCount",
+    "before": 113,
+    "after": null
+  },
+  {
+    "pageId": 2297,
+    "field": "pageCount",
+    "before": 21,
+    "after": null
+  },
+  {
+    "pageId": 2300,
+    "field": "pageCount",
+    "before": 27,
+    "after": null
+  },
+  {
+    "pageId": 2301,
+    "field": "translator",
+    "before": "Marlen Eckl. Translation of the",
+    "after": "Marlen Eckl"
+  },
+  {
+    "pageId": 2303,
+    "field": "translator",
+    "before": "Alfredo Foelkel. Milano",
+    "after": "Alfredo Foelkel"
+  },
+  {
+    "pageId": 2303,
+    "field": "pageCount",
+    "before": 52,
+    "after": null
+  },
+  {
+    "pageId": 2305,
+    "field": "translator",
+    "before": "Gottfried Ippisch. Wien",
+    "after": "Gottfried Ippisch"
+  },
+  {
+    "pageId": 2306,
+    "field": "pageCount",
+    "before": 307,
+    "after": null
+  },
+  {
+    "pageId": 2308,
+    "field": "pageCount",
+    "before": 113,
+    "after": null
+  },
+  {
+    "pageId": 2309,
+    "field": "pageCount",
+    "before": 460,
+    "after": null
+  },
+  {
+    "pageId": 2310,
+    "field": "translator",
+    "before": "Christobel Fowler. London",
+    "after": "Christobel Fowler"
+  },
+  {
+    "pageId": 2312,
+    "field": "pageCount",
+    "before": 75,
+    "after": null
+  },
+  {
+    "pageId": 2314,
+    "field": "translator",
+    "before": "James Whitall. New York",
+    "after": "James Whitall"
+  },
+  {
+    "pageId": 2341,
+    "field": "translator",
+    "before": "Vasili  Bobins'kii. Stories edited by Ievgen Popovich. Art ed",
+    "after": "Vasili  Bobins'kii"
+  },
+  {
+    "pageId": 2353,
+    "field": "translator",
+    "before": "Stefan Zweig. Leipzig",
+    "after": "Stefan Zweig"
+  },
+  {
+    "pageId": 2367,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bornac. Paris",
+    "after": "Alzir Hella and Olivier Bornac"
+  },
+  {
+    "pageId": 2386,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bournac. Paris",
+    "after": "Alzir Hella and Olivier Bournac"
+  },
+  {
+    "pageId": 2399,
+    "field": "pageCount",
+    "before": 80,
+    "after": null
+  },
+  {
+    "pageId": 2402,
+    "field": "pageCount",
+    "before": 9,
+    "after": null
+  },
+  {
+    "pageId": 2407,
+    "field": "pageCount",
+    "before": 257,
+    "after": null
+  },
+  {
+    "pageId": 2440,
+    "field": "pageCount",
+    "before": 7,
+    "after": null
+  },
+  {
+    "pageId": 2450,
+    "field": "translator",
+    "before": "Anthea Bell. xix",
+    "after": "Anthea Bell"
+  },
+  {
+    "pageId": 2451,
+    "field": "pageCount",
+    "before": 30,
+    "after": null
+  },
+  {
+    "pageId": 2462,
+    "field": "pageCount",
+    "before": 47,
+    "after": null
+  },
+  {
+    "pageId": 2479,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. With a new introduction by Laurence Mint",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2482,
+    "field": "translator",
+    "before": "Stefan Zweig from the original manuscript before its publicat",
+    "after": "Stefan Zweig"
+  },
+  {
+    "pageId": 2506,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. With a new introduction by Laurence Mint",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2554,
+    "field": "translator",
+    "before": "Jean-Pierre Lefebvre et al. xc",
+    "after": "Jean-Pierre Lefebvre et al"
+  },
+  {
+    "pageId": 2566,
+    "field": "translator",
+    "before": "Nona",
+    "after": "Nona Ķalandarišvili"
+  },
+  {
+    "pageId": 2567,
+    "field": "translator",
+    "before": "Giann",
+    "after": "Giannē Asteriadē"
+  },
+  {
+    "pageId": 2569,
+    "field": "translator",
+    "before": "Ferenc Kelen and Zoltán Horváth. Verses translated by György",
+    "after": "Ferenc Kelen and Zoltán Horváth"
+  },
+  {
+    "pageId": 2572,
+    "field": "translator",
+    "before": "Lavinia Mazzucchetti. Illustrated",
+    "after": "Lavinia Mazzucchetti"
+  },
+  {
+    "pageId": 2582,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 2591,
+    "field": "translator",
+    "before": "Maria Wis",
+    "after": "Maria Wisłowska"
+  },
+  {
+    "pageId": 2595,
+    "field": "translator",
+    "before": "R. Gal",
+    "after": "R. Gal’perina"
+  },
+  {
+    "pageId": 2598,
+    "field": "translator",
+    "before": "Anton Skácel. Verses translated by Lubomír Feldek",
+    "after": "Anton Skácel"
+  },
+  {
+    "pageId": 2607,
+    "field": "translator",
+    "before": "Jean-Pierre Lefebvre et al. xc",
+    "after": "Jean-Pierre Lefebvre et al"
+  },
+  {
+    "pageId": 2637,
+    "field": "pageCount",
+    "before": 17,
+    "after": null
+  },
+  {
+    "pageId": 2639,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. New York",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2723,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xxvi",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2751,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. xviii",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2759,
+    "field": "translator",
+    "before": "Marlen Eckl. Translation of the",
+    "after": "Marlen Eckl"
+  },
+  {
+    "pageId": 2787,
+    "field": "pageCount",
+    "before": 268,
+    "after": null
+  },
+  {
+    "pageId": 2861,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. Volume",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 2943,
+    "field": "pageCount",
+    "before": 289,
+    "after": null
+  },
+  {
+    "pageId": 2948,
+    "field": "pageCount",
+    "before": 292,
+    "after": null
+  },
+  {
+    "pageId": 2984,
+    "field": "translator",
+    "before": "Oscar A. Riveira. Introductory note by the editor concerning",
+    "after": "Oscar A. Riveira"
+  },
+  {
+    "pageId": 2994,
+    "field": "translator",
+    "before": "Naj",
+    "after": "Najāḥ al-Jubaylī"
+  },
+  {
+    "pageId": 3036,
+    "field": "translator",
+    "before": "Alzir Hella. xi",
+    "after": "Alzir Hella"
+  },
+  {
+    "pageId": 3043,
+    "field": "translator",
+    "before": "Kornelios Kastoriad",
+    "after": "Kornelios Kastoriadē"
+  },
+  {
+    "pageId": 3074,
+    "field": "translator",
+    "before": "Vladimír",
+    "after": "Vladimír Žabkay"
+  },
+  {
+    "pageId": 3084,
+    "field": "translator",
+    "before": "Tràn V",
+    "after": "Tràn Văn Nuôi"
+  },
+  {
+    "pageId": 3143,
+    "field": "translator",
+    "before": "Hugo Moss. Graphic Design by Victor Burton",
+    "after": "Hugo Moss"
+  },
+  {
+    "pageId": 3158,
+    "field": "translator",
+    "before": "Ch. Kastri",
+    "after": "Ch. Kastriōtes"
+  },
+  {
+    "pageId": 3184,
+    "field": "translator",
+    "before": "Anthea Bell. London",
+    "after": "Anthea Bell"
+  },
+  {
+    "pageId": 3186,
+    "field": "translator",
+    "before": "Anthea Bell. London",
+    "after": "Anthea Bell"
+  },
+  {
+    "pageId": 3204,
+    "field": "translator",
+    "before": "Fritz Brügel. Konstanz",
+    "after": "Fritz Brügel"
+  },
+  {
+    "pageId": 3222,
+    "field": "pageCount",
+    "before": 109,
+    "after": null
+  },
+  {
+    "pageId": 3223,
+    "field": "pageCount",
+    "before": 109,
+    "after": null
+  },
+  {
+    "pageId": 3272,
+    "field": "translator",
+    "before": "Ré Soupault. Stuttgart",
+    "after": "Ré Soupault"
+  },
+  {
+    "pageId": 3319,
+    "field": "pageCount",
+    "before": 9,
+    "after": null
+  },
+  {
+    "pageId": 3322,
+    "field": "translator",
+    "before": "Patrick Thursfield and Katalin Bánffy-Jelen. London",
+    "after": "Patrick Thursfield and Katalin Bánffy-Jelen"
+  },
+  {
+    "pageId": 3331,
+    "field": "translator",
+    "before": "Friderike Maria von Winternitz. Revised translation by Stefan",
+    "after": "Friderike Maria von Winternitz"
+  },
+  {
+    "pageId": 3334,
+    "field": "translator",
+    "before": "Franti",
+    "after": "František Götz"
+  },
+  {
+    "pageId": 3343,
+    "field": "pageCount",
+    "before": 182,
+    "after": null
+  },
+  {
+    "pageId": 3351,
+    "field": "translator",
+    "before": "Vidhayak Bhattacharya. iv",
+    "after": "Vidhayak Bhattacharya"
+  },
+  {
+    "pageId": 3352,
+    "field": "translator",
+    "before": "Helge Kjaergaard. Illustrated by Bjarne Nielsen",
+    "after": "Helge Kjaergaard"
+  },
+  {
+    "pageId": 3365,
+    "field": "translator",
+    "before": "Otar Xuci",
+    "after": "Otar Xucišvili"
+  },
+  {
+    "pageId": 3368,
+    "field": "translator",
+    "before": "Leli J",
+    "after": "Leli J̌apariǰe"
+  },
+  {
+    "pageId": 3395,
+    "field": "translator",
+    "before": "Maria Topal",
+    "after": "Maria Topalē"
+  },
+  {
+    "pageId": 3422,
+    "field": "translator",
+    "before": "Giann",
+    "after": "Giannēs Kaliphatidēs"
+  },
+  {
+    "pageId": 3453,
+    "field": "translator",
+    "before": "Mimika I. Kranak",
+    "after": "Mimika I. Kranakē"
+  },
+  {
+    "pageId": 3475,
+    "field": "translator",
+    "before": "Sophia K. Spanoud",
+    "after": "Sophia K. Spanoudē"
+  },
+  {
+    "pageId": 3477,
+    "field": "translator",
+    "before": "Andreas I. Gki",
+    "after": "Andreas I. Gkiōn"
+  },
+  {
+    "pageId": 3491,
+    "field": "translator",
+    "before": "Kost",
+    "after": "Kostēs Meranaios"
+  },
+  {
+    "pageId": 3494,
+    "field": "translator",
+    "before": "Giann",
+    "after": "Giannēs Beratēs"
+  },
+  {
+    "pageId": 3504,
+    "field": "translator",
+    "before": "P. I. Sp",
+    "after": "P. I. Spēliōtopoulos"
+  },
+  {
+    "pageId": 3505,
+    "field": "translator",
+    "before": "Nik",
+    "after": "Nikēphoros Vrettakos"
+  },
+  {
+    "pageId": 3508,
+    "field": "translator",
+    "before": "Kost",
+    "after": "Kostēs Meranaios"
+  },
+  {
+    "pageId": 3521,
+    "field": "translator",
+    "before": "Louis Charles Baudouin. Revised by Brigitte Vergne-Cain and G",
+    "after": "Louis Charles Baudouin"
+  },
+  {
+    "pageId": 3556,
+    "field": "translator",
+    "before": "Lya Luft and Pedro Süssekind. Copy editing by  Rosélis Pereir",
+    "after": "Lya Luft and Pedro Süssekind"
+  },
+  {
+    "pageId": 3572,
+    "field": "translator",
+    "before": "Iván Fónagy and Erszébet Gergely. Epilogue by Illés Jenö",
+    "after": "Iván Fónagy and Erszébet Gergely"
+  },
+  {
+    "pageId": 3610,
+    "field": "translator",
+    "before": "Rudolf Vápeki. Illustrated by Joseph Liesler",
+    "after": "Rudolf Vápeki"
+  },
+  {
+    "pageId": 3667,
+    "field": "translator",
+    "before": "Zorica Vinkovi",
+    "after": "Zorica Vinković"
+  },
+  {
+    "pageId": 3749,
+    "field": "translator",
+    "before": "Vladimír Karafiát. Praha",
+    "after": "Vladimír Karafiát"
+  },
+  {
+    "pageId": 3749,
+    "field": "pageCount",
+    "before": 302,
+    "after": null
+  },
+  {
+    "pageId": 3750,
+    "field": "translator",
+    "before": "Jan Jeli",
+    "after": "Jan Jeliński"
+  },
+  {
+    "pageId": 3772,
+    "field": "translator",
+    "before": "Kal",
+    "after": "Kalīm Abū Sayf and Anṭūn al-ʿUbaydī"
+  },
+  {
+    "pageId": 3842,
+    "field": "pageCount",
+    "before": 311,
+    "after": null
+  },
+  {
+    "pageId": 3967,
+    "field": "pageCount",
+    "before": 148,
+    "after": null
+  },
+  {
+    "pageId": 3972,
+    "field": "pageCount",
+    "before": 168,
+    "after": null
+  },
+  {
+    "pageId": 3977,
+    "field": "pageCount",
+    "before": 150,
+    "after": null
+  },
+  {
+    "pageId": 3980,
+    "field": "pageCount",
+    "before": 152,
+    "after": null
+  },
+  {
+    "pageId": 3981,
+    "field": "pageCount",
+    "before": 153,
+    "after": null
+  },
+  {
+    "pageId": 3982,
+    "field": "pageCount",
+    "before": 153,
+    "after": null
+  },
+  {
+    "pageId": 3987,
+    "field": "pageCount",
+    "before": 154,
+    "after": null
+  },
+  {
+    "pageId": 4007,
+    "field": "pageCount",
+    "before": 87,
+    "after": null
+  },
+  {
+    "pageId": 4011,
+    "field": "pageCount",
+    "before": 254,
+    "after": null
+  },
+  {
+    "pageId": 4057,
+    "field": "translator",
+    "before": "Silvin Ko",
+    "after": "Silvin Košak"
+  },
+  {
+    "pageId": 4101,
+    "field": "translator",
+    "before": "Benjamin W. Huebsch and Helmut Rippergar. London",
+    "after": "Benjamin W. Huebsch and Helmut Rippergar"
+  },
+  {
+    "pageId": 4123,
+    "field": "translator",
+    "before": "Bed",
+    "after": "Bedřich Vaníček"
+  },
+  {
+    "pageId": 4129,
+    "field": "translator",
+    "before": "Niq",
+    "after": "Niqūlā Qurbān and Nadīm Marʿashlī"
+  },
+  {
+    "pageId": 4161,
+    "field": "translator",
+    "before": "Lavinia Mazzucchetti. xv",
+    "after": "Lavinia Mazzucchetti"
+  },
+  {
+    "pageId": 4165,
+    "field": "translator",
+    "before": "Nad",
+    "after": "Nadīm Marʿashlī"
+  },
+  {
+    "pageId": 4171,
+    "field": "translator",
+    "before": "Valdem",
+    "after": "Valdemārs Kārkliņš"
+  },
+  {
+    "pageId": 4174,
+    "field": "translator",
+    "before": "Jens Poulsen into Kalaallisut",
+    "after": "Jens Poulsen"
+  },
+  {
+    "pageId": 4187,
+    "field": "translator",
+    "before": "Zofia Petersowa. xii",
+    "after": "Zofia Petersowa"
+  },
+  {
+    "pageId": 4199,
+    "field": "translator",
+    "before": "Anj",
+    "after": "Anjīl 'Abbūd"
+  },
+  {
+    "pageId": 4209,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 4212,
+    "field": "translator",
+    "before": "Gérard Cornillet. Stefan Zweig portrait",
+    "after": "Gérard Cornillet"
+  },
+  {
+    "pageId": 4216,
+    "field": "translator",
+    "before": "Shukr",
+    "after": "Shukrī Muḥammed"
+  },
+  {
+    "pageId": 4254,
+    "field": "translator",
+    "before": "Kal",
+    "after": "Kalīm Abū Sayf and Anṭūn al-ʿUbaydī"
+  },
+  {
+    "pageId": 4268,
+    "field": "translator",
+    "before": "Grete Breunlich. Revised by Karl Beckmann",
+    "after": "Grete Breunlich"
+  },
+  {
+    "pageId": 4269,
+    "field": "translator",
+    "before": "Vinko O",
+    "after": "Vinko Oŝlak"
+  },
+  {
+    "pageId": 4292,
+    "field": "translator",
+    "before": "Suhayl Ayy",
+    "after": "Suhayl Ayyūb"
+  },
+  {
+    "pageId": 4303,
+    "field": "translator",
+    "before": "Iso Velikanovi",
+    "after": "Iso Velikanović"
+  },
+  {
+    "pageId": 4303,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 4317,
+    "field": "translator",
+    "before": "Ondrej Mrlian. Verses translated by Július Lenko. Notes by Mi",
+    "after": "Ondrej Mrlian"
+  },
+  {
+    "pageId": 4351,
+    "field": "translator",
+    "before": "Far",
+    "after": "Farīd Anṭūniyūs"
+  },
+  {
+    "pageId": 4353,
+    "field": "translator",
+    "before": "Stig Torsslow. Produced by C. A. Dymling. Presented by the Sw",
+    "after": "Stig Torsslow"
+  },
+  {
+    "pageId": 4355,
+    "field": "translator",
+    "before": "Gunnar Klintberg. Prestened by the Borås Stadsteater",
+    "after": "Gunnar Klintberg"
+  },
+  {
+    "pageId": 4358,
+    "field": "pageCount",
+    "before": 7,
+    "after": null
+  },
+  {
+    "pageId": 4380,
+    "field": "translator",
+    "before": "Uriel Shela",
+    "after": "Uriel Shelaḥ"
+  },
+  {
+    "pageId": 4391,
+    "field": "translator",
+    "before": "Ce. Ka",
+    "after": "Ce. Kaṇēcaliṅkaṉ"
+  },
+  {
+    "pageId": 4392,
+    "field": "translator",
+    "before": "Lat",
+    "after": "Latā Rāmakiruṣṇaṉ"
+  },
+  {
+    "pageId": 4404,
+    "field": "translator",
+    "before": "Ali Audah from the English version ''Marie Antoinette. The Po",
+    "after": "Ali Audah"
+  },
+  {
+    "pageId": 4407,
+    "field": "translator",
+    "before": "Jean-Jacques Lafaye and François Brugier. Revised by Jean-Lou",
+    "after": "Jean-Jacques Lafaye and François Brugier"
+  },
+  {
+    "pageId": 4516,
+    "field": "translator",
+    "before": "Farh",
+    "after": "Farhād"
+  },
+  {
+    "pageId": 4524,
+    "field": "translator",
+    "before": "Far",
+    "after": "Farāmarz Tabrīzī"
+  },
+  {
+    "pageId": 4530,
+    "field": "translator",
+    "before": "Far",
+    "after": "Farāmarz Tabrīzī"
+  },
+  {
+    "pageId": 4540,
+    "field": "translator",
+    "before": "Mañju",
+    "after": "Mañju Ḍagalī"
+  },
+  {
+    "pageId": 4561,
+    "field": "translator",
+    "before": "Jav",
+    "after": "Javād Shaykh al-Islāmī"
+  },
+  {
+    "pageId": 4563,
+    "field": "translator",
+    "before": "Farh",
+    "after": "Farhād Dādsitān"
+  },
+  {
+    "pageId": 4647,
+    "field": "translator",
+    "before": "Zaur S",
+    "after": "Zaur Səttarlı and Namiq Hüseynli"
+  },
+  {
+    "pageId": 4648,
+    "field": "translator",
+    "before": "Zaur S",
+    "after": "Zaur Səttarli and Yasəmən Abbasova"
+  },
+  {
+    "pageId": 4649,
+    "field": "translator",
+    "before": "Zaur S",
+    "after": "Zaur Səttarli"
+  },
+  {
+    "pageId": 4670,
+    "field": "translator",
+    "before": "Zahid L",
+    "after": "Zahid Lətif oğlu Məmmədov and Həmid Arzulu"
+  },
+  {
+    "pageId": 4679,
+    "field": "translator",
+    "before": "Vur",
+    "after": "Vurğun Maşiyev"
+  },
+  {
+    "pageId": 4681,
+    "field": "translator",
+    "before": "Qabil",
+    "after": "Qabil İsmayıl oğlu Əhmədov"
+  },
+  {
+    "pageId": 4697,
+    "field": "translator",
+    "before": "Zahid M",
+    "after": "Zahid Məmmədov"
+  },
+  {
+    "pageId": 4718,
+    "field": "translator",
+    "before": "Joel Rotenberg. New York",
+    "after": "Joel Rotenberg"
+  },
+  {
+    "pageId": 4723,
+    "field": "translator",
+    "before": "Naj",
+    "after": "Najāḥ al-Jubaylī"
+  },
+  {
+    "pageId": 4731,
+    "field": "translator",
+    "before": "Dominique Tassel. Paris",
+    "after": "Dominique Tassel"
+  },
+  {
+    "pageId": 4732,
+    "field": "translator",
+    "before": "Dominique Tassel. Paris",
+    "after": "Dominique Tassel"
+  },
+  {
+    "pageId": 4745,
+    "field": "translator",
+    "before": "Dominique Tassel. Paris",
+    "after": "Dominique Tassel"
+  },
+  {
+    "pageId": 4765,
+    "field": "translator",
+    "before": "Ali Audah from the English intermediate translation",
+    "after": "Ali Audah"
+  },
+  {
+    "pageId": 4858,
+    "field": "translator",
+    "before": "Tamara Lipovec. Project coordination by Feliciano Medeot. Edi",
+    "after": "Tamara Lipovec"
+  },
+  {
+    "pageId": 4880,
+    "field": "translator",
+    "before": "Ali Audah from the English intermediate translation ''Marie A",
+    "after": "Ali Audah"
+  },
+  {
+    "pageId": 4905,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 4955,
+    "field": "translator",
+    "before": "J. Fontcuberta and A. Orzeszek. Barcelona",
+    "after": "J. Fontcuberta and A. Orzeszek"
+  },
+  {
+    "pageId": 4964,
+    "field": "translator",
+    "before": "Far",
+    "after": "Farīd Anṭūniyūs"
+  },
+  {
+    "pageId": 4968,
+    "field": "translator",
+    "before": "Liesbeth van Nes. Followed by the original German text",
+    "after": "Liesbeth van Nes"
+  },
+  {
+    "pageId": 4979,
+    "field": "translator",
+    "before": "Ebdulmumin De",
+    "after": "Ebdulmumin Deştî"
+  },
+  {
+    "pageId": 4988,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 5031,
+    "field": "translator",
+    "before": "Jana",
+    "after": "Jana Šimulčiková"
+  },
+  {
+    "pageId": 5041,
+    "field": "translator",
+    "before": "Irena Li",
+    "after": "Irena Liščáková"
+  },
+  {
+    "pageId": 5043,
+    "field": "translator",
+    "before": "Kornel Földvári. Illustrated by Jozef Szabó",
+    "after": "Kornel Földvári"
+  },
+  {
+    "pageId": 5045,
+    "field": "translator",
+    "before": "Perla B",
+    "after": "Perla Bžochová"
+  },
+  {
+    "pageId": 5046,
+    "field": "translator",
+    "before": "Perla B",
+    "after": "Perla Bžochová"
+  },
+  {
+    "pageId": 5093,
+    "field": "translator",
+    "before": "Yits",
+    "after": "Yitsḥaḳ Hirshberg"
+  },
+  {
+    "pageId": 5094,
+    "field": "translator",
+    "before": "Barukh",
+    "after": "Barukh Ḳupniḳ"
+  },
+  {
+    "pageId": 5143,
+    "field": "translator",
+    "before": "Phùng-",
+    "after": "Phùng-Đê"
+  },
+  {
+    "pageId": 5149,
+    "field": "translator",
+    "before": "Phát Lê and and D",
+    "after": "Phát Lê and and Dương Tường"
+  },
+  {
+    "pageId": 5160,
+    "field": "translator",
+    "before": "Phùng",
+    "after": "Phùng Đệ"
+  },
+  {
+    "pageId": 5164,
+    "field": "translator",
+    "before": "Phùng",
+    "after": "Phùng Đệ and Trần Nam Lương"
+  },
+  {
+    "pageId": 5166,
+    "field": "translator",
+    "before": "Tràn V",
+    "after": "Tràn Văn Nuôi"
+  },
+  {
+    "pageId": 5169,
+    "field": "translator",
+    "before": "Hans Thomsen. Photos by Ingi Joensen",
+    "after": "Hans Thomsen"
+  },
+  {
+    "pageId": 5197,
+    "field": "translator",
+    "before": "Joseph Buloff - various drafts",
+    "after": "Joseph Buloff"
+  },
+  {
+    "pageId": 5226,
+    "field": "translator",
+    "before": "Changshan Shu. Enlarged edition",
+    "after": "Changshan Shu"
+  },
+  {
+    "pageId": 5324,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 5325,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 5327,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 5328,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 5330,
+    "field": "language",
+    "before": null,
+    "after": "Afrikaans"
+  },
+  {
+    "pageId": 5396,
+    "field": "translator",
+    "before": "Oriana Tamburi in ''Fjala''",
+    "after": "Oriana Tamburi"
+  },
+  {
+    "pageId": 5397,
+    "field": "translator",
+    "before": "Oriana Tamburi in ''Fjala''",
+    "after": "Oriana Tamburi"
+  },
+  {
+    "pageId": 5411,
+    "field": "language",
+    "before": null,
+    "after": "Serbo-Croatian"
+  },
+  {
+    "pageId": 5423,
+    "field": "translator",
+    "before": "Stefan Pe",
+    "after": "Stefan Peĭkov"
+  },
+  {
+    "pageId": 5424,
+    "field": "translator",
+    "before": "Stefan Pe",
+    "after": "Stefan Peĭkov"
+  },
+  {
+    "pageId": 5425,
+    "field": "translator",
+    "before": "Stefan Pe",
+    "after": "Stefan Peĭkov"
+  },
+  {
+    "pageId": 5431,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 5432,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 5433,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 5434,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 5435,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 5436,
+    "field": "translator",
+    "before": "Nikola",
+    "after": "Nikolaĭ Donchev"
+  },
+  {
+    "pageId": 5438,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5445,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5446,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5447,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5451,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5453,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5455,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5457,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5458,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5459,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5460,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5462,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5472,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 5474,
+    "field": "translator",
+    "before": "M. Nenova and I. Ra",
+    "after": "M. Nenova and I. Raĭnov"
+  },
+  {
+    "pageId": 5480,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Simidov"
+  },
+  {
+    "pageId": 5661,
+    "field": "translator",
+    "before": "Lat",
+    "after": "Latā Rāmakiruṣṇaṉ"
+  },
+  {
+    "pageId": 5696,
+    "field": "pageCount",
+    "before": 56,
+    "after": null
+  },
+  {
+    "pageId": 5758,
+    "field": "translator",
+    "before": "Reinier P. Sterkenburg. Illustrations by Aaart van Ewijk",
+    "after": "Reinier P. Sterkenburg"
+  },
+  {
+    "pageId": 5831,
+    "field": "translator",
+    "before": "Ponug",
+    "after": "Ponugōṭi Kr̥ṣṇā Reḍḍi"
+  },
+  {
+    "pageId": 5888,
+    "field": "translator",
+    "before": "Shantiranjan Bandy-Opadhyay from the English intermediate tra",
+    "after": "Shantiranjan Bandy-Opadhyay"
+  },
+  {
+    "pageId": 5895,
+    "field": "translator",
+    "before": "Mais",
+    "after": "Maisāʾ al-ʿArfāwī"
+  },
+  {
+    "pageId": 5914,
+    "field": "translator",
+    "before": "Mais",
+    "after": "Maisāʾ al-ʿArfāwī"
+  },
+  {
+    "pageId": 6013,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6015,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6023,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6025,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6028,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6029,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6031,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6032,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6033,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6035,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6037,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6038,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6039,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6047,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šariċ"
+  },
+  {
+    "pageId": 6064,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6065,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6066,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6068,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6069,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6071,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6072,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6074,
+    "field": "translator",
+    "before": "Vladislav",
+    "after": "Vladislav Šarić"
+  },
+  {
+    "pageId": 6088,
+    "field": "translator",
+    "before": "M. Nenova and I. Ra",
+    "after": "M. Nenova and I. Raĭnov"
+  },
+  {
+    "pageId": 6093,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6094,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6096,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6097,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6098,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6099,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6100,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Kapitonov"
+  },
+  {
+    "pageId": 6120,
+    "field": "translator",
+    "before": "Nika Mili",
+    "after": "Nika Milićević"
+  },
+  {
+    "pageId": 6202,
+    "field": "translator",
+    "before": "Alfred Brieger. Berlin",
+    "after": "Alfred Brieger"
+  },
+  {
+    "pageId": 6220,
+    "field": "translator",
+    "before": "Arthur Schurig. Leipzig",
+    "after": "Arthur Schurig"
+  },
+  {
+    "pageId": 6222,
+    "field": "translator",
+    "before": "Alfred Brieger. Berlin",
+    "after": "Alfred Brieger"
+  },
+  {
+    "pageId": 6225,
+    "field": "translator",
+    "before": "Otto Hauser. Berlin",
+    "after": "Otto Hauser"
+  },
+  {
+    "pageId": 6242,
+    "field": "translator",
+    "before": "Erna Grautoff. Contributions by Stefan Zweig and Ernst Robert",
+    "after": "Erna Grautoff"
+  },
+  {
+    "pageId": 6303,
+    "field": "translator",
+    "before": "Jean Engel from the French version",
+    "after": "Jean Engel"
+  },
+  {
+    "pageId": 6452,
+    "field": "translator",
+    "before": "G. H. Carlsen. Illustrations by Audun Hetland",
+    "after": "G. H. Carlsen"
+  },
+  {
+    "pageId": 6502,
+    "field": "translator",
+    "before": "Michel Delines. Music by Nadia Boulanger",
+    "after": "Michel Delines"
+  },
+  {
+    "pageId": 6507,
+    "field": "translator",
+    "before": "Shaf",
+    "after": "Shafīq Maqqār"
+  },
+  {
+    "pageId": 6546,
+    "field": "translator",
+    "before": "Ren Sang. Abridged version",
+    "after": "Ren Sang"
+  },
+  {
+    "pageId": 6629,
+    "field": "translator",
+    "before": "Alfredo Cahn. Buenos Aires",
+    "after": "Alfredo Cahn"
+  },
+  {
+    "pageId": 6669,
+    "field": "translator",
+    "before": "Norman R. Shapiro. Chicago",
+    "after": "Norman R. Shapiro"
+  },
+  {
+    "pageId": 6701,
+    "field": "pageCount",
+    "before": 3,
+    "after": null
+  },
+  {
+    "pageId": 6713,
+    "field": "translator",
+    "before": "Rienier Pieter Sterkenburg. Gravenhage",
+    "after": "Rienier Pieter Sterkenburg"
+  },
+  {
+    "pageId": 6729,
+    "field": "pageCount",
+    "before": 37,
+    "after": null
+  },
+  {
+    "pageId": 6754,
+    "field": "pageCount",
+    "before": 551,
+    "after": null
+  },
+  {
+    "pageId": 6793,
+    "field": "pageCount",
+    "before": 260,
+    "after": null
+  },
+  {
+    "pageId": 6831,
+    "field": "translator",
+    "before": "Alzir Hella and Olivier Bournac. Revised translation",
+    "after": "Alzir Hella and Olivier Bournac"
+  },
+  {
+    "pageId": 6852,
+    "field": "pageCount",
+    "before": 144,
+    "after": null
+  },
+  {
+    "pageId": 6861,
+    "field": "pageCount",
+    "before": 1354,
+    "after": null
+  },
+  {
+    "pageId": 6905,
+    "field": "pageCount",
+    "before": 254,
+    "after": null
+  },
+  {
+    "pageId": 6962,
+    "field": "pageCount",
+    "before": 21,
+    "after": null
+  },
+  {
+    "pageId": 7069,
+    "field": "pageCount",
+    "before": 1363,
+    "after": null
+  },
+  {
+    "pageId": 7070,
+    "field": "pageCount",
+    "before": 1366,
+    "after": null
+  },
+  {
+    "pageId": 7074,
+    "field": "pageCount",
+    "before": 1377,
+    "after": null
+  },
+  {
+    "pageId": 7075,
+    "field": "pageCount",
+    "before": 1380,
+    "after": null
+  },
+  {
+    "pageId": 7083,
+    "field": "pageCount",
+    "before": 1174,
+    "after": null
+  },
+  {
+    "pageId": 7084,
+    "field": "pageCount",
+    "before": 1406,
+    "after": null
+  },
+  {
+    "pageId": 7110,
+    "field": "pageCount",
+    "before": 1492,
+    "after": null
+  },
+  {
+    "pageId": 7114,
+    "field": "pageCount",
+    "before": 1515,
+    "after": null
+  },
+  {
+    "pageId": 7116,
+    "field": "pageCount",
+    "before": 1537,
+    "after": null
+  },
+  {
+    "pageId": 7199,
+    "field": "translator",
+    "before": "Mariano Orta Manzano and Tomás Lamarca. Illustrated with",
+    "after": "Mariano Orta Manzano and Tomás Lamarca"
+  },
+  {
+    "pageId": 7206,
+    "field": "translator",
+    "before": "Eden and Cedar Paul. Also contains Zweig's eulogy of Freud. C",
+    "after": "Eden and Cedar Paul"
+  },
+  {
+    "pageId": 7219,
+    "field": "translator",
+    "before": "Klara Brauner. Berlin",
+    "after": "Klara Brauner"
+  },
+  {
+    "pageId": 7227,
+    "field": "translator",
+    "before": "Giann",
+    "after": "Giannēs Beratēs"
+  },
+  {
+    "pageId": 7232,
+    "field": "translator",
+    "before": "Lajos  Bálint.  Verlaine's",
+    "after": "Lajos  Bálint"
+  },
+  {
+    "pageId": 7383,
+    "field": "translator",
+    "before": "Oriana Tamburi in ''Fjala''",
+    "after": "Oriana Tamburi"
+  },
+  {
+    "pageId": 7405,
+    "field": "pageCount",
+    "before": 1174,
+    "after": null
+  },
+  {
+    "pageId": 7407,
+    "field": "pageCount",
+    "before": 1177,
+    "after": null
+  },
+  {
+    "pageId": 7470,
+    "field": "pageCount",
+    "before": 25,
+    "after": null
+  },
+  {
+    "pageId": 7525,
+    "field": "translator",
+    "before": "Dimit",
+    "after": "Dimitŭr Stoevski"
+  },
+  {
+    "pageId": 7527,
+    "field": "translator",
+    "before": "Maria Wis",
+    "after": "Maria Wisłowska"
+  }
+]

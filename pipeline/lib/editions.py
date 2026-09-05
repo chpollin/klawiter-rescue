@@ -558,6 +558,15 @@ def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
                 "@id": "klawiter:pageSummaries",
                 "@container": "@set",
             },
+            # Summary children must survive expansion as well as the container.
+            "sourcePageId": {"@id": "klawiter:sourcePageId", "@type": "xsd:integer"},
+            "sourceTextId": {"@id": "klawiter:sourceTextId", "@type": "xsd:integer"},
+            "headerCount": {"@id": "klawiter:headerCount", "@type": "xsd:integer"},
+            "editionCount": {"@id": "klawiter:editionCount", "@type": "xsd:integer"},
+            "reviewFlagCount": {
+                "@id": "klawiter:reviewFlagCount",
+                "@type": "xsd:integer",
+            },
         },
         "@id": "klawiter:dataset/work-editions",
         "@type": "schema:Dataset",

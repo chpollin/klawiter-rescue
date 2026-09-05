@@ -8,6 +8,32 @@ without touching docs/data/klawiter.json or needing a browser.
 """
 
 import apply_patches as ap
+import pytest
+
+
+@pytest.mark.parametrize(
+    "document",
+    [
+        [],
+        {},
+        {"patches": []},
+        {"patchVersion": 1, "patches": []},
+        {"patchVersion": 2, "patches": {}},
+        {"reconciliationPatchVersion": 1},
+    ],
+)
+def test_malformed_patch_envelope_cannot_be_an_empty_success(document):
+    with pytest.raises(ValueError):
+        ap.field_patches(document)
+
+
+def test_field_and_reconciliation_only_documents_remain_separate():
+    record = patch(1, "publisher", "accept", old="A", new="A")
+    assert ap.field_patches({"patchVersion": 2, "patches": [record]}) == [record]
+    assert (
+        ap.field_patches({"reconciliationPatchVersion": 1, "reconciliationPatches": []})
+        == []
+    )
 
 
 def make_entries():
@@ -130,6 +156,68 @@ def test_multiple_corrections_last_wins_history_ordered():
     e = entries[0]
     assert e["publisher"] == "Insel-Verlag"  # later edit wins
     assert [h["newValue"] for h in e["edit_history"]] == ["Wrong", "Insel-Verlag"]
+
+
+@pytest.mark.parametrize("pid", ["1", True, 1.0, 0, -1])
+def test_patch_requires_integer_page_identity(pid):
+    assert "pageId must be a positive integer" in ap.validate_patch(
+        patch(pid, "publisher", "accept", old="Leipzig", new="Leipzig")
+    )
+
+
+@pytest.mark.parametrize(
+    "timestamp", ["not-a-date", "2026-09-05", "2026-09-05T10:00:00", None]
+)
+def test_patch_requires_valid_timezone_aware_timestamp(timestamp):
+    problems = ap.validate_patch(patch(1, "publisher", "accept", at=timestamp))
+    assert any("invalid edited_at" in problem for problem in problems)
+
+
+def test_patch_order_uses_instants_across_timezone_offsets():
+    entries = make_entries()
+    ap.apply_patches(
+        entries,
+        [
+            patch(
+                1,
+                "publisher",
+                "correct",
+                old="Wrong",
+                new="Final",
+                at="2026-06-21T09:30:00Z",
+            ),
+            patch(
+                1,
+                "publisher",
+                "correct",
+                old="Leipzig",
+                new="Wrong",
+                at="2026-06-21T10:00:00+02:00",
+            ),
+        ],
+    )
+    assert entries[0]["publisher"] == "Final"
+    assert [h["newValue"] for h in entries[0]["edit_history"]] == ["Wrong", "Final"]
+
+
+@pytest.mark.parametrize("invalid", [False, True])
+def test_failed_authoritative_batch_does_not_write_partial_dataset(
+    tmp_path, monkeypatch, invalid
+):
+    dataset = tmp_path / "frontend.json"
+    dataset.write_text(
+        '{"entries": [{"sourcePageId": 1, "publisher": "Leipzig"}]}', encoding="utf-8"
+    )
+    before = dataset.read_bytes()
+    patches = [
+        patch(1, "publisher", "correct", old="Leipzig", new="Insel-Verlag"),
+        patch("2" if invalid else 999, "publisher", "accept", old="x", new="x"),
+    ]
+    monkeypatch.setattr(ap, "OUTPUT_FRONTEND_JSON", dataset)
+    monkeypatch.setattr(ap, "REPORT_PATH", str(tmp_path / "report.json"))
+    monkeypatch.setattr(ap, "load_corrections", lambda: patches)
+    assert ap.main() == 1
+    assert dataset.read_bytes() == before
 
 
 def test_location_correction_uses_only_reviewed_authority_link():

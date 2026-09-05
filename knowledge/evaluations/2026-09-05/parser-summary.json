@@ -1,0 +1,24 @@
+{
+  "corpus": "data\\intermediate\\02_encoding_fixed.csv",
+  "corpus_sha256": "ccad2060a7cb26a4133c1263c86937ed7017f0edada29803c37e343e8d6c7304",
+  "before_code_sha256": "ccf756abd5a7aad9865f56b0db5c0677299210f1c30222af6317bdc5ff5940e7",
+  "after_code_sha256": "01717d0e2259eef38877ff5e599268b17b474c8ce64adbb29781ed7f8d0f9794",
+  "rows": 6725,
+  "changed_pages": 677,
+  "changed_fields": {
+    "translator": 536,
+    "page_count": 95,
+    "language": 57
+  },
+  "classifications": {
+    "same_credit_trailing_continuation_removed": 330,
+    "same_credit_unicode_truncation_repaired": 202,
+    "reference_annotation_or_discontinuous_locator_removed": 95,
+    "missing_category_language_added": 57,
+    "same_credit_final_initial_period_preserved": 4
+  },
+  "translator_occurrence_changes": 0,
+  "newly_filled_translators": 0,
+  "existing_language_scalar_switches": 0,
+  "method": "Direct pure-function evaluation of both parser versions on every unchanged stage-02 source text; no pipeline stages or intermediates regenerated."
+}

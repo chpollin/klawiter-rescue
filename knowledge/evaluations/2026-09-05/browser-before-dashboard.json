@@ -1,0 +1,307 @@
+{
+  "viewports": [
+    {
+      "width": 1280,
+      "route": "home",
+      "client": 1280,
+      "scroll": 1280,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 30.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 30.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 30.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 30.796875
+        }
+      ],
+      "h1": [
+        "Stefan Zweig Bibliography"
+      ]
+    },
+    {
+      "width": 1280,
+      "route": "results",
+      "client": 1280,
+      "scroll": 1280,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 30.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 30.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 30.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 30.796875
+        }
+      ],
+      "h1": [
+        "Bibliography entries"
+      ]
+    },
+    {
+      "width": 1280,
+      "route": "editing",
+      "client": 1280,
+      "scroll": 1280,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 30.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 30.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 30.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 30.796875
+        }
+      ],
+      "h1": [
+        "Bibliography entries"
+      ]
+    },
+    {
+      "width": 390,
+      "route": "home",
+      "client": 390,
+      "scroll": 390,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 38.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 38.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 38.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 38.796875
+        }
+      ],
+      "h1": [
+        "Stefan Zweig Bibliography"
+      ]
+    },
+    {
+      "width": 390,
+      "route": "results",
+      "client": 390,
+      "scroll": 390,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 38.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 38.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 38.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 38.796875
+        }
+      ],
+      "h1": [
+        "Bibliography entries"
+      ]
+    },
+    {
+      "width": 390,
+      "route": "editing",
+      "client": 390,
+      "scroll": 390,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 38.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 38.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 38.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 38.796875
+        }
+      ],
+      "h1": [
+        "Bibliography entries"
+      ]
+    },
+    {
+      "width": 320,
+      "route": "home",
+      "client": 320,
+      "scroll": 320,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 38.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 38.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 38.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 38.796875
+        }
+      ],
+      "h1": [
+        "Stefan Zweig Bibliography"
+      ]
+    },
+    {
+      "width": 320,
+      "route": "results",
+      "client": 320,
+      "scroll": 320,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 38.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 38.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 38.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 38.796875
+        }
+      ],
+      "h1": [
+        "Bibliography entries"
+      ]
+    },
+    {
+      "width": 320,
+      "route": "editing",
+      "client": 320,
+      "scroll": 320,
+      "nav": [
+        {
+          "label": "Overview",
+          "width": 65.828125,
+          "height": 38.796875
+        },
+        {
+          "label": "Explore",
+          "width": 57.734375,
+          "height": 38.796875
+        },
+        {
+          "label": "Data",
+          "width": 32.15625,
+          "height": 38.796875
+        },
+        {
+          "label": "About",
+          "width": 44.25,
+          "height": 38.796875
+        }
+      ],
+      "h1": [
+        "Bibliography entries"
+      ]
+    }
+  ],
+  "errors": [],
+  "exploreButtons": [
+    "\n        German\n        1,337\n      ",
+    "\n        Chinese\n        543\n      ",
+    "\n        Not recorded\n        442\n      ",
+    "\n        French\n        393\n      ",
+    "\n        English\n        315\n      ",
+    "\n        Spanish\n        281\n      ",
+    "\n        Arabic\n        236\n      ",
+    "\n        Bulgarian\n        105\n      ",
+    "\n        Albanian\n        104\n      ",
+    "\n        Russian\n        98\n      "
+  ],
+  "missingLanguage": {
+    "expected": 442,
+    "result": "Not recorded — 442 results",
+    "url": "http://127.0.0.1:8879/#language=Not+recorded"
+  },
+  "multiFilters": {
+    "count": 304,
+    "exactIdsMatch": true,
+    "url": "http://127.0.0.1:8879/#type=fiction&type=essay&language=French&language=English",
+    "reloadAndBack": true
+  }
+}

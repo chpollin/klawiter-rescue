@@ -1,0 +1,1916 @@
+{
+  "review": "Independent published-change source review",
+  "reviewer": "source_review_b",
+  "date": "2026-09-05",
+  "reviewed_at_utc": "2026-09-05T16:18:21.006334+00:00",
+  "scope": "Read-only review of all 57 published language additions and redirect resolution against unchanged stage02 source and saved before-remediation frontend. No production, baseline, or frozen-input edits; no raw-SQL access or network calls.",
+  "inputs": {
+    "source": {
+      "path": "data/intermediate/02_encoding_fixed.csv",
+      "sha256": "ccad2060a7cb26a4133c1263c86937ed7017f0edada29803c37e343e8d6c7304"
+    },
+    "changes": {
+      "path": "test-results/published-changes.json",
+      "sha256": "cf72142078ea1d5287b623641095104cf150db2d27321ef35f9f325028d45bcc"
+    },
+    "before_frontend": {
+      "path": "test-results/before-remediation/klawiter.json",
+      "sha256": "05602558909b58b625ebcf21f26cddced63c16362114bc402ebb83cc93fd9390"
+    },
+    "after_frontend": {
+      "path": "docs/data/klawiter.json",
+      "sha256": "7b5d6b6506c0777e1494ee070518f593a987d79c5dbd77346308ad056c5397e1"
+    },
+    "before_quality": {
+      "path": "test-results/before-remediation/quality-report.json",
+      "sha256": "8d6041040a5a2840bdfd84ea7ff701e6ffa31bbcb55fe043ff3c58b408363943"
+    },
+    "after_quality": {
+      "path": "data/output/quality-report.json",
+      "sha256": "d3c3c05532d1711677d672bc86382296bf782d654816f96c203c6ad5f2792f61"
+    },
+    "parser_summary": {
+      "path": "test-results/parser-review/summary.json",
+      "sha256": "8540ca80b7c09f6141986daa31d9b2cb2c1b4d9d84e311be6d18d6d84962cd2a"
+    },
+    "language_mapping": {
+      "path": "pipeline/lib/vocabulary.py",
+      "sha256": "4f7917e8cae47e6a5f6905a3bfde9abd060657739aee45bb82a5d3d8a9b9758c"
+    }
+  },
+  "summary": {
+    "language_additions": 57,
+    "main_namespace_language_additions": 55,
+    "category_namespace_language_additions": 2,
+    "language_distribution": {
+      "Estonian": 27,
+      "Serbo-Croatian": 22,
+      "Afrikaans": 8
+    },
+    "existing_published_language_overwrites": 0,
+    "before_ns0_language_labels": 4254,
+    "final_ns0_language_labels": 4309,
+    "before_ns0_inLanguage": 4254,
+    "final_ns0_inLanguage": 4309,
+    "superseded_intermediate_ns0_inLanguage_observation": {
+      "count": 4281,
+      "explanation": "Before af/sh mappings, only 27 Estonian main-namespace codes were newly populated. This was an in-session observation; no intermediate snapshot was retained. Final hashes describe the corrected artifact."
+    },
+    "source_rows": 6725,
+    "unchanged_source_matches_parser_audit_sha256": true,
+    "unambiguous_conclusion": "All language additions have source-category evidence; all added aliases follow raw redirect chains. No prior published language scalar is overwritten. Maria Stuart has an apparently unrelated source redirect requiring owner evaluation."
+  },
+  "scope_contract": "Category-supported source-page summaries are not independent edition-level assertions. Body-language evidence below retains its original publication/contribution scope. No modern language constituent or original-work language is inferred from a broad category.",
+  "findings": [
+    {
+      "id": "redirect-maria-stuart",
+      "severity": "owner_evaluation_required",
+      "kind": "apparent_upstream_semantic_error",
+      "claim": "The resolver exactly follows the source, but Maria Stuart now sends 26 existing references to an apparently unrelated review of Castellio gegen Calvin. Technical resolution is not semantic validation.",
+      "source_page_id": 35,
+      "source_text_id": 32902,
+      "literal_source_evidence": "#REDIRECT [[Al-Sulṭānī, Fāḍil / Assultani, Fadhil]]",
+      "target_page_id": 4113,
+      "target_source_text_id": 34574,
+      "literal_target_evidence": "This is a review of the Arabic translation of Stefan Zweig's [[Castellio gegen Calvin oder Ein Gewissen gegen die Gewalt]]:",
+      "affected_referring_page_ids": [
+        827,
+        879,
+        900,
+        1527,
+        1771,
+        1837,
+        2260,
+        2524,
+        2559,
+        2566,
+        2567,
+        2569,
+        2571,
+        2572,
+        2573,
+        2579,
+        2583,
+        2587,
+        2589,
+        2591,
+        2592,
+        2593,
+        2595,
+        2598,
+        2601,
+        2603
+      ],
+      "disposition": "Do not invent a replacement target. Project owner must evaluate the source redirect and any explicit correction or quarantine; this reviewer made no production edit."
+    },
+    {
+      "id": "category-versus-edition",
+      "severity": "scope_limitation",
+      "claim": "All 57 labels have literal source-category support. A page summary does not independently prove an exclusive language for every cited edition or contribution.",
+      "representative_cases": [
+        {
+          "page_id": 1855,
+          "decision": "Source separates a 1959 Bosnian / Serbo-Croatian edition from a 1983 Serbo-Croatian edition. The new broad scalar is supported but is not a complete page-level language decision."
+        },
+        {
+          "page_ids": [
+            1417,
+            1845,
+            1855,
+            5411
+          ],
+          "decision": "Preserve both Bosnian and Serbo-Croatian category evidence; the broad scalar does not invalidate the other source label."
+        },
+        {
+          "page_id": 4905,
+          "decision": "Afrikaans describes the review category; English describes the reviewed translation."
+        },
+        {
+          "page_ids": [
+            1396,
+            2582
+          ],
+          "decision": "These are namespace 14 category pages, not two new bibliographic editions."
+        }
+      ]
+    },
+    {
+      "id": "no-published-language-overwrite",
+      "severity": "verified_nonissue",
+      "claim": "The earlier concern about frozen LLM language values being overwritten is not supported by the published comparison. All 57 old labels and language codes were null; no existing published language changed."
+    },
+    {
+      "id": "language-code-followup",
+      "severity": "resolved",
+      "claim": "An intermediate rebuild populated all labels but only 27 new main-namespace inLanguage codes. After af/sh mapping additions, all 57 new labels have corresponding codes and final ns 0 inLanguage coverage is 4309.",
+      "scope": "The historical Serbo-Croatian source label is not narrowed to a constituent language. External registry validity was checked by root, not independently in this local source review."
+    }
+  ],
+  "language_review": [
+    {
+      "page_id": 187,
+      "source_text_id": 4362,
+      "source_title": "Friedrich Nietzsche",
+      "namespace": 0,
+      "source_content_sha256": "8530fb11197fed032f799f418f996a12595370196f48e1493b1dbebdbc5553ae",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Essays / Volumes (Estonian)]]",
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "==Essays (Estonian)==",
+        "==Historical Studies / Volumes (Estonian)=="
+      ]
+    },
+    {
+      "page_id": 189,
+      "source_text_id": 55284,
+      "source_title": "Sigmund Freud",
+      "namespace": 0,
+      "source_content_sha256": "2aa156373d408841823e9a3c0e2b9040a344abb9d582bac69de84c60deda4053",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Essays / Volumes (Estonian)]]",
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "==Essays (Estonian)==",
+        "==Historical Studies / Volumes (Estonian)=="
+      ]
+    },
+    {
+      "page_id": 525,
+      "source_text_id": 59239,
+      "source_title": "Kärsitu süda",
+      "namespace": 0,
+      "source_content_sha256": "77acf9b9105e9c91e1b74e3034c043bc6104851fb5888f5c3a2bf4a233be2ed9",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 527,
+      "source_text_id": 59994,
+      "source_title": "Kiri tundmatult",
+      "namespace": 0,
+      "source_content_sha256": "2962f238fac55b838c5cf217e520487e6ae8ce038ff5bf917cbf0ad5e19f7b09",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 528,
+      "source_text_id": 58775,
+      "source_title": "Malenovell",
+      "namespace": 0,
+      "source_content_sha256": "7e211a005c833a16689aa162a16df333bbafad71a046e6589a0642929aaecd0e",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 529,
+      "source_text_id": 2117,
+      "source_title": "Muutumisuim",
+      "namespace": 0,
+      "source_content_sha256": "d92f0b900489be40b68fe15bf5e4b4d91589e190ce4deda4f9e460126bdbffd8",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 530,
+      "source_text_id": 57542,
+      "source_title": "Novelle",
+      "namespace": 0,
+      "source_content_sha256": "29766fd542f39e4c61d451896ad8a9a72425505266ab02190ecd18f9a73bede5",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 531,
+      "source_text_id": 2120,
+      "source_title": "Amokijooksja",
+      "namespace": 0,
+      "source_content_sha256": "38806f74df47b5988a70a0f3e747a3537c60b1bf98d6bb8fbd748763a877ac52",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 533,
+      "source_text_id": 2122,
+      "source_title": "Hirm",
+      "namespace": 0,
+      "source_content_sha256": "8cf3ec33339619e2c4bc9604046abee2d95bf62593a8700924e0b6bffae7ea85",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 534,
+      "source_text_id": 2123,
+      "source_title": "Kakskümmend neli tundi ühe naise elust",
+      "namespace": 0,
+      "source_content_sha256": "8c3364f69dc6fbd6c8fea56c2bcd82ce331b83b7b596d47ed0d1b5c48f1c4244",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 535,
+      "source_text_id": 2124,
+      "source_title": "Kasvatajanna",
+      "namespace": 0,
+      "source_content_sha256": "defefecc86db9522896f0e88f8d79c1eb50a1e2646a8de0bff2d98a405c2bf4b",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 536,
+      "source_text_id": 2125,
+      "source_title": "Koolipreili",
+      "namespace": 0,
+      "source_content_sha256": "c772414a1c6579f3fcba1fc5b8c32bbe471aaf7e0bb5157c8fcbf7bdfa96dcee",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 537,
+      "source_text_id": 2127,
+      "source_title": "Kõrvetav saladus",
+      "namespace": 0,
+      "source_content_sha256": "d3d47973fb0db2b3a1b3c6014f65e814451b209a43ca222592832f5a9665deb0",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 538,
+      "source_text_id": 2128,
+      "source_title": "Kuupaiste põik",
+      "namespace": 0,
+      "source_content_sha256": "8372c4b4732f4989b7c8246d6da10a71a745ee6325b3a227501989078dffd28a",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 539,
+      "source_text_id": 2136,
+      "source_title": "Nähtamatu kollektsioon",
+      "namespace": 0,
+      "source_content_sha256": "3dbb6a1652419ddb4b6238ee8ac2204551fd3d8e1712dc1430689357714f1c41",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 540,
+      "source_text_id": 2137,
+      "source_title": "Raamatu-Mendel",
+      "namespace": 0,
+      "source_content_sha256": "023288539cdc295345c4c854534adc802311fac8a8834cb05461e24a1a8b4a3f",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 893,
+      "source_text_id": 55879,
+      "source_title": "Balzac. Ühe elu lugu",
+      "namespace": 0,
+      "source_content_sha256": "c875f63a267273a2afa66c266c7b654be44635c972106e9374d50376d6ce885c",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 895,
+      "source_text_id": 3240,
+      "source_title": "Eilne maailm. Eurooplase mälestused",
+      "namespace": 0,
+      "source_content_sha256": "00270e3852ece21b2a98561b7905916b9a0e646b6e338c1dbc1fa98a8bef4a2c",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 896,
+      "source_text_id": 3244,
+      "source_title": "Inimkonna tähetunnid. Neliteist ajaloolist miniatuuri",
+      "namespace": 0,
+      "source_content_sha256": "4f0fe73c470717052bdc1603d2475b5b935fb7bbe641931977f7ab593f71ad2f",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 897,
+      "source_text_id": 55891,
+      "source_title": "Kolm meistrit: Balzac, Dickens, Dostojevski",
+      "namespace": 0,
+      "source_content_sha256": "a4fdb39859b165aa8136790448597c24865833ad582eceea51e16dd79d245ea8",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 898,
+      "source_text_id": 3246,
+      "source_title": "Kolm oma elu laulikut: Casanova - Stendhal - Tolstoi",
+      "namespace": 0,
+      "source_content_sha256": "d449ad06e0b0dcf46b43decf8c2df9bb66af6d6db5486506c2b09d1b229ac77f",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 899,
+      "source_text_id": 15025,
+      "source_title": "Kuninganna tapalaval",
+      "namespace": 0,
+      "source_content_sha256": "3b80c173628b893dd3c3a38f2a7dd03a53152d5b190ea074c0d1e27ad4804036",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 900,
+      "source_text_id": 29714,
+      "source_title": "Maria Stuart. Kuninganna tapalaval",
+      "namespace": 0,
+      "source_content_sha256": "5a325b9c6f2da56d7d39f81cd7bc6eba7f232026410c333b37f3cb0cf5d9233c",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 901,
+      "source_text_id": 19475,
+      "source_title": "Magelhães. Mees ja tema kangelastegu",
+      "namespace": 0,
+      "source_content_sha256": "659804f468fbb2fbff118ec23e0320d34bcdb88798f33073df630ad6bcbe3c88",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 902,
+      "source_text_id": 3250,
+      "source_title": "Marie-Antoinette: Keskpärase inimese portree",
+      "namespace": 0,
+      "source_content_sha256": "27effddf9a8afd35f3464008c07493dc4d75e83f8004bbf8487b61d0e13569c4",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 903,
+      "source_text_id": 3251,
+      "source_title": "Rotterdami Erasmuse triumf ja traagika",
+      "namespace": 0,
+      "source_content_sha256": "95090c1d09e4f242af8f8fb85c0fad8c968d42c5ec23be62868957acb5ffc109",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 904,
+      "source_text_id": 55532,
+      "source_title": "Tervenemine vaimu läbi: Mesmer, Mary Baker-Eddy, Freud",
+      "namespace": 0,
+      "source_content_sha256": "114b52dfbc9fca6192d624b6dd25e7cd8b1a7538de571b869ea35f31aa780e37",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Estonian",
+        "languageCode": "et"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Estonian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 1396,
+      "source_text_id": 5618,
+      "source_title": "Collected and Selected Works in Translation (Serbo-Croatian)",
+      "namespace": 14,
+      "source_content_sha256": "42ffedc4c5b16f29b96c0e7cb4d89e864d51d9e34ae639da6097f408b6c00b35",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "category_namespace_page_not_an_edition",
+      "literal_category_evidence": [
+        "[[Category:Collected and Selected Works in Translation (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 1417,
+      "source_text_id": 31770,
+      "source_title": "Neimari svijeta",
+      "namespace": 0,
+      "source_content_sha256": "70b2d37183783e92bb93c093f84fdb6d3a3889c08e7719c9f522b00de799b457",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "both_Bosnian_and_Serbo_Croatian_source_categories",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Bosnian)]]"
+      ],
+      "body_language_evidence": [
+        "''Neimari svijeta'' [Baumeister der Welt]. Translated into Serbo-Croatian by Dušan Papadopolos. 2 vols. in: [[Izabrana dela / Štefan Cvaig]]. 8 vols. Beograd: Izdavačka Radna Organizacija \\\"Rad\\\", 1983"
+      ]
+    },
+    {
+      "page_id": 1522,
+      "source_text_id": 14095,
+      "source_title": "Triumf i tragika Erazma Rotterdamskog",
+      "namespace": 0,
+      "source_content_sha256": "14fbdc54fa084b433f69ba4f21b36a4cb817d64035ab722e9a65fa0786a378d4",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "[Triumph und Tragödie des Erasmus von Rotterdam].  Translated in Serbo-Croatian by Ivan Esih. 284p. Zagreb: Binoza - Svetski  pisci, (1936)"
+      ]
+    },
+    {
+      "page_id": 1704,
+      "source_text_id": 14081,
+      "source_title": "Charles Dickens",
+      "namespace": 0,
+      "source_content_sha256": "ce72cf9be9764a7642415abaf45cddbcf0de3c516ec930748b27e30320ce7303",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Essays / Individual Essays (Serbo-Croatian)]]",
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        " commonly known as The Pickwick Papers]. 2 vols. Translated from the English version into Serbo-Croatian by Stjepan Krešić. Illustrated by Robert Seymour and Hablot K. Brown. Zagreb: Novo pokoljenje, 1949-1951, Vol. 2 (1951) [436/XXXIVp.], pp. I-XXI"
+      ]
+    },
+    {
+      "page_id": 1815,
+      "source_text_id": 19443,
+      "source_title": "Magelan. Čovek i njegovo delo",
+      "namespace": 0,
+      "source_content_sha256": "dc5835f8a1d8de1cda216bc126569b4ff22568d8c0db3d7ff324e8dcb13291b5",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 1827,
+      "source_text_id": 56328,
+      "source_title": "Zvezdani časovi čovečanstva. Dvanaest istoriskih minijatura",
+      "namespace": 0,
+      "source_content_sha256": "df77e23bd7ec6fb696a7bb5535c24bdf893ef9357f22cd2b5a313b9f0b713f4b",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "''Zvezdani časovi čovečanstva. Dvanaest istoriskih minijatura'' [Sternstunden der Menschheit. Zwölf historische Miniaturen]. Translated into Serbo-Croatian by Pero Slijepcević and Srđa Đokić. 247p. "
+      ]
+    },
+    {
+      "page_id": 1836,
+      "source_text_id": 14087,
+      "source_title": "Jučerašnji svet. Sećanja jednog Evropejca",
+      "namespace": 0,
+      "source_content_sha256": "2b9e3084a28597cf5807b5617effc7aa85c028a863b39ebab22e49ee1eb0e463",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "[Die Welt von gestern. Erinnerungen eines Europäers]. Translated into Serbo-Croatian by Aleksandar Tišma.  430p. Portraits. Novi Sad: Matica Srpska, 1952 [Svetski pisci]. Reprinted: 418p. Portraits. Novi Sad: Matica Srpska, 1962. Reprinted: 373p. Beograd: Sluzbeni Glasnik, 2009 ["
+      ]
+    },
+    {
+      "page_id": 1838,
+      "source_text_id": 41552,
+      "source_title": "Žozef Fušé. Lik jednog političara",
+      "namespace": 0,
+      "source_content_sha256": "19daa0c1a66af9e27c2947d6efd5fd38c1f062b017fefd8bb32be1e03ff2f998",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "'''[1]'''. Translated into Serbo-Croatian by Nikola Polovina. 247p. Illustrated. Beograd: Prosveta, 1952 [Vremena i ljudi, 1]",
+        "'''[2]'''. Translated into Serbo-Croatian by Vladislav (Valtko) Šarić. In: [[Odabrana djela Stefana Zweiga]]. 6 vols. Rijeka: Otokar Keršovani, 1965 [Reprinted 1967],Vol. 3: Magellan *  Žozef Fouché, No. 2, pp. 263-514",
+        "'''[3]'''. Translated into Serbo-Croatian by Nikola Polovina, Pero Slijepcević, and Srdan Đokić. In: [[Izabrana dela / Štefan Cvaig]].  8 vols. Beograd: Izdavačka Radna Organizacija \\\"Rad\\\", 1983, Vol. 4: [[Žozef  Fušé. Lik jednog političara * Zvezdani časovi čovečanstva]] [Josep"
+      ]
+    },
+    {
+      "page_id": 1840,
+      "source_text_id": 31724,
+      "source_title": "Dostojevski",
+      "namespace": 0,
+      "source_content_sha256": "7274be9631b5d8dcc5f00dac0f7fecf16d820da249aa81ed8dd3462a4598b590",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Essays / Individual Essays (Serbo-Croatian)]]",
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "''Dostojevski'' [Dostojewski. From: Baumeister der Welt. Drei Meister: Balzac - Dickens - Dostojewski]. Translated  into Serbo-Croatian by Miodrag Petrović. 136p. Frontispiece: Portrait of  Dostojewski [Biblioteka veliki neimari, 3] "
+      ]
+    },
+    {
+      "page_id": 1841,
+      "source_text_id": 41555,
+      "source_title": "Žozef Fušé. Lik jednog političara * Zvezdani časovi čovečanstva",
+      "namespace": 0,
+      "source_content_sha256": "4335cc3830c1cfc3c1944c19566b5cf700888a60fa25690ef86f6f5400075711",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 1843,
+      "source_text_id": 14083,
+      "source_title": "Erazmo Roterdamski",
+      "namespace": 0,
+      "source_content_sha256": "9e75d77a3f5117ffb2f76f6b30fd149f62f305e6bb8498183deb277bebbc0a40",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "[Triumph und Tragik des Erasmus von Rotterdam]. Translated into Serbo-Croatian by Nika Milićević. Foreword by Risto Trifković. 177p. Illustrated. Sarajevo: Narodna  prosvjeta, 1957 [Biblioteka Gama, 21]"
+      ]
+    },
+    {
+      "page_id": 1844,
+      "source_text_id": 14084,
+      "source_title": "Fouché. Roman jednoga političara",
+      "namespace": 0,
+      "source_content_sha256": "d7611ad166200653866d11d400aac647d05326e74dfc485594001f2c97777076",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "[Joseph Fouché. Bildnis eines politischen Menschen]. Translated into Serbo-Croatian by Josip Bogner. 257p. Zagreb: \\\"Binoza-Svjetski-Pisci\\\" Nakladni Zavod, 1935 [Binoza-svjetski pisci. Serija A. Redovana izdanija G 6, Sv.30]"
+      ]
+    },
+    {
+      "page_id": 1845,
+      "source_text_id": 31719,
+      "source_title": "Graditelji svijeta: Balzak - Dikens - Dostojevski",
+      "namespace": 0,
+      "source_content_sha256": "bb365b0f3ac53f71a978df33386c38891d42faa5bc1dee6bbfd6f23988dde149",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "both_Bosnian_and_Serbo_Croatian_source_categories",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Bosnian)]]"
+      ],
+      "body_language_evidence": [
+        "''Graditelji svijeta: Balzak - Dikens - Dostojevski''  [Baumeister der Welt. Drei Meister: Balzac - Dickens - Dostojewski]. Translated into Bosnian / Serbo-Croatian by Isak Samokovlija and Miodrag Petrović. 156p. "
+      ]
+    },
+    {
+      "page_id": 1848,
+      "source_text_id": 56038,
+      "source_title": "Borba s demonom",
+      "namespace": 0,
+      "source_content_sha256": "05d939fa48c3793f27601292dbd155377d10bfb7ea2514fbf540e1646b86cf02",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "''Borba s demonom''  [Der Kampf mit dem Dämon / [[Graditelji svijeta]] [Baumeister der Welt]. Translated into Serbo-Croatian by Vladislav Šarić. In: [[Odabrana djela Stefana Zweiga]]. Vol. 6. Afterword by Ivo Hergešić. 707/(1)p.  [Reprinted 1967]"
+      ]
+    },
+    {
+      "page_id": 1851,
+      "source_text_id": 31191,
+      "source_title": "Mariia Antoaneta. Slika jednog osrednjeg karaktera",
+      "namespace": 0,
+      "source_content_sha256": "1c5d02138735f1bb02bff484f29261f591479669ebcb5f7888cce7eae0a9cbe5",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 1852,
+      "source_text_id": 55088,
+      "source_title": "Tri majstora",
+      "namespace": 0,
+      "source_content_sha256": "74c48ca94f1d29e376cd12c8867eff7b4b4f12a7fd0d3b13cbf66f59f540cb72",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "''Tri majstora'' [Drei Meister in [[Graditelji svijeta]] [Baumeister der Welt]. Translated into Serbo-Croatian by Vladislav (Vlatko) Šarić. In: [[Odabrana djela Stefana Zweiga]]. Vol. 6. Afterword by Ivo Hergešić. 707/(1)p. [Reprinted 1967]"
+      ]
+    },
+    {
+      "page_id": 1853,
+      "source_text_id": 55105,
+      "source_title": "Tri pjesnika svoga života",
+      "namespace": 0,
+      "source_content_sha256": "03d4bdd24b69925e9964f6479fb6288ab90c55d065d8c11a67ff8ca84f82eede",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "rei Dichter ihres Lebens in [[Graditelji svijeta]] [Baumeister der Welt]. Translated into Serbo-Croatian by Vladislav (Vlatko) Šarić. In: [[Odabrana djela Stefana Zweiga]]. Vol. 6.  Afterword by Ivo Hergešić. 707/(1)p. Rijeka: Otokar Keršovani, 1965 [Reprinted 1967]"
+      ]
+    },
+    {
+      "page_id": 1855,
+      "source_text_id": 55940,
+      "source_title": "Balzak. Romansirana biografija",
+      "namespace": 0,
+      "source_content_sha256": "debf22bb74d6c6986b22d2810a60eda5e308194c231a8d8a8e5295195af94e9e",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "both_Bosnian_and_Serbo_Croatian_source_categories",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Bosnian)]]"
+      ],
+      "body_language_evidence": [
+        "'''Bosnian'''",
+        "''Balzak'' [Balzac]. Translated into Bosnian / Serbo-Croatian by Nika Milićević. 403p. [Biblioteka Gama, 33]",
+        "'''Serbo-Croatian'''",
+        "''Balzak'' [Balzac]. Translated into Serbo-Croatian by Nika Milićević. In: [[Izabrana dela / Štefan Cvaig]]. Vol. 1. 415p.  "
+      ]
+    },
+    {
+      "page_id": 1857,
+      "source_text_id": 18951,
+      "source_title": "Magelan - Erazmo Roterdamski",
+      "namespace": 0,
+      "source_content_sha256": "3c653255b0e84a45b3a548580b61a0feb5826e439417d8cfc7a99c2b38599f26",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "[Magellan. Der Mann und seine Tat / Triumph und Tragik des Erasmus von Rotterdam]. In: [[Izabrana dela / Štefan Cvaig]]. 8 vols. Translated into Serbo-Croatian. Beograd: Izdavačka Radna Organizacija \\\"Rad\\\", 1983, Vol. 5"
+      ]
+    },
+    {
+      "page_id": 2582,
+      "source_text_id": 14080,
+      "source_title": "Essays / Individual Essays (Serbo-Croatian)",
+      "namespace": 14,
+      "source_content_sha256": "d7f628c992dd8e83d86fba01d5a1bc99eb70d203e2181c17e74f69ab9b42de9f",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "category_namespace_page_not_an_edition",
+      "literal_category_evidence": [
+        "[[Category:Essays / Individual Essays (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 4209,
+      "source_text_id": 42182,
+      "source_title": "Vreemdes in 'n vreemde wêreld",
+      "namespace": 0,
+      "source_content_sha256": "25e93fdbdbd298e79280e3ea59915fd23b51aeb9ce309906dea386116ac0cba2",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Volumes (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 4303,
+      "source_text_id": 31254,
+      "source_title": "Mariia Antoaneta / Serbo-Croatian",
+      "namespace": 0,
+      "source_content_sha256": "2adb0720fbf269758b436a2d96d95ce2b979615b0e37a9379351086f63ae6306",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Historical Studies / Volumes (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 4905,
+      "source_text_id": 34835,
+      "source_title": "Comestor, Johannes",
+      "namespace": 0,
+      "source_content_sha256": "5780c99714d2b047cb6583e1505ca8a25707e40df98db1c406cf2c5b7375c3cd",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "review_category_Afrikaans_reviewed_translation_English",
+      "literal_category_evidence": [
+        "[[Category:Secondary Literature / Authors (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "This is a review of Benjamin W. Huebsch's and Helmut Ripperger's English translation ''The World of Yesterday. An Autobiography'' of Stefan Zweig's autobiography ''Die Welt von Gestern. Erinnerungen eines Europäers''. While the English translation originally was published in 1943"
+      ]
+    },
+    {
+      "page_id": 4988,
+      "source_text_id": 35383,
+      "source_title": "D’Assonville (jr.), Viktor Edouard",
+      "namespace": 0,
+      "source_content_sha256": "e287ed833ffe6b5d8a377f4e96466a5ffbbb3e3ca65a94139f3e4e79134e6478",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "secondary_literature_contribution_category",
+      "literal_category_evidence": [
+        "[[Category:Secondary Literature / Authors (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": [
+        "John Calvin's behaviour during the legal proceedings against Michel Servet (pp. 81-82, in Afrikaans):"
+      ]
+    },
+    {
+      "page_id": 5324,
+      "source_text_id": 42218,
+      "source_title": "Die onsigbare Versameling",
+      "namespace": 0,
+      "source_content_sha256": "20d914067f7026b16b3712e82c0b0e6b7d3a29290c6d259ae2c46775ec7f9356",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 5325,
+      "source_text_id": 42216,
+      "source_title": "Boekmendel",
+      "namespace": 0,
+      "source_content_sha256": "ecfa6c0be850c42cf0818e3d2b380951a9f6e87a00e279c8a460f5cb1e00bcc3",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 5327,
+      "source_text_id": 42217,
+      "source_title": "Leporella / Afrikaans",
+      "namespace": 0,
+      "source_content_sha256": "3dc84e8f13529472ed53f206878148ff3baac8e8511fb92993fadb770177a8e9",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 5328,
+      "source_text_id": 42215,
+      "source_title": "Voorval by die Meer van Genève",
+      "namespace": 0,
+      "source_content_sha256": "d99d02aecb807a8d8826d9cc373fdb3bd5b3b6093c87d1d0943a89cdcc5671ab",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "source_page_category",
+      "literal_category_evidence": [
+        "[[Category:Fiction / Individual Stories (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 5330,
+      "source_text_id": 40807,
+      "source_title": "Weiss, Hymne",
+      "namespace": 0,
+      "source_content_sha256": "687dd46c9659f7c118748717d064d1c87ef21afa3e5f36d8ba4f283dea604789",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Afrikaans",
+        "languageCode": "af"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "secondary_literature_contribution_category",
+      "literal_category_evidence": [
+        "[[Category:Secondary Literature / Authors (Afrikaans)]]"
+      ],
+      "other_category_evidence": [],
+      "body_language_evidence": []
+    },
+    {
+      "page_id": 5411,
+      "source_text_id": 42309,
+      "source_title": "Šarić, Vlatko (Vladislav)",
+      "namespace": 0,
+      "source_content_sha256": "34b3afb7980a65815fd1ada5c85f2bcfc08967361d5cda5e9d82939303565c4c",
+      "before": {
+        "language": null,
+        "languageCode": null
+      },
+      "after": {
+        "language": "Serbo-Croatian",
+        "languageCode": "sh"
+      },
+      "conclusion": "source_category_supported",
+      "scope": "both_Bosnian_and_Serbo_Croatian_source_categories",
+      "literal_category_evidence": [
+        "[[Category:Secondary Literature / Authors (Serbo-Croatian)]]"
+      ],
+      "other_category_evidence": [
+        "[[Category:Secondary Literature / Authors (Bosnian)]]"
+      ],
+      "body_language_evidence": []
+    }
+  ],
+  "redirect_review": {
+    "method": "Resolve each seeAlso label through the published title index first and redirect map second; require an existing terminal ID. Independently traverse raw #REDIRECT chains for every added alias. Compare reference multisets because entry ordering differs.",
+    "reference_occurrences_before": 1213,
+    "reference_occurrences_after": 1213,
+    "unresolved_occurrences_before": 120,
+    "unresolved_occurrences_after": 12,
+    "newly_resolved_occurrences": 108,
+    "newly_resolved_distinct_labels": 36,
+    "newly_unresolved_occurrences": 0,
+    "redirect_map_before": 3389,
+    "redirect_map_after": 3549,
+    "map_net_change": 160,
+    "added_alias_keys": 1470,
+    "removed_alias_keys": 1310,
+    "changed_target_on_common_key": 0,
+    "all_added_aliases_raw_chain_checked": 1470,
+    "raw_chain_mismatches": [],
+    "dangling_published_redirect_targets": 0,
+    "remaining_unresolved": [
+      {
+        "referring_page_id": 297,
+        "literal_reference": "Sytë e vëllait të  përjetshëm"
+      },
+      {
+        "referring_page_id": 297,
+        "literal_reference": "Amok * To gramma mias agnōstēs   * To phengarolousto dromaki"
+      },
+      {
+        "referring_page_id": 306,
+        "literal_reference": "Die Mondscheingasse. Gesammelte  Erzählungen"
+      },
+      {
+        "referring_page_id": 310,
+        "literal_reference": "Vergessene Träume  / Die Erzählungen, Band 1"
+      },
+      {
+        "referring_page_id": 679,
+        "literal_reference": "Stefan Zweig. Oeuvres romanesques"
+      },
+      {
+        "referring_page_id": 681,
+        "literal_reference": "La Pitié dangereuse  / Individual Story"
+      },
+      {
+        "referring_page_id": 774,
+        "literal_reference": "Der Amokläufer   .  Amok"
+      },
+      {
+        "referring_page_id": 2088,
+        "literal_reference": "Prater, Donald A.|Donald A. Prater"
+      },
+      {
+        "referring_page_id": 2651,
+        "literal_reference": "Zvjezdani sati čovječanstva *   Jučerašnji svijet"
+      },
+      {
+        "referring_page_id": 6820,
+        "literal_reference": "Královská  hra"
+      },
+      {
+        "referring_page_id": 7232,
+        "literal_reference": "Verlaine, Paul / German"
+      },
+      {
+        "referring_page_id": 7388,
+        "literal_reference": "Der Sechzigjährige dankt  / Letztes Gedicht"
+      }
+    ],
+    "newly_resolved_labels": [
+      {
+        "literal_reference": "Der Amokläufer",
+        "occurrences": 33,
+        "target_page_id": 774
+      },
+      {
+        "literal_reference": "Maria Stuart",
+        "occurrences": 26,
+        "target_page_id": 4113
+      },
+      {
+        "literal_reference": "Yige mosheng nüzi de laixin",
+        "occurrences": 4,
+        "target_page_id": 954
+      },
+      {
+        "literal_reference": "Huatielu juyou shijie yiyi de yi fenzhong",
+        "occurrences": 4,
+        "target_page_id": 1167
+      },
+      {
+        "literal_reference": "Die Gouvernante",
+        "occurrences": 3,
+        "target_page_id": 310
+      },
+      {
+        "literal_reference": "Yu mogui bodou de ren: He'erdelin, Keleisite, Nicai",
+        "occurrences": 3,
+        "target_page_id": 1008
+      },
+      {
+        "literal_reference": "Vergessene Träume / Die Erzählungen, Band 1",
+        "occurrences": 2,
+        "target_page_id": 6167
+      },
+      {
+        "literal_reference": "Amok. Zhguchaia taina. Smiatenie chuvstv. Legendy",
+        "occurrences": 2,
+        "target_page_id": 1002
+      },
+      {
+        "literal_reference": "Yifeng mosheng nüzi de laixin",
+        "occurrences": 2,
+        "target_page_id": 412
+      },
+      {
+        "literal_reference": "Yige mosheng nüren de laixin",
+        "occurrences": 2,
+        "target_page_id": 413
+      },
+      {
+        "literal_reference": "Clarissa (VIST)",
+        "occurrences": 2,
+        "target_page_id": 4929
+      },
+      {
+        "literal_reference": "Stefan Zweig 1881-1942. Ausstellung in der Residenz in Salzburg 15. Juli bis 31. August 1961",
+        "occurrences": 1,
+        "target_page_id": 2081
+      },
+      {
+        "literal_reference": "Rahel rechtet mit Gott",
+        "occurrences": 1,
+        "target_page_id": 319
+      },
+      {
+        "literal_reference": "Yongheng de xiongdi de yanjing",
+        "occurrences": 1,
+        "target_page_id": 657
+      },
+      {
+        "literal_reference": "Stefan Zweig. L'oeuvre romanesque",
+        "occurrences": 1,
+        "target_page_id": 98
+      },
+      {
+        "literal_reference": "Der Amokläufer / Brief einer Unbekannten",
+        "occurrences": 1,
+        "target_page_id": 243
+      },
+      {
+        "literal_reference": "Yige nüren yishengzhong de ershisi xiaoshi",
+        "occurrences": 1,
+        "target_page_id": 416
+      },
+      {
+        "literal_reference": "Nicai",
+        "occurrences": 1,
+        "target_page_id": 1113
+      },
+      {
+        "literal_reference": "Stefan Zweig. Bilder, Texte, Dokumente",
+        "occurrences": 1,
+        "target_page_id": 2083
+      },
+      {
+        "literal_reference": "Balzac",
+        "occurrences": 1,
+        "target_page_id": 3334
+      },
+      {
+        "literal_reference": "Kindlers Literatur-Lexikon",
+        "occurrences": 1,
+        "target_page_id": 2184
+      },
+      {
+        "literal_reference": "Angst. Novelle",
+        "occurrences": 1,
+        "target_page_id": 2336
+      },
+      {
+        "literal_reference": "Ungeduld des Herzens. Roman",
+        "occurrences": 1,
+        "target_page_id": 54
+      },
+      {
+        "literal_reference": "Die Augen des ewigen Bruders",
+        "occurrences": 1,
+        "target_page_id": 297
+      },
+      {
+        "literal_reference": "Die Augen des ewigen Bruders. Eine Legende",
+        "occurrences": 1,
+        "target_page_id": 297
+      },
+      {
+        "literal_reference": "Rousseau, Jean-Jacques",
+        "occurrences": 1,
+        "target_page_id": 3331
+      },
+      {
+        "literal_reference": "Stefan Zweig (1881-1942). Jubiläumsausgabe in 12 Bänden",
+        "occurrences": 1,
+        "target_page_id": 69
+      },
+      {
+        "literal_reference": "Novela de ajedrez / Una partida de ajedrez",
+        "occurrences": 1,
+        "target_page_id": 2793
+      },
+      {
+        "literal_reference": "Whither Jewry",
+        "occurrences": 1,
+        "target_page_id": 5366
+      },
+      {
+        "literal_reference": "Aigner, Elisabeth",
+        "occurrences": 1,
+        "target_page_id": 6884
+      },
+      {
+        "literal_reference": "Brennendes Geheimnis. Erzählung",
+        "occurrences": 1,
+        "target_page_id": 249
+      },
+      {
+        "literal_reference": "Les deux Jumelles",
+        "occurrences": 1,
+        "target_page_id": 700
+      },
+      {
+        "literal_reference": "Tolstoi, Lev Nikolaevich",
+        "occurrences": 1,
+        "target_page_id": 6243
+      },
+      {
+        "literal_reference": "Stefan Zweig au cinéma - 4 DVD",
+        "occurrences": 1,
+        "target_page_id": 4772
+      },
+      {
+        "literal_reference": "Der Flüchtling. Episode vom Genfer See (VIST)",
+        "occurrences": 1,
+        "target_page_id": 782
+      },
+      {
+        "literal_reference": "Clarissa. Ein Romanentwurf (aus dem Nachlaß) (VIST)",
+        "occurrences": 1,
+        "target_page_id": 40
+      }
+    ],
+    "representative_source_routes": [
+      {
+        "alias": "Der Amokläufer",
+        "newly_resolved_reference_occurrences": 33,
+        "target_page_id": 774,
+        "target_source_title": "Der Amokläufer (VIST)",
+        "published_target_title": "Der Amokläufer (VIST)",
+        "chain": [
+          {
+            "page_id": 7478,
+            "source_text_id": 60517,
+            "source_title": "Der Amokläufer",
+            "source_content_sha256": "0197529f85a79645e98b476b5d5ba7d4ad2f20fa50df77dabb51d752979139f3",
+            "literal_redirect": "#REDIRECT [[Der Amokläufer (VIST)]]"
+          },
+          {
+            "page_id": 774,
+            "source_text_id": 61504,
+            "source_title": "Der Amokläufer (VIST)",
+            "source_content_sha256": "7473c75ba7cff894c91f3e88b65b74057ec58afce0cf2956db2797f612eb52cb",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Rahel rechtet mit Gott",
+        "newly_resolved_reference_occurrences": 1,
+        "target_page_id": 319,
+        "target_source_title": "Rahel rechtet mit Gott (VIST)",
+        "published_target_title": "Rahel rechtet mit Gott (VIST)",
+        "chain": [
+          {
+            "page_id": 7562,
+            "source_text_id": 61113,
+            "source_title": "Rahel rechtet mit Gott",
+            "source_content_sha256": "57467dddcf958b82b9896a6f81a8af3a30e301437c2adc7827d07f69af2124d7",
+            "literal_redirect": "#REDIRECT [[Rahel rechtet mit Gott (VIST)]]"
+          },
+          {
+            "page_id": 319,
+            "source_text_id": 61396,
+            "source_title": "Rahel rechtet mit Gott (VIST)",
+            "source_content_sha256": "ba7e854fd4f3d19d3345d633b72a276c3224fe37b18542c70d35aab76699c21a",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Whither Jewry",
+        "newly_resolved_reference_occurrences": 1,
+        "target_page_id": 5366,
+        "target_source_title": "Whither Jewry?",
+        "published_target_title": "Whither Jewry?",
+        "chain": [
+          {
+            "page_id": 6897,
+            "source_text_id": 51510,
+            "source_title": "Whither Jewry",
+            "source_content_sha256": "41372689e9de548af69af30e7be0d8a94e4de893ddffe2117951e4380b940ab1",
+            "literal_redirect": "#REDIRECT [[Whither Jewry?]]"
+          },
+          {
+            "page_id": 5366,
+            "source_text_id": 52346,
+            "source_title": "Whither Jewry?",
+            "source_content_sha256": "f524975af5dffa108b1b93c921f5f5e6e3c77974e4960efcb2e9c7aa49dbf22e",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Vergessene Träume / Die Erzählungen, Band 1",
+        "newly_resolved_reference_occurrences": 2,
+        "target_page_id": 6167,
+        "target_source_title": "Vergessene Träume. Die Erzählungen, Band 1",
+        "published_target_title": "Vergessene Träume. Die Erzählungen, Band 1",
+        "chain": [
+          {
+            "page_id": 7065,
+            "source_text_id": 53393,
+            "source_title": "Vergessene Träume / Die Erzählungen, Band 1",
+            "source_content_sha256": "4520e681cc1d4b10ce1d327443a62114f7873b3d56ed9ba98613fe9212457dcc",
+            "literal_redirect": "#REDIRECT [[Vergessene Träume. Die Erzählungen, Band 1]]"
+          },
+          {
+            "page_id": 6167,
+            "source_text_id": 50708,
+            "source_title": "Vergessene Träume. Die Erzählungen, Band 1",
+            "source_content_sha256": "a0a6d6144c780b64fb36a00cf7378384a4f3c1fa483f432d080ace226874aa17",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Yige mosheng nüzi de laixin",
+        "newly_resolved_reference_occurrences": 4,
+        "target_page_id": 954,
+        "target_source_title": "Yige mosheng nüzi de laixin / Volume",
+        "published_target_title": "Yige mosheng nüzi de laixin / Volume",
+        "chain": [
+          {
+            "page_id": 6141,
+            "source_text_id": 42698,
+            "source_title": "Yige mosheng nüzi de laixin",
+            "source_content_sha256": "f31fc6020ee656f742a526e396c076d8ad4129b4a81cde90d7cfe441af662b39",
+            "literal_redirect": "#REDIRECT [[Yige mosheng nüzi de laixin / Volume]]"
+          },
+          {
+            "page_id": 954,
+            "source_text_id": 42991,
+            "source_title": "Yige mosheng nüzi de laixin / Volume",
+            "source_content_sha256": "40d6e9994d7f1ecc5621122364e044cf186e7273c3c0b32e5c0736eb886cd6ca",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Clarissa (VIST)",
+        "newly_resolved_reference_occurrences": 2,
+        "target_page_id": 4929,
+        "target_source_title": "Clarissa / Catalan",
+        "published_target_title": "Clarissa / Catalan",
+        "chain": [
+          {
+            "page_id": 7610,
+            "source_text_id": 61224,
+            "source_title": "Clarissa (VIST)",
+            "source_content_sha256": "9b1fa5f50e0d9303011b2961eb0aed4af0866dfb00621576373d1253d9a6864f",
+            "literal_redirect": "#REDIRECT [[Clarissa / Catalan]]"
+          },
+          {
+            "page_id": 4929,
+            "source_text_id": 61225,
+            "source_title": "Clarissa / Catalan",
+            "source_content_sha256": "13ed0cf12d74eb741b6497f2100a2e5b38c9eff7bac8681cc19fe022905e317d",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Balzac",
+        "newly_resolved_reference_occurrences": 1,
+        "target_page_id": 3334,
+        "target_source_title": "Balzac / Czech",
+        "published_target_title": "Balzac / Czech",
+        "chain": [
+          {
+            "page_id": 5653,
+            "source_text_id": 39174,
+            "source_title": "Balzac",
+            "source_content_sha256": "a010240a372806e7b1f9c950b541596ddc6f2420a1592dea9f7e1365fd77bd82",
+            "literal_redirect": "#REDIRECT [[Balzac / Czech]]"
+          },
+          {
+            "page_id": 3334,
+            "source_text_id": 23592,
+            "source_title": "Balzac / Czech",
+            "source_content_sha256": "3d13ac26c4868c897c338c723243b4d88a437f7e19defd2bd20d9773d12e7a85",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_not_an_identity_assertion"
+      },
+      {
+        "alias": "Maria Stuart",
+        "newly_resolved_reference_occurrences": 26,
+        "target_page_id": 4113,
+        "target_source_title": "Al-Sulṭānī, Fāḍil / Assultani, Fadhil",
+        "published_target_title": "[1]",
+        "chain": [
+          {
+            "page_id": 35,
+            "source_text_id": 32902,
+            "source_title": "Maria Stuart",
+            "source_content_sha256": "0a566e7985c07c736b64cb38fb2c396b770d2b1a4fe61ebd02387db2db65f218",
+            "literal_redirect": "#REDIRECT [[Al-Sulṭānī, Fāḍil / Assultani, Fadhil]]"
+          },
+          {
+            "page_id": 4113,
+            "source_text_id": 34574,
+            "source_title": "Al-Sulṭānī, Fāḍil / Assultani, Fadhil",
+            "source_content_sha256": "e2066b1f6933445078b65566904ea3d537fe26a26685d16c143450ef6ed1afe5",
+            "literal_redirect": null
+          }
+        ],
+        "conclusion": "source_faithful_navigation_with_apparent_source_semantic_error"
+      }
+    ],
+    "semantic_limit": "A reachable source-navigation target is not a verified work identity or bibliographic relation. Maria Stuart has an apparently unrelated target; Clarissa and Balzac resolve to language-specific edition pages as the source directs."
+  },
+  "verification": {
+    "all57_before_after_values_matched": true,
+    "all57_literal_category_evidence_matched": true,
+    "all57_final_codes_present": true,
+    "all_reported_source_quotes_checked": true,
+    "redirect_counts_independently_recomputed": true,
+    "production_and_baseline_edits": false
+  }
+}

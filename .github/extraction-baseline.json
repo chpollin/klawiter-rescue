@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-05",
+  "sourceCommit": "1902abc",
+  "groundTruthSha256": "dab5a4dc1c59915e88243ea112c8e859ff9ffd154c553da51726765354503fb6",
+  "contract": "Exact inventory of remaining rule/expectation disagreements. Expected values remain in tests/test_sample_20.json and semantic diagnostics stay red. The default guard rejects new or changed incorrect values. Source-reviewed improvements are recorded below; never regenerate this list to accept a regression.",
+  "knownMismatches": [
+    {
+      "pageId": 4303,
+      "field": "publisher",
+      "actual": null
+    },
+    {
+      "pageId": 1800,
+      "field": "publisher",
+      "actual": "Translated by Dimitŭr Stoevski. 1st edition"
+    },
+    {
+      "pageId": 5746,
+      "field": "publisher",
+      "actual": "Juventud"
+    },
+    {
+      "pageId": 5746,
+      "field": "translator",
+      "actual": "Alfredo Cahn"
+    },
+    {
+      "pageId": 2866,
+      "field": "location",
+      "actual": null
+    },
+    {
+      "pageId": 5082,
+      "field": "publisher",
+      "actual": null
+    },
+    {
+      "pageId": 1891,
+      "field": "publisher",
+      "actual": null
+    },
+    {
+      "pageId": 1891,
+      "field": "translator",
+      "actual": "R. Gal’perina"
+    },
+    {
+      "pageId": 4445,
+      "field": "publisher",
+      "actual": null
+    },
+    {
+      "pageId": 4445,
+      "field": "location",
+      "actual": "Freiburg"
+    },
+    {
+      "pageId": 4376,
+      "field": "publisher",
+      "actual": null
+    },
+    {
+      "pageId": 1999,
+      "field": "publisher",
+      "actual": "Peter Lang Verlag"
+    },
+    {
+      "pageId": 4209,
+      "field": "publisher",
+      "actual": null
+    },
+    {
+      "pageId": 4209,
+      "field": "translator",
+      "actual": null
+    }
+  ],
+  "reviewedUpdates": [
+    {
+      "date": "2026-09-05",
+      "evidence": "knowledge/technical-remediation-2026-09-05.md",
+      "resolved": [
+        {
+          "pageId": 4303,
+          "field": "translator",
+          "actual": "Iso Velikanovi"
+        },
+        {
+          "pageId": 4303,
+          "field": "language",
+          "actual": null
+        },
+        {
+          "pageId": 1800,
+          "field": "translator",
+          "actual": "Dimit"
+        },
+        {
+          "pageId": 533,
+          "field": "language",
+          "actual": null
+        },
+        {
+          "pageId": 1999,
+          "field": "page_count",
+          "actual": 425
+        },
+        {
+          "pageId": 4209,
+          "field": "language",
+          "actual": null
+        }
+      ],
+      "partialImprovements": [
+        {
+          "pageId": 1891,
+          "field": "translator",
+          "before": "R. Gal",
+          "after": "R. Gal’perina",
+          "expectedRemains": null,
+          "reason": "Restores the literal name at the same source occurrence. The credit belongs to Mariia Stiuart, not demonstrably to the whole volume; scope remains a failing expectation."
+        }
+      ]
+    }
+  ]
+}

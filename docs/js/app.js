@@ -375,12 +375,7 @@ const App = {
 
     // Parse filters
     this.state.query = params.get('q') || '';
-    this.state.filters = {};
-    for (const [key, val] of params) {
-      if (App.FILTER_KEYS.includes(key)) {
-        this.state.filters[key] = val;
-      }
-    }
+    this.state.filters = this.filtersFromParams(params);
     this.applySortFromParams(params);
 
     const input = document.getElementById('search-input');
@@ -470,6 +465,19 @@ const App = {
   FILTER_KEYS: ['type', 'language', 'period', 'location', 'category',
     'publisher', 'translator', 'years', 'decade'],
 
+  NOT_RECORDED: 'Not recorded',
+
+  filtersFromParams(params) {
+    const filters = {};
+    for (const key of this.FILTER_KEYS) {
+      const values = params.getAll(key).filter(value => value !== '');
+      if (!values.length) continue;
+      filters[key] = (key === 'type' || key === 'language') && values.length > 1
+        ? [...new Set(values)] : values[0];
+    }
+    return filters;
+  },
+
   FILTER_LABELS: {
     type: 'Type', language: 'Language', period: 'Period', location: 'Location',
     category: 'Category', publisher: 'Publisher', translator: 'Translator',
@@ -527,7 +535,7 @@ const App = {
     if (this.state.browse) params.set('browse', '');
     if (this.state.query) params.set('q', this.state.query);
     for (const [k, v] of Object.entries(this.state.filters)) {
-      params.set(k, v);
+      for (const value of Array.isArray(v) ? v : [v]) params.append(k, value);
     }
     // Default sort stays out of the URL, so unsorted views keep clean hashes.
     if (this.state.sort && this.state.sort !== 'relevance') params.set('sort', this.state.sort);
@@ -544,13 +552,14 @@ const App = {
   // --- Filtering ---
   /** True while the entry passes every filter in `f`. */
   _matchesFilters(e, f, bounds) {
-    if (f.type && e.entryType !== f.type) return false;
-    if (f.language && e.language !== f.language) return false;
+    if (f.type && !(Array.isArray(f.type) ? f.type : [f.type]).includes(e.entryType)) return false;
+    if (f.language && !(Array.isArray(f.language) ? f.language : [f.language])
+      .includes(e.language || this.NOT_RECORDED)) return false;
     if (f.period && e.timePeriod !== f.period) return false;
     if (f.location && e.location !== f.location) return false;
     if (f.publisher && e.publisher !== f.publisher) return false;
     if (f.translator && !translatorKeys(e).includes(f.translator)) return false;
-    if (bounds && !(e.year >= bounds[0] && e.year <= bounds[1])) return false;
+    if (bounds && !(Number.isFinite(e.year) && e.year > 0 && e.year >= bounds[0] && e.year <= bounds[1])) return false;
     if (f.category && !(e.categories || []).includes(f.category)) return false;
     return true;
   },
@@ -710,7 +719,7 @@ const App = {
         document.title = `${this.state.customLabel} — ${base}`;
         return;
       }
-      if (f.type) { document.title = `${ENTRY_TYPE_LABELS[f.type] || f.type} \u2014 ${base}`; return; }
+      if (f.type) { document.title = `${this._filterDisplay('type', f.type)} \u2014 ${base}`; return; }
       if (this.state.query) { document.title = `\u201c${this.state.query}\u201d \u2014 ${base}`; return; }
       document.title = `Browse \u2014 ${base}`;
       return;
@@ -841,6 +850,7 @@ const App = {
    * as the raw key in one of them.
    */
   _filterDisplay(key, val) {
+    if (Array.isArray(val)) return val.map(value => this._filterDisplay(key, value)).join(' or ');
     if (key === 'type') return ENTRY_TYPE_LABELS[val] || val;
     if (key === 'period') return PERIOD_LABELS[val] || val;
     if (key === 'decade') return `${val}s`;

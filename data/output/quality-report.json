@@ -36,16 +36,16 @@
       "percentage": 89.8
     },
     "inLanguage": {
-      "count": 4254,
-      "percentage": 89.5
+      "count": 4309,
+      "percentage": 90.7
     },
     "languageCode": {
       "count": 0,
       "percentage": 0.0
     },
     "numberOfPages": {
-      "count": 2530,
-      "percentage": 53.3
+      "count": 2435,
+      "percentage": 51.3
     },
     "translator": {
       "count": 1920,
@@ -64,8 +64,8 @@
       "percentage": 99.3
     },
     "relation": {
-      "count": 610,
-      "percentage": 12.8
+      "count": 680,
+      "percentage": 14.3
     },
     "reprints": {
       "count": 418,
@@ -126,14 +126,14 @@
     "no": 34,
     "hi": 30,
     "sv": 28,
+    "et": 27,
     "hu": 22,
+    "sh": 22,
     "bn": 22,
     "hy": 21,
     "sk": 18,
     "yi": 17,
-    "ja": 16,
-    "vi": 16,
-    "fa": 16
+    "ja": 16
   },
   "time_period_distribution": {
     "contemporary": 1332,

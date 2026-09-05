@@ -5,9 +5,13 @@ title: "[antrag-eval] Gold-standard hook for <item class>"
 labels: antrag-eval
 ---
 
+## Proposal status
+
+This template proposes additional evaluation work. It does not describe an implemented feature or an approved release requirement. See [current status](../../knowledge/status.md) and [acceptance scope](../../knowledge/production-readiness.md).
+
 ## What this issue is for
 
-The expert-verified gold standard grows inside the editing tool as entries reach `approved`. This hook asks for the attachment point that lets a reference answer be bound to an item together with the checking depth that item class requires, fixed in advance rather than chosen per case:
+An entry marked `approved` records released field decisions; it is not automatically a complete, independently verified reference answer. This hook asks for the attachment point that lets a reference answer be bound to an item together with the checking depth that item class requires, fixed in advance rather than chosen per case:
 
 - the reference answer per field, with its source (raw wiki text, print version, authority record)
 - the item class it belongs to (single-edition page, multi-edition page, redirect, blanked stub, and so on)
@@ -25,4 +29,4 @@ Criterion-independent: the hook stores reference and required depth, it computes
 ## Open before implementation
 
 - Whether the reference lives with the fixture, with the correction store, or in its own file
-- How the work and edition levels are counted separately once the segmentation lands
+- How the work and edition levels are counted separately using the existing header-selected segmentation, including its uncovered compound pages

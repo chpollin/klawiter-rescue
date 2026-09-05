@@ -1,0 +1,106 @@
+{
+  "scope": "Narrow parser corrections, pending root integration and independent source review.",
+  "modified_versioned_files": [
+    "pipeline/lib/patterns.py",
+    "tests/test_patterns.py"
+  ],
+  "complete_audit": "test-results/parser-review/changes.json",
+  "audit_summary": "test-results/parser-review/summary.json",
+  "verification": "test-results/parser-review/verification.json",
+  "reproducible_read_only_command": "python -X utf8 test-results/parser-review/audit.py",
+  "final_effects": {
+    "stage_02_rows": 6725,
+    "changed_pages": 677,
+    "translator_changes": 536,
+    "translator_breakdown": {
+      "same_credit_unicode_truncation_repaired": 202,
+      "same_credit_trailing_continuation_removed": 330,
+      "same_credit_final_initial_period_preserved": 4
+    },
+    "page_count_removals": 95,
+    "category_language_gaps_filled": 57,
+    "changed_translator_occurrence_selection": 0,
+    "newly_filled_translator_gaps": 0,
+    "existing_language_scalar_switches": 0
+  },
+  "implementation_constraints": [
+    "Translator selection uses the exact legacy patterns and qualifying-name behavior. The Unicode name parser starts at that same selected source position; it never selects an earlier newly recognized credit.",
+    "Entirely missing translator credits remain unchanged for separate scope review.",
+    "Sentence boundaries, initials, attested abbreviated name parts, combining marks, apostrophes and wiki markup have targeted tests.",
+    "The added languages are fallback values only when no previously recognized category language exists. Multilingual page 2476 remains German under the existing compatibility choice.",
+    "Only prefixed p./pp. candidates with explicit reference/annotation/note labels or noncontiguous numeric lists are rejected as book extents.",
+    "Explicit number-before-unit extents, N/(M)p. numbered/unnumbered notation and standalone pp. N remain supported.",
+    "No publisher, location, edition-selection, general language-inference or scope model was changed.",
+    "A proposed name boundary at a period followed by an initial is quarantined by retaining the legacy value; no page-ID exceptions are used."
+  ],
+  "source_review": {
+    "page_count": "Inspected all 95 changed locator snippets. Each removed scalar is documented as a citation/reference/annotation/illustration locator or noncontiguous page list. The patch does not claim that all remaining prefixed p./pp. cases are valid extents.",
+    "translator": "Each change has both old and new exact selected source spans and the complete unchanged stage-02 source. All changed names retain the legacy-selected occurrence. New values are literal source substrings; 202 repair Unicode truncation, 330 terminate trailing prose, and four retain a final initial's period.",
+    "language": "All 57 changes fill previously empty category-language values with the exact source category language. There are no existing scalar switches."
+  },
+  "unresolved_scopes": [
+    {
+      "page_id": 1891,
+      "field": "translator",
+      "before": "R. Gal",
+      "after": "R. Gal’perina",
+      "status": "Name repair only; page-level volume scope remains unresolved.",
+      "evidence": [
+        "Mariia Stiuart [Maria Stuart. Translated by  R. Gal’perina. Verses translated by V. Levik]",
+        "Kazanova [Casanova. Translated by P. S. Bernshteĭn]"
+      ],
+      "required_expectation_work": "Do not treat a fixture null as proof of no translators. R. Gal’perina translates Mariia Stiuart, V. Levik its verses, and P. S. Bernshteĭn Kazanova. The source needs scoped expectations or an explicit unresolved scalar policy; this patch does not declare R. Gal’perina whole-volume translator."
+    },
+    {
+      "page_id": 285,
+      "field": "translator",
+      "before": "Alzir Hella and Olivier Bournac. Revised translation by Brigi",
+      "after": "Alzir Hella and Olivier Bournac",
+      "status": "Original credit is bounded without merging the revised-translation credit.",
+      "required_expectation_work": "Retain the publication/contribution association of the selected source occurrence. Multiple translations on this page remain distinct; the compatibility scalar is not a claim that one credit governs every manifestation."
+    },
+    {
+      "page_id": 2476,
+      "field": "language",
+      "before": "German",
+      "after": "German",
+      "status": "Existing scalar preserved.",
+      "required_expectation_work": "The new Estonian category support does not choose between the page's Estonian and German publications."
+    },
+    {
+      "page_id": 5746,
+      "field": "translator",
+      "before": "Alfredo Cahn",
+      "after": "Alfredo Cahn",
+      "status": "Existing scalar preserved.",
+      "required_expectation_work": "Editorial Juventud and Alfredo Cahn have distinct publication scopes. The lowercase organizational credit is still skipped by the legacy selector; this package does not adjudicate which credit belongs in a flat scalar."
+    },
+    {
+      "page_id": 2489,
+      "field": "translator",
+      "before": "Anna. S. Kulisher. Afterword by Evgeni",
+      "after": "Anna. S. Kulisher. Afterword by Evgeni",
+      "status": "Quarantined irregular source punctuation; legacy value retained.",
+      "evidence": [
+        "Translated by Anna. S. Kulisher. Afterword by Evgeniĭ Necheporuk."
+      ],
+      "required_expectation_work": "Independent review caught an unsafe reduction to Anna. A generic guard now retains the legacy value when the proposed sentence boundary is a period followed by an initial. The exact source credit Anna. S. Kulisher needs separate scoped correction; the trailing afterword text is not ratified as a translator name."
+    }
+  ],
+  "known_remaining_limits": [
+    "The translator selector still cannot resolve author/edition/contribution scope. Preservation of a legacy anchor prevents a new occurrence-selection policy but does not ratify the old flat choice.",
+    "Unsupported entirely missing translator credits and expanded-name brackets are intentionally unchanged.",
+    "Unlabelled single p./pp. locators can still be accepted by the legacy prefix rule. A blanket rejection would need a broader source review and policy for prefixed volume extents.",
+    "Book extent extraction still applies the existing pattern precedence across multiple publications. This package does not select a universally correct edition.",
+    "Language remains category-derived; explicit body labels such as Chechen and contextual German inference on page 72 are outside this patch."
+  ],
+  "validation": {
+    "affected_unit_tests_passed": 112,
+    "diff_check_passed": true,
+    "ruff": "Unavailable in environment: No module named ruff.",
+    "runtime": "System Python, authorized by root because pinned uv is unavailable.",
+    "production_pipeline_run": false,
+    "intermediates_regenerated": false
+  },
+  "authorization_boundary": "Root owns fixture, baseline, generated-data and documentation integration. No other versioned files were edited by this agent."
+}

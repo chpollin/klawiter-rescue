@@ -1,79 +1,43 @@
-"""
-Bridge that runs the Node-based check of the edit-layer frontend logic
-(tests/evidence_triage.test.js) inside the pytest suite. The JS file pins the
-evidence-span matching and triage-hint ordering added by increments 2 and 3;
-see its header. Skipped where node is unavailable.
-"""
+"""Run every frontend behavior test and syntax-check every shipped JS module."""
 
-import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
 
 PROJECT_ROOT = Path(__file__).parent.parent
+BEHAVIOR_TESTS = sorted((PROJECT_ROOT / "tests").glob("*.test.js"))
+JS_MODULES = sorted((PROJECT_ROOT / "docs" / "js").glob("*.js"))
 
 
-def test_evidence_and_triage_logic():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available")
+def test_frontend_test_inventory_is_nonempty():
+    assert BEHAVIOR_TESTS, "No frontend behavior tests discovered"
+    assert JS_MODULES, "No shipped frontend modules discovered"
+
+
+@pytest.mark.parametrize("path", BEHAVIOR_TESTS, ids=lambda p: p.name)
+def test_frontend_behavior(node_executable, path):
     result = subprocess.run(
-        [node, str(PROJECT_ROOT / "tests" / "evidence_triage.test.js")],
+        [node_executable, "--test", str(path)],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=60,
         cwd=PROJECT_ROOT,
     )
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-def test_contested_claim_export_and_display():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available")
+@pytest.mark.parametrize("path", JS_MODULES, ids=lambda p: p.name)
+def test_frontend_syntax(node_executable, path):
     result = subprocess.run(
-        [node, str(PROJECT_ROOT / "tests" / "contested_claims.test.js")],
+        [node_executable, "--check", str(path)],
         capture_output=True,
         text=True,
-        cwd=PROJECT_ROOT,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-
-
-def test_routing_guard_and_edit_gate():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available")
-    result = subprocess.run(
-        [node, "--test", str(PROJECT_ROOT / "tests" / "routing_guard.test.js")],
-        capture_output=True,
-        text=True,
-        cwd=PROJECT_ROOT,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-
-
-def test_curation_queue_ordering():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available")
-    result = subprocess.run(
-        [node, "--test", str(PROJECT_ROOT / "tests" / "curation_queue.test.js")],
-        capture_output=True,
-        text=True,
-        cwd=PROJECT_ROOT,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-
-
-def test_explore_logic():
-    node = shutil.which("node")
-    if not node:
-        pytest.skip("node not available")
-    result = subprocess.run(
-        [node, "--test", str(PROJECT_ROOT / "tests" / "explore_logic.test.js")],
-        capture_output=True,
-        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=15,
         cwd=PROJECT_ROOT,
     )
     assert result.returncode == 0, result.stdout + result.stderr

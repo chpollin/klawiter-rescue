@@ -72,8 +72,7 @@ const Explore = {
     this._preprocess();
     this._renderScaffolding();
     this._bindModeTabs();
-    // #stats opens the last mode used in this session, the first one otherwise;
-    // there is no overview layer above the visualizations any more.
+    // #stats resumes the last view; a fresh session starts at the overview.
     this.setMode(this.MODES.includes(this.mode) ? this.mode : this.MODES[0]);
     this._initializing = false;
     this.updateExploreURL(false);
@@ -147,27 +146,29 @@ const Explore = {
   // -------------------------------------------------------------------------
 
   /**
-   * The frame every mode draws into: mode choice on top, one persistent
-   * sidebar on the left carrying filters, chips, the coverage notes and the
-   * selection, and the drawing surface taking the whole remaining width.
+   * Shared modes and selection bar. The overview uses the full width; Map
+   * and Connections keep their supporting facets and selection in a sidebar.
    */
   _renderScaffolding() {
     const container = document.getElementById('view-stats');
 
     container.innerHTML = `
       <div class="explore-head">
-        <h1 class="page-title">Explore</h1>
+        <div><h1 class="page-title">Explore the bibliography</h1>
+          <p class="explore-intro">Follow patterns in the catalogue, then read the entries behind them.</p></div>
         <div class="explore-mode-tabs" role="group" aria-label="Visualization">
-          <button type="button" class="mode-tab" data-mode="timeline" aria-pressed="false">Timeline</button>
-          <button type="button" class="mode-tab" data-mode="geography" aria-pressed="false">Geography</button>
+          <button type="button" class="mode-tab" data-mode="timeline" aria-pressed="false">Overview</button>
+          <button type="button" class="mode-tab" data-mode="geography" aria-pressed="false">Map</button>
           <button type="button" class="mode-tab" data-mode="network" aria-pressed="false">Connections</button>
         </div>
       </div>
 
+      <div class="explore-selection-bar" aria-label="Current selection">
+        <div id="explore-filter-chips" class="explore-filter-chips"></div>
+      </div>
       <div class="explore-layout">
         <aside class="explore-sidebar" aria-label="Filters and selection">
           <div id="explore-facets"></div>
-          <div id="explore-filter-chips" class="explore-filter-chips"></div>
           <div id="explore-notes" class="explore-notes"></div>
           <div class="explore-detail hidden" id="explore-detail">
             <div class="explore-detail-summary" id="explore-detail-content"></div>
@@ -300,7 +301,7 @@ const Explore = {
   /** A sidebar click; the value arrives as the string the attribute carried. */
   setFacet(key, raw) {
     if (key === 'decade') {
-      // A decade and a brushed year range address the same axis.
+      // A decade and an entered year range address the same axis.
       this.filters.yearRange = [null, null];
       const timeline = this._module('timeline');
       if (timeline) timeline.zoomedDomain = null;
@@ -327,6 +328,8 @@ const Explore = {
 
   setMode(mode) {
     this.mode = mode;
+    const layout = document.querySelector('.explore-layout');
+    if (layout) layout.classList.toggle('dashboard-layout', mode === 'timeline');
 
     document.querySelectorAll('.mode-tab').forEach(tab => {
       const active = tab.dataset.mode === mode;
@@ -367,6 +370,9 @@ const Explore = {
   /** Apply one filter set to one record set; the facet counts reuse this. */
   _applyFilters(entries, f) {
     let filtered = entries;
+    if (f.decade != null || f.yearRange.some(value => value != null)) {
+      filtered = filtered.filter(e => Number.isFinite(e.year) && e.year > 0);
+    }
     if (f.languages.length) {
       filtered = filtered.filter(e => f.languages.includes(e.language || this.NOT_RECORDED));
     }
@@ -420,18 +426,8 @@ const Explore = {
     this._onFilterChange();
   },
 
-  setProvenance(enabled) {
-    this.filters.showProvenance = enabled;
-    const timeline = this._module('timeline');
-    if (this.mode === 'timeline' && timeline) {
-      timeline.showProvenance = enabled;
-      if (timeline.entries) timeline.render(timeline.entries);
-    }
-    // Geography/Network: no provenance rendering yet — toggle state persists via filters
-    this.updateExploreURL(false);
-  },
-
   _onFilterChange() {
+    const focused = document.activeElement && document.activeElement.dataset.dashboardFocus;
     this._renderFilterChips();
     const data = this.visibleEntries();
     this._renderActiveMode(data);
@@ -442,6 +438,16 @@ const Explore = {
       detail: { filters: { ...this.filters }, filtered: data.length, mode: this.mode },
     }));
     this.updateExploreURL(false);
+    if (focused) {
+      let target = [...document.querySelectorAll('[data-dashboard-focus]')]
+        .find(el => el.dataset.dashboardFocus === focused);
+      if (!target || target.disabled) {
+        target = this.mode === 'timeline'
+          ? document.querySelector('#viz-timeline [name="from"]')
+          : document.querySelector('.mode-tab.active');
+      }
+      if (target) target.focus({ preventScroll: true });
+    }
   },
 
   /**
@@ -467,7 +473,7 @@ const Explore = {
   /**
    * The chip bar and the facet lists show one and the same selection, so the
    * single entry point redraws both; the views that set a filter directly
-   * (timeline brush, decade playback) call this and stay in step.
+   * (year range, map playback) call this and stay in step.
    */
   _renderFilterChips() {
     this._renderSidebar();
@@ -476,45 +482,38 @@ const Explore = {
     const f = this.filters;
     const chips = [];
 
-    const chip = (label, value, onclick) =>
-      `<span class="chip">${label}: ${value} <button type="button" aria-label="Remove filter ${label}" onclick="${onclick}">&times;</button></span>`;
+    const chip = (label, value, key, raw) =>
+      `<span class="chip">${label}: ${value} <button type="button" aria-label="Remove ${esc(label)}: ${esc(String(raw == null ? value : raw))}"
+        data-explore-clear="${esc(key)}"${raw == null ? '' : ` data-value="${esc(String(raw))}"`}>&times;</button></span>`;
 
     for (const lang of f.languages) {
       chips.push(chip('Language', esc(lang),
-        `Explore.toggleFilter('languages','${lang.replace(/'/g, "\\'")}')`));
+        'languages', lang));
     }
     for (const type of f.types) {
       chips.push(chip('Type', esc(ENTRY_TYPE_LABELS[type] || type),
-        `Explore.toggleFilter('types','${type}')`));
+        'types', type));
     }
     if (f.yearRange[0] != null || f.yearRange[1] != null) {
       chips.push(chip('Years', `${f.yearRange[0] || '?'}–${f.yearRange[1] || '?'}`,
-        `Explore.clearFilter('yearRange')`));
+        'yearRange'));
     }
-    if (f.decade != null) chips.push(chip('Decade', `${f.decade}s`, `Explore.clearFilter('decade')`));
-    if (f.location) chips.push(chip('Location', esc(f.location), `Explore.clearFilter('location')`));
+    if (f.decade != null) chips.push(chip('Decade', `${f.decade}s`, 'decade'));
+    if (f.location) chips.push(chip('Location', esc(f.location), 'location'));
     if (f.country) {
       const geo = this._module('geography');
       const name = (geo && geo._countryNames[f.country]) || f.country;
-      chips.push(chip('Country', esc(name), `Explore.clearFilter('country')`));
+      chips.push(chip('Country', esc(name), 'country'));
     }
-    if (f.publisher) chips.push(chip('Publisher', esc(f.publisher), `Explore.clearFilter('publisher')`));
-    if (f.translator) chips.push(chip('Translator', esc(f.translator), `Explore.clearFilter('translator')`));
+    if (f.publisher) chips.push(chip('Publisher', esc(f.publisher), 'publisher'));
+    if (f.translator) chips.push(chip('Translator', esc(f.translator), 'translator'));
     if (f.period) {
-      chips.push(chip('Period', esc(PERIOD_LABELS[f.period] || f.period), `Explore.clearFilter('period')`));
+      chips.push(chip('Period', esc(PERIOD_LABELS[f.period] || f.period), 'period'));
     }
 
-    if (chips.length) {
-      chips.push(`<button type="button" class="chip-clear" onclick="Explore.clearAllFilters()">Clear all</button>`);
-    }
-
-    // Provenance toggle — always visible, not a removable chip
-    const provChecked = f.showProvenance ? 'checked' : '';
-    const provToggle = `<label class="explore-provenance-toggle" title="Show data quality overlay (Timeline only)">
-      <input type="checkbox" ${provChecked} onchange="Explore.setProvenance(this.checked)"> Data quality
-    </label>`;
-
-    el.innerHTML = provToggle + chips.join(' ');
+    el.innerHTML = `<span class="explore-selection-label">Selection</span>`
+      + (chips.length ? chips.join(' ') : '<span class="explore-selection-empty">All entries · select a bar to explore</span>')
+      + `<button type="button" class="chip-clear" data-explore-reset data-dashboard-focus="reset-filters" ${chips.length ? '' : 'disabled'}>Reset filters</button>`;
   },
 
   updateSelection(entries) {
@@ -542,7 +541,9 @@ const Explore = {
   navigateToResults(filters) {
     const params = new URLSearchParams();
     for (const [k, v] of Object.entries(filters)) {
-      if (v) params.set(k, v);
+      for (const value of Array.isArray(v) ? v : [v]) {
+        if (value) params.append(k, value);
+      }
     }
     location.hash = params.toString();
   },
@@ -582,18 +583,31 @@ const Explore = {
   },
 
   restoreFromHash(mode, params) {
+    // A bookmarked selection replaces session state, including absent filters.
+    this.filters = {
+      languages: [], types: [], yearRange: [null, null],
+      decade: null, location: null, country: null,
+      publisher: null, translator: null, period: null, showProvenance: false,
+    };
     // Restore filter state from URL parameters
     const lang = params.get('language');
     if (lang) this.filters.languages = lang.split(',');
     const type = params.get('type');
     if (type) this.filters.types = type.split(',');
+    const yearValue = value => /^\d{1,4}$/.test(value || '') && Number(value) > 0 ? Number(value) : null;
     const years = params.get('years');
     if (years) {
-      const [y0, y1] = years.split('-').map(v => v ? parseInt(v, 10) : null);
-      this.filters.yearRange = [y0, y1];
+      const parts = years.split('-');
+      if (parts.length === 2) {
+        const [y0, y1] = parts.map(yearValue);
+        if (y0 == null || y1 == null || y0 <= y1) this.filters.yearRange = [y0, y1];
+      }
     }
-    const decade = params.get('decade');
-    if (decade) this.filters.decade = parseInt(decade, 10);
+    const decade = yearValue(params.get('decade'));
+    if (decade != null && decade % 10 === 0) {
+      this.filters.decade = decade;
+      this.filters.yearRange = [null, null];
+    }
     const loc = params.get('location');
     if (loc) this.filters.location = loc;
     const country = params.get('country');
@@ -744,8 +758,8 @@ const Explore = {
   _resultParams() {
     const f = this.filters;
     const params = {};
-    if (f.languages.length) params.language = f.languages[0];
-    if (f.types.length) params.type = f.types[0];
+    if (f.languages.length) params.language = [...f.languages];
+    if (f.types.length) params.type = [...f.types];
     if (f.location) params.location = f.location;
     if (f.publisher) params.publisher = f.publisher;
     if (f.translator) params.translator = f.translator;
@@ -776,6 +790,14 @@ const Explore = {
 // One delegated listener for the sidebar; the facet lists are rebuilt on every
 // filter change, so per-element handlers would have to be rebound each time.
 document.addEventListener('click', (ev) => {
+  const reset = ev.target.closest('[data-explore-reset]');
+  if (reset) { Explore.clearAllFilters(); return; }
+  const clear = ev.target.closest('[data-explore-clear]');
+  if (clear) {
+    if (clear.dataset.value != null) Explore.toggleFilter(clear.dataset.exploreClear, clear.dataset.value);
+    else Explore.clearFilter(clear.dataset.exploreClear);
+    return;
+  }
   const more = ev.target.closest('#explore-facets [data-facet-more]');
   if (more) { Explore.toggleFacetExpand(more.dataset.facetMore); return; }
   const item = ev.target.closest('#explore-facets [data-facet]');

@@ -78,10 +78,8 @@ Important rules:
 """
 
 
-# Select 10 diverse entries by index from test_sample_20.json
-# Covers: non-DE publisher, location-only, German negative, Chinese, film,
-#         standard header, French, short text, multi-edition, Arabic
-JUDGE_ENTRY_INDICES = [0, 1, 4, 5, 6, 8, 9, 12, 14, 15]
+# Stable source IDs preserve the historical sample when fixtures are reordered.
+JUDGE_PAGE_IDS = (4303, 1800, 4473, 2866, 5082, 634, 7263, 4376, 533, 162)
 
 
 def _extract_all_fields(entry):
@@ -125,9 +123,8 @@ class TestLLMJudge:
     @pytest.fixture(scope="class")
     def judge_results(self, real_entries, gemini_client):
         """Run extraction + judgment for selected entries (once per class)."""
-        selected = [
-            real_entries[i] for i in JUDGE_ENTRY_INDICES if i < len(real_entries)
-        ]
+        by_id = {entry["page_id"]: entry for entry in real_entries}
+        selected = [by_id[pid] for pid in JUDGE_PAGE_IDS]
 
         entries_for_judge = []
         for entry in selected:
@@ -136,7 +133,7 @@ class TestLLMJudge:
                 {
                     "page_id": entry["page_id"],
                     "label": entry["label"],
-                    "text": entry["text"][:500],
+                    "text": entry["text"],
                     "extracted": extracted,
                 }
             )
@@ -144,10 +141,9 @@ class TestLLMJudge:
         result = _call_judge(gemini_client, entries_for_judge)
         return result.results
 
-    # Known limitations that the LLM judge will flag as "wrong":
-    # - title: '''[year]: Publisher''' headers returned as title via first-line fallback
-    # - publisher/translator: truncated by mojibake in fixture text
-    # - page_count: start page extracted from "pp. X-Y" ranges
+    # Historical live-judge inventory, not the source-reviewed oracle. Complete
+    # fixture inputs changed on 2026-09-05; a live re-evaluation is still needed.
+    # The deterministic field diagnosis is maintained in test_real_entries.py.
     _KNOWN_WRONG = {
         (4303, "title"),
         (1800, "title"),

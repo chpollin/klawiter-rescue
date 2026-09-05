@@ -141,7 +141,7 @@ CATEGORY_TYPE_MAP = {
     "Newspapers": "newspaper",
 }
 
-# ISO 639-1 language mapping
+# BCP-47 language subtags, retaining historical source labels.
 LANGUAGE_MAP = {
     "German": "de",
     "English": "en",
@@ -169,6 +169,9 @@ LANGUAGE_MAP = {
     "Korean": "ko",
     "Serbian": "sr",
     "Croatian": "hr",
+    # IANA retains sh for the macrolanguage; the source does not narrow it.
+    "Serbo-Croatian": "sh",
+    "Afrikaans": "af",
     "Bulgarian": "bg",
     "Slovak": "sk",
     "Slovenian": "sl",

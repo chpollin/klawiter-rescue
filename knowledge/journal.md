@@ -7,17 +7,79 @@ project:
 method:
   name: Promptotyping
   url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
-status: complete
+status: historical
 language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-08-27
+updated: 2026-09-05
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
+
+---
+
+## 2026-09-05 — Session 34: Controlled closeout
+
+The operator requested an orderly end to the session, current project Markdown, an Obsidian ACTIVE-WORK update, and commit and push of the reviewed work. The matching implementation, generated gate evidence and maintained guides form the repository handoff. Earlier session and evaluation records retain their original pre-commit observations.
+
+The final implementation is covered by Session 33's locked validation, with 615 default tests passing without skips, 53 Node tests passing and 31 retained semantic failures. Documentation-only closeout does not change those executable results. The closure checks cover Markdown links and evaluation hashes, the staged diff, and the gate manifests against the committed HEAD. Git history and the [Tests workflow](https://github.com/chpollin/klawiter-rescue/actions/workflows/tests.yml) provide the delivery and remote validation record.
+
+Obsidian carries the current scholarly work state, project navigation and a completed-work note. Repository evidence remains authoritative for technical details. Unrelated concurrent Vault edits are outside this commit's scope. Commit/push authorization covers this handoff; scholarly acceptance, citation and release decisions remain open under [Production readiness](production-readiness.md).
+
+Resume with the [five-case owner worksheet](evaluations/2026-09-05/owner-evaluation.md) and the prioritized [current work list](status.md). The next implementation should complete one publication-to-source-to-canonical-correction-to-citation path and validate it with a real source-bound fixture.
+
+---
+
+## 2026-09-05 — Session 33: Source repairs, dashboard and maintained knowledge
+
+**Round.** The operator authorized autonomous implementation after the review, then requested a linked information-visualization dashboard and consolidation of project Markdown/knowledge. Independent agents reviewed source changes, dashboard invariants and documentation/CI contracts.
+**Changed.** The source-preserving parser repairs improve Unicode/name boundaries, remove explicit page locators from extent and add category language gaps with registered subtags. Literal redirect chains replace decorated targets. RDF contexts/vocabulary retain nested summary and contested source evidence. Correction replay validates envelopes, positive IDs and timestamp ordering and fails before partial frontend persistence. Semantic oracle hash/inventory and exact title variants close demonstrated false-pass paths; six resolved rule cases were retired with source review. The CI verifier now compares stable reviewed gate manifests from HEAD and every referenced input/artifact, including ignored candidates/queues, with 22 mutation tests.
+**Interface.** Explore now opens a coordinated dashboard at the compatible `#stats/timeline` route: entry/coverage cards, neutral decade histogram, linked language/type rankings, year inputs, filter chips and matching-entry preview. Map and Connections remain available. Multiple-value/missing-language handover, null-year boundaries, malformed restored dates, repeated queue listeners, mobile navigation, headings, contrast and keyboard focus were corrected. The old timeline implementation and obsolete styling were reduced. Counts explicitly describe source-page entries.
+**Knowledge.** README and maintained guides have distinct responsibilities; [Status](status.md) owns current evidence and next steps, and [Documentation](documentation.md) owns Markdown maintenance. Historical reviews/journal/data-side reports are preserved with current-guide pointers; proposal templates no longer imply implemented evaluation features. Directory guides are English and reflect actual runner/patch behaviour. [Technical remediation](technical-remediation-2026-09-05.md) and the expanded evaluation manifest preserve reviewed changes, screenshots, source evidence and validation.
+**Verified.** Locked uv installation succeeded. Final strict pytest: 615 passed, zero skips, 174 deselected; semantic: 139 passed and 31 retained failures. All 53 Node behaviour tests and 15 JS syntax checks pass. Ruff/pre-commit, compileall and diff checks pass. Full frozen production run: 176.4s, Gate 1/2 passed, 117 compared deterministic artifacts byte-identical against the reviewed prior build. The manifest verifier passes against the explicit local reviewed snapshot; no remote CI job was triggered. Browser QA at 320/390/1440px has no horizontal overflow or page errors; exact handover/reload, ranges and keyboard paths pass. Independent review verified 120 real-corpus filter combinations and rechecked the date/focus fixes.
+**Decided.** Technical resolution is not scholarly correctness: the unchanged Maria Stuart redirect sends 26 references to an apparently unrelated review, now documented for adjudication. Name corrections on 1891 and 285 preserve the source occurrence but do not resolve publication scope; their expectations stay red. A failed prototype truncation of Anna. S. Kulisher was caught and quarantined generically. No raw source or released domain decision changed. The completion assessment remains approximately 6/10 because bibliographic modelling, canonical correction/provenance propagation and scholarly product acceptance remain open.
+**Open.** Follow the finite work list in Status: public release/source scope, scoped publication/contribution facts, canonical curation, edition/evidence navigation and precise field-review meaning, source redirect adjudication, broader semantic and usability/accessibility/performance validation. Commit the already reviewed manifests with matching implementation/input/artifact changes when preparing the reviewable release change; no commit, push or deployment was made here.
+
+**The one next step.** Use the five-case owner worksheet to settle concrete source scopes while implementing one complete publication → evidence → canonical correction → citation path, with end-to-end acceptance assertions.
+
+---
+
+## 2026-09-05 — Session 32: Blind source reviews and owner evaluation
+
+**Round.** The operator asked what to evaluate personally and whether subagents should verify the project. Two separate agents reviewed all twenty complete source texts without the current expectations, baselines or each other's findings; a third reviewed the tests and downstream values.
+**Changed.** [[independent-evaluation-2026-09-05]] consolidates the findings. Full source-only input, both source reviews, test review, downstream comparison and five owner acceptance cases are preserved under `knowledge/evaluations/2026-09-05/`, with a hash manifest. The current fixture review and testing guide now qualify the earlier twenty-defect description. No production code, test expectations, decision inputs or generated product artifacts changed in this round.
+**Verified.** Both source reviews cover all twenty IDs and five fields; their evidence snippets were checked verbatim against the shared input. The test reviewer reproduced 157 focused passing tests without skips and 133 passing / 37 failing semantic assertions without skips. Collection confirmed 521 default-selected tests; the full strict suite was not repeated after documentation-only changes. Five of the twenty rule mismatches already exactly match expected values in the shipped frontend through frozen enrichment. Pinned uv/Ruff and full pinned reproduction remain unverified locally.
+**Decided.** Thirty-seven failing assertions do not establish thirty-seven product data errors. Some mismatches reflect competing scalar-selection policies across valid publications. The ratified work/edition decomposition remains in force; the owner should evaluate concrete boundaries, roles and research usability, not reapprove that principle. Agent agreement supports source interpretation but does not replace scholarly adjudication.
+**Open.** Enforce the frontend semantic fixture's recorded hash and exact inventory; prevent arbitrary title suffixes from passing; retire resolved baseline cases; express ambiguous expectations at publication/contribution scope; obtain feedback on the five acceptance cases; correct confirmed source-role and Unicode defects with downstream verification.
+
+**The one next step.** Close the two demonstrated false-pass paths in the semantic test guard while the owner evaluates the concrete bibliographic and interface cases.
+
+---
+
+## 2026-09-05 — Session 31: Complete source fixtures and explicit extraction failures
+
+**Round.** The operator authorized the next test-improvement step: restore source context, activate skipped checks and assert null fields.
+**Changed.** All twenty fixture texts were restored from complete normalized sources and checked directly against their BLOB/text IDs and stage-01 rows. The fixture now carries text hashes, source-line selectors, one hundred reviewed expectations and notes explaining citation scope and missing values. Parser-derived `existing` values and `needed` hints were removed. The ten range/truncation skips disappeared; page 162 was corrected to its explicit 254-page numbered extent, while the p. 425 locator on page 1999 is diagnosed as an incorrect count. The restored fixtures expose twenty existing rule defects (eleven missing values and nine incorrect ones); their source expectations and observed failures are separate. The default tests protect every field against new or changed failures using `.github/extraction-baseline.json`, and one hundred exact semantic assertions retain the defects as red diagnostics. The baseline is tied to the reviewed fixture hash and replacement-failure tests cover it. Stage-02 source rows are shared with edition tests. The optional LLM judge now selects stable page IDs and receives full texts; its historic live-judgment inventory still needs recalibration. [[test-fixture-review-2026-09-05]] records the concrete cases.
+**Verified.** The strict default suite passed 521 tests with no skips, 174 deselections and one existing RDFLib deprecation warning in 20.73 s. Consolidating three repeated structural extractions into one per entry reduced the test count while the field assertions and source evidence expanded. The diagnostic semantic suite ran 170 assertions: 133 passed and 37 failed, comprising twenty newly exposed rule failures and the seventeen previous frontend failures. JUnit reports are in `test-results/`. Python compilation and whitespace checks passed. No production code or data artifacts changed, and no live LLM request was made. A further pinned Ruff download attempt timed out; uv/Ruff and a pinned CI run remain unverified locally.
+**Decided.** The new case inventory describes failures already present in unchanged production code; it must not become a way to accept a future deterioration. Known observed values never serve as correct expected values. The test fixture scope is documented per record: it does not resolve the project's multi-edition modeling problem or estimate corpus-wide accuracy.
+**Open.** Correct publisher context/boundaries, Unicode translator names, page locators versus extent, and missing language coverage. Rebuild downstream artifacts and validate the gates for each correction package. The remaining frontend/model review and browser acceptance work are still open.
+
+**The one next step.** Implement the source-reviewed parser corrections, beginning with publisher context and truncated translator names, with a corpus-wide change report before updating generated artifacts.
+
+---
+
+## 2026-09-05 — Session 30: Completion review and test refactoring
+
+**Round.** Review of extraction, model, frontend and acceptance evidence, followed by the operator's request to optimize and refactor the tests.
+**Changed.** [[project-review-2026-09-05]] records the verified product gaps and acceptance criteria. Tests now discover all seven JavaScript behavior files and check all fifteen shipped JS modules. Required committed inputs fail when missing or malformed; `--require-test-inputs` and CI also require Node and regenerated stage CSVs, with isolated pytest runs proving those failure paths. Shared JSON/CSV fixtures and an ID index remove repeated reads. Edition tests share one build with per-test deep copies. Reconciliation retains its full integration build, checks occurrence completeness for all 101 agent subjects, and exercises unresolved person/publisher decisions using complete source evidence for each selected subject. Census compares the exact frontend/canonical non-redirect ID multisets. The semantic guard now permits only the existing page/field/value deviations recorded in `.github/semantic-baseline.json`, with replacement-regression checks. CI writes separate default and diagnostic semantic JUnit reports; only the diagnostic step is non-blocking.
+**Verified.** On local Python 3.11.9 / Node 22.14.0, the final strict default run passed 527 tests, skipped the ten documented legacy fixture cases and deselected 74 semantic/LLM cases in 20.66 s. The pre-change default run took 35.17 s with 497 passing tests on the same machine; these are observed runs, not a controlled benchmark. The separate semantic run remained 53 passing and exactly 17 failing field assertions, matching the frozen cases. Python compilation, workflow YAML parsing and `git diff --check` passed. The final default JUnit report is in the ignored `test-results/` directory. One RDFLib deprecation warning remains. The pinned uv environment and Ruff were unavailable locally; installation/download attempts failed, so pinned lint/format checks and the full CI reproduction job remain unverified in this session.
+**Decided.** Product completion remains approximately 6/10; a stronger green test gate does not resolve the data-model and interface defects. Preserve the known semantic failures as visible diagnostics and prohibit replacing them with new errors under an unchanged count. Repair legacy expectations only against independently reviewed source context, never by copying current extractor output. Raw inputs and generated product artifacts were not changed by the refactor.
+**Open.** Repair the six range-label and four truncated-language fixture cases, strengthen null/LLM-only assertions, correct the 17 semantic failures, add browser acceptance coverage for filters/mobile navigation/queue lifecycle/export/curation, and run pinned checks in CI. The larger model/provenance/frontend completion work remains in the review.
+
+**The one next step.** Restore complete source context and independently verified expectations for the twenty-entry extraction sample, then remove its ten skips and assert negative results explicitly.
 
 ---
 
