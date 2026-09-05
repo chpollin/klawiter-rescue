@@ -135,6 +135,8 @@ Gate 1 and Gate 2 rebuild their core documents inside the validators. CI then ru
 
 Freeze a reviewed semantic change by committing both current gate manifests with the matching code, inputs and generated outputs. Before that commit, comparison against HEAD correctly detects the pending change. For local review only, `--reference-dir <snapshot-root>` accepts the already reviewed manifests at their repository-relative paths. It does not update the reference or alter production artifacts. CI uses HEAD and no override.
 
+Before freezing evidence on an existing Windows checkout, inspect referenced tracked text inputs with `git ls-files --eol`. An older working copy can retain CRLF bytes after `.gitattributes` starts requiring LF, even when `git diff` is empty. Confirm that normalizing those bytes produces the exact committed blob before aligning the local copy and rebuilding the affected gate. Keep raw archival bytes unchanged. Session 34 records the location-input mismatch caught by the first remote reproduction check.
+
 ## Production Evidence
 
 | Evidence | Statement |

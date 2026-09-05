@@ -52,6 +52,8 @@ Population is not extraction recall or accuracy. The extent count fell because 9
 
 The operator authorized the controlled repository and Obsidian handoff in [Journal Session 34](journal.md#2026-09-05--session-34-controlled-closeout). The implementation, matching reviewed manifests and maintained knowledge form one delivery. This handoff leaves scholarly acceptance and the version 1.0 release decision open.
 
+The first remote run on `d345ee6` passed the test job and Pages deployment but detected a Gate 2 input hash mismatch. The local `locations.json` still had CRLF line endings, whereas its committed blob used LF. Closeout aligned the local bytes with the existing Git blob and regenerated Gate 2 evidence. Parsed location data and deterministic product artifacts remain unchanged. The linked workflow records verification of the follow-up commit.
+
 Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](evaluations/2026-09-05/validation.json) and [dashboard QA](evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
 
 ## Prioritized completion work
