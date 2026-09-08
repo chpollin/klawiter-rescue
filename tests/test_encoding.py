@@ -10,6 +10,8 @@ from lib.encoding import (
     fix_html_entities,
     fix_mojibake,
     has_mojibake,
+    is_encoding_damaged,
+    repair_value_encoding,
     strip_orphan_arabic_marks,
 )
 
@@ -181,3 +183,36 @@ class TestFixEncoding:
     def test_passthrough(self):
         assert fix_encoding(None) is None
         assert fix_encoding("") == ""
+
+
+class TestValueRepair:
+    """Short field values carry both the Latin-1 and the CP1252 misreading, so
+    the value repair runs the byte round-trip under both codecs until stable."""
+
+    def test_latin1_misreading_is_undone(self):
+        assert repair_value_encoding("Otokar KerÅ¡ovani") == "Otokar Keršovani"
+
+    def test_cp1252_misreading_is_undone(self):
+        assert repair_value_encoding("Xiâ€™an") == "Xi’an"
+
+    def test_double_encoding_is_undone(self):
+        assert repair_value_encoding("VÅ­zrazhdane") == "Vŭzrazhdane"
+
+    def test_repair_is_idempotent(self):
+        once = repair_value_encoding("Mlada zaloÅ¾ba")
+        assert repair_value_encoding(once) == once == "Mlada založba"
+
+    def test_clean_text_is_untouched(self):
+        for value in ("Kavkazskiĭ Krai", "Insel-Verlag", "Éditions Stock", ""):
+            assert repair_value_encoding(value) == value
+
+    def test_damage_detection_covers_both_misreadings(self):
+        assert is_encoding_damaged("Otokar KerÅ¡ovani")
+        assert is_encoding_damaged("Izdatelâ€™stvo")
+        assert not is_encoding_damaged("Kavkazskiĭ Krai")
+        assert not is_encoding_damaged("")
+
+    def test_a_lost_byte_stays_detectable(self):
+        """The closing quote of this value never reached the cache, so the
+        round-trip leaves damage behind and the caller must reject it."""
+        assert is_encoding_damaged(repair_value_encoding("Izdatelâ€™stvo â€œPravdaâ€"))

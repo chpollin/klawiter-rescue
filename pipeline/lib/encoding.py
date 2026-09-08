@@ -156,6 +156,69 @@ def has_mojibake(text):
     return False
 
 
+# --- Value-level repair (short field values, not source text) -----------------
+
+# A short model-produced value can carry the same misreading through CP1252
+# rather than Latin-1, where the bytes 0x80..0x9F appear as typographic
+# characters ("â€™" for a right single quote). The value repair therefore
+# accepts both continuation alphabets, while fix_mojibake keeps the narrow
+# Latin-1 grammar the source-text repair in stage 02 is reviewed against.
+_CP1252_HIGH = "".join(
+    char
+    for byte in range(0x80, 0xA0)
+    for char in [bytes([byte]).decode("cp1252", errors="ignore")]
+    if char
+)
+_VALUE_RUN_RE = re.compile(f"[\u00c2-\u00f4][\u0080-\u00bf{re.escape(_CP1252_HIGH)}]+")
+# The legacy guard also rejected a lead char followed by a Latin-1 letter, a
+# double-encoding signature that no round-trip resolves; it stays part of the
+# damage test so nothing that is refused today slips through.
+_DOUBLE_ENCODED_RE = re.compile("\u00c2[\u00a0-\u00ff]")
+
+
+def _redecode_value_run(match):
+    """Reverse one misread run under CP1252, then under Latin-1.
+
+    Self-validating like _redecode_run: an unmatched byte sequence fails the
+    decode and the original run is kept, and a result carrying a C1 control is
+    refused because it would be a worse reading than the input.
+    """
+    run = match.group(0)
+    for codec in ("cp1252", "latin-1"):
+        try:
+            fixed = run.encode(codec).decode("utf-8")
+        except (UnicodeDecodeError, UnicodeEncodeError):
+            continue
+        if not any("\u0080" <= char <= "\u009f" for char in fixed):
+            return fixed
+    return run
+
+
+def is_encoding_damaged(value):
+    """Whether a short value still shows a misread-UTF-8 signature."""
+    if not value:
+        return False
+    return bool(_VALUE_RUN_RE.search(value) or _DOUBLE_ENCODED_RE.search(value))
+
+
+def repair_value_encoding(value, passes=4):
+    """Undo a Latin-1 or CP1252 misreading of UTF-8 bytes in a short value.
+
+    Runs until stable so a doubly encoded value is fully unwound. Where a byte
+    was lost before the value was recorded the repair leaves the damaged run in
+    place, so is_encoding_damaged still reports it and the caller can refuse the
+    value instead of publishing a corrupt one.
+    """
+    if not value:
+        return value
+    for _ in range(passes):
+        repaired = _VALUE_RUN_RE.sub(_redecode_value_run, value)
+        if repaired == value:
+            break
+        value = repaired
+    return unicodedata.normalize("NFC", value)
+
+
 # --- Comparison utilities (used by verify.py) ---
 
 # Common mojibake substitution pairs for encoding-aware comparison

@@ -17,6 +17,7 @@ from lib.patterns import (
     extract_publisher,
     extract_translator,
 )
+from lib.publications import imprint_publisher, load_attested_places
 from lib.wiki_parser import extract_structured_data
 
 FIELDS = ("publisher", "location", "translator", "page_count", "language")
@@ -24,13 +25,20 @@ FIELDS = ("publisher", "location", "translator", "page_count", "language")
 
 @pytest.fixture(scope="module")
 def extracted_sample(real_entries):
+    """Extract exactly as stage 03 does.
+
+    The publisher combines the source-bound publication header with the body
+    patterns; measuring the body patterns alone would test a path the pipeline
+    no longer takes.
+    """
+    attested = load_attested_places()
     results = {}
     for entry in real_entries:
         text = entry["text"]
         structured = extract_structured_data(text)
         results[entry["page_id"]] = {
             "structured": structured,
-            "publisher": extract_publisher(text),
+            "publisher": imprint_publisher(text, attested) or extract_publisher(text),
             "location": extract_location(text),
             "translator": extract_translator(text),
             "page_count": extract_page_count(text),

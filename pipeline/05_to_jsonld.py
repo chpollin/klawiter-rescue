@@ -19,9 +19,11 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
+    FRONTEND_PUBLICATIONS_PATH_TEMPLATE,
     OUTPUT_EDITIONS_DIR,
     OUTPUT_ENTRIES_DIR,
     OUTPUT_FRONTEND_JSON,
+    OUTPUT_FRONTEND_PUBLICATIONS_DIR,
     OUTPUT_JSONLD,
     OUTPUT_PUBLISHABLE_LINKS,
     OUTPUT_RECONCILIATION_DECISIONS,
@@ -32,6 +34,7 @@ from lib.config import (
     setup_logging,
     write_json,
 )
+from lib.publications import build_page_publications, load_attested_places
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP, to_rdf_entry
 
 log = setup_logging(__name__)
@@ -386,7 +389,67 @@ def build_review(frontend_entry, review_index):
     return review
 
 
-def make_frontend_entry(jsonld_entry, review_index=None):
+def publication_layer(row, attested_places):
+    """Publication- and contribution-scoped facts of one source page.
+
+    The flat fields stay as they are for search, facets and exports; this layer
+    says which publication each fact belongs to. It is projected here rather
+    than into the canonical flat graph, because for multi-edition pages the
+    Gate-1 Work/Edition graph is the canonical structure and this projection
+    must not compete with it. See knowledge/data.md.
+    """
+    if row.get("page_namespace") != "0":
+        return {}
+    return build_page_publications(
+        page_id=int(row["page_id"]),
+        text=row.get("raw_content", ""),
+        page_title=row.get("page_title", ""),
+        categories=safe_json_parse(row.get("categories", "")) or [],
+        attested_places=attested_places,
+        delivered_text=row.get("clean_content", ""),
+    )
+
+
+# Page-level keys the main dataset keeps, so search and facets need no side
+# file; the arrays move to docs/data/publications/<sourcePageId>.json.
+_PUBLICATION_SUMMARY_KEYS = (
+    "pageKind",
+    "publicationCount",
+    "publicationYears",
+    "publicationPlaces",
+    "publicationLanguages",
+)
+_PUBLICATION_SIDE_KEYS = ("publications", "nameVariants")
+
+
+def write_publication_files(layers):
+    """Write one publication file per source page and drop stale files.
+
+    Rewriting the whole directory keeps the output a pure function of the
+    source, so a page that loses its layer does not leave a file behind.
+    """
+    os.makedirs(OUTPUT_FRONTEND_PUBLICATIONS_DIR, exist_ok=True)
+    written = set()
+    for page_id, layer in sorted(layers.items()):
+        document = {"sourcePageId": page_id}
+        for key in _PUBLICATION_SIDE_KEYS:
+            document[key] = layer.get(key, [])
+        path = os.path.join(OUTPUT_FRONTEND_PUBLICATIONS_DIR, f"{page_id}.json")
+        write_json(path, document, separators=(",", ":"))
+        written.add(f"{page_id}.json")
+    stale = [
+        name
+        for name in os.listdir(OUTPUT_FRONTEND_PUBLICATIONS_DIR)
+        if name.endswith(".json") and name not in written
+    ]
+    for name in stale:
+        os.remove(os.path.join(OUTPUT_FRONTEND_PUBLICATIONS_DIR, name))
+    log.info(
+        "Publication files written: %d (%d stale removed)", len(written), len(stale)
+    )
+
+
+def make_frontend_entry(jsonld_entry, review_index=None, publications=None):
     """Create a simplified entry for the frontend JSON.
 
     Maps semantic property names back to short keys the frontend expects.
@@ -417,6 +480,8 @@ def make_frontend_entry(jsonld_entry, review_index=None):
     review = build_review(e, review_index or {})
     if review:
         e["review"] = review
+    if publications:
+        e.update({key: publications[key] for key in _PUBLICATION_SUMMARY_KEYS})
     return e
 
 
@@ -563,10 +628,16 @@ def main():
     redirect_map = {}
     title_to_pid = {}
     review_index = load_review_index()
+    attested_places = load_attested_places()
+    log.info("Attested place stock for imprint splitting: %d", len(attested_places))
 
-    for e in entries:
+    publication_layers = {}
+    for row, e in zip(rows, entries, strict=True):
         if not e.get("isRedirect"):
-            fe = make_frontend_entry(e, review_index)
+            layer = publication_layer(row, attested_places)
+            if layer:
+                publication_layers[int(row["page_id"])] = layer
+            fe = make_frontend_entry(e, review_index, layer)
             non_redirect_entries.append(fe)
             title = e.get("name", "")
             pid = e.get("sourcePageId")
@@ -628,10 +699,29 @@ def main():
     languages = set(e.get("language") for e in ns0 if e.get("language"))
     locations = set(e.get("location") for e in ns0 if e.get("location"))
 
+    layers = list(publication_layers.values())
+    publication_coverage = {
+        "pages": len(layers),
+        "publications": sum(len(layer["publications"]) for layer in layers),
+        "contributions": sum(
+            len(p.get("contributions", []))
+            for layer in layers
+            for p in layer["publications"]
+        ),
+        "reviewFlags": sum(
+            len(p.get("reviewFlags", []))
+            for layer in layers
+            for p in layer["publications"]
+        ),
+        "pathTemplate": FRONTEND_PUBLICATIONS_PATH_TEMPLATE,
+    }
+
     _meta = {
         # Declared shape of this file; tests/test_frontend_contract.py holds
-        # the matching declaration. 1.1 added the per-entry review projection.
-        "frontendSchemaVersion": "1.1",
+        # the matching declaration. 1.1 added the per-entry review projection,
+        # 1.2 the publication- and contribution-scoped layer, 1.3 its move
+        # into per-page side files.
+        "frontendSchemaVersion": "1.3",
         "ns0Count": ns0_count,
         "totalCount": len(non_redirect_entries),
         "redirectCount": len(redirect_map),
@@ -643,6 +733,7 @@ def main():
         },
         "languageCount": len(languages),
         "locationCount": len(locations),
+        "publicationCoverage": publication_coverage,
     }
 
     frontend_data = {
@@ -656,6 +747,7 @@ def main():
     }
 
     write_json(OUTPUT_FRONTEND_JSON, frontend_data, separators=(",", ":"))
+    write_publication_files(publication_layers)
 
     size_mb = os.path.getsize(OUTPUT_FRONTEND_JSON) / 1024 / 1024
     log.info(f"Frontend JSON written to {OUTPUT_FRONTEND_JSON} ({size_mb:.1f} MB)")

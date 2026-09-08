@@ -373,3 +373,26 @@ class TestExtractLanguageFromCategory:
     def test_empty_and_none(self):
         assert extract_language_from_category([]) is None
         assert extract_language_from_category(None) is None
+
+
+class TestPublisherRejectsCreditPhrases:
+    """A contribution credit is not an imprint. The third publisher pattern
+    used to match the word "edition" inside "Translated by X. 1st edition"."""
+
+    def test_translation_credit_is_not_a_publisher(self):
+        assert (
+            extract_publisher("Translated by Dimitŭr Stoevski. 1st edition. 500p.")
+            is None
+        )
+
+    def test_editorial_credit_is_not_a_publisher(self):
+        assert (
+            extract_publisher(
+                "Edited with notes and an afterword by H. Akiyama. 1st edition"
+            )
+            is None
+        )
+
+    def test_a_real_publisher_name_survives(self):
+        assert extract_publisher("Published by Insel-Verlag") == "Insel-Verlag"
+        assert extract_publisher("Herbert Reichner Verlag") == "Herbert Reichner Verlag"

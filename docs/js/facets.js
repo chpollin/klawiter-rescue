@@ -1,11 +1,15 @@
 /**
- * Faceted navigation — type, language, period, location.
+ * Faceted navigation — type, language, period, location, review.
  */
 const Facets = {
   /** Facet groups whose long tail is collapsed until asked for. */
   DEFAULT_LIMIT: 15,
 
+  /** Groups whose values stay folded away until the reader asks for them. */
+  CLOSED_BY_DEFAULT: ['period', 'location'],
+
   expanded: {},     // filterKey -> true while its full list is shown
+  open: {},         // filterKey -> true/false once the group was toggled
   _entries: null,   // the set the current rendering was built from
 
   render(entries) {
@@ -18,6 +22,39 @@ const Facets = {
       'timePeriod', 'period', PERIOD_LABELS);
     this.renderFacet('facet-location-list', this._candidates('location', entries),
       'location', 'location', null, this.DEFAULT_LIMIT);
+    this.renderFacet('facet-review-list', this._candidates('review', entries),
+      'review', 'review');
+    for (const key of ['type', 'language', 'period', 'location', 'review']) {
+      this._applyGroupState(key);
+    }
+  },
+
+  isOpen(filterKey) {
+    return this.open[filterKey] === undefined
+      ? !this.CLOSED_BY_DEFAULT.includes(filterKey)
+      : this.open[filterKey];
+  },
+
+  /**
+   * A closed group still has to say that it is filtering, so its heading
+   * carries the number of values selected inside it.
+   */
+  _applyGroupState(filterKey) {
+    const btn = document.querySelector(`[data-facet-toggle="${filterKey}"]`);
+    const list = document.getElementById(`facet-${filterKey}-list`);
+    if (!btn || !list) return;
+    const open = this.isOpen(filterKey);
+    btn.setAttribute('aria-expanded', String(open));
+    list.hidden = !open;
+    const active = App.state.filters[filterKey];
+    const count = Array.isArray(active) ? active.length : (active ? 1 : 0);
+    const badge = btn.querySelector('.facet-group-count');
+    if (badge) badge.textContent = !open && count ? String(count) : '';
+  },
+
+  toggleOpen(filterKey) {
+    this.open[filterKey] = !this.isOpen(filterKey);
+    this._applyGroupState(filterKey);
   },
 
   /**
@@ -33,15 +70,37 @@ const Facets = {
       : entries;
   },
 
+  /**
+   * The values one entry falls under in a facet. Language, place and period
+   * are read from the publication layer, so a page with a German and an Arabic
+   * publication is counted under both and its count agrees with the list the
+   * facet opens. A missing language is a value of its own, and the review
+   * facet reads a derived state rather than a field.
+   */
+  _values(entry, field, filterKey) {
+    if (filterKey === 'review') return App.reviewValues(entry);
+    if (filterKey === 'language') return App.languageValues(entry);
+    if (filterKey === 'location') return App.placeValues(entry);
+    if (filterKey === 'period') return App.periodValues(entry);
+    const value = entry[field];
+    return value == null || value === '' ? [] : [value];
+  },
+
+  _counts(entries, field, filterKey) {
+    const counts = {};
+    for (const entry of entries) {
+      for (const value of this._values(entry, field, filterKey)) {
+        counts[value] = (counts[value] || 0) + 1;
+      }
+    }
+    return counts;
+  },
+
   renderFacet(containerId, entries, field, filterKey, labels, limit) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const counts = countByField(entries, field);
-    if (field === 'language') {
-      const missing = entries.filter(entry => !entry.language).length;
-      if (missing) counts[App.NOT_RECORDED] = missing;
-    }
+    const counts = this._counts(entries, field, filterKey);
     const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     const total = sorted.length;
     const active = App.state.filters[filterKey];
@@ -58,7 +117,8 @@ const Facets = {
     }
 
     let html = shown.map(([val, count]) => {
-      const label = labels ? (labels[val] || val) : val;
+      const label = filterKey === 'review'
+        ? App.reviewLabel(val) : (labels ? (labels[val] || val) : val);
       const isActive = selected.includes(val);
       return `<div class="facet-item ${isActive ? 'active' : ''}" tabindex="0" role="button"
                    aria-pressed="${isActive}"
@@ -106,6 +166,11 @@ const Facets = {
 // The value travels as a data attribute; inside an inline handler it was a JS
 // string literal that a quote in the value could end early.
 document.addEventListener('click', (ev) => {
+  const group = ev.target.closest('[data-facet-toggle]');
+  if (group) {
+    Facets.toggleOpen(group.dataset.facetToggle);
+    return;
+  }
   const more = ev.target.closest('[data-facet-more]');
   if (more) {
     Facets.toggleGroup(more.dataset.facetMore);

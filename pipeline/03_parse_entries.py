@@ -33,6 +33,7 @@ from lib.patterns import (
     extract_translator,
     extract_year,
 )
+from lib.publications import imprint_publisher, load_attested_places
 from lib.vocabulary import language_to_iso
 from lib.wiki_parser import extract_structured_data, remove_wiki_markup
 
@@ -63,7 +64,7 @@ def derive_main_category(categories):
     return ""
 
 
-def process_entry(row):
+def process_entry(row, attested_places=None):
     """Process a single entry: parse wiki content and extract metadata."""
     content = row.get("content", "")
     result = {
@@ -152,8 +153,14 @@ def process_entry(row):
     all_years = extract_all_years(content)
     result["all_years"] = json.dumps(all_years) if all_years else ""
 
-    # Publisher
-    result["publisher"] = extract_publisher(content) or ""
+    # Publisher: the publication header is the source-bound imprint statement,
+    # so it takes precedence over the loose body patterns; those keep the
+    # entries that never carried a header.
+    result["publisher"] = (
+        imprint_publisher(content, attested_places or set())
+        or extract_publisher(content)
+        or ""
+    )
 
     # Location
     result["location"] = extract_location(content) or ""
@@ -195,7 +202,12 @@ def process_entry(row):
 
 def main():
     rows = load_csv(STEP_02_OUTPUT)
-    log.info(f"Loaded {len(rows)} entries, parsing...")
+    attested_places = load_attested_places()
+    log.info(
+        "Loaded %d entries, parsing with %d attested places...",
+        len(rows),
+        len(attested_places),
+    )
 
     results = []
     stats = {
@@ -209,7 +221,7 @@ def main():
     }
 
     for i, row in enumerate(rows):
-        parsed = process_entry(row)
+        parsed = process_entry(row, attested_places)
         results.append(parsed)
 
         if parsed["is_redirect"]:

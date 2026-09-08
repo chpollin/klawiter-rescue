@@ -2,7 +2,7 @@
 title: Current Project Status
 status: maintained
 language: en
-updated: 2026-09-05
+updated: 2026-09-08
 ---
 
 # Current project status
@@ -24,6 +24,8 @@ This is the single current status/work list. [Production readiness](production-r
 | Publishable location / work / agent links | 26 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json) |
 | Open authority claims / edition binding claims | 5 / 1 | same manifest |
 | Technically unresolved See-references | 12 of 1,213 | [review evidence](evaluations/2026-09-05/published-change-review.json) |
+| Pages / publications / contributions in the publication layer | 1,659 / 3,102 / 14,312 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
+| Publication review flags held open as claims | 735 | same field, `reviewFlags` per publication |
 
 Four current pages lack text; only page 2979 is bibliographic. Earlier revisions, absent archived titles and uploaded image bytes are outside the current extracted content scope. See [Data](data.md).
 
@@ -31,11 +33,11 @@ Four current pages lack text; only page 2979 is bibliographic. Earlier revisions
 |---|---:|---:|
 | Year | 4,429 | 93.2% |
 | Language code | 4,309 | 90.7% |
-| Publisher | 2,483 | 52.3% |
+| Publisher | 2,634 | 55.4% |
 | Numbered extent | 2,435 | 51.3% |
-| Translator | 1,920 | 40.4% |
+| Translator | 1,919 | 40.4% |
 
-Population is not extraction recall or accuracy. The extent count fell because 95 citation locators were removed from the volume-extent field. Language increased through source categories, without replacing existing published labels. These flat values may still describe different publications on one page.
+Population is not extraction recall or accuracy. The extent count fell because 95 citation locators were removed from the volume-extent field. Publisher rose because the flat field now follows the publication imprint of the source header. Translator lost one value whose encoding could not be restored. These flat values still describe one publication per page; the publication layer says which publication each fact belongs to, and 237 entries with an empty flat translator document a translation credit there. No flat publisher, place or translator value carries mojibake any more.
 
 ## Implemented and checked
 
@@ -46,9 +48,11 @@ Population is not extraction recall or accuracy. The extent count fell because 9
 - Missing-language and multiple-value filter handover, repeated queue listeners, mobile navigation, result headings and badge contrast are repaired.
 - The CI reproduction contract now checks committed stable gate manifests and every referenced input/artifact, including previously omitted candidate/queue files.
 - Project knowledge is consolidated by responsibility; stale completion claims, archive counts, patch semantics and CI claims are corrected.
+- Publication- and contribution-scoped facts reach the frontend record for every page whose source carries a publication header, with roles, imprint, language, extent notation, contributions and per-field provenance bound to their own source slice. The four owner cases are covered by source-bound fixtures. The records live in per-page files under `docs/data/publications/`, so the main dataset stays at 2.1 megabytes gzipped.
+- The flat publisher follows the publication imprint, a contribution credit is refused as a publisher, and enrichment values that arrived as a misreading of UTF-8 bytes are repaired or dropped, each repair carrying a field-scoped review hint.
 - The Explore dashboard is implemented: linked entry/coverage counts, decade and language/type filters, year controls and entry preview. Map and Connections retain the shared selection; malformed date URLs and keyboard focus are covered.
 
-**Final locked-environment verification:** 615 default tests passed, zero skips; 53 Node behaviour tests and all 15 module syntax checks passed. Semantic diagnostics retain 139 passing and 31 failing assertions (14 extraction / 17 frontend); correct expectations were not weakened. Both production gates, Ruff, pre-commit and Python compilation passed. All 117 compared deterministic data/vocabulary files reproduced byte-identically. The reviewed-manifest checker passed against the explicit local reviewed snapshot. These are local pre-closeout results; the [Tests workflow](https://github.com/chpollin/klawiter-rescue/actions/workflows/tests.yml) records remote verification for each delivered commit.
+**Final locked-environment verification (8 September):** 708 default tests passed, zero skips; the Node behaviour suites and all module syntax checks passed. Semantic diagnostics now retain 147 passing and 23 failing assertions; the bounded default gate holds 16 reviewed deviations. Correct expectations were not weakened; the one reviewed change records that page 6342 reports the imprint spelling of the delivered source rather than that of the live wiki page. Both production gates, Ruff, pre-commit and Python compilation passed. All 117 compared deterministic data/vocabulary files reproduced byte-identically. The reviewed-manifest checker passed against the explicit local reviewed snapshot. These are local pre-closeout results; the [Tests workflow](https://github.com/chpollin/klawiter-rescue/actions/workflows/tests.yml) records remote verification for each delivered commit.
 
 The operator authorized the controlled repository and Obsidian handoff in [Journal Session 34](journal.md#2026-09-05--session-34-controlled-closeout). The implementation, matching reviewed manifests and maintained knowledge form one delivery. This handoff leaves scholarly acceptance and the version 1.0 release decision open.
 
@@ -60,10 +64,10 @@ Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload
 
 | Priority | Concrete next step | Completion evidence |
 |---|---|---|
-| P0 release | Prepare a reviewed public source package and reconcile publication metadata/scope; preserve archival originals separately | explicit package inventory and provenance, reviewed distribution scope, operator release decision |
-| P1 data | Model publication/contribution-scoped facts on the concrete cases 1800, 1891, 4445 and 4209, then extend to the remaining corpus | independent source assertions for roles, imprints, language and extent; no cross-publication mixing |
+| P0 release | Prepare a reviewed public source package and reconcile publication metadata/scope; preserve archival originals separately | explicit package inventory and provenance, reviewed distribution scope, operator release decision; editorship (Digital Humanities Craft with Christopher Pollin) and release form (operator acceptance yields 0.9.1, partner acceptance yields 1.0 with Git tag plus Zenodo DOI) decided 2026-09-08, see [journal](journal.md) |
+| P1 data | Done for the four cases 1800, 1891, 4445 and 4209 and extended to every page with a publication header; the two flat-layer defects are repaired, and the rules leave 231 imprint splits, 385 pagination discrepancies and 119 missing places as open claims | source-bound fixtures and the contract in [Data](data.md); flag codes and counts in the [frontend dataset](../docs/data/klawiter.json), see [journal](journal.md) |
 | P1 provenance | Apply one released field correction consistently to canonical graphs, frontend, exports, history and reports | end-to-end replay and repeatability with a real source-bound fixture |
-| P1 interface | Expose edition/source navigation and precise field-review scope; finish dashboard acceptance | research task finds the intended publication, evidence and usable citation with keyboard/mobile access |
+| P1 interface | Card, list, facets and Explore flattened and put on the publication layer on 2026-09-08, after an operator review on a phone and an independent before/after review; edit mode names its page-record scope, while editing per publication awaits a patch-contract extension | operator's own run of the worksheet task on the new interface; decision on the patch-contract extension; see [journal](journal.md) |
 | P1 source link | Adjudicate the original “Maria Stuart” redirect, which leads 26 references to an apparently unrelated review | reviewed target or preserved explicit uncertainty; see [literal evidence](evaluations/2026-09-05/published-change-review.json) |
 | P2 QA | Broaden the stratified semantic sample, complete curation/export browser checks and measure representative performance/accessibility | declared sample protocol and device/task budgets with recorded results |
 

@@ -9,7 +9,7 @@ language: en
 version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-09-05
+updated: 2026-09-08
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -65,7 +65,7 @@ Stage 03 combines structural wiki parsing and evidence-bound patterns. With bold
 
 ## Frozen Enrichment
 
-Stage 03b fills empty fields only. It overwrites no parser value. The production cache contains result, source identifier and model provenance. The output is checked again for type, occurrence and encoding. The separate local working cache is not part of the reproducible input.
+Stage 03b fills empty fields only. It overwrites no parser value. The production cache contains result, source identifier and model provenance. The output is checked again for type, occurrence and encoding: a value that arrived as a Latin-1 or CP1252 misreading of UTF-8 bytes is repaired by the byte round-trip and recorded under `encodingRepairs` in the enrichment report, one the round-trip cannot restore is dropped, and a publisher value stating a contribution credit is refused. `inject_provenance.py` turns each recorded repair into a field-scoped review hint on the entry it reached. The separate local working cache is not part of the reproducible input.
 
 Stage 03c normalizes places of publication, translators and pagination. It discards values whose form or value range violates the documented contract. Lower coverage is admissible where it removes an undocumented statement.
 
@@ -86,6 +86,8 @@ Source occurrences are documented from `04_classified.csv` with page ID, text ID
 ## Export and Interface
 
 Stage 05 adopts from Gate 2 exclusively confirmed links. The flat JSON-LD file preserves all current page records. The frontend file removes redirects and adds a redirect map. `inject_provenance.py` adds field provenance from exactly the selected LLM mode.
+
+Stage 05 also builds the publication- and contribution-scoped layer of the frontend record. `lib/publications.py` segments the page's source text with `lib.editions.segment_page`, so the layer shares Gate 1's boundaries, identifiers and extents without changing the Gate 1 artifacts. It reads one further frozen input, the reviewed location stock `docs/data/locations.json`, which attests the place names that let a header with more than two comma segments be split into a publisher and several places. Stage 03 reads the same stock for the flat publisher, which follows the publication imprint. The records are written one file per source page into `docs/data/publications/`; the directory is rewritten on every run, so a page that loses its layer leaves no file behind. The main dataset keeps only the page-level summary, and `klawiter.jsonld` is unaffected. [Data](data.md) holds the field contract.
 
 `docs/data/reconciliation.json` is a deterministic projection of candidates, decisions, open claims and edition claims. Run timestamps are held only in audit and manifest artifacts and do not alter this public data file.
 

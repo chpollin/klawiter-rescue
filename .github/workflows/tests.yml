@@ -108,5 +108,6 @@ jobs:
             data/output/reconciliation/publishable-links.json \
             data/output/reconciliation/contested-claims.json \
             docs/data/klawiter.json \
+            docs/data/publications/ \
             docs/data/reconciliation.json \
             docs/data/triage.json

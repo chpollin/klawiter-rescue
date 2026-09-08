@@ -1,0 +1,343 @@
+[
+  {
+    "page_id": 1800,
+    "label": "two editions of one work on one page",
+    "textSha256": "1b622654a5ceb77038a58a344dd9ef88573dbaa31429c6043081fe6c73fa2333",
+    "notes": "Operator specification 2026-09-08, owner worksheet case 1: two individually citable editions under the preserved source page, fields and evidence on their own edition.",
+    "pageKind": "edition-page",
+    "publicationCount": 2,
+    "publicationYears": [
+      1947,
+      1960
+    ],
+    "publicationPlaces": [
+      "Sofija"
+    ],
+    "publicationLanguages": [
+      "Bulgarian"
+    ],
+    "nameVariants": [],
+    "publications": [
+      {
+        "id": "klawiter:publication/1800-1947-a",
+        "year": 1947,
+        "yearRaw": "1947",
+        "title": "Romanŭt na edin zhivot. Balzak",
+        "imprint": "Pechat Far, Sofija",
+        "publisher": "Pechat Far",
+        "places": [
+          "Sofija"
+        ],
+        "language": "Bulgarian",
+        "languageCode": "bg",
+        "editionStatement": "1st edition",
+        "extent": {
+          "raw": "500p.",
+          "numbered": 500
+        },
+        "series": "Biblioteka Zlatni zŭrna. Godina XII, premiia",
+        "credits": [
+          {
+            "role": "translator",
+            "name": "Dimitŭr Stoevski",
+            "creditLabel": "Translated by"
+          }
+        ],
+        "contributions": [],
+        "reviewFlags": []
+      },
+      {
+        "id": "klawiter:publication/1800-1960-a",
+        "year": 1960,
+        "yearRaw": "1960",
+        "title": "Romanŭt na edin zhivot. Balzak",
+        "imprint": "Narodna Kultura, Sofija",
+        "publisher": "Narodna Kultura",
+        "places": [
+          "Sofija"
+        ],
+        "language": "Bulgarian",
+        "languageCode": "bg",
+        "editionStatement": "2nd revised edition",
+        "extent": {
+          "raw": "383/(1)p.",
+          "numbered": 383,
+          "unnumbered": 1
+        },
+        "series": "Biblioteka Svetovni obrazi",
+        "credits": [
+          {
+            "role": "translator",
+            "name": "Dimitŭr Stoevski",
+            "creditLabel": "Translated by"
+          }
+        ],
+        "contributions": [],
+        "reviewFlags": []
+      }
+    ]
+  },
+  {
+    "page_id": 1891,
+    "label": "three translation roles with contribution scope",
+    "textSha256": "3481f9484361ea7325f134543a8caf23a52d16a6493c195a0aea4fac5de4214c",
+    "notes": "Operator specification 2026-09-08, owner worksheet case 2: preserve all three translation roles and their contribution scope, keep the editor separate, show the original extent notation and flag the pagination inconsistency. A blank scalar translator must never mean that no translators are documented.",
+    "pageKind": "single-publication",
+    "publicationCount": 1,
+    "publicationYears": [
+      1993
+    ],
+    "publicationPlaces": [
+      "Stavropol’"
+    ],
+    "publicationLanguages": [
+      "Russian"
+    ],
+    "nameVariants": [],
+    "publications": [
+      {
+        "id": "klawiter:publication/1891-1993-a",
+        "year": 1993,
+        "yearRaw": "1993",
+        "title": "Mariia Stiuart * Kazanova",
+        "imprint": "Kavkazskiĭ Krai, Stavropol’",
+        "publisher": "Kavkazskiĭ Krai",
+        "places": [
+          "Stavropol’"
+        ],
+        "language": "Russian",
+        "languageCode": "ru",
+        "extent": {
+          "raw": "444/(3)p.",
+          "numbered": 444,
+          "unnumbered": 3
+        },
+        "series": "Istoricheskie romani",
+        "credits": [
+          {
+            "role": "editor",
+            "name": "N. Vysotskaia",
+            "creditLabel": "Edited by"
+          },
+          {
+            "role": "illustrator",
+            "name": "I. L. Prostitov",
+            "creditLabel": "Illustrated by"
+          }
+        ],
+        "contributions": [
+          {
+            "title": "Mariia Stiuart",
+            "note": "Maria Stuart. Translated by R. Gal’perina. Verses translated by V. Levik",
+            "pages": "(7)-(370)",
+            "pageStart": 7,
+            "pageEnd": 370,
+            "credits": [
+              {
+                "role": "translator",
+                "name": "R. Gal’perina",
+                "creditLabel": "Translated by"
+              },
+              {
+                "role": "translator",
+                "name": "V. Levik",
+                "creditLabel": "Verses translated by"
+              }
+            ]
+          },
+          {
+            "title": "Kazanova",
+            "note": "Casanova. Translated by P. S. Bernshteĭn",
+            "pages": "(371)-(445)",
+            "pageStart": 371,
+            "pageEnd": 445,
+            "credits": [
+              {
+                "role": "translator",
+                "name": "P. S. Bernshteĭn",
+                "creditLabel": "Translated by"
+              }
+            ]
+          }
+        ],
+        "reviewFlags": [
+          {
+            "code": "contents-pagination-exceeds-extent",
+            "detail": "The contents end at page 445, the stated numbered extent is 444."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "page_id": 4445,
+    "label": "German book and Arabic article on one author page",
+    "textSha256": "11dfc481465af03cb6c840b45e0b4c178df7ed08da465e7e382a1632de7d560c",
+    "notes": "Operator specification 2026-09-08, owner worksheet case 3 and the coordinator finding of the same date: two publications with their own language and citation context, linked only through source page and author. The source establishes no translation or edition relation.",
+    "pageKind": "author-page",
+    "publicationCount": 2,
+    "publicationYears": [
+      2000,
+      2015
+    ],
+    "publicationPlaces": [
+      "Freiburg im Breisgau",
+      "Rabat"
+    ],
+    "publicationLanguages": [
+      "German",
+      "Arabic"
+    ],
+    "nameVariants": [],
+    "publications": [
+      {
+        "id": "klawiter:publication/4445-2000-a",
+        "year": 2000,
+        "yearRaw": "2000",
+        "title": "Frauen- und Männerbilder in den Novellen von Stefan Zweig",
+        "imprint": "Hochschulverl., Freiburg im Breisgau",
+        "publisher": "Hochschulverl.",
+        "places": [
+          "Freiburg im Breisgau"
+        ],
+        "language": "German",
+        "languageCode": "de",
+        "extent": {
+          "raw": "168p.",
+          "numbered": 168
+        },
+        "series": "Hochschulsammlung Philosophie. Literaturwissenschaft, 16",
+        "seriesVolume": "16",
+        "note": "This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau",
+        "credits": [],
+        "contributions": [],
+        "reviewFlags": []
+      },
+      {
+        "id": "klawiter:publication/4445-2015-a",
+        "year": 2015,
+        "yearRaw": "2015",
+        "title": "Ṣūrat al-marʾah waʾl-rajul fī uqṣūṣat Stīfān Tsfāygh 'Arbaʿ wa-ʿishrūn sāʿah min ḥayāt imraʾah'",
+        "language": "Arabic",
+        "languageCode": "ar",
+        "container": {
+          "title": "Al-Balāghah waʾl-naqd al-ʿarabī",
+          "place": "Rabat",
+          "issue": "3",
+          "pages": "71-79"
+        },
+        "online": {
+          "url": "http://platform.almanhal.com/Article/Preview.aspx?ID=60445",
+          "note": "shortened preview version"
+        },
+        "credits": [],
+        "contributions": [],
+        "reviewFlags": [
+          {
+            "code": "missing-location",
+            "detail": "The publication header names no place of publication."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "page_id": 4209,
+    "label": "two publication places and a translator name variant",
+    "textSha256": "25e93fdbdbd298e79280e3ea59915fd23b51aeb9ce309906dea386116ac0cba2",
+    "notes": "Operator specification 2026-09-08, owner worksheet case 4: retain both publication places in their source wording, show Hymne Weiss as the explicitly credited translator, retain the Hymme Weiss spelling in its source context without asserting an identity correction.",
+    "pageKind": "single-publication",
+    "publicationCount": 1,
+    "publicationYears": [
+      1947
+    ],
+    "publicationPlaces": [
+      "Bloemfontein",
+      "Kaapstad (Capetown)"
+    ],
+    "publicationLanguages": [
+      "Afrikaans"
+    ],
+    "nameVariants": [
+      {
+        "name": "Hymme Weiss",
+        "variantOf": "Hymne Weiss",
+        "status": "unresolved",
+        "sourceContext": "Voorwoord [Hymme Weiss, Pretoria, 25 January, 1944], p. (5)",
+        "provenance": "regex"
+      }
+    ],
+    "publications": [
+      {
+        "id": "klawiter:publication/4209-1947-a",
+        "year": 1947,
+        "yearRaw": "1947",
+        "title": "Vreemdes in 'n vreemde wêreld",
+        "imprint": "Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)",
+        "publisher": "Nasionale Pers Beperk",
+        "places": [
+          "Bloemfontein",
+          "Kaapstad (Capetown)"
+        ],
+        "language": "Afrikaans",
+        "languageCode": "af",
+        "extent": {
+          "raw": "160p.",
+          "numbered": 160
+        },
+        "credits": [
+          {
+            "role": "translator",
+            "name": "Hymne Weiss",
+            "creditLabel": "Translated with a foreword and preface by"
+          }
+        ],
+        "contributions": [
+          {
+            "title": "Voorwoord",
+            "note": "Hymme Weiss, Pretoria, 25 January, 1944",
+            "pages": "(5)",
+            "pageStart": 5,
+            "pageEnd": 5
+          },
+          {
+            "title": "Inleiding",
+            "note": "Preface, Hymme Weiss",
+            "pages": "7-9",
+            "pageStart": 7,
+            "pageEnd": 9
+          },
+          {
+            "title": "Die onsigbare Versameling",
+            "note": "Die unsichtbare Sammlung",
+            "pages": "10-37",
+            "pageStart": 10,
+            "pageEnd": 37
+          },
+          {
+            "title": "Die Voorval by die Meer van Genève",
+            "note": "Episode vom (am) Genfer See",
+            "pages": "38-52",
+            "pageStart": 38,
+            "pageEnd": 52
+          },
+          {
+            "title": "Leporella",
+            "note": "Leporella",
+            "pages": "53-105",
+            "pageStart": 53,
+            "pageEnd": 105
+          },
+          {
+            "title": "Boekmendel",
+            "note": "Buchmendel",
+            "pages": "106-160",
+            "pageStart": 106,
+            "pageEnd": 160
+          }
+        ],
+        "reviewFlags": []
+      }
+    ]
+  }
+]

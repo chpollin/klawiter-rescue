@@ -85,6 +85,13 @@ OUTPUT_RECONCILIATION_FRONTEND = os.path.join(
     PROJECT_ROOT, "docs", "data", "reconciliation.json"
 )
 OUTPUT_FRONTEND_JSON = os.path.join(PROJECT_ROOT, "docs", "data", "klawiter.json")
+# Publication- and contribution-scoped facts, one file per source page. They
+# live beside the main dataset rather than inside it so search and facets load
+# without them; the interface fetches a page's file on demand.
+OUTPUT_FRONTEND_PUBLICATIONS_DIR = os.path.join(
+    PROJECT_ROOT, "docs", "data", "publications"
+)
+FRONTEND_PUBLICATIONS_PATH_TEMPLATE = "data/publications/{sourcePageId}.json"
 
 # Post-processor reports and artifacts (single definition site; the scripts
 # import these instead of re-deriving the paths)

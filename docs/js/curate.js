@@ -36,14 +36,9 @@ const Curate = {
     container.innerHTML = `
       <div class="page-content curate-page">
         <h1 class="page-title">Data Quality</h1>
-        <p class="curate-intro">
-          The processing state of the dataset, computed live from the published
-          artifacts. Every list opens the affected entries.
-          ${App.state.isLocal ? 'In edit mode, authority candidates can be decided directly from the queue below.' : 'Deciding open cases requires the local curation mode.'}
-        </p>
         <div id="curate-status">${this._statusPanel()}</div>
         <h3 class="curate-section-heading">Field completeness by entry type</h3>
-        <p class="curate-hint">Share of entries with a value. Click a cell to open the entries missing that field.</p>
+        <p class="curate-hint">Share of entries carrying a value.</p>
         ${this._matrix()}
         <h3 class="curate-section-heading">Open work queues</h3>
         ${this._queues()}
@@ -104,13 +99,16 @@ const Curate = {
       .map(t => ({ key: t, entries: App.entries.filter(e => (e.entryType || 'other') === t) }))
       .sort((a, b) => b.entries.length - a.entries.length);
 
-    const cell = (field, typeKey, entries) => {
+    // What the cell opens is stated on the control itself; the page carries no
+    // standing sentence about clicking it.
+    const cell = (field, label, typeKey, entries) => {
       const missing = entries.filter(e => e[field] == null || e[field] === '');
       const pct = entries.length ? Math.round(100 * (entries.length - missing.length) / entries.length) : 0;
       const cls = pct >= 90 ? 'matrix-high' : pct >= 60 ? 'matrix-mid' : 'matrix-low';
       if (!missing.length) return `<td class="${cls}">${pct}%</td>`;
+      const action = `Open the ${missing.length.toLocaleString('en')} entries without ${label}`;
       return `<td class="${cls}"><button class="matrix-cell" data-field="${field}" data-type="${typeKey}"
-        title="${missing.length} entries without ${field}">${pct}%</button></td>`;
+        title="${action}" aria-label="${pct}% — ${action}">${pct}%</button></td>`;
     };
 
     const header = ['<th scope="col">Field</th>', `<th scope="col">All (${App.entries.length.toLocaleString('en')})</th>`]
@@ -118,8 +116,8 @@ const Curate = {
         `<th scope="col">${ENTRY_TYPE_LABELS[t.key] || t.key} (${t.entries.length.toLocaleString('en')})</th>`))
       .join('');
     const rows = this.FIELDS.map(([field, label]) => {
-      const cells = [cell(field, '*', App.entries)]
-        .concat(types.map(t => cell(field, t.key, t.entries)))
+      const cells = [cell(field, label, '*', App.entries)]
+        .concat(types.map(t => cell(field, label, t.key, t.entries)))
         .join('');
       return `<tr><th scope="row">${label}</th>${cells}</tr>`;
     }).join('');

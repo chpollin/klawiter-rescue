@@ -107,11 +107,19 @@ const ExploreGeography = {
     });
   },
 
-  /** ISO country code a record's place resolves to, or null. */
-  countryOfEntry(entry) {
-    if (!entry || !entry.location || !this.locationData) return null;
-    const geo = this.locationData[entry.location];
-    return (geo && geo.country) || null;
+  /**
+   * ISO country codes a record's places resolve to. A page can name a place
+   * per publication, so it can belong to more than one country; the shared
+   * filter reads membership rather than one value.
+   */
+  countriesOfEntry(entry) {
+    if (!entry || !this.locationData) return [];
+    const codes = new Set();
+    for (const place of App.placeValues(entry)) {
+      const geo = this.locationData[place];
+      if (geo && geo.country) codes.add(geo.country);
+    }
+    return [...codes];
   },
 
   // =========================================================================
@@ -332,6 +340,8 @@ const ExploreGeography = {
     }
   },
 
+  // A page carries a place per publication, so it sits on the map at each of
+  // them and counts once per bubble, never twice in the same one.
   _buildCityBubbles(entries) {
     if (!this._mergeKeys) this._buildMergeIndex();
     const byKey = new Map();
@@ -339,25 +349,29 @@ const ExploreGeography = {
     const ungeocoded = new Map();
 
     for (const e of entries) {
-      if (!e.location) continue;
-      const key = this._mergeKeys.get(e.location);
-      if (!key) {
-        ungeocoded.set(e.location, (ungeocoded.get(e.location) || 0) + 1);
-        continue;
+      const seen = new Set();
+      for (const place of App.placeValues(e)) {
+        const key = this._mergeKeys.get(place);
+        if (!key) {
+          ungeocoded.set(place, (ungeocoded.get(place) || 0) + 1);
+          continue;
+        }
+        if (!seen.size) geocoded++;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        let b = byKey.get(key);
+        if (!b) {
+          const canon = this._mergeCanon.get(key);
+          b = {
+            key, count: 0, entries: [], locations: [],
+            lat: canon.lat, lng: canon.lng, country: canon.country, type: 'city',
+          };
+          byKey.set(key, b);
+        }
+        b.count++;
+        b.entries.push(e);
+        if (!b.locations.includes(place)) b.locations.push(place);
       }
-      geocoded++;
-      let b = byKey.get(key);
-      if (!b) {
-        const canon = this._mergeCanon.get(key);
-        b = {
-          key, count: 0, entries: [], locations: [],
-          lat: canon.lat, lng: canon.lng, country: canon.country, type: 'city',
-        };
-        byKey.set(key, b);
-      }
-      b.count++;
-      b.entries.push(e);
-      if (!b.locations.includes(e.location)) b.locations.push(e.location);
     }
 
     this._geocodedEntries = geocoded;
@@ -371,14 +385,20 @@ const ExploreGeography = {
       const cc = b.country || 'XX';
       if (!countryMap.has(cc)) {
         countryMap.set(cc, {
-          key: cc, count: 0, entries: [], locations: [],
+          key: cc, count: 0, entries: [], locations: [], seen: new Set(),
           latSum: 0, lngSum: 0, cityCount: 0,
           country: cc, type: 'country',
         });
       }
       const cb = countryMap.get(cc);
-      cb.count += b.count;
-      cb.entries.push(...b.entries);
+      // A page named in two cities of one country is one record of that
+      // country, so the country bubble counts pages rather than placements.
+      for (const e of b.entries) {
+        if (cb.seen.has(e.sourcePageId)) continue;
+        cb.seen.add(e.sourcePageId);
+        cb.entries.push(e);
+      }
+      cb.count = cb.entries.length;
       cb.locations.push(...b.locations);
       cb.latSum += b.lat * b.count;
       cb.lngSum += b.lng * b.count;
@@ -594,9 +614,11 @@ const ExploreGeography = {
     const unplacedBtn = note.querySelector('#geo-unplaced');
     if (unplacedBtn) {
       unplacedBtn.addEventListener('click', () => {
-        // Placed means the record names a location the geodata resolves.
+        // Placed means the record names a place the geodata resolves; a page
+        // is placed as soon as one of its publications names such a place.
         App.showCustomResults(
-          this.currentEntries.filter(e => !e.location || !this._mergeKeys.get(e.location)),
+          this.currentEntries.filter(e =>
+            !App.placeValues(e).some(place => this._mergeKeys.get(place))),
           'Entries without a mapped place'
         );
       });
@@ -605,7 +627,7 @@ const ExploreGeography = {
       btn.addEventListener('click', () => {
         const loc = btn.dataset.loc;
         App.showCustomResults(
-          this.currentEntries.filter(e => e.location === loc),
+          this.currentEntries.filter(e => App.placeValues(e).includes(loc)),
           `Unresolved place: ${loc}`
         );
       });
@@ -838,8 +860,9 @@ const ExploreGeography = {
     if (this.colorMode === 'language') {
       const langCounts = {};
       for (const e of bubble.entries) {
-        const lang = e.language || Explore.NOT_RECORDED;
-        langCounts[lang] = (langCounts[lang] || 0) + 1;
+        for (const lang of App.languageValues(e)) {
+          langCounts[lang] = (langCounts[lang] || 0) + 1;
+        }
       }
       const dominant = Object.entries(langCounts).sort((a, b) => b[1] - a[1])[0];
       return dominant
@@ -868,11 +891,18 @@ const ExploreGeography = {
     legendDiv.setAttribute('aria-label', 'Map legend, filters the entries');
 
     if (this.colorMode === 'language') {
+      // A legend item is a filter, so it counts the pages that item selects: a
+      // page under every language of its publications, and once per language
+      // even where it sits in several bubbles.
       const allLangs = {};
+      const seen = new Set();
       for (const b of this.allBubbles) {
         for (const e of b.entries) {
-          const lang = e.language || Explore.NOT_RECORDED;
-          allLangs[lang] = (allLangs[lang] || 0) + 1;
+          if (seen.has(e.sourcePageId)) continue;
+          seen.add(e.sourcePageId);
+          for (const lang of App.languageValues(e)) {
+            allLangs[lang] = (allLangs[lang] || 0) + 1;
+          }
         }
       }
       const topLangs = Object.entries(allLangs).sort((a, b) => b[1] - a[1]).slice(0, 8);

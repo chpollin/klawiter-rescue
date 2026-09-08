@@ -82,21 +82,31 @@
 
     <!-- Sidebar (hidden on home + stats, visible on results) -->
     <nav id="facets" class="sidebar hidden" aria-label="Filters">
+      <!-- Facets.render sets the open state and the active count per group -->
       <div class="facet-group">
-        <div class="facet-heading">Type</div>
+        <button type="button" class="facet-heading facet-toggle" data-facet-toggle="type"
+                aria-expanded="true" aria-controls="facet-type-list">Type<span class="facet-group-count"></span></button>
         <div id="facet-type-list"></div>
       </div>
       <div class="facet-group">
-        <div class="facet-heading">Language</div>
+        <button type="button" class="facet-heading facet-toggle" data-facet-toggle="language"
+                aria-expanded="true" aria-controls="facet-language-list">Language<span class="facet-group-count"></span></button>
         <div id="facet-language-list"></div>
       </div>
       <div class="facet-group">
-        <div class="facet-heading">Period</div>
-        <div id="facet-period-list"></div>
+        <button type="button" class="facet-heading facet-toggle" data-facet-toggle="period"
+                aria-expanded="false" aria-controls="facet-period-list">Period<span class="facet-group-count"></span></button>
+        <div id="facet-period-list" hidden></div>
       </div>
       <div class="facet-group">
-        <div class="facet-heading">Location</div>
-        <div id="facet-location-list"></div>
+        <button type="button" class="facet-heading facet-toggle" data-facet-toggle="location"
+                aria-expanded="false" aria-controls="facet-location-list">Location<span class="facet-group-count"></span></button>
+        <div id="facet-location-list" hidden></div>
+      </div>
+      <div class="facet-group">
+        <button type="button" class="facet-heading facet-toggle" data-facet-toggle="review"
+                aria-expanded="true" aria-controls="facet-review-list">Review<span class="facet-group-count"></span></button>
+        <div id="facet-review-list"></div>
       </div>
     </nav>
 
@@ -113,17 +123,19 @@
 
       <!-- View: Results -->
       <div id="view-results" class="hidden">
-        <h1 class="page-title">Bibliography entries</h1>
         <!-- Way back out of a session list that has no hash of its own -->
         <div id="results-context" class="results-context hidden"></div>
         <div class="results-header">
-          <span id="results-count" class="results-count" role="status" aria-live="polite"></span>
+          <!-- The result line is the heading of the view; aria-live keeps the
+               changing count announced without displacing the heading role. -->
+          <h1 id="results-count" class="results-count" aria-live="polite"></h1>
           <div class="results-actions">
             <button id="batch-export-btn" class="action-btn hidden" title="Export filtered results as BibTeX">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               <span id="batch-export-label">Export BibTeX</span>
             </button>
-            <select id="sort-select" class="sort-select" aria-label="Sort results by">
+            <label class="sort-label" for="sort-select">Sort</label>
+            <select id="sort-select" class="sort-select">
             <option value="relevance" title="Ranked by search score; without a query, source order">Relevance</option>
             <option value="year-asc">Year ascending</option>
             <option value="year-desc">Year descending</option>
@@ -131,6 +143,14 @@
           </select>
           </div>
         </div>
+        <!-- The provenance classes are the same everywhere, so the legend
+             stands once above the list instead of inside every card. -->
+        <p id="prov-legend" class="prov-legend">Provenance
+          <span class="prov-badge prov-regex" title="Regex extracted">R</span> regex-extracted
+          <span class="prov-badge prov-llm" title="LLM enriched">L</span> LLM-enriched
+          <span class="prov-badge prov-editor" title="Expert curated">E</span> expert-curated
+          <span class="prov-badge prov-missing" title="Missing">&mdash;</span> missing
+        </p>
         <div id="results-list" class="results-list"></div>
         <div id="load-more" class="load-more hidden">
           <button id="load-more-btn">Load more&hellip;</button>

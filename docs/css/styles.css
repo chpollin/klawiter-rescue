@@ -93,9 +93,7 @@ h1, h2, h3, h4 {
    controls of edit mode) are not buttons in this sense and keep their own
    in-place form. */
 .btn-primary,
-.browse-btn,
-.page-download-btn,
-.mode-tab.active {
+.browse-btn {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -111,9 +109,7 @@ h1, h2, h3, h4 {
   transition: background 0.15s, border-color 0.15s;
 }
 .btn-primary:hover,
-.browse-btn:hover,
-.page-download-btn:hover,
-.mode-tab.active:hover {
+.browse-btn:hover {
   background: var(--sz-burgundy-dark);
   border-color: var(--sz-burgundy-dark);
   color: var(--sz-cream);
@@ -121,7 +117,6 @@ h1, h2, h3, h4 {
 
 .btn-secondary,
 .action-btn,
-.mode-tab,
 .load-more button {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
@@ -139,7 +134,6 @@ h1, h2, h3, h4 {
 }
 .btn-secondary:hover,
 .action-btn:hover,
-.mode-tab:hover,
 .load-more button:hover {
   border-color: var(--sz-burgundy);
   background: rgba(99, 26, 52, 0.04);
@@ -223,24 +217,28 @@ h1, h2, h3, h4 {
   min-width: 0;
 }
 
+/* No border: the field is a lighter surface on the bar, and the only line in
+   the header stays the underline under the active navigation item. */
 .header-search input {
   width: 100%;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   padding: 0.4rem 2rem 0.4rem 0.75rem;
-  border: 1px solid rgba(250, 248, 243, 0.3);
+  border: 0;
   border-radius: 4px;
-  background: rgba(250, 248, 243, 0.1);
+  background: rgba(250, 248, 243, 0.16);
   color: var(--sz-cream);
-  outline: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition: background 0.15s;
 }
 .header-search input::placeholder {
-  color: rgba(250, 248, 243, 0.5);
+  color: rgba(250, 248, 243, 0.6);
 }
 .header-search input:focus {
-  border-color: var(--sz-gold);
-  background: rgba(250, 248, 243, 0.15);
+  background: rgba(250, 248, 243, 0.24);
+}
+.header-search input:focus-visible {
+  outline: 2px solid var(--sz-gold);
+  outline-offset: 1px;
 }
 
 .header-search-icon {
@@ -458,7 +456,7 @@ h1, h2, h3, h4 {
   transition: background 0.15s, color 0.15s;
 }
 .category-row:hover {
-  background: var(--sz-cream);
+  background: var(--sz-white);
 }
 .category-row:hover .category-row-name {
   color: var(--sz-burgundy);
@@ -508,18 +506,29 @@ h1, h2, h3, h4 {
   flex: 1 1 320px;
   margin: 0;
 }
+/* The field beside it opens the same view, so browsing is a link, not a
+   second call to action. */
+.home-browse-link {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--sz-burgundy);
+  white-space: nowrap;
+}
+/* The groups are one flat block on the page ground: two columns of rows,
+   held apart by whitespace rather than by a card each. */
 .home-groups {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 3rem;
   align-items: start;
 }
 .home-groups .category-section {
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 0.85rem 1rem 0.6rem;
   margin-bottom: 0;
+}
+.home-groups .category-list {
+  max-width: 26rem;
 }
 .home-groups .section-heading {
   font-size: 0.9375rem;
@@ -539,26 +548,31 @@ h1, h2, h3, h4 {
   margin-bottom: 1rem;
 }
 
+/* The result line is the heading of the view: a sentence, so it stays plain
+   serif rather than taking the letterspaced capitals of a view title. */
 .results-count {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  color: var(--sz-text-light);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--sz-burgundy);
+  line-height: 1.3;
 }
 
 .results-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
+/* Sort and export are text controls beside the heading, not framed buttons. */
 .sort-select {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  background: var(--sz-white);
+  padding: 0.15rem 0.25rem;
+  border: 0;
+  background: none;
   color: var(--sz-text);
   cursor: pointer;
 }
@@ -566,34 +580,35 @@ h1, h2, h3, h4 {
 .results-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.1rem;
 }
 
-/* Entry cards — expandable */
+/* A result in a list is a line, not a box. The outline, the surface and the
+   inner padding belong to the opened card, which the permalink route is. */
 .entry-card {
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
+  position: relative;
+  border: 1px solid transparent;
   border-radius: 4px;
-  border-left: 3px solid transparent;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s;
 }
 
 .card-header {
-  padding: 1rem 1.25rem;
   cursor: pointer;
 }
-.entry-card:hover {
-  border-left-color: var(--sz-gold);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+.entry-card:hover .card-title {
+  text-decoration: underline;
 }
 .entry-card.card-expanded {
-  border-left-color: var(--sz-burgundy);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--sz-white);
+  border-color: var(--sz-border);
+}
+/* Room on the right for the neighbour controls of the opened card. */
+.entry-card.card-expanded .card-header {
+  padding: 1rem 7.5rem 0.5rem 1.25rem;
 }
 
 .card-detail {
   padding: 0 1.25rem 1.25rem;
-  border-top: 1px solid var(--sz-border-light);
   animation: slideDown 0.2s ease-out;
 }
 
@@ -602,34 +617,29 @@ h1, h2, h3, h4 {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* One line under the title carries type, page kind and review state. */
 .card-meta {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
-  margin-bottom: 0.25rem;
+  margin-top: 0.25rem;
 }
 
-.card-meta-text {
+.card-meta-text,
+.card-secondary {
   font-family: var(--font-sans);
   font-size: 0.75rem;
   color: var(--sz-text-light);
 }
 
+/* The title is what a result is opened by, so it carries the link colour. */
 .card-title {
   font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 600;
-  color: var(--sz-text);
+  color: var(--sz-burgundy);
   line-height: 1.4;
-  margin-bottom: 0.125rem;
-}
-
-.card-secondary {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  color: var(--sz-text-light);
-  margin-bottom: 0.25rem;
 }
 
 /* Empty state */
@@ -652,55 +662,66 @@ h1, h2, h3, h4 {
   padding: 1rem 0;
 }
 
-/* --- Entry Type Badges --- */
+/* --- Entry Type --- */
 /* The entry type is a classification every card carries, so it reads as a
-   quiet label. Colour on a card means a state that needs attention (review
-   status, matrix cell, contested claim). */
+   quiet label in the head line rather than as a plaque on the card. */
 .badge {
   display: inline-block;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
   font-family: var(--font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.025em;
   white-space: nowrap;
-  background: var(--sz-border-light);
-  color: var(--sz-text);
+  color: var(--sz-text-light);
 }
 
-/* Metadata table */
+/* Field rows. The card carries one outline; inside it structure comes from
+   whitespace and small headings, so a row has no frame, no stripe and no rule.
+   Label and value are flex items: a short value keeps the label's line, a long
+   one wraps under it. */
 .meta-table {
   width: 100%;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .meta-row {
   display: flex;
-  padding: 0.5rem 1rem;
-}
-.meta-row:nth-child(even) {
-  background: var(--sz-white);
+  flex-wrap: wrap;
+  gap: 0 0.6rem;
+  padding: 0.15rem 0;
 }
 
 .meta-label {
-  width: 160px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   font-family: var(--font-serif);
   font-size: 0.875rem;
+  line-height: 1.6;
   color: var(--sz-burgundy);
 }
 
 .meta-value {
-  flex: 1;
+  flex: 1 1 60%;
+  min-width: 0;
   font-family: var(--font-sans);
   font-size: 0.9375rem;
+  line-height: 1.6;
   color: var(--sz-text);
+  /* An address has no break opportunity of its own and would otherwise push
+     the whole page sideways on a phone. */
+  overflow-wrap: anywhere;
+}
+
+/* From the width at which the labels can share one column, they do, so the
+   values align and no label breaks across two lines. */
+@media (min-width: 641px) {
+  .meta-table {
+    display: grid;
+    grid-template-columns: minmax(9rem, max-content) minmax(0, 1fr);
+    column-gap: 1rem;
+    row-gap: 0.25rem;
+  }
+  .meta-row { display: contents; }
 }
 
 /* Subtle external authority link (Wikidata) in the metadata table */
@@ -713,8 +734,8 @@ h1, h2, h3, h4 {
   white-space: nowrap;
 }
 .wikidata-link:hover {
-  color: var(--sz-gold);
-  border-bottom-color: var(--sz-gold);
+  color: var(--sz-gold-dark);
+  border-bottom-color: var(--sz-gold-dark);
 }
 
 /* Detail sections */
@@ -767,18 +788,33 @@ h1, h2, h3, h4 {
   margin-bottom: 0.25rem;
 }
 
-/* Action bar */
+/* Action bar. Wraps so a phone-wide card keeps every button inside the
+   viewport instead of scrolling sideways. */
 .action-bar {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   padding-top: 0.5rem;
   margin-top: 1.25rem;
 }
 
-/* Inside a card's action bar the outlined button sits in a dense row. */
+/* Inside a card the actions are text with a leading icon; an outlined button
+   would put a second frame into the one outline the card has. */
 .action-bar .action-btn {
-  padding: 0.375rem 0.75rem;
-  gap: 0.375rem;
+  padding: 0.25rem 0;
+  gap: 0.35rem;
+  border: none;
+  background: none;
+  color: var(--sz-burgundy);
+}
+.action-bar .action-btn + .action-btn {
+  margin-inline-start: 0.85rem;
+}
+.action-bar .action-btn:hover {
+  background: none;
+  color: var(--sz-gold-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .action-btn svg {
@@ -817,19 +853,12 @@ h1, h2, h3, h4 {
 .explore-mode-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 1.25rem;
 }
 
+/* One text line: what is selected, and the way back to everything. */
 .explore-selection-bar {
-  padding: 0.8rem 1rem;
-  margin-bottom: 1.25rem;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-}
-.explore-selection-bar .explore-filter-chips {
-  border: 0;
-  padding: 0;
+  margin-bottom: 1.5rem;
 }
 .explore-selection-label,
 .explore-selection-empty {
@@ -844,9 +873,6 @@ h1, h2, h3, h4 {
 .explore-layout.dashboard-layout { display: block; }
 .dashboard-layout .explore-sidebar { display: none; }
 .dashboard-layout .explore-viz {
-  padding: 0;
-  border: 0;
-  background: transparent;
   overflow: visible;
 }
 .dashboard-summary {
@@ -854,14 +880,12 @@ h1, h2, h3, h4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
+/* A figure with its label, on the page ground: the frame added nothing the
+   whitespace between the columns does not say. */
 .dashboard-metric {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 1.1rem 1.25rem;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
   font-family: var(--font-sans);
   font-size: 0.8rem;
   color: var(--sz-text-light);
@@ -876,7 +900,6 @@ h1, h2, h3, h4 {
   line-height: 1.25;
   font-variant-numeric: tabular-nums;
 }
-.dashboard-metric-primary { border-top: 3px solid var(--sz-burgundy); }
 .dashboard-metric-primary strong { color: var(--sz-burgundy); }
 .dashboard-eyebrow {
   font-family: var(--font-sans);
@@ -888,32 +911,37 @@ h1, h2, h3, h4 {
 }
 .dashboard-metric .link-btn { padding: 0; font-size: 0.8rem; }
 .dashboard-metric button:disabled { color: var(--sz-text-light); cursor: default; }
+/* The selection figure stands in the summary above; this line exists so that
+   a changed selection is announced and not only redrawn. */
 .dashboard-scope {
-  margin: 0.6rem 0 1.3rem;
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: var(--sz-text-light);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
+/* A heading and the space above it separate one panel from the next. */
 .dashboard-panel {
   min-width: 0;
-  padding: 1.35rem 1.5rem;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
+  margin-top: 2.25rem;
 }
 .dashboard-panel-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 .dashboard-panel h2 {
-  color: var(--sz-text);
-  font-size: 1.35rem;
+  color: var(--sz-gold-dark);
+  font-size: 1.125rem;
+  font-weight: 600;
   line-height: 1.3;
-  margin: 0.15rem 0 0.35rem;
+  margin: 0 0 0.15rem;
 }
 .dashboard-panel-head p,
 .dashboard-chart-unit,
@@ -980,8 +1008,7 @@ h1, h2, h3, h4 {
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 0.65rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--sz-border-light);
+  margin-top: 1.25rem;
 }
 .dashboard-range label {
   display: flex;
@@ -1010,10 +1037,11 @@ h1, h2, h3, h4 {
 .dashboard-rankings {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 1.25rem 0;
+  gap: 1.25rem 3rem;
+  margin-top: 2.25rem;
   align-items: start;
 }
+.dashboard-rankings .dashboard-panel { margin-top: 0; }
 .dashboard-ranking { list-style: none; padding: 0; margin: 0; }
 .dashboard-rank {
   display: grid;
@@ -1034,7 +1062,7 @@ h1, h2, h3, h4 {
 .dashboard-rank-count { font-variant-numeric: tabular-nums; }
 .dashboard-rank-track { grid-column: 1 / -1; height: 5px; background: #f1eee8; border-radius: 2px; }
 .dashboard-rank-track > span { display: block; height: 100%; min-width: 2px; background: #8a8275; border-radius: 2px; }
-.dashboard-rank:hover { background: var(--sz-cream); }
+.dashboard-rank:hover { background: var(--sz-white); }
 .dashboard-rank.is-selected { border-color: var(--sz-burgundy); background: #faf5f6; }
 .dashboard-rank.is-selected .dashboard-rank-track > span { background: var(--sz-burgundy); }
 .dashboard-rank:focus-visible { outline: 2px solid var(--sz-burgundy); outline-offset: 1px; }
@@ -1051,15 +1079,12 @@ h1, h2, h3, h4 {
 }
 @media (max-width: 480px) {
   .explore-head .page-title { font-size: 1.3rem; letter-spacing: 0.05em; }
-  .explore-mode-tabs { width: 100%; }
-  .explore-mode-tabs .mode-tab { flex: 1; padding: 0.45rem 0.6rem; font-size: 0.75rem; }
-  .explore-selection-bar { padding: 0.75rem; }
+  .explore-mode-tabs { width: 100%; gap: 1rem; }
+  .explore-mode-tabs .mode-tab { font-size: 0.75rem; }
   .explore-selection-bar .chip-clear { margin-left: 0; }
-  .dashboard-summary { gap: 0.65rem; }
-  .dashboard-metric { padding: 0.75rem; }
+  .dashboard-summary { gap: 0.65rem 1rem; }
   .dashboard-metric strong { font-size: 2rem; }
   .dashboard-eyebrow { font-size: 0.65rem; }
-  .dashboard-panel { padding: 1rem 0.85rem; }
   .dashboard-timeline { grid-template-columns: 1.75rem minmax(0, 1fr); gap: 0.4rem; }
   .dashboard-histogram { gap: 2px; }
   .dashboard-chart-reading { margin-left: 0; }
@@ -1067,13 +1092,27 @@ h1, h2, h3, h4 {
   .dashboard-range-separator { display: none; }
 }
 
-/* Base and active look come from the two button styles. */
+/* Text tabs in the pattern of the main navigation: the active one is marked
+   by its underline, not by a frame or a fill. */
 .mode-tab {
-  padding: 0.4rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   color: var(--sz-text-light);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 0.3rem 0;
+  cursor: pointer;
+}
+.mode-tab:hover {
+  color: var(--sz-burgundy);
+  border-bottom-color: var(--sz-gold);
 }
 .mode-tab.active {
-  padding: 0.4rem 1rem;
+  color: var(--sz-burgundy);
+  border-bottom-color: var(--sz-burgundy);
 }
 
 .explore-layout {
@@ -1085,10 +1124,6 @@ h1, h2, h3, h4 {
 }
 
 .explore-sidebar {
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 1rem;
   position: sticky;
   top: calc(var(--header-height) + 0.75rem);
   max-height: calc(100vh - var(--header-height) - 2rem);
@@ -1106,11 +1141,6 @@ h1, h2, h3, h4 {
   gap: 0.375rem;
   align-items: center;
 }
-.explore-filter-chips:not(:empty) {
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--sz-border-light);
-}
-
 /* What the active mode cannot draw, stated once beside it rather than on it. */
 .explore-notes {
   font-family: var(--font-sans);
@@ -1119,9 +1149,7 @@ h1, h2, h3, h4 {
   color: var(--sz-text-light);
 }
 .explore-notes:not(:empty) {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--sz-border-light);
+  margin-top: 1.25rem;
 }
 .explore-notes .link-btn {
   font-family: var(--font-sans);
@@ -1134,10 +1162,6 @@ h1, h2, h3, h4 {
 .explore-viz {
   min-width: 0;
   min-height: 480px;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 1.25rem;
   position: relative;
   overflow: hidden;
 }
@@ -1146,9 +1170,7 @@ h1, h2, h3, h4 {
 
 /* The selection reads under the filters that produced it. */
 .explore-detail {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--sz-border-light);
+  margin-top: 1.5rem;
 }
 .explore-detail.hidden { display: none; }
 
@@ -1180,13 +1202,6 @@ h1, h2, h3, h4 {
   font-weight: 600;
   color: var(--sz-burgundy);
   margin-bottom: 0.5rem;
-}
-
-.detail-summary-hint {
-  font-size: 0.75rem;
-  color: var(--sz-text-light);
-  font-style: italic;
-  margin-bottom: 1rem;
 }
 
 .detail-group-title {
@@ -1471,10 +1486,7 @@ h1, h2, h3, h4 {
   margin-top: 0.5rem;
 }
 .network-stat {
-  text-align: center;
-  padding: 0.4rem;
-  background: var(--sz-cream);
-  border-radius: 4px;
+  padding: 0.4rem 0;
 }
 .network-stat strong {
   display: block;
@@ -1491,14 +1503,13 @@ h1, h2, h3, h4 {
 /* --- Footer --- */
 .site-footer {
   background: var(--sz-white);
-  border-top: 1px solid var(--sz-border);
   margin-top: auto;
 }
 
 .footer-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1.5rem 2rem;
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 2rem;
@@ -1561,12 +1572,6 @@ h1, h2, h3, h4 {
   display: block;
 }
 
-/* Stats export */
-.stats-export {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
 /* --- Skip Link --- */
 .skip-link {
   position: absolute;
@@ -1592,7 +1597,8 @@ h1, h2, h3, h4 {
 .btn-primary:focus-visible,
 .btn-secondary:focus-visible,
 .browse-btn:focus-visible,
-.page-download-btn:focus-visible,
+.page-link-btn:focus-visible,
+.home-browse-link:focus-visible,
 .mode-tab:focus-visible,
 .category-row:focus-visible,
 .facet-item:focus-visible,
@@ -1654,15 +1660,11 @@ h1, h2, h3, h4 {
   border-bottom-color: var(--sz-burgundy);
 }
 
-/* Reading text sits on a white card with a quiet edge, so a long page is a
-   sheet on the cream ground rather than text laid directly on it. */
+/* Reading text sits on the page ground; its measure is what holds it
+   together, so it needs no sheet under it. */
 .page-content {
   max-width: 800px;
   margin-bottom: 2rem;
-  background: var(--sz-white);
-  border: 1px solid var(--sz-border);
-  border-radius: 4px;
-  padding: 1.75rem 2rem 2rem;
 }
 
 .page-content h1 {
@@ -1759,31 +1761,45 @@ h1, h2, h3, h4 {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
 }
-/* A table is read row by row, so alternating rows carry the structure and
-   the header needs one rule rather than a filled bar. */
+/* A table is read row by row, so a hairline between rows carries the
+   structure; the table needs no outer frame and no striping. */
 .page-table th {
   text-align: left;
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.75rem 0.4rem 0;
   color: var(--sz-gold-dark);
   font-weight: 600;
   font-size: 0.75rem;
-  border-bottom: 2px solid var(--sz-border);
+  border-bottom: 1px solid var(--sz-border);
 }
 .page-table td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.75rem 0.55rem 0;
   vertical-align: top;
-}
-.page-table tbody tr:nth-child(even) {
-  background: var(--sz-cream);
+  border-bottom: 1px solid var(--sz-border-light);
 }
 .page-table tbody tr:hover {
-  background: rgba(184, 150, 62, 0.12);
+  background: rgba(184, 150, 62, 0.08);
 }
 
-/* Action buttons on pages (download, etc.) */
+/* Actions on pages (download, etc.) */
 .page-actions {
   margin: 1rem 0 1.5rem;
 }
+/* An action that only downloads or navigates reads as a link with its icon. */
+.page-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--sz-burgundy);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.page-link-btn:hover { color: var(--sz-burgundy-dark); }
 
 /* --- JSON-LD Playground --- */
 .page-content-wide {
@@ -1867,27 +1883,29 @@ h1, h2, h3, h4 {
   margin-bottom: 0.5rem;
 }
 
+/* Same text tabs as the Explore modes: the active one carries the underline
+   and the row carries no rule of its own. */
 .jsonld-tabs {
   display: flex;
-  gap: 0;
-  border-bottom: 2px solid var(--sz-border);
-  margin-bottom: 0;
+  gap: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 .jsonld-tab {
-  padding: 0.5rem 1.25rem;
+  padding: 0.3rem 0;
   border: none;
   background: none;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 500;
+  letter-spacing: 0.04em;
   color: var(--sz-text-light, #6B6B6B);
   cursor: pointer;
   border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
   transition: color 0.15s, border-color 0.15s;
 }
 .jsonld-tab:hover {
   color: var(--sz-burgundy);
+  border-bottom-color: var(--sz-gold);
 }
 .jsonld-tab.active {
   color: var(--sz-burgundy);
@@ -1912,16 +1930,18 @@ h1, h2, h3, h4 {
   margin-bottom: 0;
 }
 
+/* The record wraps inside the surface: a long IRI would otherwise push a
+   line far past the viewport and be readable only by sideways scrolling. */
 .jsonld-code {
   background: #1e1e2e;
   color: #cdd6f4;
   padding: 1rem 1.25rem;
-  border-radius: 0 0 4px 4px;
-  overflow-x: auto;
+  border-radius: 4px;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 0.8125rem;
   line-height: 1.6;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   max-height: 480px;
   overflow-y: auto;
   margin-bottom: 1.5rem;
@@ -1939,7 +1959,6 @@ h1, h2, h3, h4 {
 /* Triples table */
 .triples-table {
   margin-top: 0;
-  border-radius: 0 0 4px 4px;
   margin-bottom: 1.5rem;
 }
 .triples-table td {
@@ -2032,30 +2051,7 @@ mark {
 .prov-missing { background: #f0f0f0; color: #595959; }
 
 /* --- Edit Mode --- */
-.edit-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(250, 248, 243, 0.7);
-  background: none;
-  border: 1px solid rgba(250, 248, 243, 0.3);
-  border-radius: 3px;
-  padding: 0.25rem 0.6rem;
-  cursor: pointer;
-  flex-shrink: 0;
-  white-space: nowrap;
-  transition: all 0.15s;
-}
-.edit-toggle-btn:hover { border-color: rgba(250, 248, 243, 0.6); color: var(--sz-cream); }
-.edit-toggle-btn.active {
-  background: var(--sz-gold);
-  border-color: var(--sz-gold);
-  color: var(--sz-burgundy);
-}
-
+/* The switch itself is a navigation item and styled as one (.nav-item-btn). */
 .edit-save-btn {
   display: inline-flex;
   flex-wrap: wrap;
@@ -2111,8 +2107,8 @@ mark {
 }
 
 /* Edit mode body class — highlight editable areas */
-body.edit-mode .meta-table {
-  border-color: var(--sz-gold);
+body.edit-mode .meta-label {
+  color: var(--sz-gold-dark);
 }
 
 /* Provenance "editor" (human-curated) — canonical name written by apply_patches.py.
@@ -2153,25 +2149,18 @@ body.edit-mode .meta-table {
   font-size: 0.8rem;
 }
 
-/* Review chip (dataset projection plus session state) */
+/* The review state closes the head line as a word, in the same subdued text
+   as the values before it: a plaque on every card marked the ordinary state
+   as loudly as the one that needs attention. */
 .review-chip {
   display: inline-block;
   font-family: var(--font-sans);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.55rem;
-  border-radius: 3px;
-  margin-bottom: 0.75rem;
-  border: 1px solid transparent;
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
 }
-.review-unreviewed { background: #f0f0f0; color: #595959; border-color: #ddd; }
-.review-agent { background: #fff3cd; color: #856404; border-color: #f0e0a8; }
-.review-contested { background: #fbe4e4; color: #8a2a2a; border-color: #eec6c6; }
-.review-approved { background: #d4edda; color: #155724; border-color: #b8dcc0; }
-/* Session state: edited in this browser, not yet exported or applied. */
-.review-edited { background: #e8e2f2; color: #46356b; border-color: #cfc3e4; }
+/* The per-state classes (review-unreviewed, review-agent, review-contested,
+   review-approved, review-edited) carry no colour of their own: the word is
+   the state, and they stay in the markup as the hook the tests read. */
 .review-pending {
   font-weight: 700;
   text-transform: none;
@@ -2226,12 +2215,9 @@ body.edit-mode .meta-table {
 .triage-hints {
   font-family: var(--font-sans);
   font-size: 0.75rem;
-  border: 1px solid var(--sz-border);
-  border-left: 3px solid var(--sz-burgundy);
-  border-radius: 3px;
-  padding: 0.5rem 0.75rem;
+  border-inline-start: 3px solid var(--sz-burgundy);
+  padding: 0.25rem 0 0.25rem 0.75rem;
   margin-bottom: 0.75rem;
-  background: rgba(122, 27, 44, 0.03);
 }
 .triage-hints-head {
   font-weight: 700;
@@ -2361,40 +2347,53 @@ body.edit-mode .meta-table {
   outline-offset: 1px;
 }
 
-/* --- Explicit contested statements --- */
-.contested-status,
+/* --- Explicit contested statements ---
+   A tint marks the open decision; the block itself stays flat, because a frame
+   inside the card frame is what made it read as a warning box. */
 .contested-claim {
-  border: 1px solid #9a6a00;
-  border-left: 4px solid #9a6a00;
-  border-radius: 3px;
   background: #fff8e7;
   color: var(--sz-text);
   font-family: var(--font-sans);
-  padding: 0.65rem 0.8rem;
+  font-size: 0.8125rem;
+  padding: 0.6rem 0.75rem;
+  margin: 0.75rem 0;
+  /* Claim ids and checksums have no break opportunity of their own. */
+  overflow-wrap: anywhere;
 }
-.contested-status ul,
 .contested-claim ul {
-  margin: 0.45rem 0;
-  padding-left: 1.25rem;
+  list-style: none;
+  margin: 0.15rem 0 0;
 }
-.contested-claims {
-  display: grid;
-  gap: 0.75rem;
+.contested-claim li {
+  line-height: 1.5;
 }
 .contested-claim-heading {
   color: #6e4a00;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: help;
 }
-.contested-claim-id,
 .contested-source {
   color: var(--sz-text-light);
   font-size: 0.75rem;
-  overflow-wrap: anywhere;
+  margin-top: 0.4rem;
 }
 .contested-claim h4 {
-  font-size: 0.8rem;
-  margin: 0.7rem 0 0.2rem;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sz-text-light);
+  margin: 0.55rem 0 0;
+}
+/* Only a checksum and an identifier are read character by character. */
+.checksum {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+  cursor: help;
 }
 
 /* --- Responsive (basic) --- */
@@ -2438,9 +2437,12 @@ body.edit-mode .meta-table {
   .explore-layout {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Stacked above the drawing surface the column has no frame left to hold
+     it, so its measure does. */
   .explore-sidebar {
     position: static;
     max-height: none;
+    max-width: 34rem;
   }
   .explore-viz {
     min-height: 380px;
@@ -2455,50 +2457,75 @@ body.edit-mode .meta-table {
 @media print {
   .site-header, .site-footer, .sidebar, .mobile-filter-btn,
   .mobile-overlay, .filter-chips, .action-bar, .load-more,
-  .home-search, .results-header, .results-context, .detail-provenance,
-  .stats-export, .page-actions { display: none !important; }
+  .home-search, .results-header, .results-context,
+  .page-actions { display: none !important; }
   body { background: white; font-size: 11pt; }
   .main-layout { max-width: 100%; padding: 0; }
   .main-content { width: 100%; }
   .entry-card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
   .card-detail { animation: none; }
-  .meta-table { border: 1px solid #ccc; }
 }
 
 @media (max-width: 640px) {
   .home-title {
     font-size: 1.375rem;
   }
-  .page-content {
-    padding: 1.25rem 1rem 1.5rem;
+  .home-groups {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
   }
   .footer-links {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* --- Compact entry detail (read layout) --- */
-.detail-inline-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1.25rem;
-  padding: 0.5rem 0 0.75rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
+/* --- Entry detail (read layout) --- */
+/* The field block is the review surface: every value under its own name, the
+   provenance class and the review decision beside the field they belong to. */
+.detail-fields {
+  margin-bottom: 1.5rem;
 }
-.inline-meta-label {
+.detail-fields .meta-table {
+  margin-bottom: 0;
+}
+
+/* Said where the flat projection cannot describe one publication on its own. */
+.field-note {
   font-family: var(--font-sans);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--sz-text-light);
-  margin-right: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--sz-text);
+  background: var(--sz-border-light);
+  border-inline-start: 3px solid var(--sz-gold-dark);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  margin-block-end: 0.5rem;
 }
+
+/* An addition to a value (language subtag, numbered extent), never a value. */
+.field-sub {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-text-light);
+}
+
+/* Review decision on a single field. Monochrome: colour on a card stays with
+   the states that need attention, and the word carries the meaning. */
+.field-review {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--sz-border-light);
+  color: var(--sz-text);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  margin-inline-start: 0.35rem;
+  vertical-align: middle;
+}
+
 .detail-contents li {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.15rem 0;
+  padding: 0.1rem 0;
 }
 .content-item-pages {
   color: var(--sz-text-light);
@@ -2506,31 +2533,36 @@ body.edit-mode .meta-table {
   font-size: 0.8125rem;
 }
 .detail-source-details {
-  margin: 1rem 0;
-  border: 1px solid var(--sz-border-light);
-  border-radius: 4px;
-  background: var(--sz-white);
+  margin: 1rem 0 0;
 }
 .detail-source-details summary {
   cursor: pointer;
-  padding: 0.5rem 0.75rem;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   color: var(--sz-burgundy);
 }
 .detail-source-details .detail-bibentry {
-  border-top: 1px solid var(--sz-border-light);
+  background: none;
+  border: none;
+  border-inline-start: 1px solid var(--sz-border-light);
+  border-radius: 0;
+  padding: 0.25rem 0 0.25rem 0.75rem;
+  margin-top: 0.5rem;
+}
+.detail-source-details .detail-provenance {
+  margin: 0.4rem 0 0;
+  padding-inline-start: 0.75rem;
 }
 
-/* --- Edit-mode helpers --- */
+/* The provenance legend stands once above the result list, not per card. */
 .prov-legend {
   font-family: var(--font-sans);
   font-size: 0.75rem;
   color: var(--sz-text-light);
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  margin: 0.5rem 0;
+  gap: 0.3rem;
+  margin: 0 0 0.5rem;
   flex-wrap: wrap;
 }
 .subject-reach {
@@ -2608,11 +2640,6 @@ body.edit-mode .meta-table {
 }
 
 /* --- Data-quality workbench (#data/quality) --- */
-.curate-page .curate-intro {
-  color: var(--sz-text-light);
-  max-width: 46rem;
-  margin-bottom: 1rem;
-}
 .curate-section-heading {
   font-size: 1.0625rem;
   margin: 1.75rem 0 0.35rem;
@@ -2876,4 +2903,355 @@ td.matrix-low { background: #F5E3E3; }
 }
 .mobile-filter-btn.hidden {
   display: none;
+}
+
+/* --- Publication layer (read layout) ---
+   A source page can document several publications, so each one carries its own
+   heading and its own fields instead of the card joining values across them. */
+.publication {
+  margin-bottom: 1.25rem;
+}
+/* A hairline is the only separation between publications. */
+.publication + .publication {
+  border-top: 1px solid var(--sz-border-light);
+  padding-top: 1rem;
+}
+.publication-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--sz-gold-dark);
+  margin-bottom: 0.4rem;
+}
+.publication .meta-table {
+  margin-bottom: 0;
+}
+
+/* Two text links, not a button bar: they belong to the heading beside them. */
+.cite-link {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--sz-burgundy);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cite-link:hover { color: var(--sz-gold-dark); }
+.publication-actions {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--sz-border);
+}
+
+.credit-role {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--sz-burgundy);
+  margin-inline-end: 0.3rem;
+}
+
+.contribution-list li {
+  margin-bottom: 0.35rem;
+}
+.contribution-list .content-item-pages {
+  margin-inline-start: 0.5rem;
+}
+.contribution-note {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--sz-text-light);
+}
+
+/* What the extraction rules leave open on one publication: one tinted line at
+   the end of its block, no box. */
+.review-flag {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  background: rgba(194, 163, 96, 0.12);
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.4rem;
+}
+.review-flag-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sz-burgundy);
+  margin-inline-end: 0.35rem;
+}
+
+.variant-name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+.variant-context {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--sz-text-light);
+}
+
+/* Publication data that arrives after the first paint keeps its state visible. */
+.field-loading,
+.field-error {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--sz-text);
+  background: var(--sz-border-light);
+  padding: 0.5rem 0.75rem;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+}
+.field-error {
+  border-inline-start: 3px solid var(--sz-burgundy);
+}
+
+/* The block of the source text one publication was read from. */
+.source-slice {
+  box-shadow: inset 2px 0 0 var(--sz-border);
+  padding-inline-start: 0.4rem;
+}
+
+.card-title-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sz-text-light);
+}
+
+/* Header, result view, list and facet sidebar */
+
+/* The router moves focus to the start of a view so the change is announced.
+   That focus is not a keyboard position, so it carries no ring; links,
+   buttons and fields keep theirs. */
+#main-content:focus,
+#main-content h1:focus {
+  outline: none;
+}
+
+/* The Edit switch is a destination of the header like the four pages. */
+.nav-item-btn {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(250, 248, 243, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nav-item-btn:hover,
+.nav-item-btn.active {
+  color: var(--sz-cream);
+  border-bottom-color: var(--sz-gold);
+}
+.nav-item-btn:focus-visible {
+  outline: 2px solid var(--sz-gold);
+  outline-offset: 2px;
+}
+
+.sort-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sz-text-light);
+}
+
+/* Beside the heading the export is a text control like the sort. */
+.results-actions .action-btn {
+  border: 0;
+  background: none;
+  padding: 0.15rem 0;
+}
+.results-actions .action-btn:hover {
+  background: none;
+  color: var(--sz-burgundy);
+}
+
+/* Neighbour controls of the opened card, in its head row. Out of flow, so
+   the head keeps its own layout and the detail block below is untouched. */
+.card-nav {
+  position: absolute;
+  top: 0.9rem;
+  right: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.card-nav-btn {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-burgundy);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.card-nav-btn:hover {
+  text-decoration: underline;
+}
+.card-nav-btn:focus-visible {
+  outline: 2px solid var(--sz-burgundy);
+  outline-offset: 2px;
+}
+
+/* A facet heading that opens and closes its group; the count says how much a
+   closed group is filtering. */
+.facet-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.facet-toggle::after {
+  content: '\25be';
+  margin-left: auto;
+  font-size: 0.7rem;
+}
+.facet-toggle[aria-expanded="false"]::after {
+  content: '\25b8';
+}
+.facet-toggle:focus-visible {
+  outline: 2px solid var(--sz-burgundy);
+  outline-offset: 2px;
+}
+
+.facet-group-count:not(:empty) {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  color: var(--sz-text);
+  background: var(--sz-border-light);
+  border-radius: 9999px;
+  padding: 0 0.4rem;
+}
+
+/* Card head, contested values, page record and the start-page groups */
+
+/* The head is a line of plain items. The separator is drawn on the item that
+   follows, so a wrap carries it to the next line instead of leaving a dot at
+   the end of the one above. */
+.card-meta > * + *::before {
+  content: '·';
+  margin-inline-end: 0.4rem;
+  color: var(--sz-border);
+}
+
+/* The room at the right of the head belongs to the neighbour controls, so it
+   is reserved only while they are there. On a phone it took a third of the
+   width of the head line and broke it into three. */
+.entry-card.card-expanded:has(> .card-nav[hidden]) .card-header {
+  padding-inline-end: 1.25rem;
+}
+
+/* The word at a value an open claim contests, leading to the block that
+   carries the interpretations and the evidence. */
+.contested-mark {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--sz-burgundy);
+  margin-inline-start: 0.4em;
+  white-space: nowrap;
+}
+.contested-claim:focus-visible {
+  outline: 2px solid var(--sz-burgundy);
+  outline-offset: 2px;
+}
+
+/* In edit mode the source stands inside the tinted evidence section, so it
+   carries the left rule the reading view gives it and no surface of its own. */
+.detail-evidence .detail-bibentry {
+  background: none;
+  border: 0;
+  border-inline-start: 1px solid var(--sz-border-light);
+  border-radius: 0;
+  padding: 0.25rem 0 0.25rem 0.75rem;
+}
+
+/* The editable table is one section like the publications above it. */
+.page-record .meta-table {
+  margin-bottom: 0;
+}
+
+/* On the permalink route the card runs far past the legend, and the legend
+   explains the badges the card carries, so it stays in view while the card
+   scrolls. A list keeps it in flow. */
+#view-results:has(> #results-list > .entry-card.card-expanded:only-child) #prov-legend {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 2;
+  background: var(--sz-cream);
+  margin: 0 0 0.5rem;
+  padding-block: 0.35rem;
+}
+
+/* The groups balance over three columns from the width at which the second
+   column of the pair runs out before the first. */
+@media (min-width: 900px) {
+  .home-groups {
+    display: block;
+    columns: 3;
+    column-gap: 3rem;
+  }
+  .home-groups .category-section {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* The header scrolls away at this width, so the legend sticks to the top
+     of the viewport itself. */
+  #view-results:has(> #results-list > .entry-card.card-expanded:only-child) #prov-legend {
+    top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  /* A narrow label column keeps a wrapping value out of the label's left
+     edge, where it read as a second label. */
+  .meta-label {
+    flex: 0 0 8rem;
+  }
+  .meta-value {
+    flex: 1 1 8rem;
+  }
+}
+
+/* Review status in the result list head line (app.js cardMeta) */
+
+/* In the head line the review status is one item among the others. Colour on
+   a result line is reserved for a state that needs attention, and a filled
+   chip on every row made the state the loudest thing in the list. */
+.card-meta .review-chip {
+  background: none;
+  border-color: transparent;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--sz-text-light);
 }

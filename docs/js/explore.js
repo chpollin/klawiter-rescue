@@ -180,21 +180,7 @@ const Explore = {
           <div id="viz-network" class="explore-panel hidden"></div>
         </div>
       </div>
-
-      <div class="stats-export">
-        <button type="button" class="action-btn" data-act="export-dataset">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Download dataset (JSON)
-        </button>
-      </div>
     `;
-
-    const exportBtn = container.querySelector('[data-act="export-dataset"]');
-    if (exportBtn) exportBtn.addEventListener('click', () => Export.fullDataset());
 
     // Shared tooltip — announced as a live region so the keyboard path
     // conveys the same reading the pointer path does.
@@ -227,12 +213,16 @@ const Explore = {
 
   _expandedFacets: {},
 
-  /** The facet value a record falls into, or null when it has none. */
-  _facetValue(key, entry) {
-    if (key === 'languages') return entry.language || this.NOT_RECORDED;
-    if (key === 'types') return entry.entryType || 'other';
-    if (key === 'decade') return entry.year ? Math.floor(entry.year / 10) * 10 : null;
-    return null;
+  /**
+   * The facet values a record falls into. A source page can document several
+   * publications, so it belongs to every language and decade of them; the
+   * counts therefore agree with the entry set the value selects.
+   */
+  _facetValues(key, entry) {
+    if (key === 'languages') return App.languageValues(entry);
+    if (key === 'types') return [entry.entryType || 'other'];
+    if (key === 'decade') return App.decadeValues(entry);
+    return [];
   },
 
   _facetLabel(key, value) {
@@ -257,9 +247,9 @@ const Explore = {
     else others[key] = [];
     const counts = new Map();
     for (const entry of this._applyFilters(this.entries, others)) {
-      const value = this._facetValue(key, entry);
-      if (value == null) continue;
-      counts.set(value, (counts.get(value) || 0) + 1);
+      for (const value of this._facetValues(key, entry)) {
+        counts.set(value, (counts.get(value) || 0) + 1);
+      }
     }
     return [...counts.entries()].sort((a, b) => key === 'decade'
       ? a[0] - b[0]
@@ -367,32 +357,38 @@ const Explore = {
     return this._applyFilters(this.entries, this.filters);
   },
 
-  /** Apply one filter set to one record set; the facet counts reuse this. */
+  /**
+   * Apply one filter set to one record set; the facet counts reuse this. The
+   * date, language and place axes read every publication of a page, the same
+   * way the results route does, so a selection made here and the list it hands
+   * over hold the same entries.
+   */
   _applyFilters(entries, f) {
     let filtered = entries;
-    if (f.decade != null || f.yearRange.some(value => value != null)) {
-      filtered = filtered.filter(e => Number.isFinite(e.year) && e.year > 0);
-    }
     if (f.languages.length) {
-      filtered = filtered.filter(e => f.languages.includes(e.language || this.NOT_RECORDED));
+      filtered = filtered.filter(e =>
+        App.languageValues(e).some(value => f.languages.includes(value)));
     }
     if (f.types.length) filtered = filtered.filter(e => f.types.includes(e.entryType));
-    if (f.yearRange[0] != null) filtered = filtered.filter(e => e.year >= f.yearRange[0]);
-    if (f.yearRange[1] != null) filtered = filtered.filter(e => e.year <= f.yearRange[1]);
-    if (f.decade != null) {
-      const d0 = f.decade, d1 = d0 + 9;
-      filtered = filtered.filter(e => e.year >= d0 && e.year <= d1);
+    // One range test rather than two: a page with a 1900 and a 1980 edition
+    // does not fall into 1930–1940 by passing each bound with a different year.
+    const [lo, hi] = f.decade != null ? [f.decade, f.decade + 9] : f.yearRange;
+    if (lo != null || hi != null) {
+      filtered = filtered.filter(e => App.yearValues(e).some(year =>
+        (lo == null || year >= lo) && (hi == null || year <= hi)));
     }
-    if (f.location) filtered = filtered.filter(e => e.location === f.location);
+    if (f.location) filtered = filtered.filter(e => App.placeValues(e).includes(f.location));
     if (f.country) {
       // The location → country mapping lives with the geodata, which only the
       // map view loads; without it the filter cannot be honoured and is a no-op.
       const geo = this._module('geography');
-      if (geo && geo.countryOfEntry) filtered = filtered.filter(e => geo.countryOfEntry(e) === f.country);
+      if (geo && geo.countriesOfEntry) {
+        filtered = filtered.filter(e => geo.countriesOfEntry(e).includes(f.country));
+      }
     }
     if (f.publisher) filtered = filtered.filter(e => e.publisher === f.publisher);
     if (f.translator) filtered = filtered.filter(e => translatorKeys(e).includes(f.translator));
-    if (f.period) filtered = filtered.filter(e => e.timePeriod === f.period);
+    if (f.period) filtered = filtered.filter(e => App.periodValues(e).includes(f.period));
     return filtered;
   },
 
@@ -512,7 +508,7 @@ const Explore = {
     }
 
     el.innerHTML = `<span class="explore-selection-label">Selection</span>`
-      + (chips.length ? chips.join(' ') : '<span class="explore-selection-empty">All entries · select a bar to explore</span>')
+      + (chips.length ? chips.join(' ') : '<span class="explore-selection-empty">All entries</span>')
       + `<button type="button" class="chip-clear" data-explore-reset data-dashboard-focus="reset-filters" ${chips.length ? '' : 'disabled'}>Reset filters</button>`;
   },
 

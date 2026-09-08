@@ -43,6 +43,29 @@ function hlEsc(text, query) {
   return out + esc(s.slice(last));
 }
 
+/**
+ * Escape text and turn the addresses inside it into links.
+ *
+ * Splitting runs on the raw text and escaping on the segments, for the reason
+ * hlEsc gives: escaping first would meet the entity spelling of an ampersand
+ * inside a query string and tear the link apart. Trailing sentence
+ * punctuation belongs to the prose around the address, not to the address.
+ */
+function linkifyEsc(text) {
+  const s = String(text == null ? '' : text);
+  const re = /https?:\/\/[^\s<>"']+/g;
+  let out = '';
+  let last = 0;
+  let m;
+  while ((m = re.exec(s)) !== null) {
+    const url = m[0].replace(/[.,;:!?)\]]+$/, '');
+    out += esc(s.slice(last, m.index))
+      + `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a>`;
+    last = m.index + url.length;
+  }
+  return out + esc(s.slice(last));
+}
+
 /** Escape BibTeX special characters */
 function escapeBibtex(s) {
   if (!s) return '';

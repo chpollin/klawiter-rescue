@@ -113,6 +113,45 @@ test('the contested-claim index answers what the linear scan answered', () => {
   );
 });
 
+test('edit mode keeps the publications and scopes the table to the page record', () => {
+  const entry = {
+    sourcePageId: 1800, title: 'Romanŭt na edin zhivot. Balzak',
+    publisher: 'Pechat Far', location: 'Sofija', pageCount: 500,
+    pageKind: 'edition-page', publicationCount: 2,
+    publications: [
+      { id: 'a', year: 1947, publisher: 'Pechat Far', places: ['Sofija'],
+        editionStatement: '1st edition', provenance: {} },
+      { id: 'b', year: 1960, publisher: 'Narodna Kultura', places: ['Sofija'],
+        editionStatement: '2nd revised edition', provenance: {} },
+    ],
+  };
+  const html = detailCtx(entry)._buildEditContent(entry);
+
+  // Both imprints stay readable, so an accepted page value is never read as
+  // a decision about the publication the card no longer shows.
+  assert.match(html, /1947 · 1st edition/);
+  assert.match(html, /1960 · 2nd revised edition/);
+  assert.match(html, />Narodna Kultura</);
+  assert.match(html, />Page record</);
+  assert.match(html, /page with 2 publications/);
+  // Editing happens in the page record alone; the publication blocks above it
+  // carry no editable cell.
+  const record = html.slice(html.indexOf('page-record'));
+  assert.strictEqual((html.match(/contenteditable/g) || []).length,
+    (record.match(/contenteditable/g) || []).length);
+  assert.match(record, /Publisher[\s\S]*?contenteditable/);
+  // Every editable row says what an edit here applies to.
+  assert.match(html, /title="[^"]*applies to the page record[^"]*"/);
+});
+
+test('a page without publications keeps the page record as its only table', () => {
+  const entry = { sourcePageId: 7, title: 'T', publisher: 'Insel', location: 'Leipzig' };
+  const html = detailCtx(entry)._buildEditContent(entry);
+  assert.match(html, />Page record</);
+  assert.doesNotMatch(html, /publication-heading/);
+  assert.doesNotMatch(html, /page with/, 'a scope line without several publications says nothing');
+});
+
 test('a category link filters by the category, not by the entry type', () => {
   const entry = {
     sourcePageId: 7, title: 'T', entryType: 'fiction',
@@ -123,10 +162,11 @@ test('a category link filters by the category, not by the entry type', () => {
   assert.doesNotMatch(html, /href="#type=/);
 });
 
-test('the read layout carries the review chip and opens a lone source', () => {
+// The review state moved into the card head, where it stands beside type and
+// page kind; tests/entry_card.test.js pins it there.
+test('the read layout opens a lone source', () => {
   const entry = { sourcePageId: 7, title: 'T', fullBibliographicEntry: 'Klawiter raw text.' };
   const html = detailCtx(entry)._buildReadContent(entry);
-  assert.match(html, /review-chip/);
   assert.match(html, /<details class="detail-source-details" open>/);
 });
 

@@ -2,7 +2,7 @@
 title: Data and Model
 status: maintained
 language: en
-updated: 2026-09-05
+updated: 2026-09-08
 related: [about, pipeline, frontend, testing, production-readiness, status]
 ---
 
@@ -32,11 +32,71 @@ The current census and coverage are in [Status](status.md). The exact source/can
 
 The flat record uses Schema.org, Dublin Core and `klawiter:` terms. It retains title, year, publisher, place, language, translator, extent, categories, cross-references and source identifiers. A populated field can belong to a different publication block from another field on the same page. A first match is a compatibility choice, not a universal scholarly rule.
 
-Language is category-derived under the existing selection precedence. Its human label is retained separately from its registered BCP-47 subtag. The historical source label “Serbo-Croatian” uses the registered macrolanguage `sh`; it is not silently narrowed to Serbian or Croatian. See the [IANA registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry). Publication- or contribution-specific language still needs scoped modelling.
+Language is category-derived under the existing selection precedence. Its human label is retained separately from its registered BCP-47 subtag. The historical source label “Serbo-Croatian” uses the registered macrolanguage `sh`; it is not silently narrowed to Serbian or Croatian. See the [IANA registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry). Publication-scoped language lives in the publication layer described below.
 
 `pageCount` / `schema:numberOfPages` means numbered extent. A citation locator such as “References: p. 425” is not a 425-page book. Translator name transcription and the association of that translator with a publication are separate assertions. Missing, not applicable, not yet extracted and ambiguous values are not yet represented as distinct states throughout the flat layer.
 
 Redirect targets preserve their source title. Stage 05 resolves literal aliases and redirect chains with cycle protection. An unresolved `seeAlso` is a diagnostic: it may reflect whitespace, link syntax or source absence, and must not automatically be described as a genuine red link.
+
+## Publication and contribution scope
+
+A source page can describe several publications. The flat record answers with one value per field, so it can join one publication's imprint to another publication's language and describe a publication the source never documents. Page 4445 showed this in the interface, where the year, place, publisher and extent of a German book from 2000 appeared beside the language of an Arabic article from 2015. The frontend record therefore carries a second layer in which every fact belongs to the publication it was written under. The flat fields keep their meaning and their values, so search, facets and exports continue to work on them.
+
+Stage 05 builds the layer from the page's source text through `lib/publications.py`, which segments with `lib.editions.segment_page`, the same function Gate 1 uses. Publication identifiers, source slices and extents therefore agree with the edition graph wherever both cover a page; `klawiter:publication/{page}-{year}-{suffix}` corresponds to `klawiter:edition/{page}-{year}-{suffix}`. A page whose source carries no publication header receives no layer, because absence of a header is the honest statement about such a page.
+
+The records live in one file per source page under `docs/data/publications/`, named by page id and reached through the template in `_meta.publicationCoverage.pathTemplate`. The main dataset keeps the page-level summary, so search and facets work without loading any of them, and the interface fetches a page's file when it shows that page. The canonical Work/Edition graph stays the authority for multi-edition pages, and the flat `klawiter.jsonld` is unchanged by this projection. Carrying the layer into the canonical RDF needs a vocabulary extension and remains open work.
+
+### Page-level fields
+
+| Field | Meaning |
+|---|---|
+| `pageKind` | `author-page` where a source category path carries the segment Authors, otherwise `edition-page` for several publications and `single-publication` for one |
+| `publicationCount` | number of publications documented on the page |
+| `publicationYears`, `publicationPlaces`, `publicationLanguages` | union over all publications, so a facet finds the page under every publication's value instead of under the value of one of them |
+| `reviewFlags` | field-scoped hints on flat values, currently the encoding repair of an enrichment value, each naming its `field` |
+
+The side file of a page carries `sourcePageId`, its `publications` in source order and its `nameVariants`, where a name variant is a spelling that differs slightly from a credited name, held with the source line it stands in and `status: unresolved`.
+
+`publicationPlaces` covers the imprint places of every publication together with the place of an article's container, because an article carries its place in the container statement.
+
+### Publication fields
+
+| Field | Meaning |
+|---|---|
+| `id`, `sourceSlice` | identifier, and the exact start, end and SHA-256 of the source block the record was read from; `textStart` and `textEnd` name the same passage inside the delivered `fullBibliographicEntry`, and are absent where no single passage matches |
+| `year`, `yearRaw` | publication year, and the header notation including an approximate `ca.` form |
+| `title` | the italic or quoted title of the block, whichever notation comes first |
+| `imprint` | the header statement in its source wording |
+| `publisher`, `places` | publisher, and every place of publication in source wording |
+| `language`, `languageCode` | language of this publication and its BCP-47 subtag |
+| `editionStatement` | an edition statement such as `2nd revised edition` |
+| `extent` | `raw` holds the source notation such as `444/(3)p.`, `numbered` and `unnumbered` hold its components |
+| `series`, `seriesVolume` | series statement and the volume number it ends with |
+| `note` | source prose that follows the series statement, such as a thesis origin |
+| `credits` | `role`, `name` and the literal `creditLabel` of the source |
+| `contributions` | contents entries with `title`, `note`, `pages`, `pageStart`, `pageEnd` and their own `credits` |
+| `container` | `title`, `place`, `issue` and `pages` of a journal an article appeared in |
+| `online` | `url` and the qualification the source gives it, such as a shortened preview version |
+| `reviewFlags` | `code` and readable `detail` of a case the rules cannot decide |
+| `provenance` | the provenance class of every reported field of this publication |
+
+A field stays absent where the source carries no value for it. Roles use the closed vocabulary `translator`, `editor`, `illustrator` and `contributor`, and a credit is read only where the label names a contribution role; a label such as "Cover design by" stays unread rather than entering as an untyped contributor. The scalar `translator` of the flat record is one credit under the compatibility rule, so an interface must read `credits` and `contributions[].credits` before it says anything about the translators of a publication.
+
+### Effect on the flat fields
+
+The flat publisher takes the imprint of the first publication whose header also names a place, split exactly as the publication layer splits it, so the two layers never disagree. The body patterns keep the entries that never carried a header, and a candidate stating who translated, edited or illustrated a work is refused, because a contribution credit is no imprint. A header without a place is left alone, since its single segment can equally be a publisher, a place or a country.
+
+Enrichment values reach the record through a repair. A value that arrived as a Latin-1 or CP1252 misreading of UTF-8 bytes is restored by the byte round-trip and carries the review hint `encoding-repaired` under its field; a value whose bytes were already lost when the cache was frozen empties the field, because an empty field is a smaller claim than a corrupt one. The repaired value keeps its provenance class `llm`, the origin of the value being unchanged by the repair. The class of every reported field is stated, for title, year, language and categories as well as the four fields the enrichment can fill.
+
+### What the layer does not assert
+
+The publications listed on one page share that source page, and on an author page they share the author. No translation, edition or work relation between them is asserted here, because the source establishes none. A relation of that kind needs review evidence and belongs in the reconciliation layer.
+
+Every value of the layer is rule-extracted from the source slice it is reported with, so `provenance` currently reports `regex` for each field. Model values and editor values do not enter it. A released field patch can later set `editor` on a single field, and the per-field map is shaped for that.
+
+Three review flags mark what the rules leave open. `imprint-segments-unresolved` marks a header with more than two comma segments whose publisher and place boundary the string does not settle; the split into several places is made only where the frozen location stock of `docs/data/locations.json` attests a trailing run of at least two places. `contents-pagination-exceeds-extent` marks contents that run past the stated numbered extent, as on page 1891, where the contents end at 445 and the extent states 444. `missing-location` marks a publication header without a place.
+
+`nameVariants` records a bracket spelling that has the same token count and the same final token as a credited name and a similarity of at least 0.85, as with the foreword spelling Hymme Weiss beside the credited translator Hymne Weiss on page 4209. Both spellings stay in the record and no identity between them is asserted.
 
 ## Work/edition model
 

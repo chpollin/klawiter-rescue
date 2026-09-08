@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
     FROZEN_LLM_CACHE,
     OUTPUT_FRONTEND_JSON,
+    OUTPUT_LLM_REPORT,
     STEP_03_OUTPUT,
     WORKING_LLM_CACHE,
     load_csv,
@@ -31,12 +32,20 @@ from lib.config import (
 
 log = setup_logging(__name__)
 
-# Fields we track provenance for (frontend key → cache/CSV key)
+# Fields we track provenance for (frontend key → cache/CSV key). The first four
+# are the fields the frozen enrichment can fill; the rest can only be regex or
+# missing, and are reported so that every displayed field states its class
+# (operator decision 2026-09-08).
 TRACKED_FIELDS = {
     "publisher": "publisher",
     "location": "location",
     "translator": "translator",
     "pageCount": "page_count",
+    "title": "title",
+    "year": "year",
+    "language": "language",
+    "languageCode": "language_iso",
+    "categories": "categories",
 }
 
 
@@ -55,6 +64,29 @@ def field_provenance(has_value, regex_had, llm_has):
     if llm_has:
         return "llm"
     return "regex"
+
+
+# A repaired enrichment value keeps its provenance class, because the LLM
+# remains its origin; the review hint records that the bytes were corrected.
+REPAIR_FLAG = {
+    "code": "encoding-repaired",
+    "detail": (
+        "The enrichment value reached the cache as a misreading of UTF-8 bytes "
+        "and was restored by the deterministic byte round-trip."
+    ),
+}
+
+
+def load_encoding_repairs(mode: str) -> dict:
+    """Repairs the enrichment stage recorded, indexed by page id."""
+    if mode == "off" or not os.path.exists(OUTPUT_LLM_REPORT):
+        return {}
+    with open(OUTPUT_LLM_REPORT, encoding="utf-8") as handle:
+        document = json.load(handle)
+    repairs: dict[str, list[str]] = {}
+    for record in document.get("encodingRepairs", []):
+        repairs.setdefault(str(record["pageId"]), []).append(record["field"])
+    return repairs
 
 
 def _parse_args() -> argparse.Namespace:
@@ -85,6 +117,8 @@ def load_provenance_cache(mode: str) -> dict:
 def main():
     args = _parse_args()
     cache = load_provenance_cache(args.llm_mode)
+    encoding_repairs = load_encoding_repairs(args.llm_mode)
+    log.info("Recorded encoding repairs: %d entries", len(encoding_repairs))
     log.info("LLM provenance cache (%s): %d entries", args.llm_mode, len(cache))
 
     # Build set of LLM-filled fields per page_id
@@ -138,6 +172,19 @@ def main():
             stats[label] += 1
 
         entry["_provenance"] = prov
+
+        # Only a value that actually came from the enrichment carries the hint;
+        # where the parser had already filled the field the repaired cache value
+        # was never merged and the record has nothing to review.
+        repaired = [
+            field
+            for field, cache_key in TRACKED_FIELDS.items()
+            if prov.get(field) == "llm" and cache_key in encoding_repairs.get(pid, [])
+        ]
+        if repaired:
+            entry["reviewFlags"] = [
+                {**REPAIR_FLAG, "field": field} for field in repaired
+            ]
 
     log.info(f"Provenance stats: {stats}")
     log.info(

@@ -47,6 +47,20 @@ const PERIOD_LABELS = {
 };
 
 /**
+ * Inclusive year bounds of the periods, mirroring the pipeline vocabulary that
+ * writes `timePeriod`. A page carries one period per publication year, while
+ * the flat field states the period of its first publication alone, so the
+ * period axis has to be derived from the years rather than read off.
+ */
+const PERIOD_BOUNDS = {
+  'pre-zweig': [-Infinity, 1880],
+  'lifetime': [1881, 1942],
+  'post-wwii': [1943, 1980],
+  'late-20c': [1981, 2000],
+  'contemporary': [2001, Infinity],
+};
+
+/**
  * Language codes occurring in the data whose customary script is not Latin.
  * A title of one of these languages written in Latin letters is a
  * transliteration and is tagged `<code>-Latn` (see titleAttrs in utils.js).
@@ -63,12 +77,6 @@ const NON_LATIN_SCRIPT_LANGS = new Set([
  */
 const SITE_URL = 'https://chpollin.github.io/klawiter-rescue/';
 
-/**
- * Entry types that are about Zweig rather than by Zweig. Single source for
- * the citation exports and the JSON-LD playground alike.
- */
-const ABOUT_ZWEIG_TYPES = ['secondary-literature', 'historical-study', 'symposium', 'other'];
-
 /** Category groupings for the home page */
 const CATEGORY_GROUPS = [
   {
@@ -84,3 +92,17 @@ const CATEGORY_GROUPS = [
     types: ['collected-works', 'translation'],
   },
 ];
+
+/** Groups of CATEGORY_GROUPS holding what Zweig wrote himself. */
+const ZWEIG_OWN_GROUPS = ['Works', 'Editions'];
+
+/**
+ * Entry types that are about Zweig rather than by Zweig, derived from the
+ * grouping the Overview already publishes: Works and Editions are his own,
+ * Reception & Impact and everything the grouping leaves out is about him. A
+ * second hand-kept list drifted from that grouping, which is how a historical
+ * study by Zweig came to be exported without its author.
+ */
+const ABOUT_ZWEIG_TYPES = Object.keys(ENTRY_TYPE_LABELS).filter(type =>
+  !CATEGORY_GROUPS.some(group =>
+    ZWEIG_OWN_GROUPS.includes(group.heading) && group.types.includes(type)));

@@ -114,7 +114,9 @@ function load(file, context, exported) {
   };
   const Detail = load('detail.js', context, 'Detail');
   const html = Detail._contestedAuthorityCell(entry);
-  assert.match(html, /Contested authority assignment/);
+  // The heading names what is contested; every open authority claim of the
+  // holding is a place assignment.
+  assert.match(html, /Contested place assignment/);
   assert.match(html, /Competing interpretations/);
   assert.match(html, /Source evidence/);
   assert.match(html, /Review history/);

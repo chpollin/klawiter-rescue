@@ -11,8 +11,25 @@ authors:
     given-names: Christopher
     affiliation: Digital Humanities Craft OG
     orcid: "https://orcid.org/0000-0002-4879-129X"
+version: "0.9"
 repository-code: "https://github.com/chpollin/klawiter-rescue"
 url: "https://chpollin.github.io/klawiter-rescue/"
+preferred-citation:
+  type: edited-work
+  title: "Stefan Zweig — An International Bibliography. Digital edition"
+  authors:
+    - family-names: Klawiter
+      given-names: Randolph J.
+      affiliation: University of Notre Dame
+  editors:
+    - family-names: Pollin
+      given-names: Christopher
+      affiliation: Digital Humanities Craft OG
+      orcid: "https://orcid.org/0000-0002-4879-129X"
+  year: 2026
+  version: "0.9"
+  url: "https://chpollin.github.io/klawiter-rescue/"
+  repository-code: "https://github.com/chpollin/klawiter-rescue"
 abstract: >-
   Digital edition of the Stefan Zweig bibliography compiled by
   Dr. Randolph J. Klawiter (University of Notre Dame). Extracted from

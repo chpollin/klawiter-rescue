@@ -21,11 +21,6 @@
       "actual": "Alzir Hella and Olivier Bournac"
     },
     {
-      "pageId": 409,
-      "field": "publisher",
-      "actual": "Bilingual edition"
-    },
-    {
       "pageId": 1166,
       "field": "title",
       "actual": "\"Huatielu jueding shengfu de yi shun\" [Die Weltminute von Waterloo: Napoleon, 18. Juni 1815] in:"
@@ -88,7 +83,7 @@
     {
       "pageId": 6342,
       "field": "publisher",
-      "actual": "Insel Verlag"
+      "actual": "Bloch Erden Veralg"
     }
   ],
   "groundTruthPageIds": [
@@ -124,6 +119,28 @@
           "after": "Alzir Hella and Olivier Bournac",
           "expectedRemains": null,
           "reason": "Removes trailing revised-translation prose from the same French credit. The German-publication scope of the fixture remains a failing expectation."
+        }
+      ]
+    },
+    {
+      "date": "2026-09-08",
+      "evidence": "knowledge/journal.md",
+      "resolved": [
+        {
+          "pageId": 409,
+          "field": "publisher",
+          "was": "Bilingual edition",
+          "reason": "The publisher now comes from the publication header, so an edition statement no longer stands in for an imprint."
+        }
+      ],
+      "partialImprovements": [
+        {
+          "pageId": 6342,
+          "field": "publisher",
+          "before": "Insel Verlag",
+          "after": "Bloch Erden Veralg",
+          "expectedRemains": "Bloch Erden Verlag",
+          "reason": "Replaces a publisher name matched elsewhere in the body with the imprint of this publication's header. The delivered source spells it 'Veralg'; the oracle records the spelling of the live wiki page, and correcting it here would be a silent identity change."
         }
       ]
     }

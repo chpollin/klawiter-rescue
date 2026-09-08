@@ -253,24 +253,39 @@ def main() -> None:
             f"  LLM processing complete: {processed} entries, {api_errors} batch errors"
         )
 
-    # Re-validate cached results with current validation rules (catches mojibake)
-    from lib.llm_extract import _has_llm_mojibake
+    # Re-validate cached results with current validation rules. A misreading the
+    # byte round-trip undoes is repaired and recorded, one it cannot undo empties
+    # the field, and a contribution credit never passes as a publisher.
+    from lib.llm_extract import repair_or_reject
+    from lib.patterns import names_a_contribution_credit
 
     revalidated_cache = {}
     rejected = 0
-    for pid, validated in cache.items():
+    repairs = []
+    for pid, validated in sorted(cache.items(), key=lambda item: int(item[0])):
         clean = {"page_id": validated["page_id"]}
         for field in ["publisher", "location", "translator"]:
             val = validated.get(field)
-            if val and not _has_llm_mojibake(val):
-                clean[field] = val
-            elif val:
+            if not val:
+                continue
+            kept = repair_or_reject(val)
+            if kept and field == "publisher" and names_a_contribution_credit(kept):
+                kept = None
+            if not kept:
                 rejected += 1
+                continue
+            if kept != val:
+                repairs.append({"pageId": int(pid), "field": field, "value": kept})
+            clean[field] = kept
         if "page_count" in validated:
             clean["page_count"] = validated["page_count"]
         revalidated_cache[pid] = clean
-    if rejected:
-        log.info(f"  Re-validation: rejected {rejected} mojibake values from cache")
+    if rejected or repairs:
+        log.info(
+            "  Re-validation: repaired %d values, rejected %d from cache",
+            len(repairs),
+            rejected,
+        )
 
     # Merge all cached results into rows
     merged = 0
@@ -326,6 +341,7 @@ def main() -> None:
             "networkCallsAllowed": args.mode == "live",
             "networkCallsMade": args.mode == "live" and bool(to_process),
             "rejectedCachedValues": rejected,
+            "encodingRepairs": repairs,
             "fieldsFilled": fields_filled,
         },
         indent=2,

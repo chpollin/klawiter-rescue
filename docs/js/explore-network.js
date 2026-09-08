@@ -177,7 +177,6 @@ const ExploreNetwork = {
           <div class="network-stat"><strong>${fmt(referencing.size)}</strong><span>Referencing entries</span></div>
           <div class="network-stat"><strong>${fmt(ranked.length ? ranked[0].sources.length : 0)}</strong><span>Top in-degree</span></div>
         </div>
-        <p class="detail-summary-hint">Expand a row for the entries citing it; open any entry for its own See-Also neighborhood. Unresolvable references are listed under Data Quality.</p>
       </div>
     `;
   },
@@ -715,7 +714,6 @@ const ExploreNetwork = {
             `).join('')}
           </ul>
         </div>
-        <p class="detail-summary-hint">Hover a flow for its figures; the two rankings above filter from the keyboard.</p>
       </div>
     `;
 

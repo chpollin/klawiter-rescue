@@ -261,8 +261,9 @@ const Pages = {
             research infrastructure
           </li>
           <li>
-            <strong>Digital edition</strong> &mdash; data extraction pipeline,
-            frontend development and publication
+            <strong>Digital edition</strong> &mdash; edited by Christopher Pollin
+            (Digital Humanities Craft): data extraction pipeline, frontend
+            development and publication
           </li>
         </ul>
         <h3>Citation</h3>
@@ -271,7 +272,8 @@ const Pages = {
         </p>
         <blockquote>
           Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
-          Bibliography.</em> Digital edition, 2026.
+          Bibliography.</em> Digital edition, edited by Christopher Pollin
+          (Digital Humanities Craft). Version 0.9, 2026.
           URL: <code>https://chpollin.github.io/klawiter-rescue/</code>
         </blockquote>
         <p>
@@ -398,8 +400,8 @@ const Pages = {
           </tbody>
         </table>
         <div class="page-actions">
-          <button class="page-download-btn" data-page-act="download-dataset">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <button class="page-link-btn" data-page-act="download-dataset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
               <polyline points="7 10 12 15 17 10"/>
               <line x1="12" y1="15" x2="12" y2="3"/>
@@ -408,7 +410,7 @@ const Pages = {
           </button>
         </div>
         <p>
-          The button downloads the loaded flat dataset together with the
+          The download delivers the loaded flat dataset together with the
           contested edition and authority claims of the current session. It is
           the frontend projection in frontend key names, not the JSON-LD
           serialization.

@@ -13,6 +13,7 @@ const App = {
     filters: {},
     sort: 'relevance',
     browse: false,   // catalogue view without query or filters
+    singleEntry: false,  // #entry= permalink: exactly one entry, read as a record
     customLabel: null,  // session list opened from the workbench or Explore
     view: 'home',
     entryId: null,
@@ -262,6 +263,7 @@ const App = {
     this._lastHash = hash;
     const params = new URLSearchParams(hash);
     this.state.browse = false;
+    this.state.singleEntry = false;
     this.state.customLabel = null;
     this._setResultsContext('');
 
@@ -332,6 +334,7 @@ const App = {
       const pid = parseInt(params.get('entry'), 10);
       const entry = this.entryMap.get(pid);
       this._resetSearchState();
+      this.state.singleEntry = !!entry;
       this.state.page = 0;
       this.filtered = entry ? [entry] : [];
       this.showView('results');
@@ -341,9 +344,6 @@ const App = {
       this.renderChips();
       if (entry) {
         this.renderResults();
-        // renderResults writes the count label, so the permalink label has to
-        // be set after it, not before.
-        document.getElementById('results-count').textContent = 'Permalink — 1 entry';
         // Auto-expand after render
         setTimeout(() => this.toggleCard(pid), 50);
       } else {
@@ -463,9 +463,80 @@ const App = {
   // `translator` and the two year forms exist so that a selection made in
   // Explore can be handed over as an addressable result list.
   FILTER_KEYS: ['type', 'language', 'period', 'location', 'category',
-    'publisher', 'translator', 'years', 'decade'],
+    'publisher', 'translator', 'years', 'decade', 'review'],
 
   NOT_RECORDED: 'Not recorded',
+
+  /** An entry without a review object has a review state; it is undecided. */
+  REVIEW_UNREVIEWED: 'unreviewed',
+
+  /** Synthetic review value: the record carries open flags of its own. */
+  REVIEW_FLAGGED: 'open-flags',
+
+  /** Review facet values an entry falls under; both axes may apply at once. */
+  reviewValues(e) {
+    const values = [(e.review && e.review.status) || this.REVIEW_UNREVIEWED];
+    if (Array.isArray(e.reviewFlags) && e.reviewFlags.length) values.push(this.REVIEW_FLAGGED);
+    return values;
+  },
+
+  /** Words for a review value; the status keys come from the dataset. */
+  reviewLabel(value) {
+    if (value === this.REVIEW_FLAGGED) return 'Open review flags';
+    const words = String(value).replace(/[_-]+/g, ' ');
+    return words.charAt(0).toUpperCase() + words.slice(1);
+  },
+
+  /**
+   * The values a page carries on one axis.
+   *
+   * A source page can document several publications, and the publication layer
+   * states the year, language and place of each of them, so the page belongs
+   * to every one of those values. The flat field describes the page as a whole
+   * (on a multi-publication page effectively its first publication) and
+   * answers only where the layer is absent. Filters, facet counts and the
+   * Explore aggregations read the axis here, so a count and the list it opens
+   * are built from the same rule.
+   */
+  _axisValues(union, flat) {
+    if (Array.isArray(union) && union.length) return union;
+    return flat == null || flat === '' ? [] : [flat];
+  },
+
+  yearValues(e) {
+    return this._axisValues(e.publicationYears, e.year)
+      .filter(year => Number.isFinite(year) && year > 0);
+  },
+
+  /** Languages of a page; a page without any is its own facet value. */
+  languageValues(e) {
+    const values = this._axisValues(e.publicationLanguages, e.language);
+    return values.length ? values : [this.NOT_RECORDED];
+  },
+
+  placeValues(e) {
+    return this._axisValues(e.publicationPlaces, e.location);
+  },
+
+  /** Periods of a page, one per publication year rather than one per page. */
+  periodValues(e) {
+    const years = this.yearValues(e);
+    if (!(Array.isArray(e.publicationYears) && e.publicationYears.length) || !years.length) {
+      return e.timePeriod ? [e.timePeriod] : [];
+    }
+    const periods = new Set();
+    for (const year of years) {
+      for (const [key, [lo, hi]] of Object.entries(PERIOD_BOUNDS)) {
+        if (year >= lo && year <= hi) { periods.add(key); break; }
+      }
+    }
+    return [...periods];
+  },
+
+  /** Decades of a page, once per decade even when two years share one. */
+  decadeValues(e) {
+    return [...new Set(this.yearValues(e).map(year => Math.floor(year / 10) * 10))];
+  },
 
   filtersFromParams(params) {
     const filters = {};
@@ -481,7 +552,7 @@ const App = {
   FILTER_LABELS: {
     type: 'Type', language: 'Language', period: 'Period', location: 'Location',
     category: 'Category', publisher: 'Publisher', translator: 'Translator',
-    years: 'Years', decade: 'Decade',
+    years: 'Years', decade: 'Decade', review: 'Review',
   },
 
   /** Inclusive [min, max] a `years` or `decade` filter value stands for. */
@@ -550,17 +621,23 @@ const App = {
   },
 
   // --- Filtering ---
-  /** True while the entry passes every filter in `f`. */
+  /**
+   * True while the entry passes every filter in `f`. The year, language,
+   * period and place axes read every publication of the page, so a page whose
+   * second edition is from 1960 is in the 1960s and a page carrying a German
+   * and an Arabic publication is under both languages.
+   */
   _matchesFilters(e, f, bounds) {
     if (f.type && !(Array.isArray(f.type) ? f.type : [f.type]).includes(e.entryType)) return false;
     if (f.language && !(Array.isArray(f.language) ? f.language : [f.language])
-      .includes(e.language || this.NOT_RECORDED)) return false;
-    if (f.period && e.timePeriod !== f.period) return false;
-    if (f.location && e.location !== f.location) return false;
+      .some(value => this.languageValues(e).includes(value))) return false;
+    if (f.period && !this.periodValues(e).includes(f.period)) return false;
+    if (f.location && !this.placeValues(e).includes(f.location)) return false;
     if (f.publisher && e.publisher !== f.publisher) return false;
     if (f.translator && !translatorKeys(e).includes(f.translator)) return false;
-    if (bounds && !(Number.isFinite(e.year) && e.year > 0 && e.year >= bounds[0] && e.year <= bounds[1])) return false;
+    if (bounds && !this.yearValues(e).some(year => year >= bounds[0] && year <= bounds[1])) return false;
     if (f.category && !(e.categories || []).includes(f.category)) return false;
+    if (f.review && !this.reviewValues(e).includes(f.review)) return false;
     return true;
   },
 
@@ -635,10 +712,17 @@ const App = {
     document.getElementById('view-page').classList.toggle('hidden', view !== 'page');
 
     // Sidebar only on results view; the mobile opener follows it, because a
-    // filter button on a page without a result list filters nothing.
-    document.getElementById('facets').classList.toggle('hidden', view !== 'results');
+    // filter button on a page without a result list filters nothing. A
+    // permalink is one record: there is nothing to sort and every facet would
+    // offer the single value the record already shows.
+    const listControls = view === 'results' && !this.state.singleEntry;
+    document.getElementById('facets').classList.toggle('hidden', !listControls);
     const mobileBtn = document.getElementById('mobile-filter-btn');
-    if (mobileBtn) mobileBtn.classList.toggle('hidden', view !== 'results');
+    if (mobileBtn) mobileBtn.classList.toggle('hidden', !listControls);
+    for (const el of [document.getElementById('sort-select'),
+      document.querySelector('.sort-label')]) {
+      if (el) el.classList.toggle('hidden', !listControls);
+    }
 
     // Hide header search on home (home has its own prominent search)
     document.querySelector('.header-search').classList.toggle('hidden', view === 'home');
@@ -736,6 +820,12 @@ const App = {
     const countEl = document.getElementById('results-count');
     countEl.textContent = this._resultsLabel(total);
 
+    // Kept for the neighbour navigation of a card opened by permalink later
+    // in the session; the permalink route itself renders a list of one.
+    if (!this.state.singleEntry) {
+      this._listIds = this.filtered.map(entry => entry.sourcePageId);
+    }
+
     // Show/hide batch export button, and say how much it would export
     const exportBtn = document.getElementById('batch-export-btn');
     if (exportBtn) {
@@ -743,6 +833,10 @@ const App = {
       const label = document.getElementById('batch-export-label');
       if (label) label.textContent = `Export ${total.toLocaleString('en')} as BibTeX`;
     }
+
+    // The legend explains badges the cards carry, so it goes with them.
+    const legend = document.getElementById('prov-legend');
+    if (legend) legend.classList.toggle('hidden', total === 0);
 
     const list = document.getElementById('results-list');
     if (total === 0) {
@@ -753,51 +847,184 @@ const App = {
         : '';
       list.innerHTML = `<div class="empty-state">
         <p>No results${q}.</p>
-        <p>Try broadening your search or removing filters.</p>
         ${clear}
       </div>`;
       document.getElementById('load-more').classList.add('hidden');
       return;
     }
     list.innerHTML = visible.map(e => this.renderCard(e)).join('');
+    this._setListStop();
 
     document.getElementById('load-more').classList.toggle('hidden', end >= total);
   },
 
+  /**
+   * Roving tabindex over the card headers, as the workbench queue has it: the
+   * list is one tab stop that lands on the header the walk is on, the arrows
+   * and j/k move inside it, and the next Tab leaves the list instead of
+   * stepping through fifty headers.
+   */
+  _setListStop(header) {
+    const headers = [...document.querySelectorAll('#results-list .card-header')];
+    const stop = header || headers.find(el => el.tabIndex === 0) || headers[0];
+    for (const el of headers) el.tabIndex = el === stop ? 0 : -1;
+  },
+
+  /**
+   * Progress and outcome of the batch export, on the button that started it:
+   * the export fetches a publication file per page, and afterwards the number
+   * of citations differs from the number of pages, so it is stated.
+   */
+  _batchExportState(state) {
+    const btn = document.getElementById('batch-export-btn');
+    const label = document.getElementById('batch-export-label');
+    if (!btn || !label) return;
+    if (!state.done) {
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      label.textContent = `Preparing ${state.loaded.toLocaleString('en')} of ${state.total.toLocaleString('en')}…`;
+      return;
+    }
+    btn.disabled = false;
+    btn.removeAttribute('aria-busy');
+    const n = state.citations;
+    label.textContent = `${n.toLocaleString('en')} citation${n === 1 ? '' : 's'} exported`;
+    clearTimeout(this._batchExportTimer);
+    this._batchExportTimer = setTimeout(() => {
+      label.textContent = `Export ${this.filtered.length.toLocaleString('en')} as BibTeX`;
+    }, 4000);
+  },
+
   renderCard(e) {
-    // Monochrome: the type is a plain meta item, colour stays with the states
-    // that carry meaning (review status, matrix, contested).
-    const badge = `<span class="badge">${ENTRY_TYPE_LABELS[e.entryType] || e.entryType}</span>`;
-    const year = e.year ? `<span class="card-meta-text">${e.year}</span>` : '';
-    const lang = e.language ? `<span class="card-meta-text">${e.language}</span>` : '';
-    const loc = e.location ? `<span class="card-meta-text">${esc(e.location)}</span>` : '';
-
     const title = hlEsc(e.title || 'Untitled', this.state.query);
-
-    const parts = [];
-    if (e.publisher) parts.push(esc(e.publisher));
-    if (e.pageCount) parts.push(e.pageCount + ' pp.');
-    const secondary = parts.length ? `<div class="card-secondary">${parts.join(' · ')}</div>` : '';
-
-    const triage = this.state.editMode ? Edit.cardHint(e.sourcePageId) : '';
+    // The title of an author page is the name of an author, so it says so.
+    const titleLabel = this.state.singleEntry && e.pageKind === 'author-page'
+      ? '<div class="card-title-label">Author</div>'
+      : '';
 
     // No source-text snippet here: it duplicated the start of the full
     // bibliographic entry shown on expansion. Title plus meta identify the card.
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
-      <div class="card-header" tabindex="0" role="button" aria-expanded="false"
+      <div class="card-header" tabindex="-1" role="button" aria-expanded="false"
            aria-controls="card-detail-${e.sourcePageId}">
-        <div class="card-meta">${badge} ${year} ${lang} ${loc} ${triage}</div>
+        ${titleLabel}
         <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
-        ${secondary}
+        <div class="card-meta">${this.cardMeta(e)}</div>
+      </div>
+      <div class="card-nav" hidden>
+        <button type="button" class="card-nav-btn" data-act="card-prev" hidden>Previous</button>
+        <button type="button" class="card-nav-btn" data-act="card-next" hidden>Next</button>
       </div>
       <div class="card-detail hidden" id="card-detail-${e.sourcePageId}"></div>
     </div>`;
+  },
+
+  /**
+   * The one line under the title: what the entry is, what the page documents
+   * and how it was reviewed, in that order.
+   *
+   * The line is plain text throughout, review status included, so a result
+   * reads as one line rather than as a card with a filled chip on it; colour
+   * stays with the states a reader has to act on (matrix gap, contested claim,
+   * edit-mode triage hint).
+   * A page documenting several publications has no single year, language,
+   * place, publisher or extent, so the triade would describe a publication
+   * that does not exist and its count takes that place. On the permalink route
+   * every value stands named in the block below, so the triade is dropped
+   * there as a repetition and the type keeps its badge.
+   */
+  cardMeta(e) {
+    const items = [];
+    const type = ENTRY_TYPE_LABELS[e.entryType] || e.entryType;
+    const several = !!e.pageKind && e.pageKind !== 'single-publication';
+    const kind = this._pageKindLine(e);
+    if (this.state.singleEntry) {
+      items.push(`<span class="badge">${type}</span>`);
+      if (kind) items.push(`<span class="card-meta-text"${Detail.help('Page kind')}>${kind}</span>`);
+    } else if (several) {
+      items.push(`<span class="card-meta-text">${esc(type)}</span>`);
+      items.push(`<span class="card-meta-text">${this._publicationCountLabel(e)}</span>`);
+    } else {
+      for (const value of [e.year, e.language, e.location]) {
+        if (value) items.push(`<span class="card-meta-text">${esc(String(value))}</span>`);
+      }
+      items.push(`<span class="card-meta-text">${esc(type)}</span>`);
+      const parts = [];
+      if (e.publisher) parts.push(esc(e.publisher));
+      if (e.pageCount) parts.push(e.pageCount + ' pp.');
+      if (parts.length) items.push(`<span class="card-secondary">${parts.join(' · ')}</span>`);
+    }
+    items.push(Detail._reviewChip(e));
+    if (this.state.editMode) {
+      const triage = Edit.cardHint(e.sourcePageId);
+      if (triage) items.push(triage);
+    }
+    // No separator elements: they wrapped to a line of their own on a phone
+    // and left the line ending in a dangling middle dot. The separator is a
+    // pseudo-element on every item but the first (see styles.css).
+    return items.join('');
+  },
+
+  /** How a source page names what it documents. */
+  PAGE_KIND_LABELS: { 'author-page': 'Author page', 'edition-page': 'Edition page' },
+
+  _publicationCountLabel(e) {
+    const n = Number(e.publicationCount);
+    if (!Number.isFinite(n) || n < 1) return '';
+    const noun = e.pageKind === 'edition-page' ? 'edition' : 'publication';
+    return `${n} ${noun}${n === 1 ? '' : 's'}`;
+  },
+
+  _pageKindLine(e) {
+    const kind = this.PAGE_KIND_LABELS[e.pageKind];
+    if (!kind) return '';
+    const count = this._publicationCountLabel(e);
+    return count ? `${kind}, ${count}` : kind;
   },
 
   _setCardExpanded(cardEl, on) {
     cardEl.classList.toggle('card-expanded', on);
     const header = cardEl.querySelector('.card-header');
     if (header) header.setAttribute('aria-expanded', on ? 'true' : 'false');
+    const nav = cardEl.querySelector('.card-nav');
+    if (!nav) return;
+    const pid = parseInt(cardEl.dataset.pid, 10);
+    const [prev, next] = on ? this._cardNeighbours(pid) : [null, null];
+    nav.hidden = prev == null && next == null;
+    const prevBtn = nav.querySelector('[data-act="card-prev"]');
+    const nextBtn = nav.querySelector('[data-act="card-next"]');
+    if (prevBtn) prevBtn.hidden = prev == null;
+    if (nextBtn) nextBtn.hidden = next == null;
+  },
+
+  /**
+   * The entries left and right of a card. In a list that is the rendered
+   * order; on the `#entry=` permalink it is the list the session last
+   * rendered, and without such a list the card has no neighbours.
+   */
+  _cardNeighbours(pageId) {
+    const ids = this.state.singleEntry
+      ? (this._listIds || [])
+      : [...document.querySelectorAll('#results-list .entry-card')]
+        .map(card => parseInt(card.dataset.pid, 10));
+    const at = ids.indexOf(pageId);
+    if (at === -1) return [null, null];
+    return [at > 0 ? ids[at - 1] : null, at < ids.length - 1 ? ids[at + 1] : null];
+  },
+
+  /** Open the neighbouring entry, in the list or as its own permalink. */
+  goToNeighbour(pageId, dir) {
+    const [prev, next] = this._cardNeighbours(pageId);
+    const target = dir > 0 ? next : prev;
+    if (target == null) return;
+    if (this.state.singleEntry) {
+      this.goTo(`entry=${target}`);
+      return;
+    }
+    // toggleCard closes whatever is open and scrolls the new card into view.
+    this.toggleCard(target);
+    const header = document.querySelector(`#card-${target} .card-header`);
+    if (header) header.focus();
   },
 
   toggleCard(pageId) {
@@ -853,6 +1080,7 @@ const App = {
     if (Array.isArray(val)) return val.map(value => this._filterDisplay(key, value)).join(' or ');
     if (key === 'type') return ENTRY_TYPE_LABELS[val] || val;
     if (key === 'period') return PERIOD_LABELS[val] || val;
+    if (key === 'review') return this.reviewLabel(val);
     if (key === 'decade') return `${val}s`;
     if (key === 'years') return String(val).replace('-', '–');
     return String(val);
@@ -891,11 +1119,28 @@ const App = {
     container.innerHTML = chips.join('');
   },
 
+  /**
+   * The heading of the result view: what was asked for and how much answered.
+   * A query yields results, a filter set yields entries, and the unfiltered
+   * catalogue says so instead of counting a selection nobody made.
+   */
   _resultsLabel(total) {
-    const parts = this._activeFilters().map(({ key, display }) =>
-      key === 'search' ? `\u201c${display}\u201d` : display);
-    const count = `${total.toLocaleString('en')} result${total !== 1 ? 's' : ''}`;
-    let label = parts.length ? `${parts.join(' \u00b7 ')} \u2014 ${count}` : count;
+    // The permalink names itself. Written here rather than after the render,
+    // because every rerender of that route (edit mode, sort) went through the
+    // count label and relabelled the record as a filtered list of one.
+    if (this.state.singleEntry) return 'Permalink — 1 entry';
+    const n = total.toLocaleString('en');
+    const facets = this._activeFilters()
+      .filter(({ key }) => key !== 'search').map(({ display }) => display);
+    let label;
+    if (this.state.query) {
+      label = `${n} result${total !== 1 ? 's' : ''} for \u201c${this.state.query}\u201d`;
+      if (facets.length) label += ` \u00b7 ${facets.join(' \u00b7 ')}`;
+    } else if (facets.length) {
+      label = `${n} ${total === 1 ? 'entry' : 'entries'} \u00b7 ${facets.join(' \u00b7 ')}`;
+    } else {
+      label = `All ${n} ${total === 1 ? 'entry' : 'entries'}`;
+    }
     // A capped search used to look like a complete count.
     if (this._searchCapped) {
       label += ` (first ${this.SEARCH_LIMIT.toLocaleString('en')} matches)`;
@@ -941,6 +1186,8 @@ const App = {
   showCustomResults(entries, label) {
     this._resetSearchState();
     this.state.browse = false;
+    // The list can be opened while a permalink is on screen, and it is a list.
+    this.state.singleEntry = false;
     this.state.customLabel = label;
     this.filtered = [...entries];
     this.state.page = 0;
@@ -1050,6 +1297,35 @@ const App = {
     }
   },
 
+  /**
+   * Move the keyboard focus from card header to card header. Reading a list
+   * is walking it, so the walk moves the focus and leaves opening to Enter.
+   */
+  _focusCard(dir) {
+    const headers = [...document.querySelectorAll('#results-list .card-header')];
+    if (!headers.length) return;
+    const active = document.activeElement;
+    const current = active && active.closest
+      ? active.closest('#results-list .card-header') : null;
+    const at = headers.indexOf(current);
+    const next = at === -1 ? (dir > 0 ? 0 : headers.length - 1) : at + dir;
+    if (next < 0 || next >= headers.length) return;
+    this._setListStop(headers[next]);
+    headers[next].focus();
+    headers[next].scrollIntoView({ block: 'nearest' });
+  },
+
+  /** Slash lands in whichever search field the current view shows. */
+  focusSearch() {
+    const wrap = document.querySelector('.header-search');
+    if (wrap && !wrap.classList.contains('hidden')) {
+      this._focusHeaderSearch();
+      return;
+    }
+    const home = document.getElementById('home-search-input');
+    if (home) home.focus();
+  },
+
   // Edit-mode keyboard: j/k walks the result cards (next/previous expanded).
   _stepCard(dir) {
     const cards = [...document.querySelectorAll('#results-list .entry-card')];
@@ -1102,8 +1378,19 @@ const App = {
 
   // --- Events ---
   bindEvents() {
-    document.getElementById('search-input').addEventListener('input', (ev) => {
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', (ev) => {
       this.onSearchInput(ev.target.value);
+    });
+
+    // Escape leaves the field and keeps the query. The native clear of a
+    // search input fires `input` with an empty value, which committed an empty
+    // query and threw the reader from their result list back to the start view.
+    searchInput.addEventListener('keydown', (ev) => {
+      if (ev.key !== 'Escape' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      ev.preventDefault();
+      ev.target.value = this.state.query;
+      ev.target.blur();
     });
 
     document.getElementById('sort-select').addEventListener('change', (ev) => {
@@ -1123,6 +1410,14 @@ const App = {
         this.clearAll();
         return;
       }
+      if (action && (action.dataset.act === 'card-prev' || action.dataset.act === 'card-next')) {
+        const card = action.closest('.entry-card');
+        if (card) {
+          this.goToNeighbour(parseInt(card.dataset.pid, 10),
+            action.dataset.act === 'card-next' ? 1 : -1);
+        }
+        return;
+      }
       const header = ev.target.closest('.card-header');
       if (header) {
         const card = header.closest('.entry-card');
@@ -1137,6 +1432,13 @@ const App = {
       if (el.dataset.act === 'back') this.goTo(el.dataset.hash);
       else { this._lastHash = null; this.handleRoute(); }
     });
+    // Clicking a header makes it the tab stop, so Tab continues from where the
+    // reader is rather than from the top of the list.
+    resultsList.addEventListener('focusin', (ev) => {
+      const header = ev.target.closest && ev.target.closest('.card-header');
+      if (header) this._setListStop(header);
+    });
+
     resultsList.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter' || ev.key === ' ') {
         const header = ev.target.closest('.card-header');
@@ -1169,7 +1471,9 @@ const App = {
           && !confirm(`Export ${total.toLocaleString('en')} entries as BibTeX?`)) {
         return;
       }
-      Export.batchBibtex(this.filtered);
+      // The export loads a publication file per page, so the button says that
+      // it is working and afterwards how many citations it wrote.
+      Export.batchBibtex(this.filtered, (state) => this._batchExportState(state));
     });
 
     document.getElementById('load-more-btn').addEventListener('click', () => {
@@ -1198,29 +1502,60 @@ const App = {
     });
     overlay.addEventListener('keydown', (ev) => this._mobileFacetsKeydown(ev));
 
-    // Edit-mode keyboard navigation on the results list (j = next, k = previous).
+    // Keyboard on the result view: slash reaches the search field, j/k and the
+    // arrows walk the card headers, Escape closes the open card. In edit mode
+    // j/k keep stepping from expanded card to expanded card, which is the
+    // adjudication walk the triage sort exists for.
     document.addEventListener('keydown', (ev) => {
       // A browser or OS shortcut is not a card command.
       if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
-      if (!this.state.editMode || this.state.view !== 'results') return;
       const t = ev.target;
-      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      const inField = !!t && (t.isContentEditable
+        || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+      if (ev.key === '/' && !inField) {
+        ev.preventDefault();
+        this.focusSearch();
+        return;
+      }
+      if (this.state.view !== 'results' || inField) return;
+      // The drawer runs its own key handling while it is open.
+      const overlay = document.getElementById('mobile-facets');
+      if (overlay && !overlay.classList.contains('hidden')) return;
+      // Arrows stay the page scroll everywhere but inside the walk itself.
+      const onCard = !!(t && t.closest && t.closest('#results-list .card-header'));
+      if (onCard && (ev.key === 'ArrowDown' || ev.key === 'ArrowUp')) {
+        ev.preventDefault();
+        this._focusCard(ev.key === 'ArrowDown' ? 1 : -1);
+        return;
+      }
       if (ev.key === 'j' || ev.key === 'k') {
         ev.preventDefault();
-        this._stepCard(ev.key === 'j' ? 1 : -1);
+        const dir = ev.key === 'j' ? 1 : -1;
+        if (this.state.editMode) this._stepCard(dir);
+        else this._focusCard(dir);
+        return;
+      }
+      if (ev.key === 'Escape') {
+        const open = document.querySelector('#results-list .entry-card.card-expanded');
+        if (!open) return;
+        ev.preventDefault();
+        this.toggleCard(parseInt(open.dataset.pid, 10));
+        const header = open.querySelector('.card-header');
+        if (header) header.focus();
       }
     });
 
-    // Edit mode toggle (localhost only)
+    // Edit mode toggle (localhost only). It is a destination of the header
+    // like the four pages, so it sits in the navigation as its last item.
     if (this.state.isLocal) {
-      const header = document.querySelector('.header-inner');
+      const nav = document.querySelector('.site-nav');
       const toggle = document.createElement('button');
       toggle.id = 'edit-toggle';
-      toggle.className = 'edit-toggle-btn';
+      toggle.className = 'nav-item-btn';
       toggle.title = 'Curation mode (available on localhost only): review fields against the source, decide authority candidates, export decisions as a patch file';
-      toggle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
+      toggle.textContent = 'Edit';
       toggle.addEventListener('click', () => this.toggleEditMode());
-      header.appendChild(toggle);
+      nav.appendChild(toggle);
       this._updateEditToggleVisibility();
     }
   },
@@ -1234,9 +1569,7 @@ const App = {
     const btn = document.getElementById('edit-toggle');
     if (btn) {
       btn.classList.toggle('active', this.state.editMode);
-      btn.innerHTML = this.state.editMode
-        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Editing'
-        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit';
+      btn.textContent = this.state.editMode ? 'Editing' : 'Edit';
     }
     this._setTriageSortOption(this.state.editMode);
     if (this.state.editMode) {

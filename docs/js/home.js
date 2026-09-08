@@ -1,5 +1,5 @@
 /**
- * Home — Category list, browse CTA, explore link.
+ * Home — Search, browse link and the category list.
  */
 const Home = {
 
@@ -72,7 +72,7 @@ const Home = {
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
           </div>
-          <button class="browse-btn" data-act="browse">Browse Catalogue</button>
+          <a class="home-browse-link" href="#browse">Browse Catalogue</a>
         </div>
       </div>
 
@@ -114,14 +114,12 @@ const Home = {
   // an apostrophe: esc() writes &#39; into the attribute, the parser hands the
   // decoded ' back to the handler, and the literal ends early.
   _dispatch(el) {
-    const act = el.dataset.act;
-    if (act === 'browse') location.hash = 'browse';
-    else if (act === 'filter-type') App.setFilter('type', el.dataset.type);
+    if (el.dataset.act === 'filter-type') App.setFilter('type', el.dataset.type);
   },
 };
 
-// Every control in the home view is a real button, so one click listener is
-// the whole keyboard path as well.
+// A category row is a real button, so one click listener is the whole
+// keyboard path as well; browsing is an anchor and needs none.
 document.addEventListener('click', (ev) => {
   const el = ev.target.closest('#view-home [data-act]');
   if (!el) return;

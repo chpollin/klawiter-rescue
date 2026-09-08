@@ -47,6 +47,86 @@ function loadApp() {
   return vm.runInContext(source + '\nApp', ctx);
 }
 
+/** App plus the facet sidebar, which counts through App's axis values. */
+function loadFacets() {
+  const location = { hash: '', pathname: '/', hostname: 'localhost' };
+  const ctx = {
+    window: { location, addEventListener() {} },
+    document: { addEventListener() {}, getElementById() { return null; } },
+    location,
+    history: { replaceState() {}, pushState() {} },
+    URLSearchParams,
+    FlexSearch,
+    console,
+  };
+  vm.createContext(ctx);
+  for (const file of ['constants.js', 'utils.js', 'app.js', 'facets.js']) {
+    vm.runInContext(fs.readFileSync(path.join(DOCS, 'js', file), 'utf8'), ctx);
+  }
+  return vm.runInContext('({ App, Facets })', ctx);
+}
+
+// Two real pages of the holding whose publications disagree with the flat
+// fields: page 1800 has a 1947 and a 1960 edition, page 4445 a German book of
+// 2000 and an Arabic article of 2015 published in Rabat.
+const PUBLICATION_PAGES = [
+  { sourcePageId: 1800, entryType: 'historical-study',
+    title: 'Romanŭt na edin zhivot. Balzak',
+    year: 1947, language: 'Bulgarian', location: 'Sofija', timePeriod: 'post-wwii',
+    pageKind: 'edition-page', publicationCount: 2,
+    publicationYears: [1947, 1960], publicationLanguages: ['Bulgarian'],
+    publicationPlaces: ['Sofija'] },
+  { sourcePageId: 4445, entryType: 'secondary-literature',
+    title: 'Al-Bāḥ, Muḥammad / El-bah, Mohammed',
+    year: 2000, language: 'Arabic', location: 'Freiburg', timePeriod: 'late-20c',
+    pageKind: 'author-page', publicationCount: 2,
+    publicationYears: [2000, 2015], publicationLanguages: ['German', 'Arabic'],
+    publicationPlaces: ['Freiburg im Breisgau', 'Rabat'] },
+];
+
+test('a page belongs to every year, language and place of its publications', () => {
+  const { App, Facets } = loadFacets();
+  const keep = (entry, filters) => App._matchesFilters(entry, filters, App.yearBounds(filters));
+  const [editionPage, authorPage] = PUBLICATION_PAGES;
+
+  // The 1960 edition of page 1800 is a publication of that page; the flat year
+  // names its first edition alone, so the page used to be missing here.
+  assert.strictEqual(keep(editionPage, { years: '1960-1960' }), true);
+  assert.strictEqual(keep(authorPage, { years: '1960-1960' }), false);
+  // A page carrying a German and an Arabic publication is under both.
+  assert.strictEqual(keep(authorPage, { language: 'German' }), true);
+  assert.strictEqual(keep(authorPage, { language: 'Arabic' }), true);
+  assert.strictEqual(keep(editionPage, { language: 'German' }), false);
+  // The place of the article's container is a place of the page.
+  assert.strictEqual(keep(authorPage, { location: 'Rabat' }), true);
+  assert.strictEqual(keep(authorPage, { location: 'Freiburg' }), false);
+  // Two publication years, two periods.
+  assert.strictEqual(keep(authorPage, { period: 'late-20c' }), true);
+  assert.strictEqual(keep(authorPage, { period: 'contemporary' }), true);
+  assert.strictEqual(keep(editionPage, { period: 'post-wwii' }), true);
+  // A range spanning neither year is not met by one year above and one below.
+  assert.strictEqual(keep(authorPage, { years: '2005-2010' }), false);
+
+  // The facet counts what the filter selects, value by value.
+  for (const [filterKey, field] of [['language', 'language'], ['location', 'location'],
+    ['period', 'timePeriod']]) {
+    const counts = Facets._counts(PUBLICATION_PAGES, field, filterKey);
+    for (const [value, count] of Object.entries(counts)) {
+      assert.strictEqual(
+        App._applyFilterSet(PUBLICATION_PAGES, { [filterKey]: value }).length, count,
+        `${filterKey}=${value}`);
+    }
+  }
+  const languages = Facets._counts(PUBLICATION_PAGES, 'language', 'language');
+  assert.strictEqual(languages.German, 1);
+  assert.strictEqual(languages.Arabic, 1);
+  assert.strictEqual(languages.Bulgarian, 1);
+  const places = Facets._counts(PUBLICATION_PAGES, 'location', 'location');
+  assert.strictEqual(places.Rabat, 1);
+  assert.strictEqual(places['Freiburg im Breisgau'], 1);
+  assert.strictEqual(places.Freiburg, undefined, 'the flat place gives way to the layer');
+});
+
 const SAMPLE = [
   { sourcePageId: 1, title: 'Zoščenko, Mixail', entryType: 'fiction', language: 'Russian' },
   { sourcePageId: 2, title: "L'amour de la vie", entryType: 'fiction', language: 'French' },
@@ -118,18 +198,62 @@ test('the result label resolves the same labels the chips do', () => {
   App.state.filters = { type: 'fiction', period: 'lifetime', category: 'Fiction / Volumes' };
   App._searchCapped = false;
 
+  // The label is the heading of the view: the count first, then what was
+  // asked for. A filtered set counts entries, a query counts results.
   const label = App._resultsLabel(3);
+  assert.ok(label.startsWith('3 entries · '), label);
   assert.ok(label.includes('Fiction'), label);
   // The period used to reach the label as its raw key while the chip showed
   // the readable name.
   assert.ok(label.includes('Lifetime (1881–1942)'), label);
   // The category was missing from the label entirely.
   assert.ok(label.includes('Fiction / Volumes'), label);
-  assert.ok(label.endsWith('3 results'), label);
+
+  App.state.query = 'schachnovelle';
+  assert.strictEqual(App._resultsLabel(411),
+    '411 results for “schachnovelle” · Fiction · Lifetime (1881–1942) · Fiction / Volumes');
+
+  // Without query and filters the view is the whole catalogue, not a selection.
+  App.state.query = '';
+  App.state.filters = {};
+  assert.strictEqual(App._resultsLabel(4751), 'All 4,751 entries');
+  assert.strictEqual(App._resultsLabel(1), 'All 1 entry');
 
   // A capped search says so instead of reading as a complete count.
+  App.state.query = 'zweig';
   App._searchCapped = true;
   assert.ok(App._resultsLabel(5000).includes('first 5,000 matches'));
+});
+
+test('the review facet reads the review state of an entry, absence included', () => {
+  const App = loadApp();
+  const verified = { review: { status: 'agent_verified' } };
+  const contested = { review: { status: 'contested' } };
+  const undecided = {};
+  const flagged = { review: { status: 'agent_verified' }, reviewFlags: [{ code: 'encoding-repaired' }] };
+
+  // The arrays come out of the script context, so they are compared as text.
+  assert.strictEqual(JSON.stringify(App.reviewValues(verified)), '["agent_verified"]');
+  assert.strictEqual(JSON.stringify(App.reviewValues(undecided)), '["unreviewed"]');
+  // An open flag is an axis of its own, so a flagged entry counts twice.
+  assert.strictEqual(JSON.stringify(App.reviewValues(flagged)),
+    '["agent_verified","open-flags"]');
+
+  assert.strictEqual(App.reviewLabel('agent_verified'), 'Agent verified');
+  assert.strictEqual(App.reviewLabel('unreviewed'), 'Unreviewed');
+  assert.strictEqual(App.reviewLabel('open-flags'), 'Open review flags');
+
+  const kept = (entry, value) => App._matchesFilters(entry, { review: value }, null);
+  assert.strictEqual(kept(undecided, 'unreviewed'), true);
+  assert.strictEqual(kept(verified, 'unreviewed'), false);
+  assert.strictEqual(kept(contested, 'contested'), true);
+  assert.strictEqual(kept(flagged, 'open-flags'), true);
+  assert.strictEqual(kept(verified, 'open-flags'), false);
+
+  // The facet is addressable, so a hash reproduces the selection.
+  assert.strictEqual(
+    JSON.stringify(App.filtersFromParams(new URLSearchParams('review=unreviewed'))),
+    '{"review":"unreviewed"}');
 });
 
 test('the clear-all chip appears only from the second active filter on', () => {

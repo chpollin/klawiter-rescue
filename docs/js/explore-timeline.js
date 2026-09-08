@@ -7,23 +7,34 @@ const ExploreTimeline = {
   zoomedDomain: null,
   expanded: {},
 
+  // The figures read the publication layer of a page, so a page with a 1947
+  // and a 1960 edition is dated in both decades and one with a German and an
+  // Arabic publication counts under both languages. A page is counted once per
+  // decade, so a bar states the number of pages its selection opens.
   coverage(entries) {
-    const dated = entries.filter(entry => Number.isFinite(entry.year) && entry.year > 0);
+    const dated = entries.filter(entry => App.yearValues(entry).length);
+    const languages = new Set();
+    let missingLanguage = 0;
+    for (const entry of entries) {
+      const values = App.languageValues(entry).filter(value => value !== App.NOT_RECORDED);
+      if (!values.length) missingLanguage++;
+      for (const value of values) languages.add(value);
+    }
     return {
       total: entries.length,
       dated: dated.length,
       undated: entries.length - dated.length,
-      languages: new Set(entries.map(entry => entry.language).filter(Boolean)).size,
-      missingLanguage: entries.filter(entry => !entry.language).length,
+      languages: languages.size,
+      missingLanguage,
     };
   },
 
   decadeCounts(entries) {
     const counts = new Map();
     for (const entry of entries) {
-      if (!Number.isFinite(entry.year) || entry.year <= 0) continue;
-      const decade = Math.floor(entry.year / 10) * 10;
-      counts.set(decade, (counts.get(decade) || 0) + 1);
+      for (const decade of App.decadeValues(entry)) {
+        counts.set(decade, (counts.get(decade) || 0) + 1);
+      }
     }
     if (!counts.size) return [];
     const min = Math.min(...counts.keys()), max = Math.max(...counts.keys());
@@ -61,18 +72,17 @@ const ExploreTimeline = {
         <div class="dashboard-metric"><span class="dashboard-eyebrow">Recorded languages</span>
           <strong>${fmt(stats.languages)}</strong><span>${fmt(missing)} entries without a language</span></div>
       </div>
-      <p id="dashboard-status" class="dashboard-scope" role="status" aria-live="polite">${fmt(stats.total)} entries selected. Counts describe source pages; one page may cite several editions.</p>
+      <p id="dashboard-status" class="dashboard-scope" role="status" aria-live="polite">${fmt(stats.total)} entries selected</p>
       <section class="dashboard-panel dashboard-time" aria-labelledby="dashboard-time-title">
-        <div class="dashboard-panel-head"><div>
-          <span class="dashboard-eyebrow">Through time</span><h2 id="dashboard-time-title">Entries by recorded year</h2>
-          <p>Select a decade, or set a year range. Undated entries are counted above.</p>
-        </div><span class="dashboard-chart-unit">Entries / decade</span></div>
+        <div class="dashboard-panel-head">
+          <h2 id="dashboard-time-title">Pages by publication year</h2>
+          <span class="dashboard-chart-unit">Pages / decade</span></div>
         ${this.timelineHtml(entries)}
         ${this.rangeHtml()}
       </section>
       <div class="dashboard-rankings">
-        ${this.rankingHtml('languages', 'Languages', 'Select one or more languages', 7)}
-        ${this.rankingHtml('types', 'Entry types', 'Select one or more types', 7)}
+        ${this.rankingHtml('languages', 'Languages', 7)}
+        ${this.rankingHtml('types', 'Entry types', 7)}
       </div>
       ${this.previewHtml(entries)}
     `;
@@ -93,7 +103,7 @@ const ExploreTimeline = {
     const bars = rows.map(([decade, count]) => {
       const chosen = selectedCounts.get(decade) || 0;
       const pressed = Explore.filters.decade === decade;
-      const label = `${decade}–${decade + 9}: ${fmt(count)} entries${filtered ? `, ${fmt(chosen)} in the selected range` : ''}`;
+      const label = `${decade}–${decade + 9}: ${fmt(count)} pages${filtered ? `, ${fmt(chosen)} in the selected range` : ''}`;
       return `<button type="button" class="dashboard-decade${filtered && chosen ? ' is-selected' : ''}"
         data-dashboard-decade="${decade}" data-dashboard-focus="decade:${decade}"
         aria-label="${label}" aria-pressed="${pressed}" title="${label}" ${count ? '' : 'disabled'}>
@@ -105,7 +115,7 @@ const ExploreTimeline = {
       <div class="dashboard-y-axis" aria-hidden="true"><span>${fmt(max)}</span><span>${fmt(Math.round(max / 2))}</span><span>0</span></div>
       <div class="dashboard-histogram" role="group" aria-label="Filter by decade" style="--decades:${rows.length}">${bars}</div>
       <div class="dashboard-x-axis" aria-hidden="true"><span>${rows[0][0]}</span><span>${rows[Math.floor((rows.length - 1) / 2)][0]}</span><span>${rows.at(-1)[0] + 9}</span></div>
-    </div><p class="dashboard-chart-reading" id="dashboard-chart-reading">${filtered ? 'Burgundy shows the selected years. ' : ''}Bars retain the other filters. Focus or hover for exact counts.</p>`;
+    </div><p class="dashboard-chart-reading" id="dashboard-chart-reading">${filtered ? 'Burgundy shows the selected years.' : ''}</p>`;
   },
 
   rangeHtml() {
@@ -122,7 +132,7 @@ const ExploreTimeline = {
     </form>`;
   },
 
-  rankingHtml(key, title, hint, limit) {
+  rankingHtml(key, title, limit) {
     const rows = Explore.facetCounts(key);
     const selected = Explore.filters[key];
     const shown = this.expanded[key] ? rows : rows.filter(([value], index) =>
@@ -133,13 +143,13 @@ const ExploreTimeline = {
       const label = Explore._facetLabel(key, value);
       return `<li><button type="button" class="dashboard-rank${active ? ' is-selected' : ''}"
         data-dashboard-facet="${key}" data-value="${esc(String(value))}" data-dashboard-focus="${key}:${esc(String(value))}"
-        aria-pressed="${active}" aria-label="${esc(label)}: ${fmt(count)} entries">
+        aria-pressed="${active}" aria-label="${esc(label)}: ${fmt(count)} pages">
         <span class="dashboard-rank-name">${esc(label)}</span><span class="dashboard-rank-count">${fmt(count)}</span>
         <span class="dashboard-rank-track" aria-hidden="true"><span style="width:${100 * count / max}%"></span></span>
       </button></li>`;
     }).join('');
     return `<section class="dashboard-panel" aria-labelledby="dashboard-${key}-title">
-      <div class="dashboard-panel-head"><div><h2 id="dashboard-${key}-title">${title}</h2><p>${hint}. Other filters stay applied.</p></div></div>
+      <div class="dashboard-panel-head"><h2 id="dashboard-${key}-title">${title}</h2></div>
       ${items ? `<ol class="dashboard-ranking">${items}</ol>` : '<p class="dashboard-empty">No matching entries. Try clearing a filter.</p>'}
       ${rows.length > limit ? `<button type="button" class="link-btn dashboard-more" data-dashboard-more="${key}" data-dashboard-focus="more:${key}" aria-expanded="${!!this.expanded[key]}">${this.expanded[key] ? 'Show fewer' : `Show all ${rows.length} ${key === 'types' ? 'types' : 'language groups'}`}</button>` : ''}
     </section>`;
@@ -148,7 +158,7 @@ const ExploreTimeline = {
   previewHtml(entries) {
     const shown = entries.slice(0, 5);
     return `<section class="dashboard-panel dashboard-preview" aria-labelledby="dashboard-preview-title">
-      <div class="dashboard-panel-head"><div><span class="dashboard-eyebrow">Behind the numbers</span>
+      <div class="dashboard-panel-head"><div>
         <h2 id="dashboard-preview-title">Read the selected entries</h2><p>${entries.length ? `Showing ${shown.length} of ${fmt(entries.length)} entries in source order.` : 'No entries match these filters.'}</p>
       </div><button type="button" class="action-btn" data-dashboard-results ${entries.length ? '' : 'disabled'}>View all ${fmt(entries.length)} entries <span aria-hidden="true">↗</span></button></div>
       <ol class="dashboard-entry-list">${shown.map(entry => `<li>

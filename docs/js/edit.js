@@ -370,12 +370,18 @@ const Edit = {
     setTimeout(() => this._rerender(pid), 0);
   },
 
-  // Re-render the open card for one entry so badges and status refresh.
+  // Re-render the open card for one entry so badges and status refresh. The
+  // head carries the review status, so it is rewritten whether or not the
+  // detail below it is open.
   _rerender(pid) {
+    const entry = App.entryMap.get(pid);
     const inline = document.getElementById(`card-detail-${pid}`);
     if (inline && !inline.classList.contains('hidden')) {
-      inline.innerHTML = Detail.renderInline(App.entryMap.get(pid));
+      inline.innerHTML = Detail.renderInline(entry);
     }
+    const card = document.getElementById(`card-${pid}`);
+    const meta = card && card.querySelector('.card-meta');
+    if (meta && entry) meta.innerHTML = App.cardMeta(entry);
   },
 
   getPendingCount() {

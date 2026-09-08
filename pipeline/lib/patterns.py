@@ -197,6 +197,9 @@ _NAME_INITIALS = (
 _NAME_TOKEN = rf"(?:{_NAME_INITIALS}|{_NAME_WORD})"
 _TRANSLATOR_NAME = rf"({_NAME_TOKEN}(?:[ \t]+{_NAME_TOKEN})*)"
 _TRANSLATOR_NAME_RE = re.compile(_TRANSLATOR_NAME)
+# The permissive form the credit selection has always used; it overruns into
+# the following sentence, so credited_name repairs it with the name grammar.
+_LOOSE_CREDIT_NAME_RE = re.compile(r"([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})")
 # Keep the existing credit selection; repair only the name at that same anchor.
 TRANSLATOR_PATTERNS = [
     re.compile(prefix + r"([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})")
@@ -258,6 +261,20 @@ _PUBLISHER_REJECT = [
     "contents",
 ]
 
+# A contribution credit is never an imprint. The third publisher pattern ends
+# on words such as "Edition", which matches the word inside a credit sentence
+# ("Translated by X. 1st edition"); this predicate refuses that reading.
+_CONTRIBUTION_CREDIT_RE = re.compile(
+    r"\b(?:translat\w+|edited|editing|illustrated|compiled|selected|adapted"
+    r"|revised|arranged)\b.{0,40}?\bby\b",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def names_a_contribution_credit(value):
+    """Whether a candidate value states who translated, edited or illustrated."""
+    return bool(value and _CONTRIBUTION_CREDIT_RE.search(value))
+
 
 def extract_publisher(text):
     """Extract publisher name from text."""
@@ -273,6 +290,8 @@ def extract_publisher(text):
                 continue
             # Reject metadata phrases
             if any(p in pub.lower() for p in _PUBLISHER_REJECT):
+                continue
+            if names_a_contribution_credit(pub):
                 continue
             return pub
     return None
@@ -371,6 +390,33 @@ def extract_page_count(text):
     return None
 
 
+def credited_name(text, start):
+    """Read the person name credited at ``start``, the position after a 'by'.
+
+    Shared by the flat translator scalar and the publication-scoped credit
+    layer, so both read one name grammar. Returns None where no name stands at
+    that anchor.
+    """
+    loose = _LOOSE_CREDIT_NAME_RE.match(text, start)
+    if not loose:
+        return None
+    legacy_name = loose.group(1).strip().rstrip(".,;:")
+    legacy_name = re.sub(r"\s*'''.*$", "", legacy_name)
+    legacy_name = legacy_name.strip().rstrip(".,;:")
+    if len(legacy_name) < 3:
+        return None
+    name_match = _TRANSLATOR_NAME_RE.match(text, start)
+    if name_match:
+        # A stray period before an initial can be internal name punctuation.
+        if re.match(r"\.[ \t]+[A-Z]\.", text[name_match.end() :]):
+            return legacy_name
+        name = _TRANSLATOR_NOTE_RE.split(name_match.group(1), maxsplit=1)[0]
+        name = name.strip()
+        if len(name) >= 3:
+            return name
+    return legacy_name
+
+
 def extract_translator(text):
     """Extract a credit's name; this compatibility scalar does not resolve scope."""
     if not text:
@@ -378,21 +424,9 @@ def extract_translator(text):
     for pattern in TRANSLATOR_PATTERNS:
         m = pattern.search(text)
         if m:
-            legacy_name = m.group(1).strip().rstrip(".,;:")
-            legacy_name = re.sub(r"\s*'''.*$", "", legacy_name)
-            legacy_name = legacy_name.strip().rstrip(".,;:")
-            if len(legacy_name) < 3:
-                continue
-            name_match = _TRANSLATOR_NAME_RE.match(text, m.start(1))
-            if name_match:
-                # A stray period before an initial can be internal name punctuation.
-                if re.match(r"\.[ \t]+[A-Z]\.", text[name_match.end() :]):
-                    return legacy_name
-                name = _TRANSLATOR_NOTE_RE.split(name_match.group(1), maxsplit=1)[0]
-                name = name.strip()
-                if len(name) >= 3:
-                    return name
-            return legacy_name
+            name = credited_name(text, m.start(1))
+            if name:
+                return name
     return None
 
 

@@ -14,6 +14,9 @@ from typing import Optional
 from google import genai
 from pydantic import BaseModel, Field
 
+from lib.encoding import is_encoding_damaged, repair_value_encoding
+from lib.patterns import names_a_contribution_credit
+
 log = logging.getLogger(__name__)
 
 # Model configuration
@@ -132,7 +135,10 @@ def call_gemini(client, batch_entries):
                 return []
 
 
-# Mojibake patterns that indicate the LLM worsened encoding
+# Mojibake patterns that indicate the LLM worsened encoding. Kept as the
+# historical guard; is_encoding_damaged recognises the same signatures and the
+# ones beginning with Ä or Å that this expression misses, so the two are used
+# together and nothing rejected before is admitted now.
 _LLM_MOJIBAKE_RE = re.compile(
     r'â€[™œ"˜]|â€™|â€œ|â€\x9d|â€\x98|Ã[\x80-\xbf]|Â[\xa0-\xff]'
 )
@@ -143,41 +149,52 @@ def _has_llm_mojibake(text):
     return bool(text and _LLM_MOJIBAKE_RE.search(text))
 
 
+def repair_or_reject(value):
+    """Repair a misread value; return None where the damage cannot be undone.
+
+    A value the byte round-trip restores is kept in its repaired form, because
+    a correct name serves the record better than an empty field. A value whose
+    bytes were already lost when the cache was written is refused, because an
+    empty field is a smaller claim than a corrupt one.
+    """
+    if not value:
+        return None
+    if not (is_encoding_damaged(value) or _has_llm_mojibake(value)):
+        return value
+    repaired = repair_value_encoding(value)
+    if is_encoding_damaged(repaired) or _has_llm_mojibake(repaired):
+        return None
+    return repaired
+
+
 def validate_extraction(extraction):
     """Validate a single LLM extraction result. Returns cleaned dict."""
     result = {"page_id": extraction.page_id}
 
-    # Publisher: 3-80 chars, no wiki markup, no mojibake
-    if extraction.publisher:
-        pub = extraction.publisher.strip().rstrip(".,;:")
+    # Publisher: 3-80 chars, no wiki markup, repaired encoding, no credit phrase
+    pub = repair_or_reject(extraction.publisher)
+    if pub:
+        pub = pub.strip().rstrip(".,;:")
         if (
             3 <= len(pub) <= 80
             and "[[" not in pub
             and "'''" not in pub
-            and not _has_llm_mojibake(pub)
+            and not names_a_contribution_credit(pub)
         ):
             result["publisher"] = pub
 
-    # Location: 2-60 chars, no wiki markup, no mojibake
-    if extraction.location:
-        loc = extraction.location.strip().rstrip(".,;:")
-        if (
-            2 <= len(loc) <= 60
-            and "[[" not in loc
-            and "'''" not in loc
-            and not _has_llm_mojibake(loc)
-        ):
+    # Location: 2-60 chars, no wiki markup, repaired encoding
+    loc = repair_or_reject(extraction.location)
+    if loc:
+        loc = loc.strip().rstrip(".,;:")
+        if 2 <= len(loc) <= 60 and "[[" not in loc and "'''" not in loc:
             result["location"] = loc
 
-    # Translator: 3-60 chars, starts with uppercase, no mojibake
-    if extraction.translator:
-        tr = extraction.translator.strip().rstrip(".,;:")
-        if (
-            3 <= len(tr) <= 60
-            and tr[0].isupper()
-            and "[[" not in tr
-            and not _has_llm_mojibake(tr)
-        ):
+    # Translator: 3-60 chars, starts with uppercase, repaired encoding
+    tr = repair_or_reject(extraction.translator)
+    if tr:
+        tr = tr.strip().rstrip(".,;:")
+        if 3 <= len(tr) <= 60 and tr[0].isupper() and "[[" not in tr:
             result["translator"] = tr
 
     # Page count: 1-10000
