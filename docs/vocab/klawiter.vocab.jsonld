@@ -18,7 +18,7 @@
         "@id": "https://creativecommons.org/licenses/by/4.0/"
       },
       "dcterms:title": "Klawiter Bibliography Vocabulary",
-      "http://www.w3.org/2002/07/owl#versionInfo": "3.1 (gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)",
+      "http://www.w3.org/2002/07/owl#versionInfo": "3.2 (resolved claims and review notes; 3.1 gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)",
       "rdfs:seeAlso": {
         "@id": "klawiter:index.html"
       }
@@ -325,7 +325,7 @@
     {
       "@id": "klawiter:bindingStatus",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "State of an edition's work binding; contested when the binding remains an open claim.",
+      "rdfs:comment": "State of an edition's work binding: contested while the binding remains an open claim, decided once a recorded decision has bound the edition.",
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
@@ -409,7 +409,7 @@
     {
       "@id": "klawiter:claimStatus",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "State of the claim itself; contested claims stay contested until superseded.",
+      "rdfs:comment": "State of the claim itself: contested while it is open, resolved once a recorded decision closes it. A resolved claim stays in the data as the record of that decision.",
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
@@ -475,7 +475,7 @@
     {
       "@id": "klawiter:decisionStatus",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "State of the human decision on a claim; open until an authorized judgment.",
+      "rdfs:comment": "State of the human decision on a claim: open until an authorized judgment, decided once one is recorded.",
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
@@ -654,7 +654,7 @@
     {
       "@id": "klawiter:interpretationStatus",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "State of one interpretation of a contested claim.",
+      "rdfs:comment": "State of one interpretation of a claim: contested while the claim is open, accepted or rejected once it is decided.",
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
@@ -870,6 +870,18 @@
         "@id": "klawiter:"
       },
       "rdfs:label": "review flags",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:reviewNote",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "A point a decision leaves open for review, such as a source discrepancy it does not resolve.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "review note",
       "rdfs:range": {
         "@id": "xsd:string"
       }

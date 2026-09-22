@@ -185,6 +185,11 @@ def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
     return projected
 
 
+def _open_claim_count(claims: list[dict]) -> int:
+    """Claims still awaiting a decision; a decided claim stays as its record."""
+    return sum(claim["klawiter:decisionStatus"] == "open" for claim in claims)
+
+
 def _frontend(result: dict, edition_dataset: dict) -> dict:
     location_items = {}
     for subject in result["candidates"]["locations"]:
@@ -227,14 +232,25 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
                         "reviewer": item["prov:wasAssociatedWith"]["@id"],
                         "outcome": item["klawiter:reviewOutcome"],
                         "basis": item.get("klawiter:reviewBasis"),
+                        **(
+                            {"date": item["dcterms:date"]}
+                            if item.get("dcterms:date")
+                            else {}
+                        ),
                     }
                     for item in claim["klawiter:hasReviewAction"]
                 ],
+                **(
+                    {"reviewNotes": claim["klawiter:reviewNote"]}
+                    if claim.get("klawiter:reviewNote")
+                    else {}
+                ),
             }
         )
     return {
-        # 1.1 added source-occurrence evidence to the agent subjects.
-        "schemaVersion": "1.1",
+        # 1.1 added source-occurrence evidence to the agent subjects, 1.2 the
+        # decided edition claims with their review notes and decision dates.
+        "schemaVersion": "1.2",
         "contract": result["publishable"]["publicationContract"],
         "summary": {
             "locationSubjects": len(result["candidates"]["locations"]),
@@ -243,9 +259,11 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
             "publishedWorkLinks": len(result["publishable"]["works"]),
             "reviewCases": result["queue"]["caseCount"],
             "contestedAuthorityClaims": len(result["contestedClaims"]),
-            "contestedEditionClaims": sum(
-                len(items) for items in edition_claims.values()
+            "contestedEditionClaims": _open_claim_count(
+                edition_dataset["contestedClaims"]
             ),
+            "decidedEditionClaims": len(edition_dataset["contestedClaims"])
+            - _open_claim_count(edition_dataset["contestedClaims"]),
         },
         "locations": location_items,
         "works": result["candidates"]["works"],
@@ -395,20 +413,21 @@ def main() -> None:
             "publishableAgentLinks": len(result["publishable"]["agents"]),
             "reviewCases": result["queue"]["caseCount"],
             "contestedAuthorityClaims": len(result["contestedClaims"]),
-            "contestedEditionClaims": len(edition_dataset["contestedClaims"]),
+            "contestedEditionClaims": _open_claim_count(
+                edition_dataset["contestedClaims"]
+            ),
+            "decidedEditionClaims": len(edition_dataset["contestedClaims"])
+            - _open_claim_count(edition_dataset["contestedClaims"]),
         },
         "artifacts": {name: _sha256(output_dir / name) for name in artifacts},
         "frontendArtifact": {
             "path": "docs/data/reconciliation.json",
             "sha256": _sha256(Path(OUTPUT_RECONCILIATION_FRONTEND)),
         },
-        "operatorPoints": [
-            {
-                "subject": "klawiter:edition/4916-2016-b",
-                "question": "Select or create the canonical adaptation work before accepting its work binding.",
-                "evidence": "data/output/editions/review-queue.json",
-            }
-        ],
+        # The adaptation binding of klawiter:edition/4916-2016-b, the one point
+        # listed here before, was decided on 2026-09-22 and is recorded in the
+        # edition modeling decisions.
+        "operatorPoints": [],
     }
     write_json(str(output_dir / "manifest.json"), manifest, indent=2, sort_keys=True)
     log.info(

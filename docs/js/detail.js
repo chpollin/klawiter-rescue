@@ -417,32 +417,47 @@ const Detail = {
     return `<div class="contested-status" role="status">${rendered}</div>`;
   },
 
+  // A decided claim keeps its block: the accepted and the rejected reading,
+  // the review history with the decision and what the decision left open stay
+  // readable, because the decision is revisable and this is its record.
   _contestedClaimsBlock(entry) {
     const claims = Edit.editionClaimsFor(entry);
     if (!claims.length) return '';
     const rendered = claims.map(claim => {
+      const decided = claim.decisionStatus === 'decided';
       const interpretations = claim.interpretations.map(item =>
-        `<li title="${esc(item.proposedObject)}">${esc(item.label)}
+        `<li title="${esc(item.proposedObject)}">${esc(item.label)}${
+          decided ? ` (${esc(item.status)})` : ''}
           <span class="field-sub">${esc(item.basis)}</span></li>`
       ).join('');
       const history = claim.reviewHistory.map(item =>
         `<li title="${esc(item.reviewId)}">${esc(item.reviewer)}: ${esc(item.outcome)}${
+          item.date ? `, ${esc(item.date)}` : ''}${
           item.basis ? ` (${esc(item.basis)})` : ''}</li>`
       ).join('');
-      return `<article class="contested-claim">
-        <h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — the edition stays part
+      const notes = (claim.reviewNotes || []).map(note => `<li>${esc(note)}</li>`).join('');
+      const heading = decided
+        ? `<h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — decided and
+          revisable; the accepted reading is the edition's schema:exampleOfWork relation, the
+          rejected one stays part of the data without it.`)}>Work identity decided</h3>`
+        : `<h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — the edition stays part
           of the data, none of the interpretations is emitted as a confirmed schema:exampleOfWork
-          relation.`)}>Contested work identity, decision open</h3>
-        <h4>Competing interpretations</h4>
+          relation.`)}>Contested work identity, decision open</h3>`;
+      return `<article class="contested-claim">
+        ${heading}
+        <h4>${decided ? 'Interpretations' : 'Competing interpretations'}</h4>
         <ul>${interpretations}</ul>
         <h4>Review history</h4>
         <ul>${history}</ul>
+        ${notes ? `<h4>Open for review</h4><ul>${notes}</ul>` : ''}
         <p class="contested-source">Page ${claim.source.sourcePageId}, characters
           ${claim.source.selector[0]}–${claim.source.selector[1]}
           ${this._checksum(claim.source.sliceSha256)}</p>
       </article>`;
     }).join('');
-    return `<section class="detail-section contested-claims" aria-label="Contested claims">${rendered}</section>`;
+    const open = claims.some(claim => claim.decisionStatus !== 'decided');
+    return `<section class="detail-section contested-claims" aria-label="${
+      open ? 'Contested claims' : 'Decided claims'}">${rendered}</section>`;
   },
 
   // Ordered attention hints for the entry (edit mode): where checking is most
@@ -566,7 +581,7 @@ const Detail = {
     return label;
   },
 
-  ROLE_LABELS: { translator: 'Translator', editor: 'Editor',
+  ROLE_LABELS: { author: 'Author', translator: 'Translator', editor: 'Editor',
                  illustrator: 'Illustrator', contributor: 'Contributor' },
 
   _publicationRows(pub, entry) {

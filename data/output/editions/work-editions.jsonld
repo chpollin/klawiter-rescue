@@ -34010,17 +34010,7 @@
       }
     }
   ],
-  "candidateWorks": [
-    {
-      "@id": "klawiter:work-candidate/4916-2016-b-adaptation",
-      "@type": "klawiter:WorkIdentityCandidate",
-      "klawiter:identityStatus": "contested",
-      "prov:wasDerivedFrom": {
-        "@id": "klawiter:annotation/4916-2016-b"
-      },
-      "schema:name": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)"
-    }
-  ],
+  "candidateWorks": [],
   "carriers": [
     {
       "@id": "klawiter:carrier/source-54-1981-d",
@@ -34090,11 +34080,11 @@
       "klawiter:claimPredicate": {
         "@id": "schema:exampleOfWork"
       },
-      "klawiter:claimStatus": "contested",
+      "klawiter:claimStatus": "resolved",
       "klawiter:claimSubject": {
         "@id": "klawiter:edition/4916-2016-b"
       },
-      "klawiter:decisionStatus": "open",
+      "klawiter:decisionStatus": "decided",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/4916-2016-b/reviewer-a",
@@ -34134,13 +34124,34 @@
           "prov:wasAssociatedWith": {
             "@id": "klawiter:agent/reconciliation-verifier"
           }
+        },
+        {
+          "@id": "klawiter:review/4916-2016-b/decision-2026-09-22",
+          "@type": "klawiter:ReviewAction",
+          "dcterms:date": "2026-09-22",
+          "klawiter:reviewBasis": "Decided by the main instance after delegation by the operator on 2026-09-22; revisable. The publication is its own work, an adaptation with a change of medium: page 4916 credits it as a graphic novel by its illustrator, adapted into German by a second person; the illustrator's author page 5110 lists the French graphic novel of 2015 and this edition under the heading German translation; page 675 lists the French graphic novel of 2015 as freely inspired by the Schachnovelle. The German edition of 2016 translates the French graphic novel of 2015 and leaves the editions of the Schachnovelle.",
+          "klawiter:reviewOutcome": "confirm",
+          "prov:used": [
+            {
+              "@id": "klawiter:annotation/4916-2016-b"
+            },
+            {
+              "@id": "klawiter:sourceText/5110"
+            },
+            {
+              "@id": "klawiter:sourceText/675"
+            }
+          ],
+          "prov:wasAssociatedWith": {
+            "@id": "klawiter:agent/main-instance"
+          }
         }
       ],
       "klawiter:interpretation": [
         {
           "@id": "klawiter:interpretation/4916-2016-b/original-work",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "klawiter:work/4916"
           },
@@ -34150,13 +34161,16 @@
         {
           "@id": "klawiter:interpretation/4916-2016-b/adaptation-work",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "accepted",
           "klawiter:proposedObject": {
             "@id": "klawiter:work-candidate/4916-2016-b-adaptation"
           },
           "schema:description": "The exact source calls the publication a graphic novel after Stefan Zweig and names an adaptor.",
           "schema:name": "Edition of a distinct graphic-novel adaptation work"
         }
+      ],
+      "klawiter:reviewNote": [
+        "Page 4916 gives this edition 120p., page 5110 gives the same edition 128p.; the difference is held for review, not resolved."
       ],
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5",
@@ -65045,25 +65059,36 @@
     {
       "@id": "klawiter:edition/4916-2016-b",
       "@type": "schema:Book",
-      "klawiter:bindingStatus": "contested",
+      "klawiter:bindingStatus": "decided",
       "klawiter:hasContestedClaim": {
         "@id": "klawiter:claim/work-binding/4916-2016-b"
       },
       "klawiter:headerLine": "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''",
       "klawiter:pageCountRaw": "120p.",
-      "klawiter:reviewBasis": "adaptation-work-identity",
-      "klawiter:reviewDecision": "unresolved",
+      "klawiter:reviewBasis": "Decided by the main instance after delegation by the operator on 2026-09-22; revisable. The publication is its own work, an adaptation with a change of medium: page 4916 credits it as a graphic novel by its illustrator, adapted into German by a second person; the illustrator's author page 5110 lists the French graphic novel of 2015 and this edition under the heading German translation; page 675 lists the French graphic novel of 2015 as freely inspired by the Schachnovelle. The German edition of 2016 translates the French graphic novel of 2015 and leaves the editions of the Schachnovelle.",
+      "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [
-        "contested-work-identity"
+        "extent-differs-across-source-pages"
       ],
-      "klawiter:reviewStatus": "contested",
+      "klawiter:reviewStatus": "confirmed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5",
       "klawiter:yearRaw": "2016",
       "schema:datePublished": "2016",
+      "schema:exampleOfWork": {
+        "@id": "klawiter:work-candidate/4916-2016-b-adaptation"
+      },
       "schema:locationCreated": "München",
       "schema:numberOfPages": 120,
-      "schema:publisher": "Knesebeck GmbH & Co. Verlag"
+      "schema:publisher": "Knesebeck GmbH & Co. Verlag",
+      "schema:translationOfWork": [
+        {
+          "@id": "klawiter:edition/675-2015-a"
+        },
+        {
+          "@id": "klawiter:edition/5110-2015-a"
+        }
+      ]
     },
     {
       "@id": "klawiter:edition/4916-2016-c",
@@ -80799,6 +80824,25 @@
         },
         {
           "@id": "klawiter:edition/7460-1989-a"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:work-candidate/4916-2016-b-adaptation",
+      "@type": "schema:CreativeWork",
+      "prov:wasDerivedFrom": {
+        "@id": "klawiter:claim/work-binding/4916-2016-b"
+      },
+      "schema:creator": "Thomas Humeau",
+      "schema:description": "Adaptation of the Schachnovelle with a change of medium, first published in French in 2015 as Le Joueur d'échecs.",
+      "schema:genre": "graphic novel",
+      "schema:isBasedOn": {
+        "@id": "klawiter:work/4916"
+      },
+      "schema:name": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)",
+      "schema:workExample": [
+        {
+          "@id": "klawiter:edition/4916-2016-b"
         }
       ]
     }

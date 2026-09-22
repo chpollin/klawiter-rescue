@@ -9,7 +9,7 @@
       "edition_id": "klawiter:edition/4916-2016-b",
       "claim_id": "klawiter:claim/work-binding/4916-2016-b",
       "predicate": "schema:exampleOfWork",
-      "decision_status": "open",
+      "decision_status": "decided",
       "interpretations": [
         {
           "interpretation_id": "klawiter:interpretation/4916-2016-b/original-work",
@@ -27,7 +27,37 @@
             "label": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)"
           }
         }
-      ]
+      ],
+      "resolution": {
+        "decision_status": "decided",
+        "selected_interpretation": "klawiter:interpretation/4916-2016-b/adaptation-work",
+        "decided_on": "2026-09-22",
+        "decided_by": "klawiter:agent/main-instance",
+        "review_id": "klawiter:review/4916-2016-b/decision-2026-09-22",
+        "provenance": "Decided by the main instance after delegation by the operator on 2026-09-22; revisable.",
+        "basis": "The publication is its own work, an adaptation with a change of medium: page 4916 credits it as a graphic novel by its illustrator, adapted into German by a second person; the illustrator's author page 5110 lists the French graphic novel of 2015 and this edition under the heading German translation; page 675 lists the French graphic novel of 2015 as freely inspired by the Schachnovelle. The German edition of 2016 translates the French graphic novel of 2015 and leaves the editions of the Schachnovelle.",
+        "evidence": [
+          "klawiter:sourceText/5110",
+          "klawiter:sourceText/675"
+        ],
+        "work": {
+          "label": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)",
+          "creator": "Thomas Humeau",
+          "genre": "graphic novel",
+          "based_on": "klawiter:work/4916",
+          "relation": "Adaptation of the Schachnovelle with a change of medium, first published in French in 2015 as Le Joueur d'échecs."
+        },
+        "translation_of": [
+          "klawiter:edition/675-2015-a",
+          "klawiter:edition/5110-2015-a"
+        ],
+        "review_notes": [
+          {
+            "code": "extent-differs-across-source-pages",
+            "detail": "Page 4916 gives this edition 120p., page 5110 gives the same edition 128p.; the difference is held for review, not resolved."
+          }
+        ]
+      }
     }
   ],
   "carrier_relations": [

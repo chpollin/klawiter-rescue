@@ -14,7 +14,8 @@
     "agentDecisions": 0,
     "agentSubjects": 101,
     "contestedAuthorityClaims": 5,
-    "contestedEditionClaims": 1,
+    "contestedEditionClaims": 0,
+    "decidedEditionClaims": 1,
     "locationCandidates": 392,
     "locationDecisions": 31,
     "locationSubjects": 382,
@@ -36,5 +37,5 @@
     "jsonldProjection": [],
     "shacl": []
   },
-  "generatedAt": "2026-09-08T13:37:20.647224+00:00"
+  "generatedAt": "2026-09-22T18:37:53.145729+00:00"
 }

@@ -51,7 +51,7 @@
 <div class="namespace">
   <strong>Namespace URI:</strong> https://chpollin.github.io/klawiter-rescue/vocab/<br>
   <strong>Preferred prefix:</strong> klawiter:<br>
-  <strong>Version:</strong> 3.1 (gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)
+  <strong>Version:</strong> 3.2 (resolved claims and review notes; 3.1 gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)
 </div>
 
 <p>Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/&lt;TermName&gt;/.</p>
@@ -192,7 +192,7 @@
     <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
   </thead>
   <tbody>
-    <tr><td><code><a href="bindingStatus/">klawiter:bindingStatus</a></code></td><td class="kind">Property</td><td>State of an edition&#x27;s work binding; contested when the binding remains an open claim.</td></tr>
+    <tr><td><code><a href="bindingStatus/">klawiter:bindingStatus</a></code></td><td class="kind">Property</td><td>State of an edition&#x27;s work binding: contested while the binding remains an open claim, decided once a recorded decision has bound the edition.</td></tr>
     <tr><td><code><a href="reviewContract/">klawiter:reviewContract</a></code></td><td class="kind">Property</td><td>Statement of the scope and limits of review decisions applied to a dataset.</td></tr>
     <tr><td><code><a href="reviewDecision/">klawiter:reviewDecision</a></code></td><td class="kind">Property</td><td>Disposition recorded by the sample review decision applied to an edition.</td></tr>
     <tr><td><code><a href="reviewEvidenceSha256/">klawiter:reviewEvidenceSha256</a></code></td><td class="kind">Property</td><td>SHA-256 of the sample reconciliation evidence recorded when review decisions are applied to a dataset.</td></tr>
@@ -200,18 +200,19 @@
     <tr><td><code><a href="reviewFlags/">klawiter:reviewFlags</a></code></td><td class="kind">Property</td><td>Machine-raised flags that prioritize an edition for review.</td></tr>
     <tr><td><code><a href="claimSubject/">klawiter:claimSubject</a></code></td><td class="kind">Property</td><td>The resource whose identity a contested claim disputes.</td></tr>
     <tr><td><code><a href="claimPredicate/">klawiter:claimPredicate</a></code></td><td class="kind">Property</td><td>The relation the contested claim would assert if resolved, for example schema:sameAs or schema:exampleOfWork.</td></tr>
-    <tr><td><code><a href="claimStatus/">klawiter:claimStatus</a></code></td><td class="kind">Property</td><td>State of the claim itself; contested claims stay contested until superseded.</td></tr>
-    <tr><td><code><a href="decisionStatus/">klawiter:decisionStatus</a></code></td><td class="kind">Property</td><td>State of the human decision on a claim; open until an authorized judgment.</td></tr>
+    <tr><td><code><a href="claimStatus/">klawiter:claimStatus</a></code></td><td class="kind">Property</td><td>State of the claim itself: contested while it is open, resolved once a recorded decision closes it. A resolved claim stays in the data as the record of that decision.</td></tr>
+    <tr><td><code><a href="decisionStatus/">klawiter:decisionStatus</a></code></td><td class="kind">Property</td><td>State of the human decision on a claim: open until an authorized judgment, decided once one is recorded.</td></tr>
     <tr><td><code><a href="identityScope/">klawiter:identityScope</a></code></td><td class="kind">Property</td><td>What kind of identity a claim or carrier concerns, for example location, work, or source-occurrence.</td></tr>
     <tr><td><code><a href="identityStatus/">klawiter:identityStatus</a></code></td><td class="kind">Property</td><td>State of a candidate work identity; contested until decided.</td></tr>
     <tr><td><code><a href="interpretation/">klawiter:interpretation</a></code></td><td class="kind">Property</td><td>A competing interpretation attached to a contested claim.</td></tr>
-    <tr><td><code><a href="interpretationStatus/">klawiter:interpretationStatus</a></code></td><td class="kind">Property</td><td>State of one interpretation of a contested claim.</td></tr>
+    <tr><td><code><a href="interpretationStatus/">klawiter:interpretationStatus</a></code></td><td class="kind">Property</td><td>State of one interpretation of a claim: contested while the claim is open, accepted or rejected once it is decided.</td></tr>
     <tr><td><code><a href="proposedObject/">klawiter:proposedObject</a></code></td><td class="kind">Property</td><td>The object an interpretation proposes for the claim predicate. The fail-closed alternative omits it.</td></tr>
     <tr><td><code><a href="candidateId/">klawiter:candidateId</a></code></td><td class="kind">Property</td><td>Identifier of the reconciliation candidate an interpretation is based on.</td></tr>
     <tr><td><code><a href="candidateSource/">klawiter:candidateSource</a></code></td><td class="kind">Property</td><td>Where a reconciliation candidate came from, for example a legacy run, the frozen authority index, or the fail-closed alternative.</td></tr>
     <tr><td><code><a href="hasReviewAction/">klawiter:hasReviewAction</a></code></td><td class="kind">Property</td><td>A review-trail step attached to a claim.</td></tr>
     <tr><td><code><a href="reviewOutcome/">klawiter:reviewOutcome</a></code></td><td class="kind">Property</td><td>Outcome of one review action, for example match, mismatch, unresolved, confirm, correct.</td></tr>
     <tr><td><code><a href="reviewBasis/">klawiter:reviewBasis</a></code></td><td class="kind">Property</td><td>Stated basis of a review judgment.</td></tr>
+    <tr><td><code><a href="reviewNote/">klawiter:reviewNote</a></code></td><td class="kind">Property</td><td>A point a decision leaves open for review, such as a source discrepancy it does not resolve.</td></tr>
     <tr><td><code><a href="decisionId/">klawiter:decisionId</a></code></td><td class="kind">Property</td><td>Stable identifier of a recorded decision in the decision files.</td></tr>
     <tr><td><code><a href="decidedAt/">klawiter:decidedAt</a></code></td><td class="kind">Property</td><td>Timestamp of a recorded decision.</td></tr>
     <tr><td><code><a href="evidence/">klawiter:evidence</a></code></td><td class="kind">Property</td><td>Evidence references supporting a review action.</td></tr>

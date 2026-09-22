@@ -1,40 +1,6 @@
 {
-  "caseCount": 317,
+  "caseCount": 316,
   "cases": [
-    {
-      "editionId": "klawiter:edition/4916-2016-b",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7104,
-          "oa:start": 6866
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/4916"
-        }
-      },
-      "flags": [
-        "contested-work-identity"
-      ],
-      "headerLine": "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''",
-      "priority": "P0",
-      "proposedValues": {
-        "contestedClaim": {
-          "@id": "klawiter:claim/work-binding/4916-2016-b"
-        },
-        "description": null,
-        "location": "München",
-        "pageCount": 120,
-        "pageCountCandidate": null,
-        "publisher": "Knesebeck GmbH & Co. Verlag",
-        "series": null,
-        "year": "2016"
-      },
-      "reviewStatus": "contested",
-      "sourcePageId": 4916,
-      "sourceSliceSha256": "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5"
-    },
     {
       "editionId": "klawiter:edition/29-1978-a",
       "evidence": {

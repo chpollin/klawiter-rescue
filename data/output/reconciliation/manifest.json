@@ -4,18 +4,19 @@
     "candidates.json": "2779dea489e66701d9d20f7bfa548e6127e7835e1f6deb086f52fefa63898219",
     "contested-claims.json": "1f4ae52905b3e080f3bb045649f5f30efc8c0307a80aa0c24574e7c232ed6ef0",
     "decisions.json": "bde3864bc41507a0e96c018e02ae44667ce54cf1133932f47c80d0b35118c78f",
-    "earl.jsonld": "fda40df0c0f0273fc117731634ed0451f54d0b6e51463cbbe11bf33ab382d617",
-    "provenance.jsonld": "d8f3385a68d55c60eb5131708a440f41acd357b3aadbc6323cf60dfafb3057cc",
+    "earl.jsonld": "1e68d9677c4fa8912b1ce8dd223d624b951a05fa5db8b7a2ca351e4970ee03f1",
+    "provenance.jsonld": "570f180503dc8df8e43c03cfa5d99cb2fdd76c88e0911daf51e3c24353e111fd",
     "publishable-links.json": "49d645b6d689e1c23e8f2088d22f98e4b5f0e32c04d4c28c19c694d7a1b6577b",
     "review-queue.json": "8f46734791089a37abe558cf1a55f8d41f58e94532823f9a20d950437bb5718c",
-    "validation-report.json": "3b452b156234aa1b6ba5df55893d2a9b1df369134f866618d8ad296bfc7f79b3"
+    "validation-report.json": "50c1ede52e3fe7cc4b9153441159bb2f152b30b8dfe3b848cd618b480013080d"
   },
-  "codeSha256": "7a0469f2debe2cd457dcb26514a45837580f7366486f5c1b15e9b31327d638bf",
+  "codeSha256": "e4eaae3805803c47f69f9a1e5be569ffea2dc803934aef2bc05b55f78fb62d8a",
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
     "contestedAuthorityClaims": 5,
-    "contestedEditionClaims": 1,
+    "contestedEditionClaims": 0,
+    "decidedEditionClaims": 1,
     "locationCandidates": 392,
     "locationDecisions": 31,
     "locationSubjects": 382,
@@ -29,9 +30,9 @@
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "d9849d451478b8526530303a2d84ab7341daecc40e30af938088c899047a9a24"
+    "sha256": "bb9c6d20d729348cc60a223bbb73d5ea483be21c56f55681c0499fadf624b94b"
   },
-  "generatedAt": "2026-09-08T13:36:49.548184+00:00",
+  "generatedAt": "2026-09-22T18:37:19.072671+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -47,11 +48,11 @@
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
-      "sha256": "9be90e8fa3b8348bd52746a364d22ee03c6e4fbeb138a0bb72df0c27cf842f05"
+      "sha256": "870bd90768654901d6530386fc4ec507e18f0083dfbb9d5927ef71fd51f8a392"
     },
     "editions": {
       "path": "data/output/editions/work-editions.jsonld",
-      "sha256": "5199fe655fd2d9f4118a25466eef44c4f161f171f599f0486e1d69ec0bee6568"
+      "sha256": "769ab9edd16ab3663b2384e51363ac14802167c6cbbd25408b9364f8165653cd"
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",
@@ -78,13 +79,7 @@
       "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
     }
   },
-  "operatorPoints": [
-    {
-      "evidence": "data/output/editions/review-queue.json",
-      "question": "Select or create the canonical adaptation work before accepting its work binding.",
-      "subject": "klawiter:edition/4916-2016-b"
-    }
-  ],
+  "operatorPoints": [],
   "validation": {
     "agentOccurrenceEvidence": true,
     "contestedClaims": true,

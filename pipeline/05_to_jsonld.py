@@ -133,7 +133,12 @@ def load_work_pages():
         )
     with open(path, encoding="utf-8") as handle:
         works = json.load(handle)["works"]
-    return {int(work["@id"].rsplit("/", 1)[1]) for work in works}
+    # A work created by a claim decision stands on no source page of its own.
+    return {
+        work["klawiter:sourcePageId"]
+        for work in works
+        if "klawiter:sourcePageId" in work
+    }
 
 
 def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=None):

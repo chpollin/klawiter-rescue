@@ -124,4 +124,40 @@ function load(file, context, exported) {
   assert.match(html, /schema:sameAs/);
 }
 
+
+{
+  // A decided claim keeps its record: both readings with their status, the
+  // decision in the history with its date, and what it left open.
+  const decided = {
+    ...claim,
+    claimStatus: 'resolved',
+    decisionStatus: 'decided',
+    interpretations: [
+      { ...claim.interpretations[0], status: 'rejected' },
+      { ...claim.interpretations[1], status: 'accepted' },
+    ],
+    reviewHistory: [
+      ...claim.reviewHistory,
+      { reviewId: 'klawiter:review/decision', reviewer: 'klawiter:agent/main-instance',
+        outcome: 'confirm', basis: 'Decided after delegation; revisable.', date: '2026-09-22' },
+    ],
+    reviewNotes: ['Page 4916 gives 120p., page 5110 gives 128p.'],
+  };
+  const context = {
+    App: { state: { editMode: false } },
+    Edit: { editionClaimsFor: () => [decided], authorityClaimsFor: () => [] },
+    esc: value => String(value),
+  };
+  const Detail = load('detail.js', context, 'Detail');
+  const html = Detail._contestedClaimsBlock({ sourcePageId: 4916 });
+  assert.match(html, /Work identity decided/);
+  assert.doesNotMatch(html, /decision open/);
+  assert.match(html, /Original work \(rejected\)/);
+  assert.match(html, /Adaptation work \(accepted\)/);
+  assert.match(html, /confirm, 2026-09-22/);
+  assert.match(html, /Open for review/);
+  assert.match(html, /120p\./);
+  assert.match(html, /aria-label="Decided claims"/);
+}
+
 console.log('all contested-claim checks passed');

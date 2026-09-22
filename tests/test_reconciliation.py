@@ -332,7 +332,7 @@ def test_public_agent_projection_carries_occurrence_evidence(
         (Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld").read_text(encoding="utf-8")
     )
     frontend = reconcile_entities._frontend(reconciliation, edition_dataset)
-    assert frontend["schemaVersion"] == "1.1"
+    assert frontend["schemaVersion"] == "1.2"
     subject = reconciliation["candidates"]["agents"][0]
     key = f"{subject['entityType']}/{subject['sourceName']}"
     projected = frontend["agents"][key]

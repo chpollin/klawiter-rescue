@@ -18,7 +18,7 @@
     dcterms:title "Klawiter Bibliography Vocabulary"@en ;
     dcterms:description "Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/<TermName>/."@en ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    owl:versionInfo "3.1 (gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)" ;
+    owl:versionInfo "3.2 (resolved claims and review notes; 3.1 gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)" ;
     rdfs:seeAlso <https://chpollin.github.io/klawiter-rescue/vocab/index.html> .
 
 #################################################################
@@ -498,7 +498,7 @@ klawiter:selectionRule
 klawiter:bindingStatus
     a rdf:Property ;
     rdfs:label "binding status"@en ;
-    rdfs:comment "State of an edition's work binding; contested when the binding remains an open claim."@en ;
+    rdfs:comment "State of an edition's work binding: contested while the binding remains an open claim, decided once a recorded decision has bound the edition."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
@@ -552,14 +552,14 @@ klawiter:claimPredicate
 klawiter:claimStatus
     a rdf:Property ;
     rdfs:label "claim status"@en ;
-    rdfs:comment "State of the claim itself; contested claims stay contested until superseded."@en ;
+    rdfs:comment "State of the claim itself: contested while it is open, resolved once a recorded decision closes it. A resolved claim stays in the data as the record of that decision."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:decisionStatus
     a rdf:Property ;
     rdfs:label "decision status"@en ;
-    rdfs:comment "State of the human decision on a claim; open until an authorized judgment."@en ;
+    rdfs:comment "State of the human decision on a claim: open until an authorized judgment, decided once one is recorded."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
@@ -586,7 +586,7 @@ klawiter:interpretation
 klawiter:interpretationStatus
     a rdf:Property ;
     rdfs:label "interpretation status"@en ;
-    rdfs:comment "State of one interpretation of a contested claim."@en ;
+    rdfs:comment "State of one interpretation of a claim: contested while the claim is open, accepted or rejected once it is decided."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
@@ -629,6 +629,13 @@ klawiter:reviewBasis
     a rdf:Property ;
     rdfs:label "review basis"@en ;
     rdfs:comment "Stated basis of a review judgment."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:reviewNote
+    a rdf:Property ;
+    rdfs:label "review note"@en ;
+    rdfs:comment "A point a decision leaves open for review, such as a source discrepancy it does not resolve."@en ;
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 

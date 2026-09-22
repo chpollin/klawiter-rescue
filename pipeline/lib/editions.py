@@ -318,6 +318,95 @@ def segment_page(page_id: int, text: str, work_title: str) -> dict:
     }
 
 
+def _resolve_claim(
+    claim: dict,
+    edition: dict,
+    works: dict,
+    annotation: dict,
+    resolution: dict,
+) -> dict:
+    """Close a contested work binding with the recorded decision.
+
+    The claim stays in the graph with its interpretations and review history,
+    now marked resolved, so the decision can be traced and revised. The
+    accepted interpretation must propose a work candidate; that candidate
+    becomes a work under its stable identifier, bound to the edition, and the
+    rejected readings keep their objects without a binding. Returns the new
+    work node.
+    """
+    selected = resolution["selected_interpretation"]
+    accepted = [
+        item for item in claim["klawiter:interpretation"] if item["@id"] == selected
+    ]
+    if len(accepted) != 1:
+        raise ValueError(f"Resolution selects no interpretation of {claim['@id']}")
+    work_id = accepted[0]["klawiter:proposedObject"]["@id"]
+    if not work_id.startswith("klawiter:work-candidate/"):
+        raise ValueError(f"Resolution of {claim['@id']} selects no work candidate")
+    for item in claim["klawiter:interpretation"]:
+        item["klawiter:interpretationStatus"] = (
+            "accepted" if item["@id"] == selected else "rejected"
+        )
+    claim["klawiter:claimStatus"] = "resolved"
+    claim["klawiter:decisionStatus"] = resolution["decision_status"]
+    basis = f"{resolution['provenance']} {resolution['basis']}"
+    claim["klawiter:hasReviewAction"].append(
+        {
+            "@id": resolution["review_id"],
+            "@type": "klawiter:ReviewAction",
+            "prov:wasAssociatedWith": {"@id": resolution["decided_by"]},
+            "prov:used": [
+                {"@id": annotation["@id"]},
+                *({"@id": source} for source in resolution["evidence"]),
+            ],
+            "klawiter:reviewOutcome": "confirm",
+            "klawiter:reviewBasis": basis,
+            "dcterms:date": resolution["decided_on"],
+        }
+    )
+    notes = resolution.get("review_notes", [])
+    if notes:
+        claim["klawiter:reviewNote"] = [note["detail"] for note in notes]
+
+    specification = resolution["work"]
+    work = {
+        "@id": work_id,
+        "@type": "schema:CreativeWork",
+        "schema:name": specification["label"],
+        "schema:creator": specification["creator"],
+        "schema:genre": specification["genre"],
+        "schema:isBasedOn": {"@id": specification["based_on"]},
+        "schema:description": specification["relation"],
+        "schema:workExample": [{"@id": edition["@id"]}],
+        "prov:wasDerivedFrom": {"@id": claim["@id"]},
+    }
+    if specification["based_on"] not in works:
+        raise ValueError(
+            f"Adapted work is absent from Gate 1: {specification['based_on']}"
+        )
+    edition["schema:exampleOfWork"] = {"@id": work_id}
+    edition["schema:translationOfWork"] = [
+        {"@id": source} for source in resolution["translation_of"]
+    ]
+    edition["klawiter:reviewStatus"] = "confirmed"
+    edition["klawiter:reviewDecision"] = "confirm"
+    edition["klawiter:reviewBasis"] = basis
+    edition["klawiter:bindingStatus"] = "decided"
+    edition["klawiter:reviewFlags"] = list(
+        dict.fromkeys(
+            [
+                *(
+                    flag
+                    for flag in edition["klawiter:reviewFlags"]
+                    if flag != "contested-work-identity"
+                ),
+                *(note["code"] for note in notes),
+            ]
+        )
+    )
+    return work
+
+
 def apply_review_reconciliation(
     dataset: dict, reconciliation: dict, modeling_decisions: dict
 ) -> dict:
@@ -433,25 +522,32 @@ def apply_review_reconciliation(
                     "klawiter:reviewBasis": decision["basis"],
                 }
             )
-            contested_claims.append(
-                {
-                    "@id": claim_id,
-                    "@type": "klawiter:ContestedClaim",
-                    "klawiter:claimSubject": {"@id": edition_id},
-                    "klawiter:claimPredicate": {"@id": specification["predicate"]},
-                    "klawiter:claimStatus": "contested",
-                    "klawiter:decisionStatus": specification["decision_status"],
-                    "klawiter:sourcePageId": edition["klawiter:sourcePageId"],
-                    "klawiter:sourceSliceSha256": edition["klawiter:sourceSliceSha256"],
-                    "oa:hasTarget": copy.deepcopy(annotation["oa:hasTarget"]),
-                    "prov:wasDerivedFrom": [
-                        {"@id": annotation["@id"]},
-                        {"@id": "klawiter:evidence/sample-reconciliation"},
-                    ],
-                    "klawiter:interpretation": interpretations,
-                    "klawiter:hasReviewAction": review_actions,
-                }
-            )
+            claim = {
+                "@id": claim_id,
+                "@type": "klawiter:ContestedClaim",
+                "klawiter:claimSubject": {"@id": edition_id},
+                "klawiter:claimPredicate": {"@id": specification["predicate"]},
+                "klawiter:claimStatus": "contested",
+                "klawiter:decisionStatus": specification["decision_status"],
+                "klawiter:sourcePageId": edition["klawiter:sourcePageId"],
+                "klawiter:sourceSliceSha256": edition["klawiter:sourceSliceSha256"],
+                "oa:hasTarget": copy.deepcopy(annotation["oa:hasTarget"]),
+                "prov:wasDerivedFrom": [
+                    {"@id": annotation["@id"]},
+                    {"@id": "klawiter:evidence/sample-reconciliation"},
+                ],
+                "klawiter:interpretation": interpretations,
+                "klawiter:hasReviewAction": review_actions,
+            }
+            resolution = specification.get("resolution")
+            if resolution:
+                work = _resolve_claim(claim, edition, works, annotation, resolution)
+                reviewed["works"].append(work)
+                works[work["@id"]] = work
+                candidate_works[:] = [
+                    item for item in candidate_works if item["@id"] != work["@id"]
+                ]
+            contested_claims.append(claim)
 
     carriers: list[dict] = []
     for relation in modeling_decisions["carrier_relations"]:

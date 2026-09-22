@@ -144,36 +144,76 @@ def _check_unique_ids(dataset: dict) -> list[str]:
     return [f"Duplicate identifier: {identifier}" for identifier in duplicates]
 
 
+def _check_decided_claim(
+    claim: dict, edition: dict, examples_by_work: dict[str, set[str]]
+) -> list[str]:
+    """A decided claim binds its edition to the accepted reading, and only there.
+
+    The claim itself stays in the graph as the record of the decision, so its
+    interpretations must say which reading was accepted and which rejected, and
+    its history must hold the decision beside the sample reviews.
+    """
+    claim_id = claim["@id"]
+    edition_id = edition["@id"]
+    errors: list[str] = []
+    if claim["klawiter:claimStatus"] != "resolved":
+        errors.append(f"{claim_id}: decided claim is not marked resolved")
+    if edition["klawiter:reviewStatus"] == "contested":
+        errors.append(f"{edition_id}: edition of a decided claim is still contested")
+    statuses = [
+        item["klawiter:interpretationStatus"]
+        for item in claim["klawiter:interpretation"]
+    ]
+    accepted = [
+        item["klawiter:proposedObject"]["@id"]
+        for item in claim["klawiter:interpretation"]
+        if item["klawiter:interpretationStatus"] == "accepted"
+    ]
+    if len(accepted) != 1 or set(statuses) != {"accepted", "rejected"}:
+        errors.append(f"{claim_id}: decision does not accept exactly one reading")
+        return errors
+    binding = edition.get("schema:exampleOfWork", {}).get("@id")
+    if binding != accepted[0]:
+        errors.append(f"{edition_id}: binding differs from the accepted reading")
+    if edition_id not in examples_by_work.get(accepted[0], set()):
+        errors.append(f"{accepted[0]}: accepted work does not list {edition_id}")
+    for item in claim["klawiter:interpretation"]:
+        rejected = item["klawiter:proposedObject"]["@id"]
+        if item["klawiter:interpretationStatus"] == "rejected" and edition_id in (
+            examples_by_work.get(rejected, set())
+        ):
+            errors.append(f"{rejected}: rejected work still lists {edition_id}")
+    if len(claim["klawiter:hasReviewAction"]) < 4:
+        errors.append(f"{claim_id}: decision is missing from the review history")
+    return errors
+
+
 def _check_contested_claims(dataset: dict) -> list[str]:
     claims = {claim["@id"]: claim for claim in dataset["contestedClaims"]}
     annotations = {
         annotation["oa:hasBody"]["@id"]: annotation
         for annotation in dataset["annotations"]
     }
-    work_examples = {
-        example["@id"]
+    examples_by_work = {
+        work["@id"]: {example["@id"] for example in work["schema:workExample"]}
         for work in dataset["works"]
-        for example in work["schema:workExample"]
     }
+    work_examples = set().union(*examples_by_work.values())
     candidate_ids = {item["@id"] for item in dataset["candidateWorks"]}
     errors: list[str] = []
     for edition in dataset["editions"]:
         edition_id = edition["@id"]
         claim_ref = edition.get("klawiter:hasContestedClaim")
-        if edition["klawiter:reviewStatus"] != "contested":
-            if claim_ref:
-                errors.append(f"{edition_id}: non-contested edition has a claim")
+        if not claim_ref:
+            if edition["klawiter:reviewStatus"] == "contested":
+                errors.append(f"{edition_id}: contested edition lacks its claim")
             continue
-        if not claim_ref or claim_ref["@id"] not in claims:
-            errors.append(f"{edition_id}: contested edition lacks its claim")
+        if claim_ref["@id"] not in claims:
+            errors.append(f"{edition_id}: referenced claim is absent")
             continue
-        if "schema:exampleOfWork" in edition or edition_id in work_examples:
-            errors.append(f"{edition_id}: contested binding is asserted as confirmed")
         claim = claims[claim_ref["@id"]]
         if claim["klawiter:claimSubject"]["@id"] != edition_id:
             errors.append(f"{claim['@id']}: claim subject mismatch")
-        if claim["klawiter:decisionStatus"] != "open":
-            errors.append(f"{claim['@id']}: contested claim is not open")
         annotation = annotations[edition_id]
         if claim["oa:hasTarget"] != annotation["oa:hasTarget"]:
             errors.append(f"{claim['@id']}: exact source target changed")
@@ -182,6 +222,19 @@ def _check_contested_claims(dataset: dict) -> list[str]:
         interpretations = claim["klawiter:interpretation"]
         if len(interpretations) < 2:
             errors.append(f"{claim['@id']}: fewer than two interpretations")
+        if len(claim["klawiter:hasReviewAction"]) < 3:
+            errors.append(f"{claim['@id']}: incomplete review history")
+        decision = claim["klawiter:decisionStatus"]
+        if decision == "decided":
+            errors.extend(_check_decided_claim(claim, edition, examples_by_work))
+            continue
+        if decision != "open":
+            errors.append(f"{claim['@id']}: unknown decision status {decision}")
+            continue
+        if edition["klawiter:reviewStatus"] != "contested":
+            errors.append(f"{edition_id}: open claim on a non-contested edition")
+        if "schema:exampleOfWork" in edition or edition_id in work_examples:
+            errors.append(f"{edition_id}: contested binding is asserted as confirmed")
         proposed = {item["klawiter:proposedObject"]["@id"] for item in interpretations}
         missing_candidates = {
             item for item in proposed if item.startswith("klawiter:work-candidate/")
@@ -190,8 +243,6 @@ def _check_contested_claims(dataset: dict) -> list[str]:
             errors.append(
                 f"{claim['@id']}: missing candidate works {sorted(missing_candidates)}"
             )
-        if len(claim["klawiter:hasReviewAction"]) < 3:
-            errors.append(f"{claim['@id']}: incomplete review history")
     referenced_claims = {
         edition["klawiter:hasContestedClaim"]["@id"]
         for edition in dataset["editions"]

@@ -5,6 +5,9 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+# A page work groups the two or more editions of its source page. A work that
+# a claim decision created stands on no page of its own: it must say what it
+# derives from and name the edition the decision bound to it.
 klawiter:WorkShape
     a sh:NodeShape ;
     sh:targetClass schema:CreativeWork ;
@@ -15,9 +18,37 @@ klawiter:WorkShape
     ] ;
     sh:property [
         sh:path schema:workExample ;
-        sh:minCount 2 ;
+        sh:minCount 1 ;
         sh:class schema:Book ;
-    ] .
+    ] ;
+    sh:or (
+        [
+            sh:property [
+                sh:path klawiter:sourcePageId ;
+                sh:minCount 1 ;
+            ] ;
+            sh:property [
+                sh:path schema:workExample ;
+                sh:minCount 2 ;
+            ]
+        ]
+        [
+            sh:property [
+                sh:path klawiter:sourcePageId ;
+                sh:maxCount 0 ;
+            ] ;
+            sh:property [
+                sh:path schema:isBasedOn ;
+                sh:minCount 1 ;
+                sh:class schema:CreativeWork ;
+            ] ;
+            sh:property [
+                sh:path prov:wasDerivedFrom ;
+                sh:minCount 1 ;
+                sh:class klawiter:ContestedClaim ;
+            ]
+        ]
+    ) .
 
 klawiter:EditionShape
     a sh:NodeShape ;
@@ -94,14 +125,26 @@ klawiter:ContestedClaimShape
         sh:path klawiter:claimStatus ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:hasValue "contested" ;
+        sh:in ("contested" "resolved") ;
     ] ;
     sh:property [
         sh:path klawiter:decisionStatus ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:hasValue "open" ;
+        sh:in ("open" "decided") ;
     ] ;
+    # A claim is either still open or resolved by a recorded decision; the
+    # two statuses move together.
+    sh:xone (
+        [
+            sh:property [ sh:path klawiter:claimStatus ; sh:hasValue "contested" ] ;
+            sh:property [ sh:path klawiter:decisionStatus ; sh:hasValue "open" ]
+        ]
+        [
+            sh:property [ sh:path klawiter:claimStatus ; sh:hasValue "resolved" ] ;
+            sh:property [ sh:path klawiter:decisionStatus ; sh:hasValue "decided" ]
+        ]
+    ) ;
     sh:property [
         sh:path klawiter:interpretation ;
         sh:minCount 2 ;
@@ -143,7 +186,7 @@ klawiter:ClaimInterpretationShape
         sh:path klawiter:interpretationStatus ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:hasValue "contested" ;
+        sh:in ("contested" "accepted" "rejected") ;
     ] .
 
 klawiter:ReviewActionShape

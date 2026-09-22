@@ -222,7 +222,7 @@ SOURCE_SLICE_KEYS = {"start", "end", "sha256", "textStart", "textEnd"}
 SIDE_FILE_KEYS = {"sourcePageId", "publications", "nameVariants"}
 PROVENANCE_CLASSES = {"regex", "llm", "missing", "editor"}
 PAGE_KINDS = {"author-page", "edition-page", "single-publication"}
-CREDIT_ROLES = {"translator", "editor", "illustrator", "contributor"}
+CREDIT_ROLES = {"author", "translator", "editor", "illustrator", "contributor"}
 PUBLICATIONS_DIR = (
     Path(__file__).resolve().parents[1] / "docs" / "data" / "publications"
 )

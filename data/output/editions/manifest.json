@@ -1,11 +1,11 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "earl.jsonld": "40d80e8c014ed66e14db5c3c892e3fa28d49e23d39c608c700b9097308b6ad22",
-    "provenance.jsonld": "bfa3ddc6a693449984ef88cb2caf40f4aeaf35b46ffb77d848490560e4406b43",
-    "review-queue.json": "6a615f4aff822128b507aed9ea76455923f3b484a4fb2d118b34bbb6b0a193c2",
-    "validation-report.json": "4de671fb058eab1d800367a6b15a3805b0936ed22a5976385cae114de91519e3",
-    "work-editions.jsonld": "5199fe655fd2d9f4118a25466eef44c4f161f171f599f0486e1d69ec0bee6568"
+    "earl.jsonld": "646eb29822400d8d24d95d1dde861599461a16eca82a4688f17ef5b2a5cd3709",
+    "provenance.jsonld": "32951d31ef0c012c7b4134ef9c4e4401738475e82d6e764d627c133021b129f0",
+    "review-queue.json": "ad258ae821f55ca7c258ed78906788402d9b3115199dd9d8d341fcf2ac944e22",
+    "validation-report.json": "8c22f7cf636c619d426fbca61b510f6b19a8d5caa70a3f95e63508d9c5665dfd",
+    "work-editions.jsonld": "769ab9edd16ab3663b2384e51363ac14802167c6cbbd25408b9364f8165653cd"
   },
   "authorityEvidence": {
     "szdWorkIndex": {
@@ -17,23 +17,23 @@
       "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
     }
   },
-  "codeSha256": "14fd8e7de319a28021bf2ba68b41a83a04e0c326122505d22358615bb535e075",
+  "codeSha256": "c449ff4114a294d1e6d4a78d960aa19ab4640ce5db794ccdc4a9c72095935bb0",
   "counts": {
     "annotations": 1886,
-    "candidateWorks": 1,
+    "candidateWorks": 0,
     "carriers": 6,
-    "confirmedEditions": 75,
+    "confirmedEditions": 76,
     "contestedClaims": 1,
-    "contestedEditions": 1,
+    "contestedEditions": 0,
     "editions": 1886,
-    "reviewCases": 317,
-    "works": 443
+    "reviewCases": 316,
+    "works": 444
   },
-  "generatedAt": "2026-09-08T13:36:35.337436+00:00",
+  "generatedAt": "2026-09-22T18:37:05.192624+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
-      "sha256": "9be90e8fa3b8348bd52746a364d22ee03c6e4fbeb138a0bb72df0c27cf842f05"
+      "sha256": "870bd90768654901d6530386fc4ec507e18f0083dfbb9d5927ef71fd51f8a392"
     },
     "sampleReconciliation": {
       "path": "data/output/edition-samples/reviews/reconciliation.json",

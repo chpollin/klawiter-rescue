@@ -46,7 +46,7 @@ from lib.wiki_parser import (
     remove_wiki_markup,
 )
 
-ROLE_VOCABULARY = ("translator", "editor", "illustrator", "contributor")
+ROLE_VOCABULARY = ("author", "translator", "editor", "illustrator", "contributor")
 PAGE_KINDS = ("author-page", "edition-page", "single-publication")
 
 # A credit is read only where the source names a contribution role. A label
@@ -54,6 +54,9 @@ PAGE_KINDS = ("author-page", "edition-page", "single-publication")
 # entering the record as an untyped contributor.
 _ROLE_STEMS = (
     ("translat", "translator"),
+    # Adapting a text into another language is translating it; the generic
+    # "adapt" below stays a contribution.
+    ("adapted into", "translator"),
     ("edited", "editor"),
     ("editing", "editor"),
     ("illustrat", "illustrator"),
@@ -76,6 +79,28 @@ _CREDIT_RE = re.compile(
 )
 _CREDIT_STOP_TOKENS = frozenset(
     {"A", "An", "The", "This", "These", "Contains", "See", "In", "Written"}
+)
+# Labels that credit the publication itself to its author. They open with a
+# stop token, so they are named whole rather than read by the role stems; the
+# graphic novel on pages 4916 and 5110 is the case the corpus holds.
+_AUTHOR_LABELS = frozenset({"A graphic novel by"})
+# A second credit chained onto a name without a sentence break ("A graphic
+# novel by <author> adapted into German by <translator>"). Without it the first
+# name runs on into the label of the second credit.
+_CHAINED_CREDIT_RE = re.compile(
+    r"([^\W\d_][^\W\d_'’.\-]*(?: [^\W\d_][^\W\d_'’.\-]*){0,3}) "
+    r"(adapted into [A-Z][a-z]+ by)\s+"
+)
+# A "See" cross-reference ends the statement a series bracket closes: the
+# brackets of "See: [[Le Joueur d'échecs]] [2015]" are the target page and its
+# date, not a series. A wiki link without "See" can name the set a volume
+# belongs to ("[[Kassette VI: …]]. Vol. 2") and stays readable as a series.
+_CROSS_REFERENCE_RE = re.compile(r"\bSee\b")
+# The one "See" reference that does state membership: the target is a
+# multi-volume set and a volume number follows it ("See: [[Z díla Stefana
+# Zweiga]], Vol. 7"), with an optional bracketed qualifier in between.
+_SET_REFERENCE_RE = re.compile(
+    r"\bSee:?\s*\[\[([^\[\]\n]+)\]\]\s*(?:\[[^\[\]\n]*\])?[.,]?\s*Vol\.\s*([0-9IVXLC]+)\b"
 )
 _LANGUAGE_HEADING_RE = re.compile(
     r"^'''\s*([A-Za-z][A-Za-z\- ]{1,20}?)\s*'''\s*$", re.MULTILINE
@@ -276,6 +301,9 @@ def _series(block_body: str) -> str | None:
     tail = block_body[extent.end() :]
     line_end = tail.find("\n")
     line = tail if line_end < 0 else tail[:line_end]
+    reference = _CROSS_REFERENCE_RE.search(line)
+    if reference:
+        line = line[: reference.start()]
     bracket = _BRACKET_RE.search(line)
     if not bracket or bracket.start() > 60:
         return None
@@ -283,6 +311,18 @@ def _series(block_body: str) -> str | None:
     if _EXTENT_RE.search(content) or content.startswith("["):
         return None
     return _flat(content)
+
+
+def _set_reference(block_body: str) -> tuple[str, str] | None:
+    """The multi-volume set and volume number a "See" reference names."""
+    extent = _EXTENT_RE.search(block_body)
+    if not extent:
+        return None
+    tail = block_body[extent.end() :]
+    line_end = tail.find("\n")
+    line = tail if line_end < 0 else tail[:line_end]
+    match = _SET_REFERENCE_RE.search(line)
+    return (_flat(match.group(1)), match.group(2)) if match else None
 
 
 def _series_volume(series: str | None) -> str | None:
@@ -344,23 +384,42 @@ def _online(block_body: str) -> dict | None:
 def _credits(text: str) -> list[dict]:
     """Read the credited roles a source passage states, with their labels."""
     credits: list[dict] = []
+
+    def add(credit: dict) -> None:
+        if credit not in credits:
+            credits.append(credit)
+
     for match in _CREDIT_RE.finditer(text):
         label = _flat(match.group(1))
         tokens = label.split()
-        if len(tokens) > 8 or tokens[0] in _CREDIT_STOP_TOKENS:
-            continue
-        if not tokens[0][:1].isupper():
-            continue
-        lowered = label.lower()
-        role = next((role for stem, role in _ROLE_STEMS if stem in lowered), None)
-        if role is None:
+        if label in _AUTHOR_LABELS:
+            role = "author"
+        else:
+            if len(tokens) > 8 or tokens[0] in _CREDIT_STOP_TOKENS:
+                continue
+            if not tokens[0][:1].isupper():
+                continue
+            lowered = label.lower()
+            role = next((role for stem, role in _ROLE_STEMS if stem in lowered), None)
+            if role is None:
+                continue
+        chained = _CHAINED_CREDIT_RE.match(text, match.end())
+        if chained:
+            add({"role": role, "name": chained.group(1), "creditLabel": label})
+            second = credited_name(text, chained.end())
+            if second:
+                add(
+                    {
+                        "role": "translator",
+                        "name": second,
+                        "creditLabel": chained.group(2),
+                    }
+                )
             continue
         name = credited_name(text, match.end())
         if not name:
             continue
-        credit = {"role": role, "name": name, "creditLabel": label}
-        if credit not in credits:
-            credits.append(credit)
+        add({"role": role, "name": name, "creditLabel": label})
     return credits
 
 
@@ -580,9 +639,14 @@ def _build_publication(
             edition.get("klawiter:pageCountRaw"), edition.get("schema:numberOfPages")
         ),
     )
-    _put(publication, "series", series)
-    _put(publication, "seriesVolume", _series_volume(series))
-    _put(publication, "note", _series_note(masked_body, series))
+    set_reference = None if series else _set_reference(masked_body)
+    if set_reference:
+        _put(publication, "series", set_reference[0])
+        _put(publication, "seriesVolume", set_reference[1])
+    else:
+        _put(publication, "series", series)
+        _put(publication, "seriesVolume", _series_volume(series))
+        _put(publication, "note", _series_note(masked_body, series))
     _put(publication, "credits", _credits(masked_body))
     _put(publication, "container", _container(masked_body))
     _put(publication, "online", _online(masked_body))

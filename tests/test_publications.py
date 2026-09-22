@@ -259,3 +259,80 @@ def test_a_country_only_header_yields_no_flat_publisher(attested_places) -> None
     publisher, a place or a country, so it produces no publisher assertion."""
     film = "'''[1984]: Czechoslovakia'''\n\n''Sach mat'' [Schachnovelle]"
     assert imprint_publisher(film, attested_places) is None
+
+
+# --- Cross-references, sets and chained credits -----------------------------
+# Exact source blocks of pages 4916, 818 and 4916 (again), quoted from the
+# delivered wiki text.
+
+GRAPHIC_NOVEL_BLOCK = (
+    "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''\n\n"
+    "''Die Schachnovelle nach Stefan Zweig''. A graphic novel by Thomas Humeau "
+    "adapted into German by Anja Kootz. 120p. Hundreds of cColor illustrations. "
+    "See: [[Le Joueur d'échecs]] [2015]\n"
+)
+SET_REFERENCE_BLOCK = (
+    "'''[2000]: Lijiang Chubanshe, Guilin''' \n\n"
+    "''Da tanxianjia: Maizhelun, Gelunbu'' [Große Abenteuer: Magellan, Columbus, "
+    "i.e. Amerigo Vespucci]. Translated by Mingjia Huang and Maoping Wei. 269p. "
+    "See: [[Ciweige zhuanji jinghua]]. Vol. 3\n"
+)
+SERIES_BLOCK = (
+    "'''[2016]: Aionas Verlag, Weimar'''\n\n"
+    "''Schachnovelle''.  52/(1)p. 1st edition. Paperback edition "
+    "[Bibliothek der Weltliteratur]\n"
+)
+
+
+def _single_publication(text: str, attested_places: set[str]) -> dict:
+    built = build_page_publications(
+        page_id=1,
+        text=text,
+        page_title="Test",
+        categories=[],
+        attested_places=attested_places,
+    )
+    assert built["publicationCount"] == 1
+    return built["publications"][0]
+
+
+def test_a_see_reference_is_not_a_series(attested_places) -> None:
+    """The bracket after a "See" link is the target page and its date; reading
+    it as a series gave the graphic novel the series of its French original."""
+    publication = _single_publication(GRAPHIC_NOVEL_BLOCK, attested_places)
+    assert "series" not in publication
+    assert "note" not in publication
+
+
+def test_a_see_reference_to_a_set_with_a_volume_is_the_series(attested_places) -> None:
+    publication = _single_publication(SET_REFERENCE_BLOCK, attested_places)
+    assert publication["series"] == "Ciweige zhuanji jinghua"
+    assert publication["seriesVolume"] == "3"
+
+
+def test_the_bracket_closing_the_extent_statement_stays_the_series(
+    attested_places,
+) -> None:
+    publication = _single_publication(SERIES_BLOCK, attested_places)
+    assert publication["series"] == "Bibliothek der Weltliteratur"
+
+
+def test_the_graphic_novel_credits_its_author_and_its_translator(
+    attested_places,
+) -> None:
+    """The label "A graphic novel by" credits the publication to its author,
+    and the chained "adapted into German by" names the translator instead of
+    running on from the first name."""
+    publication = _single_publication(GRAPHIC_NOVEL_BLOCK, attested_places)
+    assert publication["credits"] == [
+        {
+            "role": "author",
+            "name": "Thomas Humeau",
+            "creditLabel": "A graphic novel by",
+        },
+        {
+            "role": "translator",
+            "name": "Anja Kootz",
+            "creditLabel": "adapted into German by",
+        },
+    ]

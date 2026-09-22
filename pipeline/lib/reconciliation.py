@@ -131,6 +131,10 @@ def build_work_candidates(dataset: dict, authorities: list[dict]) -> list[dict]:
     """Rank frozen SZD authority candidates for every segmented work."""
     results = []
     for work in dataset["works"]:
+        # A work created by a claim decision (an adaptation by another author)
+        # has no source page and no counterpart in Zweig's work index.
+        if "klawiter:sourcePageId" not in work:
+            continue
         source_title = work["schema:name"]
         normalized = _normalize_title(source_title)
         ranked = []
