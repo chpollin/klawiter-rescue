@@ -36,7 +36,9 @@ abstract: >-
   a decommissioned MediaWiki database, structured as JSON-LD using
   Schema.org, Dublin Core, and a domain-specific vocabulary. Includes
   a static web frontend with faceted search, citation export, and
-  interactive visualizations.
+  interactive visualizations. The edition covers the current pages of the
+  wiki; titles the wiki recorded as deleted are outside the scope of
+  version 1.0 and remain unchanged in the archived originals.
 keywords:
   - Stefan Zweig
   - bibliography

@@ -58,8 +58,8 @@
     },
     {
       "path": "owner-evaluation.md",
-      "bytes": 5079,
-      "sha256": "89f05cdd2d2ca4344b656b6c82573a98db6634855b43105b49115bce11b70ece"
+      "bytes": 5957,
+      "sha256": "64e44b5a2b27902014ece761851f41c5bb0048e0a4852ae1a8d019834b0b8dc9"
     },
     {
       "path": "parser-changes.json",

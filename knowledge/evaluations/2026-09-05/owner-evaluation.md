@@ -68,3 +68,17 @@ Record the entry ID, the first point of confusion or failure, and what you expec
 ## What the agents cover
 
 Two separate reviewers examined the twenty source texts without current test expectations or failure baselines. A third reviewer checked the test gates and whether the chosen expectations encode unapproved selection rules. Their findings have been compared with the existing expectations in the consolidated review. Agreement is supporting evidence, not a substitute for scholarly adjudication.
+
+## Responses
+
+The operator delegated the answers to cases 1 to 4 to the main instance on 2026-09-22. Each answer accepts the display as it stood on that date. Decided by the main instance after delegation by the operator on 2026-09-22, revisable.
+
+| Case | Page | Response | Date |
+|---|---|---|---|
+| 1 | 1800 | accept | 2026-09-22 |
+| 2 | 1891 | accept | 2026-09-22 |
+| 3 | 4445 | accept | 2026-09-22 |
+| 4 | 4209 | accept | 2026-09-22 |
+| 5 | own item | open, the operator runs this task personally | |
+
+Two technical findings came out of cases 1 and 2 and are held as open work in [Status](../../status.md). The citations of both editions on page 1800 carry the same page URL, because the interface has no anchor per publication. The citation export of page 1891 names none of the three contribution translators, and the flat translator field holds only the first of them.

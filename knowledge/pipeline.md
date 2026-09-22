@@ -9,7 +9,7 @@ language: en
 version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-09-08
+updated: 2026-09-22
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -73,7 +73,7 @@ Stage 03c normalizes places of publication, translators and pagination. It disca
 
 `pipeline/lib/editions.py` selects the ratified multi-edition corpus via the supported header schema. Each block begins at an edition header and ends at the next header or at the end of the page. `pipeline/segment_editions.py` produces works, editions, exact text selectors, annotations, documented carriers and statement states.
 
-The 76-case sample was reviewed by two independent agents and reconciled by an independent stronger verification agent. Corrections and the open adaptation case are held under `data/reconciliation/edition-modeling-decisions.json`. No uncertain case is confirmed automatically.
+The 76-case sample was reviewed by two independent agents and reconciled by an independent stronger verification agent. Corrections and the adaptation case are held under `data/reconciliation/edition-modeling-decisions.json`, where the adaptation case carries its resolution (decided by the main instance after delegation by the operator on 2026-09-22, revisable). No uncertain case is confirmed automatically, and a decided claim is applied only from a recorded `resolution`.
 
 ## Gate 2: Reconciliation
 

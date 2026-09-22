@@ -12,12 +12,26 @@ language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-09-08
+updated: 2026-09-22
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
+
+---
+
+## 2026-09-22 — Session 38: Four delegated decisions
+
+**Round.** The operator delegated four open questions to the main instance on 2026-09-22. This session implemented its answers, each recorded as decided by the main instance after delegation by the operator on 2026-09-22, revisable.
+
+**Changed.** The owner worksheet carries a response section in which cases 1 to 4 (pages 1800, 1891, 4445, 4209) accept the display as it stood that day, and its manifest hash is refreshed. The citation author in `docs/js/export.js` follows the role in the source. Zweig is the author only of the Works group without the forewords and of the collected works, translation, foreword and author pages take the page title before " / " when it has the form "Surname, Forename", and every other title shape gives no author. A person credited twice in one role appears once in the role field, and a translation or foreword citation without a credit naming Zweig carries a note on his part. A publication crediting its own author is cited under that author. The graphic-novel claim on page 4916 is resolved in `data/reconciliation/edition-modeling-decisions.json`. `lib/editions.py` applies the resolution, the candidate becomes a work based on the Schachnovelle work, the German edition of 2016 is its example and a translation of the French graphic novel of 2015 on pages 675 and 5110, and the claim stays in the graph as resolved with its readings accepted or rejected, the dated decision and a review note on the extent difference of 120p. against 128p. The Gate 1 validator and the SHACL shapes check decided claims, the vocabulary register gains `klawiter:reviewNote` and the resolved states, the reconciliation projection carries the decision date and the review notes (schema 1.2) and counts open edition claims separately, and the card shows a decided claim under "Work identity decided". The publication layer no longer reads the bracket after a "See" cross-reference as a series, except where the reference names a multi-volume set with a volume number. It reads "A graphic novel by" as an `author` credit and the chained "adapted into German by" as a translator credit. Stage 05 and the SZD work candidates skip works without a source page. Status, production readiness, `CITATION.cff` and `codemeta.json` state that titles recorded as deleted in the wiki are outside version 1.0.
+
+**Decided.** The four decisions above. The adaptation work keeps the identifier of its former candidate, so references to the claim's interpretation stay resolvable. The See rule removes series values that were cross-reference targets or their dates on 36 publications and adds a volume number to 8 set references; the full list was reviewed against the source lines. Contribution translators and page-level anchors per publication were left as open work rather than changed in this round.
+
+**Open.** Worksheet case 5, the operator's own research task. The two findings from the cases, both editions on page 1800 cited with the same page URL and the missing contribution translators in the citation of page 1891, stand as the P1 citation row in [Status](status.md). The French graphic novel on page 675 and both occurrences on the author page 5110 keep their page-work bindings. The JSON-LD playground and export still name Zweig as author outside the reception group. Author pages whose title is a name without a comma or names several people now give no citation author. A read-only triage list of the deleted titles remains a possible separate work package. The six resolved extraction cases still await retirement from the reviewed baseline.
+
+**Resume.** The committed evidence check reports the intended drift of both gate manifests until they are committed with the code, and this session commits them together. Suites, Ruff and a full production run were green at the end.
 
 ---
 

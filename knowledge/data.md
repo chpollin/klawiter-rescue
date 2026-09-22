@@ -2,7 +2,7 @@
 title: Data and Model
 status: maintained
 language: en
-updated: 2026-09-08
+updated: 2026-09-22
 related: [about, pipeline, frontend, testing, production-readiness, status]
 ---
 
@@ -10,7 +10,7 @@ related: [about, pipeline, frontend, testing, production-readiness, status]
 
 ## Source scope
 
-The rescue selects `page_latest`, preserving every current MediaWiki page ID. It does not extract every historical bibliographic statement into an entity. The delivered dump also contains earlier revisions and archived material; historical revision recovery and the triage of archived main-namespace titles absent from the current table remain separately scoped work. The archive's revision rows, distinct namespace/title pairs and absent bibliography titles are different populations; do not call all of them “deleted pages”. The [completion review](project-review-2026-09-05.md) documents their census.
+The rescue selects `page_latest`, preserving every current MediaWiki page ID. It does not extract every historical bibliographic statement into an entity. The delivered dump also contains earlier revisions and archived material; historical revision recovery and the triage of archived main-namespace titles absent from the current table remain separately scoped work. Version 1.0 excludes those titles explicitly ([release scope](production-readiness.md#release-scope)). The archive's revision rows, distinct namespace/title pairs and absent bibliography titles are different populations; do not call all of them “deleted pages”. The [completion review](project-review-2026-09-05.md) documents their census.
 
 Four current pages lack a delivered text body. Only page `2979`, *A unidade espiritual do mundo*, is bibliographic; its named stub preserves the source identity. Uploaded image metadata does not imply that the image bytes were delivered. Raw originals remain unchanged. A separately reviewed public source package is still required; an archival directory is not a publication allowlist.
 
@@ -71,7 +71,7 @@ The side file of a page carries `sourcePageId`, its `publications` in source ord
 | `language`, `languageCode` | language of this publication and its BCP-47 subtag |
 | `editionStatement` | an edition statement such as `2nd revised edition` |
 | `extent` | `raw` holds the source notation such as `444/(3)p.`, `numbered` and `unnumbered` hold its components |
-| `series`, `seriesVolume` | series statement and the volume number it ends with |
+| `series`, `seriesVolume` | series statement and the volume number it ends with; a "See" cross-reference is no series statement, except where it names a multi-volume set followed by a volume number |
 | `note` | source prose that follows the series statement, such as a thesis origin |
 | `credits` | `role`, `name` and the literal `creditLabel` of the source |
 | `contributions` | contents entries with `title`, `note`, `pages`, `pageStart`, `pageEnd` and their own `credits` |
@@ -80,7 +80,7 @@ The side file of a page carries `sourcePageId`, its `publications` in source ord
 | `reviewFlags` | `code` and readable `detail` of a case the rules cannot decide |
 | `provenance` | the provenance class of every reported field of this publication |
 
-A field stays absent where the source carries no value for it. Roles use the closed vocabulary `translator`, `editor`, `illustrator` and `contributor`, and a credit is read only where the label names a contribution role; a label such as "Cover design by" stays unread rather than entering as an untyped contributor. The scalar `translator` of the flat record is one credit under the compatibility rule, so an interface must read `credits` and `contributions[].credits` before it says anything about the translators of a publication.
+A field stays absent where the source carries no value for it. Roles use the closed vocabulary `author`, `translator`, `editor`, `illustrator` and `contributor`, and a credit is read only where the label names a contribution role. The role `author` is read only from a label that credits the publication itself to a person, which in the corpus is "A graphic novel by" on pages 4916 and 5110, and "adapted into <language> by" counts as a translation credit. A label such as "Cover design by" stays unread rather than entering as an untyped contributor. The scalar `translator` of the flat record is one credit under the compatibility rule, so an interface must read `credits` and `contributions[].credits` before it says anything about the translators of a publication.
 
 ### Effect on the flat fields
 
@@ -117,9 +117,9 @@ Source order stabilizes edition suffixes and selectors. The graph improves segme
 - `confirmed`: source-bound reviewed statement.
 - `contested`: open statement with competing interpretations and review history.
 
-A `klawiter:ContestedClaim` has a stable ID, subject/predicate, source evidence, interpretations, review actions, `claimStatus = contested` and `decisionStatus = open`. It remains in the final graph while the disputed relation is withheld.
+A `klawiter:ContestedClaim` has a stable ID, subject/predicate, source evidence, interpretations, review actions, `claimStatus = contested` and `decisionStatus = open`. It remains in the final graph while the disputed relation is withheld. A recorded decision closes it without removing it. The claim then carries `claimStatus = resolved`, `decisionStatus = decided`, one `accepted` and the other interpretations `rejected`, the decision as a further review action with its date, and `klawiter:reviewNote` for what the decision leaves open. Only the accepted reading becomes a relation. The decision lives in `data/reconciliation/edition-modeling-decisions.json` as the `resolution` of the claim, so removing it restores the open claim.
 
-The adaptation `klawiter:edition/4916-2016-b` remains preserved. Claim `klawiter:claim/work-binding/4916-2016-b` distinguishes an edition of *Schachnovelle* from an independent graphic-novel work. It publishes no confirmed `schema:exampleOfWork` while the work identity is open.
+The graphic novel `klawiter:edition/4916-2016-b` was the one open work binding. Claim `klawiter:claim/work-binding/4916-2016-b` is resolved with the adaptation reading, decided by the main instance after delegation by the operator on 2026-09-22, revisable. The candidate `klawiter:work-candidate/4916-2016-b-adaptation` keeps its identifier and is now a `schema:CreativeWork` without a source page of its own, `schema:isBasedOn` the Schachnovelle work `klawiter:work/4916`, with the illustrator as `schema:creator`, and derived from the claim. The German edition of 2016 is its `schema:workExample` and leaves the editions of `klawiter:work/4916`; its `schema:translationOfWork` points to the French graphic novel of 2015 on pages 675 and 5110 (`klawiter:edition/675-2015-a`, `klawiter:edition/5110-2015-a`). The source pages give the German edition 120p. (page 4916) and 128p. (page 5110). The difference is held as the review flag `extent-differs-across-source-pages` and as a review note, and it is not resolved. The French edition on page 675 and both occurrences on the author page 5110 keep their page bindings, because the decision covers the German edition on page 4916 only.
 
 ## Reconciliation
 

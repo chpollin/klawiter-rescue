@@ -9,7 +9,7 @@ language: en
 version: 1.2
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
-updated: 2026-09-05
+updated: 2026-09-22
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
@@ -73,6 +73,7 @@ Gate 1 checks the complete graph:
 - stable and unique identifiers;
 - complete prioritized queue;
 - separation of confirmed relations and contested claims;
+- a decided claim binds its edition to the accepted reading only, keeps its rejected readings and records the decision in its review history;
 - deterministic rebuild from frozen inputs.
 
 The results are recorded in `validation-report.json` and EARL.
@@ -155,4 +156,4 @@ Automatically documented are record completeness, schema, known bounds, selector
 
 Two structural limits of the round-trip verification must be named. First, the circularity. `verify.py` checks extracted values against the same raw text from which they were extracted; a systematically wrong string that is present in the text passes the check. The comparison documents fidelity to the source, no factual correctness. Second, the substring weakness of the `correct` definition. A value counts as documented as soon as it occurs as a substring in the raw text; a shortened value, or one originating from the wrong edition block, can thereby count as correct, especially on multi-edition pages. For that reason the occurrence display in the editing mode makes multiple occurrences explicit.
 
-Not documented are a corpus-wide factual accuracy rate, the institutional work identity of the graphic novel adaptation and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[production-readiness]] names the remaining Operator Points.
+Not documented are a corpus-wide factual accuracy rate, an external scholarly confirmation of the graphic-novel work identity (decided by the main instance after delegation by the operator on 2026-09-22, revisable) and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[production-readiness]] names the remaining Operator Points.

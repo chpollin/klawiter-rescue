@@ -2,7 +2,7 @@
 title: Production Readiness and Acceptance
 status: maintained
 language: en
-updated: 2026-09-05
+updated: 2026-09-22
 related: [status, data, pipeline, testing, frontend, journal]
 ---
 
@@ -36,7 +36,7 @@ The operator's 5 September request explicitly reopens Explore as an interactive 
 | Research interface | exact filter handover, source access, useful visualizations, clear review scope, edition navigation | browser/Node evidence for implemented paths; edition browsing and full task acceptance remain open |
 | Accessibility and performance | keyboard/touch paths, readable contrast, mobile fit, representative device/network budgets | targeted checks support specific paths; no comprehensive certification or performance budget yet |
 | Repeatability | locked environment, both gate checks, reviewed deterministic artifact comparison | full local locked-uv rebuild and reviewed-manifest checks pass; remote CI execution remains distinct |
-| Public release | curated source package, consistent metadata, explicit release scope and acceptance | operator/publication work remains; archival originals stay unchanged |
+| Public release | curated source package, consistent metadata, explicit release scope and acceptance | release scope for 1.0 set on 22 September (see below); package, metadata review and acceptance remain; archival originals stay unchanged |
 
 Technical verification compares implementation with these contracts. Validation compares the product with real scholarly questions and users' interpretation of the source. Neither replaces the other.
 
@@ -48,7 +48,18 @@ The curation loop reviews individual fields, editions and authority candidates a
 
 ## Decisions requiring domain or publication responsibility
 
-The existing adaptation claim preserves the unresolved work identity without data loss. Its final identity, the release declaration, public archive scope and publication/citation form remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
+On 22 September the operator delegated four open questions to the main instance. Its answers are recorded with the provenance "decided by the main instance after delegation by the operator on 2026-09-22, revisable" and are listed here with their place of record.
+
+- Worksheet cases 1 to 4 accept the display as it stood that day, recorded in the [worksheet](evaluations/2026-09-05/owner-evaluation.md#responses). Case 5 remains with the operator.
+- The author of a citation follows the role in the source, as described in [Frontend](frontend.md#export).
+- The graphic novel on page 4916 is a work of its own, an adaptation of the Schachnovelle with a change of medium, whose German edition translates the French graphic novel of 2015. The claim is resolved in `data/reconciliation/edition-modeling-decisions.json`, see [Data](data.md#statement-states).
+- The archive triage is outside version 1.0, see the release scope below.
+
+The release declaration and the publication form after acceptance remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
+
+## Release scope
+
+Version 1.0 covers the current pages of the wiki. The titles that the wiki's deletion archive and log record as deleted and that are absent from the current page table are excluded from the project scope of version 1.0 (decided by the main instance after delegation by the operator on 2026-09-22, revisable). A deletion was an editorial decision of the compiler, a large part of these titles are duplicates, renamed pages or empty pages, and one of them is a private message. The raw originals under `data/raw/` stay unchanged. A later read-only triage list of these titles is possible as a separate work package and is not part of 1.0.
 
 Use the [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) to evaluate concrete edition boundaries, contribution roles, conflicting imprints and the research workflow. The questions are not a request to reapprove the work/edition principle.
 
