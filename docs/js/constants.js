@@ -106,3 +106,20 @@ const ZWEIG_OWN_GROUPS = ['Works', 'Editions'];
 const ABOUT_ZWEIG_TYPES = Object.keys(ENTRY_TYPE_LABELS).filter(type =>
   !CATEGORY_GROUPS.some(group =>
     ZWEIG_OWN_GROUPS.includes(group.heading) && group.types.includes(type)));
+
+/**
+ * Entry types whose page is indexed under the author of the translated or
+ * prefaced text rather than under Zweig. Zweig's part there is a translator or
+ * contributor credit, so a citation takes its author from the page title.
+ */
+const TITLE_AUTHOR_TYPES = ['translation', 'foreword'];
+
+/**
+ * Entry types whose pages hold Zweig's own texts and are cited under him: the
+ * Works group without the forewords, and the collected works. Derived from the
+ * grouping for the same reason as ABOUT_ZWEIG_TYPES.
+ */
+const ZWEIG_AUTHOR_TYPES = [
+  ...CATEGORY_GROUPS.find(group => group.heading === 'Works').types,
+  'collected-works',
+].filter(type => !TITLE_AUTHOR_TYPES.includes(type));

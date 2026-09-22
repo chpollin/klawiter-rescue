@@ -140,7 +140,7 @@ test('the two editions of one page are cited apart', () => {
   assert.doesNotMatch(second, /Pechat Far/);
 });
 
-test('the author follows the grouping of the Overview, and an author page its title', () => {
+test('Zweig is the author of his own texts only, and an author page names its author', () => {
   // historical-study sits under Works, so it is a text by Zweig. It used to be
   // in a hand-kept "about Zweig" list and lost its author to it.
   const own = exportCtx(editionEntry(), editions());
@@ -149,7 +149,8 @@ test('the author follows the grouping of the Overview, and an author page its ti
   assert.doesNotMatch(own.captured[0].content, /keywords = \{Stefan Zweig\}/);
 
   // An author page carries the name of the author as its title, and every
-  // publication listed on it is that author's.
+  // publication listed on it is that author's. What follows " / " is a second
+  // spelling of the name, not part of it.
   const authorPage = {
     sourcePageId: 4445, entryType: 'secondary-literature', pageKind: 'author-page',
     title: 'Al-Bāḥ, Muḥammad / El-bah, Mohammed', publicationCount: 2,
@@ -162,7 +163,7 @@ test('the author follows the grouping of the Overview, and an author page its ti
   };
   const page = exportCtx(authorPage, [book]);
   page.Export.bibtex(4445, 0);
-  assert.match(page.captured[0].content, /author = \{Al-Bāḥ, Muḥammad \/ El-bah, Mohammed\}/);
+  assert.match(page.captured[0].content, /author = \{Al-Bāḥ, Muḥammad\},/);
   // The page is about Zweig, so he stays the keyword rather than the author.
   assert.match(page.captured[0].content, /keywords = \{Stefan Zweig\}/);
 
@@ -317,4 +318,130 @@ test('RIS carries the credits of the publication by their role', () => {
   assert.match(ris, /A3 {2}- N\. Vysotskaia/);
   assert.match(ris, /ET {2}- 1st edition/);
   assert.match(ris, /N1 {2}- Extent: 500p\./);
+});
+
+test('translation and foreword pages are cited under the author the page is indexed by', () => {
+  // Page 792: Zweig translated the novel and wrote its afterword and foreword.
+  const translation = {
+    sourcePageId: 792, entryType: 'translation', pageKind: 'single-publication',
+    title: 'Barbusse, Henri', publicationCount: 1, translator: 'Stefan Zweig',
+  };
+  const translated = {
+    id: 'klawiter:publication/792-1932-a', year: 1932,
+    title: 'Die Schutzflehenden. Der Roman einer Vorkriegsjugend',
+    publisher: 'Rascher Verlag', places: ['Zürich/Leipzig/Stuttgart'],
+    extent: { raw: '247p.', numbered: 247 },
+    credits: [
+      { role: 'translator', name: 'Stefan Zweig', creditLabel: 'Translated with an afterword by' },
+      { role: 'translator', name: 'Stefan Zweig', creditLabel: 'Translated with a foreword by' },
+    ],
+  };
+  const bib = exportCtx(translation, [translated]);
+  bib.Export.bibtex(792, 0);
+  const cited = bib.captured[0].content;
+  assert.match(cited, /author = \{Barbusse, Henri\}/);
+  // One person credited twice in one role is one translator; both wordings
+  // stay in the note.
+  assert.match(cited, /translator = \{Stefan Zweig\},/);
+  assert.match(cited, /Translated with an afterword by Stefan Zweig; Translated with a foreword by/);
+  assert.doesNotMatch(cited, /Contains a translation/);
+  bib.captured.length = 0;
+  bib.Export.ris(792, 0);
+  assert.strictEqual((bib.captured[0].content.match(/^A2 {2}- Stefan Zweig$/gm) || []).length, 1);
+  assert.match(bib.captured[0].content, /^AU {2}- Barbusse, Henri$/m);
+
+  // Page 4418: the qualifier after " / " (a language) is not part of the name,
+  // and Zweig's preface stays a contributor credit.
+  const foreword = {
+    sourcePageId: 4418, entryType: 'foreword', pageKind: 'single-publication',
+    title: 'Relgis, Eugen / French', publicationCount: 1,
+  };
+  const prefaced = {
+    id: 'klawiter:publication/4418-1939-a', year: 1939,
+    title: 'Miron-le-sourd. Voix en sourdine. Roman', publisher: 'G. Mignolet Éditeur',
+    places: ['Paris'], extent: { raw: '222p.', numbered: 222 },
+    credits: [
+      { role: 'translator', name: 'S. Pavès', creditLabel: 'Translated by' },
+      { role: 'contributor', name: 'Stefan Zweig', creditLabel: 'Preface by' },
+    ],
+  };
+  const fw = exportCtx(foreword, [prefaced]);
+  fw.Export.bibtex(4418, 0);
+  assert.match(fw.captured[0].content, /author = \{Relgis, Eugen\}/);
+  assert.match(fw.captured[0].content, /Preface by Stefan Zweig/);
+
+  // Without a credit naming Zweig, the page's section keeps his part visible.
+  const flat = exportCtx({
+    sourcePageId: 6446, entryType: 'foreword', title: 'Dickens, Charles / Ausgewählte Romane und Novellen',
+    translator: 'Leo Feld and Erwin Krauss', year: 1910,
+  }, null);
+  flat.Export.bibtex(6446);
+  assert.match(flat.captured[0].content, /author = \{Dickens, Charles\}/);
+  assert.match(flat.captured[0].content, /note = \{Translated by Leo Feld and Erwin Krauss; Contains a foreword or afterword by Stefan Zweig\}/);
+});
+
+test('collected works stay Zweig\'s, reception pages carry no author', () => {
+  const collected = exportCtx({
+    sourcePageId: 12, entryType: 'collected-works',
+    title: 'Das Geheimnis des künstlerischen Schaffens. Essays', year: 1984,
+  }, null);
+  collected.Export.bibtex(12);
+  assert.match(collected.captured[0].content, /author = \{Zweig, Stefan\}/);
+
+  const reception = exportCtx({
+    sourcePageId: 1435, entryType: 'secondary-literature',
+    title: 'Stefan Zweig 1881-1981. Aufsätze und Dokumente', year: 1981,
+  }, null);
+  reception.Export.bibtex(1435);
+  assert.doesNotMatch(reception.captured[0].content, /author = /);
+  assert.match(reception.captured[0].content, /keywords = \{Stefan Zweig\}/);
+});
+
+test('a page title without the form of a name is no author', () => {
+  const { Export } = exportCtx({ sourcePageId: 1, entryType: 'fiction' }, null);
+  const author = title => Export._author({ entryType: 'secondary-literature', pageKind: 'author-page', title });
+  // Pages 2530, 1973 and 6840: a list marker, a heading and a book title.
+  assert.strictEqual(author('[1]'), '');
+  assert.strictEqual(author('Essays:'), '');
+  assert.strictEqual(author("Stefan Zweig. L'Esprit européen en exil"), '');
+  // Several people in shorthand do not split into names reliably.
+  assert.strictEqual(author('Mann, Erika and Klaus'), '');
+  assert.strictEqual(author('Finkenzeller, Roswin; Ziehr, Wilhelm; Bührer, Emil M.'), '');
+  // Particles, apostrophes, parentheses and transliteration marks are names.
+  assert.strictEqual(author("'Abbūd, 'Abduh / Abboud, Abdo"), "'Abbūd, 'Abduh");
+  assert.strictEqual(author('Djevdet (Cevdet), Abdullah'), 'Djevdet (Cevdet), Abdullah');
+  assert.strictEqual(author('Al-ʿUnayzī, Shawqī'), 'Al-ʿUnayzī, Shawqī');
+  assert.strictEqual(author('Camões, Luís Vaz de'), 'Camões, Luís Vaz de');
+  // A translation page titled by a periodical citation names nobody either.
+  assert.strictEqual(Export._author({ entryType: 'translation',
+    title: '"Juninacht" in Deutsche Dichtung [Berlin], 31 [March 1902], p. 254' }), '');
+});
+
+test('a publication that names its own author is cited under that author', () => {
+  // Page 4916: the German graphic novel of 2016 on the Schachnovelle page, a
+  // work of its own since the decision of 2026-09-22.
+  const entry = {
+    sourcePageId: 4916, entryType: 'fiction', pageKind: 'edition-page',
+    title: 'Schachnovelle / Volume', publicationCount: 25,
+  };
+  const graphicNovel = {
+    id: 'klawiter:publication/4916-2016-b', year: 2016,
+    title: 'Die Schachnovelle nach Stefan Zweig', publisher: 'Knesebeck GmbH & Co. Verlag',
+    places: ['München'], language: 'German', extent: { raw: '120p.', numbered: 120 },
+    credits: [
+      { role: 'author', name: 'Thomas Humeau', creditLabel: 'A graphic novel by' },
+      { role: 'translator', name: 'Anja Kootz', creditLabel: 'adapted into German by' },
+    ],
+  };
+  const { Export, captured } = exportCtx(entry, [graphicNovel]);
+  Export.bibtex(4916, 0);
+  const bib = captured[0].content;
+  assert.match(bib, /author = \{Thomas Humeau\}/);
+  assert.doesNotMatch(bib, /Zweig, Stefan/);
+  assert.match(bib, /translator = \{Anja Kootz\}/);
+  assert.doesNotMatch(bib, /series = /);
+  captured.length = 0;
+  Export.ris(4916, 0);
+  assert.match(captured[0].content, /^AU {2}- Thomas Humeau$/m);
+  assert.match(captured[0].content, /^A2 {2}- Anja Kootz$/m);
 });

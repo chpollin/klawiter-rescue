@@ -28,20 +28,66 @@ const Export = {
   },
 
   /**
-   * The author a citation names.
+   * The author a citation names follows the role the source gives each party.
    *
-   * An author page carries the name of an author as its title, and every
-   * publication listed on it is that author's, so the title is the author in
-   * the form the page gives it. Otherwise the entry type decides: the Overview
-   * groups the types into Works, Editions, Reception & Impact and Other, and
-   * the first two are what Zweig wrote (translations by him included, where
-   * the translator credit stays a translator credit). What is about him
-   * carries no author and names him as a keyword instead. ABOUT_ZWEIG_TYPES is
-   * derived from that grouping rather than kept as a second list.
+   * Zweig is the author only of pages holding his own texts (ZWEIG_AUTHOR_TYPES).
+   * An author page, a translation page and a foreword page are indexed under
+   * the author of what they list, so the page title names the author there and
+   * Zweig keeps his translator or contributor credit. Pages about Zweig carry
+   * no author and name him as a keyword. Revisable setting, decided by the
+   * main instance after delegation by the operator on 2026-09-22.
    */
   _author(entry) {
-    if (entry.pageKind === 'author-page') return entry.title || '';
-    return ABOUT_ZWEIG_TYPES.includes(entry.entryType) ? '' : 'Zweig, Stefan';
+    if (entry.pageKind === 'author-page' || TITLE_AUTHOR_TYPES.includes(entry.entryType)) {
+      return this._titleAuthor(entry.title);
+    }
+    return ZWEIG_AUTHOR_TYPES.includes(entry.entryType) ? 'Zweig, Stefan' : '';
+  },
+
+  /**
+   * An inverted personal name, "Surname, Forename", is the only form in which
+   * the page titles name a person. A title of any other shape in that position
+   * (a list marker such as "[1]", a heading such as "Essays:", a book or an
+   * article title) names nobody, and a citation without an author misleads
+   * less than one with a title in the author field. Titles naming several
+   * people ("Mann, Erika and Klaus", semicolon lists) are refused as well,
+   * because their shorthand does not split into separate names reliably. What
+   * follows " / " qualifies the page (a language, "Forewords", a second
+   * spelling) and is not part of the name.
+   */
+  _NAME_FORM_RE: /^[\p{L}'’][\p{L}\p{M}'’.\-() ]*,\s[\p{L}'’][\p{L}\p{M}'’.\-() ]*$/u,
+
+  _titleAuthor(title) {
+    const head = String(title || '').split(' / ')[0].trim();
+    if (!this._NAME_FORM_RE.test(head) || /\sand\s/.test(head)) return '';
+    const [surname, forenames] = head.split(', ');
+    const words = part => part.trim().split(/\s+/).length;
+    return words(surname) <= 4 && words(forenames) <= 4 ? head : '';
+  },
+
+  /**
+   * A publication whose source names its own author ("A graphic novel by") is
+   * cited under that author, whatever the page it is listed on. This is the
+   * per-publication exception to the page rule; the graphic-novel adaptation
+   * on page 4916 is the case it was made for.
+   */
+  _publicationAuthor(entry, pub) {
+    return this._creditNames(pub, 'author') || this._author(entry);
+  },
+
+  /**
+   * Where a translation or foreword page is cited and no credit names Zweig,
+   * his part would vanish from the citation now that he is not its author.
+   * The compiler's classification of the page is the evidence for it, so the
+   * note states what the page's section says, not a role in a particular
+   * volume.
+   */
+  _zweigContributionNote(entry, names) {
+    if (!TITLE_AUTHOR_TYPES.includes(entry.entryType)) return '';
+    if (names.some(name => /\bZweig\b/.test(name || ''))) return '';
+    return entry.entryType === 'translation'
+      ? 'Contains a translation by Stefan Zweig'
+      : 'Contains a foreword or afterword by Stefan Zweig';
   },
 
   /**
@@ -70,6 +116,8 @@ const Export = {
     if (e.language) fields.push(`  language = {${escapeBibtex(e.language)}}`);
     const note = [];
     if (e.translator) note.push(`Translated by ${e.translator}`);
+    const zweig = this._zweigContributionNote(e, [e.translator]);
+    if (zweig) note.push(zweig);
     const contested = this._contestedPlaceNote(e);
     if (contested) note.push(contested);
     if (note.length) fields.push(`  note = {${escapeBibtex(note.join('; '))}}`);
@@ -104,10 +152,15 @@ const Export = {
     return tail || `${entry.sourcePageId}-${index + 1}`;
   },
 
+  /**
+   * The names credited in one role, each once. A source can credit one person
+   * twice in a role ("Translated with an afterword by" and "Translated with a
+   * foreword by" on page 792); the wording of both stays in the note.
+   */
   _creditNames(pub, role) {
-    return (pub.credits || [])
+    return [...new Set((pub.credits || [])
       .filter(credit => credit.role === role && credit.name)
-      .map(credit => credit.name)
+      .map(credit => credit.name))]
       .join(' and ');
   },
 
@@ -141,7 +194,7 @@ const Export = {
     const isAboutZweig = ABOUT_ZWEIG_TYPES.includes(entry.entryType);
     const type = pub.container ? 'article' : this._bibtexType(entry.entryType);
     const fields = [];
-    const author = this._author(entry);
+    const author = this._publicationAuthor(entry, pub);
     if (author) fields.push(`  author = {${escapeBibtex(author)}}`);
     const title = pub.title || entry.title;
     if (title) fields.push(`  title = {${escapeBibtex(title)}}`);
@@ -175,7 +228,11 @@ const Export = {
     if (translators) fields.push(`  translator = {${escapeBibtex(translators)}}`);
     const editors = this._creditNames(pub, 'editor');
     if (editors) fields.push(`  editor = {${escapeBibtex(editors)}}`);
-    const note = [this._citationNote(pub), this._contestedPlaceNote(entry)].filter(Boolean);
+    const note = [
+      this._citationNote(pub),
+      this._zweigContributionNote(entry, (pub.credits || []).map(credit => credit.name)),
+      this._contestedPlaceNote(entry),
+    ].filter(Boolean);
     // The notation of the source is prose beside a page count, so it belongs
     // in the note; a citation that carries no note is not given one for it.
     const extent = this._publicationExtent(pub);
@@ -202,6 +259,8 @@ const Export = {
     if (e.language) lines.push(`LA  - ${e.language}`);
     if (e.translator) lines.push(`A2  - ${e.translator}`);
     if (e.pageCount) lines.push(`N1  - ${e.pageCount} pages`);
+    const zweig = this._zweigContributionNote(e, [e.translator]);
+    if (zweig) lines.push(`N1  - ${zweig}`);
     const contested = this._contestedPlaceNote(e);
     if (contested) lines.push(`N1  - ${contested}`);
     lines.push(`UR  - ${this.permalinkUrl(e.sourcePageId)}`);
@@ -219,8 +278,9 @@ const Export = {
     const lines = [`TY  - ${type}`];
     const title = pub.title || entry.title;
     if (title) lines.push(`TI  - ${title}`);
-    const author = this._author(entry);
-    if (author) lines.push(`AU  - ${author}`);
+    for (const author of this._publicationAuthor(entry, pub).split(' and ').filter(Boolean)) {
+      lines.push(`AU  - ${author}`);
+    }
     if (isAboutZweig) lines.push(`KW  - Stefan Zweig`);
     if (pub.year) lines.push(`PY  - ${pub.year}`);
     if (pub.editionStatement) lines.push(`ET  - ${pub.editionStatement}`);
@@ -242,9 +302,11 @@ const Export = {
       }
     }
     if (pub.language) lines.push(`LA  - ${pub.language}`);
-    for (const credit of pub.credits || []) {
-      if (credit.role === 'translator') lines.push(`A2  - ${credit.name}`);
-      else if (credit.role === 'editor') lines.push(`A3  - ${credit.name}`);
+    for (const name of this._creditNames(pub, 'translator').split(' and ').filter(Boolean)) {
+      lines.push(`A2  - ${name}`);
+    }
+    for (const name of this._creditNames(pub, 'editor').split(' and ').filter(Boolean)) {
+      lines.push(`A3  - ${name}`);
     }
     const extent = this._publicationExtent(pub);
     if (extent) lines.push(`N1  - Extent: ${extent}`);
@@ -253,6 +315,8 @@ const Export = {
     }
     const note = this._citationNote(pub);
     if (note) lines.push(`N1  - ${note}`);
+    const zweig = this._zweigContributionNote(entry, (pub.credits || []).map(credit => credit.name));
+    if (zweig) lines.push(`N1  - ${zweig}`);
     const contested = this._contestedPlaceNote(entry);
     if (contested) lines.push(`N1  - ${contested}`);
     lines.push(`UR  - ${this.permalinkUrl(entry.sourcePageId)}`);
