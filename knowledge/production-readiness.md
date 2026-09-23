@@ -50,7 +50,7 @@ The curation loop reviews individual fields, editions and authority candidates a
 
 On 22 September the operator delegated four open questions to the main instance. Its answers are recorded with the provenance "decided by the main instance after delegation by the operator on 2026-09-22, revisable" and are listed here with their place of record.
 
-- Worksheet cases 1 to 4 accept the display as it stood that day, recorded in the [worksheet](evaluations/2026-09-05/owner-evaluation.md#responses). Case 5 remains with the operator.
+- Worksheet cases 1 to 4 accept the display as it stood that day, recorded in the [worksheet](evaluations/2026-09-05/owner-evaluation.md#responses). The operator withdrew case 5 on 2026-09-23, so it is no release condition.
 - The author of a citation follows the role in the source, as described in [Frontend](frontend.md#export).
 - The graphic novel on page 4916 is a work of its own, an adaptation of the Schachnovelle with a change of medium, whose German edition translates the French graphic novel of 2015. The claim is resolved in `data/reconciliation/edition-modeling-decisions.json`, see [Data](data.md#statement-states).
 - The archive triage is outside version 1.0, see the release scope below.
