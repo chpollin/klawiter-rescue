@@ -36,7 +36,7 @@ The operator's 5 September request explicitly reopens Explore as an interactive 
 | Research interface | exact filter handover, source access, useful visualizations, clear review scope, edition navigation | browser/Node evidence for implemented paths; edition browsing and full task acceptance remain open |
 | Accessibility and performance | keyboard/touch paths, readable contrast, mobile fit, representative device/network budgets | targeted checks support specific paths; no comprehensive certification or performance budget yet |
 | Repeatability | locked environment, both gate checks, reviewed deterministic artifact comparison | full local locked-uv rebuild and reviewed-manifest checks pass; remote CI execution remains distinct |
-| Public release | curated source package, consistent metadata, explicit release scope and acceptance | release scope set on 22 and 23 September (see below); `CITATION.cff`, `.zenodo.json`, licence texts, third-party notices and the source inventory aligned on 23 September, and release archives exclude `data/raw`; rights basis confirmed and institution named by the operator on 23 September; the removal of the dump from the public Git history, the title and the acceptances remain |
+| Public release | curated source package, consistent metadata, explicit release scope and acceptance | release scope set on 22 and 23 September (see below); `CITATION.cff`, `.zenodo.json`, licence texts, third-party notices and the source inventory aligned on 23 September, and release archives exclude `data/raw`; rights basis confirmed and institution named by the operator on 23 September; the dump stays in the public Git history by operator decision; the title and the acceptances remain |
 
 Technical verification compares implementation with these contracts. Validation compares the product with real scholarly questions and users' interpretation of the source. Neither replaces the other.
 
@@ -63,7 +63,7 @@ On 23 September the operator approved the recommended course after four read-onl
 - Systematic false review flags are removed by rule for version 1.0. Genuine source conflicts stay open claims, and version 1.0 does not require their resolution.
 - Editing per publication stays outside version 1.0.
 
-The operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the edition is published with. The removal of the archival dump from the public Git history, one title for the edition and the acceptances remain with the operator and the partners.
+The operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the edition is published with. The archival dump stays in the public Git history by the operator's decision of the same day, and release archives still leave it out. One title for the edition and the acceptances remain with the operator and the partners.
 
 The release declaration and the publication form after acceptance remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
 
