@@ -20,8 +20,9 @@ from pathlib import Path
 # files so the main dataset stays loadable without them, 1.4 the Gate-1 edition
 # node and review status per publication, the page's publication flag codes,
 # the co-imprint pairs and series gloss, the release license and version, and
-# the review scope and reviewed status that main added while 1.3 still stood.
-FRONTEND_SCHEMA_VERSION = "1.4"
+# the review scope and reviewed status that main added while 1.3 still stood,
+# 1.5 the source revision a restored page is published from.
+FRONTEND_SCHEMA_VERSION = "1.5"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -84,6 +85,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "review": (False, (dict,)),
     "seeAlso": (False, (list,)),
     "sourceBlobId": (False, (int,)),
+    "sourceRevision": (False, (dict,)),
     "timePeriod": (False, (str,)),
     "translations": (False, (list,)),
     "translator": (False, (str,)),
@@ -503,3 +505,14 @@ def test_publication_spans_point_into_the_delivered_text(all_entries) -> None:
                 )
             previous_start, previous_end = source_slice["start"], end
     assert spanned, "no publication names a span of the delivered text"
+
+
+def test_restored_pages_state_their_source_revision(frontend_data) -> None:
+    """Maria Stuart is published from the compiler's revision 33251, which the
+    wiki's Redirect fixer overwrote in revision 33773."""
+    by_page = {entry["sourcePageId"]: entry for entry in frontend_data["entries"]}
+    restored = by_page[35]["sourceRevision"]
+    assert restored["humanRevision"]["revisionId"] == 33251
+    assert restored["humanRevision"]["textId"] == by_page[35]["sourceTextId"]
+    assert [rev["revisionId"] for rev in restored["fixerRevisions"]] == [33773]
+    assert "sourceRevision" not in by_page[4113]

@@ -143,6 +143,33 @@ def load_withheld_redirects():
     )
 
 
+def load_source_revision_restorations():
+    """Page id -> the record a reader needs to see why a restored page is
+    published from an earlier revision than page_latest."""
+    with open(SOURCE_REVISION_DECISIONS, encoding="utf-8") as handle:
+        document = json.load(handle)
+    restorations = {}
+    for decision in document["decisions"]:
+        if decision["action"] != "restore-human-revision":
+            continue
+        human = decision["humanRevision"]
+        restorations[decision["pageId"]] = {
+            "decisionId": decision["decisionId"],
+            "action": decision["action"],
+            "reason": decision["reason"],
+            "humanRevision": {
+                key: human[key]
+                for key in ("revisionId", "timestamp", "actor", "textId")
+            },
+            "fixerRevisions": [
+                {key: rev[key] for key in ("revisionId", "timestamp", "comment")}
+                for rev in decision["fixerRevisions"]
+            ],
+            "decidedBy": document["provenance"],
+        }
+    return restorations
+
+
 def _collapse(title):
     """MediaWiki collapses whitespace runs in a title before the lookup."""
     return " ".join(title.split())
@@ -773,6 +800,7 @@ def main():
     redirect_map = {}
     title_to_pid = {}
     review_index = load_review_index()
+    restorations = load_source_revision_restorations()
     attested_places = load_attested_places()
     log.info("Attested place stock for imprint splitting: %d", len(attested_places))
 
@@ -783,6 +811,9 @@ def main():
             if layer:
                 publication_layers[int(row["page_id"])] = layer
             fe = make_frontend_entry(e, review_index, layer)
+            restoration = restorations.get(fe.get("sourcePageId"))
+            if restoration:
+                fe["sourceRevision"] = restoration
             non_redirect_entries.append(fe)
             title = e.get("name", "")
             pid = e.get("sourcePageId")
@@ -869,7 +900,7 @@ def main():
         # per publication, the page's publication flag codes, the imprint
         # pairs and series gloss, the release license and version, and the
         # review scope and reviewed status.
-        "frontendSchemaVersion": "1.4",
+        "frontendSchemaVersion": "1.5",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,
