@@ -1,10 +1,10 @@
 {
   "algorithmVersion": "1.3",
   "artifacts": {
-    "earl.jsonld": "cf65e56140146a218bc325fb1107451c6ec951517f3a43c95b5e0d0af0a6e904",
-    "provenance.jsonld": "6e9e076474a7082ba0dabd67f023c5c49a1dd643b0465530974f6dc66dc24297",
+    "earl.jsonld": "f28c812be7bfb8468d866ed2f57226a0385bd7f3f5c823b8ab63f876bb37ab01",
+    "provenance.jsonld": "5f8c03691b5e1b01c1dcbed3f24e40535e504d42b3c925c7429fc5039c0c793e",
     "review-queue.json": "706fdabcbd73222db78258d6192b58ce416aec5e4f8678a04384f76966876d39",
-    "validation-report.json": "0ad66df8f9656a18f61bf630f82d823cc58be0e7a8daad992f0b702a3a673ee8",
+    "validation-report.json": "f706b740383988a4a109337328c24b8bcc7241df2d1ed8e7bf441886e151e0c3",
     "work-editions.jsonld": "234d49683cecadd0c5851a9ec51ce379253fa5a4da219df2bd231d370ff8038b"
   },
   "authorityEvidence": {
@@ -17,7 +17,7 @@
       "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
     }
   },
-  "codeSha256": "38270a46d1fe7a94d97d3ca200721c534579e0b741c6e4f7f7b56abdb57fb3bf",
+  "codeSha256": "08ea706ce2d7b04b89224264ef0fbdac8f8608e8fcc638386bfc188151494ff7",
   "counts": {
     "annotations": 2077,
     "candidateWorks": 0,
@@ -30,7 +30,7 @@
     "reviewCases": 339,
     "works": 448
   },
-  "generatedAt": "2026-09-23T12:00:59.458902+00:00",
+  "generatedAt": "2026-09-23T12:36:25.362207+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

@@ -3,8 +3,8 @@
     "title": {
       "total_entries": 4758,
       "extracted": 4757,
-      "correct": 2535,
-      "correct_fallback": 2222,
+      "correct": 2519,
+      "correct_fallback": 2238,
       "false_positive": 0,
       "false_negative": 0,
       "coverage": 100.0,
@@ -3561,10 +3561,10 @@
     },
     {
       "page_id": 162,
-      "title": "Essays / Volumes (German)",
+      "title": "Die Monotonisierung der Welt. Aufsätze und Vorträge",
       "fields": {
         "title": {
-          "extracted": "Essays / Volumes (German)",
+          "extracted": "Die Monotonisierung der Welt. Aufsätze und Vorträge",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -4045,13 +4045,13 @@
     },
     {
       "page_id": 187,
-      "title": "Taken from the volume Kampf mit dem Dämon.",
+      "title": "Friedrich Nietzsche",
       "fields": {
         "title": {
-          "extracted": "Taken from the volume Kampf mit dem Dämon.",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Friedrich Nietzsche",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1998,
@@ -11799,13 +11799,13 @@
     },
     {
       "page_id": 513,
-      "title": "''Der Amokläufer",
+      "title": "Index by German Title / Individual Stories (Chinese)",
       "fields": {
         "title": {
-          "extracted": "''Der Amokläufer",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Index by German Title / Individual Stories (Chinese)",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         }
       }
     },
@@ -23041,13 +23041,13 @@
     },
     {
       "page_id": 1014,
-      "title": "''Arturo Toscanini",
+      "title": "Index by German Title / Individual Essays (Chinese)",
       "fields": {
         "title": {
-          "extracted": "''Arturo Toscanini",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Index by German Title / Individual Essays (Chinese)",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         }
       }
     },
@@ -36160,13 +36160,13 @@
     },
     {
       "page_id": 1768,
-      "title": "1 page, undated handwritten text, with Zweig’s signature. In the Schiller-Nationalmuseum und Deutsches Literaturarchiv, Marbach am Neckar, A: Gregor-Dellin, Mss. Anderer",
+      "title": "Aufruf an die Jugend Amerikas",
       "fields": {
         "title": {
-          "extracted": "1 page, undated handwritten text, with Zweig’s signature. In the Schiller-Nationalmuseum und Deutsches Literaturarchiv, Marbach am Neckar, A: Gregor-Dellin, Mss. Anderer",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Aufruf an die Jugend Amerikas",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "page_count": {
           "extracted": 1,
@@ -38332,13 +38332,13 @@
     },
     {
       "page_id": 1855,
-      "title": "Bosnian",
+      "title": "Balzak. Romansirana biografija",
       "fields": {
         "title": {
-          "extracted": "Bosnian",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Balzak. Romansirana biografija",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1959,
@@ -55956,13 +55956,13 @@
     },
     {
       "page_id": 2712,
-      "title": "Antiquariat Richard Husslein, Postfach 1525, D-82144 Planegg",
+      "title": "Feld, Dr. (Leo?)",
       "fields": {
         "title": {
-          "extracted": "Antiquariat Richard Husslein, Postfach 1525, D-82144 Planegg",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Feld, Dr. (Leo?)",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "publisher": {
           "extracted": "Antiquariat Richard Husslein",
@@ -59709,13 +59709,13 @@
     },
     {
       "page_id": 2980,
-      "title": "Kungliga Biblioteket - Sveriges Nationalbiblioteket, Stockholm. Hultenberg Archive. 2 volumes. Shelf number Acc. 2011/3. Five letters and one postcard from Stefan Zweig to Hugo Hultenberg",
+      "title": "Hultenberg, Hugo",
       "fields": {
         "title": {
-          "extracted": "Kungliga Biblioteket - Sveriges Nationalbiblioteket, Stockholm. Hultenberg Archive. 2 volumes. Shelf number Acc. 2011/3. Five letters and one postcard from Stefan Zweig to Hugo Hultenberg",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Hultenberg, Hugo",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2011,
@@ -59741,13 +59741,13 @@
     },
     {
       "page_id": 2981,
-      "title": "Kungliga Bibloteket - Sveriges Nationalbiblioteket, Stockholm. Ivan Sajkovic papers. 5 volumes. Shelf number Acc. 1958/4:1. Two letters from Stefan Zweig to Ivan Sajkovic. Written in German",
+      "title": "Sajkovic, Ivan",
       "fields": {
         "title": {
-          "extracted": "Kungliga Bibloteket - Sveriges Nationalbiblioteket, Stockholm. Ivan Sajkovic papers. 5 volumes. Shelf number Acc. 1958/4:1. Two letters from Stefan Zweig to Ivan Sajkovic. Written in German",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Sajkovic, Ivan",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1958,
@@ -64466,13 +64466,13 @@
     },
     {
       "page_id": 3262,
-      "title": "Jacopo da Lentino / Giacomo di Lentini, ca. 1210 - ca. 1260. The sonnet was written ca. 1230",
+      "title": "Lentino, Jacopo da",
       "fields": {
         "title": {
-          "extracted": "Jacopo da Lentino / Giacomo di Lentini, ca. 1210 - ca. 1260. The sonnet was written ca. 1230",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Lentino, Jacopo da",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1923,
@@ -70222,13 +70222,13 @@
     },
     {
       "page_id": 3657,
-      "title": "Stefan Zweig to Hans Rosenkranz, 26 letters and 6 postcards, 1921-1933. This correspondence is located in the Jewish National Library in Jerusalem",
+      "title": "Rosenkranz, Hans",
       "fields": {
         "title": {
-          "extracted": "Stefan Zweig to Hans Rosenkranz, 26 letters and 6 postcards, 1921-1933. This correspondence is located in the Jewish National Library in Jerusalem",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Rosenkranz, Hans",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1921,
@@ -70633,13 +70633,13 @@
     },
     {
       "page_id": 3677,
-      "title": "KH = Kelsea M. Halloran, a junior in the New York State University in Fredonia, to graduate in 2018",
+      "title": "KH / LW / MS",
       "fields": {
         "title": {
-          "extracted": "KH = Kelsea M. Halloran, a junior in the New York State University in Fredonia, to graduate in 2018",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "KH / LW / MS",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2018,
@@ -72811,13 +72811,13 @@
     },
     {
       "page_id": 3818,
-      "title": "Narrative Textanalyse von Stefan Zweigs 'Schachnovelle'. Seminararbeit. Institut für Germanistik, Universität Marburg, Wintersemester 1986/1987",
+      "title": "Weidmann, Heike",
       "fields": {
         "title": {
-          "extracted": "Narrative Textanalyse von Stefan Zweigs 'Schachnovelle'. Seminararbeit. Institut für Germanistik, Universität Marburg, Wintersemester 1986/1987",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Weidmann, Heike",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1986,
@@ -74570,13 +74570,13 @@
     },
     {
       "page_id": 3923,
-      "title": "Exhibitions",
+      "title": "1993 February 27 - 28: Stefan Zweig (1881-1942) oder Das Gewissen gegen die Gewalt",
       "fields": {
         "title": {
-          "extracted": "Exhibitions",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "1993 February 27 - 28: Stefan Zweig (1881-1942) oder Das Gewissen gegen die Gewalt",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         }
       }
     },
@@ -111491,13 +111491,13 @@
     },
     {
       "page_id": 6060,
-      "title": "Christina-Maria Hochreiter and Armin Eidherr.",
+      "title": "Hochreiter, Christina-Maria",
       "fields": {
         "title": {
-          "extracted": "Christina-Maria Hochreiter and Armin Eidherr.",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Hochreiter, Christina-Maria",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2017,
@@ -116826,13 +116826,13 @@
     },
     {
       "page_id": 6416,
-      "title": "The following editions of Les Fleurs du mal are the ones quoted in Baudelaire, Charles / Individual Poems",
+      "title": "Baudelaire, Charles / Les Fleurs du mal",
       "fields": {
         "title": {
-          "extracted": "The following editions of Les Fleurs du mal are the ones quoted in Baudelaire, Charles / Individual Poems",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Baudelaire, Charles / Les Fleurs du mal",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1857,
@@ -123405,13 +123405,13 @@
     },
     {
       "page_id": 6807,
-      "title": "www.ekathimerini.com/248252/article/ekathimerini/whats-on/leporella-athens-january-11-26",
+      "title": "Leporella / Opera",
       "fields": {
         "title": {
-          "extracted": "www.ekathimerini.com/248252/article/ekathimerini/whats-on/leporella-athens-january-11-26",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Leporella / Opera",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1929,
@@ -126793,10 +126793,10 @@
     },
     {
       "page_id": 6991,
-      "title": "\"Preface\" to The Jewish Contribution to Civilization.",
+      "title": "Preface",
       "fields": {
         "title": {
-          "extracted": "\"Preface\" to The Jewish Contribution to Civilization.",
+          "extracted": "Preface",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"

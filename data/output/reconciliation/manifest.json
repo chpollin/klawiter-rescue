@@ -4,11 +4,11 @@
     "candidates.json": "d276517c47318eea0effaa8a64f6740c24fd5b748545b119ef128c51f3f893b6",
     "contested-claims.json": "6b3261c85ac2bf3324a4781c685ed1c69f0a4eb096fe3db5f4d8c64d6d6646b5",
     "decisions.json": "f964460a26ea02a6007a5ff0938f8d3db64d5c6439dffc22f78324021f4df232",
-    "earl.jsonld": "bea85921e360a189a836089b0cc8bf922a9e8a35baf83723e74e2bc11ee5eb2d",
-    "provenance.jsonld": "22a6b889d3ec83992594bf9045b09a532dcc733ebde75d4785de3a7199c8ebc5",
+    "earl.jsonld": "8ec3cd4997c6897647246c9469a38d0a1e91e3861c8506b829092ff70bd5bd90",
+    "provenance.jsonld": "8efce63f8da61c1990a23225e3b97d4d37037a7a753bab8d56d2fea43d2fbc47",
     "publishable-links.json": "8349ee1d918195bd283ac8f6f5f90284f806e0c7fc071d9a3d2d51c99c179844",
     "review-queue.json": "f95e42b4c8f3be085ce6bdf995b195eec7d4e228a041fc726c37391e745af6a2",
-    "validation-report.json": "aacae0790256937e5db580afad30808c91f2934bdd5a4cbf8007aa5762322ae5"
+    "validation-report.json": "1b8c3737c6a4a6f730b8ebd207a423355aaa8b0ce1deb4a14010977151b7fb07"
   },
   "codeSha256": "72d1464b4e72bc30e276069f1738b3741e47116b934e9a68e23484d9c6b1171e",
   "counts": {
@@ -34,7 +34,7 @@
     "path": "docs/data/reconciliation.json",
     "sha256": "ae353194e516c809416c935df6eb14ff83d34fe63215e0b01f89efa4532fe583"
   },
-  "generatedAt": "2026-09-23T12:17:29.724092+00:00",
+  "generatedAt": "2026-09-23T12:37:15.351361+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -46,7 +46,7 @@
     },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
-      "sha256": "69adc107d79ba50ed65c0fd13a156990d6edeed01017838723d6c9bf6d3dd225"
+      "sha256": "74b728658b743d22dad5cc1b00a4771925266d52461e1eb698c12c19edf219f5"
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
