@@ -64,7 +64,7 @@ function exportCtx(entry, publications, claims) {
       }
     }
   }
-  return { Export: vm.runInContext('Export', ctx), captured };
+  return { Export: vm.runInContext('Export', ctx), captured, ctx };
 }
 
 function editionEntry() {
@@ -177,7 +177,8 @@ test('Zweig is the author of his own texts only, and an author page names its au
 
 test('a contested place is cited in full and says that the assignment is open', () => {
   // Page 4209: the imprint reads "Nasionale Pers Beperk, Bloemfontein,
-  // Kaapstad (Capetown)" and the place claim is open in reconciliation.json.
+  // Kaapstad (Capetown)". A claim applies to the place it names word for
+  // word, here one component of the imprint.
   const entry = {
     sourcePageId: 4209, entryType: 'fiction', title: "Vreemdes in 'n vreemde wêreld",
     location: 'Kaapstad (Capetown)', publicationCount: 1, pageKind: 'single-publication',
@@ -191,7 +192,8 @@ test('a contested place is cited in full and says that the assignment is open', 
       creditLabel: 'Translated with a foreword and preface by' }],
   };
   const claims = [{ claimId: 'klawiter:claim/reconciliation/location/e5742c35b57192e9',
-    entityType: 'location', claimStatus: 'contested', decisionStatus: 'open' }];
+    entityType: 'location', claimStatus: 'contested', decisionStatus: 'open',
+    subject: { name: 'Kaapstad (Capetown)' } }];
 
   const { Export, captured } = exportCtx(entry, [pub], claims);
   Export.bibtex(4209, 0);
@@ -206,10 +208,64 @@ test('a contested place is cited in full and says that the assignment is open', 
   assert.match(ris, /CY {2}- Kaapstad \(Capetown\)/);
   assert.match(ris, /N1 {2}- Place authority assignment contested/);
 
-  // Without an open claim the citation says nothing about the assignment.
+  // Without an open claim the citation says nothing about the assignment,
+  // and neither does it for a decided claim or one naming the compound line.
   const settled = exportCtx(entry, [pub]);
   settled.Export.bibtex(4209, 0);
   assert.doesNotMatch(settled.captured[0].content, /contested/);
+  for (const other of [{ ...claims[0], decisionStatus: 'decided' },
+    { ...claims[0], subject: { name: 'Bloemfontein, Kaapstad' } }]) {
+    const quiet = exportCtx(entry, [pub], [other]);
+    quiet.Export.bibtex(4209, 0);
+    assert.doesNotMatch(quiet.captured[0].content, /contested/);
+  }
+});
+
+test('the contested note stands only at the edition whose place the claim names', () => {
+  // Page 1725 has editions from Sofija and one from Varna; a claim on the
+  // Varna assignment is no statement about a Sofija edition.
+  const entry = {
+    sourcePageId: 1725, entryType: 'historical-study', title: 'Magelan',
+    location: 'Sofija', publicationCount: 2, pageKind: 'edition-page',
+  };
+  const pubs = [
+    { id: 'klawiter:publication/1725-1946-a', year: 1946, title: 'Magelan',
+      publisher: 'Biser', places: ['Sofija'] },
+    { id: 'klawiter:publication/1725-1966-a', year: 1966, title: 'Magelan',
+      publisher: 'DPK St. Dobrev-Strandzhata', places: ['Varna'] },
+  ];
+  const claims = [{ claimId: 'c', entityType: 'location', decisionStatus: 'open',
+    subject: { name: 'Varna' } }];
+  const { Export, captured } = exportCtx(entry, pubs, claims);
+  Export.bibtex(1725, 0);
+  Export.bibtex(1725, 1);
+  assert.doesNotMatch(captured[0].content, /contested/);
+  assert.match(captured[1].content, /Place authority assignment contested/);
+});
+
+test('a citation waits for the claims instead of citing a contested place as settled', async () => {
+  const entry = { sourcePageId: 4819, entryType: 'secondary-literature',
+    title: 'Adam Lux', location: 'Saint-Aignan', year: 1993 };
+  const { Export, captured, ctx } = exportCtx(entry, null, []);
+  // Nothing loaded yet: the shared loader brings the claims in.
+  ctx.Edit.reconciliation = null;
+  let loads = 0;
+  ctx.App._ensureReconciliation = () => {
+    loads++;
+    ctx.Edit.reconciliation = {};
+    ctx.Edit.authorityClaimsFor = () => [{ claimId: 'c', entityType: 'location',
+      decisionStatus: 'open', subject: { name: 'Saint-Aignan' } }];
+    return Promise.resolve();
+  };
+  await Export.bibtex(4819);
+  assert.strictEqual(loads, 1);
+  assert.match(captured[0].content, /Place authority assignment contested/);
+
+  // The batch export reads them as well, whether or not a card was opened.
+  ctx.Edit.reconciliation = null;
+  await Export.batchBibtex([entry]);
+  assert.strictEqual(loads, 2);
+  assert.match(captured[1].content, /Place authority assignment contested/);
 });
 
 test('the batch export writes one citation per publication', async () => {
@@ -285,6 +341,8 @@ test('an article is cited as an article, with its container', () => {
   const bib = captured[0].content;
   assert.match(bib, /@article\{/);
   assert.match(bib, /journaltitle = \{Al-Balāghah waʾl-naqd al-ʿarabī\}/);
+  // Classic BibTeX styles read the container from `journal` alone.
+  assert.match(bib, /\n {2}journal = \{Al-Balāghah waʾl-naqd al-ʿarabī\}/);
   assert.match(bib, /number = \{3\}/);
   assert.match(bib, /pages = \{71-79\}/);
   assert.match(bib, /address = \{Rabat\}/);
@@ -300,7 +358,8 @@ test('an article is cited as an article, with its container', () => {
   assert.match(ris, /IS {2}- 3/);
   assert.match(ris, /SP {2}- 71/);
   assert.match(ris, /EP {2}- 79/);
-  assert.match(ris, /UR {2}- https:\/\/chpollin\.github\.io\/klawiter-rescue\/#entry=4445/);
+  // The address names the article, not only the page it is listed on.
+  assert.match(ris, /^UR {2}- https:\/\/chpollin\.github\.io\/klawiter-rescue\/#entry=4445&pub=4445-2015-a$/m);
   assert.strictEqual(captured[0].filename, 'klawiter-4445-2015-a.ris');
 });
 
@@ -314,10 +373,103 @@ test('RIS carries the credits of the publication by their role', () => {
   const { Export, captured } = exportCtx(entry, [pub]);
   Export.ris(1800, 0);
   const ris = captured[0].content;
-  assert.match(ris, /A2 {2}- Dimitŭr Stoevski/);
-  assert.match(ris, /A3 {2}- N\. Vysotskaia/);
+  // The RIS specification and Zotero's RIS translator read A4 as the
+  // translator. The editor of a book is A3 there, whose A2 Zotero reads as
+  // the series editor; the editor of a journal article is A2.
+  assert.match(ris, /^A4 {2}- Dimitŭr Stoevski$/m);
+  assert.match(ris, /^A3 {2}- N\. Vysotskaia$/m);
+  assert.doesNotMatch(ris, /^A2 /m);
   assert.match(ris, /ET {2}- 1st edition/);
   assert.match(ris, /N1 {2}- Extent: 500p\./);
+
+  const article = { ...pub, container: { title: 'Plamŭk', issue: '3', pages: '1-9' } };
+  const journal = exportCtx(entry, [article]);
+  journal.Export.ris(1800, 0);
+  assert.match(journal.captured[0].content, /^TY {2}- JOUR$/m);
+  assert.match(journal.captured[0].content, /^A2 {2}- N\. Vysotskaia$/m);
+});
+
+test('the translators of contained texts are cited, the other credits by role', () => {
+  // Page 1891: the volume credits an editor and an illustrator, its two
+  // contributions three translators.
+  const entry = {
+    sourcePageId: 1891, entryType: 'historical-study', title: 'Mariia Stiuart * Kazanova',
+    publicationCount: 1, pageKind: 'single-publication',
+  };
+  const pub = {
+    id: 'klawiter:publication/1891-1993-a', year: 1993, title: 'Mariia Stiuart * Kazanova',
+    publisher: 'Kavkazskiĭ Krai', places: ['Stavropol’'],
+    extent: { raw: '444/(3)p.', numbered: 444, unnumbered: 3 },
+    credits: [
+      { role: 'editor', name: 'N. Vysotskaia', creditLabel: 'Edited by' },
+      { role: 'illustrator', name: 'I. L. Prostitov', creditLabel: 'Illustrated by' },
+    ],
+    contributions: [
+      { title: 'Mariia Stiuart', pages: '(7)-(370)', credits: [
+        { role: 'translator', name: 'R. Gal’perina', creditLabel: 'Translated by' },
+        { role: 'translator', name: 'V. Levik', creditLabel: 'Verses translated by' },
+      ] },
+      { title: 'Kazanova', pages: '(371)-(445)', credits: [
+        { role: 'translator', name: 'P. S. Bernshteĭn', creditLabel: 'Translated by' },
+      ] },
+    ],
+  };
+  const { Export, captured } = exportCtx(entry, [pub]);
+  Export.bibtex(1891, 0);
+  const bib = captured[0].content;
+  assert.match(bib, /translator = \{R\. Gal’perina and V\. Levik and P\. S\. Bernshteĭn\}/);
+  assert.match(bib, /editor = \{N\. Vysotskaia\}/);
+  assert.match(bib, /illustrator = \{I\. L\. Prostitov\}/);
+  // The wording keeps which text each translator worked on.
+  assert.match(bib, /Mariia Stiuart: Translated by R\. Gal’perina, Verses translated by V\. Levik/);
+  Export.ris(1891, 0);
+  const ris = captured[1].content;
+  assert.strictEqual((ris.match(/^A4 {2}- /gm) || []).length, 3);
+  assert.match(ris, /^A3 {2}- N\. Vysotskaia$/m);
+});
+
+test('the series number is a number, said once, and the note of the source is cited', () => {
+  const entry = { sourcePageId: 4445, entryType: 'secondary-literature',
+    title: 'Al-Bāḥ, Muḥammad', pageKind: 'author-page', publicationCount: 2 };
+  const book = {
+    id: 'klawiter:publication/4445-2000-a', year: 2000,
+    title: 'Frauen- und Männerbilder in den Novellen von Stefan Zweig',
+    publisher: 'Hochschulverl.', places: ['Freiburg im Breisgau'],
+    extent: { raw: '168p.', numbered: 168 },
+    series: 'Hochschulsammlung Philosophie. Literaturwissenschaft, 16', seriesVolume: '16',
+    note: "This volume was originally the author's 1999 PhD thesis",
+  };
+  const { Export, captured } = exportCtx(entry, [book]);
+  Export.bibtex(4445, 0);
+  Export.ris(4445, 0);
+  const [bib, ris] = captured.map(item => item.content);
+  // The series wording already ends with its number, so no field repeats it.
+  assert.doesNotMatch(bib, /volume = /);
+  assert.doesNotMatch(bib, /\n {2}number = /);
+  assert.match(ris, /^T2 {2}- Hochschulsammlung Philosophie\. Literaturwissenschaft, 16$/m);
+  assert.doesNotMatch(ris, /^M1 /m);
+  assert.doesNotMatch(ris, /Series number/);
+  assert.match(bib, /note = \{[^}]*originally the author's 1999 PhD thesis/);
+  assert.match(ris, /^N1 {2}- This volume was originally/m);
+
+  const numbered = { ...book, series: 'Biblioteka Zlatni zŭrna', seriesVolume: '8' };
+  const other = exportCtx(entry, [numbered]);
+  other.Export.bibtex(4445, 0);
+  other.Export.ris(4445, 0);
+  assert.match(other.captured[0].content, /\n {2}number = \{8\}/);
+  assert.doesNotMatch(other.captured[0].content, /volume = /);
+  assert.match(other.captured[1].content, /^T2 {2}- Biblioteka Zlatni zŭrna$/m);
+  assert.match(other.captured[1].content, /^M1 {2}- 8$/m);
+});
+
+test('every publication is cited under an address of its own', () => {
+  const { Export, captured } = exportCtx(editionEntry(), editions());
+  Export.bibtex(1800);
+  const all = captured[0].content;
+  for (const slug of ['1800-1947-a', '1800-1960-a']) {
+    assert.ok(all.includes(`url = {https://chpollin.github.io/klawiter-rescue/#entry=1800&pub=${slug}}`),
+      slug);
+  }
 });
 
 test('translation and foreword pages are cited under the author the page is indexed by', () => {
@@ -347,7 +499,7 @@ test('translation and foreword pages are cited under the author the page is inde
   assert.doesNotMatch(cited, /Contains a translation/);
   bib.captured.length = 0;
   bib.Export.ris(792, 0);
-  assert.strictEqual((bib.captured[0].content.match(/^A2 {2}- Stefan Zweig$/gm) || []).length, 1);
+  assert.strictEqual((bib.captured[0].content.match(/^A4 {2}- Stefan Zweig$/gm) || []).length, 1);
   assert.match(bib.captured[0].content, /^AU {2}- Barbusse, Henri$/m);
 
   // Page 4418: the qualifier after " / " (a language) is not part of the name,
@@ -443,5 +595,5 @@ test('a publication that names its own author is cited under that author', () =>
   captured.length = 0;
   Export.ris(4916, 0);
   assert.match(captured[0].content, /^AU {2}- Thomas Humeau$/m);
-  assert.match(captured[0].content, /^A2 {2}- Anja Kootz$/m);
+  assert.match(captured[0].content, /^A4 {2}- Anja Kootz$/m);
 });

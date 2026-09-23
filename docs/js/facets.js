@@ -13,6 +13,7 @@ const Facets = {
   _entries: null,   // the set the current rendering was built from
 
   render(entries) {
+    const focus = this._focusKey();
     this._entries = entries;
     this.renderFacet('facet-type-list', this._candidates('type', entries),
       'entryType', 'type', ENTRY_TYPE_LABELS);
@@ -27,6 +28,35 @@ const Facets = {
     for (const key of ['type', 'language', 'period', 'location', 'review']) {
       this._applyGroupState(key);
     }
+    this._restoreFocus(focus);
+  },
+
+  /**
+   * The facet control holding the focus, by what it stands for. The lists are
+   * rewritten on every render, so the element itself does not survive it and
+   * the focus fell to the body after every choice.
+   */
+  _focusKey() {
+    if (typeof document === 'undefined') return null;
+    const el = document.activeElement;
+    if (!el || !el.closest || !el.closest('#facets')) return null;
+    if (el.dataset.facetKey) return { key: el.dataset.facetKey, value: el.dataset.facetValue };
+    if (el.dataset.facetMore) return { more: el.dataset.facetMore };
+    return null;
+  },
+
+  _restoreFocus(focus) {
+    if (!focus || (document.activeElement && document.activeElement.closest
+        && document.activeElement.closest('#facets'))) return;
+    const group = focus.key || focus.more;
+    const list = document.getElementById(`facet-${group}-list`);
+    if (!list) return;
+    const target = focus.more
+      ? list.querySelector('[data-facet-more]')
+      : [...list.querySelectorAll('.facet-item')].find(item =>
+        item.dataset.facetValue === focus.value)
+        || document.querySelector(`[data-facet-toggle="${group}"]`);
+    if (target) target.focus();
   },
 
   isOpen(filterKey) {

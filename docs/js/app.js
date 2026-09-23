@@ -215,8 +215,30 @@ const App = {
         e.publisher, e.location, e.language, e.translator,
         (e.categories || []).join(' '),
       ].filter(Boolean).join(' ');
-      this.index.add(i, text);
+      this.index.add(i, `${text} ${this._foldedWords(text)}`);
     });
+  },
+
+  /**
+   * Transliteration marks and apostrophes the charset treats as word
+   * boundaries: ʾ and ʿ (ayn and hamza), the modifier apostrophes, the typed
+   * apostrophes and the prime.
+   */
+  APOSTROPHE_MARKS: /['`´ʹʻʼʽʾʿˈ‘’‛′]/g,
+
+  /**
+   * The words of a text that carry such a mark, with the mark taken out.
+   * "marʾah" would otherwise be indexed as "mar" and "ah", so the plain
+   * spelling "marah" found nothing. The words with the mark stay indexed as
+   * well, so a search for "Brien" still finds "O'Brien".
+   */
+  _foldedWords(text) {
+    const words = String(text || '').match(/\S*['`´ʹʻʼʽʾʿˈ‘’‛′]\S*/g);
+    return words ? words.map(word => this.foldQuery(word)).join(' ') : '';
+  },
+
+  foldQuery(text) {
+    return String(text == null ? '' : text).replace(this.APOSTROPHE_MARKS, '');
   },
 
   // --- Routing ---
@@ -264,6 +286,7 @@ const App = {
     const params = new URLSearchParams(hash);
     this.state.browse = false;
     this.state.singleEntry = false;
+    this.state.publicationId = null;
     this.state.customLabel = null;
     this._setResultsContext('');
 
@@ -329,12 +352,15 @@ const App = {
       return;
     }
 
-    // Entry view — show in results with card expanded
+    // Entry view — show in results with card expanded. `pub` names one
+    // publication of the page, so a citation of it resolves to its block.
     if (params.has('entry')) {
       const pid = parseInt(params.get('entry'), 10);
       const entry = this.entryMap.get(pid);
       this._resetSearchState();
       this.state.singleEntry = !!entry;
+      this.state.publicationId = entry ? params.get('pub') || null : null;
+      this._publicationRevealed = null;
       this.state.page = 0;
       this.filtered = entry ? [entry] : [];
       this.showView('results');
@@ -345,7 +371,10 @@ const App = {
       if (entry) {
         this.renderResults();
         // Auto-expand after render
-        setTimeout(() => this.toggleCard(pid), 50);
+        setTimeout(() => {
+          this.toggleCard(pid);
+          this.revealPublication();
+        }, 50);
       } else {
         this._renderMissingPage('This page ID does not exist (it may have been a redirect).');
       }
@@ -390,6 +419,21 @@ const App = {
       this.showView('home');
       Home.render(this.entries);
     }
+  },
+
+  /**
+   * Bring the publication a `pub` route names into view, once per route. The
+   * block exists only after the page file arrived, so the card calls this
+   * again after its late render; until then there is nothing to reveal.
+   */
+  revealPublication() {
+    const slug = this.state.publicationId;
+    if (!slug || this._publicationRevealed === slug || typeof document === 'undefined') return;
+    const block = document.querySelector && document.querySelector('.publication-target');
+    if (!block) return;
+    this._publicationRevealed = slug;
+    block.scrollIntoView({ block: 'start' });
+    block.focus({ preventScroll: true });
   },
 
   /** Message page for a permalink that resolves to nothing. */
@@ -473,18 +517,49 @@ const App = {
   /** Synthetic review value: the record carries open flags of its own. */
   REVIEW_FLAGGED: 'open-flags',
 
-  /** Review facet values an entry falls under; both axes may apply at once. */
+  /**
+   * Review facet values an entry falls under; both axes may apply at once.
+   * A flag raised on one of the page's publications is an open flag of the
+   * page as much as one raised on the page record.
+   */
   reviewValues(e) {
     const values = [(e.review && e.review.status) || this.REVIEW_UNREVIEWED];
-    if (Array.isArray(e.reviewFlags) && e.reviewFlags.length) values.push(this.REVIEW_FLAGGED);
+    const flagged = (Array.isArray(e.reviewFlags) && e.reviewFlags.length)
+      || (Array.isArray(e.publicationReviewFlags) && e.publicationReviewFlags.length);
+    if (flagged) values.push(this.REVIEW_FLAGGED);
     return values;
   },
 
-  /** Words for a review value; the status keys come from the dataset. */
+  /**
+   * Words for a review value; the status keys come from the dataset. A
+   * decision covers the fields its review object names, so where every entry
+   * of a status was decided on the same fields the label names them.
+   */
   reviewLabel(value) {
     if (value === this.REVIEW_FLAGGED) return 'Open review flags';
-    const words = String(value).replace(/[_-]+/g, ' ');
+    // The card head names a status with the same word as the facet.
+    const words = (typeof Detail !== 'undefined' && Detail.REVIEW_WORDS[value])
+      || String(value).replace(/[_-]+/g, ' ');
+    const scope = this._reviewScopes().get(value);
+    if (scope) return `${scope} ${words}`;
     return words.charAt(0).toUpperCase() + words.slice(1);
+  },
+
+  /** Status → the field scope all its entries share, derived once per holding. */
+  _reviewScopes() {
+    if (this._reviewScopeCache && this._reviewScopeCache.entries === this.entries) {
+      return this._reviewScopeCache.scopes;
+    }
+    const seen = new Map();
+    for (const e of this.entries || []) {
+      if (!e.review || !e.review.status || typeof Detail === 'undefined') continue;
+      const scope = Detail.reviewScope(e.review);
+      const known = seen.get(e.review.status);
+      seen.set(e.review.status, known === undefined || known === scope ? scope : null);
+    }
+    const scopes = new Map([...seen].filter(([, scope]) => scope));
+    this._reviewScopeCache = { entries: this.entries, scopes };
+    return scopes;
   },
 
   /**
@@ -651,7 +726,7 @@ const App = {
     const q = this.state.query;
     if (q && q.length >= this.MIN_QUERY_LENGTH) {
       this.ensureIndex();
-      const indices = this.index.search(q, { limit: this.SEARCH_LIMIT });
+      const indices = this.index.search(this.foldQuery(q), { limit: this.SEARCH_LIMIT });
       this._searchCapped = indices.length >= this.SEARCH_LIMIT;
       return indices.map(i => this.entries[i]);
     }
@@ -854,6 +929,7 @@ const App = {
     }
     list.innerHTML = visible.map(e => this.renderCard(e)).join('');
     this._setListStop();
+    this._scheduleReconciliation();
 
     document.getElementById('load-more').classList.toggle('hidden', end >= total);
   },
@@ -944,6 +1020,8 @@ const App = {
     } else if (several) {
       items.push(`<span class="card-meta-text">${esc(type)}</span>`);
       items.push(`<span class="card-meta-text">${this._publicationCountLabel(e)}</span>`);
+      const match = this._matchingPublicationText(e);
+      if (match) items.push(`<span class="card-meta-text card-match">${match}</span>`);
     } else {
       for (const value of [e.year, e.language, e.location]) {
         if (value) items.push(`<span class="card-meta-text">${esc(String(value))}</span>`);
@@ -963,6 +1041,99 @@ const App = {
     // and left the line ending in a dangling middle dot. The separator is a
     // pseudo-element on every item but the first (see styles.css).
     return items.join('');
+  },
+
+  /** Filter axes a single publication answers on its own. */
+  PUBLICATION_AXES: ['language', 'period', 'location', 'years', 'decade'],
+
+  /**
+   * Whether one publication answers the active filters of the publication
+   * axes, or null where none is active. Type, category, publisher and
+   * review belong to the page and are not asked here.
+   */
+  publicationMatches(pub) {
+    const f = this.state.filters || {};
+    if (this.state.singleEntry
+        || !this.PUBLICATION_AXES.some(key => f[key] != null && f[key] !== '')) return null;
+    const year = Number(pub.year);
+    if (f.language) {
+      const wanted = Array.isArray(f.language) ? f.language : [f.language];
+      if (!wanted.includes(pub.language || this.NOT_RECORDED)) return false;
+    }
+    const bounds = this.yearBounds(f);
+    if (bounds && !(Number.isFinite(year) && year >= bounds[0] && year <= bounds[1])) return false;
+    if (f.period) {
+      const range = PERIOD_BOUNDS[f.period];
+      if (!range || !(year >= range[0] && year <= range[1])) return false;
+    }
+    if (f.location && !this._publicationPlaces(pub).includes(f.location)) return false;
+    return true;
+  },
+
+  /** The places of a publication, the container's where the imprint has none. */
+  _publicationPlaces(pub) {
+    if (Array.isArray(pub.places) && pub.places.length) return pub.places;
+    return pub.container && pub.container.place ? [pub.container.place] : [];
+  },
+
+  /**
+   * What the result line says about a multi-publication page under a filter
+   * that selects some of its publications: year, language and place of the
+   * one that matched. Before the page file is in, the line names the values
+   * of the page that answered the filter, and the file is fetched so the
+   * line can name the publication itself.
+   */
+  _matchingPublicationText(e) {
+    const f = this.state.filters || {};
+    if (!this.PUBLICATION_AXES.some(key => f[key] != null && f[key] !== '')) return '';
+    const state = typeof Detail !== 'undefined' ? Detail._publicationState(e) : null;
+    if (state && state.status === 'ready') {
+      const matching = state.publications.filter(pub => this.publicationMatches(pub));
+      if (!matching.length || matching.length === state.publications.length) return '';
+      const first = matching[0];
+      const values = [first.yearRaw || first.year, first.language,
+        this._publicationPlaces(first).join(', ')].filter(Boolean).map(v => esc(String(v)));
+      const more = matching.length > 1 ? ` and ${matching.length - 1} more` : '';
+      return `matching ${values.join(', ')}${more}`;
+    }
+    if (state && state.status === 'idle') {
+      Detail.loadPublications(e).then(() => this.refreshCardMeta(e.sourcePageId));
+    }
+    const values = [];
+    const bounds = this.yearBounds(f);
+    if (bounds) values.push(...this.yearValues(e).filter(y => y >= bounds[0] && y <= bounds[1]));
+    if (f.language) {
+      const wanted = Array.isArray(f.language) ? f.language : [f.language];
+      values.push(...this.languageValues(e).filter(value => wanted.includes(value)));
+    }
+    if (f.location && this.placeValues(e).includes(f.location)) values.push(f.location);
+    return values.length ? `matching ${values.map(v => esc(String(v))).join(', ')}` : '';
+  },
+
+  /** Rewrite the head line of a rendered card after data it reads arrived. */
+  refreshCardMeta(pid) {
+    if (typeof document === 'undefined' || !document.getElementById) return;
+    const card = document.getElementById(`card-${pid}`);
+    const meta = card && card.querySelector && card.querySelector('.card-meta');
+    const entry = this.entryMap.get(pid);
+    if (meta && entry) meta.innerHTML = this.cardMeta(entry);
+  },
+
+  /**
+   * The head line names an open claim a page carries, and the claims live in
+   * reconciliation.json. A result list loads it once the list stands, in idle
+   * time, and rewrites the lines already on screen when it arrives.
+   */
+  _scheduleReconciliation() {
+    if (typeof Edit === 'undefined' || Edit.reconciliation !== null || this._reconScheduled) return;
+    this._reconScheduled = true;
+    const load = () => this._ensureReconciliation().then(() => {
+      for (const card of document.querySelectorAll('#results-list .entry-card')) {
+        this.refreshCardMeta(parseInt(card.dataset.pid, 10));
+      }
+    });
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(load, { timeout: 4000 });
+    else setTimeout(load, 1500);
   },
 
   /** How a source page names what it documents. */
@@ -1188,6 +1359,7 @@ const App = {
     this.state.browse = false;
     // The list can be opened while a permalink is on screen, and it is a list.
     this.state.singleEntry = false;
+    this.state.publicationId = null;
     this.state.customLabel = label;
     this.filtered = [...entries];
     this.state.page = 0;
@@ -1256,9 +1428,16 @@ const App = {
     if (close) close.focus();
   },
 
-  closeMobileFacets() {
+  /**
+   * Put the sidebar back and hide the drawer. A widening window closes the
+   * drawer as well, because the opener is gone at desktop width and the
+   * sidebar would otherwise stay inside a hidden overlay; the focus then
+   * stays on the facet control it was on rather than jumping to that opener.
+   */
+  closeMobileFacets(opts) {
     const overlay = document.getElementById('mobile-facets');
     if (!overlay || overlay.classList.contains('hidden')) return;
+    const active = document.activeElement;
     overlay.classList.add('hidden');
     const sidebar = document.getElementById('facets');
     if (sidebar && this._facetHome) {
@@ -1266,10 +1445,26 @@ const App = {
     }
     this._facetHome = null;
     this._facetAnchor = null;
-    if (this._mobileOpener && typeof this._mobileOpener.focus === 'function') {
+    const keepInSidebar = opts && opts.keepFocus && sidebar && active && sidebar.contains(active);
+    if (keepInSidebar) {
+      active.focus();
+    } else if (this._mobileOpener && typeof this._mobileOpener.focus === 'function') {
       this._mobileOpener.focus();
     }
     this._mobileOpener = null;
+  },
+
+  /** Width up to which the sidebar lives in the drawer (styles.css). */
+  DRAWER_QUERY: '(max-width: 1024px)',
+
+  _watchDrawerWidth() {
+    if (typeof window.matchMedia !== 'function') return;
+    const query = window.matchMedia(this.DRAWER_QUERY);
+    const onChange = (ev) => {
+      if (!ev.matches) this.closeMobileFacets({ keepFocus: true });
+    };
+    if (query.addEventListener) query.addEventListener('change', onChange);
+    else if (query.addListener) query.addListener(onChange);
   },
 
   /** Escape closes the drawer; Tab stays inside it while it is open. */
@@ -1383,14 +1578,14 @@ const App = {
       this.onSearchInput(ev.target.value);
     });
 
-    // Escape leaves the field and keeps the query. The native clear of a
-    // search input fires `input` with an empty value, which committed an empty
-    // query and threw the reader from their result list back to the start view.
+    // Escape keeps the query and the field. The native clear of a search
+    // input fires `input` with an empty value, which committed an empty query
+    // and threw the reader from their result list back to the start view;
+    // blurring instead left the keyboard focus on the body.
     searchInput.addEventListener('keydown', (ev) => {
       if (ev.key !== 'Escape' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
       ev.preventDefault();
       ev.target.value = this.state.query;
-      ev.target.blur();
     });
 
     document.getElementById('sort-select').addEventListener('change', (ev) => {
@@ -1501,6 +1696,7 @@ const App = {
       if (ev.target === overlay) this.closeMobileFacets();
     });
     overlay.addEventListener('keydown', (ev) => this._mobileFacetsKeydown(ev));
+    this._watchDrawerWidth();
 
     // Keyboard on the result view: slash reaches the search field, j/k and the
     // arrows walk the card headers, Escape closes the open card. In edit mode

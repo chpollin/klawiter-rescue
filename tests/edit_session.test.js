@@ -98,19 +98,57 @@ test('a load failure is held in state instead of degrading to an empty dataset',
   assert.strictEqual(Edit.reconciliationFailed, false);
 });
 
-test('the contested-claim index answers what the linear scan answered', () => {
+test('a claim reaches a page through the value it names or the text that carries it', () => {
   const ctx = load(['edit.js'], { App: { state: { pendingEdits: {} } } });
   const Edit = vm.runInContext('Edit', ctx);
   const byName = { claimId: 'c1', subject: { name: 'Varna' }, sourceEvidence: [] };
   const byPage = { claimId: 'c2', subject: { name: 'Sofia' }, sourceEvidence: [{ sourcePageId: '299' }] };
   const both = { claimId: 'c3', subject: { name: 'Varna' }, sourceEvidence: [{ sourcePageId: 299 }] };
-  Edit.contestedAuthorityClaims = [byName, byPage, both];
-  const ids = Edit.authorityClaimsFor({ sourcePageId: 299, location: 'Varna' })
-    .map(c => c.claimId).sort();
+  const compound = { claimId: 'c4', subject: { name: 'Sofija, Varna' },
+    sourceEvidence: [{ sourcePageId: 299 }] };
+  Edit.contestedAuthorityClaims = [byName, byPage, both, compound];
+  const page = { sourcePageId: 299, location: 'Varna', fullBibliographicEntry: 'Sofia, 1950' };
+  const ids = Edit.authorityClaimsFor(page).map(c => c.claimId).sort();
   assert.strictEqual(ids.join(','), 'c1,c2,c3', 'no claim is lost and none is duplicated');
+  // An evidence page whose text does not carry the subject is not reached.
+  assert.strictEqual(Edit.authorityClaimsFor({ ...page, fullBibliographicEntry: '' })
+    .map(c => c.claimId).sort().join(','), 'c1,c3');
   assert.strictEqual(
     Edit.authorityClaimsFor({ sourcePageId: 1, location: 'Wien' }).length, 0
   );
+  // A place of a publication counts like the flat place.
+  assert.strictEqual(Edit.authorityClaimsFor({ sourcePageId: 1, location: 'Wien',
+    publicationPlaces: ['Wien', 'Varna'] }).length, 2);
+  // The value a claim contests is the one its subject names word for word.
+  assert.strictEqual(Edit.openClaimOnValue(page, 'Varna').claimId, 'c1');
+  assert.strictEqual(Edit.openClaimOnValue(page, 'Sofija'), null);
+  byName.decisionStatus = 'decided';
+  assert.strictEqual(Edit.openClaimOnValue(page, 'Varna').claimId, 'c3');
+});
+
+test('edit mode marks a candidate the recorded decision rejected', () => {
+  // Yanji: the matcher proposed Q956 (Beijing), the review corrected it to
+  // Q713362 and named Q956 as rejected.
+  const entry = { sourcePageId: 363, title: 'Ciweige jingdian xiaoshuo', location: 'Yanji' };
+  const review = {
+    candidates: [
+      { qid: 'Q956', label: 'Beijing', uri: 'http://www.wikidata.org/entity/Q956', score: 83 },
+      { qid: 'Q713362', label: 'Yanji', uri: 'http://www.wikidata.org/entity/Q713362' },
+    ],
+    decision: { action: 'correct', qid: 'Q713362', rejectedQid: 'Q956' },
+    publishable: null,
+  };
+  const ctx = load(['constants.js', 'utils.js', 'detail.js'], {
+    App: { state: { editMode: true, pendingEdits: {} }, entries: [entry],
+      entryMap: new Map([[363, entry]]), titleMap: new Map(), data: { redirects: {} } },
+    Edit: { locationReconciliation: () => review, pendingLocationDecision: () => undefined },
+  });
+  const html = vm.runInContext('Detail', ctx)._authorityCell(entry, 'location');
+  const beijing = html.slice(html.indexOf('Beijing'), html.indexOf('</li>', html.indexOf('Beijing')));
+  assert.match(beijing, /candidate-rejected[^>]*>rejected</);
+  assert.match(beijing, />Confirm instead</);
+  const yanji = html.slice(html.indexOf('Yanji (Q713362)'));
+  assert.match(yanji, /candidate-accepted[^>]*>accepted</);
 });
 
 test('edit mode keeps the publications and scopes the table to the page record', () => {

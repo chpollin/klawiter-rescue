@@ -28,6 +28,12 @@ function editStub(overrides = {}) {
     evidence: () => null,
     editionClaimsFor: () => [],
     authorityClaimsFor: () => [],
+    // The rule itself is pinned in edit_session.test.js; here it only has to
+    // follow the claims the case supplies.
+    openClaimOnValue(entry, value) {
+      return this.authorityClaimsFor(entry).find(claim => claim.decisionStatus !== 'decided'
+        && claim.subject && claim.subject.name === value) || null;
+    },
     locationReconciliation: () => null,
     agentReconciliation: () => null,
   }, overrides);
@@ -151,9 +157,10 @@ test('the single-entry head carries type and title, the list head the facet tria
   assert.match(single, /Romanŭt na edin zhivot/);
   assert.doesNotMatch(single, /card-meta-text/, 'no unlabelled year, language or place');
   assert.doesNotMatch(single, /card-secondary/, 'no generated head sentence');
-  // The review state belongs to the record, and it stands in the head line.
+  // The review state belongs to the record, and it stands in the head line
+  // naming what the decision covers: the place authority, nothing else.
   assert.match(single, /review-chip/);
-  assert.match(single, /Agent-verified/);
+  assert.match(single, />Place authority agent-verified</);
 
   App.state.singleEntry = false;
   const listed = App.renderCard(entry);
@@ -397,11 +404,12 @@ test('name variants stand as a block of their own without asserting identity', (
   assert.match(html, /Bloemfontein, Kaapstad \(Capetown\)/);
 });
 
-test('a contested place is marked at the value and leads to its claim', () => {
+test('a contested place is marked at the value it names and leads to its claim', () => {
   const claim = {
     claimId: 'klawiter:claim/reconciliation/location/e5742c35',
     entityType: 'location',
-    subject: { name: 'Bloemfontein, Kaapstad' },
+    decisionStatus: 'open',
+    subject: { name: 'Kaapstad (Capetown)' },
     interpretations: [], sourceEvidence: [], reviewHistory: [],
   };
   const entry = sampleEntry();
@@ -413,16 +421,209 @@ test('a contested place is marked at the value and leads to its claim', () => {
     { Edit: editStub({ authorityClaimsFor: () => [claim] }) })._buildReadContent(entry);
 
   const anchor = 'claim-1800-klawiter-claim-reconciliation-location-e5742c35';
-  assert.match(html, new RegExp(`class="contested-mark"[\\s\\S]*?href="#${anchor}"`));
+  // The mark follows the value it contests, not the list of the imprint.
+  assert.match(html, new RegExp(
+    `Bloemfontein, Kaapstad \\(Capetown\\) <a class="contested-mark"[\\s\\S]*?href="#${anchor}"`));
   assert.match(html, new RegExp(`id="${anchor}"`), 'the claim block answers to that address');
 
-  // The claim names two places of this imprint; a page whose place it does
-  // not name carries no mark.
+  // A compound subject names no single value, so it marks none; its block
+  // still stands on the page that carries it (page 4209).
+  const compound = { ...claim, subject: { name: 'Bloemfontein, Kaapstad' } };
+  const compoundHtml = detailCtx(entry, { singleEntry: true },
+    { Edit: editStub({ authorityClaimsFor: () => [compound] }) })._buildReadContent(entry);
+  assert.doesNotMatch(compoundHtml, /contested-mark/);
+  assert.match(compoundHtml, /Contested place assignment, decision open/);
+
+  // A page whose place the claim does not name carries no mark.
   const other = sampleEntry();
   const otherHtml = detailCtx(other, { singleEntry: true },
     { Edit: editStub({ authorityClaimsFor: () => [claim] }) })._buildReadContent(other);
   assert.match(otherHtml, /Place of publication[\s\S]*?Sofija/);
   assert.doesNotMatch(otherHtml, /contested-mark/);
+});
+
+test('a page with an open claim does not read as plainly unreviewed', () => {
+  const entry = sampleEntry();
+  delete entry.review;
+  const claim = { claimId: 'c', entityType: 'location', decisionStatus: 'open',
+    subject: { name: 'Bloemfontein, Kaapstad' } };
+  const Detail = detailCtx(entry, {}, { Edit: editStub({ authorityClaimsFor: () => [claim] }) });
+  assert.match(Detail._reviewChip(entry),
+    />Unreviewed, <span class="review-claim-note">open place claim<\/span></);
+  const quiet = detailCtx(entry, {}, { Edit: editStub() });
+  assert.match(quiet._reviewChip(entry), />Unreviewed<\/span>$/);
+});
+
+test('the place decision and its authority link stand at the decided value alone', () => {
+  // Page 3324 lists fourteen places; its decision concerns Wien.
+  const entry = sampleEntry();
+  entry.location = 'Wien';
+  entry.locationSameAs = 'http://www.wikidata.org/entity/Q1741';
+  entry.allLocations = ['Wien', 'Basel', 'Tokyo'];
+  const html = detailCtx(entry)._buildReadContent(entry);
+  assert.match(html, /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm"[^>]*>confirmed<\/span>, Basel, Tokyo/);
+  assert.doesNotMatch(html, /Place of publication<span class="field-review/);
+
+  // A publication row reads the same decision (its field is `places`, the
+  // decision's is `location`) wherever it shows the decided value.
+  const pages = editionPage();
+  const pubHtml = detailCtx(pages, { singleEntry: true })._buildReadContent(pages);
+  assert.strictEqual((pubHtml.match(/field-review-confirm/g) || []).length, 2);
+});
+
+test('a page-level review flag stands at the field it names', () => {
+  // Page 428: the translator value was restored from misread UTF-8 bytes.
+  const flag = { code: 'encoding-repaired', field: 'translator',
+    detail: 'The enrichment value reached the cache as a misreading of UTF-8 bytes.' };
+  const flat = sampleEntry();
+  flat.reviewFlags = [flag];
+  const html = detailCtx(flat)._buildReadContent(flat);
+  assert.match(html, />Translator[\s\S]*?Dimitŭr Stoevski<\/div><\/div><p class="review-flag"[\s\S]*?misreading of UTF-8 bytes/);
+
+  const layered = contributionPage();
+  layered.translator = 'V. Levik';
+  layered.reviewFlags = [flag];
+  const layeredHtml = detailCtx(layered, { singleEntry: true })._buildReadContent(layered);
+  // With the publication layer it stands under the Credits row of the
+  // publication that credits the flagged name, not in the page fields.
+  const start = layeredHtml.indexOf('<section class="detail-section publication');
+  const block = layeredHtml.slice(start);
+  assert.match(block, /Credits<\/div>[\s\S]*?<p class="review-flag"[^>]*>[\s\S]*?misreading of UTF-8 bytes[\s\S]*?Contents<\/div>/);
+  assert.doesNotMatch(layeredHtml.slice(0, start), /misreading/);
+});
+
+test('a publication names whether its edition is confirmed or proposed', () => {
+  const entry = editionPage();
+  entry.publications[0].reviewStatus = 'confirmed';
+  entry.publications[1].reviewStatus = 'proposed';
+  const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
+  assert.match(html, /1947 · 1st edition <span class="publication-status publication-status-confirmed"[^>]*>edition confirmed</);
+  assert.match(html, /1960 · 2nd revised edition <span class="publication-status publication-status-proposed"[^>]*>edition proposed</);
+  // Records built before the graph carried the state say nothing.
+  assert.doesNotMatch(detailCtx(editionPage())._buildReadContent(editionPage()), /publication-status/);
+});
+
+test('an edition claim stands in the block of the publication it concerns', () => {
+  // Page 4916: the decided work identity is about the 2016 graphic novel.
+  const entry = editionPage();
+  entry.sourcePageId = 4916;
+  entry.publications[0].id = 'klawiter:publication/4916-2016-b';
+  entry.publications[1].id = 'klawiter:publication/4916-2019-a';
+  const claim = {
+    claimId: 'klawiter:claim/work-binding/4916-2016-b', decisionStatus: 'decided',
+    subject: 'klawiter:edition/4916-2016-b',
+    interpretations: [{ label: 'Adaptation work', status: 'accepted', basis: 'b', proposedObject: 'x' }],
+    reviewHistory: [], source: { sourcePageId: 4916, selector: [1, 2], sliceSha256: 'f' },
+  };
+  const html = detailCtx(entry, { singleEntry: true },
+    { Edit: editStub({ editionClaimsFor: () => [claim] }) })._buildReadContent(entry);
+  const first = html.indexOf('aria-label="Publication 1"');
+  const second = html.indexOf('aria-label="Publication 2"');
+  const decided = html.indexOf('Work identity decided');
+  assert.ok(first < decided && decided < second, 'inside the first publication block');
+  assert.strictEqual((html.match(/Work identity decided/g) || []).length, 1);
+});
+
+test('the source block of a publication is named and marked as a whole', () => {
+  const entry = editionPage();
+  const text = entry.fullBibliographicEntry;
+  entry.publications[0].sourceSlice = { textStart: 0, textEnd: 26 };
+  entry.publications[1].sourceSlice = { textStart: 28, textEnd: text.length };
+  const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
+  assert.match(html, /<span class="source-slice"><span class="source-slice-label">1947 · 1st edition<\/span>/);
+  assert.match(html, /<span class="source-slice"><span class="source-slice-label">1960 · 2nd revised edition<\/span>/);
+});
+
+test('a publication route marks its block, a filter marks the publications it selects', () => {
+  const entry = editionPage();
+  const routed = detailCtx(entry, { singleEntry: true, publicationId: '1800-1960-a' })
+    ._buildReadContent(entry);
+  assert.match(routed, /class="detail-section publication publication-target" id="publication-1800-1800-1960-a"/);
+  assert.strictEqual((routed.match(/publication-target/g) || []).length, 1);
+
+  // Page 4445 under a language filter: the Arabic article matches, the German
+  // book does not, and the card says which one the filter found.
+  const app = (matches) => ({ App: {
+    state: { editMode: false, singleEntry: false, query: '' },
+    entries: [entry], entryMap: new Map([[entry.sourcePageId, entry]]),
+    titleMap: new Map(), data: { redirects: {} }, publicationMatches: matches,
+  } });
+  const html = detailCtx(entry, {}, app(pub => pub.year === 1960))._buildReadContent(entry);
+  const second = html.slice(html.indexOf('aria-label="Publication 2"') - 200);
+  assert.match(second, /publication-match/);
+  assert.strictEqual((html.match(/matches the filter/g) || []).length, 1);
+  // A filter every publication answers, or none at all, marks nothing.
+  for (const answer of [() => true, () => null]) {
+    const none = detailCtx(entry, {}, app(answer))._buildReadContent(entry);
+    assert.doesNotMatch(none, /matches the filter/);
+  }
+});
+
+test('a failed claim file is said where the claims would stand', () => {
+  const entry = sampleEntry();
+  const html = detailCtx(entry, {}, { Edit: editStub({ reconciliationFailed: true,
+    reconciliationError: 'HTTP 404' }) })._buildReadContent(entry);
+  assert.match(html, /contested claims\s+could not be loaded \(HTTP 404\)/);
+});
+
+test('a publication route keeps the page and names the publication', () => {
+  const { App, ctx } = appCtx();
+  const entry = sampleEntry();
+  App.entries = [entry];
+  App.entryMap = new Map([[1800, entry]]);
+  App.showView = (v) => { App.state.view = v; };
+  App.renderChips = () => {};
+  ctx.Facets = { render() {} };
+
+  App._lastHash = null;
+  ctx.location.hash = '#entry=1800&pub=1800-1960-a';
+  App.handleRoute();
+  assert.strictEqual(App.state.singleEntry, true);
+  assert.strictEqual(App.state.publicationId, '1800-1960-a');
+
+  App._lastHash = null;
+  ctx.location.hash = '#browse';
+  App.handleRoute();
+  assert.strictEqual(App.state.publicationId, null);
+});
+
+test('a filtered list names the publication of a page that matched', () => {
+  // Page 4445 carries a German book of 2000 and an Arabic article of 2015.
+  const { App, ctx } = appCtx();
+  const Detail = vm.runInContext('Detail', ctx);
+  const entry = {
+    sourcePageId: 4445, entryType: 'secondary-literature', title: 'Al-Bāḥ, Muḥammad',
+    pageKind: 'author-page', publicationCount: 2, publicationYears: [2000, 2015],
+    publicationLanguages: ['German', 'Arabic'], publicationPlaces: ['Freiburg im Breisgau', 'Rabat'],
+  };
+  App.entryMap = new Map([[4445, entry]]);
+  App.state.singleEntry = false;
+  App.state.filters = { language: 'Arabic' };
+
+  // Before the page file is in, the line names the value that answered.
+  Detail._pubCache.set(4445, { status: 'loading' });
+  assert.match(App.cardMeta(entry), /class="card-meta-text card-match">matching Arabic</);
+
+  Detail._pubCache.set(4445, { status: 'ready', nameVariants: [], publications: [
+    { id: 'klawiter:publication/4445-2000-a', year: 2000, language: 'German',
+      places: ['Freiburg im Breisgau'] },
+    { id: 'klawiter:publication/4445-2015-a', year: 2015, language: 'Arabic',
+      container: { title: 'Al-Balāghah', place: 'Rabat' } },
+  ] });
+  assert.match(App.cardMeta(entry), />matching 2015, Arabic, Rabat</);
+  assert.strictEqual(App.publicationMatches({ year: 2000, language: 'German' }), false);
+
+  // Without a filter on a publication axis the line keeps its count alone.
+  App.state.filters = { type: 'secondary-literature' };
+  assert.doesNotMatch(App.cardMeta(entry), /card-match/);
+  assert.strictEqual(App.publicationMatches({ year: 2000 }), null);
+});
+
+test('the review facet names the fields its decisions cover', () => {
+  const { App } = appCtx();
+  App.entries = [sampleEntry()];
+  assert.strictEqual(App.reviewLabel('agent_verified'), 'Place authority agent-verified');
+  assert.strictEqual(App.reviewLabel('unreviewed'), 'Unreviewed');
 });
 
 test('a page file is fetched when the record carries no inline publications', async () => {

@@ -64,6 +64,10 @@ const ExploreGeography = {
         container.innerHTML = '<div class="ov-empty">Could not load location data.</div>';
         return;
       }
+      // The coordinates come from the automatic matcher; the Gate 2 decisions
+      // say which of them a review refused, so they are read first.
+      await App._ensureReconciliation();
+      this._unmappable = this._unmappablePlaces();
       this._buildMergeIndex();
     }
     if (!this.worldData) {
@@ -116,6 +120,7 @@ const ExploreGeography = {
     if (!entry || !this.locationData) return [];
     const codes = new Set();
     for (const place of App.placeValues(entry)) {
+      if (this._unmappable && this._unmappable.has(place)) continue;
       const geo = this.locationData[place];
       if (geo && geo.country) codes.add(geo.country);
     }
@@ -328,6 +333,7 @@ const ExploreGeography = {
     const anchors = [];
     for (const [name, geo] of Object.entries(this.locationData)) {
       if (!geo || typeof geo.lat !== 'number' || typeof geo.lng !== 'number') continue;
+      if (this._unmappable && this._unmappable.has(name)) continue;
       const hit = anchors.find(a =>
         Math.abs(a.lat - geo.lat) < 0.15 && Math.abs(a.lng - geo.lng) < 0.15);
       if (hit) {
@@ -338,6 +344,34 @@ const ExploreGeography = {
         this._mergeCanon.set(name, { lat: geo.lat, lng: geo.lng, country: geo.country || null });
       }
     }
+  },
+
+  /**
+   * Place names whose coordinates the map must not use. locations.json holds
+   * the coordinates of the matcher's QID; where a decision corrected that QID
+   * (Yanji, matched to Beijing), rejected it, or left the place under an open
+   * claim (Saint-Aignan), plotting them would state a place the review did
+   * not accept. Such a value stays in the list of places without a map
+   * position rather than receiving coordinates of its own. Without the
+   * decision file nothing is known to be refused and the set stays empty.
+   */
+  _unmappablePlaces() {
+    const names = new Set();
+    const decisions = (typeof Edit !== 'undefined' && Edit.reconciliation) || {};
+    for (const [name, geo] of Object.entries(this.locationData || {})) {
+      const decision = decisions[name] && decisions[name].decision;
+      if (!decision) continue;
+      if (decision.action === 'unresolved' || decision.action === 'reject'
+          || (decision.action === 'correct' && (!geo || geo.wikidataId !== decision.qid))) {
+        names.add(name);
+      }
+    }
+    const claims = (typeof Edit !== 'undefined' && Edit.contestedAuthorityClaims) || [];
+    for (const claim of claims) {
+      if (claim.entityType === 'location' && claim.decisionStatus !== 'decided'
+          && claim.subject && claim.subject.name) names.add(claim.subject.name);
+    }
+    return names;
   },
 
   // A page carries a place per publication, so it sits on the map at each of
@@ -601,7 +635,7 @@ const ExploreGeography = {
       ? `<button type="button" class="link-btn" id="geo-unplaced">${fmt(unplaced)} entries not placed</button>`
       : '';
     if (missing.length) {
-      html += `<details class="geo-missing"><summary>${fmt(missing.length)} unresolved place names</summary> `
+      html += `<details class="geo-missing"><summary>${fmt(missing.length)} place names without a map position</summary> `
         + missing.slice(0, 25).map(([name, n]) =>
           `<button type="button" class="link-btn geo-missing-item" data-loc="${esc(name)}">${esc(name)} (${fmt(n)})</button>`
         ).join(' ')
@@ -628,7 +662,7 @@ const ExploreGeography = {
         const loc = btn.dataset.loc;
         App.showCustomResults(
           this.currentEntries.filter(e => App.placeValues(e).includes(loc)),
-          `Unresolved place: ${loc}`
+          `Place without a map position: ${loc}`
         );
       });
     });

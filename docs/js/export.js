@@ -23,8 +23,14 @@ const Export = {
     return SITE_URL;
   },
 
-  permalinkUrl(pageId) {
-    return `${this._siteBase()}#entry=${pageId}`;
+  /**
+   * The address of an entry, or of one publication on it. Two editions on one
+   * page are two citable things, so each carries the page and its own name
+   * (#entry=1800&pub=1800-1960-a), which the route opens at that block.
+   */
+  permalinkUrl(pageId, publication) {
+    const pub = publication ? `&pub=${encodeURIComponent(publication)}` : '';
+    return `${this._siteBase()}#entry=${pageId}${pub}`;
   },
 
   /**
@@ -91,13 +97,16 @@ const Export = {
   },
 
   /**
-   * The place assignment of this entry is an open authority claim, so a
-   * citation printing the place says so instead of passing it off as settled.
-   * Read from the same reconciliation claims the card shows.
+   * A place the citation prints is under an open authority claim, so the
+   * citation says so instead of passing the place off as settled. Read from
+   * the same claims the card shows, and only for a place of the cited
+   * publication itself: a claim on another edition of the page is not a
+   * statement about this one.
    */
-  _contestedPlaceNote(entry) {
-    const claims = (Edit.authorityClaimsFor(entry) || [])
-      .filter(claim => claim.entityType === 'location');
+  _contestedPlaceNote(entry, places) {
+    const claims = (Edit.authorityClaimsFor(entry) || []).filter(claim =>
+      claim.entityType === 'location' && claim.decisionStatus !== 'decided'
+      && claim.subject && places.includes(claim.subject.name));
     return claims.length ? 'Place authority assignment contested' : '';
   },
 
@@ -118,7 +127,7 @@ const Export = {
     if (e.translator) note.push(`Translated by ${e.translator}`);
     const zweig = this._zweigContributionNote(e, [e.translator]);
     if (zweig) note.push(zweig);
-    const contested = this._contestedPlaceNote(e);
+    const contested = this._contestedPlaceNote(e, e.location ? [e.location] : []);
     if (contested) note.push(contested);
     if (note.length) fields.push(`  note = {${escapeBibtex(note.join('; '))}}`);
     if (isAboutZweig) fields.push(`  keywords = {Stefan Zweig}`);
@@ -147,35 +156,53 @@ const Export = {
 
   /** Stable name of one publication, from its identifier. */
   _publicationSlug(entry, pub, index) {
-    const id = pub && pub.id ? String(pub.id) : '';
-    const tail = id.slice(id.lastIndexOf('/') + 1);
-    return tail || `${entry.sourcePageId}-${index + 1}`;
+    return Detail.publicationSlug(entry, pub, index);
+  },
+
+  /** Every credit of a publication, its own and those of its contributions. */
+  _allCredits(pub) {
+    return (pub.credits || []).concat(
+      ...(pub.contributions || []).map(item => item.credits || []));
   },
 
   /**
    * The names credited in one role, each once. A source can credit one person
    * twice in a role ("Translated with an afterword by" and "Translated with a
-   * foreword by" on page 792); the wording of both stays in the note.
+   * foreword by" on page 792); the wording of both stays in the note. With
+   * `withContributions` the credits of the contained texts count as well:
+   * page 1891 credits its three translators under its two contributions and
+   * none under the volume.
    */
-  _creditNames(pub, role) {
-    return [...new Set((pub.credits || [])
+  _creditList(pub, role, withContributions) {
+    const credits = withContributions ? this._allCredits(pub) : (pub.credits || []);
+    return [...new Set(credits
       .filter(credit => credit.role === role && credit.name)
-      .map(credit => credit.name))]
-      .join(' and ');
+      .map(credit => credit.name))];
+  },
+
+  _creditNames(pub, role, withContributions) {
+    return this._creditList(pub, role, withContributions).join(' and ');
   },
 
   /**
-   * The credit statements in the wording of the source, and an online address
-   * with the qualification the source gives it. The role fields generalize
-   * that wording away, so it stays where a reader can read it.
+   * The credit statements in the wording of the source, those of each
+   * contribution under its title, an online address with the qualification
+   * the source gives it, and the note of the publication. The role fields
+   * generalize that wording away, so it stays where a reader can read it.
    */
   _citationNote(pub) {
-    const parts = (pub.credits || [])
+    const wording = credits => credits
       .filter(credit => credit.name)
       .map(credit => `${credit.creditLabel || credit.role} ${credit.name}`);
+    const parts = wording(pub.credits || []);
+    for (const item of pub.contributions || []) {
+      const credits = wording(item.credits || []);
+      if (credits.length) parts.push(`${item.title ? `${item.title}: ` : ''}${credits.join(', ')}`);
+    }
     if (pub.online && pub.online.url) {
       parts.push(`Online: ${pub.online.url}${pub.online.note ? ` (${pub.online.note})` : ''}`);
     }
+    if (pub.note) parts.push(pub.note);
     return parts.join('; ');
   },
 
@@ -188,6 +215,23 @@ const Export = {
   _publicationPages(pub) {
     const numbered = pub.extent && pub.extent.numbered;
     return Number.isFinite(numbered) ? String(numbered) : '';
+  },
+
+  /** The places a citation prints: the imprint's, else the container's. */
+  _publicationPlaces(pub) {
+    if (pub.places && pub.places.length) return pub.places;
+    return pub.container && pub.container.place ? [pub.container.place] : [];
+  },
+
+  /**
+   * The number within the series, where the series wording does not already
+   * end with it ("Hochschulsammlung Philosophie. Literaturwissenschaft, 16"
+   * carries its 16); the card holds the same guard.
+   */
+  _seriesNumber(pub) {
+    if (!pub.series || !pub.seriesVolume) return '';
+    const volume = String(pub.seriesVolume).trim();
+    return String(pub.series).trim().endsWith(volume) ? '' : volume;
   },
 
   _toBibtexPublication(entry, pub, index) {
@@ -204,13 +248,13 @@ const Export = {
     // Every place of the publication in the wording of the source, joined the
     // way the imprint has them; naming one of them alone would settle a place
     // assignment the source leaves open.
-    const address = pub.places && pub.places.length
-      ? pub.places.join(', ')
-      : (pub.container && pub.container.place) || '';
-    if (address) fields.push(`  address = {${escapeBibtex(address)}}`);
+    const places = this._publicationPlaces(pub);
+    if (places.length) fields.push(`  address = {${escapeBibtex(places.join(', '))}}`);
     if (pub.container) {
+      // biblatex reads journaltitle, classic BibTeX styles read journal.
       if (pub.container.title) {
         fields.push(`  journaltitle = {${escapeBibtex(pub.container.title)}}`);
+        fields.push(`  journal = {${escapeBibtex(pub.container.title)}}`);
       }
       if (pub.container.issue) fields.push(`  number = {${escapeBibtex(pub.container.issue)}}`);
       if (pub.container.pages) fields.push(`  pages = {${escapeBibtex(pub.container.pages)}}`);
@@ -221,17 +265,22 @@ const Export = {
     if (pages) fields.push(`  pagetotal = {${pages}}`);
     if (pub.language) fields.push(`  language = {${escapeBibtex(pub.language)}}`);
     if (pub.series) fields.push(`  series = {${escapeBibtex(pub.series)}}`);
-    if (pub.seriesVolume && !pub.container) {
-      fields.push(`  volume = {${escapeBibtex(pub.seriesVolume)}}`);
+    // The number within a series is `number`; `volume` is a volume of a
+    // multi-volume work. An article's `number` is its issue already.
+    const seriesNumber = this._seriesNumber(pub);
+    if (seriesNumber && !pub.container) {
+      fields.push(`  number = {${escapeBibtex(seriesNumber)}}`);
     }
-    const translators = this._creditNames(pub, 'translator');
+    const translators = this._creditNames(pub, 'translator', true);
     if (translators) fields.push(`  translator = {${escapeBibtex(translators)}}`);
     const editors = this._creditNames(pub, 'editor');
     if (editors) fields.push(`  editor = {${escapeBibtex(editors)}}`);
+    const illustrators = this._creditNames(pub, 'illustrator');
+    if (illustrators) fields.push(`  illustrator = {${escapeBibtex(illustrators)}}`);
     const note = [
       this._citationNote(pub),
-      this._zweigContributionNote(entry, (pub.credits || []).map(credit => credit.name)),
-      this._contestedPlaceNote(entry),
+      this._zweigContributionNote(entry, this._allCredits(pub).map(credit => credit.name)),
+      this._contestedPlaceNote(entry, places),
     ].filter(Boolean);
     // The notation of the source is prose beside a page count, so it belongs
     // in the note; a citation that carries no note is not given one for it.
@@ -239,9 +288,9 @@ const Export = {
     if (note.length && extent && extent !== pages) note.push(`Extent: ${extent}`);
     if (note.length) fields.push(`  note = {${escapeBibtex(note.join('; '))}}`);
     if (isAboutZweig) fields.push(`  keywords = {Stefan Zweig}`);
-    fields.push(`  url = {${this.permalinkUrl(entry.sourcePageId)}}`);
-    const key = `klawiter${this._publicationSlug(entry, pub, index)}`;
-    return `@${type}{${key},\n${fields.join(',\n')}\n}`;
+    const slug = this._publicationSlug(entry, pub, index);
+    fields.push(`  url = {${this.permalinkUrl(entry.sourcePageId, slug)}}`);
+    return `@${type}{klawiter${slug},\n${fields.join(',\n')}\n}`;
   },
 
   _toRis(e) {
@@ -257,20 +306,29 @@ const Export = {
     if (e.publisher) lines.push(`PB  - ${e.publisher}`);
     if (e.location) lines.push(`CY  - ${e.location}`);
     if (e.language) lines.push(`LA  - ${e.language}`);
-    if (e.translator) lines.push(`A2  - ${e.translator}`);
+    if (e.translator) lines.push(`${this.RIS_ROLES.translator}  - ${e.translator}`);
     if (e.pageCount) lines.push(`N1  - ${e.pageCount} pages`);
     const zweig = this._zweigContributionNote(e, [e.translator]);
     if (zweig) lines.push(`N1  - ${zweig}`);
-    const contested = this._contestedPlaceNote(e);
+    const contested = this._contestedPlaceNote(e, e.location ? [e.location] : []);
     if (contested) lines.push(`N1  - ${contested}`);
     lines.push(`UR  - ${this.permalinkUrl(e.sourcePageId)}`);
     lines.push(`ER  -`);
     return lines.join('\n');
   },
 
-  // A2 carries the translators and A3 the editors, keeping the reading the
-  // flat export already used for the scalar translator field.
-  _toRisPublication(entry, pub) {
+  /**
+   * RIS creator tags by role and reference type. A4 is the subsidiary author,
+   * which the RIS specification and Zotero's RIS translator
+   * (zotero/translators, RIS.js) both read as the translator. The editor
+   * depends on the type there: A2 on a journal article, A3 on a book, whose
+   * A2 Zotero reads as the series editor. The role vocabulary of the records
+   * holds no series editor, so nothing is written to that tag.
+   */
+  RIS_ROLES: { translator: 'A4' },
+  RIS_EDITOR: { BOOK: 'A3', JOUR: 'A2' },
+
+  _toRisPublication(entry, pub, index) {
     const isAboutZweig = ABOUT_ZWEIG_TYPES.includes(entry.entryType);
     const type = pub.container || this._bibtexType(entry.entryType) === 'article'
       ? 'JOUR'
@@ -285,41 +343,47 @@ const Export = {
     if (pub.year) lines.push(`PY  - ${pub.year}`);
     if (pub.editionStatement) lines.push(`ET  - ${pub.editionStatement}`);
     if (pub.publisher) lines.push(`PB  - ${pub.publisher}`);
-    for (const place of pub.places || []) lines.push(`CY  - ${place}`);
+    const places = this._publicationPlaces(pub);
+    for (const place of places) lines.push(`CY  - ${place}`);
     if (pub.container) {
       if (pub.container.title) lines.push(`T2  - ${pub.container.title}`);
-      if (pub.container.place && !(pub.places || []).length) {
-        lines.push(`CY  - ${pub.container.place}`);
-      }
       if (pub.container.issue) lines.push(`IS  - ${pub.container.issue}`);
       const pages = pub.container.pages || '';
-      const range = /^\s*\(?(\d+)\)?\s*[-\u2013]\s*\(?(\d+)\)?\s*$/.exec(pages);
+      const range = /^\s*\(?(\d+)\)?\s*[-–]\s*\(?(\d+)\)?\s*$/.exec(pages);
       if (range) {
         lines.push(`SP  - ${range[1]}`);
         lines.push(`EP  - ${range[2]}`);
       } else if (pages) {
         lines.push(`SP  - ${pages}`);
       }
+    } else {
+      // On a book SP is the number of pages (Zotero: numPages).
+      const pages = this._publicationPages(pub);
+      if (pages) lines.push(`SP  - ${pages}`);
     }
     if (pub.language) lines.push(`LA  - ${pub.language}`);
-    for (const name of this._creditNames(pub, 'translator').split(' and ').filter(Boolean)) {
-      lines.push(`A2  - ${name}`);
+    for (const name of this._creditList(pub, 'translator', true)) {
+      lines.push(`${this.RIS_ROLES.translator}  - ${name}`);
     }
-    for (const name of this._creditNames(pub, 'editor').split(' and ').filter(Boolean)) {
-      lines.push(`A3  - ${name}`);
+    for (const name of this._creditList(pub, 'editor')) {
+      lines.push(`${this.RIS_EDITOR[type]}  - ${name}`);
     }
+    // The series of a book is T2 with its number in M1; T2 of an article is
+    // its journal, so there the series is T3 and its number stays in the note.
+    const seriesNumber = this._seriesNumber(pub);
+    if (pub.series) lines.push(`${type === 'BOOK' ? 'T2' : 'T3'}  - ${pub.series}`);
+    if (seriesNumber && type === 'BOOK') lines.push(`M1  - ${seriesNumber}`);
+    else if (seriesNumber) lines.push(`N1  - Series number: ${seriesNumber}`);
     const extent = this._publicationExtent(pub);
     if (extent) lines.push(`N1  - Extent: ${extent}`);
-    if (pub.series) {
-      lines.push(`N1  - Series: ${pub.series}${pub.seriesVolume ? `, ${pub.seriesVolume}` : ''}`);
-    }
     const note = this._citationNote(pub);
     if (note) lines.push(`N1  - ${note}`);
-    const zweig = this._zweigContributionNote(entry, (pub.credits || []).map(credit => credit.name));
+    const zweig = this._zweigContributionNote(entry, this._allCredits(pub).map(credit => credit.name));
     if (zweig) lines.push(`N1  - ${zweig}`);
-    const contested = this._contestedPlaceNote(entry);
+    const contested = this._contestedPlaceNote(entry, places);
     if (contested) lines.push(`N1  - ${contested}`);
-    lines.push(`UR  - ${this.permalinkUrl(entry.sourcePageId)}`);
+    lines.push(`UR  - ${this.permalinkUrl(entry.sourcePageId,
+      this._publicationSlug(entry, pub, index))}`);
     lines.push(`ER  -`);
     return lines.join('\n');
   },
@@ -336,7 +400,7 @@ const Export = {
     if (!entry) return null;
     const one = format === 'bib'
       ? (pub, i) => this._toBibtexPublication(entry, pub, i)
-      : (pub) => this._toRisPublication(entry, pub);
+      : (pub, i) => this._toRisPublication(entry, pub, i);
     const pubs = this._publications(entry);
     if (pubs && index != null && pubs[index]) {
       return {
@@ -353,33 +417,120 @@ const Export = {
     };
   },
 
+  /**
+   * The contested note reads the reconciliation claims, which a card loads
+   * when it opens; a download started before they arrived waits for them
+   * rather than citing a contested place as settled.
+   */
+  _whenClaimsLoaded(run) {
+    if (Edit.reconciliation === null && typeof App._ensureReconciliation === 'function') {
+      return App._ensureReconciliation().then(run);
+    }
+    run();
+    return Promise.resolve();
+  },
+
   bibtex(pageId, index) {
-    const cite = this._citation(pageId, index, 'bib');
-    if (cite) downloadBlob(cite.content, `${cite.name}.bib`, 'application/x-bibtex');
+    return this._whenClaimsLoaded(() => {
+      const cite = this._citation(pageId, index, 'bib');
+      if (cite) downloadBlob(cite.content, `${cite.name}.bib`, 'application/x-bibtex');
+    });
   },
 
   ris(pageId, index) {
-    const cite = this._citation(pageId, index, 'ris');
-    if (cite) {
-      downloadBlob(cite.content, `${cite.name}.ris`, 'application/x-research-info-systems');
-    }
+    return this._whenClaimsLoaded(() => {
+      const cite = this._citation(pageId, index, 'ris');
+      if (cite) {
+        downloadBlob(cite.content, `${cite.name}.ris`, 'application/x-research-info-systems');
+      }
+    });
   },
 
   jsonld(pageId) {
     const e = this._getEntry(pageId);
     if (!e) return;
-    const jsonld = this._jsonldPayload(e);
-    downloadBlob(JSON.stringify(jsonld, null, 2), `klawiter-${pageId}.jsonld`, 'application/ld+json');
+    return this._whenClaimsLoaded(() => {
+      const jsonld = this._jsonldPayload(e);
+      downloadBlob(JSON.stringify(jsonld, null, 2), `klawiter-${pageId}.jsonld`, 'application/ld+json');
+    });
   },
 
-  _jsonldPayload(entry) {
-    const compact = JsonldPlayground._toCompactJsonld(entry);
-    const claims = Edit.editionClaimsFor(entry);
-    if (!claims.length) return compact;
-    const context = { ...compact['@context'], oa: 'http://www.w3.org/ns/oa#', prov: 'http://www.w3.org/ns/prov#' };
-    const entryNode = { ...compact };
-    delete entryNode['@context'];
-    const claimNodes = claims.map(claim => ({
+  /**
+   * The property a field decision of the review object is about. A place
+   * decision settles the authority record of the place, which the record
+   * carries as klawiter:locationSameAs.
+   */
+  _reviewedProperty(field) {
+    if (field === 'location') return 'klawiter:locationSameAs';
+    const term = JsonldPlayground.FRONTEND_TO_JSONLD[field] || field;
+    const def = JsonldPlayground.CONTEXT[term];
+    if (typeof def === 'string') return def;
+    return def && def['@id'] ? def['@id'] : `klawiter:${field}`;
+  },
+
+  /**
+   * The review state of the record and the decisions it rests on. The
+   * playground shows only the terms of the @context, so these travel with the
+   * download under their full vocabulary names.
+   */
+  _reviewProperties(entry) {
+    const review = entry.review;
+    if (!review || !review.status) return {};
+    const place = Edit.locationReconciliation ? Edit.locationReconciliation(entry) : null;
+    const actions = Object.entries(review.fields || {}).map(([field, action]) => {
+      const node = {
+        '@type': 'klawiter:ReviewAction',
+        'klawiter:reviewOutcome': action,
+        'schema:about': { '@id': this._reviewedProperty(field) },
+        'prov:wasAssociatedWith': { 'schema:name': review.reviewed_by },
+      };
+      if (review.reviewed_at) node['klawiter:decidedAt'] = review.reviewed_at;
+      if (field === 'location' && place && place.decision && place.decision.decisionId) {
+        node['klawiter:decisionId'] = place.decision.decisionId;
+      }
+      return node;
+    });
+    return {
+      'klawiter:reviewStatus': review.status,
+      ...(actions.length ? { 'klawiter:hasReviewAction': actions } : {}),
+    };
+  },
+
+  /** An authority claim as a graph node, with its readings and decisions. */
+  _authorityClaimNode(claim) {
+    const subject = claim.subject || {};
+    const predicate = claim.predicate && claim.predicate['@id'] ? claim.predicate['@id'] : claim.predicate;
+    return {
+      '@id': claim.claimId,
+      '@type': 'klawiter:ContestedClaim',
+      'klawiter:claimStatus': claim.claimStatus,
+      'klawiter:decisionStatus': claim.decisionStatus,
+      'klawiter:claimSubject': {
+        ...(subject['@id'] ? { '@id': subject['@id'] } : {}),
+        ...(subject.name ? { 'schema:name': subject.name } : {}),
+      },
+      ...(predicate ? { 'klawiter:claimPredicate': { '@id': predicate } } : {}),
+      'klawiter:interpretation': (claim.interpretations || []).map(item => ({
+        '@id': item.interpretationId,
+        '@type': 'klawiter:ClaimInterpretation',
+        'schema:name': item.label,
+        ...(item.proposedObject && item.proposedObject['@id']
+          ? { 'klawiter:proposedObject': { '@id': item.proposedObject['@id'] } } : {}),
+        'klawiter:interpretationStatus': item.status,
+      })),
+      'klawiter:evidence': (claim.sourceEvidence || []).map(item => item['@id']).filter(Boolean),
+      'klawiter:hasReviewAction': (claim.reviewHistory || []).map(item => ({
+        '@id': item.reviewId,
+        '@type': 'klawiter:ReviewAction',
+        'klawiter:decisionId': item.decisionId,
+        'klawiter:reviewOutcome': item.action,
+        'prov:wasAssociatedWith': { 'schema:name': item.decidedBy },
+      })),
+    };
+  },
+
+  _editionClaimNode(claim) {
+    return {
       '@id': claim.claimId,
       '@type': 'klawiter:ContestedClaim',
       'klawiter:claimStatus': claim.claimStatus,
@@ -411,7 +562,30 @@ const Export = {
         'klawiter:reviewOutcome': item.outcome,
         ...(item.basis ? { 'klawiter:reviewBasis': item.basis } : {}),
       })),
-    }));
+    };
+  },
+
+  /**
+   * The record as the playground compacts it, plus what that view leaves
+   * out because the @context defines no term for it: the published place
+   * authority link, the review state with its field decisions, and the
+   * claims the entry carries, referenced from the record and included as
+   * nodes of the graph.
+   */
+  _jsonldPayload(entry) {
+    const compact = JsonldPlayground._toCompactJsonld(entry);
+    const context = { ...compact['@context'], oa: 'http://www.w3.org/ns/oa#', prov: 'http://www.w3.org/ns/prov#' };
+    const entryNode = { ...compact };
+    delete entryNode['@context'];
+    if (entry.locationSameAs) entryNode['klawiter:locationSameAs'] = { '@id': entry.locationSameAs };
+    Object.assign(entryNode, this._reviewProperties(entry));
+    const claimNodes = [
+      ...(Edit.editionClaimsFor(entry) || []).map(claim => this._editionClaimNode(claim)),
+      ...(typeof Edit.authorityClaimsFor === 'function' ? Edit.authorityClaimsFor(entry) || [] : [])
+        .map(claim => this._authorityClaimNode(claim)),
+    ];
+    if (!claimNodes.length) return { '@context': context, ...entryNode };
+    entryNode['klawiter:hasContestedClaim'] = claimNodes.map(node => ({ '@id': node['@id'] }));
     return { '@context': context, '@graph': [entryNode, ...claimNodes] };
   },
 
@@ -506,7 +680,14 @@ const Export = {
    * exported pages.
    */
   batchBibtex(entries, onState) {
-    return this._loadBatch(entries, state => onState && onState(state)).then(() => {
+    // The contested notes read the reconciliation claims, which a result list
+    // need not have loaded; without them the notes depended on whether a card
+    // had been opened in this session.
+    const claims = typeof App._ensureReconciliation === 'function'
+      ? App._ensureReconciliation()
+      : Promise.resolve();
+    const pages = this._loadBatch(entries, state => onState && onState(state));
+    return Promise.all([claims, pages]).then(() => {
       const cites = [];
       for (const entry of entries) {
         const pubs = this._publications(entry);
