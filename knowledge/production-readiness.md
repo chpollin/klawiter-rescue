@@ -2,7 +2,7 @@
 title: Production Readiness and Acceptance
 status: maintained
 language: en
-updated: 2026-09-22
+updated: 2026-09-23
 related: [status, data, pipeline, testing, frontend, journal]
 ---
 
@@ -36,7 +36,7 @@ The operator's 5 September request explicitly reopens Explore as an interactive 
 | Research interface | exact filter handover, source access, useful visualizations, clear review scope, edition navigation | browser/Node evidence for implemented paths; edition browsing and full task acceptance remain open |
 | Accessibility and performance | keyboard/touch paths, readable contrast, mobile fit, representative device/network budgets | targeted checks support specific paths; no comprehensive certification or performance budget yet |
 | Repeatability | locked environment, both gate checks, reviewed deterministic artifact comparison | full local locked-uv rebuild and reviewed-manifest checks pass; remote CI execution remains distinct |
-| Public release | curated source package, consistent metadata, explicit release scope and acceptance | release scope for 1.0 set on 22 September (see below); package, metadata review and acceptance remain; archival originals stay unchanged |
+| Public release | curated source package, consistent metadata, explicit release scope and acceptance | release scope set on 22 and 23 September (see below); `CITATION.cff`, `.zenodo.json`, licence texts, third-party notices and the source inventory aligned on 23 September, and release archives exclude `data/raw`; the removal of the dump from the public Git history, the rights basis for the compiled content and the acceptances remain |
 
 Technical verification compares implementation with these contracts. Validation compares the product with real scholarly questions and users' interpretation of the source. Neither replaces the other.
 
@@ -55,11 +55,21 @@ On 22 September the operator delegated four open questions to the main instance.
 - The graphic novel on page 4916 is a work of its own, an adaptation of the Schachnovelle with a change of medium, whose German edition translates the French graphic novel of 2015. The claim is resolved in `data/reconciliation/edition-modeling-decisions.json`, see [Data](data.md#statement-states).
 - The archive triage is outside version 1.0, see the release scope below.
 
+On 23 September the operator approved the recommended course after four read-only reviews. The domain decisions of that round carry the provenance "decided by the main instance after delegation by the operator on 2026-09-23, revisable".
+
+- A page the wiki's Redirect fixer overwrote with an unrelated redirect is published from the compiler's last revision before the overwrite, and the fixer redirect resolves no reference. Where that revision is not delivered, the redirect is withheld under an open claim. See [Data](data.md#pages-overwritten-by-the-redirect-fixer).
+- The 26 Maria Stuart references resolve to the restored page 35.
+- The compound place claims "Sofija, Varna", "Varna, Sofija" and "Bloemfontein, Kaapstad" are decided as two places each, and their components are confirmed. Tyresö and Saint-Aignan stay open.
+- Systematic false review flags are removed by rule for version 1.0. Genuine source conflicts stay open claims, and version 1.0 does not require their resolution.
+- Editing per publication stays outside version 1.0.
+
+The rights basis for publishing the compiled content, the removal of the archival dump from the public Git history, the title and institution statement and the acceptances remain with the operator and the partners.
+
 The release declaration and the publication form after acceptance remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
 
 ## Release scope
 
-Version 1.0 covers the current pages of the wiki. The titles that the wiki's deletion archive and log record as deleted and that are absent from the current page table are excluded from the project scope of version 1.0 (decided by the main instance after delegation by the operator on 2026-09-22, revisable). A deletion was an editorial decision of the compiler, a large part of these titles are duplicates, renamed pages or empty pages, and one of them is a private message. The raw originals under `data/raw/` stay unchanged. A later read-only triage list of these titles is possible as a separate work package and is not part of 1.0.
+Version 1.0 covers the current pages of the wiki. The titles that the wiki's deletion archive and log record as deleted and that are absent from the current page table are excluded from the project scope of version 1.0 (decided by the main instance after delegation by the operator on 2026-09-22, revisable). A deletion was an editorial decision of the compiler, a large part of these titles are duplicates, renamed pages or empty pages, and one of them is a private message. The raw originals under `data/raw/` stay unchanged. A later read-only triage list of these titles is possible as a separate work package and is not part of 1.0. Eight current pages are published from the compiler's last revision before an overwrite by the wiki's Redirect fixer, the only departure from the current page state (decided by the main instance after delegation by the operator on 2026-09-23, revisable).
 
 Use the [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) to evaluate concrete edition boundaries, contribution roles, conflicting imprints and the research workflow. The questions are not a request to reapprove the work/edition principle.
 

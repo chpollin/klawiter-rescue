@@ -12,12 +12,26 @@ language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-09-22
+updated: 2026-09-23
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
+
+---
+
+## 2026-09-23 — Session 39: Release review and repair round
+
+**Round.** Four read-only reviews (the Maria Stuart redirect, the separation of statement states, the public release package and a machine run of worksheet case 5) were followed by one repair round in three parallel worktrees and a release-metadata pass. The operator approved the recommended course, and its domain decisions are recorded as decided by the main instance after delegation by the operator on 2026-09-23, revisable.
+
+**Changed.** Stage 01 decodes page-link titles as UTF-8 and detects pages the wiki's Redirect fixer account overwrote. Eight such pages, among them page 35 Maria Stuart, are published from the compiler's last revision under `data/reconciliation/source-revision-decisions.json`, ten whose earlier text is missing stay withheld under open claims, and the 26 Maria Stuart references resolve to page 35 instead of the review on page 4113. Reference resolution splits at the pipe and collapses whitespace, which resolves ten of the twelve remaining See-references. Gate 2 counts a component match only inside one imprint and decides the compound places "Sofija, Varna", "Varna, Sofija" and "Bloemfontein, Kaapstad" as two places each. The publication layer and Gate 1 (algorithm 1.3) keep place qualifiers with their place, split co-imprints into publisher/place pairs, compare contents with numbered and unnumbered pages, read contribution pages before any cross-reference and separate series, volume and gloss, which removes most of the former review flags as parser artifacts. The frontend record carries edition state, review scope, co-imprints, the source revision of a restored page and the page's flag codes (schema 1.5). The interface opens its mobile filter drawer again, states the scope of each review, marks claims only on the values they name, shows decided and source-revision claims, keeps corrected or disputed places off the map, cites each publication under its own address with contribution translators and Zotero's RIS roles, and folds modifier letters in search. `CITATION.cff` and the new `.zenodo.json` state CC BY 4.0 for data and MIT for code with Digital Humanities Craft as editor, `pyproject.toml` is the single version source at 0.9, licence texts and third-party notices are added, `data/raw` is excluded from release archives and inventoried by hash. A [partner worksheet](evaluations/2026-09-23/partner-evaluation.md) is drafted.
+
+**Decided.** The edition departs from `page_latest` only where the Redirect fixer demonstrably overwrote a content page. Systematic false review flags are removed by rule for version 1.0, while genuine source conflicts stay open claims. Editing per publication stays outside version 1.0. Tyresö and Saint-Aignan stay open.
+
+**Open.** The archival dump in `data/raw` has been public in the Git history since the first commit and holds the wiki's user table with password hashes, IP addresses and an archived private message; removing it from the history or making the repository private is the operator's decision. No source records the rights basis for publishing the compiled content under CC BY 4.0. The title exists in eight variants and the footer names a partner institution that the knowledge base does not, both awaiting the operator. Worksheet case 5 and the partner acceptance remain. Two dated evidence files under `knowledge/evaluations/2026-09-05/` and `data/output/audits/` still carry absolute local paths, one naming another private repository; relativizing them changes hashed evidence and needs the operator's approval. Page 1875 still merges six volumes, and about a hundred titles end in a See-reference. The per-entry JSON-LD download lacks a term for `sourceRevision`, and `klawiter:reviewStatus` is described as edition-scoped while the download also uses it for the entry review. Seven resolved extraction cases await retirement from the reviewed baseline. One read-only Wikidata request of the round sent the operator's e-mail address in its User-Agent header.
+
+**Resume.** Default suite, semantic diagnostics with the same 23 retained failures, Node suites, Ruff, a full production run with both gates and the committed-evidence check passed on the merged state, and a Playwright run at three widths checked the repaired paths.
 
 ---
 

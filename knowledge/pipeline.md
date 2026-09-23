@@ -9,7 +9,7 @@ language: en
 version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-09-22
+updated: 2026-09-23
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -57,7 +57,7 @@ Thereafter follow round-trip verification, census, provenance projection, triage
 
 ## Extraction and Encoding
 
-Stage 01 reads MediaWiki tables and external text stores directly. A database server is not required. The extractor preserves page, text and BLOB IDs so that every later statement can be traced back to the source.
+Stage 01 reads MediaWiki tables and external text stores directly. A database server is not required. The extractor preserves page, text and BLOB IDs so that every later statement can be traced back to the source. It decodes the page-link titles as UTF-8, which earlier arrived misread as Latin-1 and left every non-ASCII link target unresolvable. It also detects the pages the wiki's Redirect fixer account overwrote, walking back from `page_latest` over the fixer's revisions to the last human revision, and compares the result with `data/reconciliation/source-revision-decisions.json`. A restored page is extracted from that human revision, and any disagreement between detection and decisions stops the run. [Data](data.md#pages-overwritten-by-the-redirect-fixer) holds the rule and the cases.
 
 Stage 02 repairs known mojibake sequences section by section and idempotently. The repair is adopted only where the byte sequence validates as UTF-8. Deliberately present Unicode characters stay unchanged.
 
@@ -71,7 +71,7 @@ Stage 03c normalizes places of publication, translators and pagination. It disca
 
 ## Gate 1: Segmentation
 
-`pipeline/lib/editions.py` selects the ratified multi-edition corpus via the supported header schema. Each block begins at an edition header and ends at the next header or at the end of the page. `pipeline/segment_editions.py` produces works, editions, exact text selectors, annotations, documented carriers and statement states.
+`pipeline/lib/editions.py` selects the ratified multi-edition corpus via the supported header schema. Since algorithm version 1.3 its header split keeps a place qualifier with its place and divides a co-imprint into publisher/place pairs, the same rule the publication layer applies, so edition nodes such as `54-1981-a` no longer carry a bare country as their place. Each block begins at an edition header and ends at the next header or at the end of the page. `pipeline/segment_editions.py` produces works, editions, exact text selectors, annotations, documented carriers and statement states.
 
 The 76-case sample was reviewed by two independent agents and reconciled by an independent stronger verification agent. Corrections and the adaptation case are held under `data/reconciliation/edition-modeling-decisions.json`, where the adaptation case carries its resolution (decided by the main instance after delegation by the operator on 2026-09-22, revisable). No uncertain case is confirmed automatically, and a decided claim is applied only from a recorded `resolution`.
 
@@ -81,11 +81,11 @@ The 76-case sample was reviewed by two independent agents and reconciled by an i
 
 The publication rule reads as follows. Only a documented `confirm` or `correct` decision produces a relation in `publishable-links.json`. `unresolved` produces a source-bound `klawiter:ContestedClaim`. `reject` preserves the negative decision, yet publishes no link.
 
-Source occurrences are documented from `04_classified.csv` with page ID, text ID, line number, exact text and SHA-256. Multi-part location values use a documented component-set match. The same scan collects the occurrences of translator and publisher names via the field carrying the name, and names the field name in every occurrence; the Gate 2 check requires, for every agent subject with a candidate, either an occurrence or a spelled-out null finding. New curation patches replace no history; the previous decision is preserved in `supersedes`.
+Source occurrences are documented from `04_classified.csv` with page ID, text ID, line number, exact text and SHA-256. Multi-part location values use a documented component-set match, which counts only where one imprint contains every component. The same scan collects the occurrences of translator and publisher names via the field carrying the name, and names the field name in every occurrence; the Gate 2 check requires, for every agent subject with a candidate, either an occurrence or a spelled-out null finding. New curation patches replace no history; the previous decision is preserved in `supersedes`.
 
 ## Export and Interface
 
-Stage 05 adopts from Gate 2 exclusively confirmed links. The flat JSON-LD file preserves all current page records. The frontend file removes redirects and adds a redirect map. `inject_provenance.py` adds field provenance from exactly the selected LLM mode.
+Stage 05 adopts from Gate 2 exclusively confirmed links. The flat JSON-LD file preserves all current page records. Its dataset description states the release scope, the compiler as creator, the responsible editor, the CC BY 4.0 licence and the version, which it reads from `pyproject.toml`, the single version source. A redirect withheld under a source-revision decision resolves no reference, and a restored page carries its decision as `sourceRevision` in the frontend record. The frontend file removes redirects and adds a redirect map. `inject_provenance.py` adds field provenance from exactly the selected LLM mode.
 
 Stage 05 also builds the publication- and contribution-scoped layer of the frontend record. `lib/publications.py` segments the page's source text with `lib.editions.segment_page`, so the layer shares Gate 1's boundaries, identifiers and extents without changing the Gate 1 artifacts. It reads one further frozen input, the reviewed location stock `docs/data/locations.json`, which attests the place names that let a header with more than two comma segments be split into a publisher and several places. Stage 03 reads the same stock for the flat publisher, which follows the publication imprint. The records are written one file per source page into `docs/data/publications/`; the directory is rewritten on every run, so a page that loses its layer leaves no file behind. The main dataset keeps only the page-level summary, and `klawiter.jsonld` is unaffected. [Data](data.md) holds the field contract.
 

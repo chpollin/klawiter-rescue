@@ -9,7 +9,7 @@ language: en
 version: 1.2
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
-updated: 2026-09-22
+updated: 2026-09-23
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
@@ -40,7 +40,7 @@ CI runs the strict default suite, then the semantic diagnostics with `continue-o
 
 ### Record Completeness
 
-`pipeline/census.py` and `tests/test_census.py` check the identities source = JSON-LD and frontend = JSON-LD minus redirects. Missing, invented and duplicate records cause a failure. The one bibliographic page without a text body is explicitly bounded as a named stub.
+`pipeline/census.py` and `tests/test_census.py` check the identities source = JSON-LD and frontend = JSON-LD minus redirects. Missing, invented and duplicate records cause a failure. The one bibliographic page without a text body is explicitly bounded as a named stub. `tests/test_source_inventory.py` checks the archival dump against its SHA-256 inventory, and `tests/test_source_revisions.py` binds the Redirect fixer rule to the dump tables, including the restoration of page 35 and the ten withheld cases.
 
 ### Schema and Value Ranges
 
@@ -88,17 +88,18 @@ Gate 2 checks:
 - supersession history for decision patches;
 - input hashes for edition graph, location data, review, decisions, SZD index and classified source;
 - identical JSON-LD and frontend projection;
+- restored and withheld source revisions against their decisions (`sourceRevisions`);
 - deterministic rebuild.
 
 `tests/test_reconciliation.py` secures the data contracts, `tests/contested_claims.test.js` the display and export of contested statements. Source-page occurrence completeness is checked for every frozen agent subject. The complete reconciliation builds once per session. The unresolved-agent decision tests each reuse one real person or publisher and all its source rows, then compare its evidence with the full integration result; they do not rebuild unrelated work and location candidates.
 
 ### RDF field preservation
 
-`tests/test_rdf_field_preservation.py` expands JSON-LD with RDFLib and asserts the exact nested source-summary and contested-evidence literals, links and registered vocabulary terms. A valid top-level JSON document alone does not detect a child property silently dropped during RDF expansion.
+`tests/test_rdf_field_preservation.py` expands JSON-LD with RDFLib and asserts the exact nested source-summary and contested-evidence literals, links and registered vocabulary terms, including the `klawiter:hasContestedClaim` reference of a flat place node under an open claim. A valid top-level JSON document alone does not detect a child property silently dropped during RDF expansion.
 
 ### Frontend Logic
 
-`tests/test_frontend_logic.py` automatically discovers every `tests/*.test.js` behavior file and runs `node --check` for every `docs/js/*.js` module. Adding a file needs no manual Python bridge entry. Node tests cover occurrences, snippets, triage, editor sessions, search normalization, reconciliation, export, routing and queue order. These checks exercise logic and syntax; they do not prove DOM interactions, accessibility or performance in a browser.
+`tests/test_frontend_logic.py` automatically discovers every `tests/*.test.js` behavior file and runs `node --check` for every `docs/js/*.js` module. Adding a file needs no manual Python bridge entry. Node tests cover occurrences, snippets, triage, editor sessions, search normalization, reconciliation, export, routing and queue order. These checks exercise logic and syntax; they do not prove DOM interactions, accessibility or performance in a browser. On 23 September a Playwright run at 320, 390 and 1440 pixels checked the repaired paths on real data, among them the mobile filter drawer, keyboard-only use, the publication route and its citation, co-imprints, series glosses, decided and source-revision claims and the map. Its scripts stay outside the repository, so it is dated evidence rather than a regression suite.
 
 Frontend, canonical JSON-LD and classified rows are shared session fixtures. Semantic diagnosis and its default guard use the same comparison and page-ID index. Edition tests share one corpus build but receive deep copies, so review overlays cannot leak between tests.
 

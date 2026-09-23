@@ -2,7 +2,7 @@
 title: Current Project Status
 status: maintained
 language: en
-updated: 2026-09-22
+updated: 2026-09-23
 ---
 
 # Current project status
@@ -11,31 +11,33 @@ updated: 2026-09-22
 
 This is the single current status/work list. [Production readiness](production-readiness.md) owns acceptance criteria; [Technical remediation](technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
 
-## Verified data snapshot — 5 September 2026, graph rows updated 22 September
+## Verified data snapshot — 23 September 2026
 
 | Population | Current result | Evidence |
 |---|---:|---|
 | Current source pages / canonical records | 6,725 / 6,725 | [quality](../data/output/quality-report.json), [census](../data/output/census-report.json) |
-| Redirects / frontend records | 1,546 / 5,179 | [frontend dataset](../docs/data/klawiter.json) |
-| Bibliography entries visible in the interface | 4,751 | namespace 0, excluding redirects |
-| Work / edition / source annotation nodes | 444 / 1,886 / 1,886 | [Gate 1 manifest](../data/output/editions/manifest.json) |
-| Confirmed / proposed / contested editions | 76 / 1,810 / 0 | same manifest and graph |
-| Prioritized edition / reconciliation review cases | 316 / 897 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
-| Publishable location / work / agent links | 26 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json) |
-| Open authority claims / edition binding claims | 5 / 0, the one binding claim decided on 22 September | same manifest |
-| Technically unresolved See-references | 12 of 1,213 | [review evidence](evaluations/2026-09-05/published-change-review.json) |
-| Pages / publications / contributions in the publication layer | 1,659 / 3,102 / 14,312 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
-| Publication review flags held open as claims | 735 | same field, `reviewFlags` per publication |
+| Redirects / frontend records | 1,538 / 5,187 | [frontend dataset](../docs/data/klawiter.json) |
+| Bibliography entries visible in the interface | 4,758 | namespace 0, excluding redirects |
+| Work / edition / source annotation nodes | 448 / 2,077 / 2,077 | [Gate 1 manifest](../data/output/editions/manifest.json) |
+| Confirmed / proposed / contested editions | 76 / 2,001 / 0 | same manifest and graph |
+| Prioritized edition / reconciliation review cases | 339 / 895 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
+| Publishable location / work / agent links | 29 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json) |
+| Open authority / source-revision / edition claims | 2 / 10 / 0 | same manifest |
+| Decided authority / edition claims | 3 / 1 | same manifest |
+| Pages restored from before a Redirect fixer overwrite | 8 | `data/reconciliation/source-revision-decisions.json` |
+| Unresolved See-references | 2 (pages 679, 7232) | [frontend dataset](../docs/data/klawiter.json) |
+| Pages / publications / contributions in the publication layer | 1,665 / 3,273 / 13,904 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
+| Publication review flags (missing place / unresolved imprint / pagination) | 173 (82 / 65 / 26) | same field, `reviewFlags` per publication |
 
 Four current pages lack text; only page 2979 is bibliographic. Earlier revisions, absent archived titles and uploaded image bytes are outside the current extracted content scope. The titles that the wiki recorded as deleted and that are absent from the current page table are excluded from version 1.0 ([Production readiness](production-readiness.md#release-scope)). See [Data](data.md).
 
 | Flat main-namespace field | Populated | Coverage |
 |---|---:|---:|
-| Year | 4,429 | 93.2% |
-| Language code | 4,309 | 90.7% |
-| Publisher | 2,634 | 55.4% |
-| Numbered extent | 2,435 | 51.3% |
-| Translator | 1,919 | 40.4% |
+| Year | 4,435 | 93.2% |
+| Language code | 4,314 | 90.7% |
+| Publisher | 2,640 | 55.5% |
+| Numbered extent | 2,440 | 51.3% |
+| Translator | 1,921 | 40.4% |
 
 Population is not extraction recall or accuracy. The extent count fell because 95 citation locators were removed from the volume-extent field. Publisher rose because the flat field now follows the publication imprint of the source header. Translator lost one value whose encoding could not be restored. These flat values still describe one publication per page; the publication layer says which publication each fact belongs to, and 237 entries with an empty flat translator document a translation credit there. No flat publisher, place or translator value carries mojibake any more.
 
@@ -60,20 +62,21 @@ The first remote run on `d345ee6` passed the test job and Pages deployment but d
 
 On 22 September the four worksheet cases on pages 1800, 1891, 4445 and 4209 are accepted as displayed, the citation author follows the role in the source, the graphic novel on page 4916 is a work of its own and the archive triage is excluded from version 1.0, each decided by the main instance after delegation by the operator on 2026-09-22, revisable. After the change the default suite, the semantic diagnostics with an unchanged set of retained failures, the Node behaviour suites, Ruff and a full production run with both gates passed. The committed-evidence check reports the intended manifest drift until the regenerated manifests are committed with the code. See [Journal](journal.md).
 
+On 23 September four read-only reviews (the Maria Stuart redirect, the separation of statement states, the public release package, and a machine run of worksheet case 5) led to one repair round, with the operator's approval of the recommended course, each domain decision recorded as decided by the main instance after delegation by the operator on 2026-09-23, revisable. Pages overwritten by the wiki's Redirect fixer are published from the compiler's last revision, the 26 Maria Stuart references lead to page 35, the compound place claims are decided as two places each, the publication-layer rules no longer raise flags for qualified places, co-imprints or the unnumbered pages of an extent, and the interface states the scope of each review, the state of each edition and every open or decided claim where it applies. Citations carry a permalink per publication, contribution translators, notes and correct RIS roles. After the round the default suite, the semantic diagnostics with the same 23 retained failures, the Node behaviour suites, Ruff, a full production run with both gates and the committed-evidence check passed. See [Journal](journal.md).
+
 Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](evaluations/2026-09-05/validation.json) and [dashboard QA](evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
 
 ## Prioritized completion work
 
 | Priority | Concrete next step | Completion evidence |
 |---|---|---|
-| P0 release | Prepare a reviewed public source package and reconcile publication metadata/scope; preserve archival originals separately | explicit package inventory and provenance, reviewed distribution scope, operator release decision; editorship (Digital Humanities Craft with Christopher Pollin) and release form (operator acceptance yields 0.9.1, partner acceptance yields 1.0 with Git tag plus Zenodo DOI) decided 2026-09-08, see [journal](journal.md); titles recorded as deleted in the wiki excluded from 1.0 (decided by the main instance after delegation by the operator on 2026-09-22, revisable), see [release scope](production-readiness.md#release-scope) |
-| P1 data | Done for the four cases 1800, 1891, 4445 and 4209, whose display the worksheet accepts since 22 September, and extended to every page with a publication header; the two flat-layer defects are repaired, and the rules leave 231 imprint splits, 385 pagination discrepancies and 119 missing places as open claims | source-bound fixtures and the contract in [Data](data.md); flag codes and counts in the [frontend dataset](../docs/data/klawiter.json), see [journal](journal.md) |
-| P1 citation | Give each publication of a page its own citable address, since both editions on page 1800 are cited with the same page URL; carry the translators of contributions into the citation export, since page 1891 exports none of its three contribution translators and the flat translator field names only the first | a permalink per publication that a citation carries; a contribution-scoped translator in BibTeX/RIS with a source-bound fixture |
+| P0 release | Remove `data/raw` from the public Git history or make the repository private, because the dump carries the wiki's user table with password hashes, IP addresses in the recent-changes table and an archived private message; record the rights basis for publishing the compiler's content under CC BY 4.0; settle one title and the institution statement of the footer | operator decision and action; `.gitattributes` already keeps `data/raw` out of release archives, `CITATION.cff`, `.zenodo.json`, licence texts and third-party notices are in place since 23 September |
+| P0 acceptance | Worksheet case 5, the operator's own research task on the current interface, yields 0.9.1; the partner acceptance through the [partner worksheet](evaluations/2026-09-23/partner-evaluation.md) yields 1.0 with Git tag and Zenodo DOI | operator response to case 5; partner responses; release authorization |
 | P1 provenance | Apply one released field correction consistently to canonical graphs, frontend, exports, history and reports | end-to-end replay and repeatability with a real source-bound fixture |
-| P1 interface | Card, list, facets and Explore flattened and put on the publication layer on 2026-09-08, after an operator review on a phone and an independent before/after review; edit mode names its page-record scope, while editing per publication awaits a patch-contract extension | operator's own run of the worksheet task on the new interface (case 5, open); decision on the patch-contract extension; see [journal](journal.md) |
-| P1 source link | Adjudicate the original “Maria Stuart” redirect, which leads 26 references to an apparently unrelated review | reviewed target or preserved explicit uncertainty; see [literal evidence](evaluations/2026-09-05/published-change-review.json) |
+| P1 editing | Editing per publication stays outside version 1.0 (decided by the main instance after delegation by the operator on 2026-09-23, revisable), because no released correction exists yet and the acceptance contract asks for propagation of a page-level correction | a patch contract that binds a publication id to its source-slice hash, when a correction needs it |
+| P2 data | Page 1875 still merges six volumes into one publication, page 2083 reads page lines of its French edition as contents, and about 100 pages carry a title ending in a See-reference (class of page 5839) | source-bound fixtures after a Gate 1 segmentation decision |
 | P2 QA | Broaden the stratified semantic sample, complete curation/export browser checks and measure representative performance/accessibility | declared sample protocol and device/task budgets with recorded results |
 
-The 12 unresolved links need source-specific syntax/target review; technical resolution alone is insufficient. The preserved Maria Stuart anomaly demonstrates why. Do not automatically change it to a guessed target.
+The two remaining unresolved See-references name titles no current page carries and stay open. The Maria Stuart case showed that a technically resolved reference can still point to the wrong page, so a resolution rests on the source revision history, never on a guessed target.
 
-The [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) records the responses to cases 1 to 4. Case 5, the operator's own research task on the interface, remains open. The adaptation identity and the archive scope were decided on 22 September under delegation and stay revisable; the release itself remains an acceptance decision.
+The [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) records the responses to cases 1 to 4. Case 5, the operator's own research task on the interface, remains open. The decisions of 22 and 23 September were taken under delegation and stay revisable; the release itself remains an acceptance decision.
