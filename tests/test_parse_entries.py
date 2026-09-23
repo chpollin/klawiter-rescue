@@ -83,6 +83,53 @@ def test_approximate_year_header_is_not_used_as_title() -> None:
         ("[Magellan. Der Mann und seine Tat]", "bracket"),
         ('"Widerstand der Wirklichkeit" [Individual story]', "annotation"),
         ('"Deutschlands Janusantlitz". A ca. 1939 typescript', "annotation"),
+        ('"Preface" to The Jewish Contribution to Civilization.', "contribution"),
+        (
+            "Kungliga Biblioteket - Sveriges Nationalbiblioteket, Stockholm. "
+            "Hultenberg Archive. 2 volumes. Shelf number Acc. 2011/3. Five letters "
+            "and one postcard from Stefan Zweig to Hugo Hultenberg",
+            "holdings",
+        ),
+        (
+            "Stefan Zweig to Hans Rosenkranz, 26 letters and 6 postcards, 1921-1933. "
+            "This correspondence is located in the Jewish National Library in "
+            "Jerusalem",
+            "holdings",
+        ),
+        (
+            "1 page, undated handwritten text, with Zweig’s signature. In the "
+            "Schiller-Nationalmuseum und Deutsches Literaturarchiv, Marbach am "
+            "Neckar, A: Gregor-Dellin, Mss. Anderer",
+            "holdings",
+        ),
+        ("Antiquariat Richard Husslein, Postfach 1525, D-82144 Planegg", "address"),
+        (
+            "''Narrative Textanalyse von Stefan Zweigs 'Schachnovelle'''. "
+            "Seminararbeit. Institut für Germanistik, Universität Marburg, "
+            "Wintersemester 1986/1987",
+            "thesis",
+        ),
+        (
+            "www.ekathimerini.com/248252/article/ekathimerini/whats-on/"
+            "leporella-athens-january-11-26",
+            "url",
+        ),
+        ("Taken from the volume Kampf mit dem Dämon.", "note"),
+        (
+            "The following editions of ''Les Fleurs du mal'' are the ones quoted in "
+            "[[Baudelaire, Charles / Individual Poems]]",
+            "note",
+        ),
+        (
+            "KH = Kelsea M. Halloran, a junior in the New York State University in "
+            "Fredonia, to graduate in 2018",
+            "note",
+        ),
+        (
+            "Jacopo da Lentino / Giacomo di Lentini, ca. 1210 - ca. 1260. The sonnet "
+            "was written ca. 1230",
+            "note",
+        ),
     ],
 )
 def test_non_title_lines_are_classified(parser, candidate, expected) -> None:
@@ -99,10 +146,87 @@ def test_non_title_lines_are_classified(parser, candidate, expected) -> None:
         "Amerigo / Amerigo. Die Geschichte eines historischen Irrtums",
         "Stefan Zweig, 1881-1942. Centenary Symposium",
         "Riverdale [pseudonym]",
+        'Stefan Zweig - Friderike Zweig. "Wenn einen Augenblick die Wolken '
+        'weichen". Briefwechsel 1912-1942',
+        "Die Zeit gibt die Bilder, ich spreche nur die Worte dazu. Stefan Zweig "
+        "1881-1942",
+        "Prolog und Epilog zu Shakespeares Sturm: Quasi und Phantasia",
+        "Al-Hurūb ilā ʾllāh : nihāyat uktūbir 1910 : khātimah li-masraḥiyyat "
+        'Tūlstūy "Waʾl-Nūr yasṭaʿ fī ʾl-ẓalām"',
     ],
 )
 def test_titles_are_not_classified_as_statements(parser, title) -> None:
     assert parser.non_title_class(title) is None
+
+
+@pytest.mark.parametrize(
+    ("candidate", "page_title", "categories", "expected"),
+    [
+        # Page 162 opens with its category as a bold label.
+        (
+            "Essays / Volumes (German)",
+            "Die Monotonisierung der Welt. Aufsätze und Vorträge",
+            ["Essays / Volumes (German)"],
+            "label",
+        ),
+        # Page 1855 opens with the language of its first category.
+        (
+            "Bosnian",
+            "Balzak. Romansirana biografija",
+            [
+                "Historical Studies / Volumes (Bosnian)",
+                "Historical Studies / Volumes (Serbo-Croatian)",
+            ],
+            "label",
+        ),
+        # Page 6060 opens with the authors of the article below it.
+        (
+            "Christina-Maria Hochreiter and Armin Eidherr.",
+            "Hochreiter, Christina-Maria",
+            ["Secondary Literature / Authors (German)"],
+            "credit",
+        ),
+        # The credit rule reads the natural name order only; a name in page-title
+        # order is outside it (page 7468).
+        (
+            "Al-Nimr, Hudā ʿAbd al-Raḥmān",
+            "Al-Nimr, H.",
+            ["Secondary Literature / Authors (Arabic)"],
+            None,
+        ),
+        # A language label is read only against the page's own categories.
+        ("Bosnian", "Balzak", [], None),
+    ],
+)
+def test_candidates_are_read_against_their_page(
+    parser, candidate, page_title, categories, expected
+) -> None:
+    assert parser.non_title_class(candidate, page_title, categories) == expected
+
+
+def test_a_list_heading_is_not_a_title(parser) -> None:
+    """Page 513 opens with the bold italic heading of its first index group."""
+    row = _row(
+        page_id="513",
+        page_title="Index by German Title / Individual Stories (Chinese)",
+        content="'''''Der Amokläufer'''''\n<lst type=ul>\n[[Gu]]\n</lst>\n",
+    )
+    assert parser.process_entry(row)["title"] == (
+        "Index by German Title / Individual Stories (Chinese)"
+    )
+
+
+def test_a_category_tail_is_not_a_title(parser) -> None:
+    """Page 3923 consists of a broken category link and its tail."""
+    row = _row(
+        page_id="3923",
+        page_title=(
+            "1993 February 27 - 28: Stefan Zweig (1881-1942) oder Das Gewissen "
+            "gegen die Gewalt"
+        ),
+        content="[[Category:Symposia and ]]Exhibitions",
+    )
+    assert parser.process_entry(row)["title"] == row["page_title"]
 
 
 def test_a_cross_reference_line_gives_way_to_the_page_title(parser) -> None:

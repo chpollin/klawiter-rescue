@@ -113,6 +113,46 @@ NON_TITLE_CLASSES = (
     # An editorial bracket alone, the original title or a language gloss
     # ("[Magellan. Der Mann und seine Tat]", page 820).
     ("bracket", re.compile(r"^\[[^\[\]]+\]\.?$")),
+    # A quoted contribution title followed by the work it belongs to
+    # ('"Preface" to The Jewish Contribution to Civilization.', page 6991).
+    ("contribution", re.compile(r"^[\"“][^\"”]+[\"”]\s+to\s")),
+    # An archival holdings statement: a shelf mark, a count of letters or
+    # postcards, or a manuscript page count opening the line ("2 volumes.
+    # Shelf number Acc. 2011/3", page 2980; "26 letters and 6 postcards", page
+    # 3657; "1 page, undated handwritten text", page 1768).
+    (
+        "holdings",
+        re.compile(
+            r"\b[Ss]helf (?:number|mark)\b|\b\d+ (?:letters?|postcards?)\b"
+            r"|^\d+ pages?,"
+        ),
+    ),
+    # A postal address ("Antiquariat Richard Husslein, Postfach 1525, D-82144
+    # Planegg", page 2712).
+    ("address", re.compile(r"\bPostfach \d+|\b[A-Z]{1,2}-\d{4,5} [^\W\d_]")),
+    # An academic paper statement after the title ("… 'Schachnovelle'.
+    # Seminararbeit. Institut für Germanistik", page 3818).
+    (
+        "thesis",
+        re.compile(
+            r"\.\s+(?:Seminararbeit|Hausarbeit|Diplomarbeit|Magisterarbeit|"
+            r"Masterarbeit|Bachelorarbeit|Dissertation|Habilitationsschrift|"
+            r"(?:Doctoral |Master's |Ph\.?D\.? )?[Tt]hesis)\b"
+        ),
+    ),
+    # A web address alone (page 6807).
+    ("url", re.compile(r"^(?:https?://|www\.)\S+$")),
+    # A compiler's note: an opening note formula ("Taken from the volume …",
+    # page 187; "The following editions of …", page 6416), an abbreviation key
+    # ("KH = Kelsea M. Halloran", page 3677) or a descriptive sentence after a
+    # name ("…, ca. 1210 - ca. 1260. The sonnet was written ca. 1230", page 3262).
+    (
+        "note",
+        re.compile(
+            r"^(?:Taken from|The following)\b|^[A-Z]{1,4} = "
+            r"|\.\s+(?:The|This|These)\s+\w+\s+(?:is|are|was|were)\s"
+        ),
+    ),
 )
 # Section labels the bold-title pattern returns without a colon.
 _BARE_LABELS = frozenset(
@@ -120,13 +160,47 @@ _BARE_LABELS = frozenset(
 )
 
 
-def non_title_class(candidate):
-    """The class of bibliographic statement a title candidate is, or None."""
+def _category_labels(categories):
+    """Each category name and the language its trailing bracket names."""
+    labels = set()
+    for category in categories:
+        labels.add(category)
+        m = re.search(r"\(([^()]+)\)\s*$", category)
+        if m:
+            labels.add(m.group(1).strip())
+    return labels
+
+
+def _credits_page_person(text, page_title):
+    """Whether the line opens with the person an author page is titled by.
+
+    An author page is titled "Surname, Forename"; a first line naming that
+    person in natural order credits the work below it ("Christina-Maria
+    Hochreiter and Armin Eidherr.", page 6060).
+    """
+    m = re.fullmatch(r"([^,/]+),\s*([^,/]+)", page_title or "")
+    if not m:
+        return False
+    name = f"{m.group(2).strip()} {m.group(1).strip()}"
+    return text == name or text.startswith((name + " ", name + ".", name + ","))
+
+
+def non_title_class(candidate, page_title="", categories=()):
+    """The class of bibliographic statement a title candidate is, or None.
+
+    page_title and categories let a candidate be read against its own page:
+    a bold line restating a page category or its language ("Essays / Volumes
+    (German)", page 162; "Bosnian", page 1855) labels the block below it.
+    """
     text = remove_wiki_markup(candidate or "")
     if not text:
         return None
     if text in _BARE_LABELS or text in LANGUAGE_MAP:
         return "label"
+    if text in _category_labels(categories):
+        return "label"
+    if _credits_page_person(text, page_title):
+        return "credit"
     for name, pattern in NON_TITLE_CLASSES:
         if pattern.search(text):
             return name
@@ -196,7 +270,11 @@ def process_entry(row, attested_places=None):
 
     # Reject: a bibliographic statement (NON_TITLE_CLASSES); the source page
     # title is the title then.
-    if extracted_title and page_title and non_title_class(extracted_title):
+    if (
+        extracted_title
+        and page_title
+        and non_title_class(extracted_title, page_title, parsed.get("categories", []))
+    ):
         extracted_title = ""
 
     # Reject: full citation text (>200 chars is not a title)

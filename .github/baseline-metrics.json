@@ -111,7 +111,7 @@
   },
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better; when extraction improves, update the value in an evidence-freeze commit.",
-    "redirect_map_size": 1575,
+    "redirect_map_size": 1557,
     "german_translator_fp": 111,
     "film_pagecount": 9,
     "publisher_equals_location": 2,
@@ -140,6 +140,11 @@
       "date": "2026-09-23",
       "evidence": "pipeline/03_parse_entries.py (NON_TITLE_CLASSES)",
       "reason": "Stage 03 no longer takes a cross-reference, citation, credit, extent, imprint, header, label, editorial bracket or section heading line as the record title; the source page title is the title then. Those page titles were page-title aliases in the redirect map and are now the entry titles, so the map shrinks from 3532 to 1575 without losing a resolution: every former key that named a page still resolves, the two unresolved See-references (pages 679 and 7232) stay unresolved, and four keys now reach the page that carries the title instead of an entry that used the string as a heading. The semantic title cases on pages 1166 and 1308 are resolved, so the bound falls from 16 to 14."
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": "pipeline/03_parse_entries.py (NON_TITLE_CLASSES), pipeline/lib/wiki_parser.py (extract_title)",
+      "reason": "Stage 03 also takes the page title where the first line is a holdings statement (pages 1768, 2980, 2981, 3657), a postal address (2712), a compiler's note (187, 3262, 3677, 6416), an academic paper statement (3818), a URL (6807), a quoted contribution title followed by its host work (6991), the credit of the author page's own person (6060), a bold label restating a page category or its language (162, 1855), a bold heading directly above a list (513, 1014) or the tail of a broken category link (3923). Those 18 page titles were page-title aliases in the redirect map and are now the entry titles of the same pages, so the map shrinks from 1575 to 1557 without losing a resolution: each removed key is now the unique entry title of the page it pointed to, no key was added and no key changed its target."
     }
   ]
 }
