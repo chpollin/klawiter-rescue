@@ -76,9 +76,10 @@ const Pages = {
           (${this._yearRange()}).
         </p>
         <p>
-          It was compiled by Dr. Randolph J. Klawiter, Professor Emeritus of
-          German at the University of Notre Dame (Indiana, USA), over several
-          decades, and published online as a MediaWiki instance. That wiki held
+          It was compiled over several decades by Dr. Randolph J. Klawiter
+          (1930&ndash;2021), who was Professor Emeritus of German at the
+          University of Notre Dame (Indiana, USA), and published online as a
+          MediaWiki instance. That wiki held
           6,725 pages: the bibliography entries republished here, 1,546 redirect
           pages for cross-references and title variants, and a few hundred
           category descriptions.
@@ -186,8 +187,9 @@ const Pages = {
           </li>
           <li>
             The flat entry layer cannot fully separate edition-specific fields
-            on pages that describe several editions. The edition graph is
-            authoritative for those cases.
+            on pages that describe several editions. The edition graph separates
+            them as proposals, and an edition counts as confirmed only after a
+            review against its source slice.
           </li>
         </ul>
       </section>
@@ -246,13 +248,13 @@ const Pages = {
         <h2>Imprint</h2>
         <p>
           This digital edition preserves and reopens the Stefan Zweig
-          bibliography compiled by Dr. Randolph J. Klawiter. It is a scholarly
-          resource for academic research and non-commercial use.
+          bibliography compiled by Dr. Randolph J. Klawiter (1930&ndash;2021).
         </p>
         <ul>
           <li>
-            <strong>Bibliography</strong> &mdash; Dr. Randolph J. Klawiter,
-            Professor Emeritus of German, University of Notre Dame, Indiana, USA
+            <strong>Bibliography</strong> &mdash; compiled by Dr. Randolph J.
+            Klawiter (1930&ndash;2021), who was Professor Emeritus of German at
+            the University of Notre Dame, Indiana, USA
           </li>
           <li>
             <strong>Stefan Zweig Centre Salzburg</strong> &mdash; institutional
@@ -322,8 +324,11 @@ const Pages = {
           The <strong>flat entry layer</strong> is a declared projection of that
           graph, one record per wiki page, and it is what this site loads. The
           projection is lossy by design: where a wiki page describes several
-          editions, the flat record cannot separate their fields, and the
-          edition graph stays authoritative.
+          editions, the flat record cannot separate their fields. The edition
+          graph separates them, but a separated edition is a deterministic
+          proposal until a review confirms it against its source slice, and
+          the entry card names each publication as a proposed or a confirmed
+          edition wherever the record carries that state.
         </p>
         <p>
           Cases where the source text supports more than one reading are not
@@ -390,7 +395,9 @@ const Pages = {
             </tr>
             <tr>
               <td><a href="data/locations.json"><code>data/locations.json</code></a></td>
-              <td>Publication places with their Wikidata reconciliation.</td>
+              <td>Publication places with coordinates and the Wikidata match the
+                  automatic matcher proposed, unreviewed. The reviewed place
+                  authority decisions are in <code>data/reconciliation.json</code>.</td>
             </tr>
             <tr>
               <td><a href="data/triage.json"><code>data/triage.json</code></a></td>
