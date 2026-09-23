@@ -144,6 +144,24 @@ test('the index folds diacritics, so a plain spelling finds the transliteration'
   assert.strictEqual(JSON.stringify(App.index.search('Hamburg')), '[]');
 });
 
+test('transliteration marks and apostrophes fold away in index and query', () => {
+  // Page 4445: "Ṣūrat al-marʾah" with the modifier letters ʾ and ʿ.
+  const App = loadApp();
+  App.entries = [
+    { sourcePageId: 4445, title: "Ṣūrat al-marʾah waʾl-rajul fī uqṣūṣat 'Arbaʿ wa-ʿishrūn'" },
+    { sourcePageId: 9, title: "O'Brien, Kate" },
+  ];
+  App.buildIndex();
+  const hits = q => JSON.stringify(App.index.search(App.foldQuery(q)));
+  assert.strictEqual(hits('marah'), '[0]');
+  assert.strictEqual(hits('marʾah'), '[0]');
+  assert.strictEqual(hits('ishrun'), '[0]');
+  // The word with its mark stays indexed, so its parts still find it.
+  assert.strictEqual(hits('Brien'), '[1]');
+  assert.strictEqual(hits("O'Brien"), '[1]');
+  assert.strictEqual(hits('obrien'), '[1]');
+});
+
 test('highlighting marks the raw text and escapes the segments', () => {
   const hlEsc = loadUtils('hlEsc');
 
@@ -238,6 +256,9 @@ test('the review facet reads the review state of an entry, absence included', ()
   // An open flag is an axis of its own, so a flagged entry counts twice.
   assert.strictEqual(JSON.stringify(App.reviewValues(flagged)),
     '["agent_verified","open-flags"]');
+  // A flag raised on a publication of the page counts as well.
+  assert.strictEqual(JSON.stringify(App.reviewValues({
+    publicationReviewFlags: ['missing-location'] })), '["unreviewed","open-flags"]');
 
   assert.strictEqual(App.reviewLabel('agent_verified'), 'Agent verified');
   assert.strictEqual(App.reviewLabel('unreviewed'), 'Unreviewed');
