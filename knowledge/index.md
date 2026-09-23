@@ -38,13 +38,12 @@ These are dated observations, not live task lists. Follow their status links bef
 | [Technical remediation](technical-remediation-2026-09-05.md) | implemented corrections, reviewed impact and verification |
 | [Evaluation artifacts](evaluations/2026-09-05/manifest.json) | hashed source excerpts and machine-readable review results |
 | [Owner worksheet](evaluations/2026-09-05/owner-evaluation.md) | five concrete domain and usability acceptance cases |
-| [Partner worksheet](evaluations/2026-09-23/partner-evaluation.md) | partner acceptance tasks and publication scope for version 1.0 |
 
 ## Reading paths
 
 - Re-entry: [Status](status.md) → latest [Journal](journal.md) → `git status -sb`.
 - Data work: [Data](data.md) → [Pipeline](pipeline.md) → [Testing](testing.md).
 - Interface work: [Frontend](frontend.md) → [Testing](testing.md).
-- Acceptance: [Production readiness](production-readiness.md) → [Status](status.md) → [owner worksheet](evaluations/2026-09-05/owner-evaluation.md) → [partner worksheet](evaluations/2026-09-23/partner-evaluation.md).
+- Acceptance: [Production readiness](production-readiness.md) → [Status](status.md) → [owner worksheet](evaluations/2026-09-05/owner-evaluation.md).
 
 Code, versioned decisions and generated validation reports take precedence over descriptive documentation. Volatile counts come from the quality report, gate manifests and frontend dataset; the current prose snapshot lives only in Status. A green technical gate does not establish complete extraction or scholarly accuracy.
