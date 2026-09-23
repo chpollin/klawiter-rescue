@@ -4,11 +4,11 @@
     "candidates.json": "0adc216752786cf4af2ab785e3f94ad5de888f1a92cbaba91bd0bc43928ce9a9",
     "contested-claims.json": "f1387fb3b5c5e664de8924c336912cf86312a9e11685f631eecbf14386a17464",
     "decisions.json": "a420a19df3d0a132829c023aca04618ad96f672438a82545ff46ecaefe004cea",
-    "earl.jsonld": "493846e2fb307dbd48d4290c404fb18101c360d59e824b96043be0e445ef12dc",
-    "provenance.jsonld": "f4d7e115563f4646f3b6ab1cad49cefa8c61fe053f9a1a6a94cfb28df8153bcc",
+    "earl.jsonld": "920ad92a268e1ac34fde5ee9dfcc0e6bc81120d76e3851144bc2648a87fc4679",
+    "provenance.jsonld": "1c6683d5ed1d9b7bfe89d6b262109a002a70c8974dffca6a22a5c855bc82a021",
     "publishable-links.json": "585550f741cf15a84032c34597bfdfa3c94c133eded12659a11e27867cc21699",
     "review-queue.json": "7048af2008c22ee7595eb2205c59b5b34b6d09289557caf9121367cbf7385059",
-    "validation-report.json": "f20478a7d396fa83b5489e50bb0832587a15bd95f6ae33e13f76534526b38def"
+    "validation-report.json": "fdcee1cd0c07107d42e6243a51f2ac26af58a3250d255143e8d5cfa6eeff07ac"
   },
   "codeSha256": "72d1464b4e72bc30e276069f1738b3741e47116b934e9a68e23484d9c6b1171e",
   "counts": {
@@ -34,7 +34,7 @@
     "path": "docs/data/reconciliation.json",
     "sha256": "c88621b743990a5d320e596217c1db4f47b5b737f61299e8d7c3b70a46f72c13"
   },
-  "generatedAt": "2026-09-23T11:48:35.756003+00:00",
+  "generatedAt": "2026-09-23T12:01:51.736986+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -46,7 +46,7 @@
     },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
-      "sha256": "16b5c6e0b079e20b3a92088fa699751b8b76c27ee206e0ddd8868dd34dd06307"
+      "sha256": "69adc107d79ba50ed65c0fd13a156990d6edeed01017838723d6c9bf6d3dd225"
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
