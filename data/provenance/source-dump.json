@@ -1,0 +1,66 @@
+{
+  "description": "SHA-256 inventory of the archival MediaWiki dump from which the pipeline extracts the edition. The files stay unchanged; a mismatch means the source input is not the archived dump.",
+  "algorithm": "sha256",
+  "files": [
+    {
+      "path": "data/raw/readme.txt",
+      "bytes": 381,
+      "sha256": "1365bea38cf3fc67d9acead8ad798aabed97dbd22c3a8105d5af490c7bb11fc1"
+    },
+    {
+      "path": "data/raw/zt_00",
+      "bytes": 28693998,
+      "sha256": "c6779ccfd5e99b8bd8420a0649a4d2da5e0e0a12e091ba64586cf6fbdd8d3537"
+    },
+    {
+      "path": "data/raw/zt_01",
+      "bytes": 51378563,
+      "sha256": "250690fb5726f9be2d3ea75b9fc5f341f61272e7e19034de0f48df7a7a66f14c"
+    },
+    {
+      "path": "data/raw/zt_02",
+      "bytes": 51081182,
+      "sha256": "fe601d276874b47a82ae439f45b74c314265b8df02bc2aafcc2015e9e24d927d"
+    },
+    {
+      "path": "data/raw/zt_03",
+      "bytes": 51407461,
+      "sha256": "36670a9aeab015417f740923a00ecccfb728b1a63f6c3c0961f2f3188a26577d"
+    },
+    {
+      "path": "data/raw/zt_04",
+      "bytes": 50394435,
+      "sha256": "5e4aeabee3cb68b33b8c697eaf8ddd43e545e68c1b29b0f08f8b09aec974c383"
+    },
+    {
+      "path": "data/raw/zt_05",
+      "bytes": 50512167,
+      "sha256": "5d4dec4fc18fdd74d7d0a3eb8a6b2c6bc38de2965108264dceec6d3953b426c2"
+    },
+    {
+      "path": "data/raw/zt_06",
+      "bytes": 51664207,
+      "sha256": "5946c7525178209282963811e9d912aca2118162ad21221eb7ea596d060f624e"
+    },
+    {
+      "path": "data/raw/zt_07",
+      "bytes": 11079906,
+      "sha256": "d5f63f0617367633f0ba4eca49692b8452ce0b34608fedc4c4f371114d325667"
+    },
+    {
+      "path": "data/raw/zweig_part_01.sql",
+      "bytes": 34091928,
+      "sha256": "d880ea6c53b72b4b23336b4ceee92aff60136193a41bb1a8318c054fb0090d42"
+    },
+    {
+      "path": "data/raw/zweig_part_02.sql",
+      "bytes": 522,
+      "sha256": "2d03b3a4993b4dd0585ceac67d3bde927b0d8e2737316235eadb8cf63e1425e2"
+    },
+    {
+      "path": "data/raw/zweig_part_03.sql",
+      "bytes": 20638,
+      "sha256": "73ea3617b20e5ff321fa885ce1fe53df1f939a1b30bf11efb935fafd2b319d1d"
+    }
+  ]
+}

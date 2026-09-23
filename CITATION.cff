@@ -6,7 +6,6 @@ authors:
   - family-names: Klawiter
     given-names: Randolph J.
     affiliation: University of Notre Dame
-    orcid: ""
   - family-names: Pollin
     given-names: Christopher
     affiliation: Digital Humanities Craft OG
@@ -22,6 +21,8 @@ preferred-citation:
       given-names: Randolph J.
       affiliation: University of Notre Dame
   editors:
+    - name: Digital Humanities Craft OG
+      website: "https://dhcraft.org"
     - family-names: Pollin
       given-names: Christopher
       affiliation: Digital Humanities Craft OG
@@ -46,6 +47,6 @@ keywords:
   - JSON-LD
   - linked data
   - data rescue
-license: MIT
-license-url: "https://github.com/chpollin/klawiter-rescue/blob/main/LICENSE"
-date-released: "2026-03-29"
+license:
+  - CC-BY-4.0
+  - MIT
