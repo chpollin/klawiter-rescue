@@ -455,6 +455,82 @@ def test_a_body_imprint_under_a_date_only_header(attested_places) -> None:
     assert "reviewFlags" not in publication
 
 
+def test_a_second_publisher_shares_the_place_before_it(attested_places) -> None:
+    """Page 2569 names two publishers at one place under its 1957 header."""
+    publication = _single_publication(
+        "'''[1957]'''\n''Stuart Mária. Skót Királyö''. 343p. Illustrated. "
+        "Budapest: Könnyvkiadó Franklin / Gondolat Kiadó, 1957 [Kelen translated "
+        "pp. 1-163]\n",
+        attested_places,
+    )
+    assert publication["publisher"] == "Könnyvkiadó Franklin"
+    assert publication["places"] == ["Budapest"]
+
+
+def test_the_imprint_after_the_closing_bold_is_read(attested_places) -> None:
+    """Page 279 sets the whole statement on the header line; a label such as
+    "First printing:" opens no imprint of its own."""
+    publication = _single_publication(
+        "'''[1942]'''. First printing: ''Schachnovelle''. 97p. 3 illustrations. "
+        "Buenos Aires: Verlag Pigmalion, 1942\n",
+        attested_places,
+    )
+    assert publication["publisher"] == "Verlag Pigmalion"
+    assert publication["places"] == ["Buenos Aires"]
+    assert "reviewFlags" not in publication
+
+
+def test_a_parenthesized_year_matches_the_header(attested_places) -> None:
+    """Page 279 gives an inferred date in parentheses, "(2002)"."""
+    publication = _single_publication(
+        "'''[2002]'''.  \\\"Die Schachnovelle\\\" in ''Wort und Sinn''. Edited by "
+        "Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290\n",
+        attested_places,
+    )
+    assert publication["places"] == ["Paderborn"]
+
+
+def test_the_header_line_may_end_in_the_imprint_without_its_year(
+    attested_places,
+) -> None:
+    """Page 793 closes the header line with "Place: Publisher"; the bold states
+    the year."""
+    publication = _single_publication(
+        "'''[1857]:''' ''Les Fleurs du mal''. 248p. Paris: Poulet-Malassis et de "
+        "Broise\n",
+        attested_places,
+    )
+    assert publication["publisher"] == "Poulet-Malassis et de Broise"
+    assert publication["places"] == ["Paris"]
+
+
+def test_a_yearless_imprint_followed_by_more_statements_stays_unread(
+    attested_places,
+) -> None:
+    """Page 793 follows the 1868 imprint with a reprint of 1886; without the
+    year the statement is read only as the last one on the header line."""
+    publication = _single_publication(
+        "'''[1868]:'''  ''Les Fleurs du Mal''. 411p. Paris: Michel Lévy Frères, "
+        "Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. "
+        "References to the numbers of each poem are taken from the Michel Lévy "
+        "edition\n",
+        attested_places,
+    )
+    assert "places" not in publication
+    assert [flag["code"] for flag in publication["reviewFlags"]] == ["missing-location"]
+
+
+def test_an_imprint_in_prose_after_the_bold_stays_unread(attested_places) -> None:
+    """Page 279 names the 1977 recording's publisher inside a sentence."""
+    publication = _single_publication(
+        "'''[1977]'''. ''Schachnovelle''. A CD recorded in 1977. Curd Jürgens "
+        "reads a shortened version of the novella published by the S. Fischer "
+        "Verlag, Frankfurt am Main. This is a recording\n",
+        attested_places,
+    )
+    assert "places" not in publication
+
+
 def test_a_page_locator_header_is_no_publication(attested_places) -> None:
     """Page 3757 sorts letters under year headings with the page range they
     occupy inside the one book the page describes."""

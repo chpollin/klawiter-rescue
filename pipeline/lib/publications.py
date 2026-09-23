@@ -147,12 +147,24 @@ _CONTAINER_TAIL_RE = re.compile(
 # A header that states only the year can leave the imprint to the body, in the
 # citation form "Place: Publisher, YEAR" ("Budapest: Rózsavölgyi, Athenaeum
 # Kiadó, 1935", page 2569), with co-imprints joined by " / ". It is read only
-# where YEAR is the header's year.
-_BODY_IMPRINT_RE = re.compile(
-    r"(?:^|(?<=[.;]\s))(?P<chain>[^\W\d_][^:;.\n\[\]]{0,40}:\s[^;\n]+?),\s*"
-    r"(?P<year>\d{4})\b",
-    re.MULTILINE,
+# where YEAR is the header's year, also in the parenthesized form of a date the
+# title page does not state ("Paderborn: Schöningh Verlag, (2002)", page 279).
+# The publisher runs over no colon and no sentence break except the period of
+# an initial ("S. Fischer Verlag"), so the statement cannot open in a label
+# such as "First printing:" and swallow the extent and the next sentence.
+_IMPRINT_NAME = r"(?:[^:;.\n]|\.(?=\S)|(?<=\b[A-ZÀ-Þ])\.\s)+?"
+_IMPRINT_PART = rf"[^\W\d_][^:;.\n\[\]]{{0,40}}:\s{_IMPRINT_NAME}"
+_IMPRINT_CHAIN = (
+    rf"(?:^|(?<=[.;]\s))(?P<chain>{_IMPRINT_PART}(?:\s+/\s+{_IMPRINT_PART})*)"
 )
+_BODY_IMPRINT_RE = re.compile(
+    rf"{_IMPRINT_CHAIN},\s*\(?(?P<year>\d{{4}})\b\)?", re.MULTILINE
+)
+# The statement after the closing bold of a date-only header ends in the imprint
+# without repeating the year the bold states ("'''[1857]:''' ''Les Fleurs du
+# mal''. 248p. Paris: Poulet-Malassis et de Broise", page 793). It is read only
+# as the last statement of that line.
+_HEADER_TAIL_IMPRINT_RE = re.compile(rf"{_IMPRINT_CHAIN}\s*\.?\s*$")
 _BODY_IMPRINT_PART_RE = re.compile(r"^([^\W\d_][^:\d]{0,40}?):\s*(.+)$")
 _URL_RE = re.compile(r"https?://\S+")
 _URL_NOTE_RE = re.compile(r"\[([^\[\]\n]{2,60})\]\s*:?\s*$")
@@ -333,27 +345,52 @@ def _split_imprint(
     return (publishers[0] if publishers else None), places, pairs, flag
 
 
-def _body_imprint(block_body: str, year: str | None) -> tuple[str | None, list[str]]:
-    """Publisher and places of a "Place: Publisher, YEAR" statement in the
-    body, for a header that names no imprint of its own."""
-    lines = [line for line in block_body.splitlines() if line.strip()]
-    if not year or not lines:
+def _imprint_chain(chain: str) -> tuple[str | None, list[str]]:
+    """Publisher and places of one "Place: Publisher" chain.
+
+    A part without a place of its own follows the part before it as a further
+    publisher at that place ("Budapest: Könnyvkiadó Franklin / Gondolat Kiadó",
+    page 2569).
+    """
+    parts = [
+        _BODY_IMPRINT_PART_RE.match(part.strip())
+        for part in re.split(r"\s+/\s+", chain)
+    ]
+    if not parts[0] or not chain[0].isupper():
         return None, []
-    # Only the statement directly under the header: a later line can cite the
-    # book a review discusses (page 2613) or a second item (page 2301).
-    for match in _BODY_IMPRINT_RE.finditer(lines[0]):
-        if match.group("year") != year:
-            continue
-        parts = [
-            _BODY_IMPRINT_PART_RE.match(part.strip())
-            for part in re.split(r"\s+/\s+", match.group("chain"))
-        ]
-        if not all(parts) or not match.group("chain")[0].isupper():
-            continue
-        places = [_flat(part.group(1)) for part in parts]
-        if any(len(place.split()) > 4 for place in places):
-            continue
-        return _flat(parts[0].group(2)), _unique(places)
+    places = [_flat(part.group(1)) for part in parts if part]
+    if any(len(place.split()) > 4 for place in places):
+        return None, []
+    return _flat(parts[0].group(2)), _unique(places)
+
+
+def _body_imprint(
+    block_body: str, year: str | None, header_tail: str | None = None
+) -> tuple[str | None, list[str]]:
+    """Publisher and places of a "Place: Publisher, YEAR" statement at the
+    header, for a header that names no imprint of its own.
+
+    The statement is read from the text after the closing bold of the header
+    line, then from the first body line. The header line may also end in the
+    imprint without the year, which its bold already states.
+    """
+    if not year:
+        return None, []
+    lines = [line for line in block_body.splitlines() if line.strip()]
+    # Only the statement directly at the header: a later line can cite the book
+    # a review discusses (page 2613) or a second item (page 2301).
+    candidates = [text for text in (header_tail, lines[0] if lines else None) if text]
+    for text in candidates:
+        for match in _BODY_IMPRINT_RE.finditer(text):
+            if match.group("year") != year:
+                continue
+            publisher, places = _imprint_chain(match.group("chain"))
+            if places:
+                return publisher, places
+    if header_tail:
+        match = _HEADER_TAIL_IMPRINT_RE.search(header_tail)
+        if match:
+            return _imprint_chain(match.group("chain"))
     return None, []
 
 
@@ -851,8 +888,11 @@ def _build_publication(
     imprint = _flat(fields.imprint or "")
     publisher, places, pairs, imprint_flag = _split_imprint(fields, attested)
     if not imprint:
+        # A compound header shares one tail among its parts, so the tail names
+        # the imprint of none of them in particular.
+        tail = None if "compound-header" in fields.flags else fields.description
         publisher, places = _body_imprint(
-            masked_body, edition.get("schema:datePublished")
+            masked_body, edition.get("schema:datePublished"), tail
         )
     series = _series(masked_body)
 
