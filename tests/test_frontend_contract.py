@@ -17,8 +17,10 @@ from pathlib import Path
 # Bumped whenever the declared entry or _meta shape changes. 1.1 added the
 # review projection (dataset-level review state per entry), 1.2 the
 # publication- and contribution-scoped layer, 1.3 its move into per-page side
-# files so the main dataset stays loadable without them.
-FRONTEND_SCHEMA_VERSION = "1.3"
+# files so the main dataset stays loadable without them, 1.4 the Gate-1 edition
+# node and review status per publication, the page's publication flag codes,
+# the co-imprint pairs and series gloss, and the release license and version.
+FRONTEND_SCHEMA_VERSION = "1.4"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -35,11 +37,13 @@ META_KEYS = {
     "fieldCoverage",
     "frontendSchemaVersion",
     "languageCount",
+    "license",
     "locationCount",
     "ns0Count",
     "publicationCoverage",
     "redirectCount",
     "totalCount",
+    "version",
     "yearRange",
 }
 
@@ -71,6 +75,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "publicationCount": (False, (int,)),
     "publicationLanguages": (False, (list,)),
     "publicationPlaces": (False, (list,)),
+    "publicationReviewFlags": (False, (list,)),
     "publicationYears": (False, (list,)),
     "reviewFlags": (False, (list,)),
     "publisher": (False, (str,)),
@@ -198,10 +203,12 @@ PUBLICATION_KEYS = {
     "container",
     "credits",
     "contributions",
+    "editionId",
     "editionStatement",
     "extent",
     "id",
     "imprint",
+    "imprints",
     "language",
     "languageCode",
     "note",
@@ -210,14 +217,28 @@ PUBLICATION_KEYS = {
     "provenance",
     "publisher",
     "reviewFlags",
+    "reviewStatus",
     "series",
+    "seriesGloss",
     "seriesVolume",
     "sourceSlice",
     "title",
     "year",
     "yearRaw",
 }
-PUBLICATION_REQUIRED_KEYS = {"id", "provenance", "sourceSlice"}
+PUBLICATION_REQUIRED_KEYS = {"id", "provenance", "reviewStatus", "sourceSlice"}
+PUBLICATION_STRUCTURAL_KEYS = {
+    "editionId",
+    "id",
+    "provenance",
+    "reviewFlags",
+    "reviewStatus",
+    "sourceSlice",
+}
+# The Gate-1 statement states. A publication outside the Gate-1 corpus is
+# rule-extracted and unreviewed, so it is proposed; contested passes through
+# from an edition whose binding is held open.
+PUBLICATION_REVIEW_STATUSES = {"confirmed", "proposed", "contested"}
 SOURCE_SLICE_KEYS = {"start", "end", "sha256", "textStart", "textEnd"}
 SIDE_FILE_KEYS = {"sourcePageId", "publications", "nameVariants"}
 PROVENANCE_CLASSES = {"regex", "llm", "missing", "editor"}
@@ -293,10 +314,84 @@ def test_every_side_file_matches_the_declared_contract(all_entries) -> None:
 
 def test_every_publication_field_states_its_provenance_class(all_entries) -> None:
     """No displayed publication value is left without a provenance class."""
-    structural = {"id", "provenance", "sourceSlice", "reviewFlags"}
     for entry in _pages_with_publications(all_entries):
         for publication in _side_file(entry["sourcePageId"])["publications"]:
-            assert set(publication["provenance"]) == set(publication) - structural
+            assert (
+                set(publication["provenance"])
+                == set(publication) - PUBLICATION_STRUCTURAL_KEYS
+            )
+
+
+def _gate1_edition_states() -> dict[str, str]:
+    graph = json.loads(
+        (
+            Path(__file__).resolve().parents[1]
+            / "data/output/editions/work-editions.jsonld"
+        ).read_text(encoding="utf-8")
+    )
+    return {
+        edition["@id"]: edition["klawiter:reviewStatus"]
+        for edition in graph["editions"]
+    }
+
+
+def test_publications_name_their_edition_node_and_its_review_status(
+    all_entries,
+) -> None:
+    """A publication that is a Gate-1 edition names that node and reports its
+    status; any other publication is proposed and names no node."""
+    states = _gate1_edition_states()
+    named = 0
+    for entry in _pages_with_publications(all_entries):
+        for publication in _side_file(entry["sourcePageId"])["publications"]:
+            status = publication["reviewStatus"]
+            assert status in PUBLICATION_REVIEW_STATUSES
+            edition_id = publication["id"].replace(
+                "klawiter:publication/", "klawiter:edition/", 1
+            )
+            if edition_id in states:
+                named += 1
+                assert publication["editionId"] == edition_id
+                assert status == states[edition_id]
+            else:
+                assert "editionId" not in publication
+                assert status == "proposed"
+    assert named, "no publication names a Gate-1 edition node"
+    assert "confirmed" in {
+        publication["reviewStatus"]
+        for entry in _pages_with_publications(all_entries)
+        for publication in _side_file(entry["sourcePageId"])["publications"]
+    }, "the reviewed Gate-1 sample did not reach the publication layer"
+
+
+def test_entry_names_the_flag_codes_of_its_publications(all_entries) -> None:
+    """The main dataset tells a card which publication flags a page holds,
+    without the side file; it lists exactly the codes the side file carries."""
+    flagged = 0
+    for entry in _pages_with_publications(all_entries):
+        codes = sorted(
+            {
+                flag["code"]
+                for publication in _side_file(entry["sourcePageId"])["publications"]
+                for flag in publication.get("reviewFlags", [])
+            }
+        )
+        assert entry.get("publicationReviewFlags", []) == codes
+        flagged += bool(codes)
+    assert flagged, "no page reports a publication review flag"
+    for entry in all_entries:
+        if not entry.get("publicationCount"):
+            assert "publicationReviewFlags" not in entry
+
+
+def test_meta_states_license_and_release_version(frontend_data) -> None:
+    import tomllib
+
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    version = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["version"]
+    meta = frontend_data["_meta"]
+    assert meta["license"] == "https://creativecommons.org/licenses/by/4.0/"
+    assert meta["version"] == version
 
 
 def test_facet_fields_cover_every_publication(all_entries) -> None:

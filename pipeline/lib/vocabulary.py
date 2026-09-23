@@ -16,6 +16,10 @@ CONTEXT = {
         "name": "schema:name",
         "description": "schema:description",
         "creator": "schema:creator",
+        "editor": "schema:editor",
+        "affiliation": "schema:affiliation",
+        "version": "schema:version",
+        "url": {"@id": "schema:url", "@type": "@id"},
         "sourceOrganization": "schema:sourceOrganization",
         "datePublished": {"@id": "schema:datePublished", "@type": "xsd:gYear"},
         "publisher": "schema:publisher",
@@ -219,16 +223,27 @@ def plain_value(value):
     return value
 
 
-def to_rdf_entry(entry, agent_links=None):
+def _mark_contested(node, field, contested):
+    """Reference the open claims that hold a resource value open, so the flat
+    graph tells a contested value from an unreviewed one."""
+    claims = contested.get((field, node["name"]))
+    if claims:
+        node["klawiter:hasContestedClaim"] = [{"@id": claim} for claim in claims]
+    return node
+
+
+def to_rdf_entry(entry, agent_links=None, contested=None):
     """Serialize the internal flat entry to its published RDF shape.
 
     The pipeline works on flat display values throughout; only the written
     JSON-LD carries language-tagged titles and resource nodes for agents
     and places. Everything downstream of the written dataset reads through
     plain_value. agent_links maps (kind, name) to a reviewed Wikidata URI
-    (fail-closed: only confirmed decisions reach this map).
+    (fail-closed: only confirmed decisions reach this map). contested maps
+    (flat field, value) to the open Gate-2 claims on that value.
     """
     agent_links = agent_links or {}
+    contested = contested or {}
     rdf = dict(entry)
     code = rdf.get("inLanguage")
     if code and rdf.get("name"):
@@ -243,7 +258,7 @@ def to_rdf_entry(entry, agent_links=None):
         link = agent_links.get(("publisher", publisher))
         if link:
             node["sameAs"] = link
-        rdf["publisher"] = node
+        rdf["publisher"] = _mark_contested(node, "publisher", contested)
     translator = rdf.get("translator")
     if translator:
         node = {
@@ -254,7 +269,7 @@ def to_rdf_entry(entry, agent_links=None):
         link = agent_links.get(("person", translator))
         if link:
             node["sameAs"] = link
-        rdf["translator"] = node
+        rdf["translator"] = _mark_contested(node, "translator", contested)
     location = rdf.get("locationCreated")
     if location:
         place = {
@@ -265,7 +280,7 @@ def to_rdf_entry(entry, agent_links=None):
         same_as = rdf.pop("locationSameAs", None)
         if same_as:
             place["sameAs"] = same_as
-        rdf["locationCreated"] = place
+        rdf["locationCreated"] = _mark_contested(place, "locationCreated", contested)
     # The as-written reference text is display data of the referencing
     # entry; asserting it as a name of the TARGET would give target
     # entries a second schema:name in the merged graph.

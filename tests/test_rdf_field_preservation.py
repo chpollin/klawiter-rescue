@@ -209,3 +209,51 @@ def test_restored_rdf_properties_are_registered(term: str, datatype: URIRef) -> 
     assert (predicate, RDFS.isDefinedBy, KLAWITER[""]) in graph
     assert graph.value(predicate, RDFS.label, any=False)
     assert graph.value(predicate, RDFS.comment, any=False)
+
+
+def test_a_contested_value_node_references_its_claim_in_rdf() -> None:
+    """A place under an open claim must be distinguishable from an unreviewed
+    place in the flat graph, and the reference must survive RDF expansion."""
+    from lib.vocabulary import CONTEXT, to_rdf_entry
+
+    claim = "klawiter:claim/reconciliation/location/13c36aabb066d6a3"
+    entry = {"@id": "klawiter:entry/4269", "locationCreated": "Tyresö"}
+    contested = {("locationCreated", "Tyresö"): [claim]}
+    rdf = to_rdf_entry(entry, {}, contested)
+    graph = _rdf({**CONTEXT, **rdf})
+    place = _iri("klawiter:place/Tyres%C3%B6")
+    assert (place, KLAWITER.hasContestedClaim, _iri(claim)) in graph
+    unreviewed = to_rdf_entry(entry, {}, {})
+    assert "klawiter:hasContestedClaim" not in unreviewed["locationCreated"]
+
+
+def test_every_open_location_claim_marks_its_flat_value(canonical_entries) -> None:
+    """Each flat place whose value an open Gate-2 claim holds names that claim;
+    a place with a published authority link names none."""
+    claims_path = (
+        Path(__file__).resolve().parents[1]
+        / "data/output/reconciliation/contested-claims.json"
+    )
+    claims = json.loads(claims_path.read_text(encoding="utf-8"))["@graph"]
+    open_places = {
+        claim["klawiter:claimSubject"]["schema:name"]: claim["@id"]
+        for claim in claims
+        if claim["klawiter:identityScope"] == "location"
+        and claim["klawiter:claimStatus"] == "contested"
+    }
+    marked = 0
+    for entry in canonical_entries:
+        place = entry.get("locationCreated")
+        if not isinstance(place, dict):
+            continue
+        references = {
+            item["@id"] for item in place.get("klawiter:hasContestedClaim", [])
+        }
+        if place["name"] in open_places:
+            assert references == {open_places[place["name"]]}
+            marked += 1
+        else:
+            assert not references
+        if references:
+            assert "sameAs" not in place
+    assert marked, "no flat place carries an open location claim"

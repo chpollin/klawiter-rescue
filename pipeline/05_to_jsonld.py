@@ -16,6 +16,7 @@ Output: data/output/klawiter.jsonld (complete dataset)
 import json
 import os
 import sys
+import tomllib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
@@ -27,6 +28,8 @@ from lib.config import (
     OUTPUT_JSONLD,
     OUTPUT_PUBLISHABLE_LINKS,
     OUTPUT_RECONCILIATION_DECISIONS,
+    OUTPUT_RECONCILIATION_DIR,
+    PROJECT_ROOT,
     STEP_01_PAGELINKS,
     STEP_04_OUTPUT,
     csv_bool,
@@ -34,10 +37,44 @@ from lib.config import (
     setup_logging,
     write_json,
 )
-from lib.publications import build_page_publications, load_attested_places
+from lib.publications import (
+    attach_edition_state,
+    build_page_publications,
+    load_attested_places,
+    review_flag_codes,
+)
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP, to_rdf_entry
 
 log = setup_logging(__name__)
+
+DATA_LICENSE = "https://creativecommons.org/licenses/by/4.0/"
+EDITION_URL = "https://chpollin.github.io/klawiter-rescue/"
+# The release covers the current wiki pages; titles recorded as deleted are
+# outside it (knowledge/production-readiness.md#release-scope).
+DATASET_DESCRIPTION = (
+    "Bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the "
+    "University of Notre Dame. This digital edition covers the current pages "
+    "of the compiler's wiki; titles the wiki records as deleted are outside "
+    "its scope."
+)
+EDITOR = {
+    "@id": "klawiter:person/Christopher%20Pollin",
+    "@type": "schema:Person",
+    "name": "Christopher Pollin",
+    "description": "Responsible editor of the digital edition",
+    "affiliation": {
+        "@id": "klawiter:organization/Digital%20Humanities%20Craft",
+        "@type": "schema:Organization",
+        "name": "Digital Humanities Craft",
+    },
+}
+
+
+def release_version():
+    """The release version, read from its single source in pyproject.toml."""
+    with open(os.path.join(PROJECT_ROOT, "pyproject.toml"), "rb") as handle:
+        return tomllib.load(handle)["project"]["version"]
+
 
 # Stefan Zweig as one referenceable entity: the @id makes every author
 # reference resolve to a single node (canonical Wikidata RDF IRI, http form)
@@ -124,21 +161,66 @@ def build_reference_targets(rows):
     return targets
 
 
-def load_work_pages():
-    """Page ids that the canonical Work/Edition graph decomposes."""
+def _load_edition_graph():
     path = os.path.join(OUTPUT_EDITIONS_DIR, "work-editions.jsonld")
     if not os.path.exists(path):
         raise FileNotFoundError(
             f"Work/Edition graph is missing: {path}. Run Gate 1 before stage 05."
         )
     with open(path, encoding="utf-8") as handle:
-        works = json.load(handle)["works"]
+        return json.load(handle)
+
+
+def load_work_pages():
+    """Page ids that the canonical Work/Edition graph decomposes."""
+    works = _load_edition_graph()["works"]
     # A work created by a claim decision stands on no source page of its own.
     return {
         work["klawiter:sourcePageId"]
         for work in works
         if "klawiter:sourcePageId" in work
     }
+
+
+def load_edition_states():
+    """Review status of every edition node of the reviewed Gate-1 graph."""
+    return {
+        edition["@id"]: edition["klawiter:reviewStatus"]
+        for edition in _load_edition_graph()["editions"]
+    }
+
+
+# Flat fields whose value a Gate-2 claim can hold open, and the scope the
+# claim names for them.
+_CLAIM_FIELDS = {
+    "location": "locationCreated",
+    "person": "translator",
+    "publisher": "publisher",
+}
+
+
+def load_contested_values():
+    """Open Gate-2 claims by the flat field and value they hold open.
+
+    The flat graph otherwise cannot tell a contested value from an unreviewed
+    one: neither carries a sameAs link. A resolved claim is no longer open.
+    """
+    path = os.path.join(OUTPUT_RECONCILIATION_DIR, "contested-claims.json")
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            f"Gate 2 contested claims are missing: {path}. Run Gate 2 before stage 05."
+        )
+    with open(path, encoding="utf-8") as handle:
+        claims = json.load(handle)["@graph"]
+    contested = {}
+    for claim in claims:
+        field = _CLAIM_FIELDS.get(claim.get("klawiter:identityScope"))
+        if field is None or claim.get("klawiter:claimStatus") != "contested":
+            continue
+        name = claim["klawiter:claimSubject"]["schema:name"]
+        contested.setdefault((field, name), []).append(claim["@id"])
+    log.info("Contested flat values: %d", len(contested))
+    return contested
 
 
 def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=None):
@@ -394,18 +476,19 @@ def build_review(frontend_entry, review_index):
     return review
 
 
-def publication_layer(row, attested_places):
+def publication_layer(row, attested_places, edition_states=None):
     """Publication- and contribution-scoped facts of one source page.
 
     The flat fields stay as they are for search, facets and exports; this layer
     says which publication each fact belongs to. It is projected here rather
     than into the canonical flat graph, because for multi-edition pages the
     Gate-1 Work/Edition graph is the canonical structure and this projection
-    must not compete with it. See knowledge/data.md.
+    must not compete with it; each publication names its edition node and that
+    node's review status. See knowledge/data.md.
     """
     if row.get("page_namespace") != "0":
         return {}
-    return build_page_publications(
+    layer = build_page_publications(
         page_id=int(row["page_id"]),
         text=row.get("raw_content", ""),
         page_title=row.get("page_title", ""),
@@ -413,6 +496,8 @@ def publication_layer(row, attested_places):
         attested_places=attested_places,
         delivered_text=row.get("clean_content", ""),
     )
+    attach_edition_state(layer, edition_states or {})
+    return layer
 
 
 # Page-level keys the main dataset keeps, so search and facets need no side
@@ -487,6 +572,11 @@ def make_frontend_entry(jsonld_entry, review_index=None, publications=None):
         e["review"] = review
     if publications:
         e.update({key: publications[key] for key in _PUBLICATION_SUMMARY_KEYS})
+        # The card can say that a page holds open cases without fetching
+        # its side file.
+        flag_codes = review_flag_codes(publications)
+        if flag_codes:
+            e["publicationReviewFlags"] = flag_codes
     return e
 
 
@@ -567,8 +657,11 @@ def main():
     repair_see_references(rows)
     location_uris = load_location_wikidata()
     agent_links = load_agent_wikidata()
+    contested = load_contested_values()
     reference_targets = build_reference_targets(rows)
     work_pages = load_work_pages()
+    edition_states = load_edition_states()
+    version = release_version()
     log.info(f"Work/Edition coupling targets: {len(work_pages)} pages")
 
     entries = []
@@ -585,18 +678,21 @@ def main():
         "@type": "schema:Dataset",
         "@id": "klawiter:klawiter-bibliography",
         "name": "Stefan Zweig Bibliography (Klawiter)",
-        "description": "Complete bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame",
+        "description": DATASET_DESCRIPTION,
         "creator": {
             "@id": "klawiter:person/Randolph%20J.%20Klawiter",
             "@type": "schema:Person",
             "name": "Dr. Randolph J. Klawiter",
         },
+        "editor": EDITOR,
         "sourceOrganization": {
             "@id": "klawiter:organization/University%20of%20Notre%20Dame",
             "@type": "schema:Organization",
             "name": "University of Notre Dame",
         },
-        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "license": DATA_LICENSE,
+        "version": version,
+        "url": EDITION_URL,
         # The Work/Edition graph is the canonical dataset for pages with
         # multiple editions; this flat dataset is its derived convenience
         # projection (operator decision 2026-08-26).
@@ -607,7 +703,7 @@ def main():
             "dataset; this flat dataset is a derived convenience projection."
         ),
         "totalEntries": len(entries),
-        "entries": [to_rdf_entry(entry, agent_links) for entry in entries],
+        "entries": [to_rdf_entry(entry, agent_links, contested) for entry in entries],
     }
 
     write_json(OUTPUT_JSONLD, dataset, indent=2)
@@ -618,7 +714,7 @@ def main():
     for entry in entries:
         entry_id = entry.get("@id", "").split("/")[-1]
         if entry_id:
-            entry_file = {**CONTEXT, **to_rdf_entry(entry, agent_links)}
+            entry_file = {**CONTEXT, **to_rdf_entry(entry, agent_links, contested)}
             path = os.path.join(OUTPUT_ENTRIES_DIR, f"{entry_id}.jsonld")
             write_json(path, entry_file, indent=2)
 
@@ -639,7 +735,7 @@ def main():
     publication_layers = {}
     for row, e in zip(rows, entries, strict=True):
         if not e.get("isRedirect"):
-            layer = publication_layer(row, attested_places)
+            layer = publication_layer(row, attested_places, edition_states)
             if layer:
                 publication_layers[int(row["page_id"])] = layer
             fe = make_frontend_entry(e, review_index, layer)
@@ -725,8 +821,12 @@ def main():
         # Declared shape of this file; tests/test_frontend_contract.py holds
         # the matching declaration. 1.1 added the per-entry review projection,
         # 1.2 the publication- and contribution-scoped layer, 1.3 its move
-        # into per-page side files.
-        "frontendSchemaVersion": "1.3",
+        # into per-page side files, 1.4 the edition node and review status
+        # per publication, the page's publication flag codes, the imprint
+        # pairs and series gloss, and the release license and version.
+        "frontendSchemaVersion": "1.4",
+        "license": DATA_LICENSE,
+        "version": version,
         "ns0Count": ns0_count,
         "totalCount": len(non_redirect_entries),
         "redirectCount": len(redirect_map),
