@@ -1,7 +1,7 @@
 {
   "upload_type": "dataset",
   "title": "Stefan Zweig Bibliography (Klawiter)",
-  "description": "The Stefan Zweig Bibliography compiled by Randolph J. Klawiter (University of Notre Dame), extracted from the decommissioned MediaWiki database of the bibliography and structured as JSON-LD with Schema.org, Dublin Core and a domain vocabulary, with the pipeline, validation evidence and a static research interface. The publication covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0. The archival database dump is preserved separately and is not part of this archive.",
+  "description": "The Stefan Zweig Bibliography compiled by Randolph J. Klawiter (University of Notre Dame), extracted from the decommissioned MediaWiki database of the bibliography and structured as JSON-LD with Schema.org, Dublin Core and a domain vocabulary, with the pipeline, validation evidence and a static research interface. The publication covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0. The archive includes the page and text tables of the MediaWiki dump that the pipeline reads, so the publication can be rebuilt; the account tables of the wiki are left out.",
   "creators": [
     {
       "name": "Klawiter, Randolph J.",
@@ -46,5 +46,10 @@
       "scheme": "url"
     }
   ],
-  "notes": "Data and documentation are licensed under CC BY 4.0, code under MIT (see LICENSE and LICENSES/)."
+  "notes": "Data and documentation are licensed under CC BY 4.0, code under MIT (see LICENSE and LICENSES/).",
+  "communities": [
+    {
+      "identifier": "dhcraft"
+    }
+  ]
 }

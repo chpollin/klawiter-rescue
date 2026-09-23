@@ -526,8 +526,16 @@ klawiter:reviewEvidenceSha256
 klawiter:reviewStatus
     a rdf:Property ;
     rdfs:label "review status"@en ;
-    rdfs:comment "Review state of an edition proposal: proposed, confirmed, rejected, or contested."@en ;
+    rdfs:comment "Review state of an edition proposal (proposed, confirmed, rejected or contested), and in the per-entry export of the interface the dataset review status of an entry (approved, agent_verified, reviewed or contested), whose scope the accompanying review actions name."@en ;
     rdfs:range xsd:string ;
+    skos:changeNote "Extended on 2026-09-23 to the dataset review status of an entry in the per-entry export."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceRevision
+    a rdf:Property ;
+    rdfs:label "source revision"@en ;
+    rdfs:comment "The wiki revision an entry is published from where it departs from the page's latest revision, because the wiki's automatic Redirect fixer account had overwritten the page with an unrelated redirect. The value names the revision, its author and date, its text identifier, the decision that restored it and the reason."@en ;
+    skos:changeNote "Added on 2026-09-23 with the restoration of pages overwritten by the Redirect fixer."@en ;
     rdfs:isDefinedBy klawiter: .
 
 klawiter:reviewFlags

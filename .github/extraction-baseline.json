@@ -6,16 +6,6 @@
   "contract": "Exact inventory of remaining rule/expectation disagreements. Expected values remain in tests/test_sample_20.json and semantic diagnostics stay red. The default guard rejects new or changed incorrect values. Source-reviewed improvements are recorded below; never regenerate this list to accept a regression.",
   "knownMismatches": [
     {
-      "pageId": 4303,
-      "field": "publisher",
-      "actual": null
-    },
-    {
-      "pageId": 1800,
-      "field": "publisher",
-      "actual": "Translated by Dimitŭr Stoevski. 1st edition"
-    },
-    {
       "pageId": 5746,
       "field": "publisher",
       "actual": "Juventud"
@@ -31,24 +21,9 @@
       "actual": null
     },
     {
-      "pageId": 5082,
-      "field": "publisher",
-      "actual": null
-    },
-    {
-      "pageId": 1891,
-      "field": "publisher",
-      "actual": null
-    },
-    {
       "pageId": 1891,
       "field": "translator",
       "actual": "R. Gal’perina"
-    },
-    {
-      "pageId": 4445,
-      "field": "publisher",
-      "actual": null
     },
     {
       "pageId": 4445,
@@ -56,19 +31,9 @@
       "actual": "Freiburg"
     },
     {
-      "pageId": 4376,
-      "field": "publisher",
-      "actual": null
-    },
-    {
       "pageId": 1999,
       "field": "publisher",
       "actual": "Peter Lang Verlag"
-    },
-    {
-      "pageId": 4209,
-      "field": "publisher",
-      "actual": null
     },
     {
       "pageId": 4209,
@@ -122,6 +87,48 @@
           "reason": "Restores the literal name at the same source occurrence. The credit belongs to Mariia Stiuart, not demonstrably to the whole volume; scope remains a failing expectation."
         }
       ]
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": "knowledge/journal.md",
+      "resolved": [
+        {
+          "pageId": 4303,
+          "field": "publisher",
+          "actual": null
+        },
+        {
+          "pageId": 1800,
+          "field": "publisher",
+          "actual": "Translated by Dimitŭr Stoevski. 1st edition"
+        },
+        {
+          "pageId": 5082,
+          "field": "publisher",
+          "actual": null
+        },
+        {
+          "pageId": 1891,
+          "field": "publisher",
+          "actual": null
+        },
+        {
+          "pageId": 4445,
+          "field": "publisher",
+          "actual": null
+        },
+        {
+          "pageId": 4376,
+          "field": "publisher",
+          "actual": null
+        },
+        {
+          "pageId": 4209,
+          "field": "publisher",
+          "actual": null
+        }
+      ],
+      "reason": "The flat publisher follows the publication imprint of the source header since 2026-09-08; each of these pages now reports the reviewed expected publisher."
     }
   ]
 }

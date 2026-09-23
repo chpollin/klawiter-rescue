@@ -3,5 +3,6 @@
 * text=auto eol=lf
 data/raw/** binary
 
-# The archival dump holds account and edit metadata; it stays out of release archives.
-data/raw export-ignore
+# The wiki's account tables (users, password hashes, watchlists) stay out of
+# release archives; the pipeline reads only zweig_part_01.sql and the text stores.
+data/raw/zweig_part_03.sql export-ignore

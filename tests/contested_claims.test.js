@@ -233,3 +233,38 @@ function load(file, context, exported) {
 }
 
 console.log('all contested-claim checks passed');
+
+{
+  // A restored page names the revision it is published from in its download.
+  const entry = {
+    sourcePageId: 35,
+    sourceRevision: {
+      decisionId: 'source-revision/35/restore-human-revision',
+      action: 'restore-human-revision',
+      reason: 'The Redirect fixer revision replaced a content page with a redirect.',
+      humanRevision: { revisionId: 33251, timestamp: '2017-09-25T20:31:36Z', actor: 'Klawiter', textId: 32391 },
+      fixerRevisions: [{ revisionId: 33773, timestamp: '2017-10-08T20:25:29Z', comment: '' }],
+    },
+  };
+  const context = {
+    console,
+    App: { entryMap: new Map([[35, entry]]) },
+    Edit: { editionClaimsFor: () => [], contestedAuthorityClaims: [] },
+    JsonldPlayground: {
+      _toCompactJsonld: () => ({
+        '@context': { schema: 'https://schema.org/', klawiter: 'https://example.test/' },
+        '@id': 'klawiter:entry/35',
+      }),
+    },
+    downloadBlob: () => {},
+    location: {},
+    navigator: {},
+    document: {},
+    setTimeout,
+  };
+  const Export = load('export.js', context, 'Export');
+  const revision = Export._jsonldPayload(entry)['klawiter:sourceRevision'];
+  assert.strictEqual(revision['schema:identifier'], '33251');
+  assert.strictEqual(revision['klawiter:sourceTextId'], 32391);
+  assert.strictEqual(revision['klawiter:decisionId'], 'source-revision/35/restore-human-revision');
+}

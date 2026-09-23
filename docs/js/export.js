@@ -599,6 +599,18 @@ const Export = {
     };
   },
 
+  _sourceRevisionNode(rev) {
+    const human = rev.humanRevision || {};
+    return {
+      'schema:identifier': String(human.revisionId),
+      'schema:dateCreated': human.timestamp,
+      'schema:author': { 'schema:name': human.actor },
+      'klawiter:sourceTextId': human.textId,
+      'klawiter:decisionId': rev.decisionId,
+      'schema:description': rev.reason,
+    };
+  },
+
   /**
    * The record as the playground compacts it, plus what that view leaves
    * out because the @context defines no term for it: the published place
@@ -612,6 +624,7 @@ const Export = {
     const entryNode = { ...compact };
     delete entryNode['@context'];
     if (entry.locationSameAs) entryNode['klawiter:locationSameAs'] = { '@id': entry.locationSameAs };
+    if (entry.sourceRevision) entryNode['klawiter:sourceRevision'] = this._sourceRevisionNode(entry.sourceRevision);
     Object.assign(entryNode, this._reviewProperties(entry));
     const claimNodes = [
       ...(Edit.editionClaimsFor(entry) || []).map(claim => this._editionClaimNode(claim)),

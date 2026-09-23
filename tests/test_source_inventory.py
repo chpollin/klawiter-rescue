@@ -14,8 +14,11 @@ def test_raw_dump_matches_its_inventory():
     present = {
         p.relative_to(ROOT).as_posix() for p in (ROOT / "data" / "raw").iterdir()
     }
-    assert present == set(listed), "raw dump and inventory list different files"
-    for path, entry in listed.items():
+    # A release archive leaves out the account tables, so only they may be absent.
+    required = {path for path, entry in listed.items() if entry["inReleaseArchive"]}
+    assert required <= present <= set(listed), "raw dump and inventory disagree"
+    for path in present:
+        entry = listed[path]
         content = (ROOT / path).read_bytes()
         assert len(content) == entry["bytes"], path
         assert hashlib.sha256(content).hexdigest() == entry["sha256"], path
