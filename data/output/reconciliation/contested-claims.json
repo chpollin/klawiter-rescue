@@ -140,12 +140,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "contested",
+      "klawiter:claimStatus": "resolved",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Sofija%2C%20Varna",
         "schema:name": "Sofija, Varna"
       },
-      "klawiter:decisionStatus": "open",
+      "klawiter:decisionStatus": "decided",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/2555757b78ef071e",
@@ -158,6 +158,21 @@
           "prov:wasAssociatedWith": {
             "schema:name": "independent-verification-agent"
           }
+        },
+        {
+          "@id": "klawiter:review/reconciliation/af89c18cf23bbdcd",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Sofija-Varna/reject",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/1725/19466/11",
+            "klawiter:sourceOccurrence/location/1799/18911/11",
+            "The compound subject names two cities; each component is decided as its own subject: Sofija (Q472) and Varna (Q6506)."
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "reject",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
         }
       ],
       "klawiter:identityScope": "location",
@@ -167,7 +182,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Sofija, Varna/Q472",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q472"
           },
@@ -178,7 +193,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Sofija, Varna/Q6506",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q6506"
           },
@@ -188,22 +203,21 @@
           "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "schema:name": "No canonical authority assignment in the current evidence"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/two-places",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "reviewed-decision",
+          "klawiter:interpretationStatus": "accepted",
+          "schema:name": "Two places of publication, decided separately: Sofija (Q472) and Varna (Q6506)"
         }
       ],
+      "klawiter:reviewNote": [
+        "No single place identity is assigned to the compound string; the single-identity readings are rejected."
+      ],
       "klawiter:sourceEvidence": [
-        {
-          "@id": "klawiter:sourceOccurrence/location/299/61398/46",
-          "sourceLine": 46,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 299,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Zakopanijat sveshtnik\\\" in  [1]. [[Igrachŭt na shakh  * Zakopanijat sveshtnik. Noveli]]  [Varna, 1992], No. 2, pp. 79-240.  Translated by An. Liubenova.  [2]. [[Zakopanijat sveshtnik. Legendi]]  [Sofija, 1946], No. 1, pp. 5-120. Translated by Dimitŭr Simidov",
-          "sourceTextId": 61398,
-          "sourceTextSha256": "d499c7774fa4e243598f6bc668f57c49bdb6ad6b816b9d0d3b157b7a96e501d6",
-          "sourceValue": "Sofija, Varna"
-        },
         {
           "@id": "klawiter:sourceOccurrence/location/1725/19466/11",
           "sourceLine": 11,
@@ -224,83 +238,6 @@
           "sourceText": "'''[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna'''",
           "sourceTextId": 18911,
           "sourceTextSha256": "b7289404e7867f1053ec7f714aa7a6c8f8a5692bc825f2afb1e2c0e361b1be34",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/2418/55869/29",
-          "sourceLine": 29,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 2418,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:'''  \\\"Knigata kato vŭvezhdane v sveta\\\" in [1].  [[Srešti]] [Sofija, 1947], No. 24, pp. 241-249 //  New translation: \\\"Knigata kato vrata kŭm sveta\\\" in  [2].[[Evropeïskata misŭl]] [Varna, 1985], No. 2, pp. 11-19.  [3].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 15, pp. 141-149",
-          "sourceTextId": 55869,
-          "sourceTextSha256": "bb3fcc7ae066bc2646e59850d3953d4227fcf194d59add19fca5f0488fcf3e11",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/3324/54121/22",
-          "sourceLine": 22,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 3324,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Evropeĭskata misŭl v  neĭnoto istorichesko razvitie\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 21, pp. 320-338. [2]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 8, pp. 58-78",
-          "sourceTextId": 54121,
-          "sourceTextSha256": "1a15f1ce4701a0abe03a3c71c843df5c30c331da3516a3a22880d27dd11e33fd",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/6222/56114/72",
-          "sourceLine": 72,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6222,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Balzak\\\" in [1].  [[Evropeĭskata misŭl]] [Varna, 1985], No. 4, pp. 60-88. [2]. [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 3, pp. 85-110. [3]. [[Romanŭt na edin zhivot. Balzak]]  [Sofija, 1947 and 1960]. [4]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 30, pp. 305-335. [5].  [[Trima maĭstori: Balzak - Dikens - Dostoevski]] [Sofija, 1946], No. 3, pp. 35-70",
-          "sourceTextId": 56114,
-          "sourceTextSha256": "fbda5be943b4fb227cd36873b419ce472243f4d45c263be5b2b29d2f7f654797",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/6242/55044/39",
-          "sourceLine": 39,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6242,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Romen Rolan\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 12, pp. 205-220. [2].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]]  [Sofija, 1987-1989], Vol. 4, No. 14, pp. 125-140",
-          "sourceTextId": 55044,
-          "sourceTextSha256": "3a9a531e29ea7a910c908e317124b6cb92a4d64bbbcc1e71c714f516f16b995c",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/6448/56242/33",
-          "sourceLine": 33,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6448,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Dikenz\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 5, pp. 89-115. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 4, pp. 111-134. [3].  [[Trima maĭstori: Balzak  - Dikenz  - Dostoevski]]   [Sofija, 1946], No. 4, pp. 71-103",
-          "sourceTextId": 56242,
-          "sourceTextSha256": "23bde594dc70e4212e829fc5ba6651e0e567a6b65e1ec3385f52657da53f09bb",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/6820/61508/50",
-          "sourceLine": 50,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6820,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Igrachŭt na shakh\\\" in [1].  [[Igrachŭt na shakh * Zakopanijat sveshtnik. Noveli]] [Varna, 1992], No. 1, pp. 3-78. Translated by An. Liubenova. [2]. [[Zvezdni migove]] [Plovdiv, 1992], No. 7, pp. 65-102. Translated by Rumiana Khristova. '''See:''' [[Igrachŭt na shakh]]  //   \\\"Shakhmatna novela\\\" in [3]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], No. 12, pp. 542-600. Translated by Ventseslav Konstantinov. '''See:''' [[Shakhmatistŭt. Novela]] and [[Shakhmatna novela]]",
-          "sourceTextId": 61508,
-          "sourceTextSha256": "5177bd90bcc91506337363da86f91893e49df0f9047b5b7292d5094d097f16ba",
-          "sourceValue": "Sofija, Varna"
-        },
-        {
-          "@id": "klawiter:sourceOccurrence/location/7207/55478/46",
-          "sourceLine": 46,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 7207,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Monten\\\" in [1]. [[Evropeĭskata misŭl]] [Varna, 1985], No. 20, pp. 260-319. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 2, pp. 27-82",
-          "sourceTextId": 55478,
-          "sourceTextSha256": "9f58d422c119448aa176b7eb1dd2d098f9b0394d9b6a1474c12ce3451ad0721d",
           "sourceValue": "Sofija, Varna"
         }
       ]
@@ -372,12 +309,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "contested",
+      "klawiter:claimStatus": "resolved",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Bloemfontein%2C%20Kaapstad",
         "schema:name": "Bloemfontein, Kaapstad"
       },
-      "klawiter:decisionStatus": "open",
+      "klawiter:decisionStatus": "decided",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/55bfb7a5fa7f12fa",
@@ -390,6 +327,21 @@
           "prov:wasAssociatedWith": {
             "schema:name": "independent-verification-agent"
           }
+        },
+        {
+          "@id": "klawiter:review/reconciliation/81de1df3bd6b0806",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Bloemfontein-Kaapstad/reject",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/4209/42182/1",
+            "klawiter:sourceOccurrence/location/5330/40807/1",
+            "The compound subject names two cities; each component is decided as its own subject: Bloemfontein (Q37701) and Kaapstad (Capetown) (Q5465)."
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "reject",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
         }
       ],
       "klawiter:identityScope": "location",
@@ -399,7 +351,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Bloemfontein, Kaapstad/Q37701",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q37701"
           },
@@ -410,7 +362,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Bloemfontein, Kaapstad/Q5465",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q5465"
           },
@@ -420,9 +372,19 @@
           "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "schema:name": "No canonical authority assignment in the current evidence"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/two-places",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "reviewed-decision",
+          "klawiter:interpretationStatus": "accepted",
+          "schema:name": "Two places of publication, decided separately: Bloemfontein (Q37701) and Kaapstad (Capetown) (Q5465)"
         }
+      ],
+      "klawiter:reviewNote": [
+        "No single place identity is assigned to the compound string; the single-identity readings are rejected."
       ],
       "klawiter:sourceEvidence": [
         {
@@ -455,12 +417,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "contested",
+      "klawiter:claimStatus": "resolved",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Varna%2C%20Sofija",
         "schema:name": "Varna, Sofija"
       },
-      "klawiter:decisionStatus": "open",
+      "klawiter:decisionStatus": "decided",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/1a0a02215105f3e0",
@@ -473,6 +435,21 @@
           "prov:wasAssociatedWith": {
             "schema:name": "independent-verification-agent"
           }
+        },
+        {
+          "@id": "klawiter:review/reconciliation/79c30eb0b6760fb9",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Varna-Sofija/reject",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/1725/19466/11",
+            "klawiter:sourceOccurrence/location/1799/18911/11",
+            "The compound subject names two cities; each component is decided as its own subject: Varna (Q6506) and Sofija (Q472)."
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "reject",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
         }
       ],
       "klawiter:identityScope": "location",
@@ -482,7 +459,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Varna, Sofija/Q6506",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q6506"
           },
@@ -493,7 +470,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Varna, Sofija/Q472",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q472"
           },
@@ -503,22 +480,21 @@
           "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "schema:name": "No canonical authority assignment in the current evidence"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/two-places",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "reviewed-decision",
+          "klawiter:interpretationStatus": "accepted",
+          "schema:name": "Two places of publication, decided separately: Varna (Q6506) and Sofija (Q472)"
         }
       ],
+      "klawiter:reviewNote": [
+        "No single place identity is assigned to the compound string; the single-identity readings are rejected."
+      ],
       "klawiter:sourceEvidence": [
-        {
-          "@id": "klawiter:sourceOccurrence/location/299/61398/46",
-          "sourceLine": 46,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 299,
-          "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Zakopanijat sveshtnik\\\" in  [1]. [[Igrachŭt na shakh  * Zakopanijat sveshtnik. Noveli]]  [Varna, 1992], No. 2, pp. 79-240.  Translated by An. Liubenova.  [2]. [[Zakopanijat sveshtnik. Legendi]]  [Sofija, 1946], No. 1, pp. 5-120. Translated by Dimitŭr Simidov",
-          "sourceTextId": 61398,
-          "sourceTextSha256": "d499c7774fa4e243598f6bc668f57c49bdb6ad6b816b9d0d3b157b7a96e501d6",
-          "sourceValue": "Varna, Sofija"
-        },
         {
           "@id": "klawiter:sourceOccurrence/location/1725/19466/11",
           "sourceLine": 11,
@@ -540,83 +516,613 @@
           "sourceTextId": 18911,
           "sourceTextSha256": "b7289404e7867f1053ec7f714aa7a6c8f8a5692bc825f2afb1e2c0e361b1be34",
           "sourceValue": "Varna, Sofija"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/1868",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/1868",
+        "schema:name": "1927-1932: Sobranie sochinenii Stefana Tsveiga"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/0fa412d59c1c802e",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/1868/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 7584 by Redirect fixer at 2010-10-07T18:27:43Z, text_id 7532: [[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga]] has been moved, it is now a redirect to [[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga v dvenadtsati tomakh]]",
+            "zweig_revision 17555 by Redirect fixer at 2014-04-06T13:51:42Z, text_id 17326: [[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga v dvenadtsati tomakh]] has been moved, it is now a redirect to [[1927-1932: Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+            "zweig_revision 17612 by Redirect fixer at 2014-04-06T18:22:51Z, text_id 17362: [[1927-1932: Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]] has been moved, it is now a redirect to [[Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+            "Overwritten revision 7252: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/1868/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/2418/55869/29",
-          "sourceLine": 29,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 2418,
+          "@id": "klawiter:claim/source-revision/1868/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/1868/17362/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 1868,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:'''  \\\"Knigata kato vŭvezhdane v sveta\\\" in [1].  [[Srešti]] [Sofija, 1947], No. 24, pp. 241-249 //  New translation: \\\"Knigata kato vrata kŭm sveta\\\" in  [2].[[Evropeïskata misŭl]] [Varna, 1985], No. 2, pp. 11-19.  [3].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 15, pp. 141-149",
-          "sourceTextId": 55869,
-          "sourceTextSha256": "bb3fcc7ae066bc2646e59850d3953d4227fcf194d59add19fca5f0488fcf3e11",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+          "sourceTextId": 17362,
+          "sourceTextSha256": "04afd0f15db37cdc717003e01d0aa64f105beb8460445e7db3e6fb095c32adc3",
+          "sourceValue": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/1931",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/1931",
+        "schema:name": "2009-2010: Sobranie sochineniĭ v 8 tomakh"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/f86fe31e9f546953",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/1931/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 7587 by Redirect fixer at 2010-10-07T18:30:16Z, text_id 7534: [[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vosem' tomakh]] has been moved, it is now a redirect to [[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vos'mi tomakh]]",
+            "zweig_revision 17571 by Redirect fixer at 2014-04-06T14:16:38Z, text_id 17336: [[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vos'mi tomakh]] has been moved, it is now a redirect to [[2009-2010: Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+            "zweig_revision 17648 by Redirect fixer at 2014-04-06T18:50:47Z, text_id 17388: [[2009-2010: Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]] has been moved, it is now a redirect to [[Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+            "Overwritten revision 7562: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/1931/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/3324/54121/22",
-          "sourceLine": 22,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 3324,
+          "@id": "klawiter:claim/source-revision/1931/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/1931/17388/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 1931,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Evropeĭskata misŭl v  neĭnoto istorichesko razvitie\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 21, pp. 320-338. [2]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 8, pp. 58-78",
-          "sourceTextId": 54121,
-          "sourceTextSha256": "1a15f1ce4701a0abe03a3c71c843df5c30c331da3516a3a22880d27dd11e33fd",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+          "sourceTextId": 17388,
+          "sourceTextSha256": "269ea1fbc6015d1ed15fdc12d3d5427b8eafc0b48d5994856aef844717f9443c",
+          "sourceValue": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/1934",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/1934",
+        "schema:name": "Sobranie sochineniĭ v odnom tome"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/9e3fdc056320b021",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/1934/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 7572 by Redirect fixer at 2010-10-06T22:10:27Z, text_id 7521: [[Sobranie sochineniĭ Stefana TSveĭga v odnom tome]] has been moved, it is now a redirect to [[Sobranie sochineniĭ Stefana Tsveĭga v odnom tome]]",
+            "zweig_revision 17594 by Redirect fixer at 2014-04-06T18:00:38Z, text_id 17351: [[Sobranie sochineniĭ Stefana Tsveĭga v odnom tome]] has been moved, it is now a redirect to [[Sobranie sochinenii Stefana Tsveiga v odnom tome]]",
+            "Overwritten revision 7569: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/1934/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Sobranie sochinenii Stefana Tsveiga v odnom tome, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/6222/56114/72",
-          "sourceLine": 72,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6222,
+          "@id": "klawiter:claim/source-revision/1934/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/1934/17351/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 1934,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Balzak\\\" in [1].  [[Evropeĭskata misŭl]] [Varna, 1985], No. 4, pp. 60-88. [2]. [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 3, pp. 85-110. [3]. [[Romanŭt na edin zhivot. Balzak]]  [Sofija, 1947 and 1960]. [4]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], Vol. 4, No. 30, pp. 305-335. [5].  [[Trima maĭstori: Balzak - Dikens - Dostoevski]] [Sofija, 1946], No. 3, pp. 35-70",
-          "sourceTextId": 56114,
-          "sourceTextSha256": "fbda5be943b4fb227cd36873b419ce472243f4d45c263be5b2b29d2f7f654797",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v odnom tome]]",
+          "sourceTextId": 17351,
+          "sourceTextSha256": "448eb57d2cccb413040f197a8f4f243c8d59040e640738692e4dfec94bc38d50",
+          "sourceValue": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v odnom tome]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/2129",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/2129",
+        "schema:name": "Stefan Zweig 1881. - 1942. (Katalog)"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/0ddc75ab56ecf6fa",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/2129/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 8891 by Redirect fixer at 2011-03-15T19:11:50Z, text_id 8831: [[Stefan Zweig 1881-1942. (Katalog)]] has been moved, it is now a redirect to [[Stefan Zweig 1881-1942. Katalog]]",
+            "Overwritten revision 8888: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/2129/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Stefan Zweig 1881-1942. Katalog, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/6242/55044/39",
-          "sourceLine": 39,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6242,
+          "@id": "klawiter:claim/source-revision/2129/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/2129/8831/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 2129,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Romen Rolan\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 12, pp. 205-220. [2].  [[Stefan Tsvaig. Izbrani tvorbi v pet toma]]  [Sofija, 1987-1989], Vol. 4, No. 14, pp. 125-140",
-          "sourceTextId": 55044,
-          "sourceTextSha256": "3a9a531e29ea7a910c908e317124b6cb92a4d64bbbcc1e71c714f516f16b995c",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Stefan Zweig 1881-1942. Katalog]]",
+          "sourceTextId": 8831,
+          "sourceTextSha256": "0d7f7d5020ede8bca22de253ba4cc1bf0ff2b75b17f896d8c6d0219dc664dc42",
+          "sourceValue": "#REDIRECT [[Stefan Zweig 1881-1942. Katalog]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/2252",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/2252",
+        "schema:name": "Prohombres del espiritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos (Begegnungen mit Menschen)"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/9892aa5141fab4c9",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/2252/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 9964 by Redirect fixer at 2011-06-09T20:48:37Z, text_id 9889: [[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos (Begegnungen mit Menschen)]] has been moved, it is now a redirect to [[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos con",
+            "zweig_revision 40538 by Redirect fixer at 2018-06-14T14:31:28Z, text_id 39450: [[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos]] has been moved, it is now a redirect to [[Prohombres del espíritu...]]",
+            "zweig_revision 40581 by Redirect fixer at 2018-06-15T13:04:15Z, text_id 39491: [[Prohombres del espíritu...]] has been moved, it is now a redirect to [[Prohombres del espíritu]]",
+            "Overwritten revision 9950: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/2252/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Prohombres del espíritu, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/6448/56242/33",
-          "sourceLine": 33,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6448,
+          "@id": "klawiter:claim/source-revision/2252/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/2252/39491/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 2252,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Dikenz\\\" in [1]. [[Evropeĭskata misŭl]]  [Varna, 1985], No. 5, pp. 89-115. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 4, pp. 111-134. [3].  [[Trima maĭstori: Balzak  - Dikenz  - Dostoevski]]   [Sofija, 1946], No. 4, pp. 71-103",
-          "sourceTextId": 56242,
-          "sourceTextSha256": "23bde594dc70e4212e829fc5ba6651e0e567a6b65e1ec3385f52657da53f09bb",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Prohombres del espíritu]]",
+          "sourceTextId": 39491,
+          "sourceTextSha256": "c70e5dd58284772a7a5b99bd109b90a0f1587db7dd33e02af3d23d5391129f79",
+          "sourceValue": "#REDIRECT [[Prohombres del espíritu]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/2270",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/2270",
+        "schema:name": "Unrast der Liebe"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/95a93bbecbd4d54a",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/2270/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 10457 by Redirect fixer at 2011-07-30T16:12:10Z, text_id 10367: [[Stefan Zweig - Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]] has been moved, it is now a redirect to [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwe",
+            "Overwritten revision 10438: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/2270/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/6820/61508/50",
-          "sourceLine": 50,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 6820,
+          "@id": "klawiter:claim/source-revision/2270/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/2270/10367/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 2270,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Igrachŭt na shakh\\\" in [1].  [[Igrachŭt na shakh * Zakopanijat sveshtnik. Noveli]] [Varna, 1992], No. 1, pp. 3-78. Translated by An. Liubenova. [2]. [[Zvezdni migove]] [Plovdiv, 1992], No. 7, pp. 65-102. Translated by Rumiana Khristova. '''See:''' [[Igrachŭt na shakh]]  //   \\\"Shakhmatna novela\\\" in [3]. [[Stefan Tsvaig. Izbrani tvorbi v pet toma]] [Sofija, 1987-1989], No. 12, pp. 542-600. Translated by Ventseslav Konstantinov. '''See:''' [[Shakhmatistŭt. Novela]] and [[Shakhmatna novela]]",
-          "sourceTextId": 61508,
-          "sourceTextSha256": "5177bd90bcc91506337363da86f91893e49df0f9047b5b7292d5094d097f16ba",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]",
+          "sourceTextId": 10367,
+          "sourceTextSha256": "ded626fbbba21f7863170f4bee813976e5e34a852bc5e58f7634125e2862526b",
+          "sourceValue": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/2284",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/2284",
+        "schema:name": "Stefan Zweig . Paul Zech - Briefe 1910-1942"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/e67ef0ce771d869c",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/2284/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 10225 by Redirect fixer at 2011-07-13T19:20:07Z, text_id 10145: [[Stefan Zweig - Paul Zech - Briefe 1910-1942]] has been moved, it is now a redirect to [[Stefan Zweig - Paul Zech. Briefe 1910-1942]]",
+            "Overwritten revision 10174: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/2284/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Stefan Zweig - Paul Zech. Briefe 1910-1942, as the Redirect fixer left it"
         },
         {
-          "@id": "klawiter:sourceOccurrence/location/7207/55478/46",
-          "sourceLine": 46,
-          "sourceMatchMode": "component-set",
-          "sourcePageId": 7207,
+          "@id": "klawiter:claim/source-revision/2284/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/2284/10145/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 2284,
           "sourcePath": "data/intermediate/04_classified.csv",
-          "sourceText": "'''Bulgarian:''' \\\"Monten\\\" in [1]. [[Evropeĭskata misŭl]] [Varna, 1985], No. 20, pp. 260-319. [2].  [[Portreti na evropeĭski pisateli]] [Sofija, 1984], No. 2, pp. 27-82",
-          "sourceTextId": 55478,
-          "sourceTextSha256": "9f58d422c119448aa176b7eb1dd2d098f9b0394d9b6a1474c12ce3451ad0721d",
-          "sourceValue": "Varna, Sofija"
+          "sourceText": "#REDIRECT [[Stefan Zweig - Paul Zech. Briefe 1910-1942]]",
+          "sourceTextId": 10145,
+          "sourceTextSha256": "c4fa2061c58a1f5ca01891eb8f8f45dc3bfd9b12d9f95671547c16328525e131",
+          "sourceValue": "#REDIRECT [[Stefan Zweig - Paul Zech. Briefe 1910-1942]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/2328",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/2328",
+        "schema:name": "Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/125949de0678ba4e",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/2328/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 10458 by Redirect fixer at 2011-07-30T16:12:19Z, text_id 10368: [[Stefan Zweig - Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]] has been moved, it is now a redirect to [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwe",
+            "Overwritten revision 10439: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/2328/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels, as the Redirect fixer left it"
+        },
+        {
+          "@id": "klawiter:claim/source-revision/2328/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/2328/10368/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 2328,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]",
+          "sourceTextId": 10368,
+          "sourceTextSha256": "ded626fbbba21f7863170f4bee813976e5e34a852bc5e58f7634125e2862526b",
+          "sourceValue": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/2329",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/2329",
+        "schema:name": "Stefan Zweig / Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/1e3edd7fb0259ce3",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/2329/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 10459 by Redirect fixer at 2011-07-30T16:12:26Z, text_id 10369: [[Stefan Zweig - Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]] has been moved, it is now a redirect to [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwe",
+            "Overwritten revision 10437: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/2329/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels, as the Redirect fixer left it"
+        },
+        {
+          "@id": "klawiter:claim/source-revision/2329/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/2329/10369/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 2329,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]",
+          "sourceTextId": 10369,
+          "sourceTextSha256": "ded626fbbba21f7863170f4bee813976e5e34a852bc5e58f7634125e2862526b",
+          "sourceValue": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/source-revision/670",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "klawiter:redirectTarget"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:entry/670",
+        "schema:name": "Le chandelier enterré"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/f678155a627c3e55",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "source-revision/670/withhold-redirect-relation",
+          "klawiter:evidence": [
+            "data/reconciliation/source-revision-decisions.json",
+            "zweig_revision 5835 by Redirect fixer at 2010-02-25T21:59:29Z, text_id 5826: [[Le chandelier enterré. Légende]] has been moved, it is now a redirect to [[Le Chandelier enterré. Légende]]",
+            "Overwritten revision 2378: text not delivered in the dump"
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
+        }
+      ],
+      "klawiter:identityScope": "source-revision",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/source-revision/670/interpretation/redirect",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "redirect-fixer-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The page redirects to Le Chandelier enterré. Légende, as the Redirect fixer left it"
+        },
+        {
+          "@id": "klawiter:claim/source-revision/670/interpretation/overwritten-content",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "undelivered-parent-revision",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "The Redirect fixer overwrote page content that the dump does not deliver"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/source-revision/670/5826/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "fixer-revision-text",
+          "sourcePageId": 670,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "#REDIRECT [[Le Chandelier enterré. Légende]]",
+          "sourceTextId": 5826,
+          "sourceTextSha256": "8831f0cc5d40cb3aac8201ad349ba039fe0a5f60c3ecf3ae922f96de9fed1140",
+          "sourceValue": "#REDIRECT [[Le Chandelier enterré. Légende]]"
         }
       ]
     }

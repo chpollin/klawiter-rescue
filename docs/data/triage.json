@@ -374,7 +374,6 @@
   },
   "3656": {
    "notInSource": [
-    "publisher",
     "location",
     "translator"
    ]
@@ -435,11 +434,6 @@
     "translator"
    ]
   },
-  "4225": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
   "4290": {
    "notInSource": [
     "translator"
@@ -469,6 +463,11 @@
    "detectable": {
     "publisher": "& Distribution"
    }
+  },
+  "4346": {
+   "notInSource": [
+    "publisher"
+   ]
   },
   "4399": {
    "notInSource": [
@@ -646,6 +645,11 @@
     "location"
    ]
   },
+  "4903": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
   "4908": {
    "notInSource": [
     "translator"
@@ -662,6 +666,11 @@
    }
   },
   "4985": {
+   "notInSource": [
+    "publisher"
+   ]
+  },
+  "4989": {
    "notInSource": [
     "publisher"
    ]

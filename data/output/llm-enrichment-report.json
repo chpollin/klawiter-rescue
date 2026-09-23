@@ -14,7 +14,7 @@
   },
   "frozenResultCount": 3905,
   "workingResultCount": 0,
-  "cacheMissCount": 64,
+  "cacheMissCount": 67,
   "networkCallsAllowed": false,
   "networkCallsMade": false,
   "rejectedCachedValues": 24,
@@ -1181,7 +1181,7 @@
     }
   ],
   "fieldsFilled": {
-    "publisher": 286,
+    "publisher": 282,
     "location": 249,
     "translator": 322,
     "page_count": 35

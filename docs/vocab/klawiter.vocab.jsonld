@@ -559,7 +559,7 @@
     {
       "@id": "klawiter:hasContestedClaim",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
-      "rdfs:comment": "Links a contested edition to the claim that keeps its work binding open.",
+      "rdfs:comment": "Links a statement subject to the contested claim that keeps it open: an edition whose work binding is disputed, or a place, person or publisher node of the flat dataset whose authority identity is disputed.",
       "rdfs:isDefinedBy": {
         "@id": "klawiter:"
       },
@@ -567,7 +567,10 @@
       "rdfs:range": {
         "@id": "klawiter:ContestedClaim"
       },
-      "skos:changeNote": "Renamed from klawiter:contestedClaim on 2026-08-27; the earlier IRI collided with the class klawiter:ContestedClaim on case-insensitive filesystems and is no longer published."
+      "skos:changeNote": [
+        "Extended on 2026-09-23 to the value nodes of the flat dataset, so a contested value can be told from an unreviewed one.",
+        "Renamed from klawiter:contestedClaim on 2026-08-27; the earlier IRI collided with the class klawiter:ContestedClaim on case-insensitive filesystems and is no longer published."
+      ]
     },
     {
       "@id": "klawiter:hasReviewAction",

@@ -1,13 +1,13 @@
 {
   "summary": {
     "total_entries": 6725,
-    "redirects": 1546,
-    "non_redirects_main": 4751,
-    "non_redirects_all": 5179,
-    "entries_with_issues": 442,
-    "total_issues": 442,
+    "redirects": 1538,
+    "non_redirects_main": 4758,
+    "non_redirects_all": 5187,
+    "entries_with_issues": 443,
+    "total_issues": 443,
     "severity_counts": {
-      "info": 442
+      "info": 443
     }
   },
   "namespace_distribution": {
@@ -20,23 +20,23 @@
   },
   "field_coverage": {
     "name": {
-      "count": 4751,
+      "count": 4758,
       "percentage": 100.0
     },
     "datePublished": {
-      "count": 4429,
+      "count": 4435,
       "percentage": 93.2
     },
     "publisher": {
-      "count": 2634,
-      "percentage": 55.4
+      "count": 2640,
+      "percentage": 55.5
     },
     "locationCreated": {
-      "count": 4265,
+      "count": 4271,
       "percentage": 89.8
     },
     "inLanguage": {
-      "count": 4309,
+      "count": 4314,
       "percentage": 90.7
     },
     "languageCode": {
@@ -44,54 +44,54 @@
       "percentage": 0.0
     },
     "numberOfPages": {
-      "count": 2435,
+      "count": 2440,
       "percentage": 51.3
     },
     "translator": {
-      "count": 1919,
+      "count": 1921,
       "percentage": 40.4
     },
     "categories": {
-      "count": 4740,
+      "count": 4747,
       "percentage": 99.8
     },
     "mainCategory": {
-      "count": 4740,
+      "count": 4747,
       "percentage": 99.8
     },
     "bibliographicCitation": {
-      "count": 4719,
+      "count": 4726,
       "percentage": 99.3
     },
     "relation": {
-      "count": 680,
-      "percentage": 14.3
+      "count": 684,
+      "percentage": 14.4
     },
     "reprints": {
-      "count": 418,
+      "count": 420,
       "percentage": 8.8
     },
     "workTranslation": {
-      "count": 177,
-      "percentage": 3.7
+      "count": 179,
+      "percentage": 3.8
     },
     "hasPart": {
-      "count": 934,
+      "count": 938,
       "percentage": 19.7
     }
   },
   "entry_type_distribution": {
-    "redirect": 1545,
+    "redirect": 1538,
     "secondary-literature": 1407,
-    "fiction": 1118,
-    "essay": 905,
+    "fiction": 1119,
+    "essay": 906,
     "historical-study": 535,
     "category": 420,
     "poetry": 274,
-    "collected-works": 115,
-    "correspondence": 109,
-    "film": 92,
-    "translation": 56,
+    "collected-works": 116,
+    "correspondence": 111,
+    "film": 93,
+    "translation": 57,
     "drama": 42,
     "symposium": 39,
     "foreword": 36,
@@ -104,11 +104,11 @@
     "file": 1
   },
   "language_distribution": {
-    "de": 1338,
+    "de": 1341,
     "zh": 543,
     "fr": 394,
-    "en": 315,
-    "es": 281,
+    "en": 316,
+    "es": 282,
     "ar": 236,
     "bg": 105,
     "sq": 104,
@@ -136,16 +136,16 @@
     "ja": 16
   },
   "time_period_distribution": {
-    "contemporary": 1332,
-    "lifetime": 1124,
+    "contemporary": 1333,
+    "lifetime": 1127,
     "late-20c": 1051,
-    "post-wwii": 872,
+    "post-wwii": 874,
     "pre-zweig": 61
   },
   "year_range": {
     "min": 1815,
     "max": 2020,
-    "count": 4440
+    "count": 4446
   },
   "sample_issues": [
     {

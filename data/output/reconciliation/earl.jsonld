@@ -19,7 +19,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -41,7 +41,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -63,7 +63,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -85,7 +85,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -107,7 +107,29 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
+        "earl:outcome": {
+          "@id": "earl:passed"
+        }
+      },
+      "earl:subject": {
+        "@id": "klawiter:dataset/gate2-reconciliation"
+      },
+      "earl:test": {
+        "@id": "klawiter:test/sourceRevisions"
+      }
+    },
+    {
+      "@type": "earl:Assertion",
+      "earl:assertedBy": {
+        "@id": "klawiter:agent/gate2-validator"
+      },
+      "earl:mode": {
+        "@id": "earl:automatic"
+      },
+      "earl:result": {
+        "@type": "earl:TestResult",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -129,7 +151,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -151,7 +173,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }
@@ -173,7 +195,7 @@
       },
       "earl:result": {
         "@type": "earl:TestResult",
-        "dc:date": "2026-09-22T18:37:53.145729+00:00",
+        "dc:date": "2026-09-23T10:50:20.379574+00:00",
         "earl:outcome": {
           "@id": "earl:passed"
         }

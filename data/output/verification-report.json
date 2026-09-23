@@ -1,19 +1,19 @@
 {
   "summary": {
     "title": {
-      "total_entries": 4751,
-      "extracted": 4750,
-      "correct": 3476,
-      "correct_fallback": 1274,
+      "total_entries": 4758,
+      "extracted": 4757,
+      "correct": 3481,
+      "correct_fallback": 1276,
       "false_positive": 0,
       "false_negative": 0,
       "coverage": 100.0,
       "precision": 100.0
     },
     "year": {
-      "total_entries": 4751,
-      "extracted": 4429,
-      "correct": 4429,
+      "total_entries": 4758,
+      "extracted": 4435,
+      "correct": 4435,
       "correct_fallback": 0,
       "false_positive": 0,
       "false_negative": 0,
@@ -21,19 +21,19 @@
       "precision": 100.0
     },
     "publisher": {
-      "total_entries": 4751,
-      "extracted": 2634,
-      "correct": 2596,
+      "total_entries": 4758,
+      "extracted": 2640,
+      "correct": 2601,
       "correct_fallback": 0,
-      "false_positive": 38,
+      "false_positive": 39,
       "false_negative": 85,
-      "coverage": 55.4,
-      "precision": 98.6
+      "coverage": 55.5,
+      "precision": 98.5
     },
     "location": {
-      "total_entries": 4751,
-      "extracted": 4265,
-      "correct": 4225,
+      "total_entries": 4758,
+      "extracted": 4271,
+      "correct": 4231,
       "correct_fallback": 0,
       "false_positive": 40,
       "false_negative": 0,
@@ -41,9 +41,9 @@
       "precision": 99.1
     },
     "translator": {
-      "total_entries": 4751,
-      "extracted": 1919,
-      "correct": 1878,
+      "total_entries": 4758,
+      "extracted": 1921,
+      "correct": 1880,
       "correct_fallback": 0,
       "false_positive": 41,
       "false_negative": 2,
@@ -51,9 +51,9 @@
       "precision": 97.9
     },
     "page_count": {
-      "total_entries": 4751,
-      "extracted": 2435,
-      "correct": 2434,
+      "total_entries": 4758,
+      "extracted": 2440,
+      "correct": 2439,
       "correct_fallback": 0,
       "false_positive": 1,
       "false_negative": 0,
@@ -292,7 +292,7 @@
       }
     ]
   },
-  "total_bib_entries": 4751,
+  "total_bib_entries": 4758,
   "entries_without_raw_content": 1,
   "detailed_results": [
     {
@@ -1170,6 +1170,38 @@
       }
     },
     {
+      "page_id": 35,
+      "title": "Maria Stuart",
+      "fields": {
+        "title": {
+          "extracted": "Maria Stuart",
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
+        },
+        "year": {
+          "extracted": 1935,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "publisher": {
+          "extracted": "Bermann-Fischer Verlag",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "location": {
+          "extracted": "Amsterdam",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 398,
+          "in_raw": true,
+          "status": "correct"
+        }
+      }
+    },
+    {
       "page_id": 36,
       "title": "Marie Antoinette. Bildnis eines mittleren Charakters",
       "fields": {
@@ -1643,7 +1675,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Gottfried Bermann-Fischer Verlag, Stockholm / Uitgeverij Allert de Lange, Amsterdam  / Longmans, Green and Company",
+          "extracted": "Gottfried Bermann-Fischer Verlag",
           "in_raw": true,
           "status": "correct"
         },
@@ -2241,7 +2273,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "RM Buch und Medien Vertrieb + Der Club Bertelsmann, Gütersloh / Buchgemeinschaft Donauland",
+          "extracted": "RM Buch und Medien Vertrieb + Der Club Bertelsmann",
           "in_raw": true,
           "status": "correct"
         },
@@ -3004,7 +3036,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Priokskoe Knizhnoe  Izdatel’stvo",
+          "extracted": "Priokskoe Knizhnoe Izdatel’stvo",
           "in_raw": true,
           "status": "correct"
         },
@@ -6055,6 +6087,43 @@
       }
     },
     {
+      "page_id": 279,
+      "title": "Schachnovelle",
+      "fields": {
+        "title": {
+          "extracted": "Schachnovelle",
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
+        },
+        "year": {
+          "extracted": 1942,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "publisher": {
+          "extracted": "Verlag Janos Peter Kramer",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "location": {
+          "extracted": "Buenos Aires",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Harald Engberg",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 97,
+          "in_raw": true,
+          "status": "correct"
+        }
+      }
+    },
+    {
       "page_id": 280,
       "title": "Schachnovelle und andere",
       "fields": {
@@ -8218,7 +8287,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Uitgeverij Allert de Lange, Amsterdam / Uitgeverij C. de Vries-Brouwers",
+          "extracted": "Uitgeverij Allert de Lange",
           "in_raw": true,
           "status": "correct"
         },
@@ -8292,7 +8361,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Stiđin, Hoyvík, Streymoy",
+          "extracted": "Stiđin, Hoyvík",
           "in_raw": true,
           "status": "correct"
         },
@@ -11345,7 +11414,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Northwestern University, The Charles Deering Library, Evanston",
+          "extracted": "Northwestern University, The Charles Deering Library",
           "in_raw": true,
           "status": "correct"
         },
@@ -11530,7 +11599,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Jonathan Cape Ltd., London / Harmony Books [Crown Publishers, Inc.]",
+          "extracted": "Jonathan Cape Ltd.",
           "in_raw": true,
           "status": "correct"
         },
@@ -17644,6 +17713,43 @@
       }
     },
     {
+      "page_id": 793,
+      "title": "Baudelaire, Charles",
+      "fields": {
+        "title": {
+          "extracted": "Baudelaire, Charles",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
+        },
+        "year": {
+          "extracted": 1902,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "publisher": {
+          "extracted": "Hermann Seemann Nachfolger Verlag",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "location": {
+          "extracted": "Leipzig",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Camill Hoffmann",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 465,
+          "in_raw": true,
+          "status": "correct"
+        }
+      }
+    },
+    {
       "page_id": 794,
       "title": "Keats, John",
       "fields": {
@@ -17903,7 +18009,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "“Hayastan”  Hratarakch‘ut‘yun",
+          "extracted": "“Hayastan” Hratarakch‘ut‘yun",
           "in_raw": true,
           "status": "correct"
         },
@@ -18125,7 +18231,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Acantilado  /  Quaderns Crema",
+          "extracted": "Acantilado / Quaderns Crema",
           "in_raw": true,
           "status": "correct"
         },
@@ -19042,7 +19148,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Editorial José Janés, Barcelona / Editorial Castilla",
+          "extracted": "Editorial José Janés",
           "in_raw": true,
           "status": "correct"
         },
@@ -19883,7 +19989,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Ariadne Press, Riverside",
+          "extracted": "Ariadne Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -19994,7 +20100,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "The Viking Press, New York and George Allen & Unwin Ltd.",
+          "extracted": "The Viking Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -20650,7 +20756,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "The Viking Press, New York / The Literary Guild of America, New York / Macmillan Company of Canada",
+          "extracted": "The Viking Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -30386,7 +30492,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Austrijski kulturni institut / Österreichisches Kulturinstitut, Zagreb  /  Gradska knijžnica “Juraj Šižgorić / Stadtbibliothek “Juraj Šižgorić",
+          "extracted": "Austrijski kulturni institut / Österreichisches Kulturinstitut",
           "in_raw": true,
           "status": "correct"
         },
@@ -30716,7 +30822,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Založništvo tržaškega tiska, Trst/Trieste and Adit",
+          "extracted": "Založništvo tržaškega tiska",
           "in_raw": true,
           "status": "correct"
         },
@@ -31828,7 +31934,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Northwestern University Library, Evanston",
+          "extracted": "Northwestern University Library",
           "in_raw": true,
           "status": "correct"
         },
@@ -34789,7 +34895,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Longsmans, Green & Co., London/New York/Bombay / David McKay Publications, Philadelphia / Cassell & Co.",
+          "extracted": "Longsmans, Green & Co.",
           "in_raw": true,
           "status": "correct"
         },
@@ -36307,7 +36413,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Mozaĭka  ot Znameniti Sŭvremenni Romani",
+          "extracted": "Mozaĭka ot Znameniti Sŭvremenni Romani",
           "in_raw": true,
           "status": "correct"
         },
@@ -38240,7 +38346,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Narodna prosvjeta, Sarajevo",
+          "extracted": "Narodna prosvjeta",
           "in_raw": true,
           "status": "correct"
         },
@@ -38928,7 +39034,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Izdatel’stvo “Strastnoi bulvar”, Moskva / Izdatel’stvo “Ussuri”",
+          "extracted": "Izdatel’stvo “Strastnoi bulvar”",
           "in_raw": true,
           "status": "correct"
         },
@@ -39039,7 +39145,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Izdatel’stvo “Druzhba  narodov” / SP  “Lexica”",
+          "extracted": "Izdatel’stvo “Druzhba narodov” / SP “Lexica”",
           "in_raw": true,
           "status": "correct"
         },
@@ -39569,7 +39675,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Izdatel’stvo  “Sovetskaia Rossiia”",
+          "extracted": "Izdatel’stvo “Sovetskaia Rossiia”",
           "in_raw": true,
           "status": "correct"
         },
@@ -39887,7 +39993,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Hentrich & Hentrich Verlag",
+          "extracted": "The Continuum International Publishing Group",
           "in_raw": true,
           "status": "correct"
         },
@@ -40197,7 +40303,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Department of German, University of Otago, Dunedin",
+          "extracted": "Department of German, University of Otago",
           "in_raw": true,
           "status": "correct"
         },
@@ -40335,7 +40441,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Camden House, Columbia",
+          "extracted": "Camden House",
           "in_raw": true,
           "status": "correct"
         },
@@ -40569,7 +40675,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Buchhändler-Vereinigung  GmbH",
+          "extracted": "Buchhändler-Vereinigung GmbH",
           "in_raw": true,
           "status": "correct"
         },
@@ -43425,7 +43531,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "El Instituto de Literaturas Modernas, Universidad Nacional de Cuyo, Mendoza",
+          "extracted": "El Instituto de Literaturas Modernas, Universidad Nacional de Cuyo",
           "in_raw": true,
           "status": "correct"
         },
@@ -43769,7 +43875,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "University of North Carolina Press, Chapel Hill",
+          "extracted": "University of North Carolina Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -44632,7 +44738,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Ariadne Press, Riverside",
+          "extracted": "Ariadne Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -44888,7 +44994,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "W. W. Norton  & Company",
+          "extracted": "W. W. Norton & Company",
           "in_raw": true,
           "status": "correct"
         },
@@ -45021,7 +45127,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "University of North Carolina Press, Chapel Hill",
+          "extracted": "University of North Carolina Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -46943,7 +47049,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "State University of New York Press, Albany",
+          "extracted": "State University of New York Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -49421,7 +49527,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Barbès  Editore",
+          "extracted": "Barbès Editore",
           "in_raw": true,
           "status": "correct"
         },
@@ -51422,7 +51528,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Transaction Publishers, New Brunswick, NJ and London",
+          "extracted": "Transaction Publishers",
           "in_raw": true,
           "status": "correct"
         },
@@ -55923,7 +56029,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Plunkett Lake Press, Lexington",
+          "extracted": "Plunkett Lake Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -56356,7 +56462,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Cassell & Co., London / The Viking Press",
+          "extracted": "Cassell & Co.",
           "in_raw": true,
           "status": "correct"
         },
@@ -57564,6 +57670,70 @@
       }
     },
     {
+      "page_id": 2816,
+      "title": "A Confidential Matter. The Letters of Richard Strauss and Stefan Zweig, 1931-1935",
+      "fields": {
+        "title": {
+          "extracted": "A Confidential Matter. The Letters of Richard Strauss and Stefan Zweig, 1931-1935",
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
+        },
+        "year": {
+          "extracted": 1977,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "publisher": {
+          "extracted": "University of California Press",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "location": {
+          "extracted": "London",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 122,
+          "in_raw": true,
+          "status": "correct"
+        }
+      }
+    },
+    {
+      "page_id": 2817,
+      "title": "Richard Strauss - Stefan Zweig. Briefwechsel",
+      "fields": {
+        "title": {
+          "extracted": "Richard Strauss - Stefan Zweig. Briefwechsel",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
+        },
+        "year": {
+          "extracted": 1957,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "publisher": {
+          "extracted": "S. Fischer Verlag",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "location": {
+          "extracted": "Frankfurt am Main",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 122,
+          "in_raw": true,
+          "status": "correct"
+        }
+      }
+    },
+    {
       "page_id": 2818,
       "title": "Lowinsky, Edward E.",
       "fields": {
@@ -57844,7 +58014,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Thomas Y. Crowell & Co., New York and W. H. Allen & Co.",
+          "extracted": "Thomas Y. Crowell & Co.",
           "in_raw": true,
           "status": "correct"
         },
@@ -59760,7 +59930,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "The Viking Press, New York / Macmillan Publishers",
+          "extracted": "The Viking Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -62743,7 +62913,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Camden House [Boydell & Brewer], Rochester",
+          "extracted": "Camden House [Boydell & Brewer]",
           "in_raw": true,
           "status": "correct"
         },
@@ -64347,7 +64517,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Allen & Unwin, London / The Viking Press",
+          "extracted": "Allen & Unwin",
           "in_raw": true,
           "status": "correct"
         },
@@ -65993,7 +66163,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Cassell and Company Limited, London/Toronto/Melbourne/Sydney and The Viking Press",
+          "extracted": "Cassell and Company Limited",
           "in_raw": true,
           "status": "correct"
         },
@@ -66774,7 +66944,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "X-Filme Creative Pool Entertainment, Berlin / Idéale Audience, Paris / Maha Productions",
+          "extracted": "X-Filme Creative Pool Entertainment",
           "in_raw": true,
           "status": "correct"
         },
@@ -68776,7 +68946,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "L&PM, Porto Alegre",
+          "extracted": "L&PM",
           "in_raw": true,
           "status": "correct"
         },
@@ -70029,9 +70199,9 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "TihrÄ n",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "ʿAṭāʾī",
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "TihrÄ n",
@@ -70312,7 +70482,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Espasa-Calpe, Madrid / Espasa-Calpe Argentina",
+          "extracted": "Espasa-Calpe",
           "in_raw": true,
           "status": "correct"
         },
@@ -70902,7 +71072,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "E. T. A. Hoffmann-Gesellschaft, Bamberg / Internationale Stefan-Zweig-Gesellschaft",
+          "extracted": "E. T. A. Hoffmann-Gesellschaft",
           "in_raw": true,
           "status": "correct"
         },
@@ -76878,7 +77048,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Appleton Press, Sperryville",
+          "extracted": "Appleton Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -76969,7 +77139,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Europäischer Buch- und Phonoklub, Stuttgart / Bertelsmann-Lesering, Gütersloh / Buchgemeinschaft Donauland",
+          "extracted": "Europäischer Buch- und Phonoklub",
           "in_raw": true,
           "status": "correct"
         },
@@ -77134,7 +77304,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Inter Nationes e. V., Bad Godesberg / Vandenhoeck & Ruprecht Verlag",
+          "extracted": "Inter Nationes e. V.",
           "in_raw": true,
           "status": "correct"
         },
@@ -77240,7 +77410,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Deutsches Kulturinstitut (Goethe-Institut), Amman / al-Maʿhad al-Thaqāfī al-Almānī (Maʿhad Ġūtah)",
+          "extracted": "Deutsches Kulturinstitut (Goethe-Institut)",
           "in_raw": true,
           "status": "correct"
         },
@@ -78662,9 +78832,9 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Muʾassasat al-AhrÄ m; al-Sharikah al-Sharqiyyah li-l-Nashr waʾl-Tawzīʿ",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Muʾassasat al-Ahrām",
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Cairo",
@@ -79271,7 +79441,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Inko, Tyresö",
+          "extracted": "Inko",
           "in_raw": true,
           "status": "correct"
         },
@@ -79606,7 +79776,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Maskīliyānā li-l-Nashr waʾl-Tawzīʿ [Masciliana Editions], Tūnis [Tunis] / Masʿā li-l-Nashr waʾl-Tawzīʿ [Masaa Publishing & Distribution], Ottawa",
+          "extracted": "Maskīliyānā li-l-Nashr waʾl-Tawzīʿ [Masciliana Editions]",
           "in_raw": true,
           "status": "correct"
         },
@@ -80215,9 +80385,9 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Wizārat al-Thaqāfah",
-          "in_raw": true,
-          "status": "correct"
+          "extracted": "Wizārat al-Thaqāfah, al-Hayʾah al-ʿĀmmah al-Sūriyyah li-l-Kitāb [Ministry of Culture, The Syrian General Organization of Books]",
+          "in_raw": false,
+          "status": "false_positive"
         },
         "location": {
           "extracted": "Dimashq",
@@ -81435,7 +81605,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Insel-Verlag, Leipzig / Josef Singer Verlag A.-G.",
+          "extracted": "Insel-Verlag",
           "in_raw": true,
           "status": "correct"
         },
@@ -81622,7 +81792,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Oriole Press, Berkeley",
+          "extracted": "Oriole Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -81718,6 +81888,33 @@
       }
     },
     {
+      "page_id": 4428,
+      "title": "A Promise",
+      "fields": {
+        "title": {
+          "extracted": "A Promise",
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
+        },
+        "year": {
+          "extracted": 2013,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "publisher": {
+          "extracted": "Fidélité Films",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "location": {
+          "extracted": "Paris",
+          "in_raw": true,
+          "status": "correct"
+        }
+      }
+    },
+    {
       "page_id": 4429,
       "title": "Coração inquieto",
       "fields": {
@@ -81733,7 +81930,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "TV Tupi, São Paulo",
+          "extracted": "TV Tupi",
           "in_raw": true,
           "status": "correct"
         },
@@ -81797,7 +81994,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "TV Tupi, São Paulo",
+          "extracted": "TV Tupi",
           "in_raw": true,
           "status": "correct"
         },
@@ -81930,7 +82127,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "TV Tupi, São Paulo",
+          "extracted": "TV Tupi",
           "in_raw": true,
           "status": "correct"
         },
@@ -82163,7 +82360,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Canadian Broadcasting Corporation (CBC), Ottawa",
+          "extracted": "Canadian Broadcasting Corporation (CBC)",
           "in_raw": true,
           "status": "correct"
         },
@@ -82212,7 +82409,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Producciones Galindo Hermanos, México D.F. / Distributed by Filmadora Chapultepec S. A.",
+          "extracted": "Producciones Galindo Hermanos",
           "in_raw": true,
           "status": "correct"
         },
@@ -82545,7 +82742,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Carlyle Productions, Burlington, North Carolina / Pathé-Natan Studios, Joinville",
+          "extracted": "Carlyle Productions",
           "in_raw": true,
           "status": "correct"
         },
@@ -83085,7 +83282,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Production Générale de Films (PROGÉFI), Paris: Rai Due, Roma; Zweites Deutsches Fernsehen, Mainz; Österreichischer Rundfunk, Wien",
+          "extracted": "Production Générale de Films (PROGÉFI), Paris: Rai Due",
           "in_raw": true,
           "status": "correct"
         },
@@ -83955,7 +84152,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Sakhkinmretsvi, Tbilisi",
+          "extracted": "Sakhkinmretsvi",
           "in_raw": true,
           "status": "correct"
         },
@@ -84535,7 +84732,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Tonal-Film GmbH, Berlin; Universum-Film (UFA)",
+          "extracted": "Tonal-Film GmbH",
           "in_raw": true,
           "status": "correct"
         },
@@ -84621,7 +84818,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "University of Salford, Manchester",
+          "extracted": "University of Salford",
           "in_raw": true,
           "status": "correct"
         },
@@ -85842,7 +86039,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Okofilm Productions, Zürich; Sciapode",
+          "extracted": "Okofilm Productions",
           "in_raw": true,
           "status": "correct"
         },
@@ -85940,7 +86137,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "B. A. Produktion GmbH, München; Bayerischer Rundfunk (BR), München; C.L.G. Films",
+          "extracted": "B. A. Produktion GmbH",
           "in_raw": true,
           "status": "correct"
         },
@@ -86004,7 +86201,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Universal Pictures, Universal City",
+          "extracted": "Universal Pictures",
           "in_raw": true,
           "status": "correct"
         },
@@ -86031,7 +86228,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Metro-Goldwyn-Mayer (MGM), Beverly Hills",
+          "extracted": "Metro-Goldwyn-Mayer (MGM)",
           "in_raw": true,
           "status": "correct"
         },
@@ -86336,7 +86533,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Solomon Pitures, Homebush, New South Wales, Australia; Matt X Productions",
+          "extracted": "Solomon Pitures",
           "in_raw": true,
           "status": "correct"
         },
@@ -87462,7 +87659,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "ZDF  [Zweites Deutsches Fernsehen]",
+          "extracted": "ZDF [Zweites Deutsches Fernsehen]",
           "in_raw": true,
           "status": "correct"
         },
@@ -87597,7 +87794,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "France 2 (FR 3), Progéfi, Paris / Taurus Films",
+          "extracted": "France 2 (FR 3), Progéfi",
           "in_raw": true,
           "status": "correct"
         },
@@ -87991,7 +88188,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Österreichischer Rundfunk (ORF), Wien / Zweites Deutsches Fernsehen (ZDF)",
+          "extracted": "Österreichischer Rundfunk (ORF)",
           "in_raw": true,
           "status": "correct"
         },
@@ -88143,7 +88340,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Sprotin, Vestmanna, Streymoy",
+          "extracted": "Sprotin, Vestmanna",
           "in_raw": true,
           "status": "correct"
         },
@@ -89863,7 +90060,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "SAGA Egmont Forlag, København, Danmark/Copenhagen",
+          "extracted": "SAGA Egmont Forlag, København",
           "in_raw": true,
           "status": "correct"
         },
@@ -90165,9 +90362,9 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "83p. First edition",
-          "in_raw": true,
-          "status": "correct"
+          "extracted": "Maskīliyānā li-l-Nashr waʾl-Tawzīʿ [Masciliana Editions]",
+          "in_raw": false,
+          "status": "false_positive"
         },
         "location": {
           "extracted": "Tunis",
@@ -92100,9 +92297,9 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Masarykova Univerzita, Filozofická Fakulta, Ústav germanistiky",
-          "in_raw": true,
-          "status": "correct"
+          "extracted": "Masarykova Univerzita, Filozofická Fakulta, Ústav germanistiky, nordistiky a nederlandistiky [Masaryk-Universität, Philosophische Fakultät, Institut für Germanistik, Nordistik und Nederlandistik]",
+          "in_raw": false,
+          "status": "false_positive"
         },
         "location": {
           "extracted": "nordistiky a nederlandistiky",
@@ -92132,7 +92329,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Petit St. Hubert bij de Witte Brug, Scheveningen",
+          "extracted": "Petit St. Hubert bij de Witte Brug",
           "in_raw": true,
           "status": "correct"
         },
@@ -98088,7 +98285,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "The Esperanto Publishing Company Ltd., Heronsgate/Rickmansworth",
+          "extracted": "The Esperanto Publishing Company Ltd.",
           "in_raw": true,
           "status": "correct"
         },
@@ -107404,7 +107601,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "A. Aṁ. Kulakarṇī [A.C.Kulkarni], Puṇē [Pune",
+          "extracted": "A. Aṁ. Kulakarṇī [A.C.Kulkarni]",
           "in_raw": true,
           "status": "correct"
         },
@@ -107590,7 +107787,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Niyataṁ Buks [Niyatham Books], Meppadi",
+          "extracted": "Niyataṁ Buks [Niyatham Books]",
           "in_raw": true,
           "status": "correct"
         },
@@ -107759,6 +107956,18 @@
       "fields": {
         "title": {
           "extracted": "\"Notas a una edición de poesías de Goethe\". See: Goethe, Johann Wolfgang von / Spanish",
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
+        }
+      }
+    },
+    {
+      "page_id": 5839,
+      "title": "\"La poesía de Goethe\". See: Goethe, Johann Wolfgang von / Spanish",
+      "fields": {
+        "title": {
+          "extracted": "\"La poesía de Goethe\". See: Goethe, Johann Wolfgang von / Spanish",
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
@@ -109421,7 +109630,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Published by the Editor, St. Petersburg",
+          "extracted": "Published by the Editor",
           "in_raw": true,
           "status": "correct"
         },
@@ -115557,7 +115766,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "J. Philip O'Hara, Chicago / W. H. Allen, London / Van Nostrand Reinhold",
+          "extracted": "J. Philip O'Hara",
           "in_raw": true,
           "status": "correct"
         },
@@ -117440,7 +117649,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Hovudkommisjon hjå  Boklag",
+          "extracted": "Hovudkommisjon hjå Boklag",
           "in_raw": true,
           "status": "correct"
         },
@@ -118116,7 +118325,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "house Ādhāra Prakāśana",
+          "extracted": "Ādhāra Prakāśana [Aadhar Prakashan Pvt. Ltd.]",
           "in_raw": true,
           "status": "correct"
         },
@@ -120584,7 +120793,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Palgrave Macmillan, Cham",
+          "extracted": "Palgrave Macmillan",
           "in_raw": true,
           "status": "correct"
         },
@@ -120985,7 +121194,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Doubleday, Garden City",
+          "extracted": "Doubleday",
           "in_raw": true,
           "status": "correct"
         },
@@ -121607,7 +121816,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Daniel Reed Library, Fredonia",
+          "extracted": "Daniel Reed Library",
           "in_raw": true,
           "status": "correct"
         },
@@ -130759,7 +130968,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Plunkett Lake Press, Lexington",
+          "extracted": "Plunkett Lake Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -134550,7 +134759,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Mu'assasat al-Ahrām, Cairo / al-Sharikah ...",
+          "extracted": "Mu'assasat al-Ahrām",
           "in_raw": true,
           "status": "correct"
         },

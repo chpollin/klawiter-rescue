@@ -8,24 +8,27 @@
     "frontendProjection": true,
     "inputHashes": true,
     "jsonldProjection": true,
-    "shacl": true
+    "shacl": true,
+    "sourceRevisions": true
   },
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
-    "contestedAuthorityClaims": 5,
+    "contestedAuthorityClaims": 2,
     "contestedEditionClaims": 0,
+    "contestedSourceRevisionClaims": 10,
+    "decidedAuthorityClaims": 3,
     "decidedEditionClaims": 1,
     "locationCandidates": 392,
-    "locationDecisions": 31,
+    "locationDecisions": 34,
     "locationSubjects": 382,
     "publishableAgentLinks": 0,
-    "publishableLocationLinks": 26,
+    "publishableLocationLinks": 29,
     "publishableWorkLinks": 3,
-    "reviewCases": 897,
-    "workCandidates": 841,
+    "reviewCases": 895,
+    "workCandidates": 853,
     "workDecisions": 3,
-    "workSubjects": 443
+    "workSubjects": 447
   },
   "errors": {
     "agentOccurrenceEvidence": [],
@@ -35,7 +38,8 @@
     "frontendProjection": [],
     "inputHashes": [],
     "jsonldProjection": [],
-    "shacl": []
+    "shacl": [],
+    "sourceRevisions": []
   },
-  "generatedAt": "2026-09-22T18:37:53.145729+00:00"
+  "generatedAt": "2026-09-23T10:50:20.379574+00:00"
 }

@@ -1,38 +1,40 @@
 {
-  "algorithmVersion": "1.1",
+  "algorithmVersion": "1.2",
   "artifacts": {
-    "candidates.json": "2779dea489e66701d9d20f7bfa548e6127e7835e1f6deb086f52fefa63898219",
-    "contested-claims.json": "1f4ae52905b3e080f3bb045649f5f30efc8c0307a80aa0c24574e7c232ed6ef0",
-    "decisions.json": "bde3864bc41507a0e96c018e02ae44667ce54cf1133932f47c80d0b35118c78f",
-    "earl.jsonld": "1e68d9677c4fa8912b1ce8dd223d624b951a05fa5db8b7a2ca351e4970ee03f1",
-    "provenance.jsonld": "570f180503dc8df8e43c03cfa5d99cb2fdd76c88e0911daf51e3c24353e111fd",
-    "publishable-links.json": "49d645b6d689e1c23e8f2088d22f98e4b5f0e32c04d4c28c19c694d7a1b6577b",
-    "review-queue.json": "8f46734791089a37abe558cf1a55f8d41f58e94532823f9a20d950437bb5718c",
-    "validation-report.json": "50c1ede52e3fe7cc4b9153441159bb2f152b30b8dfe3b848cd618b480013080d"
+    "candidates.json": "f4586f78856afb0bd2ab1563123dffc078e87e6655aa44ab2ad13fe6594785dd",
+    "contested-claims.json": "034c1d91d56b890dc4f2f504235ead5f32cdea266cb6d5d85c9eb21cc1bf859a",
+    "decisions.json": "24ea849651e1bf87f76fb4905af82149bfbefe521da3cc9e32e1c4c1801012a0",
+    "earl.jsonld": "5cf6009ad5cdb13594727d9e4283cf907a9a72c232b8efa3725aff2ed0dd6e8b",
+    "provenance.jsonld": "246fff0658796ca1263336ff4954de0cb3ea221e97348745055b97dfeb654d27",
+    "publishable-links.json": "08a23891d879ffc3c52934b35708a6fb5a5622378663eacfe7a9b0380d33bc30",
+    "review-queue.json": "23fe9cf537d92eb46f527d3ee1bc391ca9adcb613b9d61e5f41ba7503f05d27f",
+    "validation-report.json": "d9f7e04bc8385ee1cf61874479d501ade6bd024ef8b175058d05d2e931a87ea7"
   },
-  "codeSha256": "e4eaae3805803c47f69f9a1e5be569ffea2dc803934aef2bc05b55f78fb62d8a",
+  "codeSha256": "07fc5e3b0d7ba905cb773891f21c24359f24769b4ccd5b2afe63f1d3e3ca47f6",
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
-    "contestedAuthorityClaims": 5,
+    "contestedAuthorityClaims": 2,
     "contestedEditionClaims": 0,
+    "contestedSourceRevisionClaims": 10,
+    "decidedAuthorityClaims": 3,
     "decidedEditionClaims": 1,
     "locationCandidates": 392,
-    "locationDecisions": 31,
+    "locationDecisions": 34,
     "locationSubjects": 382,
     "publishableAgentLinks": 0,
-    "publishableLocationLinks": 26,
+    "publishableLocationLinks": 29,
     "publishableWorkLinks": 3,
-    "reviewCases": 897,
-    "workCandidates": 841,
+    "reviewCases": 895,
+    "workCandidates": 853,
     "workDecisions": 3,
-    "workSubjects": 443
+    "workSubjects": 447
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "bb9c6d20d729348cc60a223bbb73d5ea483be21c56f55681c0499fadf624b94b"
+    "sha256": "7233676c4eeb57202e9bd6724ebcfc6989c997a44be3e6e180df4ff2f46b65eb"
   },
-  "generatedAt": "2026-09-22T18:37:19.072671+00:00",
+  "generatedAt": "2026-09-23T10:49:41.542585+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -44,7 +46,7 @@
     },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
-      "sha256": "9b7080c3d2090a9697d62ceaeea7456ab1e88279aa820de6b8c9151c999119e7"
+      "sha256": "16b5c6e0b079e20b3a92088fa699751b8b76c27ee206e0ddd8868dd34dd06307"
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
@@ -52,11 +54,11 @@
     },
     "editions": {
       "path": "data/output/editions/work-editions.jsonld",
-      "sha256": "769ab9edd16ab3663b2384e51363ac14802167c6cbbd25408b9364f8165653cd"
+      "sha256": "234d49683cecadd0c5851a9ec51ce379253fa5a4da219df2bd231d370ff8038b"
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",
-      "sha256": "80c1697dc87da1da9a7c232f17ed9c92751f6e5705565764c8b8d2a8a24d0c9b"
+      "sha256": "4cce07b7a46f6205a7616fd384092623927145efa71d662e7d18ee3e383f294a"
     },
     "location-log": {
       "path": "data/provenance/locations-reconciliation-log.json",
@@ -69,6 +71,10 @@
     "locations": {
       "path": "docs/data/locations.json",
       "sha256": "e8ba28c3a5baee29d0313255cf3ff4aaeb11a1df9d6438e3f5f082f2876a77d3"
+    },
+    "source-revision-decisions": {
+      "path": "data/reconciliation/source-revision-decisions.json",
+      "sha256": "85858a9325081926bf8c4ae8fd81badbd9a03dc73d87fa832a296cc96ec7958b"
     },
     "szd-work-index": {
       "path": "data/provenance/szd-work-index.xml",
@@ -88,6 +94,7 @@
     "frontendProjection": true,
     "inputHashes": true,
     "jsonldProjection": true,
-    "shacl": true
+    "shacl": true,
+    "sourceRevisions": true
   }
 }

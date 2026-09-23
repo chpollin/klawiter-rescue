@@ -40,24 +40,24 @@
   "jsonld": {
     "total_entries": 6725,
     "unique_source_pages": 6725,
-    "redirects": 1546,
-    "non_redirects": 5179,
+    "redirects": 1538,
+    "non_redirects": 5187,
     "missing_source_pages": [],
     "invented_records": [],
     "duplicate_source_pages": {}
   },
   "frontend": {
-    "total_entries": 5179,
+    "total_entries": 5187,
     "redirects": 0,
     "by_namespace": {
-      "0": 4751,
+      "0": 4758,
       "6": 1,
       "8": 5,
       "10": 2,
       "12": 1,
-      "14": 419
+      "14": 420
     },
-    "displayed_ns0_entries": 4751,
+    "displayed_ns0_entries": 4758,
     "unnamed_displayed": []
   },
   "reconciliation_checks": [
@@ -74,12 +74,12 @@
     {
       "check": "frontend_equals_jsonld_minus_redirects",
       "pass": true,
-      "detail": "5179 == 6725 - 1546"
+      "detail": "5187 == 6725 - 1538"
     },
     {
       "check": "source_ns0_equals_displayed_plus_ns0_redirects",
       "pass": true,
-      "detail": "6296 == 4751 + 1545"
+      "detail": "6296 == 4758 + 1538"
     },
     {
       "check": "every_displayed_entry_is_named",

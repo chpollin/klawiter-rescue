@@ -1,5 +1,5 @@
 {
-  "caseCount": 316,
+  "caseCount": 339,
   "cases": [
     {
       "editionId": "klawiter:edition/29-1978-a",
@@ -66,6 +66,38 @@
       "sourceSliceSha256": "358faa27dc9865020ad282fe81be7b1e27b5f9bacbee148c53892c489960e6b0"
     },
     {
+      "editionId": "klawiter:edition/35-1984-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 8434,
+          "oa:start": 8149
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/35"
+        }
+      },
+      "flags": [
+        "missing-location"
+      ],
+      "headerLine": "'''[1984]: An opera'''",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": "An opera",
+        "series": null,
+        "year": "1984"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 35,
+      "sourceSliceSha256": "b685b264220a2a1c550a29a79ed73d5a067fa36b9f94e106944bb078c0f17939"
+    },
+    {
       "editionId": "klawiter:edition/36-1965-a",
       "evidence": {
         "@type": "oa:SpecificResource",
@@ -96,39 +128,6 @@
       "reviewStatus": "proposed",
       "sourcePageId": 36,
       "sourceSliceSha256": "9722d5978a1d7621d6b7299d6db312722bf9aaf366a35511b85a7826a786db45"
-    },
-    {
-      "editionId": "klawiter:edition/43-1990-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 709,
-          "oa:start": 364
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/43"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1990]:''' Fischer Taschenbuch Verlag, Frankfurt am Main",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": "Fischer Taschenbuch Verlag, Frankfurt am Main",
-        "location": null,
-        "pageCount": 298,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1990"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 43,
-      "sourceSliceSha256": "8f3961b5cdcd9131c481de8f76b51021b74a40ac3dd808d712043e1f55b0ef79"
     },
     {
       "editionId": "klawiter:edition/165-1901-a",
@@ -257,6 +256,632 @@
       "reviewStatus": "proposed",
       "sourcePageId": 165,
       "sourceSliceSha256": "a67ef7b9571dfb8a9d4e11c3f5d316d1ee4b3c4f3a20696f4592724579f9a708"
+    },
+    {
+      "editionId": "klawiter:edition/279-1942-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 25313,
+          "oa:start": 22875
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1942]'''. First printing: ''Schachnovelle''. 97p. 3 illustrations. Buenos Aires: Verlag Pigmalion, 1942",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". First printing: ''Schachnovelle''. 97p. 3 illustrations. Buenos Aires: Verlag Pigmalion, 1942",
+        "location": null,
+        "pageCount": 97,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1942"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "6931e5f42c1d8efd5fc9a3861b7e567d70edc20d50605f29fa05d10f95a37841"
+    },
+    {
+      "editionId": "klawiter:edition/279-1942-d",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 25449,
+          "oa:start": 25329
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1942]'''. \\\"Spiel gegen den Schachmeister\\\" in ''Argentinisches Tageblatt'' [Buenos Aires], 20 December 1942, p. 6",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Spiel gegen den Schachmeister\\\" in ''Argentinisches Tageblatt'' [Buenos Aires], 20 December 1942, p. 6",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1942"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "597bfdd3276266ac6a343088be090cc64f1845820ddd1e5004f38d787b240c4f"
+    },
+    {
+      "editionId": "klawiter:edition/279-1950-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 25575,
+          "oa:start": 25449
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1950]'''. \\\"Das königliche Spiel\\\" in ''Deutsche Schachrundschau Caissa'' [Weidenau-Sieg], 4:17 [September 1950], p. 263",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Das königliche Spiel\\\" in ''Deutsche Schachrundschau Caissa'' [Weidenau-Sieg], 4:17 [September 1950], p. 263",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1950"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "cbca1e51348ef8c6a77be680772a04cb9cd89d25090a03e44239d9a4e5633ceb"
+    },
+    {
+      "editionId": "klawiter:edition/279-1960-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 25732,
+          "oa:start": 25575
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1960]'''. \\\"Schachnovelle\\\" in ''Film und Frau'' [Hamburg], 12:13 [1960], pp. 34-42. Contains 6 photographs from the film version starring Curd Jürgens",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Schachnovelle\\\" in ''Film und Frau'' [Hamburg], 12:13 [1960], pp. 34-42. Contains 6 photographs from the film version starring Curd Jürgens",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1960"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "a32a27f01f7f1977237cf0fb7a63799eebdb7343cd8d946de0f76254fc2a9cae"
+    },
+    {
+      "editionId": "klawiter:edition/279-1960-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 25919,
+          "oa:start": 25732
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1960]'''. “Die Herausforderung” in ''Über den Tag hinaus. Jahresgabe 1960/61 des Deutschen Bücherbundes''. Edited by Franz A. Hoyer. Stuttgart: Deutscher Bücherbund, 1960, pp. 87-92",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". “Die Herausforderung” in ''Über den Tag hinaus. Jahresgabe 1960/61 des Deutschen Bücherbundes''. Edited by Franz A. Hoyer. Stuttgart: Deutscher Bücherbund, 1960, pp. 87-92",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1960"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "5ef6aeb492475f11974209e036f4056716a6a6691eb7a80234d00bd8b736f582"
+    },
+    {
+      "editionId": "klawiter:edition/279-1964-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 26102,
+          "oa:start": 25919
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1964]'''. \\\"Der Weltschachmeister\\\" in ''Lesestücke und Übersetzungen''. Compiled and edited by Johannes Schneider. 7th impression. Groningen: Noordhoff Verlag, 1964, pp. 91-92 ",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Der Weltschachmeister\\\" in ''Lesestücke und Übersetzungen''. Compiled and edited by Johannes Schneider. 7th impression. Groningen: Noordhoff Verlag, 1964, pp. 91-92",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1964"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "0ca5ee4df5614d1aaaecab61d64d1da724789d2bf79e1a96095ebb4fb3b6004a"
+    },
+    {
+      "editionId": "klawiter:edition/279-1969-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 26332,
+          "oa:start": 26102
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1969]'''. “Schachnovelle” in ''Literatur und Widerstand. Anthologie europäischer Poesie und Prosa''. Edited by the Internationale Föderation der  in Widerstandskämpfer. Frankfurt am Main: Röderberg Verlag, 1969, pp. 434-440",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". “Schachnovelle” in ''Literatur und Widerstand. Anthologie europäischer Poesie und Prosa''. Edited by the Internationale Föderation der  in Widerstandskämpfer. Frankfurt am Main: Röderberg Verlag, 1969, pp. 434-440",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1969"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "c7e25623787677bb3c897f1de492d214fc410e06711bdbeb37211588746b39f5"
+    },
+    {
+      "editionId": "klawiter:edition/279-1970-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 26881,
+          "oa:start": 26332
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1970]'''.  “Schachnovelle” [A summary of the story] in H. D. Tiesema. ''Der Rote Faden. Fünfzig Zusammenfassungen vielgelesener Werke aus der deutschen Literatur für Examenskandidaten Höherer Schulen, L. O.- und M. O.-Kandiaten''.  ",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ".  “Schachnovelle” [A summary of the story] in H. D. Tiesema. ''Der Rote Faden. Fünfzig Zusammenfassungen vielgelesener Werke aus der deutschen Literatur für Examenskandidaten Höherer Schulen, L. O.- und M. O.-Kandiaten''.",
+        "location": null,
+        "pageCount": 234,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1970"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "c4b2315ef5e300783fcf6ecfdb8bbb542a99c6712bd0657a3b1ca8d1919b9cab"
+    },
+    {
+      "editionId": "klawiter:edition/279-1977-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 9199,
+          "oa:start": 8786
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1977]'''. ''Schachnovelle''. A CD recorded in 1977. 55 minutes and 32 seconds. Copyrighted in 1996 by the Special Projects Polygram Austria. Curd Jürgens reads a shortened version of the novella published by the S. Fischer Verlag, Frankfurt am Main. This is an exclusive, limited edition for the Archiv Verlag. Contains a 4-page insertion. Concept and format by Christine de Grancy. Text by Michaela Knapp.",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". ''Schachnovelle''. A CD recorded in 1977. 55 minutes and 32 seconds. Copyrighted in 1996 by the Special Projects Polygram Austria. Curd Jürgens reads a shortened version of the novella published by the S. Fischer Verlag, Frankfurt am Main. This is an exclusive, limited edition for the Archiv Verlag. Contains a 4-page insertion. Concept and format by Christine de Grancy. Text by Michaela Knapp.",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1977"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "c39a618e3757e16c51098bf79c79ccaf6dd2fb9e8bad191b9ddab8de36128016"
+    },
+    {
+      "editionId": "klawiter:edition/279-1981-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 27104,
+          "oa:start": 26881
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1981]'''. \\\"Das Geheimnis des künstlerischen Schaffens\\\" [1938] in [[Das Geheimnis des künstlerischen Schaffens]] [1981],20, pp. 227-(250). Pages 244-245 contain a comparison of the story itself with the game of chess",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Das Geheimnis des künstlerischen Schaffens\\\" [1938] in [[Das Geheimnis des künstlerischen Schaffens]] [1981],20, pp. 227-(250). Pages 244-245 contain a comparison of the story itself with the game of chess",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "d144682ac416c4beeb5c5280b6d8e91f0d7814fdd7b336635ed1663f76d3b53a"
+    },
+    {
+      "editionId": "klawiter:edition/279-1988-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 27362,
+          "oa:start": 27104
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1988]'''. “Entscheidungskampf” in ''Kleine Bettlektüre für kluge Schachspieler. Literarische Schachzüge für alle, die ihren Geist beim königlichen Spiel erfrischen''. Selected and edited by Ulf Eisele. Bern/München/Wien: Scherz Verlag, 1988, pp. 97-109",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". “Entscheidungskampf” in ''Kleine Bettlektüre für kluge Schachspieler. Literarische Schachzüge für alle, die ihren Geist beim königlichen Spiel erfrischen''. Selected and edited by Ulf Eisele. Bern/München/Wien: Scherz Verlag, 1988, pp. 97-109",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1988"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "7fd8ce1e1fb40b8e8a08a8c5175c35897a62227114ecb92ac1bf09ac97733552"
+    },
+    {
+      "editionId": "klawiter:edition/279-1990-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 27553,
+          "oa:start": 27362
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1990]'''. \\\"Schachnovelle\\\" in''Wahlfach Deutsch. Literatur''. Compiled and edited by R. Hazekamp & J. V. Zambon. Groningen: Wolters-Noordhoff Verlag, 1990 [Reprinted 1996], pp. 219-221",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Schachnovelle\\\" in''Wahlfach Deutsch. Literatur''. Compiled and edited by R. Hazekamp & J. V. Zambon. Groningen: Wolters-Noordhoff Verlag, 1990 [Reprinted 1996], pp. 219-221",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1990"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "520174e7165eaefe0a885060e322300ce086c03569ea483b239fefa2f849e465"
+    },
+    {
+      "editionId": "klawiter:edition/279-1992-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 27781,
+          "oa:start": 27553
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1992]'''. A cartoon caricature [2 drawings] of \\\"Schachnovelle\\\" drawn by S. Bastian in ''Das Magazin'' [Zürich] 8 [28/29 February 1992], p. 46 [\\\"Impressum: Wochenendbeilage des Tages-Anzeigers und der Berliner Zeitung\\\"]",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". A cartoon caricature [2 drawings] of \\\"Schachnovelle\\\" drawn by S. Bastian in ''Das Magazin'' [Zürich] 8 [28/29 February 1992], p. 46 [\\\"Impressum: Wochenendbeilage des Tages-Anzeigers und der Berliner Zeitung\\\"]",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1992"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "24b77f45aa1c8655b1c7e24a5f03b818bba1e136f1b3cfe6fb0573880264b5e9"
+    },
+    {
+      "editionId": "klawiter:edition/279-1993-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 27944,
+          "oa:start": 27781
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1993]'''. [[Stefan Zweig. Bilder, Texte, Dokumente]] [1993], p. 209. Contains a facsimile of a page from the original typescript with handwritten corrections",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". [[Stefan Zweig. Bilder, Texte, Dokumente]] [1993], p. 209. Contains a facsimile of a page from the original typescript with handwritten corrections",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1993"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "714b7dc769ccde09b609a9e2757c1046b4f2dbde966d8dd835f9dfb1a8a375d2"
+    },
+    {
+      "editionId": "klawiter:edition/279-1999-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 28075,
+          "oa:start": 27944
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1999]'''. \\\"Die Herausforderung des geheimnisvollen Fremden\\\" in ''Welt am Sonntag'' [Hamburg], 11 March 1999 [No. 11], p. 44",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". \\\"Die Herausforderung des geheimnisvollen Fremden\\\" in ''Welt am Sonntag'' [Hamburg], 11 March 1999 [No. 11], p. 44",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1999"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "1cb0695ebf2f5565c885a0d29079e9636e4b7c4beec9bf043d7e014dcf644137"
+    },
+    {
+      "editionId": "klawiter:edition/279-2002-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 28343,
+          "oa:start": 28075
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[2002]'''.  \\\"Die Schachnovelle\\\" in ''Wort und Sinn. Ein Lese- und literarisches Arbeitsbuch für die Jahrgangsstufe 9/10''. Edited by Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290 Contains a photograph of Stefan Zweig and two illustrations",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ".  \\\"Die Schachnovelle\\\" in ''Wort und Sinn. Ein Lese- und literarisches Arbeitsbuch für die Jahrgangsstufe 9/10''. Edited by Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290 Contains a photograph of Stefan Zweig and two illustrations",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "2002"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "0f0b102733be73282798e541b5acb86c33886c1758fa98042c3fd2f7b30da573"
+    },
+    {
+      "editionId": "klawiter:edition/279-2002-d",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 28591,
+          "oa:start": 28343
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[2002]'''. “Die Herausforderung” [A condensed version of the story] in ''Lust am Spielen. Lesebuch einer Leidenschaft''. Edited by Linda Walz and Gerhard Seidl. 269/(3)p. München: Piper Verlag, 2002 [Piper Taschenbuch, Nr. 3493], pp. 159-(182)",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". “Die Herausforderung” [A condensed version of the story] in ''Lust am Spielen. Lesebuch einer Leidenschaft''. Edited by Linda Walz and Gerhard Seidl. 269/(3)p. München: Piper Verlag, 2002 [Piper Taschenbuch, Nr. 3493], pp. 159-(182)",
+        "location": null,
+        "pageCount": 269,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "2002"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "2faf675c1c85e8a0767660c4e09bf32ecb5d91f26e08b162ea8dc32482406978"
+    },
+    {
+      "editionId": "klawiter:edition/279-2003-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 15341,
+          "oa:start": 15210
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location"
+      ],
+      "headerLine": "'''[2003]: Wolters-Noordhoff Verlag Groningen'''",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": null,
+        "pageCount": 64,
+        "pageCountCandidate": null,
+        "publisher": "Wolters-Noordhoff Verlag Groningen",
+        "series": null,
+        "year": "2003"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "e180bef66f76cfdcb77315823d321d19eddd7b545a39d76bb5d551c22902481c"
+    },
+    {
+      "editionId": "klawiter:edition/279-2009-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 28967,
+          "oa:start": 28591
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[2009]'''. Story read by Christoph Maria Herbst. 2 CDs. 146 minutes. Berlin: Argon Verlag, 2009",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ". Story read by Christoph Maria Herbst. 2 CDs. 146 minutes. Berlin: Argon Verlag, 2009",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "2009"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "d1da11462c9cf19b594e937d64b5d9aef001a7177d17a2ba8aff921a6c298785"
     },
     {
       "editionId": "klawiter:edition/413-2004-a",
@@ -419,6 +1044,171 @@
       "sourceSliceSha256": "2694e3755509593c5c5379718e54e763d1e0e49ae79651d2266fdc9361b7fcea"
     },
     {
+      "editionId": "klawiter:edition/793-1857-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 12977,
+          "oa:start": 12897
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/793"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1857]:''' ''Les Fleurs du mal''. 248p. Paris: Poulet-Malassis et de Broise",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": "''Les Fleurs du mal''. 248p. Paris: Poulet-Malassis et de Broise",
+        "location": null,
+        "pageCount": 248,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1857"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 793,
+      "sourceSliceSha256": "8b6ef0b2e0d648489b80ae5efa2a4e9026708e9fe36ba5527d3e2b76bd411dfc"
+    },
+    {
+      "editionId": "klawiter:edition/793-1861-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 13159,
+          "oa:start": 12977
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/793"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1861]:''' ''Les Fleurs du mal''. 2nd edition, augmented with 35 new poems. Portrait of Baudelaire designed and engraved by Félix Braquemond. Paris: Poulet-Malassis et de Broise",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": "''Les Fleurs du mal''. 2nd edition, augmented with 35 new poems. Portrait of Baudelaire designed and engraved by Félix Braquemond. Paris: Poulet-Malassis et de Broise",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1861"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 793,
+      "sourceSliceSha256": "e23f924d9d5208481e2f33889394d3c82e72a9b489773c0671356dd7b399c901"
+    },
+    {
+      "editionId": "klawiter:edition/793-1868-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 13568,
+          "oa:start": 13159
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/793"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1868]:'''  ''Les Fleurs du Mal'' [Oeuvres complètes de Charles  Baudelaire. Vol. 1]. Introduction by Théophile Gautier [A biographical sketch of Baudelaire, dated 20 February 1869]. Frontispiece portrait by Félix Braquemond. 411p. Paris: Michel Lévy Frères, Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. References to the numbers of each poem are taken from the Michel Lévy edition",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": "''Les Fleurs du Mal'' [Oeuvres complètes de Charles  Baudelaire. Vol. 1]. Introduction by Théophile Gautier [A biographical sketch of Baudelaire, dated 20 February 1869]. Frontispiece portrait by Félix Braquemond. 411p. Paris: Michel Lévy Frères, Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. References to the numbers of each poem are taken from the Michel Lévy edition",
+        "location": null,
+        "pageCount": 411,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1868"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 793,
+      "sourceSliceSha256": "0142f5d67354eb2487d6eb2d2487c1cd13fec6d884dfc4607b5a9fa6d5c7e3f9"
+    },
+    {
+      "editionId": "klawiter:edition/793-1975-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 13795,
+          "oa:start": 13568
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/793"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[1975]:''' \\\"Les Fleurs du mal\\\" [Oeuvres complètes. Vol. 1]. Text established and annotated by Claude Pichois. Paris: Éditions Gallimard. Vol. I, 1975. Vol. II, 1976. Both reprinted 1983. All 1975 references are to Vol. I",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": "\\\"Les Fleurs du mal\\\" [Oeuvres complètes. Vol. 1]. Text established and annotated by Claude Pichois. Paris: Éditions Gallimard. Vol. I, 1975. Vol. II, 1976. Both reprinted 1983. All 1975 references are to Vol. I",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "1975"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 793,
+      "sourceSliceSha256": "5f3164840ac12ec50f740fdace652b6323ade9670bb4cedc2d1d69f79e6f94d1"
+    },
+    {
+      "editionId": "klawiter:edition/793-2001-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 44563,
+          "oa:start": 13795
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/793"
+        }
+      },
+      "flags": [
+        "missing-location",
+        "header-suffix"
+      ],
+      "headerLine": "'''[2001]:''' ''Les Fleurs du mal. Lecture intégrale''. Edited with an introduction and analyses of the poems by Mario Richter. 2 vols. [Vol. 1, pp. (7)-877. Vol. II, pp. (878)-1705]. Genève: Éditions Slatkine",
+      "priority": "P1",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": "''Les Fleurs du mal. Lecture intégrale''. Edited with an introduction and analyses of the poems by Mario Richter. 2 vols. [Vol. 1, pp. (7)-877. Vol. II, pp. (878)-1705]. Genève: Éditions Slatkine",
+        "location": null,
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": null,
+        "series": null,
+        "year": "2001"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 793,
+      "sourceSliceSha256": "a00d82ddf5206ebc1e7c50003486abc4891af8cdf770f3ae89de58666d418ff4"
+    },
+    {
       "editionId": "klawiter:edition/843-1998-a",
       "evidence": {
         "@type": "oa:SpecificResource",
@@ -545,39 +1335,6 @@
       "reviewStatus": "proposed",
       "sourcePageId": 1642,
       "sourceSliceSha256": "6e5a609cc8853c135ea8c419daf6699fcfb1bad60434e0239dc192e49554f166"
-    },
-    {
-      "editionId": "klawiter:edition/1685-1988-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 724,
-          "oa:start": 544
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/1685"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-series"
-      ],
-      "headerLine": "'''[1988]: Maṭbū‘āt al Sharq, [Sydney, Australia?]'''",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": null,
-        "location": null,
-        "pageCount": 159,
-        "pageCountCandidate": null,
-        "publisher": "Maṭbū‘āt al Sharq",
-        "series": "[Sydney, Australia?]",
-        "year": "1988"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 1685,
-      "sourceSliceSha256": "5f58cf7e15cd0fcec697a04be2a97962df9862ef325a44d292bb3f784f4d894d"
     },
     {
       "editionId": "klawiter:edition/1818-1957-a",
@@ -738,105 +1495,6 @@
       "reviewStatus": "proposed",
       "sourcePageId": 1818,
       "sourceSliceSha256": "48d8034b6bc8259b751fdbbd46b713149d228054c90872842edc00a37d7fdcd2"
-    },
-    {
-      "editionId": "klawiter:edition/1949-2010-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 263,
-          "oa:start": 0
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/1949"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[2010]:''' The Continuum International Publishing Group, New York",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": "The Continuum International Publishing Group, New York",
-        "location": null,
-        "pageCount": 210,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "2010"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 1949,
-      "sourceSliceSha256": "8a5e926bc1c693e65b102685a347468306573b6515e9832ecf3a915a2ca0613b"
-    },
-    {
-      "editionId": "klawiter:edition/1949-2012-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2436,
-          "oa:start": 2151
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/1949"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[2012]:''' Éditions Bernard Grasset, Paris",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": "Éditions Bernard Grasset, Paris",
-        "location": null,
-        "pageCount": 299,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "2012"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 1949,
-      "sourceSliceSha256": "c0a589029a394a5db92f5e63014185be3117a0561f54bb8f7347bc5fa4d655a5"
-    },
-    {
-      "editionId": "klawiter:edition/1949-2012-b",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4548,
-          "oa:start": 4224
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/1949"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[2012]:''' Versal Editores, Rio de Janeiro ",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": "Versal Editores, Rio de Janeiro",
-        "location": null,
-        "pageCount": 282,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "2012"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 1949,
-      "sourceSliceSha256": "e75c5c078f5c5747eaad19e0d943fac4ac3d97cfb49d08a3de7fbeadef8771be"
     },
     {
       "editionId": "klawiter:edition/2301-1992-a",
@@ -2467,72 +3125,6 @@
       "sourceSliceSha256": "b7acd4a92895f30e26d548f96054aad32458972efad0a0d6aa603eb2858ab8ed"
     },
     {
-      "editionId": "klawiter:edition/4216-2009-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4176,
-          "oa:start": 3434
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/4216"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[2009]: al-Markaz al-Qawmī li-l-Tarjamah''' [National Center for Translation], al-Qāhirah [Cairo]",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": "[National Center for Translation], al-Qāhirah [Cairo]",
-        "location": null,
-        "pageCount": 553,
-        "pageCountCandidate": null,
-        "publisher": "al-Markaz al-Qawmī li-l-Tarjamah",
-        "series": null,
-        "year": "2009"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 4216,
-      "sourceSliceSha256": "5d60cd6a2ac902810625c359a45d02c373c980931f8ec2f98e48ca1c6c5123cb"
-    },
-    {
-      "editionId": "klawiter:edition/4251-1971-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 458,
-          "oa:start": 283
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/4251"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-series"
-      ],
-      "headerLine": "'''[1971]: Milliyet Yayınları, [Istanbul]'''",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": null,
-        "location": null,
-        "pageCount": 488,
-        "pageCountCandidate": null,
-        "publisher": "Milliyet Yayınları",
-        "series": "[Istanbul]",
-        "year": "1971"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 4251,
-      "sourceSliceSha256": "17a0fc8944a3d5ecc54b9873bbbe4c667107bbfde614bbdd60286c02c31c8205"
-    },
-    {
       "editionId": "klawiter:edition/4269-1996-a",
       "evidence": {
         "@type": "oa:SpecificResource",
@@ -2547,8 +3139,7 @@
       },
       "flags": [
         "approximate-year",
-        "missing-location",
-        "header-series"
+        "missing-location"
       ],
       "headerLine": "'''[ca. 1996]: [s.n.], [s.l.]'''",
       "priority": "P1",
@@ -2558,8 +3149,8 @@
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "[s.n.]",
-        "series": "[s.l.]",
+        "publisher": null,
+        "series": null,
         "year": "1996"
       },
       "reviewStatus": "proposed",
@@ -2580,20 +3171,18 @@
         }
       },
       "flags": [
-        "missing-location",
-        "header-suffix",
-        "header-series"
+        "missing-location"
       ],
       "headerLine": "'''[2015]: Raffī : li-mutʿat al-qirāʾah [My Bookshelf: for the Pleasure of Reading]''', [s.l.]",
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ", [s.l.]",
+        "description": null,
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Raffī : li-mutʿat al-qirāʾah",
-        "series": "[My Bookshelf: for the Pleasure of Reading]",
+        "publisher": "Raffī : li-mutʿat al-qirāʾah [My Bookshelf: for the Pleasure of Reading]",
+        "series": null,
         "year": "2015"
       },
       "reviewStatus": "proposed",
@@ -2614,18 +3203,17 @@
         }
       },
       "flags": [
-        "missing-location",
-        "header-suffix"
+        "missing-location"
       ],
       "headerLine": "'''[2017]: Raffī : li-mutʿat al-qirāʾah''' [My Bookshelf: for the Pleasure of Reading], [s.l.]",
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": "[My Bookshelf: for the Pleasure of Reading], [s.l.]",
+        "description": null,
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Raffī : li-mutʿat al-qirāʾah",
+        "publisher": "Raffī : li-mutʿat al-qirāʾah [My Bookshelf: for the Pleasure of Reading]",
         "series": null,
         "year": "2017"
       },
@@ -2776,8 +3364,7 @@
         }
       },
       "flags": [
-        "missing-location",
-        "header-series"
+        "missing-location"
       ],
       "headerLine": "'''[2014]: [Bolor Sudar Khevleliin Gazar], [s.l.]'''",
       "priority": "P1",
@@ -2788,7 +3375,7 @@
         "pageCount": 88,
         "pageCountCandidate": null,
         "publisher": "[Bolor Sudar Khevleliin Gazar]",
-        "series": "[s.l.]",
+        "series": null,
         "year": "2014"
       },
       "reviewStatus": "proposed",
@@ -2809,8 +3396,7 @@
         }
       },
       "flags": [
-        "missing-location",
-        "header-series"
+        "missing-location"
       ],
       "headerLine": "'''[2015]: [Bolor Sudar Khevleliin Gazar], [s.l.]'''",
       "priority": "P1",
@@ -2821,7 +3407,7 @@
         "pageCount": 95,
         "pageCountCandidate": null,
         "publisher": "[Bolor Sudar Khevleliin Gazar]",
-        "series": "[s.l.]",
+        "series": null,
         "year": "2015"
       },
       "reviewStatus": "proposed",
@@ -3019,6 +3605,38 @@
       "reviewStatus": "proposed",
       "sourcePageId": 25,
       "sourceSliceSha256": "dae13aa6e41168c0c2bb5bd25bb10cba39fdcc8cf6f354d694819d0295013a37"
+    },
+    {
+      "editionId": "klawiter:edition/35-1981-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 7672,
+          "oa:start": 7585
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/35"
+        }
+      },
+      "flags": [
+        "header-series"
+      ],
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]'''",
+      "priority": "P2",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": "[Gesammelte Werke in Einzelbänden]",
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 35,
+      "sourceSliceSha256": "a71ee3d3ba9b8238d1783477cd7a45ada3a382e1e595a9ea087877b2b73e294b"
     },
     {
       "editionId": "klawiter:edition/36-1997-a",
@@ -3243,6 +3861,166 @@
       "reviewStatus": "proposed",
       "sourcePageId": 271,
       "sourceSliceSha256": "d4e72e7c5d98390f2eb2a6716e862a06ab8257d54db75a048d2db7ce572b7e3f"
+    },
+    {
+      "editionId": "klawiter:edition/279-1959-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 3383,
+          "oa:start": 3254
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "malformed-bold-header"
+      ],
+      "headerLine": "'''[1959]: Verlag für fremdsprachige Literatur, Moskau (Moskva)",
+      "priority": "P2",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Moskau (Moskva)",
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": "Verlag für fremdsprachige Literatur",
+        "series": null,
+        "year": "1959"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "944aba763f82b4e09ee6f72338338b638722934b661e768dfb37ebc9a5389d0f"
+    },
+    {
+      "editionId": "klawiter:edition/279-1974-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 8636,
+          "oa:start": 5098
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "header-suffix"
+      ],
+      "headerLine": "'''[1974]: Fischer Taschenbuch Verlag, Frankfurt am Main'''.",
+      "priority": "P2",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": ".",
+        "location": "Frankfurt am Main",
+        "pageCount": 94,
+        "pageCountCandidate": null,
+        "publisher": "Fischer Taschenbuch Verlag",
+        "series": null,
+        "year": "1974"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "e6c6fb20b4b240ba43ec232e3de5bebb19703b83490bd0a1dcb68061d4cb3e09"
+    },
+    {
+      "editionId": "klawiter:edition/279-1984-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 32978,
+          "oa:start": 31102
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "normalized-page-count-notation"
+      ],
+      "headerLine": "'''[1984]: Tigertheater, Berlin'''",
+      "priority": "P2",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Berlin",
+        "pageCount": 14,
+        "pageCountCandidate": null,
+        "publisher": "Tigertheater",
+        "series": null,
+        "year": "1984"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "ac489606e841eaab175fa3b413ae765c866de36c7e58812a0fb966333b91e586"
+    },
+    {
+      "editionId": "klawiter:edition/279-1994-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 34531,
+          "oa:start": 32978
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "normalized-page-count-notation"
+      ],
+      "headerLine": "'''[1994]: Rokokotheater, Schwetzingen'''",
+      "priority": "P2",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Schwetzingen",
+        "pageCount": 10,
+        "pageCountCandidate": null,
+        "publisher": "Rokokotheater",
+        "series": null,
+        "year": "1994"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "6a3b24c76b0dcc53e87b44f82e91992cd9c2f5a7546c4ebbe15dc8a795087d4b"
+    },
+    {
+      "editionId": "klawiter:edition/279-1996-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 13603,
+          "oa:start": 13415
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/279"
+        }
+      },
+      "flags": [
+        "normalized-page-count-notation"
+      ],
+      "headerLine": "'''[1996]: Noran Könyvkiadó, Budapest'''",
+      "priority": "P2",
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Budapest",
+        "pageCount": 2,
+        "pageCountCandidate": null,
+        "publisher": "Noran Könyvkiadó",
+        "series": null,
+        "year": "1996"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 279,
+      "sourceSliceSha256": "fff200cc459e07771e0bc366a6fb2a79ed60125d1264d63d83f0f350c725fb7f"
     },
     {
       "editionId": "klawiter:edition/334-1999-a",
@@ -4065,10 +4843,13 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": "England",
+        "location": [
+          "New Brunswick, NJ",
+          "London, England"
+        ],
         "pageCount": 238,
         "pageCountCandidate": null,
-        "publisher": "Transaction Publishers, New Brunswick, NJ and London",
+        "publisher": "Transaction Publishers",
         "series": null,
         "year": "2010"
       },
@@ -4577,10 +5358,16 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": "Bairūt",
+        "location": [
+          "al-Qāhira [Cairo]",
+          "Bairūt"
+        ],
         "pageCount": 197,
         "pageCountCandidate": null,
-        "publisher": "Mu'assasat al-Ahrām, al-Qāhira [Cairo] / al-Sharikah al-Sharqiyyah li-l-Nashr wa'l-Tawzī'",
+        "publisher": [
+          "Mu'assasat al-Ahrām",
+          "al-Sharikah al-Sharqiyyah li-l-Nashr wa'l-Tawzī'"
+        ],
         "series": "[Beirut]",
         "year": "1973"
       },
@@ -5164,38 +5951,6 @@
       "reviewStatus": "proposed",
       "sourcePageId": 1695,
       "sourceSliceSha256": "5ddaef84706b57db43ac8207d97b76a4da3a9a12a7e38c58e93900e6141a1749"
-    },
-    {
-      "editionId": "klawiter:edition/1695-2008-g",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3841,
-          "oa:start": 2851
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/1695"
-        }
-      },
-      "flags": [
-        "header-suffix"
-      ],
-      "headerLine": "'''[2008]: al-Hayʾah al-Miṣriyyah al-ʿĀmmah li-l-Kitāb, Wizārat al-Thaqāfah''' [General Egyptian Book Organization (GEBO), Ministry of Culture], al-Qāhirah [Cairo] / Dār al-Madā li-l-Thaqāfah waʾl-Nashr, Dimashq [Damascus]",
-      "priority": "P2",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": "[General Egyptian Book Organization (GEBO), Ministry of Culture], al-Qāhirah [Cairo] / Dār al-Madā li-l-Thaqāfah waʾl-Nashr, Dimashq [Damascus]",
-        "location": "Wizārat al-Thaqāfah",
-        "pageCount": 72,
-        "pageCountCandidate": null,
-        "publisher": "al-Hayʾah al-Miṣriyyah al-ʿĀmmah li-l-Kitāb",
-        "series": null,
-        "year": "2008"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 1695,
-      "sourceSliceSha256": "e7997357bd746f4c656c094b0079721e03c6895abcf3921b968f41d7ac4918a7"
     },
     {
       "editionId": "klawiter:edition/1815-1939-a",
@@ -6051,10 +6806,10 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": "D. F.",
+        "location": "México, D. F.",
         "pageCount": 176,
         "pageCountCandidate": null,
-        "publisher": "Editorial Diana, México",
+        "publisher": "Editorial Diana",
         "series": null,
         "year": "1949"
       },
@@ -6467,10 +7222,16 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": "'",
-        "location": "ʿAmmān",
+        "location": [
+          "Amman",
+          "ʿAmmān"
+        ],
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Deutsches Kulturinstitut (Goethe-Institut), Amman / al-Maʿhad al-Thaqāfī al-Almānī (Maʿhad Ġūtah)",
+        "publisher": [
+          "Deutsches Kulturinstitut (Goethe-Institut)",
+          "al-Maʿhad al-Thaqāfī al-Almānī (Maʿhad Ġūtah)"
+        ],
         "series": null,
         "year": "1974"
       },
@@ -8324,10 +9085,16 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": "Bayrūt",
+        "location": [
+          "London, ON",
+          "Bayrūt"
+        ],
         "pageCount": 207,
         "pageCountCandidate": null,
-        "publisher": "Opus Publishers, London, ON / Dār al-Rāfidayn",
+        "publisher": [
+          "Opus Publishers",
+          "Dār al-Rāfidayn"
+        ],
         "series": "[Beirut]",
         "year": "2017"
       },
@@ -8388,10 +9155,10 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": "Brasil",
+        "location": "Salvador, Brasil",
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Santa Luiza Filmes, Salvador",
+        "publisher": "Santa Luiza Filmes",
         "series": "[Brazil]",
         "year": "2012"
       },

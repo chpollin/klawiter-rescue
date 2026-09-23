@@ -37,6 +37,12 @@
       "qid": "Q64",
       "uri": "http://www.wikidata.org/entity/Q64"
     },
+    "Bloemfontein": {
+      "decisionId": "location/Bloemfontein/Q37701",
+      "label": "Bloemfontein",
+      "qid": "Q37701",
+      "uri": "http://www.wikidata.org/entity/Q37701"
+    },
     "Borås, Sweden": {
       "decisionId": "location/Boras-Sweden/Q26040",
       "label": "Borås",
@@ -60,6 +66,12 @@
       "label": "Frankfurt",
       "qid": "Q1794",
       "uri": "http://www.wikidata.org/entity/Q1794"
+    },
+    "Kaapstad (Capetown)": {
+      "decisionId": "location/Kaapstad-Capetown/Q5465",
+      "label": "Cape Town",
+      "qid": "Q5465",
+      "uri": "http://www.wikidata.org/entity/Q5465"
     },
     "Leipzig": {
       "decisionId": "location/Leipzig/Q2079",
@@ -144,6 +156,12 @@
       "label": "Tokyo",
       "qid": "Q1490",
       "uri": "http://www.wikidata.org/entity/Q1490"
+    },
+    "Varna": {
+      "decisionId": "location/Varna/Q6506",
+      "label": "Varna",
+      "qid": "Q6506",
+      "uri": "http://www.wikidata.org/entity/Q6506"
     },
     "Wien": {
       "decisionId": "location/Wien/Q1741",
