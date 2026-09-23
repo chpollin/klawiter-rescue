@@ -16,7 +16,7 @@ The edition is available at https://chpollin.github.io/klawiter-rescue/. Please 
 
 - Content: the current pages of the bibliography wiki at the time of its shutdown. Where an automatic maintenance account of the wiki overwrote a content page with an unrelated redirect, the page is published from the compiler's last revision before that overwrite, with the revision named in its provenance.
 - Excluded: titles the wiki recorded as deleted, earlier page revisions, user accounts and edit metadata. The archival database dump is preserved separately and is not published.
-- Responsibility: Randolph J. Klawiter as compiler; Digital Humanities Craft with Christopher Pollin as responsible editor of the digital edition.
+- Responsibility: Randolph J. Klawiter as compiler, Digital Humanities Craft with Christopher Pollin as responsible editor of the digital edition, published with the Literaturarchiv Salzburg.
 - Licences: data and documentation CC BY 4.0, code MIT. Reuse credits the bibliographic source.
 - Release: a versioned repository tag and a Zenodo DOI after acceptance.
 - Uncertainty: the edition keeps unreviewed proposals, reviewed confirmations and open questions apart. Open questions stay visible in the data and the interface and are not resolved by the release.

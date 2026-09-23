@@ -97,7 +97,7 @@ const Pages = {
         <p>
           The project is connected to
           <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>,
-          a research initiative at the Stefan Zweig Centre Salzburg providing
+          a research initiative at the Literaturarchiv Salzburg providing
           digital access to Zweig&rsquo;s literary estate. The bibliography
           complements that collection by documenting the publication history the
           estate materials produced, and the visual design follows the Stefan
@@ -257,7 +257,7 @@ const Pages = {
             the University of Notre Dame, Indiana, USA
           </li>
           <li>
-            <strong>Stefan Zweig Centre Salzburg</strong> &mdash; institutional
+            <strong>Literaturarchiv Salzburg</strong> &mdash; institutional
             context and connection to the
             <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>
             research infrastructure

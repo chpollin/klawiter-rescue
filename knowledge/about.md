@@ -9,7 +9,7 @@ language: en
 version: 1.0
 tags: [project, context, provenance]
 created: 2026-03-29
-updated: 2026-09-05
+updated: 2026-09-23
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, testing, production-readiness]
 ---
@@ -26,7 +26,8 @@ From these the project reconstructs a static research interface, complete JSON-L
 
 - Randolph J. Klawiter is the author of the bibliography.
 - Christopher Pollin is responsible for the digital edition, data model, software and documentation.
-- Stefan Zweig Digital supplies the scholarly and institutional context as well as the frozen SZD work index for reconciliation candidates.
+- The Literaturarchiv Salzburg is the institution the edition is published with (operator decision of 2026-09-23). Its Stefan Zweig Digital initiative supplies the scholarly context as well as the frozen SZD work index for reconciliation candidates.
+- Digital Humanities Craft, with Christopher Pollin as responsible editor, publishes the digital edition (operator decision of 2026-09-08).
 - Automated and agentic checks supply evidence. Institutionally content-changing work decisions remain with the responsible domain staff.
 
 ## Data Integrity
@@ -47,4 +48,4 @@ The interface is connected with Stefan Zweig Digital and uses the established co
 
 ## Licenses and Citation
 
-The code is licensed under MIT. Documentation and the structured edition are licensed under CC BY 4.0. `CITATION.cff` contains the machine-readable citation details; the bibliographic source must be credited expressly on reuse.
+The code is licensed under MIT. Documentation and the structured edition are licensed under CC BY 4.0. Permission to publish the compiled bibliography under CC BY 4.0 exists, as the operator confirmed on 2026-09-23. `CITATION.cff` contains the machine-readable citation details; the bibliographic source must be credited expressly on reuse.
