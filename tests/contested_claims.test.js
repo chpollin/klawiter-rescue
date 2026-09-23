@@ -139,9 +139,20 @@ function load(file, context, exported) {
     path.join(__dirname, '..', 'docs', 'data', 'reconciliation.json'),
     'utf8'
   ));
+  // Page 4269 carries the open place claim on Tyresö in its imprint. Page 299
+  // no longer serves: its line names Varna and Sofija for two different
+  // contributions, which is no evidence for a compound place.
   const realClaim = reconciliation.contestedClaims.find(item =>
     item.subject && item.subject.name === 'Tyresö' && item.decisionStatus !== 'decided');
   assert.ok(realClaim, 'the open Tyresö place claim must exist');
+  assert.ok(!reconciliation.contestedClaims.some(item =>
+    (item.sourceEvidence || []).some(evidence => evidence.sourcePageId === 299)),
+    'no claim takes evidence from a page that does not carry its subject');
+  assert.ok(reconciliation.contestedClaims.every(item => item.decisionStatus === 'open'),
+    'the contested list holds open claims only');
+  assert.ok((reconciliation.decidedClaims || []).some(item =>
+    item.subject.name === 'Sofija, Varna' && item.decisionStatus === 'decided'),
+    'a decided compound claim keeps its record');
 
   const editContext = { App: { state: {} } };
   const Edit = load('edit.js', editContext, 'Edit');

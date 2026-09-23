@@ -19,7 +19,7 @@ WIKIDATA_URI = "http://www.wikidata.org/entity/"
 SZD_WORK_URI = "https://gams.uni-graz.at/o:szd.werkindex#"
 TEI_NS = {"tei": "http://www.tei-c.org/ns/1.0"}
 XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
-ALGORITHM_VERSION = "1.1"
+ALGORITHM_VERSION = "1.2"
 
 
 def load_reconciliation_patches(directory: Path) -> dict:
@@ -380,19 +380,38 @@ def _sorted_occurrences(occurrences: list[dict]) -> list[dict]:
     return occurrences
 
 
+# One publication's imprint: a bold edition header ('''[1966]: Publisher,
+# Sofija / Publisher, Varna''') or one bracket group ([Varna, 1992]). The
+# single [ of a [[wiki link]] opens no imprint.
+_IMPRINT_UNIT_RE = re.compile(r"'''\[[^\]]*\].*?'''|(?<!\[)\[[^\[\]]*\](?!\])")
+
+
 def _location_source_occurrences(
     location: str, folded_rows: list[_SourceRow]
 ) -> list[dict]:
-    """Return stable, exact source-line references for a location string."""
+    """Return stable, exact source-line references for a location string.
+
+    A multi-part value matches by its components only where one imprint
+    carries all of them as whole words. A line that names Varna for one
+    contribution and Sofija for another never states the place "Sofija,
+    Varna", and "CA" is no word of "California"; counting either would give
+    a claim evidence from pages that do not carry its subject.
+    """
     occurrences: list[dict] = []
     seen: set[tuple[int, int | None, int]] = set()
     needle = location.casefold()
     components = [item.strip().casefold() for item in location.split(",")]
+    words = [re.compile(rf"(?<!\w){re.escape(item)}(?!\w)") for item in components]
     for row in folded_rows:
         for line_number, line, folded_line in row.lines:
             exact_match = needle in folded_line
-            component_match = len(components) > 1 and all(
-                component in folded_line for component in components
+            component_match = (
+                len(components) > 1
+                and all(component in folded_line for component in components)
+                and any(
+                    all(word.search(unit) for word in words)
+                    for unit in _IMPRINT_UNIT_RE.findall(folded_line)
+                )
             )
             if not exact_match and not component_match:
                 continue
@@ -747,6 +766,8 @@ def _decision_history(decision: dict) -> list[dict]:
         }
         if current.get("decidedAt"):
             action["klawiter:decidedAt"] = current["decidedAt"]
+        if current.get("provenance"):
+            action["klawiter:reviewBasis"] = current["provenance"]
         history.append(action)
         current = current.get("supersedes")
     history.reverse()
@@ -761,10 +782,75 @@ def _claim_subject_key(subject: dict, entity_type: str) -> str:
     return subject["subjectId"]
 
 
+def decision_chain(decision: dict) -> list[dict]:
+    """A decision and every decision it supersedes, newest first."""
+    chain = []
+    current: dict | None = decision
+    while current:
+        chain.append(current)
+        current = current.get("supersedes")
+    return chain
+
+
+def closes_claim(decision: dict) -> bool:
+    """A final decision on a subject that was once an open claim.
+
+    The claim stays in the data as a decided record, the way a decided
+    edition claim does, so the decision can be traced and revised.
+    """
+    return decision["action"] != "unresolved" and any(
+        item["action"] == "unresolved" for item in decision_chain(decision)[1:]
+    )
+
+
+def _decide_claim(claim: dict, decision: dict) -> None:
+    """Mark the accepted reading of a closed claim and reject the others.
+
+    confirm and correct accept the interpretation of their target. A reject
+    accepts the reading its resolution names, such as a compound subject that
+    names two places, which then joins the interpretations.
+    """
+    claim_id = claim["@id"]
+    interpretations = claim["klawiter:interpretation"]
+    if decision["action"] == "reject":
+        resolution = decision.get("resolution")
+        if not resolution:
+            raise ValueError(f"Rejection closing {claim_id} names no accepted reading")
+        selected = f"{claim_id}/interpretation/{resolution['reading']}"
+        interpretations.append(
+            {
+                "@id": selected,
+                "@type": "klawiter:ClaimInterpretation",
+                "schema:name": resolution["label"],
+                "klawiter:interpretationStatus": "contested",
+                "klawiter:candidateSource": "reviewed-decision",
+            }
+        )
+        notes = resolution.get("reviewNotes", [])
+    else:
+        target = decision.get("qid") or decision.get("szdId")
+        selected = f"{claim_id}/interpretation/{target}"
+        notes = []
+    if selected not in {item["@id"] for item in interpretations}:
+        raise ValueError(f"Decision on {claim_id} selects no interpretation")
+    for item in interpretations:
+        item["klawiter:interpretationStatus"] = (
+            "accepted" if item["@id"] == selected else "rejected"
+        )
+    claim["klawiter:claimStatus"] = "resolved"
+    claim["klawiter:decisionStatus"] = "decided"
+    if notes:
+        claim["klawiter:reviewNote"] = list(notes)
+
+
 def _contested_claims(
     locations: list[dict], works: list[dict], agents: list[dict] | None = None
 ) -> list[dict]:
-    """Materialize unresolved decisions as claims without publishing them as links."""
+    """Materialize unresolved decisions as claims without publishing them as links.
+
+    A subject decided after an open claim keeps that claim as a decided
+    record with its accepted and rejected readings.
+    """
     claims = []
     groups: list[tuple[str, list[dict]]] = [("location", locations), ("work", works)]
     for subject in agents or []:
@@ -772,7 +858,9 @@ def _contested_claims(
     for entity_type, subjects in groups:
         for subject in subjects:
             decision = subject.get("decision")
-            if not decision or decision["action"] != "unresolved":
+            if not decision or (
+                decision["action"] != "unresolved" and not closes_claim(decision)
+            ):
                 continue
             subject_id = subject["subjectId"]
             subject_key = _claim_subject_key(subject, entity_type)
@@ -822,24 +910,124 @@ def _contested_claims(
                     }
                 ]
             )
-            claims.append(
-                {
-                    "@id": claim_id,
-                    "@type": "klawiter:ContestedClaim",
-                    "klawiter:identityScope": entity_type,
-                    "klawiter:claimSubject": {
-                        "@id": subject_id,
-                        "schema:name": subject_key,
-                    },
-                    "klawiter:claimPredicate": {"@id": "schema:sameAs"},
-                    "klawiter:claimStatus": "contested",
-                    "klawiter:decisionStatus": "open",
-                    "klawiter:sourceEvidence": source_evidence,
-                    "klawiter:interpretation": interpretations,
-                    "klawiter:hasReviewAction": _decision_history(decision),
-                }
-            )
+            claim = {
+                "@id": claim_id,
+                "@type": "klawiter:ContestedClaim",
+                "klawiter:identityScope": entity_type,
+                "klawiter:claimSubject": {
+                    "@id": subject_id,
+                    "schema:name": subject_key,
+                },
+                "klawiter:claimPredicate": {"@id": "schema:sameAs"},
+                "klawiter:claimStatus": "contested",
+                "klawiter:decisionStatus": "open",
+                "klawiter:sourceEvidence": source_evidence,
+                "klawiter:interpretation": interpretations,
+                "klawiter:hasReviewAction": _decision_history(decision),
+            }
+            if decision["action"] != "unresolved":
+                _decide_claim(claim, decision)
+            claims.append(claim)
     claims.sort(key=lambda item: item["@id"])
+    return claims
+
+
+SOURCE_REVISION_WITHHOLD = "withhold-redirect-relation"
+SOURCE_REVISION_RESTORE = "restore-human-revision"
+
+
+def _source_revision_claims(
+    source_revisions: dict,
+    source_rows: list[dict[str, str]],
+    folded_rows: list[_SourceRow],
+) -> list[dict]:
+    """Open claims for Redirect fixer overwrites whose parent text is absent.
+
+    The dump delivers only the fixer's redirect, so it cannot show whether
+    the page held content the fixer overwrote. The redirect is withheld as a
+    relation; the claim keeps both readings open with the exact fixer text.
+    """
+    rows = {int(row["page_id"]): row for row in source_rows}
+    folded = {row.page_id: row for row in folded_rows}
+    claims = []
+    for decision in source_revisions.get("decisions", []):
+        action = decision["action"]
+        if action not in {SOURCE_REVISION_WITHHOLD, SOURCE_REVISION_RESTORE}:
+            raise ValueError(f"Unsupported source-revision action: {action}")
+        if action != SOURCE_REVISION_WITHHOLD:
+            continue
+        page_id = decision["pageId"]
+        row = folded.get(page_id)
+        if row is None or not row.lines:
+            raise ValueError(f"Withheld redirect page is absent: {page_id}")
+        line_number, line, _ = row.lines[0]
+        fixer = decision["fixerRevisions"][-1]
+        target = rows[page_id].get("redirect_target", "")
+        claim_id = f"klawiter:claim/source-revision/{page_id}"
+        human = decision["humanRevision"]
+        review = {
+            "decisionId": decision["decisionId"],
+            "action": "unresolved",
+            "decidedBy": source_revisions["decidedBy"],
+            "evidence": [
+                "data/reconciliation/source-revision-decisions.json",
+                *(
+                    f"zweig_revision {item['revisionId']} by Redirect fixer at "
+                    f"{item['timestamp']}, text_id {item['textId']}: {item['comment']}"
+                    for item in decision["fixerRevisions"]
+                ),
+                f"Overwritten revision {human['revisionId']}: text not delivered "
+                "in the dump",
+            ],
+            "provenance": source_revisions["provenance"],
+        }
+        claims.append(
+            {
+                "@id": claim_id,
+                "@type": "klawiter:ContestedClaim",
+                "klawiter:identityScope": "source-revision",
+                "klawiter:claimSubject": {
+                    "@id": f"klawiter:entry/{page_id}",
+                    "schema:name": decision["pageTitle"],
+                },
+                "klawiter:claimPredicate": {"@id": "klawiter:redirectTarget"},
+                "klawiter:claimStatus": "contested",
+                "klawiter:decisionStatus": "open",
+                "klawiter:sourceEvidence": [
+                    _line_occurrence(
+                        "source-revision",
+                        row,
+                        line_number,
+                        line,
+                        fixer["redirectText"],
+                        "fixer-revision-text",
+                    )
+                ],
+                "klawiter:interpretation": [
+                    {
+                        "@id": f"{claim_id}/interpretation/redirect",
+                        "@type": "klawiter:ClaimInterpretation",
+                        "schema:name": (
+                            f"The page redirects to {target}, as the Redirect "
+                            "fixer left it"
+                        ),
+                        "klawiter:interpretationStatus": "contested",
+                        "klawiter:candidateSource": "redirect-fixer-revision",
+                    },
+                    {
+                        "@id": f"{claim_id}/interpretation/overwritten-content",
+                        "@type": "klawiter:ClaimInterpretation",
+                        "schema:name": (
+                            "The Redirect fixer overwrote page content that the "
+                            "dump does not deliver"
+                        ),
+                        "klawiter:interpretationStatus": "contested",
+                        "klawiter:candidateSource": "undelivered-parent-revision",
+                    },
+                ],
+                "klawiter:hasReviewAction": _decision_history(review),
+            }
+        )
     return claims
 
 
@@ -854,8 +1042,10 @@ def build_reconciliation(
     source_rows: list[dict[str, str]] | None = None,
     agent_reconciliation: dict | None = None,
     agent_decisions: dict | None = None,
+    source_revisions: dict | None = None,
 ) -> dict:
     """Build all deterministic Gate-2 layers from frozen inputs."""
+    source_revisions = source_revisions or {"decisions": []}
     folded_rows = _folded_source_lines(source_rows or [])
     location_subjects = apply_decisions(
         build_location_candidates(
@@ -878,6 +1068,7 @@ def build_reconciliation(
         "locationDecisions": location_decisions["decisions"],
         "workDecisions": work_decisions["decisions"],
         "agentDecisions": (agent_decisions or {}).get("decisions", []),
+        "sourceRevisionDecisions": source_revisions["decisions"],
     }
     candidates = {
         "algorithmVersion": ALGORITHM_VERSION,
@@ -890,7 +1081,8 @@ def build_reconciliation(
     queue = _review_queue(location_subjects, work_subjects, agent_subjects)
     contested_claims = _contested_claims(
         location_subjects, work_subjects, agent_subjects
-    )
+    ) + _source_revision_claims(source_revisions, source_rows or [], folded_rows)
+    contested_claims.sort(key=lambda item: item["@id"])
     return {
         "candidates": candidates,
         "decisions": decisions,

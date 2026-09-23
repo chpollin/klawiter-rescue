@@ -161,20 +161,32 @@ def extract_original_title(content):
     return None
 
 
+def link_target(link):
+    """The page a [[target|label]] link points to, as MediaWiki reads it.
+
+    The label after the pipe is display text, not part of the target, and
+    MediaWiki collapses whitespace runs in a title before it looks the page
+    up; a reference written with a double space reaches the same page.
+    """
+    return " ".join(link.split("|", 1)[0].split())
+
+
 def extract_see_references(content):
-    """Extract '''See:''' and '''See also:''' cross-references."""
+    """Extract '''See:''' and '''See also:''' cross-references as link targets."""
     refs = []
     # See: [[target]]
     for m in re.finditer(r"'''See(?:\s+also)?:?'''\s*\[\[([^\]]+)\]\]", content):
-        refs.append(m.group(1).strip())
+        ref = link_target(m.group(1))
+        if ref:
+            refs.append(ref)
     # See: [[target1]], [[target2]]
     see_block = re.search(
         r"'''See(?:\s+also)?:?'''\s*(.+?)(?:\n\n|\Z)", content, re.DOTALL
     )
     if see_block:
         for m in re.finditer(r"\[\[([^\]]+)\]\]", see_block.group(1)):
-            ref = m.group(1).strip()
-            if ref not in refs:
+            ref = link_target(m.group(1))
+            if ref and ref not in refs:
                 refs.append(ref)
     return refs
 

@@ -188,6 +188,20 @@ class TestExtractSeeReferences:
         refs = extract_see_references(content)
         assert "Baoshou buzhu de mimi" in refs
 
+    def test_link_target_drops_the_label(self):
+        # Page 2088 links the Prater page with a display label.
+        refs = extract_see_references(
+            "'''See:''' [[Prater, Donald A.|Donald A. Prater]]"
+        )
+        assert refs == ["Prater, Donald A."]
+
+    def test_link_target_collapses_whitespace_runs(self):
+        # Pages 774 and 6820 write their targets with doubled spaces.
+        refs = extract_see_references(
+            "'''See also:''' [[Der Amokläufer   .  Amok]], [[Královská  hra]]"
+        )
+        assert refs == ["Der Amokläufer . Amok", "Královská hra"]
+
 
 class TestExtractReprints:
     def test_extracted(self, entry_reprints):

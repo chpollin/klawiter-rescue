@@ -349,7 +349,16 @@ def main() -> None:
             "editions": len(dataset["editions"]),
             "annotations": len(dataset["annotations"]),
             "carriers": len(dataset["carriers"]),
-            "contestedClaims": len(dataset["contestedClaims"]),
+            # Open and decided claims apart, under the names Gate 2 uses; a
+            # decided claim stays in the graph as its record.
+            "contestedEditionClaims": sum(
+                claim["klawiter:decisionStatus"] == "open"
+                for claim in dataset["contestedClaims"]
+            ),
+            "decidedEditionClaims": sum(
+                claim["klawiter:decisionStatus"] == "decided"
+                for claim in dataset["contestedClaims"]
+            ),
             "candidateWorks": len(dataset["candidateWorks"]),
             "confirmedEditions": sum(
                 edition["klawiter:reviewStatus"] == "confirmed"
