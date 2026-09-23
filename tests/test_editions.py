@@ -159,6 +159,16 @@ def test_an_imprint_after_the_bold_is_read_but_a_sentence_is_not() -> None:
     assert sentence.description.startswith(". Story read by")
 
 
+def test_the_period_of_an_initial_is_no_sentence_break() -> None:
+    """Page 66 sets "S. Fischer Verlag" after the bold year; the period of the
+    initial S. ends no sentence, so the suffix is the imprint."""
+    imprint = parse_header_line("'''[1983]:''' S. Fischer Verlag, Frankfurt am Main")[0]
+    assert imprint.publishers == ("S. Fischer Verlag",)
+    assert imprint.locations == ("Frankfurt am Main",)
+    assert imprint.description is None
+    assert "missing-location" not in imprint.flags
+
+
 def test_a_co_imprint_edition_lists_every_publisher_and_place() -> None:
     edition = segment_page(
         54,

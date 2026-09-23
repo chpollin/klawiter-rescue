@@ -124,8 +124,12 @@ def _split_series(value: str) -> tuple[str, str | None]:
 # Translation], al-Qāhirah [Cairo]", page 4216).
 # A sentence after the bold is a description, not an imprint ("'''[2009]'''.
 # Story read by … Berlin: Argon Verlag, 2009", page 279), so the suffix may
-# open only with the colon, holds no sentence break and ends in no number.
-_IMPRINT_SUFFIX_RE = re.compile(r"^:?\s*(?=[^\W\d_])(?!.*'')(?!.*\.\s)[^\n]*,[^\n\d]*$")
+# open only with the colon, holds no sentence break and ends in no number. The
+# period of a single capital initial is no sentence break ("'''[1983]:''' S.
+# Fischer Verlag, Frankfurt am Main", page 66), as in lib/publications.py.
+_IMPRINT_SUFFIX_RE = re.compile(
+    r"^:?\s*(?=[^\W\d_])(?!.*'')(?!.*(?<!\b[A-ZÀ-Þ])\.\s)[^\n]*,[^\n\d]*$"
+)
 _GLOSS_CONTINUATION_RE = re.compile(r"^(?:\s*\[[^\[\]\n]*\])*\s*,\s*\S")
 _EXTENT_IN_SUFFIX_RE = re.compile(r"\d\)?p\.")
 
