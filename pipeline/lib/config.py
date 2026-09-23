@@ -66,6 +66,11 @@ LOCATION_DECISIONS = os.path.join(
 WORK_DECISIONS = os.path.join(
     PROJECT_ROOT, "data", "reconciliation", "work-decisions.json"
 )
+# Which revision a page publishes where the wiki's Redirect fixer account
+# overwrote it; stage 01 verifies every entry against the dump.
+SOURCE_REVISION_DECISIONS = os.path.join(
+    PROJECT_ROOT, "data", "reconciliation", "source-revision-decisions.json"
+)
 SZD_WORK_INDEX = os.path.join(PROJECT_ROOT, "data", "provenance", "szd-work-index.xml")
 # Frozen Gate-2 input; lives with the other provenance inputs instead of
 # the served docs/data/ directory, which no frontend module reads it from.

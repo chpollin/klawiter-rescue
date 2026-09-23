@@ -1,0 +1,718 @@
+{
+  "schemaVersion": "1.0",
+  "decisionScope": "Which revision a current page publishes where the wiki's automatic Redirect fixer account overwrote it. Stage 01 re-detects every case from zweig_revision, zweig_revision_actor_temp, zweig_slots and zweig_content and fails when detection and these decisions disagree.",
+  "rule": "Walk back from page_latest over consecutive revisions of the actor 'Redirect fixer' to the last human revision. A delivered text there that is no redirect is restored (restore-human-revision). An absent revision or undelivered text leaves the case open (withhold-redirect-relation). A human redirect there is the fixer's ordinary double-redirect repair and no case. The raw originals stay unchanged.",
+  "fixerActor": "Redirect fixer",
+  "decidedBy": "main-instance",
+  "provenance": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+  "decisions": [
+    {
+      "decisionId": "source-revision/35/restore-human-revision",
+      "pageId": 35,
+      "pageTitle": "Maria Stuart",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 33773,
+          "timestamp": "2017-10-08T20:25:29Z",
+          "textId": 32902,
+          "comment": "[[Al-Sulṭānī, Fāḍil]] has been moved, it is now a redirect to [[Al-Sulṭānī, Fāḍil / Assultani, Fadhil]]",
+          "redirectText": "#REDIRECT [[Al-Sulṭānī, Fāḍil / Assultani, Fadhil]]",
+          "trigger": {
+            "logId": 31352,
+            "type": "move",
+            "movedTitle": "Al-Sulṭānī, Fāḍil",
+            "timestamp": "2017-10-08T20:25:20Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 33251,
+        "timestamp": "2017-09-25T20:31:36Z",
+        "actor": "Klawiter",
+        "textId": 32391,
+        "blob": "zt_03",
+        "characters": 16551,
+        "sha256": "8c7c8b0be880c5cb49fe1b213f9979a124a7017d2b9282cb3b26be35380020d4"
+      },
+      "note": "The See-references to [[Maria Stuart]] resolve to this restored page, not to page 4113, the target of the fixer redirect. Page 6826 \"Maria Stuart / Biography\" stays a separate page."
+    },
+    {
+      "decisionId": "source-revision/279/restore-human-revision",
+      "pageId": 279,
+      "pageTitle": "Schachnovelle",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 34725,
+          "timestamp": "2017-11-17T14:37:47Z",
+          "textId": 33815,
+          "comment": "[[Politische]] has been moved, it is now a redirect to [[Try again]]",
+          "redirectText": "#REDIRECT [[Try again]]",
+          "trigger": {
+            "logId": 32258,
+            "type": "move",
+            "movedTitle": "Politische",
+            "timestamp": "2017-11-17T14:37:43Z"
+          }
+        },
+        {
+          "revisionId": 34731,
+          "timestamp": "2017-11-17T14:45:54Z",
+          "textId": 33820,
+          "comment": "[[Try again]] has been moved, it is now a redirect to [[\\\"Nur die Lebendigen schaffen die Welt\\\"]]",
+          "redirectText": "#REDIRECT [[\\\"Nur die Lebendigen schaffen die Welt\\\"]]",
+          "trigger": {
+            "logId": 32264,
+            "type": "move",
+            "movedTitle": "Try again",
+            "timestamp": "2017-11-17T14:45:54Z"
+          }
+        },
+        {
+          "revisionId": 36073,
+          "timestamp": "2018-01-10T21:23:26Z",
+          "textId": 35128,
+          "comment": "[[Novella d'escacs]] has been moved, it is now a redirect to [[Novel.la d'escacs]]",
+          "redirectText": "#REDIRECT [[Novel.la d'escacs]]",
+          "trigger": {
+            "logId": 33577,
+            "type": "move",
+            "movedTitle": "Novella d'escacs",
+            "timestamp": "2018-01-10T21:23:23Z"
+          }
+        },
+        {
+          "revisionId": 36079,
+          "timestamp": "2018-01-10T21:35:55Z",
+          "textId": 35132,
+          "comment": "[[Novel.la d'escacs]] has been moved, it is now a redirect to [[Novel·la d’escacs]]",
+          "redirectText": "#REDIRECT [[Novel·la d’escacs]]",
+          "trigger": {
+            "logId": 33580,
+            "type": "move",
+            "movedTitle": "Novel.la d'escacs",
+            "timestamp": "2018-01-10T21:35:55Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 34466,
+        "timestamp": "2017-11-07T15:37:35Z",
+        "actor": "Klawiter",
+        "textId": 33565,
+        "blob": "zt_03",
+        "characters": 55473,
+        "sha256": "eb413a25d19855f8a36debcce923468a43449adea120c0de7e5d54614dcef1ff"
+      }
+    },
+    {
+      "decisionId": "source-revision/670/withhold-redirect-relation",
+      "pageId": 670,
+      "pageTitle": "Le chandelier enterré",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 5835,
+          "timestamp": "2010-02-25T21:59:29Z",
+          "textId": 5826,
+          "comment": "[[Le chandelier enterré. Légende]] has been moved, it is now a redirect to [[Le Chandelier enterré. Légende]]",
+          "redirectText": "#REDIRECT [[Le Chandelier enterré. Légende]]",
+          "trigger": {
+            "logId": 4436,
+            "type": "move",
+            "movedTitle": "Le chandelier enterré. Légende",
+            "timestamp": "2010-02-25T21:59:28Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 2378,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/793/restore-human-revision",
+      "pageId": 793,
+      "pageTitle": "Baudelaire, Charles",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 31691,
+          "timestamp": "2017-08-05T18:55:17Z",
+          "textId": 30928,
+          "comment": "[[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra Ṣūrah tārīkjiyyah wajīzah]] has been moved, it is now a redirect to [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra ṣūrah tārīkjiyyah wajīzah]]",
+          "redirectText": "#REDIRECT [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra ṣūrah tārīkjiyyah wajīzah]]",
+          "trigger": {
+            "logId": 29489,
+            "type": "move",
+            "movedTitle": "Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra Ṣūrah tārīkjiyyah wajīzah",
+            "timestamp": "2017-08-05T18:53:45Z"
+          }
+        },
+        {
+          "revisionId": 31839,
+          "timestamp": "2017-08-11T19:26:13Z",
+          "textId": 31065,
+          "comment": "[[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra ṣūrah tārīkjiyyah wajīzah]] has been moved, it is now a redirect to [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkjiyyah wajīzah]]",
+          "redirectText": "#REDIRECT [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkjiyyah wajīzah]]",
+          "trigger": {
+            "logId": 29620,
+            "type": "move",
+            "movedTitle": "Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra ṣūrah tārīkjiyyah wajīzah",
+            "timestamp": "2017-08-11T19:26:13Z"
+          }
+        },
+        {
+          "revisionId": 31908,
+          "timestamp": "2017-08-13T21:25:14Z",
+          "textId": 31130,
+          "comment": "[[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkjiyyah wajīzah]] has been moved, it is now a redirect to [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhjiyyah wajīzah]]",
+          "redirectText": "#REDIRECT [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhjiyyah wajīzah]]",
+          "trigger": {
+            "logId": 29671,
+            "type": "move",
+            "movedTitle": "Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkjiyyah wajīzah",
+            "timestamp": "2017-08-13T21:25:13Z"
+          }
+        },
+        {
+          "revisionId": 32203,
+          "timestamp": "2017-08-21T19:42:25Z",
+          "textId": 31394,
+          "comment": "[[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhjiyyah wajīzah]] has been moved, it is now a redirect to [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhiyyah wajīzah]]",
+          "redirectText": "#REDIRECT [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhiyyah wajīzah]]",
+          "trigger": {
+            "logId": 29894,
+            "type": "move",
+            "movedTitle": "Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhjiyyah wajīzah",
+            "timestamp": "2017-08-21T19:42:25Z"
+          }
+        },
+        {
+          "revisionId": 32434,
+          "timestamp": "2017-08-26T16:51:49Z",
+          "textId": 31614,
+          "comment": "[[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhiyyah wajīzah]] has been moved, it is now a redirect to [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra ṣūrah tārīkhiyyah wajīzah]]",
+          "redirectText": "#REDIRECT [[Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashra ṣūrah tārīkhiyyah wajīzah]]",
+          "trigger": {
+            "logId": 30094,
+            "type": "move",
+            "movedTitle": "Sā‘āt al-qadar fī tārīkh al-bashariyyah: arba‘ ‘ashrah ṣūrah tārīkhiyyah wajīzah",
+            "timestamp": "2017-08-26T16:51:49Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 23119,
+        "timestamp": "2015-12-29T15:59:11Z",
+        "actor": "Klawiter",
+        "textId": 22723,
+        "blob": "zt_02",
+        "characters": 44563,
+        "sha256": "544646cc3bf2145aac592ab4a7b4147aedf8117d1c71f4fc0ed037a820685181"
+      }
+    },
+    {
+      "decisionId": "source-revision/1868/withhold-redirect-relation",
+      "pageId": 1868,
+      "pageTitle": "1927-1932: Sobranie sochinenii Stefana Tsveiga",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 7584,
+          "timestamp": "2010-10-07T18:27:43Z",
+          "textId": 7532,
+          "comment": "[[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga]] has been moved, it is now a redirect to [[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga v dvenadtsati tomakh]]",
+          "redirectText": "#REDIRECT [[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga v dvenadtsati tomakh]]",
+          "trigger": {
+            "logId": 6308,
+            "type": "move",
+            "movedTitle": "1927-1932: Sobranie sochineniĭ Stefana Tsveĭga",
+            "timestamp": "2010-10-07T18:27:43Z"
+          }
+        },
+        {
+          "revisionId": 17555,
+          "timestamp": "2014-04-06T13:51:42Z",
+          "textId": 17326,
+          "comment": "[[1927-1932: Sobranie sochineniĭ Stefana Tsveĭga v dvenadtsati tomakh]] has been moved, it is now a redirect to [[1927-1932: Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+          "redirectText": "#REDIRECT [[1927-1932: Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+          "trigger": {
+            "logId": 16155,
+            "type": "move",
+            "movedTitle": "1927-1932: Sobranie sochineniĭ Stefana Tsveĭga v dvenadtsati tomakh",
+            "timestamp": "2014-04-06T13:51:42Z"
+          }
+        },
+        {
+          "revisionId": 17612,
+          "timestamp": "2014-04-06T18:22:51Z",
+          "textId": 17362,
+          "comment": "[[1927-1932: Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]] has been moved, it is now a redirect to [[Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+          "redirectText": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh]]",
+          "trigger": {
+            "logId": 16183,
+            "type": "move",
+            "movedTitle": "1927-1932: Sobranie sochinenii Stefana Tsveiga v dvenadtsati tomakh",
+            "timestamp": "2014-04-06T18:22:51Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 7252,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/1931/withhold-redirect-relation",
+      "pageId": 1931,
+      "pageTitle": "2009-2010: Sobranie sochineniĭ v 8 tomakh",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 7587,
+          "timestamp": "2010-10-07T18:30:16Z",
+          "textId": 7534,
+          "comment": "[[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vosem' tomakh]] has been moved, it is now a redirect to [[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vos'mi tomakh]]",
+          "redirectText": "#REDIRECT [[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vos'mi tomakh]]",
+          "trigger": {
+            "logId": 6309,
+            "type": "move",
+            "movedTitle": "2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vosem' tomakh",
+            "timestamp": "2010-10-07T18:30:15Z"
+          }
+        },
+        {
+          "revisionId": 17571,
+          "timestamp": "2014-04-06T14:16:38Z",
+          "textId": 17336,
+          "comment": "[[2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vos'mi tomakh]] has been moved, it is now a redirect to [[2009-2010: Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+          "redirectText": "#REDIRECT [[2009-2010: Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+          "trigger": {
+            "logId": 16162,
+            "type": "move",
+            "movedTitle": "2009-2010: Sobranie sochineniĭ Stefana Tsveĭga v vos'mi tomakh",
+            "timestamp": "2014-04-06T14:16:38Z"
+          }
+        },
+        {
+          "revisionId": 17648,
+          "timestamp": "2014-04-06T18:50:47Z",
+          "textId": 17388,
+          "comment": "[[2009-2010: Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]] has been moved, it is now a redirect to [[Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+          "redirectText": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh]]",
+          "trigger": {
+            "logId": 16203,
+            "type": "move",
+            "movedTitle": "2009-2010: Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh",
+            "timestamp": "2014-04-06T18:50:47Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 7562,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/1934/withhold-redirect-relation",
+      "pageId": 1934,
+      "pageTitle": "Sobranie sochineniĭ v odnom tome",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 7572,
+          "timestamp": "2010-10-06T22:10:27Z",
+          "textId": 7521,
+          "comment": "[[Sobranie sochineniĭ Stefana TSveĭga v odnom tome]] has been moved, it is now a redirect to [[Sobranie sochineniĭ Stefana Tsveĭga v odnom tome]]",
+          "redirectText": "#REDIRECT [[Sobranie sochineniĭ Stefana Tsveĭga v odnom tome]]",
+          "trigger": {
+            "logId": 6298,
+            "type": "move",
+            "movedTitle": "Sobranie sochineniĭ Stefana TSveĭga v odnom tome",
+            "timestamp": "2010-10-06T22:10:27Z"
+          }
+        },
+        {
+          "revisionId": 17594,
+          "timestamp": "2014-04-06T18:00:38Z",
+          "textId": 17351,
+          "comment": "[[Sobranie sochineniĭ Stefana Tsveĭga v odnom tome]] has been moved, it is now a redirect to [[Sobranie sochinenii Stefana Tsveiga v odnom tome]]",
+          "redirectText": "#REDIRECT [[Sobranie sochinenii Stefana Tsveiga v odnom tome]]",
+          "trigger": {
+            "logId": 16170,
+            "type": "move",
+            "movedTitle": "Sobranie sochineniĭ Stefana Tsveĭga v odnom tome",
+            "timestamp": "2014-04-06T18:00:38Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 7569,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2129/withhold-redirect-relation",
+      "pageId": 2129,
+      "pageTitle": "Stefan Zweig 1881. - 1942. (Katalog)",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 8891,
+          "timestamp": "2011-03-15T19:11:50Z",
+          "textId": 8831,
+          "comment": "[[Stefan Zweig 1881-1942. (Katalog)]] has been moved, it is now a redirect to [[Stefan Zweig 1881-1942. Katalog]]",
+          "redirectText": "#REDIRECT [[Stefan Zweig 1881-1942. Katalog]]",
+          "trigger": {
+            "logId": 7617,
+            "type": "move",
+            "movedTitle": "Stefan Zweig 1881-1942. (Katalog)",
+            "timestamp": "2011-03-15T19:11:50Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 8888,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2252/withhold-redirect-relation",
+      "pageId": 2252,
+      "pageTitle": "Prohombres del espiritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos (Begegnungen mit Menschen)",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 9964,
+          "timestamp": "2011-06-09T20:48:37Z",
+          "textId": 9889,
+          "comment": "[[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos (Begegnungen mit Menschen)]] has been moved, it is now a redirect to [[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos con",
+          "redirectText": "#REDIRECT [[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos]]"
+        },
+        {
+          "revisionId": 40538,
+          "timestamp": "2018-06-14T14:31:28Z",
+          "textId": 39450,
+          "comment": "[[Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos]] has been moved, it is now a redirect to [[Prohombres del espíritu...]]",
+          "redirectText": "#REDIRECT [[Prohombres del espíritu...]]",
+          "trigger": {
+            "logId": 37711,
+            "type": "move",
+            "movedTitle": "Prohombres del espíritu. Encuentros con escritores, artistas plasticos y musicos contemporaneos",
+            "timestamp": "2018-06-14T14:31:28Z"
+          }
+        },
+        {
+          "revisionId": 40581,
+          "timestamp": "2018-06-15T13:04:15Z",
+          "textId": 39491,
+          "comment": "[[Prohombres del espíritu...]] has been moved, it is now a redirect to [[Prohombres del espíritu]]",
+          "redirectText": "#REDIRECT [[Prohombres del espíritu]]",
+          "trigger": {
+            "logId": 37749,
+            "type": "move",
+            "movedTitle": "Prohombres del espíritu...",
+            "timestamp": "2018-06-15T13:04:15Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 9950,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2270/withhold-redirect-relation",
+      "pageId": 2270,
+      "pageTitle": "Unrast der Liebe",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 10457,
+          "timestamp": "2011-07-30T16:12:10Z",
+          "textId": 10367,
+          "comment": "[[Stefan Zweig - Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]] has been moved, it is now a redirect to [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwe",
+          "redirectText": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]"
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 10438,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2284/withhold-redirect-relation",
+      "pageId": 2284,
+      "pageTitle": "Stefan Zweig . Paul Zech - Briefe 1910-1942",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 10225,
+          "timestamp": "2011-07-13T19:20:07Z",
+          "textId": 10145,
+          "comment": "[[Stefan Zweig - Paul Zech - Briefe 1910-1942]] has been moved, it is now a redirect to [[Stefan Zweig - Paul Zech. Briefe 1910-1942]]",
+          "redirectText": "#REDIRECT [[Stefan Zweig - Paul Zech. Briefe 1910-1942]]",
+          "trigger": {
+            "logId": 8947,
+            "type": "move",
+            "movedTitle": "Stefan Zweig - Paul Zech - Briefe 1910-1942",
+            "timestamp": "2011-07-13T19:20:05Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 10174,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2328/withhold-redirect-relation",
+      "pageId": 2328,
+      "pageTitle": "Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 10458,
+          "timestamp": "2011-07-30T16:12:19Z",
+          "textId": 10368,
+          "comment": "[[Stefan Zweig - Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]] has been moved, it is now a redirect to [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwe",
+          "redirectText": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]"
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 10439,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2329/withhold-redirect-relation",
+      "pageId": 2329,
+      "pageTitle": "Stefan Zweig / Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels",
+      "namespace": 0,
+      "action": "withhold-redirect-relation",
+      "reason": "The revision the Redirect fixer rewrote is not delivered in the dump, so whether the page held content or a redirect cannot be established. The page keeps the delivered fixer text, its redirect is not resolved as a relation, and an open claim records the case.",
+      "fixerRevisions": [
+        {
+          "revisionId": 10459,
+          "timestamp": "2011-07-30T16:12:26Z",
+          "textId": 10369,
+          "comment": "[[Stefan Zweig - Friderike Maria Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]] has been moved, it is now a redirect to [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwe",
+          "redirectText": "#REDIRECT [[Stefan Zweig - Friderike Zweig. Unrast der Liebe. Ihr Leben und ihre Zeit im Spiegel ihres Briefwechsels]]"
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 10437,
+        "revisionRow": "absent from zweig_revision",
+        "text": "not delivered in the dump"
+      }
+    },
+    {
+      "decisionId": "source-revision/2816/restore-human-revision",
+      "pageId": 2816,
+      "pageTitle": "A Confidential Matter. The Letters of Richard Strauss and Stefan Zweig, 1931-1935",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 33308,
+          "timestamp": "2017-09-26T21:15:44Z",
+          "textId": 32445,
+          "comment": "[[Māri Istuvārt]] has been moved, it is now a redirect to [[Mārī Istuvārt]]",
+          "redirectText": "#REDIRECT [[Mārī Istuvārt]]",
+          "trigger": {
+            "logId": 30890,
+            "type": "move",
+            "movedTitle": "Māri Istuvārt",
+            "timestamp": "2017-09-26T21:15:41Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 30639,
+        "timestamp": "2017-06-29T21:17:04Z",
+        "actor": "Klawiter",
+        "textId": 29951,
+        "blob": "zt_03",
+        "characters": 1545,
+        "sha256": "5f673315af46d0520146cd44208b83f4e70921852b378a95c72e19c63ecef047"
+      }
+    },
+    {
+      "decisionId": "source-revision/2817/restore-human-revision",
+      "pageId": 2817,
+      "pageTitle": "Richard Strauss - Stefan Zweig. Briefwechsel",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 34158,
+          "timestamp": "2017-10-24T22:45:06Z",
+          "textId": 33268,
+          "comment": "[[Al-Maʿmarī, Sulaymān ibn ʿAli / Ḥamad, Hudā]] has been moved, it is now a redirect to [[Al-Maʿmarī, Sulaymān ibn ʿAli / Ḥamad, Hudā // Almamari, Sulaiman / Hamad, Huda]]",
+          "redirectText": "#REDIRECT [[Al-Maʿmarī, Sulaymān ibn ʿAli / Ḥamad, Hudā // Almamari, Sulaiman / Hamad, Huda]]",
+          "trigger": {
+            "logId": 31716,
+            "type": "move",
+            "movedTitle": "Al-Maʿmarī, Sulaymān ibn ʿAli / Ḥamad, Hudā",
+            "timestamp": "2017-10-24T22:45:03Z"
+          }
+        },
+        {
+          "revisionId": 34175,
+          "timestamp": "2017-10-25T16:22:33Z",
+          "textId": 33283,
+          "comment": "[[Al-Maʿmarī, Sulaymān ibn ʿAli / Ḥamad, Hudā // Almamari, Sulaiman / Hamad, Huda]] has been moved, it is now a redirect to [[Al-Maʿmarī, Sulaymān ibn ʿAlī / Ḥamad, Hudā // Almamari, Sulaiman / Hamad, Huda]]",
+          "redirectText": "#REDIRECT [[Al-Maʿmarī, Sulaymān ibn ʿAlī / Ḥamad, Hudā // Almamari, Sulaiman / Hamad, Huda]]",
+          "trigger": {
+            "logId": 31729,
+            "type": "move",
+            "movedTitle": "Al-Maʿmarī, Sulaymān ibn ʿAli / Ḥamad, Hudā // Almamari, Sulaiman / Hamad, Huda",
+            "timestamp": "2017-10-25T16:22:33Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 30640,
+        "timestamp": "2017-06-29T21:18:10Z",
+        "actor": "Klawiter",
+        "textId": 29952,
+        "blob": "zt_03",
+        "characters": 7109,
+        "sha256": "ec7f98d4a7fd3b59e5a842b40fa40a1977815d40e7c216df181dc7773883aa28"
+      }
+    },
+    {
+      "decisionId": "source-revision/4248/restore-human-revision",
+      "pageId": 4248,
+      "pageTitle": "Historical Studies / Volumes (Yiddish)",
+      "namespace": 14,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 48723,
+          "timestamp": "2019-06-17T13:06:16Z",
+          "textId": 47394,
+          "comment": "[[Guvernanten/Guvernanta / Nynorsk]] has been moved, it is now a redirect to [[Guvernanten / Bokmål]]",
+          "redirectText": "#REDIRECT [[Guvernanten / Bokmål]]",
+          "trigger": {
+            "logId": 45613,
+            "type": "move",
+            "movedTitle": "Guvernanten/Guvernanta / Nynorsk",
+            "timestamp": "2019-06-17T13:06:15Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 31586,
+        "timestamp": "2017-08-04T18:57:55Z",
+        "actor": "Klawiter",
+        "textId": 30835,
+        "blob": "zt_03",
+        "characters": 43,
+        "sha256": "2e08328dcccf6ce818a2ea23d74bf33d8e71b37b824ac19d5061dfb4489d4573"
+      }
+    },
+    {
+      "decisionId": "source-revision/4428/restore-human-revision",
+      "pageId": 4428,
+      "pageTitle": "A Promise",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 39095,
+          "timestamp": "2018-05-11T20:10:21Z",
+          "textId": 38079,
+          "comment": "[[Müller, Hartman / Turkish]] has been moved, it is now a redirect to [[Müller, Hartmut / Turkish]]",
+          "redirectText": "#REDIRECT [[Müller, Hartmut / Turkish]]",
+          "trigger": {
+            "logId": 36339,
+            "type": "move",
+            "movedTitle": "Müller, Hartman / Turkish",
+            "timestamp": "2018-05-11T20:10:20Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 34659,
+        "timestamp": "2017-11-15T14:54:54Z",
+        "actor": "Klawiter",
+        "textId": 33754,
+        "blob": "zt_03",
+        "characters": 754,
+        "sha256": "1e675d0ee7fb7a7e092009c5bebca3a9e1d4e9d63dafcbbcb46dab365fed1c95"
+      }
+    },
+    {
+      "decisionId": "source-revision/5839/restore-human-revision",
+      "pageId": 5839,
+      "pageTitle": "La poesía de Goethe",
+      "namespace": 0,
+      "action": "restore-human-revision",
+      "reason": "The Redirect fixer revision replaced a content page with a redirect: the revision it rewrote is a delivered human text that is no redirect. The page publishes that last human revision; the fixer redirect is not resolved as a relation.",
+      "fixerRevisions": [
+        {
+          "revisionId": 48412,
+          "timestamp": "2019-06-03T14:19:38Z",
+          "textId": 47099,
+          "comment": "[[Lilien, Ephraim, Mose]] has been moved, it is now a redirect to [[Lilien, Ephraim Mose]]",
+          "redirectText": "#REDIRECT [[Lilien, Ephraim Mose]]",
+          "trigger": {
+            "logId": 45319,
+            "type": "move",
+            "movedTitle": "Lilien, Ephraim, Mose",
+            "timestamp": "2019-06-03T14:19:36Z"
+          }
+        }
+      ],
+      "humanRevision": {
+        "revisionId": 41825,
+        "timestamp": "2018-07-11T13:53:33Z",
+        "actor": "Klawiter",
+        "textId": 40679,
+        "blob": "zt_04",
+        "characters": 165,
+        "sha256": "1c650299712788aaedf92a7f891a4701d8072e33657ff11809ba633ca75e4c09"
+      }
+    }
+  ]
+}

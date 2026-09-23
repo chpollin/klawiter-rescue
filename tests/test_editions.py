@@ -133,9 +133,11 @@ def test_sample_boundaries_and_selectors(
 
 def test_real_corpus_selection_and_output_counts(edition_corpus) -> None:
     corpus = edition_corpus
-    assert len(corpus["works"]) == 443
-    assert len(corpus["editions"]) == 1886
-    assert len(corpus["annotations"]) == 1886
+    # Pages 35, 279, 793 and 2817 joined with their restored human revisions
+    # (data/reconciliation/source-revision-decisions.json).
+    assert len(corpus["works"]) == 447
+    assert len(corpus["editions"]) == 2077
+    assert len(corpus["annotations"]) == 2077
     assert all(
         edition["klawiter:reviewStatus"] == "proposed" for edition in corpus["editions"]
     )
@@ -170,7 +172,7 @@ def test_reviewed_sample_overlay_records_the_adaptation_decision(
         )
         for status in ("proposed", "confirmed", "contested")
     }
-    assert status_counts == {"proposed": 1810, "confirmed": 76, "contested": 0}
+    assert status_counts == {"proposed": 2001, "confirmed": 76, "contested": 0}
     assert len(reviewed["carriers"]) == 6
     assert len(reviewed["contestedClaims"]) == 1
     assert reviewed["candidateWorks"] == []

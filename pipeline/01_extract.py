@@ -4,10 +4,21 @@ Step 1: Extract all pages from SQL dump + binary BLOB files.
 No MySQL required — parses the raw files directly.
 Extracts ALL namespaces (main, category, template, etc.).
 
-Input:  data/raw/zweig_part_01.sql, data/raw/zt_00..zt_07
-Output: data/intermediate/01_extracted.csv
+A page normally publishes its latest revision. Where the wiki's automatic
+"Redirect fixer" account overwrote a content page with a redirect, the page
+publishes the last human revision before the overwrite instead, as recorded
+in data/reconciliation/source-revision-decisions.json. Stage 01 re-detects
+every such case from the revision tables and fails when detection and the
+reviewed decisions disagree, so the decision file can neither go stale nor
+cover a case the dump does not show.
+
+Input:  data/raw/zweig_part_01.sql, data/raw/zt_00..zt_07,
+        data/reconciliation/source-revision-decisions.json
+Output: data/intermediate/01_extracted.csv, data/intermediate/01_pagelinks.csv
 """
 
+import hashlib
+import json
 import os
 import re
 import sys
@@ -16,6 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
     BLOB_FILES,
     EXTRACTED_FIELDS,
+    SOURCE_REVISION_DECISIONS,
     SQL_DUMP_PATH,
     STEP_01_OUTPUT,
     STEP_01_PAGELINKS,
@@ -24,6 +36,10 @@ from lib.config import (
 )
 
 PAGELINK_FIELDS = ["pl_from", "pl_namespace", "pl_title"]
+FIXER_ACTOR = "Redirect fixer"
+RESTORE_ACTION = "restore-human-revision"
+WITHHOLD_ACTION = "withhold-redirect-relation"
+_REDIRECT_RE = re.compile(r"\s*#REDIRECT", re.IGNORECASE)
 
 log = setup_logging(__name__)
 
@@ -123,6 +139,18 @@ def clean_binary_value(val):
         val = val[1:-1]
     val = val.replace("\\'", "'").replace("\\\\", "\\")
     return val
+
+
+def decode_utf8(value: str) -> str:
+    """Restore a binary UTF-8 column from the Latin-1 reading of the dump.
+
+    The dump is decoded as Latin-1 so that every byte survives the SQL
+    parsing; MediaWiki stores titles, actor names and comments as UTF-8
+    bytes, so every non-ASCII character arrives as mojibake (\"KrÃ¡lovskÃ¡\").
+    Re-encoding recovers the bytes exactly. Strict decoding fails loudly on a
+    value that is not UTF-8 instead of guessing.
+    """
+    return value.encode("latin-1").decode("utf-8")
 
 
 def load_page_table(sql_text):
@@ -253,7 +281,8 @@ def load_pagelinks_table(sql_text):
     The wiki resolved every [[...]] link at save time; this table is the
     authoritative target list per source page and repairs See-references
     whose regex-extracted title differs from the canonical page title.
-    Returns rows with display-form titles (underscores as spaces).
+    Returns rows with display-form titles (underscores as spaces), decoded
+    from their UTF-8 bytes so that non-ASCII titles match page titles.
     """
     log.info("Parsing zweig_pagelinks...")
     links = []
@@ -266,7 +295,9 @@ def load_pagelinks_table(sql_text):
                     {
                         "pl_from": int(vals[0]),
                         "pl_namespace": int(vals[1]),
-                        "pl_title": clean_binary_value(vals[2]).replace("_", " "),
+                        "pl_title": decode_utf8(clean_binary_value(vals[2])).replace(
+                            "_", " "
+                        ),
                     }
                 )
             else:
@@ -277,6 +308,164 @@ def load_pagelinks_table(sql_text):
         )
     log.info(f"  Parsed {len(links)} page links")
     return links
+
+
+def _table_values(sql_text: str, table: str):
+    for values_str in parse_sql_inserts(sql_text, table):
+        for tuple_str in parse_value_tuples(values_str):
+            yield parse_tuple_values(tuple_str)
+
+
+def _mediawiki_timestamp(value: str) -> str:
+    """20171008202529 -> 2017-10-08T20:25:29Z (MediaWiki stores UTC)."""
+    v = clean_binary_value(value)
+    return f"{v[:4]}-{v[4:6]}-{v[6:8]}T{v[8:10]}:{v[10:12]}:{v[12:14]}Z"
+
+
+def load_revisions(sql_text: str) -> dict[int, dict]:
+    """Parse zweig_revision into rev_id -> page, parent, timestamp, actor.
+
+    This MediaWiki version keeps actor and comment of a revision in the
+    revision_*_temp tables; zweig_revision carries zero in both columns.
+    Comments stay in their Latin-1 reading and are decoded only where a
+    decision reports them.
+    """
+    log.info("Parsing zweig_revision with actors and comments...")
+    actors = {}
+    for vals in _table_values(sql_text, "zweig_actor"):
+        # parse_tuple_values drops a trailing empty string (anonymous actor).
+        name = clean_binary_value(vals[2]) if len(vals) > 2 else ""
+        actors[int(vals[0])] = decode_utf8(name)
+    rev_actor = {
+        int(vals[0]): int(vals[1])
+        for vals in _table_values(sql_text, "zweig_revision_actor_temp")
+    }
+    comments = {
+        int(vals[0]): clean_binary_value(vals[2]) if len(vals) > 2 else ""
+        for vals in _table_values(sql_text, "zweig_comment")
+    }
+    rev_comment = {
+        int(vals[0]): int(vals[1])
+        for vals in _table_values(sql_text, "zweig_revision_comment_temp")
+    }
+    revisions = {}
+    for vals in _table_values(sql_text, "zweig_revision"):
+        if len(vals) < 9:
+            raise ValueError(f"Malformed zweig_revision tuple: {vals[:3]}")
+        rev_id = int(vals[0])
+        actor_id = rev_actor.get(rev_id) or int(vals[3])
+        revisions[rev_id] = {
+            "page": int(vals[1]),
+            "parent": None if vals[8] == "NULL" else int(vals[8]),
+            "timestamp": _mediawiki_timestamp(vals[4]),
+            "actor": actors.get(actor_id, ""),
+            "comment_raw": comments.get(rev_comment.get(rev_id) or int(vals[2]), ""),
+        }
+    log.info(f"  Parsed {len(revisions)} revisions")
+    return revisions
+
+
+def detect_fixer_overwrites(pages, revisions, slots, contents, text_index):
+    """Pages whose current text is a Redirect fixer overwrite of content.
+
+    The fixer rewrites pages that redirect to a moved page. Where the page it
+    rewrote was no redirect, the edit replaced content. Walking back from
+    page_latest over consecutive fixer revisions reaches the last human
+    revision: a delivered non-redirect text there is restorable; an absent
+    revision or undelivered text leaves the case open. A human redirect
+    there is the fixer's ordinary work and no case.
+    """
+    cases = {}
+    for page_id, page in sorted(pages.items()):
+        rev_id = page["page_latest"]
+        chain = []
+        while rev_id in revisions and revisions[rev_id]["actor"] == FIXER_ACTOR:
+            chain.append(rev_id)
+            rev_id = revisions[rev_id]["parent"]
+        if not chain:
+            continue
+        human_text_id = contents.get(slots.get(rev_id)) if rev_id else None
+        human_text = text_index.get(human_text_id)
+        if human_text is not None and _REDIRECT_RE.match(human_text["content"]):
+            continue
+        chain.reverse()
+        case = {
+            "pageId": page_id,
+            "action": RESTORE_ACTION if human_text is not None else WITHHOLD_ACTION,
+            "fixerRevisionIds": chain,
+            "humanRevisionId": rev_id,
+        }
+        if human_text is not None:
+            case["humanTextId"] = human_text_id
+        cases[page_id] = case
+    return cases
+
+
+def text_sha256(text_data: dict) -> str:
+    """SHA-256 over the delivered text bytes (the Latin-1 reading is lossless)."""
+    return hashlib.sha256(text_data["content"].encode("latin-1")).hexdigest()
+
+
+def load_source_revision_decisions(path: str = SOURCE_REVISION_DECISIONS) -> dict:
+    with open(path, encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def apply_source_revision_decisions(mapping, cases, decisions, text_index):
+    """Check the reviewed decisions against detection and apply restorations.
+
+    Any disagreement is a hard failure: a decision the dump does not support,
+    a detected case without a decision, or a changed revision, text id or
+    text hash. A restoration replaces the text id of the page; a withheld
+    case keeps the fixer text, and later stages withhold its redirect.
+    """
+    recorded = {decision["pageId"]: decision for decision in decisions["decisions"]}
+    if set(recorded) != set(cases):
+        raise ValueError(
+            "Source-revision decisions disagree with the dump: undecided cases "
+            f"{sorted(set(cases) - set(recorded))}, decisions without a case "
+            f"{sorted(set(recorded) - set(cases))}"
+        )
+    for page_id, case in sorted(cases.items()):
+        decision = recorded[page_id]
+        human = decision["humanRevision"]
+        expected = (
+            decision["action"],
+            [item["revisionId"] for item in decision["fixerRevisions"]],
+            human["revisionId"],
+            human.get("textId"),
+            decision["fixerRevisions"][-1]["textId"],
+        )
+        actual = (
+            case["action"],
+            case["fixerRevisionIds"],
+            case["humanRevisionId"],
+            case.get("humanTextId"),
+            mapping[page_id]["text_id"],
+        )
+        if expected != actual:
+            raise ValueError(
+                f"Source-revision decision for page {page_id} differs from the "
+                f"dump: decision {expected}, dump {actual}"
+            )
+        if case["action"] != RESTORE_ACTION:
+            continue
+        restored = text_index[case["humanTextId"]]
+        if text_sha256(restored) != human["sha256"]:
+            raise ValueError(f"Restored text of page {page_id} changed its bytes")
+        mapping[page_id]["text_id"] = case["humanTextId"]
+        log.info(
+            f"  Page {page_id}: restored revision {human['revisionId']} "
+            f"(text_id {case['humanTextId']}) over fixer revision "
+            f"{case['fixerRevisionIds'][-1]}"
+        )
+    withheld = sorted(
+        pid for pid, case in cases.items() if case["action"] == WITHHOLD_ACTION
+    )
+    log.info(
+        f"Redirect fixer overwrites: {len(cases) - len(withheld)} restored, "
+        f"{len(withheld)} withheld as open cases {withheld}"
+    )
 
 
 def load_blob_index(blob_path):
@@ -332,6 +521,13 @@ def main():
             log.warning(f"  BLOB file not found: {blob_path}")
 
     log.info(f"Total text index entries: {len(text_index)}")
+
+    cases = detect_fixer_overwrites(
+        pages, load_revisions(sql_text), slots, contents, text_index
+    )
+    apply_source_revision_decisions(
+        mapping, cases, load_source_revision_decisions(), text_index
+    )
 
     # Join: page mapping + text content
     results = []

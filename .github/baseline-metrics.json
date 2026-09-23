@@ -1,15 +1,15 @@
 {
   "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json and the frontend dataset. Direction-sensitive: tests fail when a count increases and warn when it decreases; a decrease is frozen here in the next evidence-freeze commit.",
-  "date": "2026-09-05-source-reviewed-remediation",
+  "date": "2026-09-23-redirect-fixer-restoration",
   "summary": {
     "total_entries": 6725,
-    "redirects": 1546,
-    "non_redirects_main": 4751,
-    "non_redirects_all": 5179,
-    "entries_with_issues": 442,
-    "total_issues": 442,
+    "redirects": 1538,
+    "non_redirects_main": 4758,
+    "non_redirects_all": 5187,
+    "entries_with_issues": 443,
+    "total_issues": 443,
     "severity_counts": {
-      "info": 442
+      "info": 443
     }
   },
   "field_coverage": {
@@ -80,17 +80,17 @@
     "count": 4440
   },
   "entry_type_distribution": {
-    "redirect": 1545,
+    "redirect": 1538,
     "secondary-literature": 1407,
-    "fiction": 1118,
-    "essay": 905,
+    "fiction": 1119,
+    "essay": 906,
     "historical-study": 535,
     "category": 420,
     "poetry": 274,
-    "collected-works": 115,
-    "correspondence": 109,
-    "film": 92,
-    "translation": 56,
+    "collected-works": 116,
+    "correspondence": 111,
+    "film": 93,
+    "translation": 57,
     "drama": 42,
     "symposium": 39,
     "foreword": 36,
@@ -111,11 +111,11 @@
   },
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better; when extraction improves, update the value in an evidence-freeze commit.",
-    "redirect_map_size": 3549,
-    "german_translator_fp": 110,
+    "redirect_map_size": 3532,
+    "german_translator_fp": 111,
     "film_pagecount": 9,
     "publisher_equals_location": 2,
-    "broken_see_also_refs": 12,
+    "broken_see_also_refs": 2,
     "wiki_markup_in_fields": 0,
     "section_header_titles": 0,
     "long_titles": 0,
@@ -130,6 +130,11 @@
       "date": "2026-09-05",
       "evidence": "knowledge/technical-remediation-2026-09-05.md",
       "reason": "Removed 95 explicit reference/annotation or discontinuous page locators misclassified as volume extents; lower numberOfPages coverage is a source-correctness improvement. Added source-category language fallbacks and literal redirect-chain resolution. Threshold tolerances are unchanged; unresolved-reference ceiling tightened from 120 to 12."
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": "data/reconciliation/source-revision-decisions.json",
+      "reason": "Eight pages overwritten by the wiki's Redirect fixer account publish their last human revision, so they leave the redirects and join the displayed entries; ten fixer redirects over undelivered revisions are withheld as relations. The redirect map loses the aliases those redirects carried, among them Maria Stuart -> 4113. See-references are read as link targets (label after the pipe dropped, whitespace runs collapsed) and pagelink titles are decoded from UTF-8, which leaves two unresolved references (pages 679 and 7232). The restored Schachnovelle page 279 adds one German entry whose flat translator comes from a later translation block, the known first-match compatibility limit of the flat fields; no extraction rule changed for it."
     }
   ]
 }

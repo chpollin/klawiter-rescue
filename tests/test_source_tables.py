@@ -11,9 +11,11 @@ from __future__ import annotations
 
 import hashlib
 import importlib
+import json
+from pathlib import Path
 
 import pytest
-from lib.config import SQL_DUMP_PATH
+from lib.config import SOURCE_REVISION_DECISIONS, SQL_DUMP_PATH
 from lib.encoding import fix_encoding
 
 extract = importlib.import_module("01_extract")
@@ -57,7 +59,20 @@ def test_categories_match_the_categorylinks_table(sql_text, canonical_entries) -
 
     The category link syntax [[Category:Name|sort key]] carries a sort key
     after the pipe; treating it as part of the name splinters the category
-    facets into phantom values (550 such assignments before the fix)."""
+    facets into phantom values (550 such assignments before the fix).
+
+    The table holds the links of each page's latest revision. A page restored
+    from the human revision a Redirect fixer edit overwrote carries that
+    revision's categories, which the table does not record, so this oracle
+    leaves those pages out."""
+    decisions = json.loads(Path(SOURCE_REVISION_DECISIONS).read_text(encoding="utf-8"))[
+        "decisions"
+    ]
+    restored = {
+        decision["pageId"]
+        for decision in decisions
+        if decision["action"] == "restore-human-revision"
+    }
     expected: dict[int, set[str]] = {}
     for vals in _table_rows(sql_text, "zweig_categorylinks", 2):
         page_id = int(vals[0])
@@ -66,12 +81,13 @@ def test_categories_match_the_categorylinks_table(sql_text, canonical_entries) -
         name = fix_encoding(
             extract.clean_binary_value(vals[1]).replace("_", " ").strip()
         )
-        expected.setdefault(page_id, set()).add(name)
+        if page_id not in restored:
+            expected.setdefault(page_id, set()).add(name)
 
     actual: dict[int, set[str]] = {}
     for entry in canonical_entries:
         cats = entry.get("categories")
-        if cats:
+        if cats and entry["sourcePageId"] not in restored:
             actual[entry["sourcePageId"]] = set(cats)
 
     assert set(actual) == set(expected), (
@@ -89,6 +105,18 @@ def test_categories_match_the_categorylinks_table(sql_text, canonical_entries) -
         f"{len(mismatched)} pages carry category names deviating from "
         f"zweig_categorylinks; sample: {sample}"
     )
+
+
+def test_pagelink_titles_are_decoded_from_utf8(sql_text, source_rows) -> None:
+    """zweig_pagelinks stores titles as UTF-8 bytes; read as Latin-1 they
+    turned every non-ASCII title into mojibake and missed its page."""
+    links = extract.load_pagelinks_table(sql_text)
+    titles = {row["pl_title"] for row in links if row["pl_namespace"] == 0}
+    assert not [title for title in titles if "Ã" in title or "Â" in title]
+    assert "Královská hra" in titles
+    page_titles = {row["page_title"] for row in source_rows}
+    non_ascii = {title for title in titles if not title.isascii()}
+    assert non_ascii and len(non_ascii & page_titles) > len(non_ascii) // 2
 
 
 # Unresolved targets are diagnostics, not proof of absent source pages.
