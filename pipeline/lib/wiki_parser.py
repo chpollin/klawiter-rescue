@@ -135,6 +135,10 @@ def extract_title(content):
     # Pattern 3: For collected-works entries with '''[year]: Publisher''' format,
     # look for the page_title or the first meaningful text line
     first_line = content.split("\n")[0].strip()
+    # A section heading ("==Essays (English)==", page 185) names a part of the
+    # page, not the work.
+    if re.match(r"={2,6}[^=].*={2,6}$", first_line):
+        return None
     if first_line and len(first_line) < 300:
         cleaned = remove_wiki_markup(first_line)
         # Reject lines that are just category/structural markers

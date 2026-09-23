@@ -146,6 +146,9 @@ class TestExtractTitle:
             extract_title('"Some Quoted Title" in Journal, 1976') == "Some Quoted Title"
         )
 
+    def test_section_heading_is_no_title(self):
+        assert extract_title("==Essays (English)==\nMore content") is None
+
     def test_empty_none(self):
         assert extract_title(None) is None
         assert extract_title("") is None
