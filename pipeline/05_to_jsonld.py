@@ -54,7 +54,7 @@ EDITION_URL = "https://chpollin.github.io/klawiter-rescue/"
 # outside it (knowledge/production-readiness.md#release-scope).
 DATASET_DESCRIPTION = (
     "Bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the "
-    "University of Notre Dame. This digital edition covers the current pages "
+    "University of Notre Dame. This publication covers the current pages "
     "of the compiler's wiki; titles the wiki records as deleted are outside "
     "its scope."
 )
@@ -62,7 +62,7 @@ EDITOR = {
     "@id": "klawiter:person/Christopher%20Pollin",
     "@type": "schema:Person",
     "name": "Christopher Pollin",
-    "description": "Responsible editor of the digital edition",
+    "description": "Responsible editor of the data publication",
     "affiliation": {
         "@id": "klawiter:organization/Digital%20Humanities%20Craft",
         "@type": "schema:Organization",

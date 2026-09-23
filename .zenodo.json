@@ -1,7 +1,7 @@
 {
   "upload_type": "dataset",
-  "title": "Stefan Zweig — An International Bibliography. Digital edition",
-  "description": "Digital edition of the Stefan Zweig bibliography compiled by Randolph J. Klawiter (University of Notre Dame), extracted from the decommissioned MediaWiki database of the bibliography and structured as JSON-LD with Schema.org, Dublin Core and a domain vocabulary, with the pipeline, validation evidence and a static research interface. The edition covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0. The archival database dump is preserved separately and is not part of this archive.",
+  "title": "Stefan Zweig Bibliography (Klawiter)",
+  "description": "The Stefan Zweig Bibliography compiled by Randolph J. Klawiter (University of Notre Dame), extracted from the decommissioned MediaWiki database of the bibliography and structured as JSON-LD with Schema.org, Dublin Core and a domain vocabulary, with the pipeline, validation evidence and a static research interface. The publication covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0. The archival database dump is preserved separately and is not part of this archive.",
   "creators": [
     {
       "name": "Klawiter, Randolph J.",

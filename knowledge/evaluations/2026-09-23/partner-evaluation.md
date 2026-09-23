@@ -8,18 +8,18 @@ related: [owner-evaluation, production-readiness, status]
 
 # Partner acceptance for version 1.0
 
-Version 1.0 of the digital edition of Randolph J. Klawiter's Stefan Zweig bibliography requires the acceptance of the project partners in addition to the editor's own acceptance of version 0.9.1. This worksheet asks for two judgements: whether the edition represents the bibliography faithfully enough for scholarly use, and whether the partners agree to the publication scope below.
+Version 1.0 of the Stefan Zweig Bibliography compiled by Randolph J. Klawiter, published as open data, requires the acceptance of the project partners in addition to the editor's own acceptance of version 0.9.1. This worksheet asks for two judgements: whether the publication represents the bibliography faithfully enough for scholarly use, and whether the partners agree to the publication scope below.
 
-The edition is available at https://chpollin.github.io/klawiter-rescue/. Please reply by e-mail with the task number, `accept / change / unclear` and, where needed, the entry ID and a short note. "Unclear from the source" is a valid answer and becomes an open review case.
+The bibliography is available at https://chpollin.github.io/klawiter-rescue/. Please reply by e-mail with the task number, `accept / change / unclear` and, where needed, the entry ID and a short note. "Unclear from the source" is a valid answer and becomes an open review case.
 
 ## Publication scope
 
 - Content: the current pages of the bibliography wiki at the time of its shutdown. Where an automatic maintenance account of the wiki overwrote a content page with an unrelated redirect, the page is published from the compiler's last revision before that overwrite, with the revision named in its provenance.
 - Excluded: titles the wiki recorded as deleted, earlier page revisions, user accounts and edit metadata. The archival database dump is preserved separately and is not published.
-- Responsibility: Randolph J. Klawiter as compiler, Digital Humanities Craft with Christopher Pollin as responsible editor of the digital edition, published with the Literaturarchiv Salzburg.
+- Responsibility: Randolph J. Klawiter as compiler, Digital Humanities Craft with Christopher Pollin as responsible editor of the data publication, published with the Literaturarchiv Salzburg.
 - Licences: data and documentation CC BY 4.0, code MIT. Reuse credits the bibliographic source.
 - Release: a versioned repository tag and a Zenodo DOI after acceptance.
-- Uncertainty: the edition keeps unreviewed proposals, reviewed confirmations and open questions apart. Open questions stay visible in the data and the interface and are not resolved by the release.
+- Uncertainty: the publication keeps unreviewed proposals, reviewed confirmations and open questions apart. Open questions stay visible in the data and the interface and are not resolved by the release.
 
 ## Tasks
 

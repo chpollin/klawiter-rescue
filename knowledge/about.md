@@ -25,9 +25,9 @@ From these the project reconstructs a static research interface, complete JSON-L
 ## Responsibilities
 
 - Randolph J. Klawiter is the author of the bibliography.
-- Christopher Pollin is responsible for the digital edition, data model, software and documentation.
+- Christopher Pollin is responsible for the data rescue, data model, software and documentation.
 - The Literaturarchiv Salzburg is the institution the edition is published with (operator decision of 2026-09-23). Its Stefan Zweig Digital initiative supplies the scholarly context as well as the frozen SZD work index for reconciliation candidates.
-- Digital Humanities Craft, with Christopher Pollin as responsible editor, publishes the digital edition (operator decision of 2026-09-08).
+- Digital Humanities Craft, with Christopher Pollin as responsible editor, publishes the bibliography as open data (operator decision of 2026-09-08). The publication is titled "Stefan Zweig Bibliography", after the wiki, and cited as "Stefan Zweig Bibliography (Klawiter)" (operator decision of 2026-09-23). It is a data publication of the rescued bibliography, and the term digital edition is not used for it.
 - Automated and agentic checks supply evidence. Institutionally content-changing work decisions remain with the responsible domain staff.
 
 ## Data Integrity
@@ -48,4 +48,4 @@ The interface is connected with Stefan Zweig Digital and uses the established co
 
 ## Licenses and Citation
 
-The code is licensed under MIT. Documentation and the structured edition are licensed under CC BY 4.0. Permission to publish the compiled bibliography under CC BY 4.0 exists, as the operator confirmed on 2026-09-23. `CITATION.cff` contains the machine-readable citation details; the bibliographic source must be credited expressly on reuse.
+The code is licensed under MIT. Documentation and the structured data are licensed under CC BY 4.0. Permission to publish the compiled bibliography under CC BY 4.0 exists, as the operator confirmed on 2026-09-23. `CITATION.cff` contains the machine-readable citation details; the bibliographic source must be credited expressly on reuse.

@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "Klawiter Bibliography — Stefan Zweig: An International Bibliography (Digital Edition)"
+title: "Stefan Zweig Bibliography (Klawiter)"
 message: "If you use this dataset or software, please cite it as below."
 type: dataset
 authors:
@@ -14,8 +14,8 @@ version: "0.9"
 repository-code: "https://github.com/chpollin/klawiter-rescue"
 url: "https://chpollin.github.io/klawiter-rescue/"
 preferred-citation:
-  type: edited-work
-  title: "Stefan Zweig — An International Bibliography. Digital edition"
+  type: database
+  title: "Stefan Zweig Bibliography"
   authors:
     - family-names: Klawiter
       given-names: Randolph J.
@@ -32,12 +32,12 @@ preferred-citation:
   url: "https://chpollin.github.io/klawiter-rescue/"
   repository-code: "https://github.com/chpollin/klawiter-rescue"
 abstract: >-
-  Digital edition of the Stefan Zweig bibliography compiled by
-  Dr. Randolph J. Klawiter (University of Notre Dame). Extracted from
+  The Stefan Zweig Bibliography compiled by
+  Dr. Randolph J. Klawiter (University of Notre Dame), extracted from
   a decommissioned MediaWiki database, structured as JSON-LD using
   Schema.org, Dublin Core, and a domain-specific vocabulary. Includes
   a static web frontend with faceted search, citation export, and
-  interactive visualizations. The edition covers the current pages of the
+  interactive visualizations. The publication covers the current pages of the
   wiki; titles the wiki recorded as deleted are outside the scope of
   version 1.0 and remain unchanged in the archived originals.
 keywords:

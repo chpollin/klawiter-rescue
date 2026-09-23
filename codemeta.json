@@ -1,8 +1,8 @@
 {
   "@context": "https://w3id.org/codemeta/3.0",
   "type": "SoftwareSourceCode",
-  "name": "Klawiter Bibliography (Digital Edition)",
-  "description": "Pipeline and static web frontend that extract, structure, and publish the Stefan Zweig bibliography as JSON-LD from a decommissioned MediaWiki database. The edition covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0.",
+  "name": "Stefan Zweig Bibliography (Klawiter)",
+  "description": "Pipeline and static web frontend that extract, structure, and publish the Stefan Zweig bibliography as JSON-LD from a decommissioned MediaWiki database. The publication covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0.",
   "codeRepository": "https://github.com/chpollin/klawiter-rescue",
   "author": {
     "type": "Person",

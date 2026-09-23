@@ -1,5 +1,5 @@
 ---
-title: Klawiter Bibliography — Project Knowledge
+title: Stefan Zweig Bibliography (Klawiter) — Project Knowledge
 status: maintained
 language: en
 updated: 2026-09-23

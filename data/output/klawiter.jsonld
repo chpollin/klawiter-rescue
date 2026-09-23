@@ -115,7 +115,7 @@
   "@type": "schema:Dataset",
   "@id": "klawiter:klawiter-bibliography",
   "name": "Stefan Zweig Bibliography (Klawiter)",
-  "description": "Bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame. This digital edition covers the current pages of the compiler's wiki; titles the wiki records as deleted are outside its scope.",
+  "description": "Bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the University of Notre Dame. This publication covers the current pages of the compiler's wiki; titles the wiki records as deleted are outside its scope.",
   "creator": {
     "@id": "klawiter:person/Randolph%20J.%20Klawiter",
     "@type": "schema:Person",
@@ -125,7 +125,7 @@
     "@id": "klawiter:person/Christopher%20Pollin",
     "@type": "schema:Person",
     "name": "Christopher Pollin",
-    "description": "Responsible editor of the digital edition",
+    "description": "Responsible editor of the data publication",
     "affiliation": {
       "@id": "klawiter:organization/Digital%20Humanities%20Craft",
       "@type": "schema:Organization",

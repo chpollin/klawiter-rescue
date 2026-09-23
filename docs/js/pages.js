@@ -67,7 +67,7 @@ const Pages = {
       <section id="sec-about">
         <h2>About the project</h2>
         <p>
-          The Klawiter Bibliography is one of the most comprehensive reference
+          The Stefan Zweig Bibliography compiled by Randolph J. Klawiter is one of the most comprehensive reference
           works on Stefan Zweig (1881&ndash;1942). It holds ${entries}
           bibliographic records of publications by and about the Austrian author,
           covering fiction, essays, poetry, drama, correspondence, secondary
@@ -247,8 +247,8 @@ const Pages = {
       <section id="sec-imprint">
         <h2>Imprint</h2>
         <p>
-          This digital edition preserves and reopens the Stefan Zweig
-          bibliography compiled by Dr. Randolph J. Klawiter (1930&ndash;2021).
+          This publication preserves and reopens the Stefan Zweig
+          Bibliography compiled by Dr. Randolph J. Klawiter (1930&ndash;2021).
         </p>
         <ul>
           <li>
@@ -263,9 +263,9 @@ const Pages = {
             research infrastructure
           </li>
           <li>
-            <strong>Digital edition</strong> &mdash; edited by Christopher Pollin
-            (Digital Humanities Craft): data extraction pipeline, frontend
-            development and publication
+            <strong>Data rescue and publication</strong> &mdash; edited by
+            Christopher Pollin (Digital Humanities Craft): data extraction
+            pipeline, frontend development and publication
           </li>
         </ul>
         <h3>Citation</h3>
@@ -273,9 +273,8 @@ const Pages = {
           When referencing this resource in academic publications, please use:
         </p>
         <blockquote>
-          Klawiter, Randolph J.: <em>Stefan Zweig &mdash; An International
-          Bibliography.</em> Digital edition, edited by Christopher Pollin
-          (Digital Humanities Craft). Version 0.9, 2026.
+          Klawiter, Randolph J.: <em>Stefan Zweig Bibliography.</em> Edited by
+          Christopher Pollin (Digital Humanities Craft). Version 0.9, 2026.
           URL: <code>https://chpollin.github.io/klawiter-rescue/</code>
         </blockquote>
         <p>

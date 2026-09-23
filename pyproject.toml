@@ -1,7 +1,7 @@
 [project]
 name = "klawiter-rescue"
 version = "0.9"
-description = "Reproducible rescue, modeling, and publication pipeline for the Klawiter Bibliography"
+description = "Reproducible rescue, modeling, and publication pipeline for the Stefan Zweig Bibliography (Klawiter)"
 requires-python = ">=3.11"
 dependencies = [
   "google-genai>=1.0",

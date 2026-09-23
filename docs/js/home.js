@@ -54,7 +54,7 @@ const Home = {
     container.innerHTML = `
       <div class="home-intro home-compact">
         <h1 class="home-title">Stefan Zweig Bibliography</h1>
-        <p class="home-subtitle">The Klawiter Bibliography as Open Data</p>
+        <p class="home-subtitle">Compiled by Randolph J. Klawiter, as open data</p>
         <p class="home-text">
           ${entries.length.toLocaleString('en')} publications by and about Stefan Zweig,
           from first editions and translations to secondary literature, films and

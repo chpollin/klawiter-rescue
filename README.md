@@ -1,4 +1,4 @@
-# Klawiter Bibliography
+# Stefan Zweig Bibliography (Klawiter)
 
 A source-bound reconstruction of Randolph J. Klawiter's Stefan Zweig bibliography from a decommissioned MediaWiki. This repository contains the extraction pipeline, structured data, static research interface and review evidence.
 
@@ -64,4 +64,4 @@ BibTeX and RIS exports cite flat records. Browser JSON-LD exports and the full c
 
 `CLAUDE.md` is the sole repository-specific agent instruction. Start with [Status](knowledge/status.md) and the latest [Journal](knowledge/journal.md) entry; use the [documentation map](knowledge/documentation.md) to update the responsible document. Historical reviews remain dated evidence.
 
-Randolph J. Klawiter compiled the source bibliography; Christopher Pollin is responsible for the digital edition. `CITATION.cff` contains citation details. Code is MIT-licensed; documentation and the structured edition are CC BY 4.0. The license texts are `LICENSE` (MIT) and `LICENSES/CC-BY-4.0.txt`, third-party components are listed in `docs/vendor/NOTICE.md`, and reuse credits the bibliographic source. Release scope, metadata consistency and acceptance are tracked in [Production readiness](knowledge/production-readiness.md).
+Randolph J. Klawiter compiled the source bibliography; Christopher Pollin (Digital Humanities Craft) is responsible for the data rescue and publication. `CITATION.cff` contains citation details. Code is MIT-licensed; documentation and the structured data are CC BY 4.0. The license texts are `LICENSE` (MIT) and `LICENSES/CC-BY-4.0.txt`, third-party components are listed in `docs/vendor/NOTICE.md`, and reuse credits the bibliographic source. Release scope, metadata consistency and acceptance are tracked in [Production readiness](knowledge/production-readiness.md).
