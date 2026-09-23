@@ -26,6 +26,7 @@ from lib.config import (  # noqa: E402
     OUTPUT_RECONCILIATION_DIR,
     OUTPUT_RECONCILIATION_FRONTEND,
     PROJECT_ROOT,
+    SOURCE_REVISION_DECISIONS,
     STEP_04_OUTPUT,
     SZD_WORK_INDEX,
     WORK_DECISIONS,
@@ -35,7 +36,10 @@ from lib.config import (  # noqa: E402
 )
 from lib.reconciliation import (  # noqa: E402
     AGENT_SOURCE_FIELDS,
+    SOURCE_REVISION_RESTORE,
+    SOURCE_REVISION_WITHHOLD,
     build_reconciliation,
+    closes_claim,
     load_reconciliation_patches,
     merge_agent_decision_patches,
     merge_decision_patches,
@@ -94,24 +98,53 @@ def _check_decisions(result: dict) -> list[str]:
 
 
 def _check_contested_claims(result: dict) -> list[str]:
+    """Open claims match open decisions, decided claims match closing ones.
+
+    An open claim keeps every reading contested; a decided claim accepts
+    exactly one reading and rejects the others, and its subject was once an
+    open claim. Neither publishes a link on its own.
+    """
     errors = []
-    unresolved = sum(
-        decision["action"] == "unresolved"
+    decisions = [
+        decision
         for key in ("locationDecisions", "workDecisions", "agentDecisions")
         for decision in result["decisions"][key]
+    ]
+    unresolved = sum(decision["action"] == "unresolved" for decision in decisions)
+    unresolved += sum(
+        decision["action"] == SOURCE_REVISION_WITHHOLD
+        for decision in result["decisions"].get("sourceRevisionDecisions", [])
     )
+    closed = sum(closes_claim(decision) for decision in decisions)
     claims = result["contestedClaims"]
-    if len(claims) != unresolved:
+    open_claims = [c for c in claims if c["klawiter:decisionStatus"] == "open"]
+    decided = [c for c in claims if c["klawiter:decisionStatus"] == "decided"]
+    if len(open_claims) != unresolved:
         errors.append(
-            f"{len(claims)} contested claims for {unresolved} unresolved decisions"
+            f"{len(open_claims)} open claims for {unresolved} unresolved decisions"
         )
+    if len(decided) != closed:
+        errors.append(f"{len(decided)} decided claims for {closed} closing decisions")
+    if len(open_claims) + len(decided) != len(claims):
+        errors.append("a claim has neither an open nor a decided status")
     for claim in claims:
         claim_id = claim["@id"]
-        if (
+        statuses = [
+            item["klawiter:interpretationStatus"]
+            for item in claim["klawiter:interpretation"]
+        ]
+        is_open = claim["klawiter:decisionStatus"] == "open"
+        if is_open and (
             claim["klawiter:claimStatus"] != "contested"
-            or claim["klawiter:decisionStatus"] != "open"
+            or set(statuses) != {"contested"}
         ):
-            errors.append(f"{claim_id}: claim status is not contested/open")
+            errors.append(f"{claim_id}: open claim is not contested throughout")
+        if not is_open and (
+            claim["klawiter:claimStatus"] != "resolved"
+            or statuses.count("accepted") != 1
+            or set(statuses) != {"accepted", "rejected"}
+        ):
+            errors.append(f"{claim_id}: decided claim lacks one accepted reading")
         if len(claim["klawiter:interpretation"]) < 2:
             errors.append(f"{claim_id}: competing interpretations are missing")
         if not claim["klawiter:sourceEvidence"]:
@@ -122,6 +155,29 @@ def _check_contested_claims(result: dict) -> list[str]:
             source_hash = evidence.get("sourceTextSha256")
             if source_hash and not re.fullmatch(r"[0-9a-f]{64}", source_hash):
                 errors.append(f"{claim_id}: invalid source evidence hash")
+    return errors
+
+
+def _check_source_revisions(result: dict, source_rows: list[dict]) -> list[str]:
+    """Restored pages publish their human revision, withheld ones stay redirects."""
+    errors = []
+    rows = {int(row["page_id"]): row for row in source_rows}
+    for decision in result["decisions"].get("sourceRevisionDecisions", []):
+        page_id = decision["pageId"]
+        row = rows.get(page_id)
+        if row is None:
+            errors.append(f"source revision {page_id}: page is absent")
+            continue
+        is_redirect = row.get("is_redirect") in ("True", "true", "1")
+        if decision["action"] == SOURCE_REVISION_RESTORE:
+            restored = str(decision["humanRevision"]["textId"])
+            if row.get("text_id") != restored or is_redirect:
+                errors.append(
+                    f"source revision {page_id}: restored text {restored} "
+                    "is not the published text"
+                )
+        elif not is_redirect:
+            errors.append(f"source revision {page_id}: withheld page is no redirect")
     return errors
 
 
@@ -186,6 +242,7 @@ def main() -> None:
         "classified_source": Path(STEP_04_OUTPUT),
         "agent_reconciliation": Path(AGENT_RECONCILIATION),
         "agent_decisions": Path(AGENT_DECISIONS),
+        "source_revision_decisions": Path(SOURCE_REVISION_DECISIONS),
         "candidates": output_dir / "candidates.json",
         "decisions": output_dir / "decisions.json",
         "publishable": output_dir / "publishable-links.json",
@@ -219,6 +276,7 @@ def main() -> None:
         _read_json(paths["agent_decisions"]),
         decision_patches["person"] + decision_patches["publisher"],
     )
+    source_rows = load_csv(STEP_04_OUTPUT)
     expected = build_reconciliation(
         _read_json(paths["edition_dataset"]),
         _read_json(paths["locations"]),
@@ -227,9 +285,10 @@ def main() -> None:
         location_decisions,
         work_decisions,
         parse_szd_work_index(paths["szd_index"]),
-        load_csv(STEP_04_OUTPUT),
+        source_rows,
         _read_json(paths["agent_reconciliation"]),
         agent_decisions,
+        _read_json(paths["source_revision_decisions"]),
     )
     actual = {
         "candidates": _read_json(paths["candidates"]),
@@ -242,6 +301,7 @@ def main() -> None:
     decision_errors = _check_decisions(actual)
     contested_errors = _check_contested_claims(actual)
     agent_occurrence_errors = _check_agent_occurrences(actual)
+    source_revision_errors = _check_source_revisions(actual, source_rows)
 
     # SHACL over the standalone contested-claims artifact: the unified
     # claim model must satisfy the same shapes the edition graph obeys.
@@ -294,6 +354,7 @@ def main() -> None:
         "classified-source": paths["classified_source"],
         "agent-reconciliation": paths["agent_reconciliation"],
         "agent-decisions": paths["agent_decisions"],
+        "source-revision-decisions": paths["source_revision_decisions"],
     }
     for path in decision_patches["files"]:
         input_map[f"curation-patch-{path.name}"] = path
@@ -306,6 +367,7 @@ def main() -> None:
         "decisionSeparation": not decision_errors,
         "contestedClaims": not contested_errors,
         "agentOccurrenceEvidence": not agent_occurrence_errors,
+        "sourceRevisions": not source_revision_errors,
         "shacl": bool(shacl_conforms),
         "inputHashes": not input_hash_errors,
         "jsonldProjection": not public_errors,
@@ -318,6 +380,7 @@ def main() -> None:
         "decisionSeparation": decision_errors,
         "contestedClaims": contested_errors,
         "agentOccurrenceEvidence": agent_occurrence_errors,
+        "sourceRevisions": source_revision_errors,
         "shacl": [] if shacl_conforms else [str(shacl_text)],
         "inputHashes": input_hash_errors,
         "jsonldProjection": public_errors,
