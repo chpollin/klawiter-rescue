@@ -149,6 +149,15 @@ class TestExtractTitle:
     def test_section_heading_is_no_title(self):
         assert extract_title("==Essays (English)==\nMore content") is None
 
+    def test_bold_italic_leaves_no_markup_residue(self):
+        assert extract_title("'''''Der Amokläufer'''''. More") == "Der Amokläufer"
+
+    def test_a_bold_list_heading_is_no_title(self):
+        """Page 513: the bold line heads the list below it, as "Volume:" or a
+        language label does on other pages."""
+        assert extract_title("'''''Der Amokläufer'''''\n<lst type=ul>\n[[Gu]]") is None
+        assert extract_title("'''Printed in:'''\n<lst type=bracket>\nX") is None
+
     def test_empty_none(self):
         assert extract_title(None) is None
         assert extract_title("") is None

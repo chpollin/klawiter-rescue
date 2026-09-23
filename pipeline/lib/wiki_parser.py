@@ -117,9 +117,14 @@ def extract_title(content):
         return None
 
     # Pattern 1: '''Bold text''' at start — but reject if it looks like [year]: Publisher
-    m = re.match(r"\s*'''(.+?)'''", content)
+    # Bold italic ('''''X''''') is read whole, so no '' residue stays behind.
+    m = re.match(r"\s*'''''(.+?)'''''|\s*'''(.+?)'''", content)
     if m:
-        bold_text = m.group(1).strip()
+        # A bold line directly above a list heads that list (a language, "Printed
+        # in", an index group such as "Der Amokläufer" on page 513), not the page.
+        if re.match(r"[ \t]*\n<lst\b", content[m.end() :]):
+            return None
+        bold_text = (m.group(1) or m.group(2)).strip()
         # Reject: [1922]: Insel-Verlag, Leipzig (publisher/year pattern, not a title)
         if not re.match(r"\[\d{4}\]\s*:", bold_text):
             return bold_text
@@ -254,9 +259,14 @@ def extract_structured_data(content):
     if sortkey:
         result["sortkey"] = sortkey
 
-    # Title
+    # Title. Text glued to a category link on its line is the tail of a broken
+    # link ("[[Category:Symposia and ]]Exhibitions", page 3923), not a title.
     title = extract_title(content_clean)
-    if title:
+    category_tails = {
+        remove_wiki_markup(m.group(1))
+        for m in re.finditer(r"\[\[Category:[^\]]*\]\][ \t]*([^\n]+)", content)
+    }
+    if title and title not in category_tails:
         result["title"] = title
 
     # Original title

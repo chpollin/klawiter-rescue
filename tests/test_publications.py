@@ -618,6 +618,29 @@ def test_contents_end_at_a_reprint_list(attested_places) -> None:
     assert "reviewFlags" not in publication
 
 
+def test_contents_of_an_edition_in_another_language_stay_with_it(
+    attested_places,
+) -> None:
+    """Page 2083 describes its French edition under a bold "French edition:"
+    label without a year header; its contents are not the German book's."""
+    publication = _single_publication(
+        "'''[1993]: Residenz Verlag, Salzburg/Wien'''\n\n"
+        "Edited by Klemens Renoldner, Hildemar Holl, and Peter Karlhuber. "
+        "223/(1)p.\n\n"
+        "'''Contents:'''\n<lst type=bracket start=1>\n"
+        "Zu diesem Buch [The editors], p. 7\n</lst>\n\n"
+        "'''French edition:'''\n\n"
+        "'''Stefan Zweig, instants d'une vie. Images, textes, documents'''. "
+        "223/(1)p. Illustrated. Paris: Éditions Stock, 1994\n\n"
+        "'''Contents:'''\n<lst type=bracket start=153>\n"
+        "Page (7): Avant-propos [By the editors]\n</lst>\n\n"
+        "'''I. 1881-1914''', pp. 9-(51)\n<lst type=bracket start=154>\n"
+        "Pages 18-21: “En souvenir de Theodor Herzl”\n</lst>\n",
+        attested_places,
+    )
+    assert [c["title"] for c in publication["contributions"]] == ["Zu diesem Buch"]
+
+
 def test_pagination_counts_the_unnumbered_pages(attested_places) -> None:
     """444/(3)p. declares 447 pages, so contents ending at (445) fit (page
     1891); contents that run past both components are flagged."""
