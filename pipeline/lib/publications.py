@@ -195,6 +195,13 @@ _CONTENTS_END_RE = re.compile(
     r"NB|[A-Z][a-z]+ Editions/Reprints)\b)",
     re.MULTILINE,
 )
+# A bold label announcing the edition in another language ("'''French
+# edition:'''", page 2083) opens a publication without a year header, so the
+# contents after it belong to that edition, not to the publication before it.
+_LANGUAGE_EDITION_RE = re.compile(
+    rf"^'''\s*(?:{'|'.join(map(re.escape, LANGUAGE_MAP))}) edition\s*:?\s*'''\s*$",
+    re.MULTILINE,
+)
 # A year header followed only by a page locator is a heading inside a
 # publication, not a publication ("'''[1911]''', p. 12" on page 3757).
 _LOCATOR_HEADER_RE = re.compile(
@@ -840,10 +847,12 @@ def _attach_contributions(
         owner = None
         for start, end, publication in publications:
             if start < section["start"]:
-                owner = (end, publication)
+                owner = (start, end, publication)
         if owner is None:
             continue
-        block_end, publication = owner
+        block_start, block_end, publication = owner
+        if _LANGUAGE_EDITION_RE.search(text, block_start, section["start"]):
+            continue
         contributions = _contributions(
             _contents_text(text[section["start"] : section["end"]])
         )
