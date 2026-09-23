@@ -111,7 +111,7 @@
   },
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better; when extraction improves, update the value in an evidence-freeze commit.",
-    "redirect_map_size": 3532,
+    "redirect_map_size": 1575,
     "german_translator_fp": 111,
     "film_pagecount": 9,
     "publisher_equals_location": 2,
@@ -123,7 +123,7 @@
     "publisher_wiki_markup": 0,
     "publisher_metadata": 0,
     "publisher_mojibake": 0,
-    "semantic_field_mismatches": 16
+    "semantic_field_mismatches": 14
   },
   "reviewedUpdates": [
     {
@@ -135,6 +135,11 @@
       "date": "2026-09-23",
       "evidence": "data/reconciliation/source-revision-decisions.json",
       "reason": "Eight pages overwritten by the wiki's Redirect fixer account publish their last human revision, so they leave the redirects and join the displayed entries; ten fixer redirects over undelivered revisions are withheld as relations. The redirect map loses the aliases those redirects carried, among them Maria Stuart -> 4113. See-references are read as link targets (label after the pipe dropped, whitespace runs collapsed) and pagelink titles are decoded from UTF-8, which leaves two unresolved references (pages 679 and 7232). The restored Schachnovelle page 279 adds one German entry whose flat translator comes from a later translation block, the known first-match compatibility limit of the flat fields; no extraction rule changed for it."
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": "pipeline/03_parse_entries.py (NON_TITLE_CLASSES)",
+      "reason": "Stage 03 no longer takes a cross-reference, citation, credit, extent, imprint, header, label, editorial bracket or section heading line as the record title; the source page title is the title then. Those page titles were page-title aliases in the redirect map and are now the entry titles, so the map shrinks from 3532 to 1575 without losing a resolution: every former key that named a page still resolves, the two unresolved See-references (pages 679 and 7232) stay unresolved, and four keys now reach the page that carries the title instead of an entry that used the string as a heading. The semantic title cases on pages 1166 and 1308 are resolved, so the bound falls from 16 to 14."
     }
   ]
 }

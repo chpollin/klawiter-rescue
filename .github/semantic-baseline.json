@@ -22,11 +22,6 @@
     },
     {
       "pageId": 1166,
-      "field": "title",
-      "actual": "\"Huatielu jueding shengfu de yi shun\" [Die Weltminute von Waterloo: Napoleon, 18. Juni 1815] in:"
-    },
-    {
-      "pageId": 1166,
       "field": "year",
       "actual": 1815
     },
@@ -34,11 +29,6 @@
       "pageId": 1308,
       "field": "pageCount",
       "actual": 23
-    },
-    {
-      "pageId": 1308,
-      "field": "title",
-      "actual": "[Du!] in Yin xian ji. Zaonian de huahuan. Xin de lücheng [Beijing 2000], No. 18, p. 23 [Translated by Yan Zhu]"
     },
     {
       "pageId": 1667,
@@ -73,7 +63,7 @@
     {
       "pageId": 5487,
       "field": "title",
-      "actual": "\"Leporella\" [Leporella] in Petita crònica : quatre narracions [Girona, 2015], No. 5, pp. 55-92. Translated by Marc Jiménez Buzzi"
+      "actual": "Leporella / Catalan"
     },
     {
       "pageId": 6342,
@@ -141,6 +131,34 @@
           "after": "Bloch Erden Veralg",
           "expectedRemains": "Bloch Erden Verlag",
           "reason": "Replaces a publisher name matched elsewhere in the body with the imprint of this publication's header. The delivered source spells it 'Veralg'; the oracle records the spelling of the live wiki page, and correcting it here would be a silent identity change."
+        }
+      ]
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": "pipeline/03_parse_entries.py (NON_TITLE_CLASSES)",
+      "resolved": [
+        {
+          "pageId": 1166,
+          "field": "title",
+          "was": "\"Huatielu jueding shengfu de yi shun\" [Die Weltminute von Waterloo: Napoleon, 18. Juni 1815] in:",
+          "reason": "A first line that opens a citation ('\"Title\" [gloss] in:') is no title; stage 03 falls back to the source page title, which is the expected title."
+        },
+        {
+          "pageId": 1308,
+          "field": "title",
+          "was": "[Du!] in Yin xian ji. Zaonian de huahuan. Xin de lücheng [Beijing 2000], No. 18, p. 23 [Translated by Yan Zhu]",
+          "reason": "The first line is the citation of the poem inside a collection; stage 03 falls back to the source page title 'Ni!', which is the expected title."
+        }
+      ],
+      "partialImprovements": [
+        {
+          "pageId": 5487,
+          "field": "title",
+          "before": "\"Leporella\" [Leporella] in Petita crònica : quatre narracions [Girona, 2015], No. 5, pp. 55-92. Translated by Marc Jiménez Buzzi",
+          "after": "Leporella / Catalan",
+          "expectedRemains": "Leporella",
+          "reason": "The citation line gives way to the exact source page title. Its ' / Catalan' part disambiguates the wiki page and is not part of the title; stripping it would be a generic suffix rule, which the title comparison refuses."
         }
       ]
     }

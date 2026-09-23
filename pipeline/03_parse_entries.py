@@ -34,7 +34,7 @@ from lib.patterns import (
     extract_year,
 )
 from lib.publications import imprint_publisher, load_attested_places
-from lib.vocabulary import language_to_iso
+from lib.vocabulary import LANGUAGE_MAP, language_to_iso
 from lib.wiki_parser import extract_structured_data, remove_wiki_markup
 
 log = setup_logging(__name__)
@@ -51,6 +51,86 @@ SECTION_HEADER_RE = re.compile(
     r"Collected Works / [A-Za-z]+):?\s*",
     re.IGNORECASE,
 )
+
+# Shapes of a title candidate that is a bibliographic statement rather than a
+# title. The first-line fallback of extract_title returns the whole first line,
+# and the corpus writes its quotes escaped (\"), which the quoted-title pattern
+# does not read, so an article page yields its full citation ('"Buchmendel".
+# See: Book-Mendel', page 586). The source page title is then the title
+# (knowledge/data.md, stage 03 in knowledge/pipeline.md). The patterns anchor at
+# statement boundaries, so a title that merely contains a word such as "See"
+# stays ("Der Flüchtling. Episode vom/am Genfer See", page 782).
+NON_TITLE_CLASSES = (
+    # "See:" / "See also" opening the line, a sentence, a bracket or following
+    # a quoted title ('"Ist die Geschichte gerecht?" See: …', page 6230).
+    ("cross-reference", re.compile(r"(?:^[\"'“”‘’\s]*|[.;:?!\]\[\"”’']\s*)See\b")),
+    # The container of an article: a closing quote, bracket or parenthesis
+    # followed by "in" ('"Title" [gloss] in Journal'), a line opening or ending
+    # with "in", a page or column locator ("pp. 280-284", "p. ??"), an issue statement
+    # after the place bracket ("[Wien], 32:5", "[Paris], No. 1190") or the
+    # "Zweig references" locator of the secondary literature.
+    (
+        "citation",
+        re.compile(
+            r"[\"”“\])]\s*,?\s*in\b\s*:?(?:\s|$)|^in\s|\bin\s*:?\s*$"
+            r"|\bpp?\.\s*[(\[]?[\d?]|\bcols?\.\s*\d"
+            r"|\],\s*(?:No\.\s*\d|\d+:\d+)|\bZweig references?\b"
+        ),
+    ),
+    # A quoted title followed by an editorial note or a description ('"Widerstand
+    # der Wirklichkeit" [Individual story]', page 329; '"Deutschlands
+    # Janusantlitz". A ca. 1939 typescript …', page 4026).
+    ("annotation", re.compile(r"^[\"“][^\"”]+[\"”]\s*(?:\[|\.\s+\S)")),
+    # A contribution credit ("Translated by Eugen Relgis", page 212).
+    (
+        "credit",
+        re.compile(
+            r"^By\s"
+            r"|\b(?:[Tt]ranslat\w+|[Ee]dited|[Ii]llustrat\w+|[Aa]dapted|[Cc]ompiled|"
+            r"[Ss]elected|[Pp]roduced|[Ss]ponsored|[Aa]fterword|[Ff]oreword|"
+            r"[Pp]reface|[Ii]ntroduction|[Ss]cript|[Dd]rawings)\s+by\b"
+        ),
+    ),
+    # An extent statement ("248p.", "240/(1)p.", "(8)p.", "17 leaves").
+    ("extent", re.compile(r"(?<![\w/-])\(?\d+\)?(?:/\(\d+\))?p\.|\b\d+ leaves\b")),
+    # "Place: Publisher, YEAR" after a sentence break.
+    (
+        "imprint",
+        re.compile(r"[.)\]]\s+[^\W\d_][^:.\n]{1,40}:\s[^:\n]{2,80}?,\s*\(?\d{4}\)?\b"),
+    ),
+    # A publication header without a four-digit year ("[No date indicated]:
+    # Latino Americana, Ciudad de México", page 608; "[s.a.]: …"), a list
+    # number ("[1]", "[I].", "[1]. 1934: Herbert Reichner Verlag, Wien") or a
+    # header whose opening bracket the source lost ("11946]: Prometeĭ, Sofija").
+    (
+        "header",
+        re.compile(
+            r"^'?\[[^\[\]]{1,60}\]\s*:\s*\S|^\[(?:\d{1,3}|[IVXL]{1,4})\]|^\d{4,5}\]\s*:"
+        ),
+    ),
+    # A label introducing what follows ("Volume:", "Printed in:", "Essays:").
+    ("label", re.compile(r":\s*$")),
+    # An editorial bracket alone, the original title or a language gloss
+    # ("[Magellan. Der Mann und seine Tat]", page 820).
+    ("bracket", re.compile(r"^\[[^\[\]]+\]\.?$")),
+)
+# Section labels the bold-title pattern returns without a colon.
+_BARE_LABELS = frozenset(
+    {"Volume", "Volumes", "Correspondence", "No Date Indicated", "No date indicated"}
+)
+
+
+def non_title_class(candidate):
+    """The class of bibliographic statement a title candidate is, or None."""
+    text = remove_wiki_markup(candidate or "")
+    if not text:
+        return None
+    if text in _BARE_LABELS or text in LANGUAGE_MAP:
+        return "label"
+    for name, pattern in NON_TITLE_CLASSES:
+        if pattern.search(text):
+            return name
+    return None
 
 
 def derive_main_category(categories):
@@ -112,6 +192,11 @@ def process_entry(row, attested_places=None):
 
     # Reject: section headers ("Contents:", "Volumes:", "German:", etc.)
     if extracted_title and SECTION_HEADER_RE.match(extracted_title):
+        extracted_title = ""
+
+    # Reject: a bibliographic statement (NON_TITLE_CLASSES); the source page
+    # title is the title then.
+    if extracted_title and page_title and non_title_class(extracted_title):
         extracted_title = ""
 
     # Reject: full citation text (>200 chars is not a title)
