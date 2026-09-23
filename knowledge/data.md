@@ -74,7 +74,7 @@ The side file of a page carries `sourcePageId`, its `publications` in source ord
 | `id`, `sourceSlice` | identifier, and the exact start, end and SHA-256 of the source block the record was read from; `textStart` and `textEnd` name the same passage inside the delivered `fullBibliographicEntry`, and are absent where no single passage matches |
 | `year`, `yearRaw` | publication year, and the header notation including an approximate `ca.` form |
 | `title` | the italic or quoted title of the block, whichever notation comes first |
-| `editionId`, `reviewStatus` | the Gate 1 edition node the publication corresponds to, and its state `proposed` or `confirmed`; a publication outside the Gate 1 corpus is `proposed` and has no `editionId` |
+| `editionId`, `reviewStatus` | the Gate 1 edition node the publication corresponds to, and its state `proposed` or `confirmed`. A publication outside the Gate 1 corpus is `proposed` and has no `editionId` |
 | `imprint` | the header statement in its source wording |
 | `imprints` | the publisher/place pairs of a co-imprint, one pair per imprinting house |
 | `publisher`, `places` | publisher, and every place of publication in source wording, a qualifier such as `UT` or `Switzerland` kept with its place |
