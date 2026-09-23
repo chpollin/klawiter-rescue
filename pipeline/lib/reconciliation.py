@@ -395,16 +395,17 @@ def _location_source_occurrences(
     carries all of them as whole words. A line that names Varna for one
     contribution and Sofija for another never states the place "Sofija,
     Varna", and "CA" is no word of "California"; counting either would give
-    a claim evidence from pages that do not carry its subject.
+    a claim evidence from pages that do not carry its subject. The whole
+    value matches as a word too, so "Bonn" is no occurrence in "Bonnier".
     """
     occurrences: list[dict] = []
     seen: set[tuple[int, int | None, int]] = set()
-    needle = location.casefold()
+    needle = re.compile(rf"(?<!\w){re.escape(location.casefold())}(?!\w)")
     components = [item.strip().casefold() for item in location.split(",")]
     words = [re.compile(rf"(?<!\w){re.escape(item)}(?!\w)") for item in components]
     for row in folded_rows:
         for line_number, line, folded_line in row.lines:
-            exact_match = needle in folded_line
+            exact_match = bool(needle.search(folded_line))
             component_match = (
                 len(components) > 1
                 and all(component in folded_line for component in components)
@@ -595,6 +596,23 @@ def apply_decisions(
             raise ValueError(
                 f"Confirmed target is not a candidate for {subject_name}: {target}"
             )
+        if action == "unresolved":
+            # A reviewer may name readings the legacy matcher never proposed;
+            # they join the claim as marked candidates, never as links.
+            for reading in decision.get("interpretations", []):
+                if reading[target_key] in candidate_targets:
+                    continue
+                subject["candidates"].append(
+                    {
+                        "candidateId": f"{entity_type}/{subject_name}/{reading[target_key]}",
+                        target_key: reading[target_key],
+                        "label": reading.get("label") or subject_name,
+                        "score": None,
+                        "candidateSource": "independent-review-proposal",
+                        "uri": WIKIDATA_URI + reading[target_key],
+                    }
+                )
+                candidate_targets.add(reading[target_key])
         if action == "correct" and target and target not in candidate_targets:
             candidate = {
                 "candidateId": f"{entity_type}/{subject_name}/{target}",

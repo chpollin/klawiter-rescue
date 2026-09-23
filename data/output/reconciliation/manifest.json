@@ -1,40 +1,40 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "candidates.json": "f4586f78856afb0bd2ab1563123dffc078e87e6655aa44ab2ad13fe6594785dd",
-    "contested-claims.json": "034c1d91d56b890dc4f2f504235ead5f32cdea266cb6d5d85c9eb21cc1bf859a",
-    "decisions.json": "24ea849651e1bf87f76fb4905af82149bfbefe521da3cc9e32e1c4c1801012a0",
-    "earl.jsonld": "e7f82b840de9c635c3fd09b888fd16173c434c229659499352961d56f21d5e27",
-    "provenance.jsonld": "ff5a7d6ee511ec8282c881f8894cb587bed9fa622cda3606be46ed419f6f9fa5",
-    "publishable-links.json": "08a23891d879ffc3c52934b35708a6fb5a5622378663eacfe7a9b0380d33bc30",
-    "review-queue.json": "23fe9cf537d92eb46f527d3ee1bc391ca9adcb613b9d61e5f41ba7503f05d27f",
-    "validation-report.json": "8dde02404479761a4e84ba79af11f71768e8851efd424cce607a55d3420c3b8f"
+    "candidates.json": "0adc216752786cf4af2ab785e3f94ad5de888f1a92cbaba91bd0bc43928ce9a9",
+    "contested-claims.json": "f1387fb3b5c5e664de8924c336912cf86312a9e11685f631eecbf14386a17464",
+    "decisions.json": "a420a19df3d0a132829c023aca04618ad96f672438a82545ff46ecaefe004cea",
+    "earl.jsonld": "493846e2fb307dbd48d4290c404fb18101c360d59e824b96043be0e445ef12dc",
+    "provenance.jsonld": "f4d7e115563f4646f3b6ab1cad49cefa8c61fe053f9a1a6a94cfb28df8153bcc",
+    "publishable-links.json": "585550f741cf15a84032c34597bfdfa3c94c133eded12659a11e27867cc21699",
+    "review-queue.json": "7048af2008c22ee7595eb2205c59b5b34b6d09289557caf9121367cbf7385059",
+    "validation-report.json": "f20478a7d396fa83b5489e50bb0832587a15bd95f6ae33e13f76534526b38def"
   },
-  "codeSha256": "07fc5e3b0d7ba905cb773891f21c24359f24769b4ccd5b2afe63f1d3e3ca47f6",
+  "codeSha256": "72d1464b4e72bc30e276069f1738b3741e47116b934e9a68e23484d9c6b1171e",
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
-    "contestedAuthorityClaims": 2,
+    "contestedAuthorityClaims": 14,
     "contestedEditionClaims": 0,
     "contestedSourceRevisionClaims": 10,
     "decidedAuthorityClaims": 3,
     "decidedEditionClaims": 1,
-    "locationCandidates": 392,
-    "locationDecisions": 34,
+    "locationCandidates": 421,
+    "locationDecisions": 378,
     "locationSubjects": 382,
     "publishableAgentLinks": 0,
-    "publishableLocationLinks": 29,
+    "publishableLocationLinks": 352,
     "publishableWorkLinks": 3,
-    "reviewCases": 895,
+    "reviewCases": 563,
     "workCandidates": 853,
     "workDecisions": 3,
     "workSubjects": 447
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "7233676c4eeb57202e9bd6724ebcfc6989c997a44be3e6e180df4ff2f46b65eb"
+    "sha256": "c88621b743990a5d320e596217c1db4f47b5b737f61299e8d7c3b70a46f72c13"
   },
-  "generatedAt": "2026-09-23T11:25:36.741569+00:00",
+  "generatedAt": "2026-09-23T11:48:35.756003+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -58,7 +58,7 @@
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",
-      "sha256": "4cce07b7a46f6205a7616fd384092623927145efa71d662e7d18ee3e383f294a"
+      "sha256": "fbed83b9dcfc6a26959b1479d8dfd995462039fb59b1f706b51fc421eafac951"
     },
     "location-log": {
       "path": "data/provenance/locations-reconciliation-log.json",

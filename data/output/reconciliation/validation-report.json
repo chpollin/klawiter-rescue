@@ -14,18 +14,18 @@
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
-    "contestedAuthorityClaims": 2,
+    "contestedAuthorityClaims": 14,
     "contestedEditionClaims": 0,
     "contestedSourceRevisionClaims": 10,
     "decidedAuthorityClaims": 3,
     "decidedEditionClaims": 1,
-    "locationCandidates": 392,
-    "locationDecisions": 34,
+    "locationCandidates": 421,
+    "locationDecisions": 378,
     "locationSubjects": 382,
     "publishableAgentLinks": 0,
-    "publishableLocationLinks": 29,
+    "publishableLocationLinks": 352,
     "publishableWorkLinks": 3,
-    "reviewCases": 895,
+    "reviewCases": 563,
     "workCandidates": 853,
     "workDecisions": 3,
     "workSubjects": 447
@@ -41,5 +41,5 @@
     "shacl": [],
     "sourceRevisions": []
   },
-  "generatedAt": "2026-09-23T11:26:11.277302+00:00"
+  "generatedAt": "2026-09-23T11:49:49.273573+00:00"
 }

@@ -243,6 +243,812 @@
       ]
     },
     {
+      "@id": "klawiter:claim/reconciliation/location/225b8365b56e1363",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Indaura",
+        "schema:name": "Indaura"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/57a07c37cb9db709",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Indaura/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/5145/36345/1",
+            "klawiter:sourceOccurrence/location/774/61504/114",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Indaura"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/225b8365b56e1363/interpretation/Q66616",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Indaura/Q66616",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q66616"
+          },
+          "schema:name": "Indore"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/225b8365b56e1363/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/774/61504/114",
+          "sourceLine": 114,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 774,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Hindi:'''  \\\"Amoka\\\" in [1]. [[Amoka urpha veḍāpisā]]  [Indaura, 1936]. Volume pagination not indicated.  Translated by  N[arahara] K[āśīnātha]. // \\\"Antarvedna\\\" in [2].  [[Bhāgya kī viḍambanā. Bhāvapūrṇa do mārmika upanyāsoṃ ke hindī rūpāntara]]  [Naī Dillī/New Delhi, 1968], No. 3, pp. (47)-13.  Translated by Ādarśa  Kumārī.  //   \\\"Vikshipti\\\" in [3]. [[Stefan Zweig  ki mahan kahaniyan]] [Delhi, 1957], No. 4, pp. 115-177. Translated by Vijaya Chauhan and Shivdan Singh Chauhan. // \\\"Vikśipta\\\" in [4]. [[Śatarañji  kā khel]] [Bambaī, 1949], No. 7, pp. (132)-196. Translated by Śobhācandr Jośī",
+          "sourceTextId": 61504,
+          "sourceTextSha256": "1d17307b5d014412d99012bc311a3a874e773418a514e54e8e438f1f3f33dd77",
+          "sourceValue": "Indaura"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5145/36345/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5145,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1936]: [s.n.], Indaura [Indore?]'''",
+          "sourceTextId": 36345,
+          "sourceTextSha256": "5e440eca16bb7d1319e07f86c9ade47deb4259c065de0df558a861039657a063",
+          "sourceValue": "Indaura"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/4c38cfc109d792b7",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Hyderabad",
+        "schema:name": "Hyderabad"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/95883a3fee4075d1",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Hyderabad/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/4426/32528/1",
+            "klawiter:sourceOccurrence/location/5883/40215/1",
+            "klawiter:sourceOccurrence/location/7460/61558/205",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Hyderabad"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/4c38cfc109d792b7/interpretation/Q1361",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Hyderabad/Q1361",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q1361"
+          },
+          "schema:name": "Hyderabad"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/4c38cfc109d792b7/interpretation/Q1640079",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Hyderabad/Q1640079",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q1640079"
+          },
+          "schema:name": "Hyderabad"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/4c38cfc109d792b7/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/4426/32528/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4426,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1981]: Nīyū Fīlḍs Pablīkeshan [New Fields Publication], Ḥaydarābād [Hyderabad]'''",
+          "sourceTextId": 32528,
+          "sourceTextSha256": "02575db319c1a0d980d14f47aa069006a993d075e07b71714df40fccf88931b4",
+          "sourceValue": "Hyderabad"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5883/40215/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5883,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1956]: Sadhana Prakashan [Sadhana Publications], Hyderabad'''",
+          "sourceTextId": 40215,
+          "sourceTextSha256": "39a9beb50c4d48720d3966f147e21abbb72277b0ab7e0364046084b6610eb072",
+          "sourceValue": "Hyderabad"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/7460/61558/205",
+          "sourceLine": 205,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 7460,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Telgu:''' [[Aparichitalekha]] [Hyderabad, 1956]. Translated by Abburi Chayadevi",
+          "sourceTextId": 61558,
+          "sourceTextSha256": "38e8d9ee7f0db416ab5721e68ce7a0ef600dea9233bebfec7986511584e70393",
+          "sourceValue": "Hyderabad"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/572f2e114b5dd49c",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Prishtina%3F",
+        "schema:name": "Prishtina?"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/3ad3ccc25ad072b9",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Prishtina-45e8b796/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/5397/37817/1",
+            "klawiter:sourceOccurrence/location/5398/37820/1",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Prishtina-45e8b796"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/572f2e114b5dd49c/interpretation/Q25270",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Prishtina?/Q25270",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q25270"
+          },
+          "schema:name": "Pristina"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/572f2e114b5dd49c/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/5397/37817/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5397,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Ne thoshim shkollë; Naivitet; 60 vjeçari falenderon : [poezi]\\\" [Wir sagten 'Schule'...; Der Träumer (?); Der Sechzigjährige dankt: (Poetry)]. Translated by Oriana Tamburi in ''Fjala'' [The Word] [Prishtina?], No. 126 [22-23 February 2004], p. 11",
+          "sourceTextId": 37817,
+          "sourceTextSha256": "bee86739e6a5c3237f1f9b847320ad33fbfbbe7d95a9c234dc8f0ded338dfb95",
+          "sourceValue": "Prishtina?"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5398/37820/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5398,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Ne thoshim shkollë; Naivitet; 60 vjeçari falenderon : [poezi]\\\" [Wir sagten 'Schule'...; Der Träumer (?); Der Sechzigjährige dankt: (Poetry)]. Translated by Oriana Tamburi in Fjala [The Word] [Prishtina?], No. 126 [22-23 February 2004], p. 11",
+          "sourceTextId": 37820,
+          "sourceTextSha256": "eb1194398884909be1a1f0d14340f261db04fc9a9b51cd9c4630f6d62a38fd0d",
+          "sourceValue": "Prishtina?"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/724fb04ae6054c77",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Tirana%3F",
+        "schema:name": "Tirana?"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/a16863cea890f5cb",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Tirana-cd439c8e/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/5349/37678/1",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Tirana-cd439c8e"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/724fb04ae6054c77/interpretation/Q19689",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Tirana?/Q19689",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q19689"
+          },
+          "schema:name": "Tirana"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/724fb04ae6054c77/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/5349/37678/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5349,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Stefan Cvajg\\\" [Stefan Zweig] in ''Personalitete dhe personazhe qe kane bere historine..!'' [Personalities and Characters That Made History ... !] [Tirana?], 29 May 2012",
+          "sourceTextId": 37678,
+          "sourceTextSha256": "378bed3c6c3b5ff0a6a5408e701600a6bdde6b9f854b9adc701afae8a0a4b5b2",
+          "sourceValue": "Tirana?"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Kuwait",
+        "schema:name": "Kuwait"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/b6b9a36fd31d7476",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Kuwait/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/4573/37649/1",
+            "klawiter:sourceOccurrence/location/4920/35086/1",
+            "klawiter:sourceOccurrence/location/1695/48318/56",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Kuwait"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947/interpretation/Q35178",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Kuwait/Q35178",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q35178"
+          },
+          "schema:name": "Kuwait City"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947/interpretation/Q817",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Kuwait/Q817",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q817"
+          },
+          "schema:name": "Kuwait"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/1695/48318/56",
+          "sourceLine": 56,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 1695,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "Free supplement to the Kuwشiti newspaper \\\"Al-Qabas\\\" [The Firebrand], [Kuwait City]",
+          "sourceTextId": 48318,
+          "sourceTextSha256": "9535fae4866c0cea63175abd76abc6368668af8a920cc1a781a2622f50511244",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4566/37873/69",
+          "sourceLine": 69,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4566,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[2017]: Dār al-Khān li-l-Tarjamah waʾl-Nashr, Kuwait'''",
+          "sourceTextId": 37873,
+          "sourceTextSha256": "3a15e45f5da7329f656688b43cdb99533dcc7c31deb3e4e67ee00feba53a9a4b",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4573/37649/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4573,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[2017]: Dār al-Khān li-l-Tarjamah waʾl-Nashr, Kuwait'''",
+          "sourceTextId": 37649,
+          "sourceTextSha256": "3a15e45f5da7329f656688b43cdb99533dcc7c31deb3e4e67ee00feba53a9a4b",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4580/32753/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4580,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Sabʿūna ʿāman ʿalā ghiyāb Stīfān Zfāygh .. intaḥara baʿdamā dammarat Ūrūbā nafsahā\\\" [Stefan Zweig's Disappearance: Seventy Years Later - After Europe Had Destroyed Herself, He Committed Suicide] in ''Al-Jarīdah'' [The Newspaper] [Kuwait] No. 3554 [5 March 2012], pp. ??",
+          "sourceTextId": 32753,
+          "sourceTextSha256": "24a2c7c98e18190990e38edb8cb431f262946d6a31fa288633c7c6a952c5ff1b",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4841/34441/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4841,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Fiyīnā fī ʿuyūn Stīfān Tsfāygh\\\" [Vienna in the Eyes of Stefan Zweig] in ''Tawābil'' [Tawabil / Condiments] [Kuwait], Vol. 1, No. 136 [7 November 2007], p. III. ''Tawābil'' [Tawabil / Condiments] is a cultural supplement to the Kuwaiti daily ''Al-Jarīdah'' [Aljarida / The Newspaper], Kuwait",
+          "sourceTextId": 34441,
+          "sourceTextSha256": "cf726eb5f6888a0a0b4b66d5986efe242987de24dcc36188d832ea51a41dc489",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4920/35086/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4920,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Durūs daʿawiyyah wa-ḥaḍāriyyah min kitāb \\\"Mājillān qāhir al-biḥār\\\"\\\" [Missionary and Civilizational Lessons from the Book \\\"Conqueror of the Seas. The Story of Magellan\\\"] in ''Mahārāt al-daʿwah'' [dawahskills / Missionary Skills], [Kuwait], 27 December 2017",
+          "sourceTextId": 35086,
+          "sourceTextSha256": "7b85edb1c6c3c0c22ba67ea1efc783a86a11b0194272ba7560af199801fb7a0c",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4920/35086/3",
+          "sourceLine": 3,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4920,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "The webpage ''Mahārāt al-daʿwah'' [dawahskills / Missionary Skills] is published by the Jamʿiyyat al-Najāt al-Khayriyyah [Al-Najat Charity], Kuwait",
+          "sourceTextId": 35086,
+          "sourceTextSha256": "b2168c52bb968485f202fffca10f30597d0e0e5b65ccaa3149a9b03ddaf85b36",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5252/37143/9",
+          "sourceLine": 9,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5252,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "[1]. \\\"Risālah min imraʾah majhūlah\\\" [Brief einer Unbekannten]. Translated by Amānī Lāzār. Edited by Muḥammad Sālim. Kuwait: Dār al-Khān li-l-Tarjamah waʾl-Nashr, 2017",
+          "sourceTextId": 37143,
+          "sourceTextSha256": "8e3b4aa0f8540d0399393b32f402ee148d81547f9e8ccd36dc0a00f121fed4d2",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5252/37143/11",
+          "sourceLine": 11,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5252,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "[2]. \\\"Laylah sāḥirah\\\" [Phantastische Nacht. Erzählungen]. Translated by Amānī Lāzār. Edited by Muḥammad Sālim. Kuwait: Dār al-Khān li-l-Tarjamah waʾl-Nashr, 2017",
+          "sourceTextId": 37143,
+          "sourceTextSha256": "526c9188d671cb56bc0d1a540b61b42725ccb4b92d6475b5d0ca24c36c310e94",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5417/37889/7",
+          "sourceLine": 7,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5417,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "In this article two recent translations by Amānī Lāzār are reviewed: [1] \\\"Risālah min imraʾah majhūlah\\\" [Brief einer Unbekannten]. Translated by Amānī Lāzār. Edited by Muḥammad Sālim. ??p. Kuwait: Dār al-Khān li-l-Tarjamah waʾl-Nashr, 2017, and [2] \\\"Laylah sāḥirah\\\" [Phantastische Nacht. Erzählungen]. Translated by Amānī Lāzār. Edited by Muḥammad Sālim. ??p. Kuwait: Dār al-Khān li-l-Tarjamah waʾl-Nashr, 2017",
+          "sourceTextId": 37889,
+          "sourceTextSha256": "550bdbf84fb75541700b658a5181b4ba478fe738278a03411a6b4acd189fbbb4",
+          "sourceValue": "Kuwait"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/7460/61558/123",
+          "sourceLine": 123,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 7460,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Arabic:'''  \\\"Risālah min imra'ah majhūlah\\\"  in [1]. ''Sukhriyyāt ṣaghīrah'' [al-Qāhirah/Cairo, 1945], No. 6, pp.  ??.. [2].  ''Sukhriyyāt ṣaghīrah ...'' [Bayrūt/Beirut, 1947] , No. 6, pp. 160-222'  [Bayrūt/Beirut, 2017], No. 6, pp. 145-190.  Translated by Muḥammmad Quṭb. // [3]. [[Risālah min majhūlah]] [Dimashq/Damascus, 1953]. Translated by Fu'ād Ayyūb; [[Tūnis/Tunis, 2017]. Translated by Abū Bakr al-'Ayyadī  // [4].  ''Risālah min imra'ah majhūlah''  [Kuwait, 2017]. Translated by Amānī Lāzār. // [5]. [[Risālah min imra'ah majhūlah wa'l-ḥubb al-junūnī]] [Bairūt/Beirut, 1955]; [Dimashq/Damascus, 1983]. Translated by Anjīl 'Abbūd",
+          "sourceTextId": 61558,
+          "sourceTextSha256": "9d9f1382ae4dbb921a2dbaf92995baf46a163a8a45ad26c8d050867779892e19",
+          "sourceValue": "Kuwait"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/82f16e77646777d8",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Huis%20ter%20Heide",
+        "schema:name": "Huis ter Heide"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/05057c1c7e680322",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Huis-ter-Heide/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/5054/40079/1",
+            "klawiter:sourceOccurrence/location/297/61397/38",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Huis-ter-Heide"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/82f16e77646777d8/interpretation/Q130619",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Huis ter Heide/Q130619",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q130619"
+          },
+          "schema:name": "Huis ter Heide"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/82f16e77646777d8/interpretation/Q1873812",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Huis ter Heide/Q1873812",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q1873812"
+          },
+          "schema:name": "Huis ter Heide (Noordenveld, Drenthe)"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/82f16e77646777d8/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/297/61397/38",
+          "sourceLine": 38,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 297,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Dutch:'''  [[De oogen van den eeuwigen broeder]] [Huis ter Heide, 1925. Reprinted 1933]. Translated by Reinier P[ieter] Sterkenburg",
+          "sourceTextId": 61397,
+          "sourceTextSha256": "8f3e58fa57e8671dd54c7659bfcc9492843b71d2abc6670add6647cfe645a89e",
+          "sourceValue": "Huis ter Heide"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5054/40079/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5054,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1925]: De Tijdstroom Uitgeverij, Huis ter Heide'''",
+          "sourceTextId": 40079,
+          "sourceTextSha256": "172ca37c148d882c5fb8390a297da26ea80b7bb756d3400c1ed1f76e1a9d79b3",
+          "sourceValue": "Huis ter Heide"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/8b41d397c7b7324c",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Jakarta%3F",
+        "schema:name": "Jakarta?"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/ef3957279fb9f690",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Jakarta-306b4ba2/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/4880/34644/1",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Jakarta-306b4ba2"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/8b41d397c7b7324c/interpretation/Q3630",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Jakarta?/Q3630",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q3630"
+          },
+          "schema:name": "Jakarta"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/8b41d397c7b7324c/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/4880/34644/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4880,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Obituari Ali Audah: Sastrawan otodidak yang luar biasa\\\" [Obituary of Ali Audah: A Remarkable Autodidactic Writer] in ''Islami.co'' [Jakarta?], 22 June 2017",
+          "sourceTextId": 34644,
+          "sourceTextSha256": "062a81e35040ddfeba2c116d49fbda5bcb12aa221b6f8c951707621d93a34bf1",
+          "sourceValue": "Jakarta?"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/ab80f45dac712d79",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Irun%20%28Iru%C3%B1ea%29%20%5BPamplona%5D",
+        "schema:name": "Irun (Iruñea) [Pamplona]"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/929f0aa90ad960f0",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Irun-Irunea-Pamplona/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/423/42266/1",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Irun-Irunea-Pamplona"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/ab80f45dac712d79/interpretation/Q23999366",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Irun (Iruñea) [Pamplona]/Q23999366",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q23999366"
+          },
+          "schema:name": "Irun"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/ab80f45dac712d79/interpretation/Q200201",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Irun (Iruñea) [Pamplona]/Q200201",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q200201"
+          },
+          "schema:name": "Irun (municipality)"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/ab80f45dac712d79/interpretation/Q10282",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Irun (Iruñea) [Pamplona]/Q10282",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q10282"
+          },
+          "schema:name": "Pamplona"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/ab80f45dac712d79/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/423/42266/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 423,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1999]:  Alberdania, Irun (Iruñea) [Pamplona]'''",
+          "sourceTextId": 42266,
+          "sourceTextSha256": "9e9c81a42162901dcbc5c0379ca38ff5a50f6e3d320ba626b7808f8c1fb2b336",
+          "sourceValue": "Irun (Iruñea) [Pamplona]"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/b4da8b5dd7018a18",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Tashkent%3F",
+        "schema:name": "Tashkent?"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/aaec8a264ba8fb79",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Tashkent-027ff90c/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/5004/60242/1",
+            "klawiter:sourceOccurrence/location/5001/35497/1",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Tashkent-027ff90c"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/b4da8b5dd7018a18/interpretation/Q269",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Tashkent?/Q269",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q269"
+          },
+          "schema:name": "Tashkent"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/b4da8b5dd7018a18/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/5001/35497/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5001,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Stefan Sveyg. Novella va hikoyalar\\\" [Stefan Zweig. Novellas and Stories] in ''Xurshid Davron [Khurshid Davron]: Xurshid Davron Kutubkonasi. Adib asarlari, tarjimalari, hamda o'zbek va jahon adabiyotidan namunalar'' [The Xurshid Davron Library. Literary Works, Translations, and Examples from Uzbek and World Literature] [Tashkent?], 28 November 2014",
+          "sourceTextId": 35497,
+          "sourceTextSha256": "0532e1dae81e7b68f0d5a589c2125b951641e5c1d2285e71ce55c9b8e129f33c",
+          "sourceValue": "Tashkent?"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5004/60242/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5004,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1962]: Oʻzadabiynashr, [Toshkent/Tashkent?]'''",
+          "sourceTextId": 60242,
+          "sourceTextSha256": "cc60a9f089a84c7568a1d6496f5f5840a54cdef4745e108aeea296c853d3349e",
+          "sourceValue": "Tashkent?"
+        }
+      ]
+    },
+    {
       "@id": "klawiter:claim/reconciliation/location/d72833396adc8499",
       "@type": "klawiter:ContestedClaim",
       "klawiter:claimPredicate": {
@@ -300,6 +1106,367 @@
           "sourceTextId": 34446,
           "sourceTextSha256": "55197b89e54f3a7222113c188398a279e4defcc1615e49682b6e150dcd2cdee5",
           "sourceValue": "Saint-Aignan"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/dc2abbbaec994547",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/St.%20Petersburg",
+        "schema:name": "St. Petersburg"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/8a683c7ab8ce048e",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/St-Petersburg/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/5021/36461/1",
+            "klawiter:sourceOccurrence/location/5947/40798/1",
+            "klawiter:sourceOccurrence/location/2060/8426/6",
+            "data/reconciliation/location-agent-review-2026-09-23.json#St-Petersburg"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/dc2abbbaec994547/interpretation/Q656",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/St. Petersburg/Q656",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q656"
+          },
+          "schema:name": "Saint Petersburg"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/dc2abbbaec994547/interpretation/Q49236",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/St. Petersburg/Q49236",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q49236"
+          },
+          "schema:name": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/dc2abbbaec994547/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/889/30234/15",
+          "sourceLine": 15,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 889,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "Heroic Moment. Dostoyevsky, St. Petersburg, Semenovsk Square, December 22, 1849 [Heroischer Augenblick. Dostojewski, Petersburg, Semenowskplatz, 22. Dezember 1849], pp. (143)-151",
+          "sourceTextId": 30234,
+          "sourceTextSha256": "bd1b28702d64c170f3208275e03d9d773f193422cf8270b3303f7ec22f2137d8",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/2060/8426/6",
+          "sourceLine": 6,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 2060,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Stefan Zweigs russische Briefpartner\\\" in ''Stefan Zweig. Exil und Suche nach dem Weltfrieden''. Edited by Mark H. Gelber and Klaus Zelewitz. Riverside, CA: Ariadne Press, 1995, No. 6, pp. 59-72. Reprinted as: “Stefan Zweigs russische Briefpartner (neue Materialien)” in  ''Österreichische Literatur: Interpretationen, Materialien und Rezeption. Jahrbuch der Österreich-Bibliothek in St. Petersburg''. 3 (1997/1998). Edited by Alexander W. Belobratow. St. Petersburg: Verlag “Peterburg XXI vek”, (1999), pp. 42-57.  See the letters to/from V. Briusov, Pavel Ettinger, F. A. Hünich, Anatolii Lunacharskii, and Sofiia Tolstaia-Esenina",
+          "sourceTextId": 8426,
+          "sourceTextSha256": "a0ebe8b5419ecebea2aad16007456e287a0fc502a39665ae20864af9adee6c61",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/3235/49509/15",
+          "sourceLine": 15,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 3235,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Sjakknovelle\\\" [Schachnovelle] in ''Mannen fra St. Petersburg'' [The Man",
+          "sourceTextId": 49509,
+          "sourceTextSha256": "d83e51c6e63970e79eb9c82e220080400b2db5855ca9d99deae86bc415a7ae64",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/3235/49509/16",
+          "sourceLine": 16,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 3235,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "from St. Petersburg]. 476p. Illustrated. Abridged edition [Series: Det",
+          "sourceTextId": 49509,
+          "sourceTextSha256": "0e1b91d1d92821b9adf3b90798c5933a3315944d23f411e8875eef5a67267a37",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/3235/49509/21",
+          "sourceLine": 21,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 3235,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1]'''. Ken Follett: \\\"Mannen fra St. Petersburg\\\" [The Man from St.",
+          "sourceTextId": 49509,
+          "sourceTextSha256": "23850696d8b525fd04d47dcefa05d0526b4c6da70a811276eb1540eb11363748",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4824/34466/8",
+          "sourceLine": 8,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4824,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "Cast: Viktor Piščaev [of the Mikhailovsky Ballet and Opera Theatre, St. Petersburg], Elena Mirtova [of the Kirov (Mariinsky) Opera and Ballet Theatre, St. Petersburg], Anatoli Buganov [of the Kirov (Mariinsky) Opera and Ballet Theatre, St. Petersburg] et al.",
+          "sourceTextId": 34466,
+          "sourceTextSha256": "e877d0c2ae6a0f9e9b924e642b5b6baa963e98bc5967191319386db06c4082af",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4824/34466/9",
+          "sourceLine": 9,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4824,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "Production sponsored by the Nevskaia Perspektiva Association of St. Petersburg, Russia",
+          "sourceTextId": 34466,
+          "sourceTextSha256": "1ec51836bb63571854d94e092778e7b9ddc7c64ce289451b2c6d76974af85170",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/4824/34466/10",
+          "sourceLine": 10,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 4824,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "First performance on 11 February 1992. Performed in the St. Petersburg Opera Theatre in 1993",
+          "sourceTextId": 34466,
+          "sourceTextSha256": "ef828347a2de3a411f15849ae704dfa10338a2dae66b0f75a89f172e7468d3ca",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5021/36461/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5021,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Jakypbekov, Ashym\\\" in ''Uikipedia, acık entsiklopedia'' [Wikipedia. The Free Encyclopedia] [St. Petersburg, FL], 12 September 2012",
+          "sourceTextId": 36461,
+          "sourceTextSha256": "98da5bf66d835f2529da6c70c2aa0579ffe046daab62462bc1d463502fb6d478",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/5947/40798/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 5947,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[1997]: Published by the Editor, St. Petersburg, Russia'''",
+          "sourceTextId": 40798,
+          "sourceTextSha256": "cbdbe1cbaeff02f962b7b3a73d8cca50b8d15f6ac82df646621ef1bc8747668c",
+          "sourceValue": "St. Petersburg"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6820/61508/108",
+          "sourceLine": 108,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6820,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Norwegian:''' \\\"Sjakknovelle\\\" in [1]. ''Mannen fra St. Petersburg'' [Oslo, 1983], No. 3, pp. ??. Translator not indicated.  [2].  [[Sjakknovelle]] [Råde, 2012], No. 1, pp. (1)-94. Translated by Ursula Monsen. [3]. [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 5, pp. 157-232. Translated by Øystein Vidnes ",
+          "sourceTextId": 61508,
+          "sourceTextSha256": "fb6f29392e262417d3c10c38994bc43b5569507bdfd888ffe42c60c1bb4614a6",
+          "sourceValue": "St. Petersburg"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/dd0219e90c719699",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Leikanger",
+        "schema:name": "Leikanger"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/69b6112b0fbca447",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Leikanger/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/6445/47152/3",
+            "klawiter:sourceOccurrence/location/3235/49509/47",
+            "klawiter:sourceOccurrence/location/6455/47245/3",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Leikanger"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/dd0219e90c719699/interpretation/Q844106",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Leikanger/Q844106",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q844106"
+          },
+          "schema:name": "Hermansverk"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/dd0219e90c719699/interpretation/Q48121170",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Leikanger/Q48121170",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q48121170"
+          },
+          "schema:name": "Leikanger"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/dd0219e90c719699/interpretation/Q107396",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Leikanger/Q107396",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q107396"
+          },
+          "schema:name": "Leikanger Municipality"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/dd0219e90c719699/interpretation/Q15102981",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Leikanger/Q15102981",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q15102981"
+          },
+          "schema:name": "Leikanger"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/dd0219e90c719699/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/3235/49509/47",
+          "sourceLine": 47,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 3235,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Sjakknovelle\\\" [Schanovelle] in [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 5, pp. 157-232",
+          "sourceTextId": 49509,
+          "sourceTextSha256": "58c8f8d511338d517e2e2207fb7e628a0d101c5f15e1688eef9b063170c8ddfc",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6445/47152/3",
+          "sourceLine": 3,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6445,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''[2019]: Skald Forlag, Leikanger'''",
+          "sourceTextId": 47152,
+          "sourceTextSha256": "a07d7ba85aa3f4d70f8eb09aa54da87af4b8ff2faa0351604a82be4243f2f5ef",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6455/47245/3",
+          "sourceLine": 3,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6455,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Måneskinssmauet\\\" [Die Mondscheingasse] in [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 1, pp. 9-34",
+          "sourceTextId": 47245,
+          "sourceTextSha256": "d408c41e304f460105a24953452f3fc8878e9cadc8c485e06e94dae541c76481",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6456/47247/3",
+          "sourceLine": 3,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6456,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Brev frå ei ukjend kvinne\\\" [Der Brief einer Unbekannten] in [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 2, pp. 35-86",
+          "sourceTextId": 47247,
+          "sourceTextSha256": "bf71c3a57911dfab1b2b3680c32fda8112d0a36fa9c8495125e22dd6c941d362",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6457/47250/3",
+          "sourceLine": 3,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6457,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Den usynlege samlinga. Ein episode frå den tyske inflasjonen\\\" [Dei unsichtbare Sammlung. Eine Episode aus der deutschen Inflation] in [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 3, pp. 87-106",
+          "sourceTextId": 47250,
+          "sourceTextSha256": "6fda2b4c59ee029834fe3b78ba78c3bcf5b9436f65dfffe2e5edb4334ca5c570",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6458/47254/3",
+          "sourceLine": 3,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6458,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Uventa innføring i eit handverk\\\" [Unvermutete Bekanntschaft mit einem Handwerk] in [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 4, pp. 107-156",
+          "sourceTextId": 47254,
+          "sourceTextSha256": "fa4d81e0866a1affe819b16b3d638de75ee15d809e65c00afa4368d2f6781df5",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/6820/61508/108",
+          "sourceLine": 108,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 6820,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Norwegian:''' \\\"Sjakknovelle\\\" in [1]. ''Mannen fra St. Petersburg'' [Oslo, 1983], No. 3, pp. ??. Translator not indicated.  [2].  [[Sjakknovelle]] [Råde, 2012], No. 1, pp. (1)-94. Translated by Ursula Monsen. [3]. [[Sjakknovelle og andre tekstar]] [Leikanger, 2019], No. 5, pp. 157-232. Translated by Øystein Vidnes ",
+          "sourceTextId": 61508,
+          "sourceTextSha256": "fb6f29392e262417d3c10c38994bc43b5569507bdfd888ffe42c60c1bb4614a6",
+          "sourceValue": "Leikanger"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/7460/61558/183",
+          "sourceLine": 183,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 7460,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "'''Norwegian:''' \\\"Brev frå ei ukjend kvinne\\\" in [[Sjakknovelle og andre tekstar]]  [Leikanger, 2019], No. 2, pp. 35-86. Translated by  Øystein Vidnes",
+          "sourceTextId": 61558,
+          "sourceTextSha256": "e870838fce5bc2790bd4b117348d0f714c1e86a23e63931ba771d0aff39a8318",
+          "sourceValue": "Leikanger"
         }
       ]
     },
@@ -408,6 +1575,136 @@
           "sourceTextId": 40807,
           "sourceTextSha256": "50b82822a302197f7c788bec90aeb49b065129dfa970072f72a33f5b456c56f5",
           "sourceValue": "Bloemfontein, Kaapstad"
+        }
+      ]
+    },
+    {
+      "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f",
+      "@type": "klawiter:ContestedClaim",
+      "klawiter:claimPredicate": {
+        "@id": "schema:sameAs"
+      },
+      "klawiter:claimStatus": "contested",
+      "klawiter:claimSubject": {
+        "@id": "klawiter:location/Sulzbach",
+        "schema:name": "Sulzbach"
+      },
+      "klawiter:decisionStatus": "open",
+      "klawiter:hasReviewAction": [
+        {
+          "@id": "klawiter:review/reconciliation/99d4df4125b6b357",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Sulzbach/unresolved",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/3183/20667/1",
+            "klawiter:sourceOccurrence/location/7386/58343/5",
+            "data/reconciliation/location-agent-review-2026-09-23.json#Sulzbach"
+          ],
+          "klawiter:reviewBasis": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+          "klawiter:reviewOutcome": "unresolved",
+          "prov:wasAssociatedWith": {
+            "schema:name": "independent-verification-agent"
+          }
+        }
+      ],
+      "klawiter:identityScope": "location",
+      "klawiter:interpretation": [
+        {
+          "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f/interpretation/Q120357",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Sulzbach/Q120357",
+          "klawiter:candidateSource": "legacy-reconciliation-output",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q120357"
+          },
+          "schema:name": "Sulzbach am Main"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f/interpretation/Q624417",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Sulzbach/Q624417",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q624417"
+          },
+          "schema:name": "Sulzbach (Taunus)"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f/interpretation/Q616258",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Sulzbach/Q616258",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q616258"
+          },
+          "schema:name": "Sulzbach"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f/interpretation/Q503633",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Sulzbach/Q503633",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q503633"
+          },
+          "schema:name": "Sulzbach-Rosenberg"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f/interpretation/Q83048",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateId": "location/Sulzbach/Q83048",
+          "klawiter:candidateSource": "independent-review-proposal",
+          "klawiter:interpretationStatus": "contested",
+          "klawiter:proposedObject": {
+            "@id": "http://www.wikidata.org/entity/Q83048"
+          },
+          "schema:name": "Sulzbach an der Murr"
+        },
+        {
+          "@id": "klawiter:claim/reconciliation/location/f2321a36ead8cb4f/interpretation/no-assignment",
+          "@type": "klawiter:ClaimInterpretation",
+          "klawiter:candidateSource": "fail-closed-alternative",
+          "klawiter:interpretationStatus": "contested",
+          "schema:name": "No canonical authority assignment in the current evidence"
+        }
+      ],
+      "klawiter:sourceEvidence": [
+        {
+          "@id": "klawiter:sourceOccurrence/location/54/61144/222",
+          "sourceLine": 222,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 54,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "\\\"Ein verhängnisvoller Irrtum\\\" in ''Auslese. Ein Sammlung zeitgenössischer Erzähler''. Edited with notes by Erik N:son Liljebäck and Ernst Sulzbach. Stockholm: Albert Bonnier Förlag, 1948 [Reprinted 1951], pp. 95-110. Notes, pp. 148-153",
+          "sourceTextId": 61144,
+          "sourceTextSha256": "3b1e76e007af7590afe9fa1b3a265fe57575a0595f1fe78eb887a4fcd8cfba77",
+          "sourceValue": "Sulzbach"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/3183/20667/1",
+          "sourceLine": 1,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 3183,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "''Durch das Jahr auf den Spuren von Stefan Zweig''. Edited and illustrated by Petra M. Lorenz. 24p. Silkscreen-printing on handmade paper. Sulzbach: Edition Leuchtkäfer, 2015. The volume contains 12 poems by Stefan Zweig, each one illustrated by Petra M. Lorenz",
+          "sourceTextId": 20667,
+          "sourceTextSha256": "cdc09e8860a6ea3d75971970aef45ac3811dd3bbdb8ba1f471f9730161aa1b1f",
+          "sourceValue": "Sulzbach"
+        },
+        {
+          "@id": "klawiter:sourceOccurrence/location/7386/58343/5",
+          "sourceLine": 5,
+          "sourceMatchMode": "exact-string",
+          "sourcePageId": 7386,
+          "sourcePath": "data/intermediate/04_classified.csv",
+          "sourceText": "[[Durch das Jahr auf den Spuren von Stefan Zweig]] [Sulzbach, 2015], No. 7, p. 13",
+          "sourceTextId": 58343,
+          "sourceTextSha256": "ae586037340a2254a09a3258579970fe378a52a3500a7ff92f50dd1f852bacc6",
+          "sourceValue": "Sulzbach"
         }
       ]
     },

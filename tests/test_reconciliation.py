@@ -59,16 +59,29 @@ def test_frozen_szd_index_and_confirmed_work_links(reconciliation: dict) -> None
     }
 
 
+def _location_decisions() -> list[dict]:
+    path = Path(__file__).resolve().parent.parent / "data" / "reconciliation"
+    return json.loads((path / "location-decisions.json").read_text(encoding="utf-8"))[
+        "decisions"
+    ]
+
+
+def _decided(action_set: set[str]) -> set[str]:
+    return {d["subject"] for d in _location_decisions() if d["action"] in action_set}
+
+
 def test_location_candidates_are_not_public_links(reconciliation: dict) -> None:
+    """Exactly the confirm and correct decisions publish; a subject with a
+    candidate but no decision, such as La Tour d'Aigues, does not."""
     published = reconciliation["publishable"]["locations"]
-    assert len(published) == 29
-    assert "Girona" not in published
-    girona = next(
+    assert set(published) == _decided({"confirm", "correct"})
+    undecided = next(
         item
         for item in reconciliation["candidates"]["locations"]
-        if item["sourceLocation"] == "Girona"
+        if item["sourceLocation"] == "La Tour d'Aigues"
     )
-    assert {candidate["qid"] for candidate in girona["candidates"]} == {"Q7038"}
+    assert undecided["candidates"] and not undecided.get("decision")
+    assert "La Tour d'Aigues" not in published
 
 
 def test_wrong_legacy_qids_are_replaced_fail_closed(reconciliation: dict) -> None:
@@ -101,10 +114,10 @@ def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
     reconciliation: dict,
 ) -> None:
     queue = reconciliation["queue"]
-    # 796 location and work cases before 2026-09-23; the three compound
-    # places and their three components left the queue with their decisions,
-    # the four works of restored pages joined it.
-    assert queue["caseCount"] == 794 + 101
+    # 794 location and work cases before the agent place review of
+    # 2026-09-23; its 344 decisions leave 13 more places unresolved, and
+    # decided places leave the queue.
+    assert queue["caseCount"] == 462 + 101
     queued = {(item["entityType"], item["subject"]): item for item in queue["cases"]}
     assert queued[("location", "Saint-Aignan")]["status"] == "unresolved"
     assert queued[("location", "Tyresö")]["status"] == "unresolved"
@@ -120,10 +133,9 @@ def test_unresolved_decisions_are_explicit_contested_claims(
         if claim["klawiter:decisionStatus"] == "open"
         and claim["klawiter:identityScope"] == "location"
     ]
-    assert {claim["klawiter:claimSubject"]["schema:name"] for claim in claims} == {
-        "Tyresö",
-        "Saint-Aignan",
-    }
+    names = {claim["klawiter:claimSubject"]["schema:name"] for claim in claims}
+    assert names == _decided({"unresolved"})
+    assert {"Tyresö", "Saint-Aignan"} <= names
     assert all(claim["klawiter:claimStatus"] == "contested" for claim in claims)
     assert all(len(claim["klawiter:interpretation"]) >= 2 for claim in claims)
     assert all(claim["klawiter:sourceEvidence"] for claim in claims)
@@ -142,9 +154,9 @@ def test_unresolved_decisions_are_explicit_contested_claims(
 def test_stage_05_reads_only_publishable_links() -> None:
     stage_05 = importlib.import_module("05_to_jsonld")
     links = stage_05.load_location_wikidata()
-    assert len(links) == 29
+    assert set(links) == _decided({"confirm", "correct"})
     assert links["Yanji"] == "http://www.wikidata.org/entity/Q713362"
-    assert "Girona" not in links
+    assert "La Tour d'Aigues" not in links
 
 
 def test_public_reconciliation_projection_is_time_independent(
@@ -417,10 +429,11 @@ def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
         if claim["klawiter:identityScope"] == "location"
         and claim["klawiter:decisionStatus"] == "open"
     }
-    assert open_ids == {
+    assert {
         "klawiter:claim/reconciliation/location/13c36aabb066d6a3",
         "klawiter:claim/reconciliation/location/d72833396adc8499",
-    }
+    } <= open_ids
+    assert len(open_ids) == len(_decided({"unresolved"}))
 
 
 def test_claim_evidence_is_the_pages_that_carry_the_subject(
@@ -487,6 +500,6 @@ def test_open_and_decided_claim_counts_agree_across_gates() -> None:
         assert gate1[key] == gate2[key]
     assert gate1["contestedEditionClaims"] == 0
     assert gate1["decidedEditionClaims"] == 1
-    assert gate2["contestedAuthorityClaims"] == 2
+    assert gate2["contestedAuthorityClaims"] == len(_decided({"unresolved"}))
     assert gate2["decidedAuthorityClaims"] == 3
     assert gate2["contestedSourceRevisionClaims"] == 10

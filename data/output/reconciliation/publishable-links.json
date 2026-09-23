@@ -1,11 +1,173 @@
 {
   "agents": {},
   "locations": {
+    "'s-Gravenhage": {
+      "decisionId": "location/s-Gravenhage/Q36600",
+      "label": "The Hague",
+      "qid": "Q36600",
+      "uri": "http://www.wikidata.org/entity/Q36600"
+    },
+    "Aalborg": {
+      "decisionId": "location/Aalborg/Q25410",
+      "label": "Aalborg",
+      "qid": "Q25410",
+      "uri": "http://www.wikidata.org/entity/Q25410"
+    },
+    "Abu Dhabi": {
+      "decisionId": "location/Abu-Dhabi/Q1519",
+      "label": "Abu Dhabi",
+      "qid": "Q1519",
+      "uri": "http://www.wikidata.org/entity/Q1519"
+    },
+    "Algiers": {
+      "decisionId": "location/Algiers/Q3561",
+      "label": "Algiers",
+      "qid": "Q3561",
+      "uri": "http://www.wikidata.org/entity/Q3561"
+    },
+    "Almaty": {
+      "decisionId": "location/Almaty/Q35493",
+      "label": "Almaty",
+      "qid": "Q35493",
+      "uri": "http://www.wikidata.org/entity/Q35493"
+    },
+    "Amersfoort": {
+      "decisionId": "location/Amersfoort/Q992",
+      "label": "Amersfoort",
+      "qid": "Q992",
+      "uri": "http://www.wikidata.org/entity/Q992"
+    },
+    "Amman": {
+      "decisionId": "location/Amman/Q3805",
+      "label": "Amman",
+      "qid": "Q3805",
+      "uri": "http://www.wikidata.org/entity/Q3805"
+    },
+    "Amman, Jordan": {
+      "decisionId": "location/Amman-Jordan/Q3805",
+      "label": "Amman",
+      "qid": "Q3805",
+      "uri": "http://www.wikidata.org/entity/Q3805"
+    },
+    "Amstelveen": {
+      "decisionId": "location/Amstelveen/Q9898",
+      "label": "Amstelveen",
+      "qid": "Q9898",
+      "uri": "http://www.wikidata.org/entity/Q9898"
+    },
     "Amsterdam": {
       "decisionId": "location/Amsterdam/Q727",
       "label": "Amsterdam",
       "qid": "Q727",
       "uri": "http://www.wikidata.org/entity/Q727"
+    },
+    "Amsterdan": {
+      "decisionId": "location/Amsterdan/Q727",
+      "label": "Amsterdam",
+      "qid": "Q727",
+      "uri": "http://www.wikidata.org/entity/Q727"
+    },
+    "Antwerpen": {
+      "decisionId": "location/Antwerpen/Q12892",
+      "label": "Antwerp",
+      "qid": "Q12892",
+      "uri": "http://www.wikidata.org/entity/Q12892"
+    },
+    "Apeldoorn": {
+      "decisionId": "location/Apeldoorn/Q101918",
+      "label": "Apeldoorn",
+      "qid": "Q101918",
+      "uri": "http://www.wikidata.org/entity/Q101918"
+    },
+    "Arnhem": {
+      "decisionId": "location/Arnhem/Q1310",
+      "label": "Arnhem",
+      "qid": "Q1310",
+      "uri": "http://www.wikidata.org/entity/Q1310"
+    },
+    "Astana": {
+      "decisionId": "location/Astana/Q1520",
+      "label": "Astana",
+      "qid": "Q1520",
+      "uri": "http://www.wikidata.org/entity/Q1520"
+    },
+    "Athena": {
+      "decisionId": "location/Athena-412b726d/Q1524",
+      "label": "Athens",
+      "qid": "Q1524",
+      "uri": "http://www.wikidata.org/entity/Q1524"
+    },
+    "Athēna": {
+      "decisionId": "location/Athena-f1eebd7a/Q1524",
+      "label": "Athens",
+      "qid": "Q1524",
+      "uri": "http://www.wikidata.org/entity/Q1524"
+    },
+    "Augsburg": {
+      "decisionId": "location/Augsburg/Q2749",
+      "label": "Augsburg",
+      "qid": "Q2749",
+      "uri": "http://www.wikidata.org/entity/Q2749"
+    },
+    "Bad Nauheim": {
+      "decisionId": "location/Bad-Nauheim/Q16105",
+      "label": "Bad Nauheim",
+      "qid": "Q16105",
+      "uri": "http://www.wikidata.org/entity/Q16105"
+    },
+    "Badalona": {
+      "decisionId": "location/Badalona/Q15468",
+      "label": "Badalona",
+      "qid": "Q15468",
+      "uri": "http://www.wikidata.org/entity/Q15468"
+    },
+    "Baden-Baden": {
+      "decisionId": "location/Baden-Baden/Q4100",
+      "label": "Baden-Baden",
+      "qid": "Q4100",
+      "uri": "http://www.wikidata.org/entity/Q4100"
+    },
+    "Baghdad": {
+      "decisionId": "location/Baghdad-c6bd9a06/Q1530",
+      "label": "Bagdad",
+      "qid": "Q1530",
+      "uri": "http://www.wikidata.org/entity/Q1530"
+    },
+    "Baghdād": {
+      "decisionId": "location/Baghdad-01fb184f/Q1530",
+      "label": "Bagdad",
+      "qid": "Q1530",
+      "uri": "http://www.wikidata.org/entity/Q1530"
+    },
+    "Bakı": {
+      "decisionId": "location/Bak/Q9248",
+      "label": "Baku",
+      "qid": "Q9248",
+      "uri": "http://www.wikidata.org/entity/Q9248"
+    },
+    "Bakı (Baku)": {
+      "decisionId": "location/Bak-Baku-79937c26/Q9248",
+      "label": "Baku",
+      "qid": "Q9248",
+      "uri": "http://www.wikidata.org/entity/Q9248"
+    },
+    "Bakı [Baku]": {
+      "decisionId": "location/Bak-Baku-f670542b/Q9248",
+      "label": "Baku",
+      "qid": "Q9248",
+      "uri": "http://www.wikidata.org/entity/Q9248"
+    },
+    "Bakı/Baku": {
+      "decisionId": "location/Bak-Baku-551a2501/Q9248",
+      "label": "Baku",
+      "qid": "Q9248",
+      "uri": "http://www.wikidata.org/entity/Q9248"
+    },
+    "Baltimore, MD": {
+      "decisionId": "location/Baltimore-MD/Q5092",
+      "label": "Baltimore",
+      "qid": "Q5092",
+      "uri": "http://www.wikidata.org/entity/Q5092"
     },
     "Bambaī": {
       "decisionId": "location/Bambai/Q1156",
@@ -13,11 +175,47 @@
       "qid": "Q1156",
       "uri": "http://www.wikidata.org/entity/Q1156"
     },
+    "Bamberg": {
+      "decisionId": "location/Bamberg/Q3936",
+      "label": "Bamberg",
+      "qid": "Q3936",
+      "uri": "http://www.wikidata.org/entity/Q3936"
+    },
+    "Bandung": {
+      "decisionId": "location/Bandung/Q10389",
+      "label": "Bandung",
+      "qid": "Q10389",
+      "uri": "http://www.wikidata.org/entity/Q10389"
+    },
+    "Bangkok": {
+      "decisionId": "location/Bangkok/Q1861",
+      "label": "Bangkok",
+      "qid": "Q1861",
+      "uri": "http://www.wikidata.org/entity/Q1861"
+    },
     "Barcelona": {
       "decisionId": "location/Barcelona/Q1492",
       "label": "Barcelona",
       "qid": "Q1492",
       "uri": "http://www.wikidata.org/entity/Q1492"
+    },
+    "Basel": {
+      "decisionId": "location/Basel/Q78",
+      "label": "Basel",
+      "qid": "Q78",
+      "uri": "http://www.wikidata.org/entity/Q78"
+    },
+    "Baton Rouge, LA": {
+      "decisionId": "location/Baton-Rouge-LA/Q28218",
+      "label": "Baton Rouge",
+      "qid": "Q28218",
+      "uri": "http://www.wikidata.org/entity/Q28218"
+    },
+    "Batumi": {
+      "decisionId": "location/Batumi/Q25475",
+      "label": "Batumi",
+      "qid": "Q25475",
+      "uri": "http://www.wikidata.org/entity/Q25475"
     },
     "Beijing": {
       "decisionId": "location/Beijing/Q956",
@@ -31,11 +229,53 @@
       "qid": "Q3820",
       "uri": "http://www.wikidata.org/entity/Q3820"
     },
+    "Beltershausen": {
+      "decisionId": "location/Beltershausen/Q816204",
+      "label": "Beltershausen",
+      "qid": "Q816204",
+      "uri": "http://www.wikidata.org/entity/Q816204"
+    },
+    "Beograd": {
+      "decisionId": "location/Beograd/Q3711",
+      "label": "Belgrade",
+      "qid": "Q3711",
+      "uri": "http://www.wikidata.org/entity/Q3711"
+    },
+    "Berat": {
+      "decisionId": "location/Berat/Q170244",
+      "label": "Berat",
+      "qid": "Q170244",
+      "uri": "http://www.wikidata.org/entity/Q170244"
+    },
     "Berlin": {
       "decisionId": "location/Berlin/Q64",
       "label": "Berlin",
       "qid": "Q64",
       "uri": "http://www.wikidata.org/entity/Q64"
+    },
+    "Bern": {
+      "decisionId": "location/Bern/Q70",
+      "label": "Bern",
+      "qid": "Q70",
+      "uri": "http://www.wikidata.org/entity/Q70"
+    },
+    "Beverly Hills, CA": {
+      "decisionId": "location/Beverly-Hills-CA/Q127856",
+      "label": "Beverly Hills",
+      "qid": "Q127856",
+      "uri": "http://www.wikidata.org/entity/Q127856"
+    },
+    "Bielefeld": {
+      "decisionId": "location/Bielefeld/Q2112",
+      "label": "Bielefeld",
+      "qid": "Q2112",
+      "uri": "http://www.wikidata.org/entity/Q2112"
+    },
+    "Bishkek": {
+      "decisionId": "location/Bishkek/Q9361",
+      "label": "Bishkek",
+      "qid": "Q9361",
+      "uri": "http://www.wikidata.org/entity/Q9361"
     },
     "Bloemfontein": {
       "decisionId": "location/Bloemfontein/Q37701",
@@ -43,11 +283,89 @@
       "qid": "Q37701",
       "uri": "http://www.wikidata.org/entity/Q37701"
     },
+    "Bogotá": {
+      "decisionId": "location/Bogota/Q2841",
+      "label": "Bogotá",
+      "qid": "Q2841",
+      "uri": "http://www.wikidata.org/entity/Q2841"
+    },
+    "Bonn": {
+      "decisionId": "location/Bonn/Q586",
+      "label": "Bonn",
+      "qid": "Q586",
+      "uri": "http://www.wikidata.org/entity/Q586"
+    },
+    "Bordeaux": {
+      "decisionId": "location/Bordeaux/Q1479",
+      "label": "Bordeaux",
+      "qid": "Q1479",
+      "uri": "http://www.wikidata.org/entity/Q1479"
+    },
     "Borås, Sweden": {
       "decisionId": "location/Boras-Sweden/Q26040",
       "label": "Borås",
       "qid": "Q26040",
       "uri": "http://www.wikidata.org/entity/Q26040"
+    },
+    "Bratislava": {
+      "decisionId": "location/Bratislava/Q1780",
+      "label": "Bratislava",
+      "qid": "Q1780",
+      "uri": "http://www.wikidata.org/entity/Q1780"
+    },
+    "Braunschweig": {
+      "decisionId": "location/Braunschweig/Q2773",
+      "label": "Brunswick",
+      "qid": "Q2773",
+      "uri": "http://www.wikidata.org/entity/Q2773"
+    },
+    "Brescia": {
+      "decisionId": "location/Brescia/Q6221",
+      "label": "Brescia",
+      "qid": "Q6221",
+      "uri": "http://www.wikidata.org/entity/Q6221"
+    },
+    "Brno": {
+      "decisionId": "location/Brno/Q14960",
+      "label": "Brno",
+      "qid": "Q14960",
+      "uri": "http://www.wikidata.org/entity/Q14960"
+    },
+    "Brussel": {
+      "decisionId": "location/Brussel/Q239",
+      "label": "Brussels",
+      "qid": "Q239",
+      "uri": "http://www.wikidata.org/entity/Q239"
+    },
+    "Brussels": {
+      "decisionId": "location/Brussels/Q239",
+      "label": "Brussels",
+      "qid": "Q239",
+      "uri": "http://www.wikidata.org/entity/Q239"
+    },
+    "Bruxelles": {
+      "decisionId": "location/Bruxelles/Q239",
+      "label": "Brussels",
+      "qid": "Q239",
+      "uri": "http://www.wikidata.org/entity/Q239"
+    },
+    "Bucharest": {
+      "decisionId": "location/Bucharest/Q19660",
+      "label": "Bucharest",
+      "qid": "Q19660",
+      "uri": "http://www.wikidata.org/entity/Q19660"
+    },
+    "Bucureşti": {
+      "decisionId": "location/Bucuresti-4bb15dde/Q19660",
+      "label": "Bucharest",
+      "qid": "Q19660",
+      "uri": "http://www.wikidata.org/entity/Q19660"
+    },
+    "Budapest": {
+      "decisionId": "location/Budapest/Q1781",
+      "label": "Budapest",
+      "qid": "Q1781",
+      "uri": "http://www.wikidata.org/entity/Q1781"
     },
     "Buenos Aires": {
       "decisionId": "location/Buenos-Aires/Q1486",
@@ -61,11 +379,473 @@
       "qid": "Q85",
       "uri": "http://www.wikidata.org/entity/Q85"
     },
+    "Calcutta": {
+      "decisionId": "location/Calcutta/Q1348",
+      "label": "Kolkata",
+      "qid": "Q1348",
+      "uri": "http://www.wikidata.org/entity/Q1348"
+    },
+    "Cambridge, MA": {
+      "decisionId": "location/Cambridge-MA/Q49111",
+      "label": "Cambridge",
+      "qid": "Q49111",
+      "uri": "http://www.wikidata.org/entity/Q49111"
+    },
+    "Celje": {
+      "decisionId": "location/Celje/Q1012",
+      "label": "Celje",
+      "qid": "Q1012",
+      "uri": "http://www.wikidata.org/entity/Q1012"
+    },
+    "Celovec": {
+      "decisionId": "location/Celovec/Q41753",
+      "label": "Klagenfurt am Wörthersee",
+      "qid": "Q41753",
+      "uri": "http://www.wikidata.org/entity/Q41753"
+    },
+    "Celovec/Klagenfurt": {
+      "decisionId": "location/Celovec-Klagenfurt/Q41753",
+      "label": "Klagenfurt am Wörthersee",
+      "qid": "Q41753",
+      "uri": "http://www.wikidata.org/entity/Q41753"
+    },
+    "Cham, Switzerland": {
+      "decisionId": "location/Cham-Switzerland/Q69235",
+      "label": "Cham",
+      "qid": "Q69235",
+      "uri": "http://www.wikidata.org/entity/Q69235"
+    },
+    "Changsha": {
+      "decisionId": "location/Changsha/Q174091",
+      "label": "Changsha",
+      "qid": "Q174091",
+      "uri": "http://www.wikidata.org/entity/Q174091"
+    },
+    "Charkiv": {
+      "decisionId": "location/Charkiv/Q42308",
+      "label": "Kharkiv",
+      "qid": "Q42308",
+      "uri": "http://www.wikidata.org/entity/Q42308"
+    },
+    "Chengdou": {
+      "decisionId": "location/Chengdou/Q30002",
+      "label": "Chengdu",
+      "qid": "Q30002",
+      "uri": "http://www.wikidata.org/entity/Q30002"
+    },
+    "Chengdu": {
+      "decisionId": "location/Chengdu/Q30002",
+      "label": "Chengdu",
+      "qid": "Q30002",
+      "uri": "http://www.wikidata.org/entity/Q30002"
+    },
+    "Chennai": {
+      "decisionId": "location/Chennai/Q1352",
+      "label": "Chennai",
+      "qid": "Q1352",
+      "uri": "http://www.wikidata.org/entity/Q1352"
+    },
+    "Chicago": {
+      "decisionId": "location/Chicago/Q1297",
+      "label": "Chicago",
+      "qid": "Q1297",
+      "uri": "http://www.wikidata.org/entity/Q1297"
+    },
+    "Coimbatore": {
+      "decisionId": "location/Coimbatore/Q9885",
+      "label": "Coimbatore",
+      "qid": "Q9885",
+      "uri": "http://www.wikidata.org/entity/Q9885"
+    },
+    "Craiova": {
+      "decisionId": "location/Craiova/Q168057",
+      "label": "Craiova",
+      "qid": "Q168057",
+      "uri": "http://www.wikidata.org/entity/Q168057"
+    },
+    "Cuttack": {
+      "decisionId": "location/Cuttack/Q207324",
+      "label": "Cuttack",
+      "qid": "Q207324",
+      "uri": "http://www.wikidata.org/entity/Q207324"
+    },
+    "Czeladź": {
+      "decisionId": "location/Czeladz/Q161605",
+      "label": "Czeladź",
+      "qid": "Q161605",
+      "uri": "http://www.wikidata.org/entity/Q161605"
+    },
+    "Damascus": {
+      "decisionId": "location/Damascus/Q3766",
+      "label": "Damascus",
+      "qid": "Q3766",
+      "uri": "http://www.wikidata.org/entity/Q3766"
+    },
+    "Darmstadt": {
+      "decisionId": "location/Darmstadt/Q2973",
+      "label": "Darmstadt",
+      "qid": "Q2973",
+      "uri": "http://www.wikidata.org/entity/Q2973"
+    },
+    "Delhi": {
+      "decisionId": "location/Delhi/Q1353",
+      "label": "Delhi",
+      "qid": "Q1353",
+      "uri": "http://www.wikidata.org/entity/Q1353"
+    },
+    "Den Haag": {
+      "decisionId": "location/Den-Haag/Q36600",
+      "label": "The Hague",
+      "qid": "Q36600",
+      "uri": "http://www.wikidata.org/entity/Q36600"
+    },
+    "Dhaka": {
+      "decisionId": "location/Dhaka/Q1354",
+      "label": "Dhaka",
+      "qid": "Q1354",
+      "uri": "http://www.wikidata.org/entity/Q1354"
+    },
+    "Dimashq": {
+      "decisionId": "location/Dimashq/Q3766",
+      "label": "Damascus",
+      "qid": "Q3766",
+      "uri": "http://www.wikidata.org/entity/Q3766"
+    },
+    "Dimashq [Damascus]": {
+      "decisionId": "location/Dimashq-Damascus/Q3766",
+      "label": "Damascus",
+      "qid": "Q3766",
+      "uri": "http://www.wikidata.org/entity/Q3766"
+    },
+    "Doha": {
+      "decisionId": "location/Doha/Q3861",
+      "label": "Doha",
+      "qid": "Q3861",
+      "uri": "http://www.wikidata.org/entity/Q3861"
+    },
+    "Donetsk": {
+      "decisionId": "location/Donetsk/Q43070",
+      "label": "Donetsk",
+      "qid": "Q43070",
+      "uri": "http://www.wikidata.org/entity/Q43070"
+    },
+    "Dresden": {
+      "decisionId": "location/Dresden/Q1731",
+      "label": "Dresden",
+      "qid": "Q1731",
+      "uri": "http://www.wikidata.org/entity/Q1731"
+    },
+    "Duisburg": {
+      "decisionId": "location/Duisburg/Q2100",
+      "label": "Duisburg",
+      "qid": "Q2100",
+      "uri": "http://www.wikidata.org/entity/Q2100"
+    },
+    "Durrës": {
+      "decisionId": "location/Durres/Q83285",
+      "label": "Durrës",
+      "qid": "Q83285",
+      "uri": "http://www.wikidata.org/entity/Q83285"
+    },
+    "Dushanbe": {
+      "decisionId": "location/Dushanbe/Q9365",
+      "label": "Dushanbe",
+      "qid": "Q9365",
+      "uri": "http://www.wikidata.org/entity/Q9365"
+    },
+    "Düsseldorf": {
+      "decisionId": "location/Dusseldorf/Q1718",
+      "label": "Düsseldorf",
+      "qid": "Q1718",
+      "uri": "http://www.wikidata.org/entity/Q1718"
+    },
+    "Eberswalde": {
+      "decisionId": "location/Eberswalde/Q9306",
+      "label": "Eberswalde",
+      "qid": "Q9306",
+      "uri": "http://www.wikidata.org/entity/Q9306"
+    },
+    "Enschede": {
+      "decisionId": "location/Enschede/Q10002",
+      "label": "Enschede",
+      "qid": "Q10002",
+      "uri": "http://www.wikidata.org/entity/Q10002"
+    },
+    "Erfurt": {
+      "decisionId": "location/Erfurt/Q1729",
+      "label": "Erfurt",
+      "qid": "Q1729",
+      "uri": "http://www.wikidata.org/entity/Q1729"
+    },
+    "Ernakulam": {
+      "decisionId": "location/Ernakulam/Q1025408",
+      "label": "Ernakulam",
+      "qid": "Q1025408",
+      "uri": "http://www.wikidata.org/entity/Q1025408"
+    },
+    "Evanston, IL": {
+      "decisionId": "location/Evanston-IL/Q462799",
+      "label": "Evanston",
+      "qid": "Q462799",
+      "uri": "http://www.wikidata.org/entity/Q462799"
+    },
+    "Firenze": {
+      "decisionId": "location/Firenze/Q2044",
+      "label": "Florence",
+      "qid": "Q2044",
+      "uri": "http://www.wikidata.org/entity/Q2044"
+    },
+    "Frankfurt": {
+      "decisionId": "location/Frankfurt/Q1794",
+      "label": "Frankfurt",
+      "qid": "Q1794",
+      "uri": "http://www.wikidata.org/entity/Q1794"
+    },
     "Frankfurt am Main": {
       "decisionId": "location/Frankfurt-am-Main/Q1794",
       "label": "Frankfurt",
       "qid": "Q1794",
       "uri": "http://www.wikidata.org/entity/Q1794"
+    },
+    "Freiburg": {
+      "decisionId": "location/Freiburg/Q2833",
+      "label": "Freiburg im Breisgau",
+      "qid": "Q2833",
+      "uri": "http://www.wikidata.org/entity/Q2833"
+    },
+    "Friedrichsfehn": {
+      "decisionId": "location/Friedrichsfehn/Q1464215",
+      "label": "Friedrichsfehn",
+      "qid": "Q1464215",
+      "uri": "http://www.wikidata.org/entity/Q1464215"
+    },
+    "Frunze": {
+      "decisionId": "location/Frunze/Q9361",
+      "label": "Bishkek",
+      "qid": "Q9361",
+      "uri": "http://www.wikidata.org/entity/Q9361"
+    },
+    "Fuzhou": {
+      "decisionId": "location/Fuzhou/Q68481",
+      "label": "Fuzhou",
+      "qid": "Q68481",
+      "uri": "http://www.wikidata.org/entity/Q68481"
+    },
+    "Garden City, NY": {
+      "decisionId": "location/Garden-City-NY/Q739452",
+      "label": "Garden City",
+      "qid": "Q739452",
+      "uri": "http://www.wikidata.org/entity/Q739452"
+    },
+    "Gent": {
+      "decisionId": "location/Gent/Q1296",
+      "label": "Ghent",
+      "qid": "Q1296",
+      "uri": "http://www.wikidata.org/entity/Q1296"
+    },
+    "Genève": {
+      "decisionId": "location/Geneve/Q71",
+      "label": "Geneva",
+      "qid": "Q71",
+      "uri": "http://www.wikidata.org/entity/Q71"
+    },
+    "Genève/Geneva": {
+      "decisionId": "location/Geneve-Geneva/Q71",
+      "label": "Geneva",
+      "qid": "Q71",
+      "uri": "http://www.wikidata.org/entity/Q71"
+    },
+    "Girona": {
+      "decisionId": "location/Girona/Q7038",
+      "label": "Girona",
+      "qid": "Q7038",
+      "uri": "http://www.wikidata.org/entity/Q7038"
+    },
+    "Graz": {
+      "decisionId": "location/Graz/Q13298",
+      "label": "Graz",
+      "qid": "Q13298",
+      "uri": "http://www.wikidata.org/entity/Q13298"
+    },
+    "Grenoble": {
+      "decisionId": "location/Grenoble/Q1289",
+      "label": "Grenoble",
+      "qid": "Q1289",
+      "uri": "http://www.wikidata.org/entity/Q1289"
+    },
+    "Guangzhou": {
+      "decisionId": "location/Guangzhou/Q16572",
+      "label": "Guangzhou",
+      "qid": "Q16572",
+      "uri": "http://www.wikidata.org/entity/Q16572"
+    },
+    "Guilin": {
+      "decisionId": "location/Guilin/Q189633",
+      "label": "Guilin",
+      "qid": "Q189633",
+      "uri": "http://www.wikidata.org/entity/Q189633"
+    },
+    "Gurugram": {
+      "decisionId": "location/Gurugram/Q238508",
+      "label": "Gurgaon",
+      "qid": "Q238508",
+      "uri": "http://www.wikidata.org/entity/Q238508"
+    },
+    "Gyoma": {
+      "decisionId": "location/Gyoma/Q18980272",
+      "label": "Gyoma",
+      "qid": "Q18980272",
+      "uri": "http://www.wikidata.org/entity/Q18980272"
+    },
+    "Göttingen": {
+      "decisionId": "location/Gottingen/Q3033",
+      "label": "Göttingen",
+      "qid": "Q3033",
+      "uri": "http://www.wikidata.org/entity/Q3033"
+    },
+    "Hamburg": {
+      "decisionId": "location/Hamburg/Q1055",
+      "label": "Hamburg",
+      "qid": "Q1055",
+      "uri": "http://www.wikidata.org/entity/Q1055"
+    },
+    "Hannover": {
+      "decisionId": "location/Hannover/Q1715",
+      "label": "Hanover",
+      "qid": "Q1715",
+      "uri": "http://www.wikidata.org/entity/Q1715"
+    },
+    "Harbin": {
+      "decisionId": "location/Harbin/Q42956",
+      "label": "Harbin",
+      "qid": "Q42956",
+      "uri": "http://www.wikidata.org/entity/Q42956"
+    },
+    "Hefei": {
+      "decisionId": "location/Hefei/Q185684",
+      "label": "Hefei",
+      "qid": "Q185684",
+      "uri": "http://www.wikidata.org/entity/Q185684"
+    },
+    "Heidelberg": {
+      "decisionId": "location/Heidelberg/Q2966",
+      "label": "Heidelberg",
+      "qid": "Q2966",
+      "uri": "http://www.wikidata.org/entity/Q2966"
+    },
+    "Helsinki": {
+      "decisionId": "location/Helsinki/Q1757",
+      "label": "Helsinki",
+      "qid": "Q1757",
+      "uri": "http://www.wikidata.org/entity/Q1757"
+    },
+    "Heronsgate/Rickmansworth, England": {
+      "decisionId": "location/Heronsgate-Rickmansworth-England/Q3889674",
+      "label": "Heronsgate",
+      "qid": "Q3889674",
+      "uri": "http://www.wikidata.org/entity/Q3889674"
+    },
+    "Hollfeld": {
+      "decisionId": "location/Hollfeld/Q503048",
+      "label": "Hollfeld",
+      "qid": "Q503048",
+      "uri": "http://www.wikidata.org/entity/Q503048"
+    },
+    "Hollfeld/Oberfranken": {
+      "decisionId": "location/Hollfeld-Oberfranken/Q503048",
+      "label": "Hollfeld",
+      "qid": "Q503048",
+      "uri": "http://www.wikidata.org/entity/Q503048"
+    },
+    "Hong Kong": {
+      "decisionId": "location/Hong-Kong/Q8646",
+      "label": "Hong Kong",
+      "qid": "Q8646",
+      "uri": "http://www.wikidata.org/entity/Q8646"
+    },
+    "Hoyvík": {
+      "decisionId": "location/Hoyvik/Q677723",
+      "label": "Hoyvík",
+      "qid": "Q677723",
+      "uri": "http://www.wikidata.org/entity/Q677723"
+    },
+    "Hvannasund": {
+      "decisionId": "location/Hvannasund/Q933117",
+      "label": "Hvannasund",
+      "qid": "Q933117",
+      "uri": "http://www.wikidata.org/entity/Q933117"
+    },
+    "Hà Nội": {
+      "decisionId": "location/Ha-Noi-6ac69af8/Q1858",
+      "label": "Hanoi",
+      "qid": "Q1858",
+      "uri": "http://www.wikidata.org/entity/Q1858"
+    },
+    "Hà Nội [Hanoi]": {
+      "decisionId": "location/Ha-Noi-Hanoi/Q1858",
+      "label": "Hanoi",
+      "qid": "Q1858",
+      "uri": "http://www.wikidata.org/entity/Q1858"
+    },
+    "Hà-Nội": {
+      "decisionId": "location/Ha-Noi-c2913d31/Q1858",
+      "label": "Hanoi",
+      "qid": "Q1858",
+      "uri": "http://www.wikidata.org/entity/Q1858"
+    },
+    "Innsbruck": {
+      "decisionId": "location/Innsbruck/Q1735",
+      "label": "Innsbruck",
+      "qid": "Q1735",
+      "uri": "http://www.wikidata.org/entity/Q1735"
+    },
+    "Irbid": {
+      "decisionId": "location/Irbid/Q194165",
+      "label": "Irbid",
+      "qid": "Q194165",
+      "uri": "http://www.wikidata.org/entity/Q194165"
+    },
+    "Iruñea [Pamplona]": {
+      "decisionId": "location/Irunea-Pamplona/Q10282",
+      "label": "Pamplona",
+      "qid": "Q10282",
+      "uri": "http://www.wikidata.org/entity/Q10282"
+    },
+    "Istanbul": {
+      "decisionId": "location/Istanbul-70af65c9/Q406",
+      "label": "Istanbul",
+      "qid": "Q406",
+      "uri": "http://www.wikidata.org/entity/Q406"
+    },
+    "Jakarta": {
+      "decisionId": "location/Jakarta-592e27e2/Q3630",
+      "label": "Jakarta",
+      "qid": "Q3630",
+      "uri": "http://www.wikidata.org/entity/Q3630"
+    },
+    "Jena": {
+      "decisionId": "location/Jena/Q3150",
+      "label": "Jena",
+      "qid": "Q3150",
+      "uri": "http://www.wikidata.org/entity/Q3150"
+    },
+    "Jerusalem": {
+      "decisionId": "location/Jerusalem/Q1218",
+      "label": "Jerusalem",
+      "qid": "Q1218",
+      "uri": "http://www.wikidata.org/entity/Q1218"
+    },
+    "Jinan": {
+      "decisionId": "location/Jinan/Q170247",
+      "label": "Jinan",
+      "qid": "Q170247",
+      "uri": "http://www.wikidata.org/entity/Q170247"
+    },
+    "Jyväskylä": {
+      "decisionId": "location/Jyvaskyla/Q134620",
+      "label": "Jyväskylä",
+      "qid": "Q134620",
+      "uri": "http://www.wikidata.org/entity/Q134620"
     },
     "Kaapstad (Capetown)": {
       "decisionId": "location/Kaapstad-Capetown/Q5465",
@@ -73,11 +853,191 @@
       "qid": "Q5465",
       "uri": "http://www.wikidata.org/entity/Q5465"
     },
+    "Kafr El Sheikh, Egypt": {
+      "decisionId": "location/Kafr-El-Sheikh-Egypt/Q328176",
+      "label": "Kafr el-Sheikh",
+      "qid": "Q328176",
+      "uri": "http://www.wikidata.org/entity/Q328176"
+    },
+    "Kiev": {
+      "decisionId": "location/Kiev/Q1899",
+      "label": "Kyiv",
+      "qid": "Q1899",
+      "uri": "http://www.wikidata.org/entity/Q1899"
+    },
+    "Kiiv": {
+      "decisionId": "location/Kiiv-4d3a9c73/Q1899",
+      "label": "Kyiv",
+      "qid": "Q1899",
+      "uri": "http://www.wikidata.org/entity/Q1899"
+    },
+    "Kiiv/Kiev": {
+      "decisionId": "location/Kiiv-Kiev-3a67c6dc/Q1899",
+      "label": "Kyiv",
+      "qid": "Q1899",
+      "uri": "http://www.wikidata.org/entity/Q1899"
+    },
+    "Kiïv": {
+      "decisionId": "location/Kiiv-583176cc/Q1899",
+      "label": "Kyiv",
+      "qid": "Q1899",
+      "uri": "http://www.wikidata.org/entity/Q1899"
+    },
+    "Kiïv/Kiev": {
+      "decisionId": "location/Kiiv-Kiev-c79c7c0d/Q1899",
+      "label": "Kyiv",
+      "qid": "Q1899",
+      "uri": "http://www.wikidata.org/entity/Q1899"
+    },
+    "Kolkata": {
+      "decisionId": "location/Kolkata/Q1348",
+      "label": "Kolkata",
+      "qid": "Q1348",
+      "uri": "http://www.wikidata.org/entity/Q1348"
+    },
+    "Koper": {
+      "decisionId": "location/Koper/Q1015",
+      "label": "Koper",
+      "qid": "Q1015",
+      "uri": "http://www.wikidata.org/entity/Q1015"
+    },
+    "Kottayam": {
+      "decisionId": "location/Kottayam/Q659887",
+      "label": "Kottayam",
+      "qid": "Q659887",
+      "uri": "http://www.wikidata.org/entity/Q659887"
+    },
+    "Kraków": {
+      "decisionId": "location/Krakow/Q31487",
+      "label": "Kraków",
+      "qid": "Q31487",
+      "uri": "http://www.wikidata.org/entity/Q31487"
+    },
+    "Krems": {
+      "decisionId": "location/Krems/Q131266",
+      "label": "Krems",
+      "qid": "Q131266",
+      "uri": "http://www.wikidata.org/entity/Q131266"
+    },
+    "Krems an der Donau": {
+      "decisionId": "location/Krems-an-der-Donau/Q131266",
+      "label": "Krems",
+      "qid": "Q131266",
+      "uri": "http://www.wikidata.org/entity/Q131266"
+    },
+    "Kuala Lampur": {
+      "decisionId": "location/Kuala-Lampur/Q1865",
+      "label": "Kuala Lumpur",
+      "qid": "Q1865",
+      "uri": "http://www.wikidata.org/entity/Q1865"
+    },
+    "Kyïv": {
+      "decisionId": "location/Kyiv/Q1899",
+      "label": "Kyiv",
+      "qid": "Q1899",
+      "uri": "http://www.wikidata.org/entity/Q1899"
+    },
+    "Köln": {
+      "decisionId": "location/Koln/Q365",
+      "label": "Cologne",
+      "qid": "Q365",
+      "uri": "http://www.wikidata.org/entity/Q365"
+    },
+    "København": {
+      "decisionId": "location/Kbenhavn/Q1748",
+      "label": "Copenhagen",
+      "qid": "Q1748",
+      "uri": "http://www.wikidata.org/entity/Q1748"
+    },
+    "Laaber": {
+      "decisionId": "location/Laaber/Q491811",
+      "label": "Laaber",
+      "qid": "Q491811",
+      "uri": "http://www.wikidata.org/entity/Q491811"
+    },
+    "Lahr (Schwarzwald)": {
+      "decisionId": "location/Lahr-Schwarzwald/Q7039",
+      "label": "Lahr/Schwarzwald",
+      "qid": "Q7039",
+      "uri": "http://www.wikidata.org/entity/Q7039"
+    },
+    "Lannuon": {
+      "decisionId": "location/Lannuon/Q207581",
+      "label": "Lannion",
+      "qid": "Q207581",
+      "uri": "http://www.wikidata.org/entity/Q207581"
+    },
+    "Lanzhou": {
+      "decisionId": "location/Lanzhou/Q183584",
+      "label": "Lanzhou",
+      "qid": "Q183584",
+      "uri": "http://www.wikidata.org/entity/Q183584"
+    },
+    "Lattakia": {
+      "decisionId": "location/Lattakia/Q200030",
+      "label": "Latakia",
+      "qid": "Q200030",
+      "uri": "http://www.wikidata.org/entity/Q200030"
+    },
+    "Lausanne": {
+      "decisionId": "location/Lausanne/Q807",
+      "label": "Lausanne",
+      "qid": "Q807",
+      "uri": "http://www.wikidata.org/entity/Q807"
+    },
+    "Lavin": {
+      "decisionId": "location/Lavin/Q65557",
+      "label": "Lavin",
+      "qid": "Q65557",
+      "uri": "http://www.wikidata.org/entity/Q65557"
+    },
     "Leipzig": {
       "decisionId": "location/Leipzig/Q2079",
       "label": "Leipzig",
       "qid": "Q2079",
       "uri": "http://www.wikidata.org/entity/Q2079"
+    },
+    "Lelystad": {
+      "decisionId": "location/Lelystad/Q166065",
+      "label": "Lelystad",
+      "qid": "Q166065",
+      "uri": "http://www.wikidata.org/entity/Q166065"
+    },
+    "Lexington, MA": {
+      "decisionId": "location/Lexington-MA/Q929667",
+      "label": "Lexington",
+      "qid": "Q929667",
+      "uri": "http://www.wikidata.org/entity/Q929667"
+    },
+    "Lille": {
+      "decisionId": "location/Lille/Q648",
+      "label": "Lille",
+      "qid": "Q648",
+      "uri": "http://www.wikidata.org/entity/Q648"
+    },
+    "Linz": {
+      "decisionId": "location/Linz/Q41329",
+      "label": "Linz",
+      "qid": "Q41329",
+      "uri": "http://www.wikidata.org/entity/Q41329"
+    },
+    "Lisboa": {
+      "decisionId": "location/Lisboa/Q597",
+      "label": "Lisbon",
+      "qid": "Q597",
+      "uri": "http://www.wikidata.org/entity/Q597"
+    },
+    "Ljubljana": {
+      "decisionId": "location/Ljubljana/Q437",
+      "label": "Ljubljana",
+      "qid": "Q437",
+      "uri": "http://www.wikidata.org/entity/Q437"
+    },
+    "Locarno": {
+      "decisionId": "location/Locarno/Q11935",
+      "label": "Locarno",
+      "qid": "Q11935",
+      "uri": "http://www.wikidata.org/entity/Q11935"
     },
     "London": {
       "decisionId": "location/London/Q84",
@@ -85,17 +1045,281 @@
       "qid": "Q84",
       "uri": "http://www.wikidata.org/entity/Q84"
     },
+    "Longpont-sur-Orge": {
+      "decisionId": "location/Longpont-sur-Orge/Q247627",
+      "label": "Longpont-sur-Orge",
+      "qid": "Q247627",
+      "uri": "http://www.wikidata.org/entity/Q247627"
+    },
+    "Los Angeles, CA": {
+      "decisionId": "location/Los-Angeles-CA/Q65",
+      "label": "Los Angeles",
+      "qid": "Q65",
+      "uri": "http://www.wikidata.org/entity/Q65"
+    },
+    "Ludwigshafen am Rhein": {
+      "decisionId": "location/Ludwigshafen-am-Rhein/Q2910",
+      "label": "Ludwigshafen",
+      "qid": "Q2910",
+      "uri": "http://www.wikidata.org/entity/Q2910"
+    },
+    "Luxembourg City": {
+      "decisionId": "location/Luxembourg-City/Q1842",
+      "label": "Luxembourg",
+      "qid": "Q1842",
+      "uri": "http://www.wikidata.org/entity/Q1842"
+    },
     "Luxembourg City, Luxembourg": {
       "decisionId": "location/Luxembourg-City/Q1842",
       "label": "Luxembourg",
       "qid": "Q1842",
       "uri": "http://www.wikidata.org/entity/Q1842"
     },
+    "Maastricht": {
+      "decisionId": "location/Maastricht/Q1309",
+      "label": "Maastricht",
+      "qid": "Q1309",
+      "uri": "http://www.wikidata.org/entity/Q1309"
+    },
+    "Madison, WI": {
+      "decisionId": "location/Madison-WI/Q43788",
+      "label": "Madison",
+      "qid": "Q43788",
+      "uri": "http://www.wikidata.org/entity/Q43788"
+    },
+    "Madrid": {
+      "decisionId": "location/Madrid/Q2807",
+      "label": "Madrid",
+      "qid": "Q2807",
+      "uri": "http://www.wikidata.org/entity/Q2807"
+    },
+    "Mainz": {
+      "decisionId": "location/Mainz/Q1720",
+      "label": "Mainz",
+      "qid": "Q1720",
+      "uri": "http://www.wikidata.org/entity/Q1720"
+    },
+    "Marburg": {
+      "decisionId": "location/Marburg/Q3869",
+      "label": "Marburg",
+      "qid": "Q3869",
+      "uri": "http://www.wikidata.org/entity/Q3869"
+    },
+    "Maribor": {
+      "decisionId": "location/Maribor/Q1010",
+      "label": "Maribor",
+      "qid": "Q1010",
+      "uri": "http://www.wikidata.org/entity/Q1010"
+    },
+    "Mataró": {
+      "decisionId": "location/Mataro/Q11492",
+      "label": "Mataró",
+      "qid": "Q11492",
+      "uri": "http://www.wikidata.org/entity/Q11492"
+    },
+    "Meerut": {
+      "decisionId": "location/Meerut/Q200237",
+      "label": "Meerut",
+      "qid": "Q200237",
+      "uri": "http://www.wikidata.org/entity/Q200237"
+    },
+    "Melbourne": {
+      "decisionId": "location/Melbourne/Q3141",
+      "label": "Melbourne",
+      "qid": "Q3141",
+      "uri": "http://www.wikidata.org/entity/Q3141"
+    },
+    "Memmingen": {
+      "decisionId": "location/Memmingen/Q14825",
+      "label": "Memmingen",
+      "qid": "Q14825",
+      "uri": "http://www.wikidata.org/entity/Q14825"
+    },
+    "Mengen": {
+      "decisionId": "location/Mengen/Q82279",
+      "label": "Mengen",
+      "qid": "Q82279",
+      "uri": "http://www.wikidata.org/entity/Q82279"
+    },
+    "Menlo Park, CA": {
+      "decisionId": "location/Menlo-Park-CA/Q74195",
+      "label": "Menlo Park",
+      "qid": "Q74195",
+      "uri": "http://www.wikidata.org/entity/Q74195"
+    },
+    "Meppadi": {
+      "decisionId": "location/Meppadi/Q14224739",
+      "label": "Meppadi",
+      "qid": "Q14224739",
+      "uri": "http://www.wikidata.org/entity/Q14224739"
+    },
+    "Metz": {
+      "decisionId": "location/Metz/Q22690",
+      "label": "Metz",
+      "qid": "Q22690",
+      "uri": "http://www.wikidata.org/entity/Q22690"
+    },
+    "Mexico City": {
+      "decisionId": "location/Mexico-City/Q1489",
+      "label": "Mexico City",
+      "qid": "Q1489",
+      "uri": "http://www.wikidata.org/entity/Q1489"
+    },
+    "Milan": {
+      "decisionId": "location/Milan/Q490",
+      "label": "Milan",
+      "qid": "Q490",
+      "uri": "http://www.wikidata.org/entity/Q490"
+    },
+    "Milano": {
+      "decisionId": "location/Milano/Q490",
+      "label": "Milan",
+      "qid": "Q490",
+      "uri": "http://www.wikidata.org/entity/Q490"
+    },
+    "Minsk": {
+      "decisionId": "location/Minsk/Q2280",
+      "label": "Minsk",
+      "qid": "Q2280",
+      "uri": "http://www.wikidata.org/entity/Q2280"
+    },
+    "Montevideo": {
+      "decisionId": "location/Montevideo/Q1335",
+      "label": "Montevideo",
+      "qid": "Q1335",
+      "uri": "http://www.wikidata.org/entity/Q1335"
+    },
+    "Montevideo, Uruguay": {
+      "decisionId": "location/Montevideo-Uruguay/Q1335",
+      "label": "Montevideo",
+      "qid": "Q1335",
+      "uri": "http://www.wikidata.org/entity/Q1335"
+    },
+    "Morsbach/Sieg": {
+      "decisionId": "location/Morsbach-Sieg/Q11050",
+      "label": "Morsbach",
+      "qid": "Q11050",
+      "uri": "http://www.wikidata.org/entity/Q11050"
+    },
+    "Moscow": {
+      "decisionId": "location/Moscow/Q649",
+      "label": "Moscow",
+      "qid": "Q649",
+      "uri": "http://www.wikidata.org/entity/Q649"
+    },
+    "Moskau": {
+      "decisionId": "location/Moskau/Q649",
+      "label": "Moscow",
+      "qid": "Q649",
+      "uri": "http://www.wikidata.org/entity/Q649"
+    },
+    "Moskva": {
+      "decisionId": "location/Moskva/Q649",
+      "label": "Moscow",
+      "qid": "Q649",
+      "uri": "http://www.wikidata.org/entity/Q649"
+    },
+    "Mountain View, CA": {
+      "decisionId": "location/Mountain-View-CA/Q486860",
+      "label": "Mountain View",
+      "qid": "Q486860",
+      "uri": "http://www.wikidata.org/entity/Q486860"
+    },
+    "Mumbai": {
+      "decisionId": "location/Mumbai/Q1156",
+      "label": "Mumbai",
+      "qid": "Q1156",
+      "uri": "http://www.wikidata.org/entity/Q1156"
+    },
+    "Munich": {
+      "decisionId": "location/Munich/Q1726",
+      "label": "Munich",
+      "qid": "Q1726",
+      "uri": "http://www.wikidata.org/entity/Q1726"
+    },
+    "Muscat": {
+      "decisionId": "location/Muscat/Q3826",
+      "label": "Muscat",
+      "qid": "Q3826",
+      "uri": "http://www.wikidata.org/entity/Q3826"
+    },
+    "México": {
+      "decisionId": "location/Mexico/Q1489",
+      "label": "Mexico City",
+      "qid": "Q1489",
+      "uri": "http://www.wikidata.org/entity/Q1489"
+    },
     "München": {
       "decisionId": "location/Muenchen/Q1726",
       "label": "Munich",
       "qid": "Q1726",
       "uri": "http://www.wikidata.org/entity/Q1726"
+    },
+    "Münster": {
+      "decisionId": "location/Munster/Q2742",
+      "label": "Münster",
+      "qid": "Q2742",
+      "uri": "http://www.wikidata.org/entity/Q2742"
+    },
+    "Nabeul": {
+      "decisionId": "location/Nabeul/Q867615",
+      "label": "Nabeul",
+      "qid": "Q867615",
+      "uri": "http://www.wikidata.org/entity/Q867615"
+    },
+    "Nablus": {
+      "decisionId": "location/Nablus/Q214178",
+      "label": "Nablus",
+      "qid": "Q214178",
+      "uri": "http://www.wikidata.org/entity/Q214178"
+    },
+    "Namur": {
+      "decisionId": "location/Namur/Q134121",
+      "label": "Namur",
+      "qid": "Q134121",
+      "uri": "http://www.wikidata.org/entity/Q134121"
+    },
+    "Nanjing": {
+      "decisionId": "location/Nanjing/Q16666",
+      "label": "Nanjing",
+      "qid": "Q16666",
+      "uri": "http://www.wikidata.org/entity/Q16666"
+    },
+    "Nanning": {
+      "decisionId": "location/Nanning/Q179608",
+      "label": "Nanning",
+      "qid": "Q179608",
+      "uri": "http://www.wikidata.org/entity/Q179608"
+    },
+    "Nanterre": {
+      "decisionId": "location/Nanterre/Q170507",
+      "label": "Nanterre",
+      "qid": "Q170507",
+      "uri": "http://www.wikidata.org/entity/Q170507"
+    },
+    "Nanterre (Hauts-de-Seine)": {
+      "decisionId": "location/Nanterre-Hauts-de-Seine/Q170507",
+      "label": "Nanterre",
+      "qid": "Q170507",
+      "uri": "http://www.wikidata.org/entity/Q170507"
+    },
+    "Neckarsteinach": {
+      "decisionId": "location/Neckarsteinach/Q1973855",
+      "label": "Neckarsteinach",
+      "qid": "Q1973855",
+      "uri": "http://www.wikidata.org/entity/Q1973855"
+    },
+    "New Delhi": {
+      "decisionId": "location/New-Delhi/Q987",
+      "label": "New Delhi",
+      "qid": "Q987",
+      "uri": "http://www.wikidata.org/entity/Q987"
+    },
+    "New Orleans, LA": {
+      "decisionId": "location/New-Orleans-LA/Q34404",
+      "label": "New Orleans",
+      "qid": "Q34404",
+      "uri": "http://www.wikidata.org/entity/Q34404"
     },
     "New York": {
       "decisionId": "location/New-York/Q60",
@@ -109,11 +1333,119 @@
       "qid": "Q3856",
       "uri": "http://www.wikidata.org/entity/Q3856"
     },
+    "Nokis": {
+      "decisionId": "location/Nokis/Q489898",
+      "label": "Nukus",
+      "qid": "Q489898",
+      "uri": "http://www.wikidata.org/entity/Q489898"
+    },
+    "Norderstedt": {
+      "decisionId": "location/Norderstedt/Q3928",
+      "label": "Norderstedt",
+      "qid": "Q3928",
+      "uri": "http://www.wikidata.org/entity/Q3928"
+    },
+    "Novi Sad": {
+      "decisionId": "location/Novi-Sad/Q55630",
+      "label": "Novi Sad",
+      "qid": "Q55630",
+      "uri": "http://www.wikidata.org/entity/Q55630"
+    },
+    "Oberhausen": {
+      "decisionId": "location/Oberhausen/Q2838",
+      "label": "Oberhausen",
+      "qid": "Q2838",
+      "uri": "http://www.wikidata.org/entity/Q2838"
+    },
+    "Oldenburg": {
+      "decisionId": "location/Oldenburg/Q2936",
+      "label": "Oldenburg",
+      "qid": "Q2936",
+      "uri": "http://www.wikidata.org/entity/Q2936"
+    },
+    "Olomouc": {
+      "decisionId": "location/Olomouc/Q81137",
+      "label": "Olomouc",
+      "qid": "Q81137",
+      "uri": "http://www.wikidata.org/entity/Q81137"
+    },
+    "Olpe": {
+      "decisionId": "location/Olpe/Q10898",
+      "label": "Olpe",
+      "qid": "Q10898",
+      "uri": "http://www.wikidata.org/entity/Q10898"
+    },
+    "Oslo": {
+      "decisionId": "location/Oslo/Q585",
+      "label": "Oslo",
+      "qid": "Q585",
+      "uri": "http://www.wikidata.org/entity/Q585"
+    },
+    "Ottawa, ON": {
+      "decisionId": "location/Ottawa-ON/Q1930",
+      "label": "Ottawa",
+      "qid": "Q1930",
+      "uri": "http://www.wikidata.org/entity/Q1930"
+    },
     "Paris": {
       "decisionId": "location/Paris/Q90",
       "label": "Paris",
       "qid": "Q90",
       "uri": "http://www.wikidata.org/entity/Q90"
+    },
+    "Philadelphia": {
+      "decisionId": "location/Philadelphia/Q1345",
+      "label": "Philadelphia",
+      "qid": "Q1345",
+      "uri": "http://www.wikidata.org/entity/Q1345"
+    },
+    "Planegg": {
+      "decisionId": "location/Planegg/Q255796",
+      "label": "Planegg",
+      "qid": "Q255796",
+      "uri": "http://www.wikidata.org/entity/Q255796"
+    },
+    "Pleven": {
+      "decisionId": "location/Pleven/Q165420",
+      "label": "Pleven",
+      "qid": "Q165420",
+      "uri": "http://www.wikidata.org/entity/Q165420"
+    },
+    "Plovdiv": {
+      "decisionId": "location/Plovdiv/Q459",
+      "label": "Plovdiv",
+      "qid": "Q459",
+      "uri": "http://www.wikidata.org/entity/Q459"
+    },
+    "Porto": {
+      "decisionId": "location/Porto/Q36433",
+      "label": "Porto",
+      "qid": "Q36433",
+      "uri": "http://www.wikidata.org/entity/Q36433"
+    },
+    "Porto Alegre": {
+      "decisionId": "location/Porto-Alegre/Q40269",
+      "label": "Porto Alegre",
+      "qid": "Q40269",
+      "uri": "http://www.wikidata.org/entity/Q40269"
+    },
+    "Porto Alegre, RS": {
+      "decisionId": "location/Porto-Alegre-RS/Q40269",
+      "label": "Porto Alegre",
+      "qid": "Q40269",
+      "uri": "http://www.wikidata.org/entity/Q40269"
+    },
+    "Prag": {
+      "decisionId": "location/Prag/Q1085",
+      "label": "Prague",
+      "qid": "Q1085",
+      "uri": "http://www.wikidata.org/entity/Q1085"
+    },
+    "Prague": {
+      "decisionId": "location/Prague/Q1085",
+      "label": "Prague",
+      "qid": "Q1085",
+      "uri": "http://www.wikidata.org/entity/Q1085"
     },
     "Praha": {
       "decisionId": "location/Praha/Q1085",
@@ -121,11 +1453,125 @@
       "qid": "Q1085",
       "uri": "http://www.wikidata.org/entity/Q1085"
     },
+    "Pretoria": {
+      "decisionId": "location/Pretoria/Q3926",
+      "label": "Pretoria",
+      "qid": "Q3926",
+      "uri": "http://www.wikidata.org/entity/Q3926"
+    },
+    "Prishtina": {
+      "decisionId": "location/Prishtina-0e7834f9/Q25270",
+      "label": "Pristina",
+      "qid": "Q25270",
+      "uri": "http://www.wikidata.org/entity/Q25270"
+    },
+    "Prishtinë": {
+      "decisionId": "location/Prishtine/Q25270",
+      "label": "Pristina",
+      "qid": "Q25270",
+      "uri": "http://www.wikidata.org/entity/Q25270"
+    },
+    "Pune": {
+      "decisionId": "location/Pune/Q1538",
+      "label": "Pune",
+      "qid": "Q1538",
+      "uri": "http://www.wikidata.org/entity/Q1538"
+    },
+    "Pôrto [Porto]": {
+      "decisionId": "location/Porto-Porto/Q36433",
+      "label": "Porto",
+      "qid": "Q36433",
+      "uri": "http://www.wikidata.org/entity/Q36433"
+    },
+    "Reykjavik": {
+      "decisionId": "location/Reykjavik-c8bf9cc7/Q1764",
+      "label": "Reykjavík",
+      "qid": "Q1764",
+      "uri": "http://www.wikidata.org/entity/Q1764"
+    },
+    "Reykjavík": {
+      "decisionId": "location/Reykjavik-b607805a/Q1764",
+      "label": "Reykjavík",
+      "qid": "Q1764",
+      "uri": "http://www.wikidata.org/entity/Q1764"
+    },
+    "Riga": {
+      "decisionId": "location/Riga-d1199df7/Q1773",
+      "label": "Riga",
+      "qid": "Q1773",
+      "uri": "http://www.wikidata.org/entity/Q1773"
+    },
+    "Rijeka": {
+      "decisionId": "location/Rijeka/Q1647",
+      "label": "Rijeka",
+      "qid": "Q1647",
+      "uri": "http://www.wikidata.org/entity/Q1647"
+    },
+    "Rio de Janeiro": {
+      "decisionId": "location/Rio-de-Janeiro/Q8678",
+      "label": "Rio de Janeiro",
+      "qid": "Q8678",
+      "uri": "http://www.wikidata.org/entity/Q8678"
+    },
     "Rio de Janiero": {
       "decisionId": "location/Rio-de-Janiero/Q8678",
       "label": "Rio de Janeiro",
       "qid": "Q8678",
       "uri": "http://www.wikidata.org/entity/Q8678"
+    },
+    "Rio de Janiro": {
+      "decisionId": "location/Rio-de-Janiro/Q8678",
+      "label": "Rio de Janeiro",
+      "qid": "Q8678",
+      "uri": "http://www.wikidata.org/entity/Q8678"
+    },
+    "Riverside, CA": {
+      "decisionId": "location/Riverside-CA/Q49243",
+      "label": "Riverside",
+      "qid": "Q49243",
+      "uri": "http://www.wikidata.org/entity/Q49243"
+    },
+    "Riyadh": {
+      "decisionId": "location/Riyadh/Q3692",
+      "label": "Riyadh",
+      "qid": "Q3692",
+      "uri": "http://www.wikidata.org/entity/Q3692"
+    },
+    "Rochester, NY": {
+      "decisionId": "location/Rochester-NY/Q49218",
+      "label": "Rochester",
+      "qid": "Q49218",
+      "uri": "http://www.wikidata.org/entity/Q49218"
+    },
+    "Roma": {
+      "decisionId": "location/Roma/Q220",
+      "label": "Rome",
+      "qid": "Q220",
+      "uri": "http://www.wikidata.org/entity/Q220"
+    },
+    "Rostock": {
+      "decisionId": "location/Rostock/Q2861",
+      "label": "Rostock",
+      "qid": "Q2861",
+      "uri": "http://www.wikidata.org/entity/Q2861"
+    },
+    "Rotterdam": {
+      "decisionId": "location/Rotterdam/Q34370",
+      "label": "Rotterdam",
+      "qid": "Q34370",
+      "uri": "http://www.wikidata.org/entity/Q34370"
+    },
+    "Rudolstadt": {
+      "decisionId": "location/Rudolstadt/Q517107",
+      "label": "Rudolstadt",
+      "qid": "Q517107",
+      "uri": "http://www.wikidata.org/entity/Q517107"
+    },
+    "Rīga": {
+      "decisionId": "location/Riga-b4d4433a/Q1773",
+      "label": "Riga",
+      "qid": "Q1773",
+      "uri": "http://www.wikidata.org/entity/Q1773"
     },
     "Salzburg": {
       "decisionId": "location/Salzburg/Q34713",
@@ -133,11 +1579,119 @@
       "qid": "Q34713",
       "uri": "http://www.wikidata.org/entity/Q34713"
     },
+    "San Francisco": {
+      "decisionId": "location/San-Francisco/Q62",
+      "label": "San Francisco",
+      "qid": "Q62",
+      "uri": "http://www.wikidata.org/entity/Q62"
+    },
+    "San Francisco, CA": {
+      "decisionId": "location/San-Francisco-CA/Q62",
+      "label": "San Francisco",
+      "qid": "Q62",
+      "uri": "http://www.wikidata.org/entity/Q62"
+    },
+    "Sankt-Peterburg": {
+      "decisionId": "location/Sankt-Peterburg/Q656",
+      "label": "Saint Petersburg",
+      "qid": "Q656",
+      "uri": "http://www.wikidata.org/entity/Q656"
+    },
+    "Santiago": {
+      "decisionId": "location/Santiago/Q2887",
+      "label": "Santiago",
+      "qid": "Q2887",
+      "uri": "http://www.wikidata.org/entity/Q2887"
+    },
+    "Sarajevo": {
+      "decisionId": "location/Sarajevo/Q11194",
+      "label": "Sarajevo",
+      "qid": "Q11194",
+      "uri": "http://www.wikidata.org/entity/Q11194"
+    },
+    "Saratov": {
+      "decisionId": "location/Saratov/Q5332",
+      "label": "Saratov",
+      "qid": "Q5332",
+      "uri": "http://www.wikidata.org/entity/Q5332"
+    },
+    "Scheveningen, Netherlands": {
+      "decisionId": "location/Scheveningen-Netherlands/Q837211",
+      "label": "Scheveningen",
+      "qid": "Q837211",
+      "uri": "http://www.wikidata.org/entity/Q837211"
+    },
+    "Secunderabad": {
+      "decisionId": "location/Secunderabad/Q1003502",
+      "label": "Secunderabad",
+      "qid": "Q1003502",
+      "uri": "http://www.wikidata.org/entity/Q1003502"
+    },
+    "Seoul": {
+      "decisionId": "location/Seoul/Q8684",
+      "label": "Seoul",
+      "qid": "Q8684",
+      "uri": "http://www.wikidata.org/entity/Q8684"
+    },
+    "Sewanee, TN": {
+      "decisionId": "location/Sewanee-TN/Q1987614",
+      "label": "Sewanee",
+      "qid": "Q1987614",
+      "uri": "http://www.wikidata.org/entity/Q1987614"
+    },
+    "Shanghai": {
+      "decisionId": "location/Shanghai/Q8686",
+      "label": "Shanghai",
+      "qid": "Q8686",
+      "uri": "http://www.wikidata.org/entity/Q8686"
+    },
+    "Shenyang": {
+      "decisionId": "location/Shenyang/Q11720",
+      "label": "Shenyang",
+      "qid": "Q11720",
+      "uri": "http://www.wikidata.org/entity/Q11720"
+    },
+    "Simferopol'": {
+      "decisionId": "location/Simferopol/Q19566",
+      "label": "Simferopol",
+      "qid": "Q19566",
+      "uri": "http://www.wikidata.org/entity/Q19566"
+    },
+    "Skopje": {
+      "decisionId": "location/Skopje/Q384",
+      "label": "Skopje",
+      "qid": "Q384",
+      "uri": "http://www.wikidata.org/entity/Q384"
+    },
+    "Soesterberg": {
+      "decisionId": "location/Soesterberg/Q1025080",
+      "label": "Soesterberg",
+      "qid": "Q1025080",
+      "uri": "http://www.wikidata.org/entity/Q1025080"
+    },
     "Sofija": {
       "decisionId": "location/Sofija/Q472",
       "label": "Sofia",
       "qid": "Q472",
       "uri": "http://www.wikidata.org/entity/Q472"
+    },
+    "Soul-si [Seoul, South Korea]": {
+      "decisionId": "location/Soul-si-Seoul-South-Korea/Q8684",
+      "label": "Seoul",
+      "qid": "Q8684",
+      "uri": "http://www.wikidata.org/entity/Q8684"
+    },
+    "St.-Peterburg": {
+      "decisionId": "location/St-Peterburg/Q656",
+      "label": "Saint Petersburg",
+      "qid": "Q656",
+      "uri": "http://www.wikidata.org/entity/Q656"
+    },
+    "Stamford, CT": {
+      "decisionId": "location/Stamford-CT/Q49169",
+      "label": "Stamford",
+      "qid": "Q49169",
+      "uri": "http://www.wikidata.org/entity/Q49169"
     },
     "Stockholm": {
       "decisionId": "location/Stockholm/Q1754",
@@ -151,11 +1705,245 @@
       "qid": "Q1022",
       "uri": "http://www.wikidata.org/entity/Q1022"
     },
+    "Surabaya": {
+      "decisionId": "location/Surabaya/Q11462",
+      "label": "Surabaya",
+      "qid": "Q11462",
+      "uri": "http://www.wikidata.org/entity/Q11462"
+    },
+    "Sydney": {
+      "decisionId": "location/Sydney/Q3130",
+      "label": "Sydney",
+      "qid": "Q3130",
+      "uri": "http://www.wikidata.org/entity/Q3130"
+    },
+    "São Paulo": {
+      "decisionId": "location/Sao-Paulo/Q174",
+      "label": "São Paulo",
+      "qid": "Q174",
+      "uri": "http://www.wikidata.org/entity/Q174"
+    },
+    "T'aipei": {
+      "decisionId": "location/T-aipei/Q1867",
+      "label": "Taipei",
+      "qid": "Q1867",
+      "uri": "http://www.wikidata.org/entity/Q1867"
+    },
+    "Taiyuan": {
+      "decisionId": "location/Taiyuan/Q72778",
+      "label": "Taiyuan",
+      "qid": "Q72778",
+      "uri": "http://www.wikidata.org/entity/Q72778"
+    },
+    "Tallinn": {
+      "decisionId": "location/Tallinn/Q1770",
+      "label": "Tallinn",
+      "qid": "Q1770",
+      "uri": "http://www.wikidata.org/entity/Q1770"
+    },
+    "Tashkent": {
+      "decisionId": "location/Tashkent-8de56ea4/Q269",
+      "label": "Tashkent",
+      "qid": "Q269",
+      "uri": "http://www.wikidata.org/entity/Q269"
+    },
+    "Tbilisi": {
+      "decisionId": "location/Tbilisi/Q994",
+      "label": "Tbilisi",
+      "qid": "Q994",
+      "uri": "http://www.wikidata.org/entity/Q994"
+    },
+    "Tehran": {
+      "decisionId": "location/Tehran/Q3616",
+      "label": "Tehran",
+      "qid": "Q3616",
+      "uri": "http://www.wikidata.org/entity/Q3616"
+    },
+    "Tel Aviv": {
+      "decisionId": "location/Tel-Aviv-68371d5b/Q33935",
+      "label": "Tel Aviv",
+      "qid": "Q33935",
+      "uri": "http://www.wikidata.org/entity/Q33935"
+    },
+    "Tel-Aviv": {
+      "decisionId": "location/Tel-Aviv-3d4179cc/Q33935",
+      "label": "Tel Aviv",
+      "qid": "Q33935",
+      "uri": "http://www.wikidata.org/entity/Q33935"
+    },
+    "Tel-ʾAviv": {
+      "decisionId": "location/Tel-Aviv-3db4706d/Q33935",
+      "label": "Tel Aviv",
+      "qid": "Q33935",
+      "uri": "http://www.wikidata.org/entity/Q33935"
+    },
+    "Thành-phô-Hô-chí-Minh": {
+      "decisionId": "location/Thanh-pho-Ho-chi-Minh-1aaee677/Q1854",
+      "label": "Ho Chi Minh City",
+      "qid": "Q1854",
+      "uri": "http://www.wikidata.org/entity/Q1854"
+    },
+    "Thành-phô-Hô-chí-Minh [Ho Chi Minh City]": {
+      "decisionId": "location/Thanh-pho-Ho-chi-Minh-Ho-Chi-Minh-City/Q1854",
+      "label": "Ho Chi Minh City",
+      "qid": "Q1854",
+      "uri": "http://www.wikidata.org/entity/Q1854"
+    },
+    "Thành-phô-Hồ-chí-Minh": {
+      "decisionId": "location/Thanh-pho-Ho-chi-Minh-00e7c9d0/Q1854",
+      "label": "Ho Chi Minh City",
+      "qid": "Q1854",
+      "uri": "http://www.wikidata.org/entity/Q1854"
+    },
+    "Tianjin": {
+      "decisionId": "location/Tianjin/Q11736",
+      "label": "Tianjin",
+      "qid": "Q11736",
+      "uri": "http://www.wikidata.org/entity/Q11736"
+    },
+    "Tihrān": {
+      "decisionId": "location/Tihran/Q3616",
+      "label": "Tehran",
+      "qid": "Q3616",
+      "uri": "http://www.wikidata.org/entity/Q3616"
+    },
+    "Tihrān [Tehran]": {
+      "decisionId": "location/Tihran-Tehran/Q3616",
+      "label": "Tehran",
+      "qid": "Q3616",
+      "uri": "http://www.wikidata.org/entity/Q3616"
+    },
+    "Tilburg": {
+      "decisionId": "location/Tilburg/Q26430",
+      "label": "Tilburg",
+      "qid": "Q26430",
+      "uri": "http://www.wikidata.org/entity/Q26430"
+    },
+    "Tirana": {
+      "decisionId": "location/Tirana-9e8e9239/Q19689",
+      "label": "Tirana",
+      "qid": "Q19689",
+      "uri": "http://www.wikidata.org/entity/Q19689"
+    },
+    "Tirane/Tirana": {
+      "decisionId": "location/Tirane-Tirana-96b7f8c7/Q19689",
+      "label": "Tirana",
+      "qid": "Q19689",
+      "uri": "http://www.wikidata.org/entity/Q19689"
+    },
+    "Tiranë": {
+      "decisionId": "location/Tirane/Q19689",
+      "label": "Tirana",
+      "qid": "Q19689",
+      "uri": "http://www.wikidata.org/entity/Q19689"
+    },
+    "Tiranë (Tirana)": {
+      "decisionId": "location/Tirane-Tirana-b5a58aa8/Q19689",
+      "label": "Tirana",
+      "qid": "Q19689",
+      "uri": "http://www.wikidata.org/entity/Q19689"
+    },
+    "Tiranë [Tirana]": {
+      "decisionId": "location/Tirane-Tirana-29af0fc1/Q19689",
+      "label": "Tirana",
+      "qid": "Q19689",
+      "uri": "http://www.wikidata.org/entity/Q19689"
+    },
+    "Tiranë/Tirana": {
+      "decisionId": "location/Tirane-Tirana-3059e1ae/Q19689",
+      "label": "Tirana",
+      "qid": "Q19689",
+      "uri": "http://www.wikidata.org/entity/Q19689"
+    },
     "Tokyo": {
       "decisionId": "location/Tokyo/Q1490",
       "label": "Tokyo",
       "qid": "Q1490",
       "uri": "http://www.wikidata.org/entity/Q1490"
+    },
+    "Toronto": {
+      "decisionId": "location/Toronto/Q172",
+      "label": "Toronto",
+      "qid": "Q172",
+      "uri": "http://www.wikidata.org/entity/Q172"
+    },
+    "Toshkent": {
+      "decisionId": "location/Toshkent/Q269",
+      "label": "Tashkent",
+      "qid": "Q269",
+      "uri": "http://www.wikidata.org/entity/Q269"
+    },
+    "Toulouse": {
+      "decisionId": "location/Toulouse/Q7880",
+      "label": "Toulouse",
+      "qid": "Q7880",
+      "uri": "http://www.wikidata.org/entity/Q7880"
+    },
+    "Tunis": {
+      "decisionId": "location/Tunis-61275990/Q3572",
+      "label": "Tunis",
+      "qid": "Q3572",
+      "uri": "http://www.wikidata.org/entity/Q3572"
+    },
+    "Tutzing": {
+      "decisionId": "location/Tutzing/Q533166",
+      "label": "Tutzing",
+      "qid": "Q533166",
+      "uri": "http://www.wikidata.org/entity/Q533166"
+    },
+    "Tórshavn": {
+      "decisionId": "location/Torshavn/Q10704",
+      "label": "Tórshavn",
+      "qid": "Q10704",
+      "uri": "http://www.wikidata.org/entity/Q10704"
+    },
+    "Tübingen": {
+      "decisionId": "location/Tubingen/Q3806",
+      "label": "Tübingen",
+      "qid": "Q3806",
+      "uri": "http://www.wikidata.org/entity/Q3806"
+    },
+    "Tōkyō": {
+      "decisionId": "location/Tokyo/Q1490",
+      "label": "Tokyo",
+      "qid": "Q1490",
+      "uri": "http://www.wikidata.org/entity/Q1490"
+    },
+    "Tūnis": {
+      "decisionId": "location/Tunis-49ce6012/Q3572",
+      "label": "Tunis",
+      "qid": "Q3572",
+      "uri": "http://www.wikidata.org/entity/Q3572"
+    },
+    "Tūnis [Tunis]": {
+      "decisionId": "location/Tunis-Tunis/Q3572",
+      "label": "Tunis",
+      "qid": "Q3572",
+      "uri": "http://www.wikidata.org/entity/Q3572"
+    },
+    "Udin [Udine]": {
+      "decisionId": "location/Udin-Udine/Q2790",
+      "label": "Udine",
+      "qid": "Q2790",
+      "uri": "http://www.wikidata.org/entity/Q2790"
+    },
+    "Ulaanbaatar": {
+      "decisionId": "location/Ulaanbaatar/Q23430",
+      "label": "Ulaanbaatar",
+      "qid": "Q23430",
+      "uri": "http://www.wikidata.org/entity/Q23430"
+    },
+    "Ulaanbaatar [formerly Ulan Bator]": {
+      "decisionId": "location/Ulaanbaatar-formerly-Ulan-Bator/Q23430",
+      "label": "Ulaanbaatar",
+      "qid": "Q23430",
+      "uri": "http://www.wikidata.org/entity/Q23430"
+    },
+    "Utrecht": {
+      "decisionId": "location/Utrecht/Q803",
+      "label": "Utrecht",
+      "qid": "Q803",
+      "uri": "http://www.wikidata.org/entity/Q803"
     },
     "Varna": {
       "decisionId": "location/Varna/Q6506",
@@ -163,17 +1951,167 @@
       "qid": "Q6506",
       "uri": "http://www.wikidata.org/entity/Q6506"
     },
+    "Vestmanna, Streymoy, Faeroe Islands": {
+      "decisionId": "location/Vestmanna-Streymoy-Faeroe-Islands/Q608352",
+      "label": "Vestmanna",
+      "qid": "Q608352",
+      "uri": "http://www.wikidata.org/entity/Q608352"
+    },
+    "Vienna": {
+      "decisionId": "location/Vienna/Q1741",
+      "label": "Vienna",
+      "qid": "Q1741",
+      "uri": "http://www.wikidata.org/entity/Q1741"
+    },
+    "Vigo": {
+      "decisionId": "location/Vigo/Q8745",
+      "label": "Vigo",
+      "qid": "Q8745",
+      "uri": "http://www.wikidata.org/entity/Q8745"
+    },
+    "Villeneuve d'Ascq": {
+      "decisionId": "location/Villeneuve-d-Ascq/Q43295",
+      "label": "Villeneuve-d'Ascq",
+      "qid": "Q43295",
+      "uri": "http://www.wikidata.org/entity/Q43295"
+    },
+    "Vilnius": {
+      "decisionId": "location/Vilnius/Q216",
+      "label": "Vilnius",
+      "qid": "Q216",
+      "uri": "http://www.wikidata.org/entity/Q216"
+    },
+    "Växjö": {
+      "decisionId": "location/Vaxjo/Q26152",
+      "label": "Växjö",
+      "qid": "Q26152",
+      "uri": "http://www.wikidata.org/entity/Q26152"
+    },
+    "Warsaw": {
+      "decisionId": "location/Warsaw/Q270",
+      "label": "Warsaw",
+      "qid": "Q270",
+      "uri": "http://www.wikidata.org/entity/Q270"
+    },
+    "Warszawa": {
+      "decisionId": "location/Warszawa/Q270",
+      "label": "Warschau",
+      "qid": "Q270",
+      "uri": "http://www.wikidata.org/entity/Q270"
+    },
+    "Weimar": {
+      "decisionId": "location/Weimar/Q3955",
+      "label": "Weimar",
+      "qid": "Q3955",
+      "uri": "http://www.wikidata.org/entity/Q3955"
+    },
     "Wien": {
       "decisionId": "location/Wien/Q1741",
       "label": "Wien",
       "qid": "Q1741",
       "uri": "http://www.wikidata.org/entity/Q1741"
     },
+    "Wiesbaden": {
+      "decisionId": "location/Wiesbaden/Q1721",
+      "label": "Wiesbaden",
+      "qid": "Q1721",
+      "uri": "http://www.wikidata.org/entity/Q1721"
+    },
+    "Wilmington, DE": {
+      "decisionId": "location/Wilmington-DE/Q174224",
+      "label": "Wilmington",
+      "qid": "Q174224",
+      "uri": "http://www.wikidata.org/entity/Q174224"
+    },
+    "Wuhan": {
+      "decisionId": "location/Wuhan/Q11746",
+      "label": "Wuhan",
+      "qid": "Q11746",
+      "uri": "http://www.wikidata.org/entity/Q11746"
+    },
+    "Würzburg": {
+      "decisionId": "location/Wurzburg-e1b62de9/Q2999",
+      "label": "Würzburg",
+      "qid": "Q2999",
+      "uri": "http://www.wikidata.org/entity/Q2999"
+    },
+    "Wũrzburg": {
+      "decisionId": "location/Wurzburg-ff7b53f0/Q2999",
+      "label": "Würzburg",
+      "qid": "Q2999",
+      "uri": "http://www.wikidata.org/entity/Q2999"
+    },
+    "Xi'an": {
+      "decisionId": "location/Xi-an/Q5826",
+      "label": "Xi'an",
+      "qid": "Q5826",
+      "uri": "http://www.wikidata.org/entity/Q5826"
+    },
     "Yanji": {
       "decisionId": "location/Yanji/Q713362",
       "label": "Yanji",
       "qid": "Q713362",
       "uri": "http://www.wikidata.org/entity/Q713362"
+    },
+    "Yerevan": {
+      "decisionId": "location/Yerevan/Q1953",
+      "label": "Yerevan",
+      "qid": "Q1953",
+      "uri": "http://www.wikidata.org/entity/Q1953"
+    },
+    "Yogyakarta": {
+      "decisionId": "location/Yogyakarta/Q7568",
+      "label": "Yogyakarta",
+      "qid": "Q7568",
+      "uri": "http://www.wikidata.org/entity/Q7568"
+    },
+    "Zagreb": {
+      "decisionId": "location/Zagreb/Q1435",
+      "label": "Zagreb",
+      "qid": "Q1435",
+      "uri": "http://www.wikidata.org/entity/Q1435"
+    },
+    "Zürich": {
+      "decisionId": "location/Zurich/Q72",
+      "label": "Zurich",
+      "qid": "Q72",
+      "uri": "http://www.wikidata.org/entity/Q72"
+    },
+    "al-Riyāḍ": {
+      "decisionId": "location/al-Riyad/Q3692",
+      "label": "Riyadh",
+      "qid": "Q3692",
+      "uri": "http://www.wikidata.org/entity/Q3692"
+    },
+    "Étival-lès-Le Mans": {
+      "decisionId": "location/Etival-les-Le-Mans/Q1224451",
+      "label": "Étival-lès-le-Mans",
+      "qid": "Q1224451",
+      "uri": "http://www.wikidata.org/entity/Q1224451"
+    },
+    "Ürümchi [Ürümqi]": {
+      "decisionId": "location/Urumchi-Urumqi/Q16959",
+      "label": "Ürümqi",
+      "qid": "Q16959",
+      "uri": "http://www.wikidata.org/entity/Q16959"
+    },
+    "Ürümqi": {
+      "decisionId": "location/Urumqi/Q16959",
+      "label": "Ürümqi",
+      "qid": "Q16959",
+      "uri": "http://www.wikidata.org/entity/Q16959"
+    },
+    "Đà Nẵng": {
+      "decisionId": "location/a-Nang/Q25282",
+      "label": "Da Nang",
+      "qid": "Q25282",
+      "uri": "http://www.wikidata.org/entity/Q25282"
+    },
+    "İstanbul": {
+      "decisionId": "location/Istanbul-24ec8f72/Q406",
+      "label": "Istanbul",
+      "qid": "Q406",
+      "uri": "http://www.wikidata.org/entity/Q406"
     }
   },
   "publicationContract": "Only targets with an evidence-bearing confirm or correct decision are projected into public data.",
