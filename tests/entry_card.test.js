@@ -566,6 +566,94 @@ test('a failed claim file is said where the claims would stand', () => {
   assert.match(html, /contested claims\s+could not be loaded \(HTTP 404\)/);
 });
 
+test('a joint imprint keeps each publisher with its place, a series keeps its gloss', () => {
+  // Page 1725, the edition of 1966, and page 5039.
+  const entry = editionPage();
+  entry.publications[1].imprints = [
+    { publisher: 'Nauka i izkustvo', place: 'Sofija' },
+    { publisher: 'DPK St. Dobrev-Strandzhata', place: 'Varna' },
+  ];
+  entry.publications[1].places = ['Sofija', 'Varna'];
+  entry.publications[1].publisher = 'Nauka i izkustvo';
+  entry.publications[0].series = 'Tvorba národov';
+  entry.publications[0].seriesGloss = 'The Formation of Nations';
+  const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
+  const second = html.slice(html.indexOf('aria-label="Publication 2"'));
+  assert.match(second, />Imprint</);
+  // The decision and the authority link of Sofija stay at Sofija.
+  assert.match(second, /Nauka i izkustvo, Sofija <a class="wikidata-link"[\s\S]*?<\/span> \/ DPK St\. Dobrev-Strandzhata, Varna</);
+  assert.doesNotMatch(second.slice(0, second.indexOf('</section>')), />Publisher</);
+  assert.match(html, /Tvorba národov <span class="field-sub"[^>]*>\(The Formation of Nations\)</);
+});
+
+test('a rejection reads as a rejection, and the chip names the scope the record states', () => {
+  const entry = sampleEntry();
+  entry.review = { status: 'reviewed', reviewed_by: 'main-instance',
+    fields: { location: 'reject' }, scope: ['location'] };
+  const chip = detailCtx(entry)._reviewChip(entry);
+  assert.match(chip, /review-reviewed/);
+  assert.match(chip, />Place authority candidate rejected</);
+  assert.doesNotMatch(chip, /Unreviewed|verified/);
+  // The stated scope wins over the keys of the decisions.
+  entry.review = { status: 'agent_verified', reviewed_by: 'x',
+    fields: { location: 'confirm', publisher: 'reject' }, scope: ['location', 'publisher'] };
+  assert.match(detailCtx(entry)._reviewChip(entry), />Place authority and publisher agent-verified</);
+});
+
+test('a contested edition says so in its heading', () => {
+  const entry = editionPage();
+  entry.publications[0].reviewStatus = 'contested';
+  const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
+  assert.match(html, /publication-status-contested[^>]*>edition contested</);
+});
+
+test('a restored page states the revision it is published from and why', () => {
+  // Page 35, Maria Stuart: the Redirect fixer overwrote the compiler's page.
+  const entry = sampleEntry();
+  entry.sourceRevision = {
+    decisionId: 'source-revision/35/restore-human-revision',
+    action: 'restore-human-revision',
+    reason: 'The Redirect fixer revision replaced a content page with a redirect.',
+    humanRevision: { revisionId: 33251, timestamp: '2017-09-25T20:31:36Z', actor: 'Klawiter',
+      textId: 32391 },
+    fixerRevisions: [{ revisionId: 33773, timestamp: '2017-10-08T20:25:29Z',
+      comment: '[[Al-Sulṭānī, Fāḍil]] has been moved' }],
+    decidedBy: 'decided by the main instance after delegation',
+  };
+  const html = detailCtx(entry)._buildReadContent(entry);
+  assert.match(html, /Source revision<\/span>\s+Published from revision 33251 by Klawiter of 2017-09-25\. The Redirect fixer revision replaced a content page/);
+  assert.match(html, /Revision 33773, 2017-10-08: \[\[Al-Sulṭānī, Fāḍil\]\] has been moved/);
+  assert.match(html, /title="source-revision\/35\/restore-human-revision Decided by the main instance/);
+  assert.ok(html.indexOf('Source revision') < html.indexOf('detail-source-details'));
+  assert.doesNotMatch(detailCtx(sampleEntry())._buildReadContent(sampleEntry()), /Source revision/);
+});
+
+test('a reference leads to its page, or to the claim that withholds its redirect', () => {
+  const claim = { claimId: 'klawiter:claim/source-revision/670', entityType: 'source-revision',
+    decisionStatus: 'open', subject: { '@id': 'klawiter:entry/670', name: 'Le chandelier enterré' },
+    interpretations: [{ label: 'The page redirects to Der begrabene Leuchter' }],
+    sourceEvidence: [{ sourcePageId: 670, sourceTextId: 1, sourceValue: '#REDIRECT [[X]]',
+      sourceTextSha256: 'ab'.repeat(32) }],
+    reviewHistory: [{ decidedBy: 'main-instance', action: 'unresolved', basis: 'revisable',
+      evidence: ['data/reconciliation/source-revision-decisions.json',
+        'zweig_revision 1 by Redirect fixer'] }] };
+  const entry = sampleEntry();
+  const Detail = detailCtx(entry, {}, {
+    App: { state: { editMode: false }, entries: [entry], entryMap: new Map([[1800, entry]]),
+      titleMap: new Map([['Maria Stuart', 35]]), data: { redirects: {} } },
+    Edit: editStub({ sourceRevisionClaim: (pid, title) =>
+      (title === 'Le chandelier enterré' || pid === 670 ? claim : null) }),
+  });
+  assert.strictEqual(Detail.makeLink('Maria Stuart'), '<a href="#entry=35">Maria Stuart</a>');
+  assert.match(Detail.makeLink('Le chandelier enterré'),
+    /<a href="#entry=670">Le chandelier enterré<\/a> <span class="field-sub">redirect withheld,\s+open claim<\/span>/);
+  assert.strictEqual(Detail.makeLink('Nowhere'), 'Nowhere');
+  const block = Detail.withheldRedirectBlock(claim);
+  assert.match(block, /Le chandelier enterré: redirect\s+withheld, decision open/);
+  assert.match(block, /zweig_revision 1 by Redirect fixer/);
+  assert.doesNotMatch(block, /source-revision-decisions\.json/);
+});
+
 test('a publication route keeps the page and names the publication', () => {
   const { App, ctx } = appCtx();
   const entry = sampleEntry();

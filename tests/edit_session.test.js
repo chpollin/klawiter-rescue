@@ -126,6 +126,32 @@ test('a claim reaches a page through the value it names or the text that carries
   assert.strictEqual(Edit.openClaimOnValue(page, 'Varna').claimId, 'c3');
 });
 
+test('a decided claim stays readable where it applies and contests no value', () => {
+  // Pages 1725 and 1799 print "Nauka i izkustvo, Sofija / DPK St.
+  // Dobrev-Strandzhata, Varna"; the decided compound claim names that line.
+  const ctx = load(['edit.js'], { App: { state: { pendingEdits: {} } } });
+  const Edit = vm.runInContext('Edit', ctx);
+  const decided = { claimId: 'd', entityType: 'location', decisionStatus: 'decided',
+    subject: { name: 'Sofija, Varna' },
+    sourceEvidence: [{ sourcePageId: 1725,
+      sourceText: "'''[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna'''" }] };
+  const withheld = { claimId: 's', entityType: 'source-revision', decisionStatus: 'open',
+    subject: { '@id': 'klawiter:entry/670', name: 'Le chandelier enterré' },
+    sourceEvidence: [{ sourcePageId: 1725, sourceText: '#REDIRECT [[Der begrabene Leuchter]]' }] };
+  Edit.contestedAuthorityClaims = [withheld];
+  Edit.decidedAuthorityClaims = [decided];
+  const page = { sourcePageId: 1725, location: 'Sofija', publicationPlaces: ['Sofija', 'Varna'],
+    fullBibliographicEntry: '[1966]: Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna\n' };
+  assert.strictEqual(Edit.authorityClaimsFor(page).map(c => c.claimId).join(','), 'd');
+  assert.strictEqual(Edit.openClaimOnValue(page, 'Sofija'), null);
+  // Without the evidence line in its text the page is not reached.
+  assert.strictEqual(Edit.authorityClaimsFor({ ...page, fullBibliographicEntry: 'Sofija' }).length, 0);
+  // A withheld redirect is found by its page or its title, never by a place.
+  assert.strictEqual(Edit.sourceRevisionClaim(670), withheld);
+  assert.strictEqual(Edit.sourceRevisionClaim(null, 'Le chandelier enterré'), withheld);
+  assert.strictEqual(Edit.sourceRevisionClaim(35, 'Maria Stuart'), null);
+});
+
 test('edit mode marks a candidate the recorded decision rejected', () => {
   // Yanji: the matcher proposed Q956 (Beijing), the review corrected it to
   // Q713362 and named Q956 as rejected.

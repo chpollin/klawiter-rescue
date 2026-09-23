@@ -376,7 +376,8 @@ const App = {
           this.revealPublication();
         }, 50);
       } else {
-        this._renderMissingPage('This page ID does not exist (it may have been a redirect).');
+        this._renderMissingPage('This page ID does not exist (it may have been a redirect).',
+          { pageId: pid });
       }
       return;
     }
@@ -398,7 +399,8 @@ const App = {
       this.showView('results');
       Facets.render(this.filtered);
       this.renderChips();
-      this._renderMissingPage('This page title does not exist (it may have been a redirect).');
+      this._renderMissingPage('This page title does not exist (it may have been a redirect).',
+        { title });
       return;
     }
 
@@ -436,14 +438,43 @@ const App = {
     block.focus({ preventScroll: true });
   },
 
-  /** Message page for a permalink that resolves to nothing. */
-  _renderMissingPage(message) {
+  /**
+   * Message page for a permalink that resolves to nothing. A page whose
+   * redirect is withheld under an open source-revision claim is not missing,
+   * so once the claims are in, that claim replaces the message.
+   */
+  _renderMissingPage(message, target) {
+    this._renderMissingMessage(message);
+    if (!target || typeof Edit === 'undefined' || typeof Edit.sourceRevisionClaim !== 'function') {
+      return;
+    }
+    const route = location.hash;
+    this._ensureReconciliation().then(() => {
+      if (location.hash !== route) return;
+      const claim = Edit.sourceRevisionClaim(target.pageId, target.title);
+      const list = document.getElementById('results-list');
+      if (!claim || !list) return;
+      const countEl = document.getElementById('results-count');
+      if (countEl) countEl.textContent = 'Redirect withheld';
+      list.innerHTML = `${Detail.withheldRedirectBlock(claim)}
+        <p><a href="#">Back to the start page</a></p>`;
+    });
+  },
+
+  _renderMissingMessage(message) {
     const countEl = document.getElementById('results-count');
     if (countEl) countEl.textContent = 'Not found';
     const exportBtn = document.getElementById('batch-export-btn');
     if (exportBtn) exportBtn.classList.add('hidden');
     const loadMore = document.getElementById('load-more');
     if (loadMore) loadMore.classList.add('hidden');
+    // No list stands here, so nothing sorts, filters or needs the badge key.
+    for (const id of ['prov-legend', 'sort-select', 'facets', 'mobile-filter-btn']) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    }
+    const sortLabel = document.querySelector && document.querySelector('.sort-label');
+    if (sortLabel) sortLabel.classList.add('hidden');
     const list = document.getElementById('results-list');
     if (!list) return;
     list.innerHTML = `<div class="empty-state">

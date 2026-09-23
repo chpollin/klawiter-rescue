@@ -139,6 +139,8 @@ const Detail = {
     'Authority status': 'Open authority claims on this entry.',
     'Edition confirmed': 'The edition graph holds this publication as an edition reviewed against its exact source slice.',
     'Edition proposed': 'The edition graph holds this publication as a deterministic proposal that no review has confirmed yet.',
+    'Edition contested': 'The edition graph holds the work binding of this publication open under a contested claim.',
+    'Imprint': 'Each publisher of a joint imprint with its own place, in the wording and order of the source.',
   },
 
   /** Title attribute for a named thing, empty where the dictionary is silent. */
@@ -180,14 +182,20 @@ const Detail = {
 
   /** "Place authority" for a review object deciding the place authority alone. */
   reviewScope(review) {
-    const fields = Object.keys((review && review.fields) || {});
+    // The projection states the decided fields as `scope` since frontend
+    // schema 1.4; records before it carry them as the keys of `fields`.
+    const fields = review && Array.isArray(review.scope) && review.scope.length
+      ? review.scope
+      : Object.keys((review && review.fields) || {});
     if (!fields.length) return '';
     const words = fields.map(field => this.REVIEW_SCOPES[field] || field).join(' and ');
     return words.charAt(0).toUpperCase() + words.slice(1);
   },
 
+  // `reviewed` is the weakest status: a candidate link was refused, and
+  // nothing was verified by it.
   REVIEW_WORDS: { agent_verified: 'agent-verified', contested: 'contested',
-                  approved: 'expert-reviewed' },
+                  approved: 'expert-reviewed', reviewed: 'candidate rejected' },
 
   /** Open authority claims the entry carries; a decided claim no longer contests. */
   _openAuthorityClaims(entry) {
@@ -203,6 +211,7 @@ const Detail = {
   // them, and an open authority claim the page carries is said beside it.
   _reviewChip(entry) {
     const classes = { unreviewed: 'review-unreviewed', agent_verified: 'review-agent',
+      reviewed: 'review-reviewed',
       contested: 'review-contested', approved: 'review-approved', edited: 'review-edited' };
     const st = Edit.entryStatus(entry.sourcePageId);
     const dataset = entry.review && entry.review.status;
@@ -476,22 +485,94 @@ const Detail = {
         `<li>Page ${esc(item.sourcePageId)}, line ${esc(item.sourceLine)}: ${esc(item.sourceValue)}
           ${this._checksum(item.sourceTextSha256)}</li>`
       ).join('');
-      const history = (claim.reviewHistory || []).map(item =>
-        `<li title="${esc(item.decisionId)}">${esc(item.decidedBy)}: ${esc(item.action)}</li>`
-      ).join('');
+      const history = this._authorityHistory(claim);
+      const notes = (claim.reviewNotes || []).map(note => `<li>${esc(note)}</li>`).join('');
       return `<article class="contested-claim" id="${this._claimAnchor(entry, claim.claimId)}"
         tabindex="-1">
-        ${this._claimHeading(noun, claim,
-          '— the claim stays part of the data, no interpretation is emitted as a confirmed schema:sameAs relation.')}
+        ${this._claimHeading(noun, claim, claim.decisionStatus === 'decided'
+          ? '— decided and revisable; the decision and the rejected readings stay part of the data.'
+          : '— the claim stays part of the data, no interpretation is emitted as a confirmed schema:sameAs relation.')}
         <h4>${claim.decisionStatus === 'decided' ? 'Interpretations' : 'Competing interpretations'}</h4>
         <ul>${interpretations}</ul>
         <h4>Source evidence</h4>
         <ul>${evidence}</ul>
         <h4>Review history</h4>
         <ul>${history}</ul>
+        ${notes ? `<h4>Review notes</h4><ul>${notes}</ul>` : ''}
       </article>`;
     }).join('');
     return `<div class="contested-status" role="status">${rendered}</div>`;
+  },
+
+  /** The decisions of an authority claim in plain words, with their basis. */
+  _authorityHistory(claim) {
+    return (claim.reviewHistory || []).map(item =>
+      `<li title="${esc(item.decisionId)}">${esc(item.decidedBy)}: ${esc(item.action)}${
+        item.basis ? ` <span class="field-sub">(${esc(item.basis)})</span>` : ''}</li>`
+    ).join('');
+  },
+
+  /**
+   * An open source-revision claim: the wiki's automatic "Redirect fixer"
+   * wrote a redirect over this page, and the text it replaced is not in the
+   * dump, so the redirect is withheld rather than followed. Shown where a
+   * reader reaches the page by its identifier, its title or a reference.
+   */
+  withheldRedirectBlock(claim) {
+    const pid = String(claim.subject && claim.subject['@id'] || '').split('/').pop();
+    const readings = (claim.interpretations || [])
+      .map(item => `<li>${esc(item.label)}</li>`).join('');
+    const evidence = (claim.sourceEvidence || []).map(item =>
+      `<li>Page ${esc(item.sourcePageId)}, text ${esc(item.sourceTextId)}: <code>${
+        esc(item.sourceValue || item.sourceText)}</code> ${this._checksum(item.sourceTextSha256)}</li>`
+    ).join('');
+    const history = (claim.reviewHistory || []).map(item => {
+      const trail = (item.evidence || []).filter(line => !/\.json\b/.test(line))
+        .map(line => `<li>${esc(line)}</li>`).join('');
+      return `<li title="${esc(item.decisionId)}">${esc(item.decidedBy)}: ${esc(item.action)}${
+        item.basis ? ` <span class="field-sub">(${esc(item.basis)})</span>` : ''}${
+        trail ? `<ul class="detail-list">${trail}</ul>` : ''}</li>`;
+    }).join('');
+    return `<article class="contested-claim withheld-redirect" id="withheld-${esc(pid)}" tabindex="-1">
+      <h2 class="contested-claim-heading"${this.help(null, `${claim.claimId} — the page is not
+        resolved as a redirect while the claim is open.`)}>${esc(claim.subject.name)}: redirect
+        withheld, decision open</h2>
+      <h4>Competing interpretations</h4>
+      <ul>${readings}</ul>
+      <h4>Source evidence</h4>
+      <ul>${evidence}</ul>
+      <h4>Review history</h4>
+      <ul>${history}</ul>
+    </article>`;
+  },
+
+  /**
+   * The revision a restored page is published from, and why. The Redirect
+   * fixer overwrote these pages after the compiler's last edit; the record
+   * states the revision taken and the later ones set aside.
+   */
+  _sourceRevisionNote(entry) {
+    const rev = entry.sourceRevision;
+    if (!rev || !rev.humanRevision) return '';
+    const human = rev.humanRevision;
+    const date = human.timestamp ? String(human.timestamp).slice(0, 10) : '';
+    const by = [human.actor ? `by ${esc(human.actor)}` : '', date ? `of ${esc(date)}` : '']
+      .filter(Boolean).join(' ');
+    const later = (rev.fixerRevisions || []).map(item =>
+      `<li>Revision ${esc(item.revisionId)}${item.timestamp
+        ? `, ${esc(String(item.timestamp).slice(0, 10))}` : ''}${
+        item.comment ? `: ${esc(item.comment)}` : ''}</li>`).join('');
+    // decidedBy is a sentence in the record ("decided by the main instance ...").
+    const decided = rev.decidedBy ? String(rev.decidedBy) : '';
+    const tip = this.help(null, [rev.decisionId,
+      decided ? `${decided.charAt(0).toUpperCase()}${decided.slice(1)}.` : ''].filter(Boolean).join(' '));
+    return `<div class="source-revision" role="note">
+      <p class="review-flag"${tip}><span class="review-flag-label">Source revision</span>
+        Published from revision ${esc(human.revisionId)} ${by}.${
+        rev.reason ? ` ${esc(rev.reason)}` : ''}</p>
+      ${later ? `<details class="source-revision-later"><summary>Later revisions not
+        published</summary><ul class="detail-list">${later}</ul></details>` : ''}
+    </div>`;
   },
 
   /**
@@ -593,6 +674,7 @@ const Detail = {
     const contestedAuthority = this._contestedAuthorityCell(entry);
     if (contestedAuthority) html += contestedAuthority;
     html += this._contestedClaimsBlock(entry, this._unplacedEditionClaims(entry, state));
+    html += this._sourceRevisionNote(entry);
 
     // On the permalink route the source is what the reader checks the fields
     // against, so it stands open. In a result list it stays collapsed, unless
@@ -714,7 +796,8 @@ const Detail = {
    * or as a proposal. Records built before the graph carried it say nothing.
    */
   _editionStatus(pub) {
-    const labels = { confirmed: 'Edition confirmed', proposed: 'Edition proposed' };
+    const labels = { confirmed: 'Edition confirmed', proposed: 'Edition proposed',
+      contested: 'Edition contested' };
     const label = labels[pub.reviewStatus];
     if (!label) return '';
     return ` <span class="publication-status publication-status-${esc(pub.reviewStatus)}"${
@@ -802,10 +885,18 @@ const Detail = {
     }
     put('Language', this._languageValue(pub), 'language');
 
-    const places = Array.isArray(pub.places) ? pub.places : [];
-    put('Place of publication', places.length ? this._placeList(entry, places) : '', 'places');
-
-    put('Publisher', pub.publisher ? esc(pub.publisher) : '', 'publisher');
+    // A joint imprint pairs each publisher with its own place, so the pairs
+    // stand together instead of a place list beside the first publisher.
+    const imprints = Array.isArray(pub.imprints) ? pub.imprints : [];
+    if (imprints.length > 1) {
+      put('Imprint', imprints.map(pair => [pair.publisher ? esc(pair.publisher) : '',
+        pair.place ? this._placeList(entry, [pair.place]) : ''].filter(Boolean).join(', '))
+        .join(' / '), 'imprints');
+    } else {
+      const places = Array.isArray(pub.places) ? pub.places : [];
+      put('Place of publication', places.length ? this._placeList(entry, places) : '', 'places');
+      put('Publisher', pub.publisher ? esc(pub.publisher) : '', 'publisher');
+    }
     put('Extent (as in source)', this._publicationExtent(pub), 'extent');
     put('Credits', this._creditsList(pub.credits), 'credits');
     put('Contents', this._contributionsList(pub.contributions), 'contributions');
@@ -921,7 +1012,11 @@ const Detail = {
       && !String(pub.series).trim().endsWith(String(pub.seriesVolume))
       ? ` <span class="field-sub">volume ${esc(pub.seriesVolume)}</span>`
       : '';
-    return esc(pub.series) + volume;
+    // The gloss is the compiler's rendering of the series title.
+    const gloss = pub.seriesGloss
+      ? ` <span class="field-sub" title="Gloss of the series title in the source">(${esc(pub.seriesGloss)})</span>`
+      : '';
+    return esc(pub.series) + gloss + volume;
   },
 
   // What the extraction rules leave open on this publication, in the words of
@@ -1152,7 +1247,22 @@ const Detail = {
 
   _contentTitle(title) {
     const pid = App.titleMap && App.titleMap.get(title.trim());
-    return pid ? `<a href="#entry=${pid}">${esc(title)}</a>` : esc(title);
+    return pid ? `<a href="#entry=${pid}">${esc(title)}</a>` : this._withheldLink(title.trim(), title);
+  },
+
+  /**
+   * A title that resolves to no entry because its redirect is withheld under
+   * a source-revision claim leads to that claim instead of standing as a
+   * dead name.
+   */
+  _withheldLink(title, shown) {
+    const claim = typeof Edit.sourceRevisionClaim === 'function'
+      ? Edit.sourceRevisionClaim(null, title)
+      : null;
+    if (!claim) return esc(shown);
+    const pid = String(claim.subject['@id']).split('/').pop();
+    return `<a href="#entry=${esc(pid)}">${esc(shown)}</a> <span class="field-sub">redirect withheld,
+      open claim</span>`;
   },
 
   // ---------------------------------------------------------------------------
@@ -1248,6 +1358,7 @@ const Detail = {
     html += this._claimsLoadNote();
     html += this._contestedClaimsBlock(entry, this._unplacedEditionClaims(entry, state));
 
+    html += this._sourceRevisionNote(entry);
     // In edit mode the source is the adjudication reference: kept open.
     if (entry.fullBibliographicEntry) {
       html += `
@@ -1326,7 +1437,7 @@ const Detail = {
   makeLink(title) {
     const pid = App.titleMap.get(title) || (App.data.redirects && App.data.redirects[title]);
     if (pid) return `<a href="#entry=${pid}">${esc(title)}</a>`;
-    return esc(title);
+    return this._withheldLink(title, title);
   },
 };
 

@@ -3332,3 +3332,16 @@ td.matrix-low { background: #F5E3E3; }
   text-transform: none;
   color: var(--sz-text-light);
 }
+
+/* The revisions a restored page set aside, one quiet line below its note. */
+.source-revision-later summary {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--sz-text-light);
+  cursor: pointer;
+  margin-top: 0.25rem;
+}
+.source-revision-later ul {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+}

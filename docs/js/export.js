@@ -194,7 +194,15 @@ const Export = {
     const wording = credits => credits
       .filter(credit => credit.name)
       .map(credit => `${credit.creditLabel || credit.role} ${credit.name}`);
-    const parts = wording(pub.credits || []);
+    const parts = [];
+    // The publisher and place fields cannot say which publisher of a joint
+    // imprint worked where, so the pairs of the source stand in the note.
+    const imprints = this._imprints(pub);
+    if (imprints) parts.push(`Imprint: ${this._imprintWording(imprints)}`);
+    // The gloss is the compiler's rendering of the series title, which the
+    // series field carries in the original wording alone.
+    if (pub.series && pub.seriesGloss) parts.push(`Series: ${pub.series} (${pub.seriesGloss})`);
+    parts.push(...wording(pub.credits || []));
     for (const item of pub.contributions || []) {
       const credits = wording(item.credits || []);
       if (credits.length) parts.push(`${item.title ? `${item.title}: ` : ''}${credits.join(', ')}`);
@@ -215,6 +223,15 @@ const Export = {
   _publicationPages(pub) {
     const numbered = pub.extent && pub.extent.numbered;
     return Number.isFinite(numbered) ? String(numbered) : '';
+  },
+
+  /** The publisher-place pairs of a joint imprint, or null for a single one. */
+  _imprints(pub) {
+    return Array.isArray(pub.imprints) && pub.imprints.length > 1 ? pub.imprints : null;
+  },
+
+  _imprintWording(imprints) {
+    return imprints.map(pair => [pair.publisher, pair.place].filter(Boolean).join(', ')).join(' / ');
   },
 
   /** The places a citation prints: the imprint's, else the container's. */
@@ -244,12 +261,22 @@ const Export = {
     if (title) fields.push(`  title = {${escapeBibtex(title)}}`);
     if (pub.year) fields.push(`  year = {${pub.year}}`);
     if (pub.editionStatement) fields.push(`  edition = {${escapeBibtex(pub.editionStatement)}}`);
-    if (pub.publisher) fields.push(`  publisher = {${escapeBibtex(pub.publisher)}}`);
-    // Every place of the publication in the wording of the source, joined the
-    // way the imprint has them; naming one of them alone would settle a place
-    // assignment the source leaves open.
     const places = this._publicationPlaces(pub);
-    if (places.length) fields.push(`  address = {${escapeBibtex(places.join(', '))}}`);
+    const imprints = this._imprints(pub);
+    if (imprints) {
+      // A joint imprint: biblatex name lists in the order of the source, so
+      // the n-th publisher and the n-th place belong together; each item is
+      // braced so a comma or "and" inside a name stays part of it.
+      const list = values => values.filter(Boolean).map(value => `{${escapeBibtex(value)}}`).join(' and ');
+      fields.push(`  publisher = {${list(imprints.map(pair => pair.publisher))}}`);
+      fields.push(`  address = {${list(imprints.map(pair => pair.place))}}`);
+    } else {
+      if (pub.publisher) fields.push(`  publisher = {${escapeBibtex(pub.publisher)}}`);
+      // Every place of the publication in the wording of the source, joined
+      // the way the imprint has them; naming one of them alone would settle a
+      // place assignment the source leaves open.
+      if (places.length) fields.push(`  address = {${escapeBibtex(places.join(', '))}}`);
+    }
     if (pub.container) {
       // biblatex reads journaltitle, classic BibTeX styles read journal.
       if (pub.container.title) {
@@ -342,9 +369,16 @@ const Export = {
     if (isAboutZweig) lines.push(`KW  - Stefan Zweig`);
     if (pub.year) lines.push(`PY  - ${pub.year}`);
     if (pub.editionStatement) lines.push(`ET  - ${pub.editionStatement}`);
-    if (pub.publisher) lines.push(`PB  - ${pub.publisher}`);
+    const imprints = this._imprints(pub);
+    if (imprints) {
+      lines.push(`PB  - ${imprints.map(pair => pair.publisher).filter(Boolean).join(' / ')}`);
+    } else if (pub.publisher) {
+      lines.push(`PB  - ${pub.publisher}`);
+    }
     const places = this._publicationPlaces(pub);
-    for (const place of places) lines.push(`CY  - ${place}`);
+    for (const place of imprints ? imprints.map(pair => pair.place).filter(Boolean) : places) {
+      lines.push(`CY  - ${place}`);
+    }
     if (pub.container) {
       if (pub.container.title) lines.push(`T2  - ${pub.container.title}`);
       if (pub.container.issue) lines.push(`IS  - ${pub.container.issue}`);
@@ -709,6 +743,7 @@ const Export = {
       ...App.data,
       contestedEditionClaims: Object.values(Edit.editionClaims).flat(),
       contestedAuthorityClaims: Edit.contestedAuthorityClaims,
+      decidedAuthorityClaims: Edit.decidedAuthorityClaims || [],
     };
     downloadBlob(JSON.stringify(payload, null, 2), 'klawiter-bibliography.json', 'application/json');
   },

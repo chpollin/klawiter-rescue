@@ -462,6 +462,30 @@ test('the series number is a number, said once, and the note of the source is ci
   assert.match(other.captured[1].content, /^M1 {2}- 8$/m);
 });
 
+test('a joint imprint keeps each publisher with its place, and the series its gloss', () => {
+  // Page 1725, the edition of 1966; the gloss is the one of page 5039.
+  const entry = { sourcePageId: 1725, entryType: 'historical-study', title: 'Magelan',
+    location: 'Sofija', publicationCount: 5, pageKind: 'edition-page' };
+  const pub = {
+    id: 'klawiter:publication/1725-1966-a', year: 1966, title: 'Magelan',
+    publisher: 'Nauka i izkustvo', places: ['Sofija', 'Varna'],
+    imprints: [{ publisher: 'Nauka i izkustvo', place: 'Sofija' },
+      { publisher: 'DPK St. Dobrev-Strandzhata', place: 'Varna' }],
+    series: 'Tvorba národov', seriesGloss: 'The Formation of Nations',
+  };
+  const { Export, captured } = exportCtx(entry, [pub]);
+  Export.bibtex(1725, 0);
+  Export.ris(1725, 0);
+  const [bib, ris] = captured.map(item => item.content);
+  assert.match(bib, /publisher = \{\{Nauka i izkustvo\} and \{DPK St\. Dobrev-Strandzhata\}\}/);
+  assert.match(bib, /address = \{\{Sofija\} and \{Varna\}\}/);
+  assert.match(bib, /note = \{Imprint: Nauka i izkustvo, Sofija \/ DPK St\. Dobrev-Strandzhata, Varna; Series: Tvorba národov \(The Formation of Nations\)/);
+  assert.match(bib, /series = \{Tvorba národov\}/);
+  assert.match(ris, /^PB {2}- Nauka i izkustvo \/ DPK St\. Dobrev-Strandzhata$/m);
+  assert.match(ris, /^CY {2}- Sofija$\n^CY {2}- Varna$/m);
+  assert.match(ris, /^N1 {2}- Imprint: Nauka i izkustvo, Sofija \/ DPK St\. Dobrev-Strandzhata, Varna; Series: Tvorba národov \(The Formation of Nations\)$/m);
+});
+
 test('every publication is cited under an address of its own', () => {
   const { Export, captured } = exportCtx(editionEntry(), editions());
   Export.bibtex(1800);

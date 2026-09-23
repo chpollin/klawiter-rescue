@@ -85,7 +85,8 @@ const Curate = {
       : '';
     return `${failNote}<div class="network-stats-grid curate-stats">
       ${stat(reconOut || openCandidates.toLocaleString('en'), 'Open authority candidates')}
-      ${stat(reconOut || ((summary.contestedAuthorityClaims || 0) + (summary.contestedEditionClaims || 0)), 'Contested claims')}
+      ${stat(reconOut || ((summary.contestedAuthorityClaims || 0) + (summary.contestedEditionClaims || 0)
+        + (summary.contestedSourceRevisionClaims || 0)), 'Contested claims')}
       ${stat(pending.toLocaleString('en'), 'Pending decisions this session')}
     </div>`;
   },

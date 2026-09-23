@@ -27,7 +27,8 @@ const Edit = {
   triage: null,            // pageId(str) -> flags from triage.json; null until loaded
   reconciliation: null,    // location string -> Gate 2 candidates and decisions
   editionClaims: {},       // sourcePageId(str) -> contested edition claims
-  contestedAuthorityClaims: [],
+  contestedAuthorityClaims: [],   // open claims, source-revision claims included
+  decidedAuthorityClaims: [],     // decided claims, kept as the record of the decision
   pendingReconciliation: {},
   _triageFetched: false,
   _reconciliationFetched: false,
@@ -64,6 +65,7 @@ const Edit = {
         this.agents = doc && doc.agents ? doc.agents : {};
         this.editionClaims = doc && doc.editionClaims ? doc.editionClaims : {};
         this.contestedAuthorityClaims = doc && doc.contestedClaims ? doc.contestedClaims : [];
+        this.decidedAuthorityClaims = doc && doc.decidedClaims ? doc.decidedClaims : [];
         this.summary = doc && doc.summary ? doc.summary : {};
         this._authorityIndex = null;
       })
@@ -204,22 +206,30 @@ const Edit = {
 
   _authorityIndex: null,
 
-  // Two lookup tables over the contested claims, built once. Without them
-  // every card expansion scanned the whole claim list twice.
+  // Lookup tables over the authority claims, open and decided, built once.
+  // Without them every card expansion scanned the whole claim list twice.
   // Claim subject IRIs are percent-encoded; the display name is the stable
-  // match key.
+  // match key. A source-revision claim is about a page, not a value, and has
+  // its own lookup (sourceRevisionClaim).
   _buildAuthorityIndex() {
     const byPage = new Map();
     const byName = new Map();
-    const push = (map, key, claim) => {
+    const push = (map, key, item) => {
       const bucket = map.get(key);
-      if (bucket) { if (!bucket.includes(claim)) bucket.push(claim); }
-      else map.set(key, [claim]);
+      if (bucket) bucket.push(item);
+      else map.set(key, [item]);
     };
-    for (const claim of this.contestedAuthorityClaims || []) {
+    const claims = (this.contestedAuthorityClaims || []).concat(this.decidedAuthorityClaims || [])
+      .filter(claim => claim.entityType !== 'source-revision');
+    for (const claim of claims) {
       if (claim.subject && claim.subject.name) push(byName, claim.subject.name, claim);
       for (const evidence of (claim.sourceEvidence || [])) {
-        push(byPage, Number(evidence.sourcePageId), claim);
+        push(byPage, Number(evidence.sourcePageId), {
+          claim,
+          // The evidence line as the shipped text spells it: without the
+          // bold and italic quotes of the wiki markup.
+          line: String(evidence.sourceText || '').replace(/'{2,}/g, '').trim(),
+        });
       }
     }
     this._authorityIndex = { byPage, byName };
@@ -237,13 +247,15 @@ const Edit = {
   },
 
   /**
-   * The authority claims an entry carries.
+   * The authority claims an entry carries, open and decided.
    *
    * A claim applies to a place value whose wording equals its subject. An
-   * evidence page counts only where its source text literally holds the
-   * subject, because the evidence list reached pages that name neither place
-   * of a compound subject, and a split at the comma put a claim about
-   * "Sofija, Varna" on every card that shows Sofija.
+   * evidence page counts where its source text holds the subject or the
+   * evidence line itself, because the evidence list once reached pages that
+   * name neither place of a compound subject, and a split at the comma put a
+   * claim about "Sofija, Varna" on every card that shows Sofija. The line
+   * check lets a compound imprint split by a slash (page 1725: "Nauka i
+   * izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna") keep its record.
    */
   authorityClaimsFor(entry) {
     if (!entry) return [];
@@ -254,11 +266,23 @@ const Edit = {
       for (const claim of idx.byName.get(value) || []) add(claim);
     }
     const text = entry.fullBibliographicEntry || '';
-    for (const claim of idx.byPage.get(Number(entry.sourcePageId)) || []) {
+    for (const { claim, line } of idx.byPage.get(Number(entry.sourcePageId)) || []) {
       const subject = claim.subject && claim.subject.name;
-      if (subject && text.includes(subject)) add(claim);
+      if ((subject && text.includes(subject)) || (line && text.includes(line))) add(claim);
     }
     return claims;
+  },
+
+  /**
+   * The open source-revision claim on a page, by its identifier or its title.
+   * These are the redirects the wiki's "Redirect fixer" wrote over page text
+   * the dump does not deliver; the redirect is withheld while the claim is open.
+   */
+  sourceRevisionClaim(pageId, title) {
+    return (this.contestedAuthorityClaims || []).find(claim =>
+      claim.entityType === 'source-revision' && claim.subject
+      && ((pageId != null && claim.subject['@id'] === `klawiter:entry/${pageId}`)
+        || (title != null && claim.subject.name === title))) || null;
   },
 
   /** A decided claim stays in the data as its record; only an open one contests. */
