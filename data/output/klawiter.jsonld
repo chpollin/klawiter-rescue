@@ -154649,11 +154649,7 @@
         "@id": "klawiter:place/Tyres%C3%B6",
         "@type": "schema:Place",
         "name": "Tyresö",
-        "klawiter:hasContestedClaim": [
-          {
-            "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3"
-          }
-        ]
+        "sameAs": "http://www.wikidata.org/entity/Q113730"
       },
       "inLanguage": "eo",
       "languageName": "Esperanto",
@@ -163295,11 +163291,7 @@
         "@id": "klawiter:place/Kuwait",
         "@type": "schema:Place",
         "name": "Kuwait",
-        "klawiter:hasContestedClaim": [
-          {
-            "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947"
-          }
-        ]
+        "sameAs": "http://www.wikidata.org/entity/Q35178"
       },
       "inLanguage": "ar",
       "languageName": "Arabic",
@@ -173586,11 +173578,7 @@
         "@id": "klawiter:place/Kuwait",
         "@type": "schema:Place",
         "name": "Kuwait",
-        "klawiter:hasContestedClaim": [
-          {
-            "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947"
-          }
-        ]
+        "sameAs": "http://www.wikidata.org/entity/Q35178"
       },
       "inLanguage": "ar",
       "languageName": "Arabic",

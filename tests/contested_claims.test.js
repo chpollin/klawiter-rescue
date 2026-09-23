@@ -139,12 +139,12 @@ function load(file, context, exported) {
     path.join(__dirname, '..', 'docs', 'data', 'reconciliation.json'),
     'utf8'
   ));
-  // Page 4269 carries the open place claim on Tyresö in its imprint. Page 299
+  // Page 4819 carries the open place claim on Saint-Aignan in its imprint. Page 299
   // no longer serves: its line names Varna and Sofija for two different
   // contributions, which is no evidence for a compound place.
   const realClaim = reconciliation.contestedClaims.find(item =>
-    item.subject && item.subject.name === 'Tyresö' && item.decisionStatus !== 'decided');
-  assert.ok(realClaim, 'the open Tyresö place claim must exist');
+    item.subject && item.subject.name === 'Saint-Aignan' && item.decisionStatus !== 'decided');
+  assert.ok(realClaim, 'the open Saint-Aignan place claim must exist');
   assert.ok(!reconciliation.contestedClaims.some(item =>
     (item.sourceEvidence || []).some(evidence => evidence.sourcePageId === 299)),
     'no claim takes evidence from a page that does not carry its subject');
@@ -157,12 +157,12 @@ function load(file, context, exported) {
   const editContext = { App: { state: {} } };
   const Edit = load('edit.js', editContext, 'Edit');
   Edit.contestedAuthorityClaims = reconciliation.contestedClaims;
-  // Page 4269 prints "Inko, Tyresö, Sweden" and holds Tyresö as its place.
-  const entry = { sourcePageId: 4269, title: 'Ŝaknovelo', location: 'Tyresö' };
+  // Page 4819 prints "l'Université de Rouen - Haute Normandie, Saint-Aignan".
+  const entry = { sourcePageId: 4819, title: 'Adam Lux', location: 'Saint-Aignan' };
   const matchedClaims = Edit.authorityClaimsFor(entry);
   assert.ok(matchedClaims.some(item => item.claimId === realClaim.claimId));
   assert.ok(realClaim.claimId, 'projected claims carry a claimId');
-  assert.strictEqual(Edit.openClaimOnValue(entry, 'Tyresö'), realClaim);
+  assert.strictEqual(Edit.openClaimOnValue(entry, 'Saint-Aignan'), realClaim);
 
   // A claim reaches a page only through a value it names word for word or
   // through source text that literally carries its subject: pages 299 and

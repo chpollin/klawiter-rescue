@@ -426,13 +426,28 @@
       ]
     },
     {
-      "decisionId": "location/Tyreso/unresolved",
+      "decisionId": "location/Tyreso/Q113730",
       "subject": "Tyresö",
-      "action": "unresolved",
-      "decidedBy": "independent-verification-agent",
+      "action": "confirm",
+      "qid": "Q113730",
+      "label": "Tyresö Municipality",
+      "decidedBy": "main-instance",
+      "provenance": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
       "evidence": [
-        "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
-      ]
+        "klawiter:sourceOccurrence/location/4169/57772/15",
+        "klawiter:sourceOccurrence/location/4269/37310/5",
+        "The imprints name the publisher's seat Tyresö; Wikidata models the place as the municipality Q113730, the principal item carrying the English Wikipedia sitelink, and as the statistical district Q21667397 without one. The principal-item rule of 2026-09-23 selects Q113730."
+      ],
+      "supersedesDecisionId": "location/Tyreso/unresolved",
+      "supersedes": {
+        "decisionId": "location/Tyreso/unresolved",
+        "subject": "Tyresö",
+        "action": "unresolved",
+        "decidedBy": "independent-verification-agent",
+        "evidence": [
+          "data/output/reconciliation/location-low-score-review.json#open-log-entry-assessment"
+        ]
+      }
     },
     {
       "decisionId": "location/s-Gravenhage/Q36600",
@@ -1210,27 +1225,43 @@
       ]
     },
     {
-      "decisionId": "location/Kuwait/unresolved",
+      "decisionId": "location/Kuwait/Q35178",
       "subject": "Kuwait",
-      "action": "unresolved",
-      "interpretations": [
-        {
-          "qid": "Q35178",
-          "label": "Kuwait City"
-        },
-        {
-          "qid": "Q817",
-          "label": "Kuwait"
-        }
-      ],
-      "decidedBy": "independent-verification-agent",
-      "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+      "action": "confirm",
+      "qid": "Q35178",
+      "label": "Kuwait City",
+      "decidedBy": "main-instance",
+      "provenance": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
       "evidence": [
         "klawiter:sourceOccurrence/location/4573/37649/1",
-        "klawiter:sourceOccurrence/location/4920/35086/1",
-        "klawiter:sourceOccurrence/location/1695/48318/56",
-        "data/reconciliation/location-agent-review-2026-09-23.json#Kuwait"
-      ]
+        "klawiter:sourceOccurrence/location/4566/37873/69",
+        "The imprint '[2017]: Dār al-Khān li-l-Tarjamah waʾl-Nashr, Kuwait' names the seat of a publishing house, which is a settlement; as with 'México' for Mexico City, the state name stands for its capital Kuwait City (Q35178). The rejected reading is the state Q817."
+      ],
+      "rejectedQid": "Q817",
+      "supersedesDecisionId": "location/Kuwait/unresolved",
+      "supersedes": {
+        "decisionId": "location/Kuwait/unresolved",
+        "subject": "Kuwait",
+        "action": "unresolved",
+        "interpretations": [
+          {
+            "qid": "Q35178",
+            "label": "Kuwait City"
+          },
+          {
+            "qid": "Q817",
+            "label": "Kuwait"
+          }
+        ],
+        "decidedBy": "independent-verification-agent",
+        "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
+        "evidence": [
+          "klawiter:sourceOccurrence/location/4573/37649/1",
+          "klawiter:sourceOccurrence/location/4920/35086/1",
+          "klawiter:sourceOccurrence/location/1695/48318/56",
+          "data/reconciliation/location-agent-review-2026-09-23.json#Kuwait"
+        ]
+      }
     },
     {
       "decisionId": "location/Kbenhavn/Q1748",

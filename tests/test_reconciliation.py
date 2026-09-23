@@ -115,12 +115,11 @@ def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
 ) -> None:
     queue = reconciliation["queue"]
     # 794 location and work cases before the agent place review of
-    # 2026-09-23; its 344 decisions leave 13 more places unresolved, and
-    # decided places leave the queue.
-    assert queue["caseCount"] == 462 + 101
+    # 2026-09-23; its 344 decisions and the later decisions on Tyresö and
+    # Kuwait leave twelve places unresolved, and decided places leave the queue.
+    assert queue["caseCount"] == 460 + 101
     queued = {(item["entityType"], item["subject"]): item for item in queue["cases"]}
     assert queued[("location", "Saint-Aignan")]["status"] == "unresolved"
-    assert queued[("location", "Tyresö")]["status"] == "unresolved"
     assert ("work", "klawiter:work/54") not in queued
 
 
@@ -135,19 +134,20 @@ def test_unresolved_decisions_are_explicit_contested_claims(
     ]
     names = {claim["klawiter:claimSubject"]["schema:name"] for claim in claims}
     assert names == _decided({"unresolved"})
-    assert {"Tyresö", "Saint-Aignan"} <= names
+    assert "Saint-Aignan" in names and "Tyresö" not in names
     assert all(claim["klawiter:claimStatus"] == "contested" for claim in claims)
     assert all(len(claim["klawiter:interpretation"]) >= 2 for claim in claims)
     assert all(claim["klawiter:sourceEvidence"] for claim in claims)
-    tyreso = next(
+    saint_aignan = next(
         claim
         for claim in claims
-        if claim["klawiter:claimSubject"]["@id"] == "klawiter:location/Tyres%C3%B6"
+        if claim["klawiter:claimSubject"]["@id"] == "klawiter:location/Saint-Aignan"
     )
-    assert tyreso["klawiter:claimSubject"]["schema:name"] == "Tyresö"
+    assert saint_aignan["klawiter:claimSubject"]["schema:name"] == "Saint-Aignan"
     assert any(
-        evidence["sourceValue"] == "Tyresö" and len(evidence["sourceTextSha256"]) == 64
-        for evidence in tyreso["klawiter:sourceEvidence"]
+        evidence["sourceValue"] == "Saint-Aignan"
+        and len(evidence["sourceTextSha256"]) == 64
+        for evidence in saint_aignan["klawiter:sourceEvidence"]
     )
 
 
@@ -181,10 +181,10 @@ def test_reconciliation_patch_supersedes_prior_decision(tmp_path: Path) -> None:
                 "reconciliationPatches": [
                     {
                         "entityType": "location",
-                        "subject": "Tyresö",
+                        "subject": "Saint-Aignan",
                         "action": "confirm",
-                        "qid": "Q113730",
-                        "decisionId": "location/Tyreso/Q113730/editor",
+                        "qid": "Q1055925",
+                        "decisionId": "location/Saint-Aignan/Q1055925/editor",
                         "decidedBy": "Editor (SZD)",
                         "decidedAt": "2026-08-21T20:00:00Z",
                         "evidence": ["source-imprint"],
@@ -197,9 +197,11 @@ def test_reconciliation_patch_supersedes_prior_decision(tmp_path: Path) -> None:
     loaded = load_reconciliation_patches(tmp_path)
     base = json.loads(Path(LOCATION_DECISIONS).read_text(encoding="utf-8"))
     merged = merge_decision_patches(base, loaded["location"], "location")
-    decision = next(item for item in merged["decisions"] if item["subject"] == "Tyresö")
+    decision = next(
+        item for item in merged["decisions"] if item["subject"] == "Saint-Aignan"
+    )
     assert decision["action"] == "confirm"
-    assert decision["supersedesDecisionId"] == "location/Tyreso/unresolved"
+    assert decision["supersedesDecisionId"] == "location/Saint-Aignan/unresolved"
 
 
 def test_generated_gate2_validation_passes() -> None:
@@ -376,6 +378,8 @@ def test_public_agent_projection_carries_occurrence_evidence(
         "Sofija, Varna",
         "Varna, Sofija",
         "Bloemfontein, Kaapstad",
+        "Tyresö",
+        "Kuwait",
     }
 
 
@@ -429,10 +433,8 @@ def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
         if claim["klawiter:identityScope"] == "location"
         and claim["klawiter:decisionStatus"] == "open"
     }
-    assert {
-        "klawiter:claim/reconciliation/location/13c36aabb066d6a3",
-        "klawiter:claim/reconciliation/location/d72833396adc8499",
-    } <= open_ids
+    assert "klawiter:claim/reconciliation/location/d72833396adc8499" in open_ids
+    assert "klawiter:claim/reconciliation/location/13c36aabb066d6a3" not in open_ids
     assert len(open_ids) == len(_decided({"unresolved"}))
 
 
@@ -501,5 +503,5 @@ def test_open_and_decided_claim_counts_agree_across_gates() -> None:
     assert gate1["contestedEditionClaims"] == 0
     assert gate1["decidedEditionClaims"] == 1
     assert gate2["contestedAuthorityClaims"] == len(_decided({"unresolved"}))
-    assert gate2["decidedAuthorityClaims"] == 3
+    assert gate2["decidedAuthorityClaims"] == 5
     assert gate2["contestedSourceRevisionClaims"] == 10

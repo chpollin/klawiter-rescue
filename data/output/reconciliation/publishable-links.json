@@ -931,6 +931,12 @@
       "qid": "Q1865",
       "uri": "http://www.wikidata.org/entity/Q1865"
     },
+    "Kuwait": {
+      "decisionId": "location/Kuwait/Q35178",
+      "label": "Kuwait City",
+      "qid": "Q35178",
+      "uri": "http://www.wikidata.org/entity/Q35178"
+    },
     "Kyïv": {
       "decisionId": "location/Kyiv/Q1899",
       "label": "Kyiv",
@@ -1890,6 +1896,12 @@
       "label": "Tutzing",
       "qid": "Q533166",
       "uri": "http://www.wikidata.org/entity/Q533166"
+    },
+    "Tyresö": {
+      "decisionId": "location/Tyreso/Q113730",
+      "label": "Tyresö Municipality",
+      "qid": "Q113730",
+      "uri": "http://www.wikidata.org/entity/Q113730"
     },
     "Tórshavn": {
       "decisionId": "location/Torshavn/Q10704",

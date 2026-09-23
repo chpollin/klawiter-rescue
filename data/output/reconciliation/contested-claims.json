@@ -46,12 +46,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "contested",
+      "klawiter:claimStatus": "resolved",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Tyres%C3%B6",
         "schema:name": "Tyresö"
       },
-      "klawiter:decisionStatus": "open",
+      "klawiter:decisionStatus": "decided",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/c2e71f5d9a751732",
@@ -64,6 +64,21 @@
           "prov:wasAssociatedWith": {
             "schema:name": "independent-verification-agent"
           }
+        },
+        {
+          "@id": "klawiter:review/reconciliation/c2aff4e8885f09d9",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Tyreso/Q113730",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/4169/57772/15",
+            "klawiter:sourceOccurrence/location/4269/37310/5",
+            "The imprints name the publisher's seat Tyresö; Wikidata models the place as the municipality Q113730, the principal item carrying the English Wikipedia sitelink, and as the statistical district Q21667397 without one. The principal-item rule of 2026-09-23 selects Q113730."
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "confirm",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
         }
       ],
       "klawiter:identityScope": "location",
@@ -73,7 +88,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Tyresö/Q113730",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "accepted",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q113730"
           },
@@ -84,7 +99,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Tyresö/Q21667397",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q21667397"
           },
@@ -94,7 +109,7 @@
           "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "schema:name": "No canonical authority assignment in the current evidence"
         }
       ],
@@ -559,12 +574,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "contested",
+      "klawiter:claimStatus": "resolved",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Kuwait",
         "schema:name": "Kuwait"
       },
-      "klawiter:decisionStatus": "open",
+      "klawiter:decisionStatus": "decided",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/b6b9a36fd31d7476",
@@ -581,6 +596,21 @@
           "prov:wasAssociatedWith": {
             "schema:name": "independent-verification-agent"
           }
+        },
+        {
+          "@id": "klawiter:review/reconciliation/7dcef863841ea073",
+          "@type": "klawiter:ReviewAction",
+          "klawiter:decisionId": "location/Kuwait/Q35178",
+          "klawiter:evidence": [
+            "klawiter:sourceOccurrence/location/4573/37649/1",
+            "klawiter:sourceOccurrence/location/4566/37873/69",
+            "The imprint '[2017]: Dār al-Khān li-l-Tarjamah waʾl-Nashr, Kuwait' names the seat of a publishing house, which is a settlement; as with 'México' for Mexico City, the state name stands for its capital Kuwait City (Q35178). The rejected reading is the state Q817."
+          ],
+          "klawiter:reviewBasis": "decided by the main instance after delegation by the operator on 2026-09-23, revisable",
+          "klawiter:reviewOutcome": "confirm",
+          "prov:wasAssociatedWith": {
+            "schema:name": "main-instance"
+          }
         }
       ],
       "klawiter:identityScope": "location",
@@ -590,28 +620,17 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Kuwait/Q35178",
           "klawiter:candidateSource": "legacy-reconciliation-output",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "accepted",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q35178"
           },
           "schema:name": "Kuwait City"
         },
         {
-          "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947/interpretation/Q817",
-          "@type": "klawiter:ClaimInterpretation",
-          "klawiter:candidateId": "location/Kuwait/Q817",
-          "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "contested",
-          "klawiter:proposedObject": {
-            "@id": "http://www.wikidata.org/entity/Q817"
-          },
-          "schema:name": "Kuwait"
-        },
-        {
           "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "contested",
+          "klawiter:interpretationStatus": "rejected",
           "schema:name": "No canonical authority assignment in the current evidence"
         }
       ],

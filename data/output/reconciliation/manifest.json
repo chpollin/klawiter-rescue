@@ -1,40 +1,40 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "candidates.json": "0adc216752786cf4af2ab785e3f94ad5de888f1a92cbaba91bd0bc43928ce9a9",
-    "contested-claims.json": "f1387fb3b5c5e664de8924c336912cf86312a9e11685f631eecbf14386a17464",
-    "decisions.json": "a420a19df3d0a132829c023aca04618ad96f672438a82545ff46ecaefe004cea",
-    "earl.jsonld": "920ad92a268e1ac34fde5ee9dfcc0e6bc81120d76e3851144bc2648a87fc4679",
-    "provenance.jsonld": "1c6683d5ed1d9b7bfe89d6b262109a002a70c8974dffca6a22a5c855bc82a021",
-    "publishable-links.json": "585550f741cf15a84032c34597bfdfa3c94c133eded12659a11e27867cc21699",
-    "review-queue.json": "7048af2008c22ee7595eb2205c59b5b34b6d09289557caf9121367cbf7385059",
-    "validation-report.json": "fdcee1cd0c07107d42e6243a51f2ac26af58a3250d255143e8d5cfa6eeff07ac"
+    "candidates.json": "d276517c47318eea0effaa8a64f6740c24fd5b748545b119ef128c51f3f893b6",
+    "contested-claims.json": "6b3261c85ac2bf3324a4781c685ed1c69f0a4eb096fe3db5f4d8c64d6d6646b5",
+    "decisions.json": "f964460a26ea02a6007a5ff0938f8d3db64d5c6439dffc22f78324021f4df232",
+    "earl.jsonld": "bea85921e360a189a836089b0cc8bf922a9e8a35baf83723e74e2bc11ee5eb2d",
+    "provenance.jsonld": "22a6b889d3ec83992594bf9045b09a532dcc733ebde75d4785de3a7199c8ebc5",
+    "publishable-links.json": "8349ee1d918195bd283ac8f6f5f90284f806e0c7fc071d9a3d2d51c99c179844",
+    "review-queue.json": "f95e42b4c8f3be085ce6bdf995b195eec7d4e228a041fc726c37391e745af6a2",
+    "validation-report.json": "aacae0790256937e5db580afad30808c91f2934bdd5a4cbf8007aa5762322ae5"
   },
   "codeSha256": "72d1464b4e72bc30e276069f1738b3741e47116b934e9a68e23484d9c6b1171e",
   "counts": {
     "agentDecisions": 0,
     "agentSubjects": 101,
-    "contestedAuthorityClaims": 14,
+    "contestedAuthorityClaims": 12,
     "contestedEditionClaims": 0,
     "contestedSourceRevisionClaims": 10,
-    "decidedAuthorityClaims": 3,
+    "decidedAuthorityClaims": 5,
     "decidedEditionClaims": 1,
-    "locationCandidates": 421,
+    "locationCandidates": 420,
     "locationDecisions": 378,
     "locationSubjects": 382,
     "publishableAgentLinks": 0,
-    "publishableLocationLinks": 352,
+    "publishableLocationLinks": 354,
     "publishableWorkLinks": 3,
-    "reviewCases": 563,
+    "reviewCases": 561,
     "workCandidates": 853,
     "workDecisions": 3,
     "workSubjects": 447
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "c88621b743990a5d320e596217c1db4f47b5b737f61299e8d7c3b70a46f72c13"
+    "sha256": "ae353194e516c809416c935df6eb14ff83d34fe63215e0b01f89efa4532fe583"
   },
-  "generatedAt": "2026-09-23T12:01:51.736986+00:00",
+  "generatedAt": "2026-09-23T12:17:29.724092+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -58,7 +58,7 @@
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",
-      "sha256": "fbed83b9dcfc6a26959b1479d8dfd995462039fb59b1f706b51fc421eafac951"
+      "sha256": "99f0dafe815c775b7bb6dbf95858282431be2efd11ab51d7d0379c63b5856101"
     },
     "location-log": {
       "path": "data/provenance/locations-reconciliation-log.json",
