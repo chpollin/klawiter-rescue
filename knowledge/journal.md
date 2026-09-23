@@ -21,6 +21,20 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-09-23 — Session 41: Remaining titles and two places
+
+**Round.** Closing data pass on the cases the operator asked to solve at once. One agent extended the title rule and two header rules in its own worktree, the main instance decided two places.
+
+**Changed.** Tyresö resolves to the municipality Q113730 and "Kuwait" as the seat of a publishing house to Kuwait City Q35178, both by the principal-item rule, superseding their open decisions (decided by the main instance after delegation by the operator on 2026-09-23, revisable). The title rule gained classes for holdings notes, addresses, notes, seminar papers, URLs and contribution lines, a check against the page's own categories and author name, and a bold label directly above a list, which corrects eighteen further titles. The Gate 1 header split reads the period of a single capital initial as no sentence end, so page 66 has publisher S. Fischer Verlag and place Frankfurt am Main. Contents after a bold "<language> edition" label no longer attach to the publication before them (page 2083).
+
+**Decided.** Page 1875 keeps its six volumes in one publication. Thirty-one blocks carry several volume lines, splitting them would change the ratified editions of seven Gate 1 pages, and the notation varies too much for one rule; a publications-only volume part would need a new field contract.
+
+**Open.** Ten places stay open. Four of them (Sulzbach, Huis ter Heide, Leikanger, Saint-Aignan) can be decided with evidence outside the bibliography, such as a publisher's address, if the operator admits such evidence. St. Petersburg and Hyderabad name two places under one string. The question-marked places and the self-contradicting "Irun (Iruñea) [Pamplona]" stay open by design. Author pages 3436 and 6503 still carry a non-title.
+
+**Resume.** Default suite, semantic diagnostics with 21 retained failures, Node suites, Ruff, a full production run with both gates and the committed-evidence check passed.
+
+---
+
 ## 2026-09-23 — Session 40: Place authority review and record titles
 
 **Round.** Data round after the release items were closed. Three agents reviewed the undecided place subjects in parallel, a fourth repaired the record-title selection and the header imprints in its own worktree, and the main instance adjudicated and integrated.
