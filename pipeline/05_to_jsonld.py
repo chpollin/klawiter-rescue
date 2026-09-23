@@ -366,16 +366,22 @@ _FRONTEND_SKIPPED_KEYS = {"author", "relation", "seeAlsoText", "decomposedAsWork
 # kind that decides each of them.
 _REVIEW_FIELDS = ("location", "translator", "publisher")
 _AGENT_DECISION_FIELDS = {"person": "translator", "publisher": "publisher"}
-# What a decision action says about the entry as a whole. reject is a
-# completed review too: the reviewer saw the candidate and refused it.
+# What a decision action says about the entry as a whole. A rejection
+# refuses a candidate link and verifies no value, so it yields the weakest
+# status, reviewed: a decision exists, nothing was verified.
 _REVIEW_STATUS_BY_ACTION = {
     "confirm": "agent_verified",
     "correct": "agent_verified",
-    "reject": "agent_verified",
+    "reject": "reviewed",
     "unresolved": "contested",
 }
 # approved is reserved for apply_patches.py, where a human editor decided.
-_REVIEW_STATUS_RANK = {"contested": 0, "agent_verified": 1, "approved": 2}
+_REVIEW_STATUS_RANK = {
+    "reviewed": 0,
+    "contested": 1,
+    "agent_verified": 2,
+    "approved": 3,
+}
 
 
 def load_review_index():
@@ -404,7 +410,8 @@ def build_review(frontend_entry, review_index):
     Returns None where no decision covers any value of the entry, so an
     unreviewed entry carries no key at all. The status reports the strongest
     statement any of its fields carries; the fields map keeps the per-field
-    detail the interface needs to say what was reviewed.
+    detail, and scope lists the fields the status covers, because a decided
+    place says nothing about year, translator or any other field.
     """
     fields = {}
     strongest = None
@@ -427,6 +434,7 @@ def build_review(frontend_entry, review_index):
     if decision.get("decidedAt"):
         review["reviewed_at"] = decision["decidedAt"]
     review["fields"] = fields
+    review["scope"] = list(fields)
     return review
 
 
