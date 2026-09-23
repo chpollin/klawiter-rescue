@@ -21,6 +21,20 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-09-23 — Session 40: Place authority review and record titles
+
+**Round.** Data round after the release items were closed. Three agents reviewed the undecided place subjects in parallel, a fourth repaired the record-title selection and the header imprints in its own worktree, and the main instance adjudicated and integrated.
+
+**Changed.** 344 place subjects received decisions in `data/reconciliation/location-decisions.json` (307 confirm, 16 correct, 9 reject of compound places, 12 unresolved), each with source occurrences and the agent review in `data/reconciliation/location-agent-review-2026-09-23.json`; published place links rose from 29 to 352. Corrections replaced legacy matches such as Garden City (Singapore), Lexington (Kentucky), Cambridge (England) for Harvard imprints, Amersfoort (a camp) and Delhi (New Delhi). Occurrence matching counts whole words, so "Bonnier" no longer evidences Bonn, and readings a reviewer names for an open claim join it as marked candidates. Stage 03 takes the page title where the first line is a citation, cross-reference, credit, extent, imprint, annotation, label or heading, which changes about two thousand titles, and `lib/publications.py` reads an imprint that closes a date-only header line, adding thirteen places. The redirect map shrank to the aliases that differ from an entry title, and no referenced key was lost.
+
+**Decided.** For a place that Wikidata models as both town and municipality, the principal item carrying the English Wikipedia sitelink is the target, as with Amsterdam. A place the source marks with a question mark (Tashkent?, Jakarta?, Prishtina?, Tirana?, the gloss "[Indore?]") receives no identity. A subject without a source occurrence and without a current record receives no decision (București, La Tour d'Aigues, a mis-encoded Rīga and a Seoul variant). An author page keeps its page title as record title even where the compiler titled it by a reviewer's initials, because the interface marks such a title as an author name and the article title stays in the publication layer.
+
+**Open.** Twelve places stay open, among them St. Petersburg (Russia or Florida), Hyderabad (Sindh or India), Sulzbach and Huis ter Heide. A few non-titles outside the bounded classes remain (holdings notes on 1768, 2980, 2981, 3657, an address on 2712, notes on 187, 3262, 3677, 6416, a seminar paper on 3818, a URL on 6807, and 3923, 6060, 6991). The header split of Gate 1 reads the "S." of "S. Fischer Verlag" as a sentence boundary on page 66. Page 1875 still merges six volumes.
+
+**Resume.** Default suite, semantic diagnostics with 21 retained failures, Node suites, Ruff, a full production run with both gates and the committed-evidence check passed on the merged state.
+
+---
+
 ## 2026-09-23 — Session 39: Release review and repair round
 
 **Round.** Four read-only reviews (the Maria Stuart redirect, the separation of statement states, the public release package and a machine run of worksheet case 5) were followed by one repair round in three parallel worktrees and a release-metadata pass. The operator approved the recommended course, and its domain decisions are recorded as decided by the main instance after delegation by the operator on 2026-09-23, revisable.

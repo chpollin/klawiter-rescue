@@ -20,14 +20,14 @@ This is the single current status/work list. [Production readiness](production-r
 | Bibliography entries visible in the interface | 4,758 | namespace 0, excluding redirects |
 | Work / edition / source annotation nodes | 448 / 2,077 / 2,077 | [Gate 1 manifest](../data/output/editions/manifest.json) |
 | Confirmed / proposed / contested editions | 76 / 2,001 / 0 | same manifest and graph |
-| Prioritized edition / reconciliation review cases | 339 / 895 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
-| Publishable location / work / agent links | 29 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json) |
-| Open authority / source-revision / edition claims | 2 / 10 / 0 | same manifest |
+| Prioritized edition / reconciliation review cases | 339 / 563 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
+| Publishable location / work / agent links | 352 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json) |
+| Open authority / source-revision / edition claims | 14 / 10 / 0 | same manifest |
 | Decided authority / edition claims | 3 / 1 | same manifest |
 | Pages restored from before a Redirect fixer overwrite | 8 | `data/reconciliation/source-revision-decisions.json` |
 | Unresolved See-references | 2 (pages 679, 7232) | [frontend dataset](../docs/data/klawiter.json) |
 | Pages / publications / contributions in the publication layer | 1,665 / 3,273 / 13,904 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
-| Publication review flags (missing place / unresolved imprint / pagination) | 173 (82 / 65 / 26) | same field, `reviewFlags` per publication |
+| Publication review flags (missing place / unresolved imprint / pagination) | 160 (69 / 65 / 26) | same field, `reviewFlags` per publication |
 
 Four current pages lack text; only page 2979 is bibliographic. Earlier revisions, absent archived titles and uploaded image bytes are outside the current extracted content scope. The titles that the wiki recorded as deleted and that are absent from the current page table are excluded from version 1.0 ([Production readiness](production-readiness.md#release-scope)). See [Data](data.md).
 
@@ -64,6 +64,8 @@ On 22 September the four worksheet cases on pages 1800, 1891, 4445 and 4209 are 
 
 On 23 September four read-only reviews (the Maria Stuart redirect, the separation of statement states, the public release package, and a machine run of worksheet case 5) led to one repair round, with the operator's approval of the recommended course, each domain decision recorded as decided by the main instance after delegation by the operator on 2026-09-23, revisable. Pages overwritten by the wiki's Redirect fixer are published from the compiler's last revision, the 26 Maria Stuart references lead to page 35, the compound place claims are decided as two places each, the publication-layer rules no longer raise flags for qualified places, co-imprints or the unnumbered pages of an extent, and the interface states the scope of each review, the state of each edition and every open or decided claim where it applies. Citations carry a permalink per publication, contribution translators, notes and correct RIS roles. After the round the default suite, the semantic diagnostics with the same 23 retained failures, the Node behaviour suites, Ruff, a full production run with both gates and the committed-evidence check passed. See [Journal](journal.md).
 
+A second round on the same day reviewed every undecided place subject. Three independent agents checked each candidate against its source occurrences and Wikidata (label, instance of, country), and the main instance adjudicated one rule set: the principal Wikidata item carrying the English Wikipedia sitelink, no identity for a place the source marks with a question mark, and no decision without a source occurrence. Published place links rose from 29 to 352, twelve further places stay open, and the reviews are versioned in `data/reconciliation/location-agent-review-2026-09-23.json`. Occurrence evidence now counts whole words only. The record title of an entry whose first line is a citation, cross-reference, credit, extent or imprint statement is now the page title, which changes the title of about two thousand entries, among them every author page formerly titled "[1]", and the imprint of a date-only header is read from its header line. The semantic diagnostics dropped from 23 to 21 retained failures.
+
 Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](evaluations/2026-09-05/validation.json) and [dashboard QA](evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
 
 ## Prioritized completion work
@@ -74,7 +76,7 @@ Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload
 | P0 acceptance | None outstanding. On 23 September the operator withdrew worksheet case 5, the partner acceptance and the Zenodo deposit; a Git tag remains the operator's decision | operator decision |
 | P1 provenance | Apply one released field correction consistently to canonical graphs, frontend, exports, history and reports | end-to-end replay and repeatability with a real source-bound fixture |
 | P1 editing | Editing per publication stays outside version 1.0 (decided by the main instance after delegation by the operator on 2026-09-23, revisable), because no released correction exists yet and the acceptance contract asks for propagation of a page-level correction | a patch contract that binds a publication id to its source-slice hash, when a correction needs it |
-| P2 data | Page 1875 still merges six volumes into one publication, page 2083 reads page lines of its French edition as contents, and 145 main-namespace titles are taken from a cross-reference, translation or imprint line instead of the page title (class of pages 5839, 212, 586) | source-bound fixtures after a Gate 1 segmentation decision |
+| P2 data | Page 1875 still merges six volumes into one publication, page 2083 reads page lines of its French edition as contents, and a few titles remain non-titles outside the bounded classes of the title rule (holdings notes on 1768, 2980, 2981, 3657, notes on 187, 3262, 3677, 6416, and others listed in the journal) | source-bound fixtures after a Gate 1 segmentation decision |
 | P2 QA | Broaden the stratified semantic sample, complete curation/export browser checks and measure representative performance/accessibility | declared sample protocol and device/task budgets with recorded results |
 
 The two remaining unresolved See-references name titles no current page carries and stay open. The Maria Stuart case showed that a technically resolved reference can still point to the wrong page, so a resolution rests on the source revision history, never on a guessed target.

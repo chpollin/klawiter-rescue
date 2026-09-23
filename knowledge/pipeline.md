@@ -61,7 +61,7 @@ Stage 01 reads MediaWiki tables and external text stores directly. A database se
 
 Stage 02 repairs known mojibake sequences section by section and idempotently. The repair is adopted only where the byte sequence validates as UTF-8. Deliberately present Unicode characters stay unchanged.
 
-Stage 03 combines structural wiki parsing and evidence-bound patterns. With bold-set edition headers such as `[1939]` or `[ca. 1965]`, the MediaWiki page title stays authoritative; the header is not emitted as a work title. Empty source pages keep their page title as a stub.
+Stage 03 combines structural wiki parsing and evidence-bound patterns. With bold-set edition headers such as `[1939]` or `[ca. 1965]`, the MediaWiki page title stays authoritative; the header is not emitted as a work title. The same fallback applies where the first line is a statement rather than a title, meaning a citation of an article in its container, a cross-reference, a credit, an extent, an imprint, an annotation, a label such as "Volume:" or a wiki heading (`NON_TITLE_CLASSES` in `03_parse_entries.py`). The corpus writes quotation marks escaped, so the quoted-title pattern rarely applies, and before this rule every article page carried its full citation as title. Empty source pages keep their page title as a stub.
 
 ## Frozen Enrichment
 
