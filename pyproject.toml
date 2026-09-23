@@ -1,6 +1,6 @@
 [project]
 name = "klawiter-rescue"
-version = "1.0.0"
+version = "0.9"
 description = "Reproducible rescue, modeling, and publication pipeline for the Klawiter Bibliography"
 requires-python = ">=3.11"
 dependencies = [

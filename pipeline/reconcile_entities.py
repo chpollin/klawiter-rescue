@@ -24,6 +24,7 @@ from lib.config import (  # noqa: E402
     OUTPUT_RECONCILIATION_DIR,
     OUTPUT_RECONCILIATION_FRONTEND,
     PROJECT_ROOT,
+    SOURCE_REVISION_DECISIONS,
     STEP_04_OUTPUT,
     SZD_WORK_INDEX,
     WORK_DECISIONS,
@@ -177,9 +178,19 @@ def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
                         "decidedBy": item["prov:wasAssociatedWith"]["schema:name"],
                         "decidedAt": item.get("klawiter:decidedAt"),
                         "evidence": item["klawiter:evidence"],
+                        **(
+                            {"basis": item["klawiter:reviewBasis"]}
+                            if item.get("klawiter:reviewBasis")
+                            else {}
+                        ),
                     }
                     for item in claim["klawiter:hasReviewAction"]
                 ],
+                **(
+                    {"reviewNotes": claim["klawiter:reviewNote"]}
+                    if claim.get("klawiter:reviewNote")
+                    else {}
+                ),
             }
         )
     return projected
@@ -188,6 +199,31 @@ def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
 def _open_claim_count(claims: list[dict]) -> int:
     """Claims still awaiting a decision; a decided claim stays as its record."""
     return sum(claim["klawiter:decisionStatus"] == "open" for claim in claims)
+
+
+def claim_counts(claims: list[dict], edition_claims: list[dict]) -> dict[str, int]:
+    """Open and decided claims per layer, under the names Gate 1 also uses.
+
+    contested* counts open claims only; a decided claim stays in the data as
+    its record and is counted under decided*.
+    """
+    authority = [
+        claim
+        for claim in claims
+        if claim["klawiter:identityScope"] != "source-revision"
+    ]
+    revision = [
+        claim
+        for claim in claims
+        if claim["klawiter:identityScope"] == "source-revision"
+    ]
+    return {
+        "contestedAuthorityClaims": _open_claim_count(authority),
+        "decidedAuthorityClaims": len(authority) - _open_claim_count(authority),
+        "contestedSourceRevisionClaims": _open_claim_count(revision),
+        "contestedEditionClaims": _open_claim_count(edition_claims),
+        "decidedEditionClaims": len(edition_claims) - _open_claim_count(edition_claims),
+    }
 
 
 def _frontend(result: dict, edition_dataset: dict) -> dict:
@@ -249,8 +285,10 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
         )
     return {
         # 1.1 added source-occurrence evidence to the agent subjects, 1.2 the
-        # decided edition claims with their review notes and decision dates.
-        "schemaVersion": "1.2",
+        # decided edition claims with their review notes and decision dates,
+        # 1.3 decided authority claims, source-revision claims and the split
+        # of open and decided claim counts.
+        "schemaVersion": "1.3",
         "contract": result["publishable"]["publicationContract"],
         "summary": {
             "locationSubjects": len(result["candidates"]["locations"]),
@@ -258,12 +296,9 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
             "publishedLocationLinks": len(result["publishable"]["locations"]),
             "publishedWorkLinks": len(result["publishable"]["works"]),
             "reviewCases": result["queue"]["caseCount"],
-            "contestedAuthorityClaims": len(result["contestedClaims"]),
-            "contestedEditionClaims": _open_claim_count(
-                edition_dataset["contestedClaims"]
+            **claim_counts(
+                result["contestedClaims"], edition_dataset["contestedClaims"]
             ),
-            "decidedEditionClaims": len(edition_dataset["contestedClaims"])
-            - _open_claim_count(edition_dataset["contestedClaims"]),
         },
         "locations": location_items,
         "works": result["candidates"]["works"],
@@ -295,7 +330,23 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
             }
             for subject in result["candidates"]["agents"]
         },
-        "contestedClaims": _frontend_authority_claims(result["contestedClaims"]),
+        # Open claims only: the interface renders every entry of this list as
+        # a claim awaiting its decision. Decided claims keep their record in
+        # a list of their own, with accepted and rejected readings.
+        "contestedClaims": _frontend_authority_claims(
+            [
+                claim
+                for claim in result["contestedClaims"]
+                if claim["klawiter:decisionStatus"] == "open"
+            ]
+        ),
+        "decidedClaims": _frontend_authority_claims(
+            [
+                claim
+                for claim in result["contestedClaims"]
+                if claim["klawiter:decisionStatus"] == "decided"
+            ]
+        ),
         "editionClaims": edition_claims,
     }
 
@@ -314,6 +365,7 @@ def main() -> None:
         "classified-source": Path(STEP_04_OUTPUT),
         "agent-reconciliation": Path(AGENT_RECONCILIATION),
         "agent-decisions": Path(AGENT_DECISIONS),
+        "source-revision-decisions": Path(SOURCE_REVISION_DECISIONS),
     }
     for description, path in input_paths.items():
         if not path.exists():
@@ -357,6 +409,7 @@ def main() -> None:
         load_csv(STEP_04_OUTPUT),
         _read_json(input_paths["agent-reconciliation"]),
         agent_decisions,
+        _read_json(input_paths["source-revision-decisions"]),
     )
     generated_at = datetime.now(timezone.utc).isoformat()
     # LF-normalize so the recorded provenance hash is independent of the
@@ -412,12 +465,9 @@ def main() -> None:
             "agentDecisions": len(result["decisions"]["agentDecisions"]),
             "publishableAgentLinks": len(result["publishable"]["agents"]),
             "reviewCases": result["queue"]["caseCount"],
-            "contestedAuthorityClaims": len(result["contestedClaims"]),
-            "contestedEditionClaims": _open_claim_count(
-                edition_dataset["contestedClaims"]
+            **claim_counts(
+                result["contestedClaims"], edition_dataset["contestedClaims"]
             ),
-            "decidedEditionClaims": len(edition_dataset["contestedClaims"])
-            - _open_claim_count(edition_dataset["contestedClaims"]),
         },
         "artifacts": {name: _sha256(output_dir / name) for name in artifacts},
         "frontendArtifact": {

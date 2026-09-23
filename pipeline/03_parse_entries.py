@@ -46,7 +46,8 @@ SECTION_HEADER_RE = re.compile(
     r"Polish|Czech|Hungarian|Romanian|Bulgarian|Croatian|Serbian|Turkish|Greek|"
     r"Albanian|Catalan|Korean|Slovenian|Slovak|Ukrainian|Georgian|Persian|"
     r"First printing|First edition|Reprinted in|See also|See:|Note:|Translations|"
-    r"Manuscript|Reviews|Book editions|Excerpts|Fischer Editions/Reprints|"
+    r"Manuscript|Reviews|Book editions|Printed editions|Excerpts|"
+    r"Fischer Editions/Reprints|"
     r"Collected Works / [A-Za-z]+):?\s*",
     re.IGNORECASE,
 )

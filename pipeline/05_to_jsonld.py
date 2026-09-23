@@ -30,6 +30,7 @@ from lib.config import (
     OUTPUT_RECONCILIATION_DECISIONS,
     OUTPUT_RECONCILIATION_DIR,
     PROJECT_ROOT,
+    SOURCE_REVISION_DECISIONS,
     STEP_01_PAGELINKS,
     STEP_04_OUTPUT,
     csv_bool,
@@ -126,9 +127,38 @@ def safe_json_parse(value):
         return None
 
 
-def build_reference_targets(rows):
+def load_withheld_redirects():
+    """Page ids whose Redirect-fixer redirect is not resolved as a relation.
+
+    Where the revision the fixer overwrote is not delivered, the dump cannot
+    show whether the page held content; the decision withholds the redirect
+    and Gate 2 records an open claim instead (source-revision-decisions.json).
+    """
+    with open(SOURCE_REVISION_DECISIONS, encoding="utf-8") as handle:
+        document = json.load(handle)
+    return frozenset(
+        decision["pageId"]
+        for decision in document["decisions"]
+        if decision["action"] == "withhold-redirect-relation"
+    )
+
+
+def _collapse(title):
+    """MediaWiki collapses whitespace runs in a title before the lookup."""
+    return " ".join(title.split())
+
+
+def build_reference_targets(rows, withheld=None):
     """Map every resolvable reference name (parsed title, wiki page title,
-    redirect name) to the page id of the entry it finally lands on."""
+    redirect name) to the page id of the entry it finally lands on.
+
+    Every name also enters in its whitespace-collapsed form, the form a link
+    target takes, without displacing an exact name. A withheld redirect
+    neither resolves nor carries a chain; it defaults to the recorded
+    decisions so that every caller applies them.
+    """
+    if withheld is None:
+        withheld = load_withheld_redirects()
     direct = {}
     for row in rows:
         if csv_bool(row.get("is_redirect")):
@@ -138,26 +168,32 @@ def build_reference_targets(rows):
             value = row.get(key, "")
             if value:
                 direct.setdefault(value, pid)
+    for value, pid in list(direct.items()):
+        direct.setdefault(_collapse(value), pid)
     targets = dict(direct)
+    redirect_rows = [
+        row
+        for row in rows
+        if csv_bool(row.get("is_redirect")) and int(row["page_id"]) not in withheld
+    ]
     redirects = {
         row["page_title"]: row.get("redirect_target") or row.get("title", "")
-        for row in rows
-        if csv_bool(row.get("is_redirect")) and row.get("page_title")
+        for row in redirect_rows
+        if row.get("page_title")
     }
-    for row in rows:
-        if not csv_bool(row.get("is_redirect")):
-            continue
+    for row in redirect_rows:
         target = row.get("redirect_target", "") or row.get("title", "")
         seen = set()
         while target not in direct and target in redirects and target not in seen:
             seen.add(target)
             target = redirects[target]
-        pid = direct.get(target)
+        pid = direct.get(target) or direct.get(_collapse(target))
         if pid:
             for key in ("page_title", "title"):
                 value = row.get(key, "")
                 if value:
                     targets.setdefault(value, pid)
+                    targets.setdefault(_collapse(value), pid)
     return targets
 
 
@@ -412,16 +448,22 @@ _FRONTEND_SKIPPED_KEYS = {"author", "relation", "seeAlsoText", "decomposedAsWork
 # kind that decides each of them.
 _REVIEW_FIELDS = ("location", "translator", "publisher")
 _AGENT_DECISION_FIELDS = {"person": "translator", "publisher": "publisher"}
-# What a decision action says about the entry as a whole. reject is a
-# completed review too: the reviewer saw the candidate and refused it.
+# What a decision action says about the entry as a whole. A rejection
+# refuses a candidate link and verifies no value, so it yields the weakest
+# status, reviewed: a decision exists, nothing was verified.
 _REVIEW_STATUS_BY_ACTION = {
     "confirm": "agent_verified",
     "correct": "agent_verified",
-    "reject": "agent_verified",
+    "reject": "reviewed",
     "unresolved": "contested",
 }
 # approved is reserved for apply_patches.py, where a human editor decided.
-_REVIEW_STATUS_RANK = {"contested": 0, "agent_verified": 1, "approved": 2}
+_REVIEW_STATUS_RANK = {
+    "reviewed": 0,
+    "contested": 1,
+    "agent_verified": 2,
+    "approved": 3,
+}
 
 
 def load_review_index():
@@ -450,7 +492,8 @@ def build_review(frontend_entry, review_index):
     Returns None where no decision covers any value of the entry, so an
     unreviewed entry carries no key at all. The status reports the strongest
     statement any of its fields carries; the fields map keeps the per-field
-    detail the interface needs to say what was reviewed.
+    detail, and scope lists the fields the status covers, because a decided
+    place says nothing about year, translator or any other field.
     """
     fields = {}
     strongest = None
@@ -473,6 +516,7 @@ def build_review(frontend_entry, review_index):
     if decision.get("decidedAt"):
         review["reviewed_at"] = decision["decidedAt"]
     review["fields"] = fields
+    review["scope"] = list(fields)
     return review
 
 
@@ -823,7 +867,8 @@ def main():
         # 1.2 the publication- and contribution-scoped layer, 1.3 its move
         # into per-page side files, 1.4 the edition node and review status
         # per publication, the page's publication flag codes, the imprint
-        # pairs and series gloss, and the release license and version.
+        # pairs and series gloss, the release license and version, and the
+        # review scope and reviewed status.
         "frontendSchemaVersion": "1.4",
         "license": DATA_LICENSE,
         "version": version,

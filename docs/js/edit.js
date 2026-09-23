@@ -67,9 +67,10 @@ const Edit = {
         this.summary = doc && doc.summary ? doc.summary : {};
         this._authorityIndex = null;
       })
-      .catch(() => {
+      .catch(err => {
         this.reconciliation = {}; this.agents = {}; this.summary = {};
         this.reconciliationFailed = true;
+        this.reconciliationError = err && err.message ? err.message : String(err);
       });
   },
 
@@ -225,14 +226,51 @@ const Edit = {
     return this._authorityIndex;
   },
 
+  /** Every place value the card of this entry can display. */
+  displayedPlaces(entry) {
+    const values = new Set();
+    if (entry.location) values.add(entry.location);
+    for (const list of [entry.allLocations, entry.publicationPlaces]) {
+      for (const value of Array.isArray(list) ? list : []) if (value) values.add(value);
+    }
+    return [...values];
+  },
+
+  /**
+   * The authority claims an entry carries.
+   *
+   * A claim applies to a place value whose wording equals its subject. An
+   * evidence page counts only where its source text literally holds the
+   * subject, because the evidence list reached pages that name neither place
+   * of a compound subject, and a split at the comma put a claim about
+   * "Sofija, Varna" on every card that shows Sofija.
+   */
   authorityClaimsFor(entry) {
     if (!entry) return [];
     const idx = this._authorityIndex || this._buildAuthorityIndex();
-    const byName = entry.location ? (idx.byName.get(entry.location) || []) : [];
-    const byPage = idx.byPage.get(Number(entry.sourcePageId)) || [];
-    if (!byName.length) return byPage;
-    if (!byPage.length) return byName;
-    return byName.concat(byPage.filter(claim => !byName.includes(claim)));
+    const claims = [];
+    const add = claim => { if (!claims.includes(claim)) claims.push(claim); };
+    for (const value of this.displayedPlaces(entry)) {
+      for (const claim of idx.byName.get(value) || []) add(claim);
+    }
+    const text = entry.fullBibliographicEntry || '';
+    for (const claim of idx.byPage.get(Number(entry.sourcePageId)) || []) {
+      const subject = claim.subject && claim.subject.name;
+      if (subject && text.includes(subject)) add(claim);
+    }
+    return claims;
+  },
+
+  /** A decided claim stays in the data as its record; only an open one contests. */
+  isOpenClaim(claim) {
+    return !!claim && claim.decisionStatus !== 'decided';
+  },
+
+  /** The open claim whose subject is exactly this place value, if any. */
+  openClaimOnValue(entry, value) {
+    if (value == null || value === '') return null;
+    return this.authorityClaimsFor(entry).find(claim =>
+      this.isOpenClaim(claim) && claim.subject && claim.subject.name === String(value)) || null;
   },
 
   pendingLocationDecision(pid) {

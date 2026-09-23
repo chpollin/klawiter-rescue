@@ -13,8 +13,11 @@
       "name": "Digital Humanities Craft OG"
     },
     "id": "https://orcid.org/0000-0002-4879-129X",
-    "sameAs": ["https://github.com/chpollin"]
+    "sameAs": [
+      "https://github.com/chpollin"
+    ]
   },
   "license": "https://spdx.org/licenses/MIT",
-  "dateModified": "2026-09-22"
+  "dateModified": "2026-09-22",
+  "version": "0.9"
 }

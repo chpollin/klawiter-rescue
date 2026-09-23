@@ -15,10 +15,13 @@ from lib.config import (
     LOCATION_REVIEW_EVIDENCE,
     LOCATIONS_JSON,
     OUTPUT_EDITIONS_DIR,
+    SOURCE_REVISION_DECISIONS,
     SZD_WORK_INDEX,
     WORK_DECISIONS,
 )
 from lib.reconciliation import (
+    _folded_source_lines,
+    build_location_candidates,
     build_reconciliation,
     load_reconciliation_patches,
     merge_decision_patches,
@@ -42,6 +45,7 @@ def reconciliation(classified_rows) -> dict:
         classified_rows,
         read(AGENT_RECONCILIATION),
         read(AGENT_DECISIONS),
+        read(SOURCE_REVISION_DECISIONS),
     )
 
 
@@ -57,7 +61,7 @@ def test_frozen_szd_index_and_confirmed_work_links(reconciliation: dict) -> None
 
 def test_location_candidates_are_not_public_links(reconciliation: dict) -> None:
     published = reconciliation["publishable"]["locations"]
-    assert len(published) == 26
+    assert len(published) == 29
     assert "Girona" not in published
     girona = next(
         item
@@ -97,7 +101,10 @@ def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
     reconciliation: dict,
 ) -> None:
     queue = reconciliation["queue"]
-    assert queue["caseCount"] == 796 + 101
+    # 796 location and work cases before 2026-09-23; the three compound
+    # places and their three components left the queue with their decisions,
+    # the four works of restored pages joined it.
+    assert queue["caseCount"] == 794 + 101
     queued = {(item["entityType"], item["subject"]): item for item in queue["cases"]}
     assert queued[("location", "Saint-Aignan")]["status"] == "unresolved"
     assert queued[("location", "Tyresö")]["status"] == "unresolved"
@@ -107,10 +114,17 @@ def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
 def test_unresolved_decisions_are_explicit_contested_claims(
     reconciliation: dict,
 ) -> None:
-    claims = reconciliation["contestedClaims"]
-    assert len(claims) == 5
+    claims = [
+        claim
+        for claim in reconciliation["contestedClaims"]
+        if claim["klawiter:decisionStatus"] == "open"
+        and claim["klawiter:identityScope"] == "location"
+    ]
+    assert {claim["klawiter:claimSubject"]["schema:name"] for claim in claims} == {
+        "Tyresö",
+        "Saint-Aignan",
+    }
     assert all(claim["klawiter:claimStatus"] == "contested" for claim in claims)
-    assert all(claim["klawiter:decisionStatus"] == "open" for claim in claims)
     assert all(len(claim["klawiter:interpretation"]) >= 2 for claim in claims)
     assert all(claim["klawiter:sourceEvidence"] for claim in claims)
     tyreso = next(
@@ -128,7 +142,7 @@ def test_unresolved_decisions_are_explicit_contested_claims(
 def test_stage_05_reads_only_publishable_links() -> None:
     stage_05 = importlib.import_module("05_to_jsonld")
     links = stage_05.load_location_wikidata()
-    assert len(links) == 26
+    assert len(links) == 29
     assert links["Yanji"] == "http://www.wikidata.org/entity/Q713362"
     assert "Girona" not in links
 
@@ -332,7 +346,7 @@ def test_public_agent_projection_carries_occurrence_evidence(
         (Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld").read_text(encoding="utf-8")
     )
     frontend = reconcile_entities._frontend(reconciliation, edition_dataset)
-    assert frontend["schemaVersion"] == "1.2"
+    assert frontend["schemaVersion"] == "1.3"
     subject = reconciliation["candidates"]["agents"][0]
     key = f"{subject['entityType']}/{subject['sourceName']}"
     projected = frontend["agents"][key]
@@ -342,3 +356,137 @@ def test_public_agent_projection_carries_occurrence_evidence(
         {name: value for name, value in occurrence.items() if name != "sourcePath"}
         for occurrence in subject["sourceOccurrences"]
     ]
+    # The interface list holds open claims; decided ones keep their record.
+    assert {claim["decisionStatus"] for claim in frontend["contestedClaims"]} == {
+        "open"
+    }
+    assert {claim["subject"]["name"] for claim in frontend["decidedClaims"]} == {
+        "Sofija, Varna",
+        "Varna, Sofija",
+        "Bloemfontein, Kaapstad",
+    }
+
+
+# Compound place strings decided on 2026-09-23: each names two cities, whose
+# components are decided as subjects of their own.
+COMPOUND_CLAIMS = {
+    "Sofija, Varna": ("1ff25adffafe2fd7", {"Q472", "Q6506"}, {1725, 1799}),
+    "Varna, Sofija": ("f401570c46e6b7e9", {"Q472", "Q6506"}, {1725, 1799}),
+    "Bloemfontein, Kaapstad": ("e5742c35b57192e9", {"Q37701", "Q5465"}, {4209, 5330}),
+}
+
+
+def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
+    claims = {
+        claim["klawiter:claimSubject"]["schema:name"]: claim
+        for claim in reconciliation["contestedClaims"]
+    }
+    published = reconciliation["publishable"]["locations"]
+    for name, (suffix, qids, _) in COMPOUND_CLAIMS.items():
+        claim = claims[name]
+        assert claim["@id"] == f"klawiter:claim/reconciliation/location/{suffix}"
+        assert claim["klawiter:claimStatus"] == "resolved"
+        assert claim["klawiter:decisionStatus"] == "decided"
+        readings = {
+            item["@id"].rsplit("/", 1)[1]: item["klawiter:interpretationStatus"]
+            for item in claim["klawiter:interpretation"]
+        }
+        assert readings == {
+            **dict.fromkeys(qids, "rejected"),
+            "no-assignment": "rejected",
+            "two-places": "accepted",
+        }
+        history = claim["klawiter:hasReviewAction"]
+        assert [item["klawiter:reviewOutcome"] for item in history] == [
+            "unresolved",
+            "reject",
+        ]
+        assert history[-1]["klawiter:reviewBasis"] == (
+            "decided by the main instance after delegation by the operator on "
+            "2026-09-23, revisable"
+        )
+        assert claim["klawiter:reviewNote"]
+        assert name not in published
+    assert published["Sofija"]["qid"] == "Q472"
+    assert published["Varna"]["qid"] == "Q6506"
+    assert published["Bloemfontein"]["qid"] == "Q37701"
+    assert published["Kaapstad (Capetown)"]["qid"] == "Q5465"
+    open_ids = {
+        claim["@id"]
+        for claim in reconciliation["contestedClaims"]
+        if claim["klawiter:identityScope"] == "location"
+        and claim["klawiter:decisionStatus"] == "open"
+    }
+    assert open_ids == {
+        "klawiter:claim/reconciliation/location/13c36aabb066d6a3",
+        "klawiter:claim/reconciliation/location/d72833396adc8499",
+    }
+
+
+def test_claim_evidence_is_the_pages_that_carry_the_subject(
+    reconciliation: dict,
+) -> None:
+    claims = {
+        claim["klawiter:claimSubject"]["schema:name"]: claim
+        for claim in reconciliation["contestedClaims"]
+    }
+    for name, (_, _, pages) in COMPOUND_CLAIMS.items():
+        evidence = claims[name]["klawiter:sourceEvidence"]
+        assert {item["sourcePageId"] for item in evidence} == pages
+        components = [part.strip().casefold() for part in name.split(",")]
+        for item in evidence:
+            text = item["sourceText"].casefold()
+            assert text.startswith("'''[19"), item["sourceText"]
+            assert all(component in text for component in components)
+
+
+def test_component_match_needs_one_imprint_with_whole_words() -> None:
+    rows = [
+        {
+            "page_id": "1",
+            "text_id": "11",
+            "raw_content": "'''[1966]: Nauka, Sofija / DPK, Varna'''",
+        },
+        {
+            "page_id": "2",
+            "text_id": "12",
+            "raw_content": "in [1]. [[X]] [Varna, 1992]. [2]. [[Y]] [Sofija, 1946]",
+        },
+        {
+            "page_id": "3",
+            "text_id": "13",
+            "raw_content": "'''[1977]: University of California Press, Los Angeles'''",
+        },
+    ]
+    folded = _folded_source_lines(rows)
+    locations = {
+        "Sofija, Varna": {"lat": 0, "lng": 0},
+        "Los Angeles, CA": {"lat": 0, "lng": 0},
+    }
+    subjects = {
+        subject["sourceLocation"]: subject
+        for subject in build_location_candidates(locations, [], None, folded)
+    }
+    assert [
+        item["sourcePageId"] for item in subjects["Sofija, Varna"]["sourceOccurrences"]
+    ] == [1]
+    assert subjects["Los Angeles, CA"]["sourceOccurrences"] == []
+
+
+def test_open_and_decided_claim_counts_agree_across_gates() -> None:
+    from lib.config import OUTPUT_RECONCILIATION_DIR
+
+    gate1 = json.loads(
+        (Path(OUTPUT_EDITIONS_DIR) / "manifest.json").read_text(encoding="utf-8")
+    )["counts"]
+    gate2 = json.loads(
+        (Path(OUTPUT_RECONCILIATION_DIR) / "manifest.json").read_text(encoding="utf-8")
+    )["counts"]
+    assert "contestedClaims" not in gate1
+    for key in ("contestedEditionClaims", "decidedEditionClaims"):
+        assert gate1[key] == gate2[key]
+    assert gate1["contestedEditionClaims"] == 0
+    assert gate1["decidedEditionClaims"] == 1
+    assert gate2["contestedAuthorityClaims"] == 2
+    assert gate2["decidedAuthorityClaims"] == 3
+    assert gate2["contestedSourceRevisionClaims"] == 10

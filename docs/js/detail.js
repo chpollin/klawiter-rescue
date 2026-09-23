@@ -28,6 +28,8 @@ const Detail = {
     for (const el of document.querySelectorAll(`[data-entry-detail="${pid}"]`)) {
       el.outerHTML = this.renderInline(entry);
     }
+    if (typeof App.revealPublication === 'function') App.revealPublication();
+    if (typeof App.refreshCardMeta === 'function') App.refreshCardMeta(pid);
   },
 
   // --- Publication layer -----------------------------------------------------
@@ -130,11 +132,13 @@ const Detail = {
     'See also': 'Cross-references the source page makes to other entries.',
     'Categories': 'The categories the source page is filed under; each opens the entries of that category.',
     'Name variant': 'A spelling in the source close to a credited name; both stand, and no identity is asserted.',
-    'Open for review': 'What the extraction rules leave open on this publication; the tooltip names the flag code.',
+    'Open for review': 'What the extraction or repair rules leave open on this value; the tooltip names the flag code.',
     'Page kind': 'What this source page documents, and how many publications stand on it.',
-    'Review status': 'The review decision the dataset holds for this entry, under the session state where one is open.',
+    'Review status': 'The review decision the dataset holds for this entry, under the session state where one is open. It names the fields the decision covers; every other field is unreviewed.',
     'Authority candidates': 'Authority records proposed for this value; a decision applies to every entry carrying it.',
     'Authority status': 'Open authority claims on this entry.',
+    'Edition confirmed': 'The edition graph holds this publication as an edition reviewed against its exact source slice.',
+    'Edition proposed': 'The edition graph holds this publication as a deterministic proposal that no review has confirmed yet.',
   },
 
   /** Title attribute for a named thing, empty where the dictionary is silent. */
@@ -144,38 +148,84 @@ const Detail = {
     return ` title="${esc([text, extra].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim())}"`;
   },
 
+  REVIEW_ACTION_LABELS: { confirm: 'confirmed', correct: 'corrected', unresolved: 'unresolved',
+                          reject: 'rejected' },
+
   // Review decision on one field, from the dataset review object. Its scope
   // is that field alone: a decided place says nothing about year or translator.
+  // A place decision is about the authority record of one place value, so it
+  // stands at that value (_placeList) rather than at a label over a list.
   _fieldReview(fieldName, entry) {
+    if (fieldName === 'location' || fieldName === 'places') return '';
     const fields = entry && entry.review && entry.review.fields;
     const action = fields && fields[fieldName];
     if (!action) return '';
-    const labels = { confirm: 'confirmed', correct: 'corrected', unresolved: 'unresolved' };
     return `<span class="field-review field-review-${esc(action)}"
-      title="Reviewed decision on this field alone">${esc(labels[action] || action)}</span>`;
+      title="Reviewed decision on this field alone">${esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>`;
+  },
+
+  /** The place decision of the review object, at the value it was made on. */
+  _placeReview(entry) {
+    const fields = entry && entry.review && entry.review.fields;
+    const action = fields && fields.location;
+    if (!action) return '';
+    return ` <span class="field-review field-review-${esc(action)}"
+      title="Reviewed decision on the authority record of this place alone">${
+      esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>`;
+  },
+
+  /** What a field decision of the review object is about, in a reader's words. */
+  REVIEW_SCOPES: { location: 'place authority', publisher: 'publisher', translator: 'translator',
+                   pageCount: 'extent', title: 'title' },
+
+  /** "Place authority" for a review object deciding the place authority alone. */
+  reviewScope(review) {
+    const fields = Object.keys((review && review.fields) || {});
+    if (!fields.length) return '';
+    const words = fields.map(field => this.REVIEW_SCOPES[field] || field).join(' and ');
+    return words.charAt(0).toUpperCase() + words.slice(1);
+  },
+
+  REVIEW_WORDS: { agent_verified: 'agent-verified', contested: 'contested',
+                  approved: 'expert-reviewed' },
+
+  /** Open authority claims the entry carries; a decided claim no longer contests. */
+  _openAuthorityClaims(entry) {
+    if (typeof Edit.authorityClaimsFor !== 'function') return [];
+    return (Edit.authorityClaimsFor(entry) || []).filter(claim => claim.decisionStatus !== 'decided');
   },
 
   // Review chip: the dataset projection (entry.review, built by the pipeline
   // from decided reconciliation subjects and applied patches) layered under
   // the live session state, which wins because it is newer. "edited" is the
-  // session state alone; "approved" stays reserved for the dataset.
+  // session state alone; "approved" stays reserved for the dataset. A
+  // decision covers the fields its review object names, so the chip names
+  // them, and an open authority claim the page carries is said beside it.
   _reviewChip(entry) {
-    const map = {
-      unreviewed: { label: 'Unreviewed', cls: 'review-unreviewed' },
-      agent_verified: { label: 'Agent-verified', cls: 'review-agent' },
-      contested: { label: 'Contested', cls: 'review-contested' },
-      approved: { label: 'Expert-reviewed', cls: 'review-approved' },
-      edited: { label: 'Edited', cls: 'review-edited' },
-    };
+    const classes = { unreviewed: 'review-unreviewed', agent_verified: 'review-agent',
+      contested: 'review-contested', approved: 'review-approved', edited: 'review-edited' };
     const st = Edit.entryStatus(entry.sourcePageId);
     const dataset = entry.review && entry.review.status;
     const status = st.pending ? st.status : (dataset || 'unreviewed');
-    const m = map[status] || map.unreviewed;
+    let label;
+    if (st.pending) label = 'Edited';
+    else if (!dataset) label = 'Unreviewed';
+    else {
+      const word = this.REVIEW_WORDS[dataset] || String(dataset).replace(/[_-]+/g, ' ');
+      const scope = this.reviewScope(entry.review);
+      label = scope ? `${scope} ${word}` : word.charAt(0).toUpperCase() + word.slice(1);
+    }
     const by = !st.pending && dataset && entry.review.reviewed_by
       ? `Decided by ${entry.review.reviewed_by}.`
       : '';
     const note = st.pending ? ' <span class="review-pending">unsaved</span>' : '';
-    return `<span class="review-chip ${m.cls}"${this.help('Review status', by)}>${m.label}${note}</span>`;
+    const open = status === 'contested' ? [] : this._openAuthorityClaims(entry);
+    const nouns = [...new Set(open.map(claim => this.CLAIM_NOUNS[claim.entityType] || 'authority'))];
+    const claims = nouns.length
+      ? `, <span class="review-claim-note">open ${esc(nouns.join(' and '))} claim</span>`
+      : '';
+    return `<span class="review-chip ${classes[status] || 'review-other'}"${
+      this.help('Review status', by)}>${esc(label)}${note}${claims}</span>`;
   },
 
   // Editable cell for a provenance-tracked field (edit mode only). A pending
@@ -257,7 +307,7 @@ const Detail = {
     return this._editableValue(fieldName, entry)
       + this._triageFlag(fieldName, entry)
       + this._fieldControls(fieldName, entry)
-      + this._contestedMark(fieldName, entry, [entry[fieldName]])
+      + (fieldName === 'location' ? this._contestedMark(entry, entry.location) : '')
       + this._fieldEvidence(fieldName, entry);
   },
 
@@ -300,8 +350,13 @@ const Detail = {
     const attrs = `data-pid="${pid}" data-kind="${esc(kind)}"`;
     const candidates = (review.candidates || []).map(candidate => {
       const score = candidate.score == null ? '' : `, score ${candidate.score}`;
-      return `<li><a href="${esc(candidate.uri)}" target="_blank" rel="noopener">${esc(candidate.label)} (${esc(candidate.qid)})</a>${score}
-        <button class="reconciliation-btn" ${attrs} data-act="confirm" data-qid="${esc(candidate.qid)}">Confirm</button></li>`;
+      const verdict = this._candidateVerdict(decision, candidate);
+      const mark = verdict
+        ? ` <span class="candidate-verdict candidate-${verdict}">${verdict}</span>`
+        : '';
+      return `<li><a href="${esc(candidate.uri)}" target="_blank" rel="noopener">${esc(candidate.label)} (${esc(candidate.qid)})</a>${score}${mark}
+        <button class="reconciliation-btn" ${attrs} data-act="confirm" data-qid="${esc(candidate.qid)}">${
+          verdict === 'rejected' ? 'Confirm instead' : 'Confirm'}</button></li>`;
     }).join('');
     const revert = pending
       ? `<button class="reconciliation-btn" ${attrs} data-act="undo">Undo pending</button>`
@@ -317,15 +372,24 @@ const Detail = {
     </div>`;
   },
 
+  /**
+   * What the recorded decision says about one candidate. A correction names
+   * the matcher QID it replaced as `rejectedQid`; a rejection without one
+   * refuses every candidate of the subject.
+   */
+  _candidateVerdict(decision, candidate) {
+    if (!decision || !candidate) return '';
+    if (decision.rejectedQid && decision.rejectedQid === candidate.qid) return 'rejected';
+    if (decision.action === 'reject' && !decision.rejectedQid) return 'rejected';
+    if ((decision.action === 'confirm' || decision.action === 'correct')
+        && decision.qid === candidate.qid) return 'accepted';
+    return '';
+  },
+
   // A claim names what it contests, so the heading takes the noun of its
   // subject; the identifier and the standing rule behind it are what only an
   // occasional desktop check needs, so they are the tooltip of that heading.
   CLAIM_NOUNS: { location: 'place', person: 'person', publisher: 'publisher' },
-
-  // The fields a claim of that kind speaks about: a place claim contests the
-  // place rows, in the flat projection and in every publication whose imprint
-  // carries the contested place.
-  CLAIM_FIELDS: { location: ['location', 'places'] },
 
   // The claim block is addressed per card, because a claim reached from its
   // source pages stands in several cards of one list.
@@ -333,29 +397,18 @@ const Detail = {
     return `claim-${entry.sourcePageId}-${String(claimId).replace(/[^A-Za-z0-9]+/g, '-')}`;
   },
 
-  // The source spells a compound imprint as one line, so the subject of the
-  // claim is matched against each place with its gloss set aside.
-  _placeKey(value) {
-    return String(value == null ? '' : value).toLowerCase().replace(/\([^)]*\)/g, '').trim();
-  },
-
-  _claimTouches(claim, values) {
-    const subject = (claim.subject && claim.subject.name) || '';
-    const parts = subject.split(',').map(part => this._placeKey(part)).filter(Boolean);
-    return values.some(value => parts.includes(this._placeKey(value)));
-  },
-
   /**
-   * The word "contested" at the value an open claim is about.
+   * The word "contested" at the one value an open claim is about.
    *
    * The claim block carries the competing interpretations and the evidence,
-   * but it stands below every field of the card, so the field it decides has
-   * to say so where the value is read.
+   * but it stands below every field of the card, so the value it contests has
+   * to say so where it is read. A claim applies only where its subject is
+   * that value word for word; a compound imprint is not split at its commas.
    */
-  _contestedMark(fieldName, entry, values) {
-    const claim = (Edit.authorityClaimsFor(entry) || []).find(item =>
-      (this.CLAIM_FIELDS[item.entityType] || []).includes(fieldName)
-      && this._claimTouches(item, values));
+  _contestedMark(entry, value) {
+    const claim = typeof Edit.openClaimOnValue === 'function'
+      ? Edit.openClaimOnValue(entry, value)
+      : null;
     if (!claim) return '';
     const tip = this.help(null,
       'An open claim contests this value. It stands with its evidence in this card.');
@@ -363,9 +416,31 @@ const Detail = {
       href="#${this._claimAnchor(entry, claim.claimId)}"${tip}>contested</a>`;
   },
 
-  _claimHeading(noun, claimId, rule) {
-    const tip = this.help(null, `${claimId} ${rule}`);
-    return `<h3 class="contested-claim-heading"${tip}>Contested ${esc(noun)} assignment, decision open</h3>`;
+  /**
+   * The places of an imprint, each with what was decided about it.
+   *
+   * The authority record and the review decision of the record belong to the
+   * one value they were made on (entry.location), and an open claim to the
+   * value it names, so each mark follows its own value rather than the list.
+   */
+  _placeList(entry, places) {
+    return places.map(place => {
+      let out = esc(place);
+      if (place === entry.location && entry.locationSameAs) {
+        out += ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank"
+          rel="noopener" title="Place authority record for ${esc(place)}">Wikidata</a>`;
+      }
+      if (place === entry.location) out += this._placeReview(entry);
+      return out + this._contestedMark(entry, place);
+    }).join(', ');
+  },
+
+  _claimHeading(noun, claim, rule) {
+    const tip = this.help(null, `${claim.claimId} ${rule}`);
+    const text = claim.decisionStatus === 'decided'
+      ? `${noun.charAt(0).toUpperCase()}${noun.slice(1)} assignment decided`
+      : `Contested ${noun} assignment, decision open`;
+    return `<h3 class="contested-claim-heading"${tip}>${esc(text)}</h3>`;
   },
 
   // A checksum is read by its ends; the full value stays one tooltip away.
@@ -393,7 +468,9 @@ const Detail = {
         const object = proposedObject
           ? ` · ${this._authorityLink(proposedObject)}`
           : '';
-        return `<li>${esc(item.label)}${object}</li>`;
+        const status = claim.decisionStatus === 'decided' && item.status
+          ? ` (${esc(item.status)})` : '';
+        return `<li>${esc(item.label)}${object}${status}</li>`;
       }).join('');
       const evidence = (claim.sourceEvidence || []).map(item =>
         `<li>Page ${esc(item.sourcePageId)}, line ${esc(item.sourceLine)}: ${esc(item.sourceValue)}
@@ -404,9 +481,9 @@ const Detail = {
       ).join('');
       return `<article class="contested-claim" id="${this._claimAnchor(entry, claim.claimId)}"
         tabindex="-1">
-        ${this._claimHeading(noun, claim.claimId,
+        ${this._claimHeading(noun, claim,
           '— the claim stays part of the data, no interpretation is emitted as a confirmed schema:sameAs relation.')}
-        <h4>Competing interpretations</h4>
+        <h4>${claim.decisionStatus === 'decided' ? 'Interpretations' : 'Competing interpretations'}</h4>
         <ul>${interpretations}</ul>
         <h4>Source evidence</h4>
         <ul>${evidence}</ul>
@@ -417,45 +494,64 @@ const Detail = {
     return `<div class="contested-status" role="status">${rendered}</div>`;
   },
 
+  /**
+   * The publication an edition claim is about: the edition identifier the
+   * publication carries, or the shared tail of the two identifiers
+   * (klawiter:edition/4916-2016-b and klawiter:publication/4916-2016-b).
+   */
+  _claimPublicationIndex(claim, publications) {
+    const subject = String(claim.subject || '');
+    const tail = subject.slice(subject.lastIndexOf('/') + 1);
+    return (publications || []).findIndex(pub => (pub.editionId && pub.editionId === subject)
+      || (tail && String(pub.id || '').endsWith(`/${tail}`)));
+  },
+
   // A decided claim keeps its block: the accepted and the rejected reading,
   // the review history with the decision and what the decision left open stay
   // readable, because the decision is revisable and this is its record.
-  _contestedClaimsBlock(entry) {
-    const claims = Edit.editionClaimsFor(entry);
-    if (!claims.length) return '';
-    const rendered = claims.map(claim => {
-      const decided = claim.decisionStatus === 'decided';
-      const interpretations = claim.interpretations.map(item =>
-        `<li title="${esc(item.proposedObject)}">${esc(item.label)}${
-          decided ? ` (${esc(item.status)})` : ''}
-          <span class="field-sub">${esc(item.basis)}</span></li>`
-      ).join('');
-      const history = claim.reviewHistory.map(item =>
-        `<li title="${esc(item.reviewId)}">${esc(item.reviewer)}: ${esc(item.outcome)}${
-          item.date ? `, ${esc(item.date)}` : ''}${
-          item.basis ? ` (${esc(item.basis)})` : ''}</li>`
-      ).join('');
-      const notes = (claim.reviewNotes || []).map(note => `<li>${esc(note)}</li>`).join('');
-      const heading = decided
-        ? `<h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — decided and
-          revisable; the accepted reading is the edition's schema:exampleOfWork relation, the
-          rejected one stays part of the data without it.`)}>Work identity decided</h3>`
-        : `<h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — the edition stays part
-          of the data, none of the interpretations is emitted as a confirmed schema:exampleOfWork
-          relation.`)}>Contested work identity, decision open</h3>`;
-      return `<article class="contested-claim">
-        ${heading}
-        <h4>${decided ? 'Interpretations' : 'Competing interpretations'}</h4>
-        <ul>${interpretations}</ul>
-        <h4>Review history</h4>
-        <ul>${history}</ul>
-        ${notes ? `<h4>Open for review</h4><ul>${notes}</ul>` : ''}
-        <p class="contested-source">Page ${claim.source.sourcePageId}, characters
-          ${claim.source.selector[0]}–${claim.source.selector[1]}
-          ${this._checksum(claim.source.sliceSha256)}</p>
-      </article>`;
-    }).join('');
-    const open = claims.some(claim => claim.decisionStatus !== 'decided');
+  _editionClaimArticle(claim) {
+    const decided = claim.decisionStatus === 'decided';
+    const interpretations = claim.interpretations.map(item =>
+      `<li title="${esc(item.proposedObject)}">${esc(item.label)}${
+        decided ? ` (${esc(item.status)})` : ''}
+        <span class="field-sub">${esc(item.basis)}</span></li>`
+    ).join('');
+    const history = claim.reviewHistory.map(item =>
+      `<li title="${esc(item.reviewId)}">${esc(item.reviewer)}: ${esc(item.outcome)}${
+        item.date ? `, ${esc(item.date)}` : ''}${
+        item.basis ? ` (${esc(item.basis)})` : ''}</li>`
+    ).join('');
+    const notes = (claim.reviewNotes || []).map(note => `<li>${esc(note)}</li>`).join('');
+    const heading = decided
+      ? `<h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — decided and
+        revisable; the accepted reading is the edition's schema:exampleOfWork relation, the
+        rejected one stays part of the data without it.`)}>Work identity decided</h3>`
+      : `<h3 class="contested-claim-heading"${this.help(null, `${claim.claimId} — the edition stays part
+        of the data, none of the interpretations is emitted as a confirmed schema:exampleOfWork
+        relation.`)}>Contested work identity, decision open</h3>`;
+    return `<article class="contested-claim">
+      ${heading}
+      <h4>${decided ? 'Interpretations' : 'Competing interpretations'}</h4>
+      <ul>${interpretations}</ul>
+      <h4>Review history</h4>
+      <ul>${history}</ul>
+      ${notes ? `<h4>Open for review</h4><ul>${notes}</ul>` : ''}
+      <p class="contested-source">Page ${claim.source.sourcePageId}, characters
+        ${claim.source.selector[0]}–${claim.source.selector[1]}
+        ${this._checksum(claim.source.sliceSha256)}</p>
+    </article>`;
+  },
+
+  /**
+   * Edition claims that no rendered publication takes, as one section after
+   * the publications. A claim whose publication is on the card stands in
+   * that publication's block instead (_publicationSection).
+   */
+  _contestedClaimsBlock(entry, claims) {
+    const list = claims || Edit.editionClaimsFor(entry);
+    if (!list.length) return '';
+    const rendered = list.map(claim => this._editionClaimArticle(claim)).join('');
+    const open = list.some(claim => claim.decisionStatus !== 'decided');
     return `<section class="detail-section contested-claims" aria-label="${
       open ? 'Contested claims' : 'Decided claims'}">${rendered}</section>`;
   },
@@ -491,10 +587,12 @@ const Detail = {
     let html = this._publicationView(entry, state);
 
     // Contested claims stay visible to every reader: openness is part of the
-    // published data, not an edit-mode extra.
+    // published data, not an edit-mode extra. A missing claim file is said
+    // here, where the claims would stand, so it does not read as a clean page.
+    html += this._claimsLoadNote();
     const contestedAuthority = this._contestedAuthorityCell(entry);
     if (contestedAuthority) html += contestedAuthority;
-    html += this._contestedClaimsBlock(entry);
+    html += this._contestedClaimsBlock(entry, this._unplacedEditionClaims(entry, state));
 
     // On the permalink route the source is what the reader checks the fields
     // against, so it stands open. In a result list it stays collapsed, unless
@@ -502,6 +600,20 @@ const Detail = {
     html += this._sourceBlock(entry, App.state.singleEntry || html === '', state);
     html += this._actionBar(entry);
     return html;
+  },
+
+  _claimsLoadNote() {
+    if (!Edit.reconciliationFailed) return '';
+    const cause = Edit.reconciliationError ? ` (${esc(Edit.reconciliationError)})` : '';
+    return `<p class="field-error" role="status">The authority decisions and contested claims
+      could not be loaded${cause}. Open claims on this entry are not shown.</p>`;
+  },
+
+  /** Edition claims whose publication is not among the rendered blocks. */
+  _unplacedEditionClaims(entry, state) {
+    const claims = Edit.editionClaimsFor(entry) || [];
+    if (state.status !== 'ready') return claims;
+    return claims.filter(claim => this._claimPublicationIndex(claim, state.publications) === -1);
   },
 
   /**
@@ -516,7 +628,9 @@ const Detail = {
     if (state.status === 'ready') {
       // The rows of the page precede the publications, because they hold for
       // every one of them.
-      return this._pageFieldsBlock(entry) + this._publicationBlocks(entry, state);
+      const placed = this._pageFlagPlacement(entry, state.publications);
+      return this._pageFieldsBlock(entry, placed.page)
+        + this._publicationBlocks(entry, state, placed.byPublication);
     }
     if (state.status === 'failed') {
       return this._publicationLoadNote(state) + this._fieldBlock(entry);
@@ -528,11 +642,21 @@ const Detail = {
   },
 
   /** The publications alone, as the edit layout shows them beside its table. */
-  _publicationBlocks(entry, state) {
-    const several = state.publications.length > 1;
-    return state.publications
-      .map((pub, i) => this._publicationSection(pub, entry, i, several)).join('')
-      + this._nameVariantsBlock(entry, state);
+  _publicationBlocks(entry, state, pageFlags) {
+    const pubs = state.publications;
+    const several = pubs.length > 1;
+    // Under a filter that selects some publications of the page and not
+    // others, the selected ones say so; a filter all of them answer marks
+    // nothing.
+    const matches = pubs.map(pub =>
+      typeof App.publicationMatches === 'function' ? App.publicationMatches(pub) : null);
+    const subset = matches.includes(true) && matches.includes(false);
+    const claims = Edit.editionClaimsFor(entry) || [];
+    return pubs.map((pub, i) => this._publicationSection(pub, entry, i, several, {
+      match: subset && matches[i] === true,
+      flags: (pageFlags && pageFlags.get(i)) || {},
+      claims: claims.filter(claim => this._claimPublicationIndex(claim, pubs) === i),
+    })).join('') + this._nameVariantsBlock(entry, state);
   },
 
   /** What the card says while the page file is on its way, and if it fails. */
@@ -548,15 +672,54 @@ const Detail = {
     return '';
   },
 
+  /**
+   * The name of one publication inside its page: the tail of its identifier,
+   * or its position where the record carries none. The route, the citation
+   * key and the section anchor all read it.
+   */
+  publicationSlug(entry, pub, index) {
+    const id = pub && pub.id ? String(pub.id) : '';
+    const tail = id.slice(id.lastIndexOf('/') + 1);
+    return tail || `${entry.sourcePageId}-${index + 1}`;
+  },
+
+  publicationAnchor(entry, slug) {
+    return `publication-${entry.sourcePageId}-${String(slug).replace(/[^A-Za-z0-9-]+/g, '-')}`;
+  },
+
   /** One publication, headed by the year and what distinguishes it. */
-  _publicationSection(pub, entry, index, several) {
-    const rows = this._publicationRows(pub, entry);
-    return `<section class="detail-section publication" aria-label="Publication ${index + 1}">
-      <h3 class="publication-heading"><span>${this._publicationHeading(pub, entry)}</span>${
+  _publicationSection(pub, entry, index, several, extra = {}) {
+    const rows = this._publicationRows(pub, entry, extra.flags || {});
+    const slug = this.publicationSlug(entry, pub, index);
+    const classes = ['detail-section', 'publication'];
+    if (extra.match) classes.push('publication-match');
+    if (App.state.publicationId === slug) classes.push('publication-target');
+    const match = extra.match
+      ? ' <span class="publication-match-label">matches the filter</span>'
+      : '';
+    const claims = (extra.claims || []).map(claim => this._editionClaimArticle(claim)).join('');
+    return `<section class="${classes.join(' ')}" id="${this.publicationAnchor(entry, slug)}"
+      tabindex="-1" aria-label="Publication ${index + 1}">
+      <h3 class="publication-heading"><span>${this._publicationHeading(pub, entry)}${
+        this._editionStatus(pub)}${match}</span>${
         several ? this._publicationActions(entry, index) : ''}</h3>
       <div class="meta-table">${rows.join('')}</div>
       ${this._reviewFlags(pub)}
+      ${claims}
     </section>`;
+  },
+
+  /**
+   * Whether the edition graph holds this publication as a reviewed edition
+   * or as a proposal. Records built before the graph carried it say nothing.
+   */
+  _editionStatus(pub) {
+    const labels = { confirmed: 'Edition confirmed', proposed: 'Edition proposed' };
+    const label = labels[pub.reviewStatus];
+    if (!label) return '';
+    return ` <span class="publication-status publication-status-${esc(pub.reviewStatus)}"${
+      this.help(label, pub.editionId ? `Edition ${pub.editionId}.` : '')}>${
+      esc(label.replace('Edition ', 'edition '))}</span>`;
   },
 
   // A citation of a page with several publications has to say which one it
@@ -574,21 +737,63 @@ const Detail = {
   },
 
   _publicationHeading(pub, entry) {
+    return esc(this.publicationLabel(pub, entry));
+  },
+
+  /** Year and what distinguishes the publication, as plain text. */
+  publicationLabel(pub, entry) {
     const year = pub.yearRaw || pub.year;
-    const label = esc(year == null ? 'Undated' : String(year));
-    if (pub.editionStatement) return `${label} · ${esc(pub.editionStatement)}`;
-    if (pub.title && pub.title !== entry.title) return `${label} · ${esc(pub.title)}`;
+    const label = year == null ? 'Undated' : String(year);
+    if (pub.editionStatement) return `${label} · ${pub.editionStatement}`;
+    if (pub.title && pub.title !== entry.title) return `${label} · ${pub.title}`;
     return label;
   },
 
   ROLE_LABELS: { author: 'Author', translator: 'Translator', editor: 'Editor',
                  illustrator: 'Illustrator', contributor: 'Contributor' },
 
-  _publicationRows(pub, entry) {
+  // A page-level flag names a field of the flat record; a publication shows
+  // that value under a row of its own name.
+  FLAG_ROWS: { translator: 'credits', publisher: 'publisher', location: 'places' },
+
+  /**
+   * Where each page-level review flag stands on a card with publications: at
+   * the row of the first publication carrying the flagged value, or in the
+   * page fields where none does.
+   */
+  _pageFlagPlacement(entry, publications) {
+    const byPublication = new Map();
+    const page = [];
+    for (const flag of Array.isArray(entry.reviewFlags) ? entry.reviewFlags : []) {
+      const value = flag.field ? entry[flag.field] : null;
+      const at = value == null ? -1 : publications.findIndex(pub => {
+        if (flag.field === 'publisher') return pub.publisher === value;
+        if (flag.field === 'location') return (pub.places || []).includes(value);
+        if (flag.field === 'translator') {
+          const credits = (pub.credits || []).concat(
+            ...(pub.contributions || []).map(item => item.credits || []));
+          return credits.some(credit => credit.name === value);
+        }
+        return false;
+      });
+      const row = this.FLAG_ROWS[flag.field];
+      if (at === -1 || !row) { page.push(flag); continue; }
+      const rows = byPublication.get(at) || {};
+      (rows[row] = rows[row] || []).push(flag);
+      byPublication.set(at, rows);
+    }
+    return { byPublication, page };
+  },
+
+  _publicationRows(pub, entry, flags = {}) {
     const rows = [];
     const prov = pub.provenance || {};
+    const shown = new Set();
     const put = (label, value, fieldName) => {
-      if (value) rows.push(this.row(label, value, fieldName, entry, prov));
+      if (!value) return;
+      rows.push(this.row(label, value, fieldName, entry, prov));
+      if (flags[fieldName]) rows.push(this._reviewFlags({ reviewFlags: flags[fieldName] }));
+      shown.add(fieldName);
     };
 
     // The title stands as a row wherever the heading did not already take it.
@@ -598,18 +803,7 @@ const Detail = {
     put('Language', this._languageValue(pub), 'language');
 
     const places = Array.isArray(pub.places) ? pub.places : [];
-    // The page-level authority record answers for one place; with several
-    // places in the imprint it would not say which one it decides.
-    const authority = places.length === 1 && places[0] === entry.location && entry.locationSameAs
-      ? ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank"
-          rel="noopener" title="Place authority record for ${esc(entry.location)}">Wikidata</a>`
-      : '';
-    put('Place of publication',
-      places.length
-        ? places.map(p => esc(p)).join(', ') + authority
-          + this._contestedMark('places', entry, places)
-        : '',
-      'places');
+    put('Place of publication', places.length ? this._placeList(entry, places) : '', 'places');
 
     put('Publisher', pub.publisher ? esc(pub.publisher) : '', 'publisher');
     put('Extent (as in source)', this._publicationExtent(pub), 'extent');
@@ -619,6 +813,10 @@ const Detail = {
     put('Online', this._onlineValue(pub.online), 'online');
     put('Series', this._seriesValue(pub), 'series');
     put('Note', pub.note ? esc(pub.note) : '', 'note');
+    // A translator credited under a contribution has no Credits row of its own.
+    for (const [fieldName, list] of Object.entries(flags)) {
+      if (!shown.has(fieldName)) rows.push(this._reviewFlags({ reviewFlags: list }));
+    }
     return rows;
   },
 
@@ -755,8 +953,9 @@ const Detail = {
   },
 
   /** The fields that belong to the source page rather than to a publication. */
-  _pageFieldsBlock(entry) {
+  _pageFieldsBlock(entry, flags) {
     const rows = this._pageRows(entry, entry);
+    if (flags && flags.length) rows.push(this._reviewFlags({ reviewFlags: flags }));
     if (!rows.length) return '';
     return `<div class="meta-table detail-fields" role="group"
       aria-label="Source page fields">${rows.join('')}</div>`;
@@ -784,6 +983,8 @@ const Detail = {
     // A field the provenance layer tracks is shown even when it holds nothing,
     // because "missing" is a recorded state of the record and part of what a
     // reader checks. No placeholder stands in for the absent value.
+    // A page-level review flag stands under the row of the field it names.
+    const pageFlags = Array.isArray(entry.reviewFlags) ? entry.reviewFlags : [];
     const tracked = (label, fieldName, value) => {
       const prov = entry._provenance && entry._provenance[fieldName];
       if (value) rows.push(this.row(label, value, fieldName, entry));
@@ -791,6 +992,8 @@ const Detail = {
         rows.push(this.row(label, '<span class="missing-value">Not recorded</span>',
           fieldName, entry));
       }
+      const flags = pageFlags.filter(flag => flag.field === fieldName);
+      if (flags.length) rows.push(this._reviewFlags({ reviewFlags: flags }));
     };
 
     if (fields.originalTitle && fields.originalTitle !== fields.title) {
@@ -803,15 +1006,7 @@ const Detail = {
     const places = Array.isArray(fields.allLocations) && fields.allLocations.length > 1
       ? fields.allLocations
       : (fields.location ? [fields.location] : []);
-    const authority = fields.location && fields.locationSameAs
-      ? ` <a class="wikidata-link" href="${esc(fields.locationSameAs)}" target="_blank"
-          rel="noopener" title="Place authority record for ${esc(fields.location)}">Wikidata</a>`
-      : '';
-    tracked('Place of publication', 'location',
-      places.length
-        ? places.map(l => esc(l)).join(', ') + authority
-          + this._contestedMark('location', entry, places)
-        : '');
+    tracked('Place of publication', 'location', places.length ? this._placeList(entry, places) : '');
 
     tracked('Publisher', 'publisher', fields.publisher ? esc(fields.publisher) : '');
 
@@ -902,7 +1097,7 @@ const Detail = {
     const publications = state && state.status === 'ready' ? state.publications : null;
     return `<details class="detail-source-details"${open ? ' open' : ''}>
       <summary>Full bibliographic entry (Klawiter source)</summary>
-      <div class="detail-bibentry">${this._sourceBody(entry.fullBibliographicEntry, publications)}</div>
+      <div class="detail-bibentry">${this._sourceBody(entry.fullBibliographicEntry, publications, entry)}</div>
       ${this._provenanceLine(entry)}
     </details>`;
   },
@@ -915,22 +1110,34 @@ const Detail = {
    * and would mark the wrong passage. A slice without them, or one that
    * leaves the order or the bounds of the text, marks nothing.
    */
-  _sourceBody(text, publications) {
+  _sourceBody(text, publications, entry) {
     const slices = (publications || [])
-      .map(pub => pub.sourceSlice)
-      .filter(slice => slice
+      .map(pub => ({ pub, slice: pub.sourceSlice }))
+      .filter(({ slice }) => slice
         && Number.isFinite(slice.textStart) && Number.isFinite(slice.textEnd))
-      .sort((a, b) => a.textStart - b.textStart);
+      .sort((a, b) => a.slice.textStart - b.slice.textStart);
+    // A marked block is a box of its own, so the line break that separated
+    // it from the text around it would add an empty line inside the flow.
     let out = '';
     let cursor = 0;
-    for (const slice of slices) {
+    let afterBlock = false;
+    for (const { pub, slice } of slices) {
       if (slice.textStart < cursor || slice.textEnd <= slice.textStart
           || slice.textEnd > text.length) continue;
-      out += linkifyEsc(text.slice(cursor, slice.textStart))
-        + `<span class="source-slice">${linkifyEsc(text.slice(slice.textStart, slice.textEnd))}</span>`;
+      let gap = text.slice(cursor, slice.textStart);
+      if (afterBlock) gap = gap.replace(/^\n/, '');
+      gap = gap.replace(/\n$/, '');
+      const label = entry
+        ? `<span class="source-slice-label">${esc(this.publicationLabel(pub, entry))}</span>`
+        : '';
+      out += linkifyEsc(gap)
+        + `<span class="source-slice">${label}${
+          linkifyEsc(text.slice(slice.textStart, slice.textEnd))}</span>`;
       cursor = slice.textEnd;
+      afterBlock = true;
     }
-    return out + linkifyEsc(text.slice(cursor));
+    const rest = text.slice(cursor);
+    return out + linkifyEsc(afterBlock ? rest.replace(/^\n/, '') : rest);
   },
 
   // Split a trailing page reference off a contents item for aligned display.
@@ -1030,14 +1237,16 @@ const Detail = {
     // The publications stay as the reading view shows them and stay read-only,
     // because the patch contract carries no target for a single one of them.
     html += state.status === 'ready'
-      ? this._publicationBlocks(entry, state)
+      ? this._publicationBlocks(entry, state,
+        this._pageFlagPlacement(entry, state.publications).byPublication)
       : this._publicationLoadNote(state);
     html += `<section class="detail-section page-record">
       <h3 class="detail-section-heading">Page record</h3>
       ${this._pageRecordNote(entry, state)}
       <div class="meta-table">${rows.join('')}</div>
     </section>`;
-    html += this._contestedClaimsBlock(entry);
+    html += this._claimsLoadNote();
+    html += this._contestedClaimsBlock(entry, this._unplacedEditionClaims(entry, state));
 
     // In edit mode the source is the adjudication reference: kept open.
     if (entry.fullBibliographicEntry) {

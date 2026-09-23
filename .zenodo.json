@@ -1,0 +1,50 @@
+{
+  "upload_type": "dataset",
+  "title": "Stefan Zweig — An International Bibliography. Digital edition",
+  "description": "Digital edition of the Stefan Zweig bibliography compiled by Randolph J. Klawiter (University of Notre Dame), extracted from the decommissioned MediaWiki database of the bibliography and structured as JSON-LD with Schema.org, Dublin Core and a domain vocabulary, with the pipeline, validation evidence and a static research interface. The edition covers the current pages of the wiki; titles the wiki recorded as deleted are outside the scope of version 1.0. The archival database dump is preserved separately and is not part of this archive.",
+  "creators": [
+    {
+      "name": "Klawiter, Randolph J.",
+      "affiliation": "University of Notre Dame"
+    },
+    {
+      "name": "Pollin, Christopher",
+      "affiliation": "Digital Humanities Craft OG",
+      "orcid": "0000-0002-4879-129X"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Digital Humanities Craft OG",
+      "type": "Editor"
+    },
+    {
+      "name": "Pollin, Christopher",
+      "affiliation": "Digital Humanities Craft OG",
+      "orcid": "0000-0002-4879-129X",
+      "type": "Editor"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "keywords": [
+    "Stefan Zweig",
+    "bibliography",
+    "digital humanities",
+    "JSON-LD",
+    "linked data",
+    "data rescue"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/chpollin/klawiter-rescue",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://chpollin.github.io/klawiter-rescue/",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Data and documentation are licensed under CC BY 4.0, code under MIT (see LICENSE and LICENSES/)."
+}

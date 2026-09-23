@@ -19,7 +19,8 @@ from pathlib import Path
 # publication- and contribution-scoped layer, 1.3 its move into per-page side
 # files so the main dataset stays loadable without them, 1.4 the Gate-1 edition
 # node and review status per publication, the page's publication flag codes,
-# the co-imprint pairs and series gloss, and the release license and version.
+# the co-imprint pairs and series gloss, the release license and version, and
+# the review scope and reviewed status that main added while 1.3 still stood.
 FRONTEND_SCHEMA_VERSION = "1.4"
 
 TOP_LEVEL_KEYS = {
@@ -121,9 +122,9 @@ def test_every_entry_matches_the_declared_contract(all_entries) -> None:
 
 
 # Review projection: which review vocabulary a projected entry may carry.
-REVIEW_KEYS = {"status", "reviewed_by", "reviewed_at", "fields"}
+REVIEW_KEYS = {"status", "reviewed_by", "reviewed_at", "fields", "scope"}
 REVIEW_REQUIRED_KEYS = {"status", "reviewed_by"}
-REVIEW_STATUSES = {"approved", "agent_verified", "contested"}
+REVIEW_STATUSES = {"approved", "agent_verified", "contested", "reviewed"}
 REVIEW_FIELDS = {"location", "translator", "publisher"}
 REVIEW_ACTIONS = {"confirm", "correct", "reject", "unresolved"}
 
@@ -147,6 +148,8 @@ def test_review_projection_matches_the_declared_vocabulary(all_entries) -> None:
         fields = review.get("fields", {})
         assert set(fields) <= REVIEW_FIELDS
         assert set(fields.values()) <= REVIEW_ACTIONS
+        if fields:
+            assert review["scope"] == list(fields)
         for field in fields:
             assert entry.get(field), (
                 f"entry {entry['@id']} reviews {field} without carrying a value"
@@ -161,6 +164,7 @@ def test_review_projection_is_derived_from_gate2_decisions() -> None:
     entry = {"location": "Amsterdam", "translator": "not a reviewed name"}
     review = stage_05.build_review(entry, index)
     assert review["fields"] == {"location": "confirm"}
+    assert review["scope"] == ["location"]
     assert review["status"] == "agent_verified"
     assert review["reviewed_by"] == index[("location", "Amsterdam")]["decidedBy"]
     assert stage_05.build_review({"location": "not a reviewed place"}, index) is None
@@ -181,7 +185,43 @@ def test_unresolved_decision_projects_as_contested() -> None:
         "reviewed_by": "independent-verification-agent",
         "reviewed_at": "2026-08-21T20:00:00Z",
         "fields": {"location": "unresolved"},
+        "scope": ["location"],
     }
+
+
+def test_rejection_verifies_nothing() -> None:
+    """A rejected candidate link lends the entry no verified status; a
+    confirmed place on the same entry still states its own field scope."""
+    stage_05 = importlib.import_module("05_to_jsonld")
+    reject = {"action": "reject", "decidedBy": "main-instance"}
+    confirm = {"action": "confirm", "decidedBy": "repository-ground-truth-fixture"}
+    only_reject = stage_05.build_review(
+        {"location": "Sofija, Varna"}, {("location", "Sofija, Varna"): reject}
+    )
+    assert only_reject == {
+        "status": "reviewed",
+        "reviewed_by": "main-instance",
+        "fields": {"location": "reject"},
+        "scope": ["location"],
+    }
+    mixed = stage_05.build_review(
+        {"location": "Wien", "publisher": "Refused"},
+        {("location", "Wien"): confirm, ("publisher", "Refused"): reject},
+    )
+    assert mixed["status"] == "agent_verified"
+    assert mixed["scope"] == ["location", "publisher"]
+
+
+def test_place_review_states_its_field_scope(all_entries) -> None:
+    """The ground-truth place decisions verify the place alone."""
+    fixture_reviews = [
+        entry["review"]
+        for entry in all_entries
+        if entry.get("review", {}).get("reviewed_by")
+        == "repository-ground-truth-fixture"
+    ]
+    assert fixture_reviews
+    assert all(review["scope"] == ["location"] for review in fixture_reviews)
 
 
 def test_display_values_are_flat(all_entries) -> None:

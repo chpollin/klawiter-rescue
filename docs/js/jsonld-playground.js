@@ -249,6 +249,8 @@ const JsonldPlayground = {
     // @context does not define carries no IRI, so a processor would drop it;
     // showing it would suggest a term the vocabulary does not publish. This
     // is what removes _provenance, review and locationSameAs from the view.
+    // The per-entry download carries the last two under their full
+    // vocabulary names (Export._jsonldPayload).
     for (const [key, val] of Object.entries(entry)) {
       if (val == null || val === '') continue;
       if (key.startsWith('@')) {
