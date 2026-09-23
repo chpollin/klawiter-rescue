@@ -141,6 +141,24 @@ def test_header_imprint_pairs(
     assert parsed[0].locations == locations
 
 
+def test_an_imprint_after_the_bold_is_read_but_a_sentence_is_not() -> None:
+    """Page 1949 sets the imprint after the bold year; page 279 sets a
+    description there, which names no publisher of the header's own."""
+    imprint = parse_header_line(
+        "'''[2010]:''' The Continuum International Publishing Group, New York"
+    )[0]
+    assert imprint.publishers == ("The Continuum International Publishing Group",)
+    assert imprint.locations == ("New York",)
+    assert imprint.description is None
+    sentence = parse_header_line(
+        "'''[2009]'''. Story read by Christoph Maria Herbst. 2 CDs. 146 minutes. "
+        "Berlin: Argon Verlag, 2009"
+    )[0]
+    assert sentence.publishers == ()
+    assert sentence.locations == ()
+    assert sentence.description.startswith(". Story read by")
+
+
 def test_a_co_imprint_edition_lists_every_publisher_and_place() -> None:
     edition = segment_page(
         54,

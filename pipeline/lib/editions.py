@@ -122,7 +122,10 @@ def _split_series(value: str) -> tuple[str, str | None]:
 # York", page 1949), or the bold imprint breaks off before a gloss and the place
 # ("'''[2009]: al-Markaz al-Qawmī li-l-Tarjamah''' [National Center for
 # Translation], al-Qāhirah [Cairo]", page 4216).
-_IMPRINT_SUFFIX_RE = re.compile(r"^[:.]?\s*(?=[^\W\d_])(?!.*'')[^\n]*,[^\n]*$")
+# A sentence after the bold is a description, not an imprint ("'''[2009]'''.
+# Story read by … Berlin: Argon Verlag, 2009", page 279), so the suffix may
+# open only with the colon, holds no sentence break and ends in no number.
+_IMPRINT_SUFFIX_RE = re.compile(r"^:?\s*(?=[^\W\d_])(?!.*'')(?!.*\.\s)[^\n]*,[^\n\d]*$")
 _GLOSS_CONTINUATION_RE = re.compile(r"^(?:\s*\[[^\[\]\n]*\])*\s*,\s*\S")
 _EXTENT_IN_SUFFIX_RE = re.compile(r"\d\)?p\.")
 
@@ -133,7 +136,7 @@ def _continues_imprint(field_text: str, suffix: str) -> str | None:
         return None
     if not field_text.strip():
         if _IMPRINT_SUFFIX_RE.match(suffix):
-            return suffix.lstrip(":.").strip()
+            return suffix.lstrip(":").strip()
         return None
     if field_text.rstrip().endswith(",") or _GLOSS_CONTINUATION_RE.match(suffix):
         joiner = "" if suffix.lstrip().startswith(",") else " "
