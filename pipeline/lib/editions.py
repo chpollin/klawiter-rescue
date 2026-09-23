@@ -18,9 +18,15 @@ import re
 from dataclasses import dataclass
 from typing import Iterable
 
-from lib.patterns import EDITION_YEAR_PREFIX
+from lib.patterns import (
+    ABSENCE_MARKS,
+    CORPORATE_SUFFIXES,
+    EDITION_YEAR_PREFIX,
+    PLACE_NAMES_STANDING_ALONE,
+    PLACE_QUALIFIERS,
+)
 
-ALGORITHM_VERSION = "1.2"
+ALGORITHM_VERSION = "1.3"
 # Header grammar built from the shared year fragment in lib/patterns.py, so
 # '[ca. YEAR]' parses identically in the flat extraction and here. patterns.py
 # is part of segment_editions.py's provenance code hash for this reason.
@@ -56,11 +62,29 @@ class HeaderFields:
 
     year_raw: str
     year: int | None
-    publisher: str | None
-    location: str | None
+    imprint: str | None
+    imprints: tuple[Imprint, ...]
     series: str | None
     description: str | None
     flags: tuple[str, ...]
+
+    @property
+    def publishers(self) -> tuple[str, ...]:
+        return tuple(
+            dict.fromkeys(item.publisher for item in self.imprints if item.publisher)
+        )
+
+    @property
+    def locations(self) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(item.place for item in self.imprints if item.place))
+
+    @property
+    def publisher(self) -> str | None:
+        return self.publishers[0] if self.publishers else None
+
+    @property
+    def location(self) -> str | None:
+        return self.locations[0] if self.locations else None
 
 
 @dataclass(frozen=True)
@@ -86,25 +110,245 @@ def _letter_suffix(index: int) -> str:
 
 def _split_series(value: str) -> tuple[str, str | None]:
     match = SERIES_RE.search(value)
-    if not match:
+    # A bracket after a comma is an imprint segment, the supplied place of
+    # "Milliyet Yayınları, [Istanbul]" or the "[s.l.]" of "[s.n.], [s.l.]".
+    if not match or value[: match.start()].rstrip().endswith(","):
         return value.strip(), None
     return value[: match.start()].strip(), match.group(1)
 
 
-def _split_publisher_location(value: str) -> tuple[str | None, str | None, bool]:
+# The imprint continues after the closing bold: either the bold holds only the
+# year ("'''[2010]:''' The Continuum International Publishing Group, New
+# York", page 1949), or the bold imprint breaks off before a gloss and the place
+# ("'''[2009]: al-Markaz al-Qawmī li-l-Tarjamah''' [National Center for
+# Translation], al-Qāhirah [Cairo]", page 4216).
+_IMPRINT_SUFFIX_RE = re.compile(r"^[:.]?\s*(?=[^\W\d_])(?!.*'')[^\n]*,[^\n]*$")
+_GLOSS_CONTINUATION_RE = re.compile(r"^(?:\s*\[[^\[\]\n]*\])*\s*,\s*\S")
+_EXTENT_IN_SUFFIX_RE = re.compile(r"\d\)?p\.")
+
+
+def _continues_imprint(field_text: str, suffix: str) -> str | None:
+    """The imprint text when the suffix after the bold continues it."""
+    if _EXTENT_IN_SUFFIX_RE.search(suffix):
+        return None
+    if not field_text.strip():
+        if _IMPRINT_SUFFIX_RE.match(suffix):
+            return suffix.lstrip(":.").strip()
+        return None
+    if field_text.rstrip().endswith(",") or _GLOSS_CONTINUATION_RE.match(suffix):
+        joiner = "" if suffix.lstrip().startswith(",") else " "
+        return f"{field_text.strip()}{joiner}{suffix.strip()}"
+    return None
+
+
+@dataclass(frozen=True)
+class Imprint:
+    """One publisher and place pair of a header, both in source wording."""
+
+    publisher: str | None
+    place: str | None
+    resolved: bool
+
+
+def protected_mask(text: str) -> list[bool]:
+    """Mark the characters inside balanced brackets or paired quotation marks.
+
+    A comma or separator there belongs to a name ("Izdatel'stvo \\"Mir knigi,
+    Literatura\\"", "[Pune, formerly Poona]") and never splits the imprint. An
+    opener without its closer protects nothing, so one stray bracket cannot
+    swallow the rest of the header.
+    """
+    mask = [False] * len(text)
+    stack: list[int] = []
+    for index, char in enumerate(text):
+        if char in "[(":
+            stack.append(index)
+        elif char in "])" and stack:
+            start = stack.pop()
+            for position in range(start, index + 1):
+                mask[position] = True
+    for opener, closer in (('"', '"'), ("“", "”"), ("„", "“")):
+        start = text.find(opener)
+        while start >= 0:
+            end = text.find(closer, start + 1)
+            if end < 0:
+                break
+            for position in range(start, end + 1):
+                mask[position] = True
+            start = text.find(opener, end + 1)
+    return mask
+
+
+def _cuts(text: str, pattern: re.Pattern[str], mask: list[bool]) -> list[re.Match]:
+    return [match for match in pattern.finditer(text) if not mask[match.start()]]
+
+
+def _segments(text: str) -> list[tuple[int, int]]:
+    """Spans of the comma segments of one imprint, outside protected regions."""
+    mask = protected_mask(text)
+    spans = []
+    start = 0
+    for index, char in enumerate(text):
+        if char == "," and not mask[index]:
+            spans.append((start, index))
+            start = index + 1
+    spans.append((start, len(text)))
+    return [
+        (start + len(text[start:end]) - len(text[start:end].lstrip()), end)
+        for start, end in spans
+        if text[start:end].strip()
+    ]
+
+
+def _segment_text(text: str, span: tuple[int, int]) -> str:
+    return text[span[0] : span[1]].strip()
+
+
+def _is_qualifier(segment: str) -> bool:
+    if segment in PLACE_QUALIFIERS:
+        return True
+    # A bracket standing alone after a comma supplies the place or glosses it
+    # ("Milliyet Yayınları, [Istanbul]", "ʿAṭāʾī, Tihrān, [Tehran]").
+    return segment.startswith("[") and segment.endswith("]")
+
+
+def _pair(text: str, *, continuation: bool = False) -> Imprint:
+    """Read one publisher and its place from a single imprint statement.
+
+    The place is the last comma segment, together with the trailing segments
+    that qualify it (a state, a country, a supplied bracket). The publisher is
+    everything before. The pair is resolved where the publisher is one segment
+    once its legal-form suffixes are joined to it; otherwise the boundary
+    between a publisher name with commas and a place hierarchy stays open.
+    """
+    spans = _segments(text)
+    segments = [_segment_text(text, span) for span in spans]
+    if not segments:
+        return Imprint(None, None, True)
+    if len(segments) == 1:
+        single = segments[0]
+        if single in PLACE_NAMES_STANDING_ALONE:
+            return Imprint(None, single, True)
+        period = PUBLISHER_PERIOD_RE.search(single)
+        if period:
+            return Imprint(
+                single[: period.end() - 2].strip() or None,
+                single[period.end() :].strip() or None,
+                True,
+            )
+        return Imprint(_present(single), None, True)
+    qualifiers = 0
+    while qualifiers < len(segments) - 1 and _is_qualifier(
+        segments[len(segments) - 1 - qualifiers]
+    ):
+        qualifiers += 1
+    place_index = len(segments) - 1 - qualifiers
+    if qualifiers and place_index == 0:
+        # "Publisher, Country" and "Place, Country" read alike; a continuation
+        # after "and" has no publisher of its own, a first statement has one.
+        if continuation:
+            return Imprint(None, text[spans[0][0] :].strip(), False)
+        place_index = 1
+    place = _present(text[spans[place_index][0] :].strip().rstrip(",").strip())
+    publisher_segments = segments[:place_index]
+    names = [item for item in publisher_segments if item not in CORPORATE_SUFFIXES]
+    publisher = _present(text[: spans[place_index][0]].strip().rstrip(",").strip())
+    return Imprint(publisher, place, len(names) <= 1)
+
+
+def _present(value: str | None) -> str | None:
+    """A publisher or place value, or None where the source marks its absence."""
+    if not value or value.strip() in ABSENCE_MARKS:
+        return None
+    return value
+
+
+# Co-imprints: "Nauka i izkustvo, Sofija / DPK St. Dobrev-Strandzhata, Varna".
+# A slash counts only with space before it, so "Berlin/Darmstadt/Wien" and the
+# parallel name "Trst/Trieste" stay one place.
+_CO_IMPRINT_RE = re.compile(r"\s+/{1,2}\s*|;\s+")
+_AND_RE = re.compile(r"(?<!,) and ")
+# "Longmans, Green and Company": the word after "and" continues a firm name.
+_FIRM_CONTINUATIONS = frozenset({"Company", "Co.", "Sons", "Son", "Brothers"})
+
+
+def split_imprint(value: str) -> tuple[Imprint, ...]:
+    """Split an imprint statement into publisher and place pairs.
+
+    Co-imprints are separated at " / ", " // ", "; " and at an "and" that joins
+    two complete statements. A part without a comma names no place and belongs
+    to the publisher of the part after it ("Acantilado / Quaderns Crema, S. A.
+    U., Barcelona"). Every value keeps its source wording.
+    """
+    text = value.strip()
+    if not text:
+        return ()
+    mask = protected_mask(text)
+    bounds = [0]
+    for match in _cuts(text, _CO_IMPRINT_RE, mask):
+        bounds.append(match.start())
+        bounds.append(match.end())
+    bounds.append(len(text))
+    raw_parts = [
+        (bounds[index], bounds[index + 1]) for index in range(0, len(bounds), 2)
+    ]
+    # Merge a part without its own place into the part after it, keeping the
+    # separator as the source writes it.
+    parts: list[tuple[int, int]] = []
+    pending: int | None = None
+    for start, end in raw_parts:
+        chunk = text[start:end]
+        begin = pending if pending is not None else start
+        if not any(char == "," and not mask[start + i] for i, char in enumerate(chunk)):
+            pending = begin
+            continue
+        parts.append((begin, end))
+        pending = None
+    if pending is not None:
+        # A last part without a comma continues the place before it: the
+        # parallel seats of "Holger Schildts Förlag, Stockholm / Helsingfors"
+        # (page 4377) form one place statement.
+        if parts:
+            parts[-1] = (parts[-1][0], len(text))
+        else:
+            parts.append((pending, len(text)))
+
+    imprints: list[Imprint] = []
+    for start, end in parts:
+        statement = text[start:end]
+        local_mask = mask[start:end]
+        pieces = [0]
+        for match in _AND_RE.finditer(statement):
+            if local_mask[match.start()]:
+                continue
+            left = statement[pieces[-1] : match.start()]
+            right = statement[match.end() :]
+            right_first = right.split(",", 1)[0].split()
+            if (
+                "," in left
+                and "," in right
+                and right_first
+                and right_first[0] not in _FIRM_CONTINUATIONS
+            ):
+                pieces.extend((match.start(), match.end()))
+        pieces.append(len(statement))
+        for index in range(0, len(pieces), 2):
+            imprints.append(
+                _pair(
+                    statement[pieces[index] : pieces[index + 1]],
+                    continuation=index > 0,
+                )
+            )
+    return tuple(imprints)
+
+
+def _split_publisher_location(
+    value: str,
+) -> tuple[tuple[Imprint, ...], bool]:
+    """The imprint pairs of a header field, and whether residue was repaired."""
     cleaned = re.sub(r"\]{2,}$", "", value).strip().rstrip("'").strip()
     normalized = cleaned != value.strip().rstrip("'").strip()
-    if not cleaned:
-        return None, None, normalized
-    if "," in cleaned:
-        publisher, location = cleaned.rsplit(",", 1)
-        return publisher.strip() or None, location.strip() or None, normalized
-    period = PUBLISHER_PERIOD_RE.search(cleaned)
-    if period:
-        publisher = cleaned[: period.end() - 2].strip()
-        location = cleaned[period.end() :].strip()
-        return publisher or None, location or None, True
-    return cleaned, None, normalized
+    return split_imprint(cleaned), normalized
 
 
 def parse_header_line(line: str) -> list[HeaderFields]:
@@ -126,15 +370,15 @@ def parse_header_line(line: str) -> list[HeaderFields]:
 
     parts = COMPOUND_HEADER_RE.split(header_text)
     parsed: list[HeaderFields] = []
-    for part in parts:
+    for index, part in enumerate(parts):
         match = HEADER_RE.match(part)
         if not match:
             parsed.append(
                 HeaderFields(
                     year_raw="",
                     year=None,
-                    publisher=part.strip() or None,
-                    location=None,
+                    imprint=part.strip() or None,
+                    imprints=(Imprint(part.strip() or None, None, True),),
                     series=None,
                     description=suffix,
                     flags=("unparsed-header",),
@@ -145,9 +389,21 @@ def parse_header_line(line: str) -> list[HeaderFields]:
         year_raw = match.group(1).strip()
         year_match = YEAR_RE.search(year_raw)
         year = int(year_match.group(1)) if year_match else None
-        field_text, series = _split_series(match.group(2).strip())
+        description = suffix
+        continued = None
+        if suffix and index == len(parts) - 1:
+            continued = _continues_imprint(match.group(2), suffix)
+        if continued is not None:
+            # The trailing bracket of a continued imprint glosses its place
+            # ("al-Qāhirah [Cairo]"); a series never follows the bold here.
+            field_text, series, description = continued, None, None
+        else:
+            field_text, series = _split_series(match.group(2).strip())
         series = series or suffix_series
-        publisher, location, normalized = _split_publisher_location(field_text)
+        imprints, normalized = _split_publisher_location(field_text)
+        if "," not in field_text and PUBLISHER_PERIOD_RE.search(field_text):
+            normalized = True
+        imprint = re.sub(r"\]{2,}$", "", field_text).strip().rstrip("'").strip()
         flags: list[str] = []
         if len(parts) > 1:
             flags.append("compound-header")
@@ -155,11 +411,11 @@ def parse_header_line(line: str) -> list[HeaderFields]:
             flags.append("approximate-year")
         if year is None:
             flags.append("missing-year")
-        if location is None:
+        if not any(item.place for item in imprints):
             flags.append("missing-location")
         if missing_close:
             flags.append("malformed-bold-header")
-        if suffix:
+        if description:
             flags.append("header-suffix")
         if series:
             flags.append("header-series")
@@ -169,10 +425,10 @@ def parse_header_line(line: str) -> list[HeaderFields]:
             HeaderFields(
                 year_raw=year_raw,
                 year=year,
-                publisher=publisher,
-                location=location,
+                imprint=imprint or None,
+                imprints=imprints,
                 series=series,
-                description=suffix,
+                description=description,
                 flags=tuple(flags),
             )
         )
@@ -223,6 +479,10 @@ def _page_count(
     return None, None, None, ()
 
 
+def _one_or_all(values: tuple[str, ...]) -> str | list[str]:
+    return values[0] if len(values) == 1 else list(values)
+
+
 def segment_page(page_id: int, text: str, work_title: str) -> dict:
     """Segment one page into proposed edition nodes and exact annotations."""
     boundaries = _boundaries(text)
@@ -267,10 +527,12 @@ def segment_page(page_id: int, text: str, work_title: str) -> dict:
             }
             if fields.year is not None:
                 edition["schema:datePublished"] = str(fields.year)
-            if fields.publisher:
-                edition["schema:publisher"] = fields.publisher
-            if fields.location:
-                edition["schema:locationCreated"] = fields.location
+            # A co-imprint names several publishers and places; the pairing
+            # itself lives in the publication layer.
+            if fields.publishers:
+                edition["schema:publisher"] = _one_or_all(fields.publishers)
+            if fields.locations:
+                edition["schema:locationCreated"] = _one_or_all(fields.locations)
             if page_count is not None:
                 edition["schema:numberOfPages"] = page_count
             if page_count_candidate is not None:

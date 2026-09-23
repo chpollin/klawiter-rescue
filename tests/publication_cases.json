@@ -81,7 +81,7 @@
     "page_id": 1891,
     "label": "three translation roles with contribution scope",
     "textSha256": "3481f9484361ea7325f134543a8caf23a52d16a6493c195a0aea4fac5de4214c",
-    "notes": "Operator specification 2026-09-08, owner worksheet case 2: preserve all three translation roles and their contribution scope, keep the editor separate, show the original extent notation and flag the pagination inconsistency. A blank scalar translator must never mean that no translators are documented.",
+    "notes": "Operator specification 2026-09-08, owner worksheet case 2: preserve all three translation roles and their contribution scope, keep the editor separate, show the original extent notation and flag the pagination inconsistency. A blank scalar translator must never mean that no translators are documented. Revised 2026-09-23: the notation 444/(3)p. declares 444 numbered and 3 unnumbered pages, 447 in all, and the contents end on the unnumbered page (445); the source states no inconsistency, so no pagination flag is expected.",
     "pageKind": "single-publication",
     "publicationCount": 1,
     "publicationYears": [
@@ -160,12 +160,7 @@
             ]
           }
         ],
-        "reviewFlags": [
-          {
-            "code": "contents-pagination-exceeds-extent",
-            "detail": "The contents end at page 445, the stated numbered extent is 444."
-          }
-        ]
+        "reviewFlags": []
       }
     ]
   },
@@ -173,7 +168,7 @@
     "page_id": 4445,
     "label": "German book and Arabic article on one author page",
     "textSha256": "11dfc481465af03cb6c840b45e0b4c178df7ed08da465e7e382a1632de7d560c",
-    "notes": "Operator specification 2026-09-08, owner worksheet case 3 and the coordinator finding of the same date: two publications with their own language and citation context, linked only through source page and author. The source establishes no translation or edition relation.",
+    "notes": "Operator specification 2026-09-08, owner worksheet case 3 and the coordinator finding of the same date: two publications with their own language and citation context, linked only through source page and author. The source establishes no translation or edition relation. Revised 2026-09-23: the source bracket [Hochschulsammlung Philosophie. Literaturwissenschaft, 16] states the series and its volume 16; the series value no longer repeats the volume.",
     "pageKind": "author-page",
     "publicationCount": 2,
     "publicationYears": [
@@ -206,7 +201,7 @@
           "raw": "168p.",
           "numbered": 168
         },
-        "series": "Hochschulsammlung Philosophie. Literaturwissenschaft, 16",
+        "series": "Hochschulsammlung Philosophie. Literaturwissenschaft",
         "seriesVolume": "16",
         "note": "This volume was originally the author's 1999 PhD thesis at the Albert-Ludwigs-Universität, Freiburg im Breisgau",
         "credits": [],

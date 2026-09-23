@@ -164,6 +164,134 @@ BRACKET_KNOWN_RE = re.compile(rf"\[({_loc_pattern})\b")
 # Two-letter uppercase token, e.g. a US state code trailing "City, ST".
 _US_STATE_RE = re.compile(r"^[A-Z]{2}$")
 
+# Imprint place qualifiers. A header such as "Inko, Tyresö, Sweden" or "Ariadne
+# Press, Riverside, CA" ends in a segment that qualifies the place before it;
+# lib/editions.split_imprint reads such a trailing segment as part of the place,
+# never as the place itself. Only the fixed lists below qualify, so an unknown
+# trailing segment keeps its old reading and its review flag.
+#
+# United States Postal Service, Publication 28, Appendix B: the two-letter state,
+# district and territory abbreviations, and the state names. "New York" and
+# "Washington" are left out of the names because the corpus uses both as the
+# city of publication ("Longmans, Green & Company, New York").
+US_POSTAL_CODES = frozenset(
+    """AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN
+    MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI
+    WY AS GU MP PR VI""".split()
+)
+US_STATE_NAMES = frozenset(
+    {
+        "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+        "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine",
+        "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+        "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+        "New Mexico", "North Carolina", "North Dakota", "Ohio", "Oklahoma",
+        "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+        "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "West Virginia",
+        "Wisconsin", "Wyoming",
+    }
+)  # fmt: skip
+# Canada Post: the two-letter province and territory symbols.
+CA_POSTAL_CODES = frozenset("AB BC MB NB NL NS NT NU ON PE QC SK YT".split())
+# ISO 3166-2:BR: the two-letter codes of the Brazilian federative units
+# ("L&PM, Porto Alegre, RS" on page 3556).
+BR_STATE_CODES = frozenset(
+    """AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC
+    SP SE TO""".split()
+)
+# Country names of the Natural Earth 1:110m country layer, exactly as vendored in
+# docs/vendor/countries-110m.json (world-atlas 2); tests/test_publications.py
+# asserts this list equals the names in that file.
+NATURAL_EARTH_COUNTRY_NAMES = frozenset(
+    {
+        'Afghanistan', 'Albania', 'Algeria', 'Angola', 'Antarctica', 'Argentina',
+        'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bangladesh',
+        'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia',
+        'Bosnia and Herz.', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria',
+        'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada',
+        'Central African Rep.', 'Chad', 'Chile', 'China', 'Colombia', 'Congo',
+        'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czechia', "Côte d'Ivoire",
+        'Dem. Rep. Congo', 'Denmark', 'Djibouti', 'Dominican Rep.', 'Ecuador',
+        'Egypt', 'El Salvador', 'Eq. Guinea', 'Eritrea', 'Estonia', 'Ethiopia',
+        'Falkland Is.', 'Fiji', 'Finland', 'Fr. S. Antarctic Lands', 'France',
+        'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Greenland',
+        'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Honduras',
+        'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland',
+        'Israel', 'Italy', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya',
+        'Kosovo', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho',
+        'Liberia', 'Libya', 'Lithuania', 'Luxembourg', 'Macedonia', 'Madagascar',
+        'Malawi', 'Malaysia', 'Mali', 'Mauritania', 'Mexico', 'Moldova',
+        'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar', 'N. Cyprus',
+        'Namibia', 'Nepal', 'Netherlands', 'New Caledonia', 'New Zealand',
+        'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'Norway', 'Oman',
+        'Pakistan', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru',
+        'Philippines', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Romania',
+        'Russia', 'Rwanda', 'S. Sudan', 'Saudi Arabia', 'Senegal', 'Serbia',
+        'Sierra Leone', 'Slovakia', 'Slovenia', 'Solomon Is.', 'Somalia',
+        'Somaliland', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka', 'Sudan',
+        'Suriname', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan',
+        'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Trinidad and Tobago',
+        'Tunisia', 'Turkey', 'Turkmenistan', 'Uganda', 'Ukraine',
+        'United Arab Emirates', 'United Kingdom', 'United States of America',
+        'Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela', 'Vietnam', 'W. Sahara',
+        'Yemen', 'Zambia', 'Zimbabwe', 'eSwatini',
+    }
+)  # fmt: skip
+# State and region names the source headers use as a trailing qualifier that the
+# lists above lack, each with the page whose header attests it.
+SOURCE_REGION_NAMES = {
+    "Bayern": 34,
+    "Bosnia": 1855,
+    "Brasil": 4429,
+    "Czech Republic": 34,
+    "Czechoslovakia": 4477,
+    "England": 886,
+    "Faeroe Islands": 374,
+    "Kerala": 5829,
+    "New South Wales": 4689,
+    "República Argentina": 2087,
+    "USA": 2294,
+}
+# "D.F." is the Mexican Distrito Federal ("Editorial Diana, México, D.F.", page
+# 2524); the source writes it with and without the inner space.
+_FEDERAL_DISTRICT = frozenset({"D.F.", "D. F."})
+PLACE_QUALIFIERS = (
+    US_POSTAL_CODES
+    | US_STATE_NAMES
+    | CA_POSTAL_CODES
+    | BR_STATE_CODES
+    | NATURAL_EARTH_COUNTRY_NAMES
+    | frozenset(SOURCE_REGION_NAMES)
+    | _FEDERAL_DISTRICT
+)
+# Country and region names can stand alone as a film's country of production
+# ("'''[1991]: Germany'''", page 4630); postal codes never do.
+PLACE_NAMES_STANDING_ALONE = NATURAL_EARTH_COUNTRY_NAMES | frozenset(
+    SOURCE_REGION_NAMES
+)
+# Legal-form and designation segments that belong to the publisher name before
+# them ("Pocket Books, Inc., New York", page 890), each attested in a header.
+CORPORATE_SUFFIXES = frozenset(
+    {
+        "Inc.",  # 890
+        "Ltd.",  # 502
+        "Ltda.",  # 3058
+        "S. A.",  # 217
+        "S. A. U.",  # 2873
+        "S. L.",  # 3668
+        "s.l.u.",  # 2893
+        "S. R. L.",  # 5008
+        "S. r. o.",  # 3612
+        "SIA",  # 854
+        "Éditeurs",  # 672
+        "Editeur",  # 6667
+    }
+)
+# Sine loco / sine nomine: the cataloguing marks for a place or publisher the
+# item does not state ("[s.n.], [s.l.]", page 4269). They record an absence.
+ABSENCE_MARKS = frozenset({"[s.l.]", "s.l.", "[s.n.]", "s.n."})
+
 # Page count patterns
 # Note: pp. N-M is a page RANGE (start-end), not a page count.
 # Pattern 2 requires the number to NOT be followed by a hyphen+digit (range).

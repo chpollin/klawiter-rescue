@@ -94,6 +94,67 @@ def test_compound_header_preserves_two_source_bound_proposals() -> None:
     assert all("compound-header" in item.flags for item in parsed)
 
 
+@pytest.mark.parametrize(
+    ("line", "publishers", "locations"),
+    [
+        # Page 54: a co-imprint of three publishers, each with its seat.
+        (
+            "'''[1939]: Gottfried Bermann-Fischer Verlag, Stockholm / Uitgeverij "
+            "Allert de Lange, Amsterdam / Longmans, Green and Company, "
+            "New York/Toronto'''",
+            (
+                "Gottfried Bermann-Fischer Verlag",
+                "Uitgeverij Allert de Lange",
+                "Longmans, Green and Company",
+            ),
+            ("Stockholm", "Amsterdam", "New York/Toronto"),
+        ),
+        # Page 54: the country qualifies the town, it is not the place.
+        (
+            "'''[1981]: Buch- und Schallplattenfreunde, Zug, Switzerland'''",
+            ("Buch- und Schallplattenfreunde",),
+            ("Zug, Switzerland",),
+        ),
+        # Page 1452: a parallel place name stays one place.
+        (
+            "'''[1988]: Založništvo tržaškega tiska, Trst/Trieste and Adit, "
+            "Ljubljana'''",
+            ("Založništvo tržaškega tiska", "Adit"),
+            ("Trst/Trieste", "Ljubljana"),
+        ),
+        # Page 4377: parallel seats after a slash stay one place statement.
+        (
+            "'''[1921]: Holger Schildts Förlag, Stockholm / Helsingfors'''",
+            ("Holger Schildts Förlag",),
+            ("Stockholm / Helsingfors",),
+        ),
+        # Page 4473: a country alone names the country of production.
+        ("'''[1984]: Czechoslovakia'''", (), ("Czechoslovakia",)),
+    ],
+)
+def test_header_imprint_pairs(
+    line: str, publishers: tuple[str, ...], locations: tuple[str, ...]
+) -> None:
+    parsed = parse_header_line(line)
+    assert len(parsed) == 1
+    assert parsed[0].publishers == publishers
+    assert parsed[0].locations == locations
+
+
+def test_a_co_imprint_edition_lists_every_publisher_and_place() -> None:
+    edition = segment_page(
+        54,
+        "'''[1939]: Gottfried Bermann-Fischer Verlag, Stockholm / Uitgeverij "
+        "Allert de Lange, Amsterdam'''\n''Ungeduld des Herzens''. 562p.\n",
+        "Ungeduld des Herzens",
+    )["editions"][0]
+    assert edition["schema:publisher"] == [
+        "Gottfried Bermann-Fischer Verlag",
+        "Uitgeverij Allert de Lange",
+    ]
+    assert edition["schema:locationCreated"] == ["Stockholm", "Amsterdam"]
+
+
 def test_numeric_reference_headers_are_not_editions() -> None:
     text = "'''[1]'''. Citation\n'''[1960]: Publisher, Wien'''\n"
     assert count_edition_headers(text) == 1
