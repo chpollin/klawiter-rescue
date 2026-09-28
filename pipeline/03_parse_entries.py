@@ -185,6 +185,25 @@ def _credits_page_person(text, page_title):
     return text == name or text.startswith((name + " ", name + ".", name + ","))
 
 
+# A repository holding a correspondent's letters, named at the head of a
+# Correspondence page ("The Stefan Zweig Collection", "Kungliga Biblioteket").
+_REPOSITORY_NAME_RE = re.compile(r"\b(?:Collection|Papers?|Nachlass|Archives?)$")
+
+
+def _names_repository(text, page_title, categories):
+    """Whether the line names the archive holding a correspondence.
+
+    A Correspondence page is titled by the correspondent ("Hasenclever,
+    Walter"); a bold line above the letter list naming a collection or
+    archive names its repository, not a title (page 3436).
+    """
+    if not any("Correspondence" in category for category in categories):
+        return False
+    if not re.fullmatch(r"([^,/]+),\s*([^,/]+)", page_title or ""):
+        return False
+    return bool(_REPOSITORY_NAME_RE.search(text))
+
+
 def non_title_class(candidate, page_title="", categories=()):
     """The class of bibliographic statement a title candidate is, or None.
 
@@ -201,6 +220,8 @@ def non_title_class(candidate, page_title="", categories=()):
         return "label"
     if _credits_page_person(text, page_title):
         return "credit"
+    if _names_repository(text, page_title, categories):
+        return "holdings"
     for name, pattern in NON_TITLE_CLASSES:
         if pattern.search(text):
             return name

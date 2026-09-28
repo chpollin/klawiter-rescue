@@ -196,12 +196,63 @@ def test_titles_are_not_classified_as_statements(parser, title) -> None:
         ),
         # A language label is read only against the page's own categories.
         ("Bosnian", "Balzak", [], None),
+        # Page 3436 opens with the repository holding Hasenclever's letters.
+        (
+            "The Stefan Zweig Collection",
+            "Hasenclever, Walter",
+            ["Correspondence / Individual Letters (German)"],
+            "holdings",
+        ),
+        # A collection name outside a Correspondence page is a real title
+        # (page 4663, "The Mossbach Collection").
+        (
+            "The Mossbach Collection",
+            "The Mossbach Collection",
+            ["Films / Plays / Operas"],
+            None,
+        ),
     ],
 )
 def test_candidates_are_read_against_their_page(
     parser, candidate, page_title, categories, expected
 ) -> None:
     assert parser.non_title_class(candidate, page_title, categories) == expected
+
+
+def test_a_repository_name_gives_way_to_the_correspondent(parser) -> None:
+    """Page 3436 opens with the archive holding Hasenclever's letters, not a
+    title of its own."""
+    row = _row(
+        page_id="3436",
+        page_title="Hasenclever, Walter",
+        content=(
+            "'''The Stefan Zweig Collection'''. Daniel A. Reed Library, "
+            "The State University of New York at Fredonia\n\n"
+            "Walter Hasenclever to Stefan Zweig, 11 letters, 7 postcards, and "
+            "1 telegram, 19 March 1914 - 2 September 1921\n\n"
+            "[[Category:Correspondence / Individual Letters (German)]]"
+        ),
+    )
+    assert parser.process_entry(row)["title"] == "Hasenclever, Walter"
+
+
+def test_a_citation_split_across_lines_gives_way_to_the_page_title(parser) -> None:
+    """Page 6503 opens with a quoted review headline whose container, ''India.
+    Com'', follows on the next line rather than the same one."""
+    row = _row(
+        page_id="6503",
+        page_title="Mishra, Raghvendra",
+        content=(
+            '\\"Sameeksha: Paakistaan se tanaav aur yuddh jaise maahaul '
+            "mein...Padhana chaahie 'Vo gujara jamaana' [Review: In Pakistan, "
+            "in the Atmosphere of Tension and War ... One Should Read 'They "
+            "Passed Away']\\\"\n"
+            "in ''India.Com'' [Mumbai], 03 March 2019. Published by the Zee "
+            "Entertainment Enterprises ltd, Mumbai (formerly Bombay)\n\n"
+            "[[Category:Secondary Literature / Authors (Hindi)]]"
+        ),
+    )
+    assert parser.process_entry(row)["title"] == "Mishra, Raghvendra"
 
 
 def test_a_list_heading_is_not_a_title(parser) -> None:

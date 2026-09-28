@@ -3,8 +3,8 @@
     "title": {
       "total_entries": 4758,
       "extracted": 4757,
-      "correct": 2519,
-      "correct_fallback": 2238,
+      "correct": 2517,
+      "correct_fallback": 2240,
       "false_positive": 0,
       "false_negative": 0,
       "coverage": 100.0,
@@ -66962,13 +66962,13 @@
     },
     {
       "page_id": 3436,
-      "title": "The Stefan Zweig Collection",
+      "title": "Hasenclever, Walter",
       "fields": {
         "title": {
-          "extracted": "The Stefan Zweig Collection",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Hasenclever, Walter",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 1914,
@@ -118220,13 +118220,13 @@
     },
     {
       "page_id": 6503,
-      "title": "\"Sameeksha: Paakistaan se tanaav aur yuddh jaise maahaul mein...Padhana chaahie 'Vo gujara jamaana' [Review: In Pakistan, in the Atmosphere of Tension and War ... One Should Read 'They Passed Away']\"",
+      "title": "Mishra, Raghvendra",
       "fields": {
         "title": {
-          "extracted": "\"Sameeksha: Paakistaan se tanaav aur yuddh jaise maahaul mein...Padhana chaahie 'Vo gujara jamaana' [Review: In Pakistan, in the Atmosphere of Tension and War ... One Should Read 'They Passed Away']\"",
-          "in_raw": true,
-          "status": "correct",
-          "title_source": "wiki_extract"
+          "extracted": "Mishra, Raghvendra",
+          "in_raw": false,
+          "status": "correct_fallback",
+          "title_source": "page_title_fallback"
         },
         "year": {
           "extracted": 2019,

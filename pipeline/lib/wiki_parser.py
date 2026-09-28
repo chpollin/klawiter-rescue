@@ -139,7 +139,8 @@ def extract_title(content):
 
     # Pattern 3: For collected-works entries with '''[year]: Publisher''' format,
     # look for the page_title or the first meaningful text line
-    first_line = content.split("\n")[0].strip()
+    first_line_raw, _, rest = content.partition("\n")
+    first_line = first_line_raw.strip()
     # A section heading ("==Essays (English)==", page 185) names a part of the
     # page, not the work.
     if re.match(r"={2,6}[^=].*={2,6}$", first_line):
@@ -148,6 +149,12 @@ def extract_title(content):
         cleaned = remove_wiki_markup(first_line)
         # Reject lines that are just category/structural markers
         if cleaned and not cleaned.startswith("[[") and not cleaned.startswith("{{"):
+            # A quoted title whose container opens the next line ('"Sameeksha:
+            # ...']"' \n"in ''India.Com''..."', page 6503) is a citation split
+            # across lines, the shape the citation class of 03_parse_entries
+            # reads when the container follows on the same line.
+            if re.match(r"\s*in\b", rest, re.IGNORECASE):
+                return None
             return cleaned
 
     return None

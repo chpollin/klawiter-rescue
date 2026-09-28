@@ -12,12 +12,26 @@ language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-09-23
+updated: 2026-09-28
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
+
+---
+
+## 2026-09-28 — Session 42: The two remaining non-titles
+
+**Round.** Closing pass on the two author pages Session 41 left open, plus a check of page 2083 and the two homonymous places.
+
+**Changed.** The title rule gained two classes. A Correspondence page titled by the correspondent now reads a bold line naming the archive holding the letters ("Collection", "Papers", "Nachlass", "Archive") as a repository statement rather than a title, which restores page 3436 to its page title "Hasenclever, Walter". `extract_title`'s first-line fallback now also rejects a quoted headline whose container opens the very next line rather than following on the same one, which restores page 6503 to its page title "Mishra, Raghvendra" (the quoted review headline is followed by "in ''India.Com''..." one line down, outside the reach of the existing same-line citation pattern). Both fixes carry source-bound fixtures in `tests/test_parse_entries.py`, keep the corpus-wide check of collection-named titles outside a Correspondence page unaffected (page 4663, "The Mossbach Collection", stays a real title), and a full production run regenerated the frontend dataset and both gate manifests.
+
+**Decided.** Page 2083 is fixed. The reviewed Session 41 rule (a bold "<language> edition" label ends the preceding publication's contents) already keeps the French 1994 edition's page lines out of the German 1993 edition's four contributions in the regenerated `docs/data/publications/2083.json`; no second defect was found. St. Petersburg and Hyderabad stay open. The Session 39 compound-place rule reads a comma-separated subject such as "Sofija, Varna" as two places; neither open subject contains a comma, so the rule does not reach them by its own condition (`location.split(",")` yields one component), and their ambiguity is a homonym choice between two distinct real places sharing one name, not a compound statement. Applying the rule would not be a deterministic application of it but a guess, so both stay untouched.
+
+**Open.** Page 1875 still merges six volumes into one publication (unchanged, a Gate 1 segmentation decision). St. Petersburg (Russia or Florida) and Hyderabad (Sindh or India) still need a source-external disambiguation the operator would have to admit as evidence, as do Sulzbach, Huis ter Heide, Leikanger and Saint-Aignan.
+
+**Resume.** Default suite (833 passed), semantic diagnostics with the same 21 retained failures (confirmed unchanged against the pre-change baseline), Ruff check and format, a full production run with both gates, and `git diff --check` passed.
 
 ---
 

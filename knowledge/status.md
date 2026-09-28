@@ -2,7 +2,7 @@
 title: Current Project Status
 status: maintained
 language: en
-updated: 2026-09-23
+updated: 2026-09-28
 ---
 
 # Current project status
@@ -76,7 +76,7 @@ Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload
 | P0 acceptance | None outstanding. On 23 September the operator withdrew worksheet case 5, the partner acceptance and the Zenodo deposit; a Git tag remains the operator's decision | operator decision |
 | P1 provenance | Apply one released field correction consistently to canonical graphs, frontend, exports, history and reports | end-to-end replay and repeatability with a real source-bound fixture |
 | P1 editing | Editing per publication stays outside version 1.0 (decided by the main instance after delegation by the operator on 2026-09-23, revisable), because no released correction exists yet and the acceptance contract asks for propagation of a page-level correction | a patch contract that binds a publication id to its source-slice hash, when a correction needs it |
-| P2 data | Page 1875 still merges six volumes into one publication, page 2083 reads page lines of its French edition as contents, and two author pages still carry a non-title (3436, 6503); page 1875 keeps its six volumes in one publication, because splitting sets would move the ratified segmentation of seven Gate 1 pages | source-bound fixtures after a Gate 1 segmentation decision |
+| P2 data | Page 1875 still merges six volumes into one publication; page 1875 keeps its six volumes in one publication, because splitting sets would move the ratified segmentation of seven Gate 1 pages | source-bound fixture after a Gate 1 segmentation decision |
 | P2 QA | Broaden the stratified semantic sample, complete curation/export browser checks and measure representative performance/accessibility | declared sample protocol and device/task budgets with recorded results |
 
 The two remaining unresolved See-references name titles no current page carries and stay open. The Maria Stuart case showed that a technically resolved reference can still point to the wrong page, so a resolution rests on the source revision history, never on a guessed target.
