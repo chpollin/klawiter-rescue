@@ -12,12 +12,24 @@ language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-09-28
+updated: 2026-10-21
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
+
+---
+
+## 2026-10-21 — Hosted wiki shut down
+
+**Round.** Operational change outside the repository, no code or data touched.
+
+**Changed.** The hosted copy of the MediaWiki (Cloud Run service `klawiter-wiki` in the Google Cloud project `klawiter-szd`) still ran on PHP 8.1, which no longer receives security updates. Its ingress was set to internal, and the whole project was then shut down in agreement with the project partner at the Literaturarchiv Salzburg; Google deletes it for good after 2026-11-20.
+
+**Decided.** No PHP or MediaWiki upgrade. The wiki was not edited after the 2021 dump in `data/raw/`, so the dump remains the complete source and the static interface replaces the wiki.
+
+**Open.** The project partners, who manage `stefanzweig.digital`, are to redirect `klawiter.stefanzweig.digital` to the published interface. Until then the `wiki_url` values in `tests/wiki_ground_truth.json` and the "live wiki page" wording in `.github/semantic-baseline.json` record where the oracle was taken and no longer resolve; the tests read only the local file.
 
 ---
 
