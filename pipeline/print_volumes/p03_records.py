@@ -74,14 +74,26 @@ PLACE_YEAR = re.compile(
 # heads no editions.
 REFERENCE_HEADING = re.compile(r"\bSee\b")
 SECTION_HEADING = re.compile(r"^[A-Z]{1,3}\d? / ")
+# Form and genre headings inside a language group ("INDIVIDUAL STORIES",
+# "SELECTED WORKS", "NEWSPAPER ARTICLES") and citation lines set as headings
+# do not end the group.
+FORM_HEADING = re.compile(
+    r"^(?:INDIVIDUAL|SELECTED|COLLECTED|BOOKS|PERIODICAL|NEWSPAPER|ADDENDUM"
+    r"|EXCERPTS?|UPDATED|REPRINTS?|REVIEWS?|CONTENTS)\b|\d"
+)
+# Headings are set in capitals ("SERBO-CROATIAN"), so languages match folded.
+LANGUAGE_BY_FOLD = {name.lower(): name for name in LANGUAGES}
+
+
+def _language_of(label: str) -> str:
+    return LANGUAGE_BY_FOLD.get(label.strip("* .:").lower(), "")
 
 
 def _language(headings: list[str]) -> str:
     for heading in reversed(headings):
-        words = re.findall(r"[A-Za-z-]+", heading)
-        for word in words:
-            if word.capitalize() in LANGUAGES:
-                return word.capitalize()
+        for word in re.findall(r"[A-Za-z-]+", heading):
+            if word.lower() in LANGUAGE_BY_FOLD:
+                return LANGUAGE_BY_FOLD[word.lower()]
     return ""
 
 
@@ -155,6 +167,7 @@ def build(volume: str) -> tuple[list[dict], Counter]:
         headings: list[str] = []
         collection: dict | None = None
         work: dict | None = None
+        scope: list[str] = []
         for unit in units(body):
             first = unit[0]
             text = unit_text(unit)
@@ -171,7 +184,9 @@ def build(volume: str) -> tuple[list[dict], Counter]:
             context = list(headings[-3:])
             objects = []
             for n, span in enumerate(split_objects(text, part, kind), start=1):
-                fields = _fields(span, context)
+                # The language comes from headings within the current work or
+                # section only; a translation group ends at the next work.
+                fields = _fields(span, scope)
                 inherited = None
                 if (
                     collection
@@ -218,15 +233,21 @@ def build(volume: str) -> tuple[list[dict], Counter]:
             if kind == "heading":
                 headings.append(text)
                 label = text.strip("* .")
-                if SECTION_HEADING.match(label) or REFERENCE_HEADING.search(label):
+                if SECTION_HEADING.match(label):
+                    work, scope = None, [text]
+                elif REFERENCE_HEADING.search(label):
+                    # A cross-reference set as heading points to another
+                    # work; it heads no editions but stays in its group.
                     work = None
                 elif len(re.sub(r"[^A-Za-z]", "", REFERENCE.sub(" ", label))) < 4:
                     # An address list under the work heading ("D 29 / H 37,
                     # 113") keeps the work it follows.
                     pass
-                elif label.capitalize() not in LANGUAGES:
+                elif _language_of(label) or FORM_HEADING.search(label):
                     # A language heading groups translations under the work.
-                    work = {"id": key, "title": label}
+                    scope.append(text)
+                else:
+                    work, scope = {"id": key, "title": label}, [text]
             elif not first["start"] and objects and part in COLLECTION_PARTS:
                 # An unnumbered unit with its own imprint heads the numbered
                 # volumes that follow it (collection header). Elsewhere an
