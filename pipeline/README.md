@@ -30,6 +30,7 @@ The runner executes `01`, `01v`, `02`, `03`, `03b`, `03c`, `04`, `gate1`, `gate1
 | [05_to_jsonld.py](05_to_jsonld.py) | Canonical flat JSON-LD and frontend projection |
 | [apply_patches.py](apply_patches.py) | Released field corrections as the final frontend overlay |
 | [build_vocab_pages.py](build_vocab_pages.py) | Vocabulary index and term pages |
+| [print_volumes/](print_volumes/) | Line extraction and probes of the print-volume PDFs, outside the production run; see [Print volumes](../knowledge/print-volumes.md) |
 
 Keep source material under `data/raw/` unchanged. Rebuild intermediates and published artifacts through their responsible scripts. Frozen inputs and decisions remain separate from generated output; see the [correction-store contract](../data/corrections/README.md) for field replay and reconciliation patches.
 

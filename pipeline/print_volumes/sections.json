@@ -1,0 +1,105 @@
+{
+  "_note": "PDF page ranges per part, from the verified tables in knowledge/print-volumes.md. Where two parts share a boundary page, the page belongs to the earlier part. kind: body parts carry numbered or unnumbered entries; index, front and tail parts are never entries.",
+  "volumes": {
+    "I": {
+      "file": "I Bibliography.pdf",
+      "sha256": "9556c474",
+      "suffix": "",
+      "parts": [
+        ["A", "body", 1, 19],
+        ["B", "body", 20, 22],
+        ["C", "body", 23, 32],
+        ["D", "body", 33, 66],
+        ["E", "body", 67, 78],
+        ["F", "body", 79, 160],
+        ["G", "body", 161, 288],
+        ["H", "body", 289, 398],
+        ["I", "body", 399, 419],
+        ["J", "body", 420, 431],
+        ["K", "body", 432, 518],
+        ["L", "body", 519, 696],
+        ["M", "body", 697, 732],
+        ["N", "body", 733, 740],
+        ["O", "body", 741, 743],
+        ["P", "body", 744, 748],
+        ["Q", "body", 749, 752],
+        ["Index A", "index", 753, 916],
+        ["Index B", "index", 917, 918],
+        ["Index C", "index", 919, 924],
+        ["Index D", "index", 925, 929],
+        ["Index E", "index", 930, 970],
+        ["Additional Information 1990", "tail", 971, 971]
+      ],
+      "toc_max": {
+        "_source": "1991 table of contents as transcribed on wiki page 2101 (F 1-723 etc.)",
+        "A": 170, "B": 15, "C": 70, "D": 227, "E": 58, "F": 723, "G": 1126,
+        "H": 802, "I": 169, "J": 75, "K": 767, "L": 1895, "M": 157, "N": 39,
+        "O": 17, "P": 6, "Q": 25
+      }
+    },
+    "A1": {
+      "file": "II Addendum I.pdf",
+      "sha256": "d4b36ed9",
+      "suffix": "A1",
+      "parts": [
+        ["Front matter", "front", 1, 5],
+        ["Errata", "front", 6, 11],
+        ["Abbreviations", "front", 12, 16],
+        ["A", "body", 17, 18],
+        ["B", "body", 19, 25],
+        ["C", "body", 26, 31],
+        ["D", "body", 32, 37],
+        ["E", "body", 38, 42],
+        ["F", "body", 43, 65],
+        ["G", "body", 66, 86],
+        ["H", "body", 87, 124],
+        ["I", "body", 125, 126],
+        ["J", "body", 127, 129],
+        ["K", "body", 130, 215],
+        ["L", "body", 216, 362],
+        ["M", "body", 363, 392],
+        ["N", "body", 393, 405],
+        ["O", "body", 406, 407],
+        ["P", "body", 408, 416],
+        ["Q", "body", 417, 418],
+        ["R", "body", 419, 422],
+        ["Index A", "index", 423, 440],
+        ["Index B", "index", 441, 443],
+        ["Index C", "index", 444, 456],
+        ["Index D", "index", 457, 481]
+      ],
+      "toc_max": {
+        "_source": "table of contents of Addendum I, PDF pp. 3-5; RA1 is not listed there",
+        "A": 7, "B": 8, "C": 23, "D": 30, "E": 23, "F": 182, "G": 165,
+        "H": 323, "I": 12, "J": 13, "K": 242, "L": 1063, "M": 100, "N": 61,
+        "O": 4, "P": 18, "Q": 6
+      }
+    },
+    "A2": {
+      "file": "III Addendum II.pdf",
+      "sha256": "a3de9c35",
+      "suffix": "A2",
+      "parts": [
+        ["A", "body", 1, 32],
+        ["B", "body", 33, 117],
+        ["C", "body", 118, 160],
+        ["D", "body", 161, 257],
+        ["E", "body", 258, 269],
+        ["F", "body", 270, 497],
+        ["G", "body", 498, 613],
+        ["H", "body", 614, 773],
+        ["I", "body", 774, 774],
+        ["J", "body", 775, 778],
+        ["K", "body", 779, 804],
+        ["L", "body", 805, 1388],
+        ["M", "body", 1389, 1392],
+        ["P 1981", "tail", 1393, 1397],
+        ["English list", "tail", 1398, 1408],
+        ["Advertisements duplicate", "tail", 1409, 1413],
+        ["P", "body", 1414, 1422],
+        ["Internet and abbreviations", "tail", 1423, 1424],
+        ["Letter 2009", "tail", 1425, 1425]
+      ]
+    }
+  }
+}

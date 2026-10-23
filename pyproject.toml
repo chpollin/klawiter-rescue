@@ -17,6 +17,9 @@ dev = [
   "pytest>=8.0",
   "ruff>=0.12",
 ]
+print = [
+    "pdfplumber>=0.11.10",
+]
 
 [tool.uv]
 package = false

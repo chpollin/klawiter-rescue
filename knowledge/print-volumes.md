@@ -21,7 +21,7 @@ The structural statements below come from three surveys on 2026-10-23, one per f
 | `II Addendum I.pdf` | Addendum I, Ariadne Press, 1999 | 481 | complete volume with title, preface, contents, errata, abbreviations and indexes |
 | `III Addendum II.pdf` | Addendum II | 1425 | the compiler's working file, without front matter, ending in a compiled tail and a letter |
 
-The files come from the repository `chpollin/SZD`, folder `klawiter/`, commit `58234e73`, and lie in `data/print/`. Their SHA-256 values begin `9556c474…`, `a3de9c35…` and `d4b36ed9…` and match the SZD copies.
+The files come from the repository `chpollin/SZD`, folder `klawiter/`, commit `58234e73`, and lie in `data/print/`. Their SHA-256 values begin `9556c474…` (main volume), `d4b36ed9…` (Addendum I) and `a3de9c35…` (Addendum II) and match the SZD copies. `pipeline/print_volumes/sections.json` carries these prefixes, and the extraction refuses a file that does not match.
 
 None of the files is a clean copy of a printed book. The main volume starts directly with the divider of section A. The printed book has xvii pages of front matter and 934 pages of text according to the catalogue of the Deutsches Literaturarchiv Marbach, and the errata of Addendum I cite those front pages ("Page xvi Add: GM = …"), so contents, introduction and abbreviation list of 1991 are missing from the file. The publisher describes the book as "17 divisions covering all of the works by and about Zweig in 57 languages", which matches sections A to Q of the file. The file also carries insertions dated up to 2001, for instance a 1993 edition and a 1996 auction note in C 6, and some corrections that Addendum I lists as errata are already applied. It is therefore a later state of the main volume, not the 1991 print. The project has no access to a printed copy. Addendum II has no title, contents or preface. Its last pages hold a list of informants and a letter of 17 August 2009 in which the compiler writes "Currently I am preparing a second addendum to my 'Stefan Zweig. An International Bibliography' [Riverside, CA.: Ariadne Press, 1991. Addendum I, 1999]". Addendum II was never published, so the working file is its only form.
 
@@ -197,7 +197,13 @@ Entries refer to these addresses in a fixed notation. The compiler set the links
 
 Not every "See" is a cross-reference. In Addendum I about 160 of them introduce a source citation, such as an auction catalogue or a newspaper. The references also carry typing errors ("H 307, 365365", "[RSJ]"), so their parsing has to tolerate noise.
 
-Because the notation is formal, a parser can resolve each address to its target. A reference to an address that does not exist signals either a segmentation error or an error in the print. The wiki cites the same addresses (`See F 455`, `HA1 152`, `LA1 229`) and carries the sigla `[PF]` and `[RJS]`, which makes the address system the primary anchor for comparing print and wiki. How completely the wiki carries print addresses has not been measured.
+Because the notation is formal, a parser can resolve each address to its target. A reference to an address that does not exist signals either a segmentation error or an error in the print. The probe of 2026-10-23 (see Probes) resolves almost every internal reference of the main volume and of Addendum I. The residue consists mostly of tokens that only look like addresses, such as page numbers of the Börsenblatt supplement "Aus dem Antiquariat" (`A437`), postal codes, years after a letter ("A 1988 film", "Teilband I 1933") and catalogue numbers of a Chinese series (`[B 21]`). A list such as "Reprinted A 144, 559-573" is ambiguous, because the numbers after the comma may be pages or further addresses. The compiler's explicit correction and continuation markers are rare in the sections; corrections to the main volume stand mainly in the errata pages of Addendum I.
+
+## Print and wiki
+
+The wiki is the latest state of the bibliography. The compiler's own account on wiki page 1140 dates a prototype to December 2008, migrated from the WordPerfect files, and most pages and revisions were created after the letter of August 2009. The wiki contains publications up to 2020, which none of the print volumes can hold.
+
+The wiki cites print addresses (`See F 455`, `HA1 152`, `LA1 229`) and the sigla `[PF]` and `[RJS]`, but the current page text carries them only on a small number of entry pages. Earlier revisions carried them on many more pages, and the compiler's account removed them between 2012 and 2020. An address anchor for the concordance therefore has to be mined from the revision history. A cited address is moreover rarely an identity. In spot checks it pointed to an earlier edition by the same translator (`F 533` on page 564), to a translation pointer without a record of its own, or to the same work with a conflicting imprint, and only for a few entries to the same publication. A cited address is a relation of unknown type and has to be typed before it can serve as evidence for identity. Wiki pages 2101, 2154 and 2155 transcribe the contents of 1991 and the section breakdowns of both printed volumes with entry ranges and printed page numbers. These findings come from a read-only agent survey of the raw wiki revisions on 2026-10-23, spot-checked by the main agent.
 
 ## Entry anatomy
 
@@ -294,20 +300,39 @@ The figures of the survey of 2026-10-23 describe the files as extracted on that 
 | Numbering gaps | 15 | 7 | not applicable |
 | Duplicate numbers | 2 (C 3, F 50) | none | one run in DA2 (PDF p. 229) |
 
+## Probes
+
+Three deterministic probes in `pipeline/print_volumes/` test the files on the `p01` lines. They write their reports to `data/print/derived/reports/` and need no model call. The figures below are those of the run of 2026-10-23.
+
+`p01_extract.py` checks itself on every page. Every non-space character of the PDF reappears in exactly one line, and a second extraction is byte-identical. The line count is the same at 2 and 3 pt vertical tolerance on every page. At 1 pt, lines of the main volume split on about a third of its pages, presumably where glyphs of the substitute fonts sit on a shifted baseline, so the 2 pt setting lies on a stable plateau.
+
+`probe_addresses.py` builds the address census. An entry start is a number, optionally preceded by its code (`L 464`), left of the part's hanging indent and on the longest rising chain of such numbers in the part. It finds 6,329 entry starts in the main volume, the figure of the earlier survey, with 15 gaps in G and L. The highest number per section equals the transcribed contents of 1991 in every section except D, where the contents give 227 and the file ends at 223, and J, where the file runs to 79 against 75, which fits the later insertions. Addendum I matches its own contents except MA1, whose numbers run past the contents, and NA1, which repeats seven numbers. In Addendum II only AA2, DA2 and the symposia list carry running numbers. Resolution of references against these starts reaches 99.7 percent within the main volume, 99.6 percent within Addendum I, 99.4 percent from Addendum I into the main volume, and about 90 percent from Addendum II into the main volume, where the residue is mostly false address tokens.
+
+`probe_roundtrip.py` gives every line one role, rebuilds the page texts from the roles and compares their hash with `p01`. All three files pass. It then compares four single-signal boundary rules (number, hanging indent, vertical gap, bold start) per section and drops a rule that carries no signal there. The files differ in which signals they carry.
+
+| | Main volume | Addendum I | Addendum II |
+|---|---|---|---|
+| Carrying signals | number, indent, gap. Bold carries no signal from section I on | all four | gap and bold. No hanging indent, numbers only in AA2, DA2 and the symposia |
+| Lines on which the carrying rules disagree | 4.9 percent, concentrated in E, G, H and K | 0.4 percent | 14.1 percent, GA2 the weakest |
+
+`probe_signatures.py` profiles each consensus unit by its citation forms. Besides imprints and periodical citations it recognises contributions that cite their host volume by address ("in Romans et Nouvelles [BA1 5]") and volumes that give only extent and year because the imprint stands once in a collection header. A unit with several citations or numbered sub-items occurs in every volume, about a quarter of the units in the main volume and Addendum I and a third in Addendum II, with peaks in D, H and M of the main volume and in the work-centred sections of Addendum II. A sizeable share of units carries no recognised citation, such as commentary paragraphs in E and descriptive notes. The bracketed sigla differ per volume: `[PF]` dominates the main volume, informant sigla dominate Addendum I, and in Addendum II brackets mostly hold supplied places such as `[Wien]`.
+
+Four consequences follow for the parse stage. The address grammar is deterministic and the reference graph checks the segmentation of the main volume and Addendum I. Addendum II needs its own boundary rules based on gaps and bold, with a review residue. One entry often describes several publications, so the record model separates entry and described object. Some entries depend on context outside themselves, a collection header or a host entry, and the parser has to carry that context.
+
 ## Approach
 
 The analysis proceeds in stages, each with an inspectable output.
 
 | Stage | Input and output | Purpose |
 |---|---|---|
-| `p01 extract` | PDF to lines as JSONL, with volume, page, coordinates, font runs, text and hash | lossless deterministic base, running heads and page numbers marked rather than removed |
+| `p01 extract` | PDF to lines as JSONL, with volume, page, coordinates, font runs, text and a defect flag, page hashes in its report | lossless deterministic base, running heads and page numbers marked rather than removed |
 | `p02 view` | lines to Markdown per volume and section | reading view, derived and regenerable |
 | `p03 segment` | lines to entries with section, number, line span and raw text | entry boundaries, across page breaks |
 | `p04 sample` | entries to a hand-checked sample | reference set for tests, stratified by file, section and the hazards above |
 | `p05 parse` | entries to fields | after the conventions are fixed |
 | `p06 resolve` | addresses to target entries | reference graph and a self-check of the segmentation |
 
-`p01` uses `pdfplumber` under an MIT licence. PyMuPDF would be faster but is licensed under the AGPL, which does not fit an MIT repository. Docling is a candidate for the reading view only, because it drops the x-positions and partly the font runs that mark boundaries and can change its output with the version of its layout models. A comparison on the same pages decides whether it enters `p02`.
+`p01` exists as `pipeline/print_volumes/p01_extract.py` and runs in the optional uv group `print` (`python -m uv run --group print python pipeline/print_volumes/p01_extract.py`). Its lines and all reports go to `data/print/derived/`, which stays local with the PDFs. The section map with page ranges, hash prefixes and the compiler's contents ranges is `pipeline/print_volumes/sections.json`. `p01` uses `pdfplumber` under an MIT licence. PyMuPDF would be faster but is licensed under the AGPL, which does not fit an MIT repository. Docling is a candidate for the reading view only, because it drops the x-positions and partly the font runs that mark boundaries and can change its output with the version of its layout models. A comparison on the same pages decides whether it enters `p02`.
 
 Segmentation stays lossless whatever decides the boundaries. Every line belongs to exactly one unit or is marked as a running head, heading or other non-entry, and the units reproduce the source text. A rule proposes each boundary, and number sequence, position, font, page breaks, headings and resolvable addresses check one another. Where they disagree, the case goes to a residue that review or an LLM decides, recorded as a separate layer in the manner of the `proposed`, `confirmed` and `contested` states of the reconciliation. Each file gets its own rule set, because the three files differ in layout. The tail of Addendum II and the indexes are parsed separately as resolution tables or checks, never as entries.
 
@@ -318,6 +343,7 @@ After segmentation follow a concordance of print and wiki at entry level, first 
 - The missing abbreviations, the broken Index A and the question which state of the main volume the file represents cannot be settled from the files, because the project has no access to a printed copy. The open-access edition of the first bibliography of 1965 may share part of the abbreviation system.
 - How the post-1991 insertions in the main volume relate to Addendum I and to the wiki.
 - What the starred references (`G 379*`) mean.
+- Why section D of the main volume ends at 223 while the transcribed contents of 1991 give 227, and why NA1 repeats seven numbers.
 - Whether the unnumbered units of the main volume, such as collection headers and commentary paragraphs in E, become entities of their own or attach to the following entries.
 
 ## Decisions outside this strand

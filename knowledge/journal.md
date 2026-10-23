@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Print volumes probed
+
+**Round.** Implementation round, first stage of the print strand and three deterministic probes, outside the production run.
+
+**Changed.** `pipeline/print_volumes/` holds `p01_extract.py` (lossless line extraction with coordinates and font runs), a section map with hash prefixes and the compiler's contents ranges, and the probes `probe_addresses.py`, `probe_roundtrip.py` and `probe_signatures.py`. `pdfplumber` entered as the optional uv group `print`. Lines and reports stay local under `data/print/derived/`. The hash check caught that [Print volumes](print-volumes.md) had swapped the hash prefixes of the two addenda; the document now carries the corrected values, the probe results and a section on print and wiki, the latter from a read-only agent survey of the wiki revisions spot-checked by the main agent.
+
+**Decided.** Entry starts are found by hanging indent plus the longest rising number chain per section, which reproduces the earlier survey count of the main volume. A boundary signal that carries no information in a section is dropped from the comparison there. The wiki is treated as the latest state of the bibliography, and address citations in the wiki count as untyped relations, never as identity.
+
+**Open.** Parse stage and record model with entry and described object kept apart; boundary rules for Addendum II; mining print addresses from the wiki revision history; the redirect census test (`test_redirect_count_stable`, 1555 against 1557) fails independently of this round.
+
+---
+
 ## 2026-10-23 — Print volumes surveyed
 
 **Round.** Analysis only, no pipeline code or data touched.
