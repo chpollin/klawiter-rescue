@@ -11,7 +11,7 @@ related: [data, pipeline, about, status]
 
 Randolph J. Klawiter compiled the Stefan Zweig bibliography twice, as printed volumes and as the MediaWiki that the production run rescues. Which statements exist only in print, only in the wiki or in both is not known. This document records how the three PDF files of the print volumes are built, which conventions their entries follow, how the compiler's reference system works and what a parser has to expect. It is the basis for turning the volumes into structured data that can be compared with the wiki. That work is a separate strand of the repository and does not touch the production run. The wiki/print merge that [About](about.md) lists as a later option depends on its results.
 
-The structural statements below come from three surveys on 2026-10-23, one per file, which extracted every line with coordinates and font runs through `pdfplumber`. The main agent checked their central claims against the PDFs.
+The structural statements below come from three surveys on 2026-10-23, one per file, which extracted every line with coordinates and font runs through `pdfplumber`. A second round of agents checked each chapter schema independently against the PDFs, and the main agent spot-checked central claims of both rounds.
 
 ## The three files
 
@@ -19,7 +19,7 @@ The structural statements below come from three surveys on 2026-10-23, one per f
 |---|---|---|---|
 | `I Bibliography.pdf` | Stefan Zweig. An International Bibliography, Ariadne Press, 1991 | 971 | revised production file of the main volume, without front matter, with later insertions |
 | `II Addendum I.pdf` | Addendum I, Ariadne Press, 1999 | 481 | complete volume with title, preface, contents, errata, abbreviations and indexes |
-| `III Addendum II.pdf` | Addendum II | 1426 | the compiler's working file, without front matter, ending in a compiled tail and a letter |
+| `III Addendum II.pdf` | Addendum II | 1425 | the compiler's working file, without front matter, ending in a compiled tail and a letter |
 
 The files come from the repository `chpollin/SZD`, folder `klawiter/`, commit `58234e73`, and lie in `data/print/`. Their SHA-256 values begin `9556c474…`, `a3de9c35…` and `d4b36ed9…` and match the SZD copies.
 
@@ -75,10 +75,10 @@ All three volumes share one section scheme. A letter names the section in the ma
 | J | Forewords and Afterwords | JA1 Forewords and Afterwords | JA2 Forewords and Afterwords |
 | K | Correspondence | KA1 Correspondence | KA2 Correspondence |
 | L | Secondary Literature I and II | LA1 Secondary Literature | Secondary Literature, without heading code, cited as LA2 |
-| M | Reviews | MA1 Reviews | none, MA2 occurs in a few references |
+| M | Reviews | MA1 Reviews | Advertisements for Works by Zweig, cited as MA2 |
 | N | Film Versions of Zweig's Works | NA1 Stage Productions, Movies | none |
 | O | Zweig's Works Set to Music | OA1 Works Set to Music | none, poems set to music stand in DA2 |
-| P | Zweig Symposia, Centennial 1981 | PA1 Symposia and Exhibitions 1992–1996 | P section and a symposia list in the tail |
+| P | Zweig Symposia, Centennial 1981 | PA1 Symposia and Exhibitions 1992–1996 | P section 1981 and Symposia and Exhibitions 1981–2009, cited as PA2 |
 | Q | Works Dedicated to Zweig | QA1 Works Dedicated to Zweig | none |
 | R | none | RA1 Handwritten Dedications | none |
 | Indexes | A Proper Names, B Artists, C Chronology, D Languages other than German, E Newspapers and Periodicals | A Works by Zweig, B Themes, C Sources, D Proper Names | none |
@@ -103,6 +103,44 @@ The page ranges of the main volume were reconstructed from divider pages and run
 
 The file ends inside the last part, so that part may be incomplete.
 
+The page ranges of Addendum I were taken from entry numbers, the contents of the volume and the index headings, and confirmed by an independent check. Each section is announced by a placeholder page carrying only "Graphic Page (n) XA1 / TITLE", which presumably stands in for an illustrated divider of the printed book.
+
+| Part | PDF pages | Part | PDF pages |
+|---|---|---|---|
+| Title, preface, contents | 1–5 | JA1 Forewords and Afterwords | 127–128 |
+| Errata to the main volume | 6–11 | KA1 Correspondence | 130–214 |
+| Abbreviations | 12–15 | LA1 Secondary Literature | 216–361 |
+| AA1 Collected Works | 17 | MA1 Reviews | 363–391 |
+| BA1 Selected Works | 19–24 | NA1 Stage Productions, Movies | 393–404 |
+| CA1 Essays in Book Form | 26–30 | OA1 Works Set to Music | 406 |
+| DA1 Poetry | 32–36 | PA1 Symposia and Exhibitions | 408–415 |
+| EA1 Dramas | 38–41 | QA1 Works Dedicated to Zweig | 417 |
+| FA1 Fiction | 43–64 | RA1 Handwritten Dedications | 419–422 |
+| GA1 Historical Studies | 66–85 | Index A Works by Zweig (A1–A7) | 423–440 |
+| HA1 Essays | 87–123 | Index B Themes | 441–444 |
+| IA1 Translations | 125 | Index C Sources (C1, C2) | 444–456 |
+| | | Index D Proper Names | 457–481 |
+
+The page ranges of Addendum II were reconstructed from its headings and confirmed by an independent check. The file has no printed page numbers apart from running heads on the symposia pages, which appear to be carried over from section P of the main volume.
+
+| Part | PDF pages | Part | PDF pages |
+|---|---|---|---|
+| AA2 Collected and Selected Works, German | 1–32 | Secondary Literature, German, unheaded | 805–1237 |
+| BA2 Collected and Selected Works in translation | 33–117 | Secondary Literature by language | 1238–1388 |
+| CA2 Essays in Book Form | 118–160 | Advertisements for Works by Zweig (MA2) | 1388–1392 |
+| DA2 Poetry | 161–257 | P Zweig Symposia, Centennial 1981 | 1393–1397 |
+| EA2 Dramas | 258–269 | "Zweig Bibliography / English" | 1398–1408 |
+| FA2 Fiction | 270–497 | Advertisements, duplicate | 1408–1413 |
+| GA2 Historical Studies | 498–613 | Zweig Symposia and Exhibitions (PA2) | 1413–1422 |
+| HA2 Essays | 614–773 | Zweig on the Internet, Abbreviations | 1423–1424 |
+| IA2 Translations | 774 | Letter of 17 August 2009 | 1424–1425 |
+| JA2 Forewords and Afterwords | 775–778 | | |
+| KA2 Correspondence | 779–804 | | |
+
+Within the secondary literature, the alphabetical "BOOKS, ARTICLES AND REVIEWS" (808–1233) is followed by "EXHIBITIONS, FILMS, LECTURES, READINGS, THEATER PRODUCTIONS, ETC." (1233–1237). The language sections run over many languages, about forty in FA2, thirty-six in GA2 and thirty-two in the secondary literature.
+
+Within LA1, the German subdivisions follow the volume's contents exactly by entry number (frequently cited volumes 1–15, books and periodical articles 16–386, newspaper articles 387–650, radio and television 651–667, lectures 668–674, manuscripts 675–689, then a block of reviews), and the other languages run from Albanian (690) to Yiddish (1061–1063).
+
 Section titles differ between table of contents, running heads and divider pages within one volume, for instance EA1 "Dramas" and "Dramas and Scenarios". The page numbers in the contents of Addendum I drift by up to seven pages from the body, while its entry-number ranges match exactly, so entry numbers are the reliable locator. Printed page numbers and PDF page numbers diverge in every file, because blank and divider pages are missing from the PDFs. Addendum II carries no printed page numbers before its tail.
 
 ## Levels below the section
@@ -111,9 +149,9 @@ Below the section the volumes use the same kinds of units, marked differently in
 
 | Unit | Main volume | Addendum I | Addendum II |
 |---|---|---|---|
-| Section divider | divider page with letter and title | no body heading, only running heads and "Graphic Page (n) XA1 / TITLE" placeholder lines | bold capital line at page top |
-| Sub-genre or part | Arial bold mixed case (B–E) or Times bold capitals (F, K, L, M), e.g. "Collected Poems", "INDIVIDUAL LETTERS" | bold capitals | bold capitals, e.g. "Volumes", "Individual stories", "Excerpts" |
-| Language | bold capitals or Arial bold, alphabetical | bold capitals, German implicit without heading | bold capitals, about fifty languages in FA2 |
+| Section divider | divider page with letter and title | placeholder page "Graphic Page (n) XA1 / TITLE", otherwise only running heads | capital line at page top, such as "FA2 / FICTION" |
+| Sub-genre or part | Arial bold mixed case (B–E) or Times bold capitals (F, K, L, M), e.g. "Collected Poems", "INDIVIDUAL LETTERS" | bold capitals | mostly bold capitals, e.g. "VOLUMES", "INDIVIDUAL STORIES", "EXCERPTS", "POEMS SET TO MUSIC" |
+| Language | bold capitals or Arial bold, alphabetical | bold capitals, German first without heading | mostly bold capitals, German first without heading except in AA2 |
 | Work heading | roman capitals in G (e.g. AMERIGO, BALZAC) with "* * * * *" separators, Arial bold in E with an unnumbered commentary paragraph | bold capitals with bracketed references in MA1 | none, work-centred entries instead |
 | Preamble or note | flush paragraph headed "Secondary Literature:" or "NB:" | "NB:" paragraphs | "Nota bene", "NB:" |
 | Numbered entry | number at the left margin, text with hanging indent | bold number at the left margin, hanging indent | running numbers only in AA2, DA2 and the symposia list |
@@ -122,13 +160,13 @@ Below the section the volumes use the same kinds of units, marked differently in
 
 The main volume also contains collection headers in section A, an unnumbered series title with a descriptive paragraph followed by the volumes as numbered entries, and "ADDENDUM" headings near the end of sections A, C, F, G, H, J, K and L whose entries continue the section's numbering. Several sections have further levels. E groups its entries under twelve drama work headings with language headings below them, I under translated authors ("BAUDELAIRE, CHARLES: INDIVIDUAL POEMS"), K under "REPOSITORIES", "COLLECTED LETTERS" and "INDIVIDUAL LETTERS", and M under genre headings that mirror sections A to L. G uses roman inline labels such as "Excerpt" and "Individual Historical Miniature" inside its work blocks. Section K has its own table of repository sigla (PDF pp. 433–435).
 
-The preambles headed "Secondary Literature:" in sections B to K are lists of cross-references into L and M, sorted by topic ("Zweig as dramatist see L 132, …", "Reviews M 20-31"). They form a second, topical access to the reference network. In section LA1 of Addendum I, language and genre headings are typographically identical, so only a vocabulary separates them.
+The preambles headed "Secondary Literature:" in sections B to K are lists of cross-references into L and M, sorted by topic ("Zweig as dramatist see L 132, …", "Reviews M 20-31"). They form a second, topical access to the reference network. In Addendum I, German material always comes first in a section and never carries a heading, so the first language heading marks the switch to translations or foreign secondary literature. In LA1 the foreign languages carry genre headings of their own ("BOOKS AND PERIODICAL ARTICLES", "NEWSPAPER ARTICLES", "REVIEWS" and others, chosen per language), and language and genre headings are typographically identical, so only a vocabulary separates them. MA1 groups its reviews under headings naming the reviewed work with its addresses ("ADAM LUX [E 5 / EA1 1 / NA1 1]"), and each entry runs through languages with labels such as "German:" and "French:".
 
 Addendum II is organised differently in its works sections. FA2, GA2, HA2 and DA2 each split into volume entries and work-centred entries for individual stories, essays, poems or excerpts. A work-centred entry gives the first periodical printing and then a numbered list of every reprint in a collection, each reprint cited by section code, title, year and contents number.
 
 > "Der Amokläufer. Eine Novelle" [1922] in *Neue Freie Presse* … Reprinted as … in [2]. AA2 1 Amok… 1950 [1], pp. (5)-(59). … [23]. LA2 Jacquot…
 
-These lists belong to the bibliography's own record of printing history, and in practice they work as a concordance between works and collections. Earlier sampling had suggested that the volume contains separate registers by work or translator. The survey found one explicit subject register (PDF p. 617, "Autographs - Collecting and Collections, see: [1]. HA2 …") and no concordance by translator.
+These lists belong to the bibliography's own record of printing history, and in practice they work as a concordance between works and collections. Earlier sampling had suggested that the volume contains separate registers by work or translator. The surveys found a single topical cluster of cross-references inside the alphabetical essays (PDF pp. 617–618, "Autographs - Collecting and Collections, see: [1]. HA2 …") and no concordance by translator. In the translation subsections of FA2, GA2, HA2 and KA2, the pattern of volumes followed by "INDIVIDUAL STORIES", "INDIVIDUAL ESSAYS" or "INDIVIDUAL LETTERS" recurs under each language.
 
 ## Reference system
 
@@ -153,6 +191,7 @@ Entries refer to these addresses in a fixed notation. The compiler set the links
 | `See HA1 34[1, 2]`, `K 760 (1)`, `KA1 24[8, No. 3539]` | reference to a sub-item of an entry |
 | `AA2 57: Kassette IV [1]`, `No. 6`, `[Nos. 18-22]` | position inside a multi-volume set or collection |
 | `BA2/GA2 …`, `[G 224 & 445 = H 48, 143]` | compound or equated references |
+| `See Index A1:Heroischer Augenblick`, `See Index D:…` | reference to an index heading (Addendum I) |
 | `[See p. 934]`, `[Zh., 681]`, `See Bild, No. 87, p. 91` | page reference or reference to an external source |
 | `G 379*` | starred reference, meaning not defined in any of the files |
 
@@ -214,7 +253,7 @@ The informant lists name private persons and institutions who supplied informati
 ### Main volume
 
 - Entry numbers sometimes extract as two tokens ("5 14" on PDF p. 217).
-- Index A (PDF pp. 753–916) is broken in the PDF itself. Long reference strings are drawn one character per line in vertical columns, so the index cannot be recovered from this file and must come from the printed book or be rebuilt from the entries.
+- Index A (PDF pp. 753–916) is broken in the PDF itself. Long reference strings are drawn one character per line in vertical columns, so the index cannot be recovered from this file. Without a printed copy it can only be rebuilt from the entries.
 - Index pagination overlaps, because Index C restarts at printed page 884 inside the range Index A claims.
 - The hanging indent varies between sections (108, 122, 144 and 150 pt against a margin of 72 pt), so continuation means "x greater than the margin".
 - Entry numbers are mostly bold in A–H but always roman with a letter prefix in E and I–Q, so font is no reliable start criterion. Position and number sequence are.
@@ -225,14 +264,18 @@ The informant lists name private persons and institutions who supplied informati
 ### Addendum I
 
 - The errata to the main volume (PDF pp. 6–11) form a two-column list addressed by page and siglum of the main volume, including renumberings ("Renumber as H 152a") and corrections of its index pages. They need their own parser.
-- Some entry numbers are split across fonts or glued to the first word ("1040aPinto,").
+- Seven entry numbers are missing without a gap in the text. At least one is a numbering slip of the compiler, since KA1 cites "Einige Grundlagen …" as `[HA1 54]` while the text is printed as HA1 55. References to such numbers have to be checked against neighbouring entries before they count as broken.
+- The running heads of the indexes name the wrong index and carry frozen page numbers, so index boundaries come from the bold index headings.
+- Some entry numbers are split across fonts or glued to the first word ("1040aPinto,"), and bold years at the left margin inside long letter entries look like entry numbers.
 - Overprinted háček glyphs split one line into two on a few pages.
 - The indexes are set in two columns at 10 pt.
 
 ### Addendum II
 
 - The tail after the secondary literature is a compilation. Advertisements for Zweig's works appear twice with practically identical text (PDF pp. 1388–1392 and 1408–1413), the 1981 symposia appear twice, an English list of works without section codes (pp. 1398–1408) follows another scheme, and a stray running head recurs on the last pages.
-- Draft flags such as "NEED INFO" are set in bold capitals and look like headings (PDF pp. 532–536).
+- Headings do not follow one typographic rule. Most are bold capitals at the left margin, but some are set in regular weight, in mixed case, indented or centred, and many entry titles are bold too, so bold alone identifies no heading. Only the title lines on PDF p. 1 are set at 14 pt.
+- Draft flags such as "NEED INFO" and "HAVE INFO / NEED HELP" are set partly in bold capitals and look like headings (GA2 Chinese, PDF pp. 529–536). Query marks ("[1922??]") stand inside entries.
+- A faulty search-and-replace turned "Seele" and "seen" into "See:le" and "See:n" on a few lines ("See:lenmeister"), which a reference parser must not read as "See:".
 - Numbering inside reprint lists is unfinished. `[X]` marks items without a number, and some lists run non-monotone ("11 12 9 X X X 10").
 - Reprint lists in the translation subsections often run one item per paragraph and look like separate entries by layout, although they belong to the preceding work entry.
 - Page margins switch between two regimes page by page, and most of the body has no hanging indent, so boundaries depend on vertical gaps and the font of the first run.

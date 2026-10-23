@@ -29,7 +29,7 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 **Decided.** The PDFs stay local because of size and unresolved rights. Parsing will start from coordinates (`pdfplumber`), with Docling at most for a reading view. The project has no access to a printed copy of the main volume.
 
-**Open.** Independent checks of the Addendum I and Addendum II schemas; the stages `p01` to `p06`; whether the print becomes a second admitted source.
+**Open.** The stages `p01` to `p06`; whether the print becomes a second admitted source.
 
 ---
 
