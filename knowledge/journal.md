@@ -21,6 +21,16 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Review round on data, interface and tests; plan extended
+
+**Round.** Seven fresh-context reviews: data fidelity from source to interface, a scholar's review of the production interface, the test suite, the lab against its stories, blog v3, and the proposal drafts v1.4 and "Grounds for Use" (research question, argument and evidence).
+
+**Found.** The published wiki values mostly occur in their source, but on pages without edition headers they are often taken from the wrong passage (prose, glosses, translation sections), and five classes run through the whole corpus: original titles, truncated translation lists, lost languages, an unresolved SQL escape, and the label `confirmed` on decisions made only by LLM agents. All eight earlier defects had passed the unit tests. Sofija had lost its standalone decision with the fixture and Tyresö was decided while the knowledge base said otherwise; both corrected.
+
+**Changed.** Concordance field matches name the wiki publication through hash-verified slices (a4dbd63). [Merged bibliography](print-wiki-merge.md) gains the relation invariant, the rule that fresh-context reviews run after each fix batch, the print-wiki field comparison as a check of both sources, the parallel milestone wiki data true to their source passage, and the open operator questions on delegation, flat fields and push. A pipeline and a frontend fix batch are in progress.
+
+**Decided.** The operator: implement the plan extension; the team draft "Grounds for Use" is the basis of the proposal.
+
 ## 2026-10-23 — Production defects fixed, fixture demoted, concordance widened, reviews of blog and proposal
 
 **Round.** Fix round on the published wiki data, implementation round on the print concordance, and three fresh-context reviews commissioned for the AI operator's blog and proposal drafts.

@@ -53,6 +53,10 @@ The delivery shape is agreed with Stefan Zweig Digital on one sample object (an 
 
 Self-consistency checks (number sequences, contents ranges, reference resolution) confirm the numbering and find references into gaps; they cannot show that boundaries between existing entries are right. A content check, comparing the title cited before an address with the opening of the target entry, tests those boundaries. Correctness of segmentation and fields is measured against a gold standard: pages annotated blind by two annotators, with a person deciding their disagreements and a control sample of their agreements. Agent annotators measure agreement, not correctness, until a person has decided. Checks are assigned by the kind of task (operator guidance of 2026-10-23). A deterministic check, such as near-verbatim alignment or the resolution of an address, needs no person. A simple check, such as an entry boundary or whether title, year and publisher agree between two lines, needs care but no domain knowledge. A complex check, such as edition against later printing, which translation is meant or what counts as an object, needs Zweig expertise, and only these cases go to specialists. A person who decides with a proposal in view tends to adopt it, so at least part of the human control sample is annotated blind, from the source page alone, before the person sees any annotation or method output; only that part measures correctness, the rest measures how often the person accepts proposals. Rules are developed on other pages than those they are measured on, and a sample is frozen before its results are inspected. Automatic confirmation rules are admitted only with a precision measured on a sample. Before delivery, the merged bibliography is tried on real research tasks. An independent skeptical review checks method, code and this document before each milestone closes.
 
+Two kinds of invariant hold over all records, not only over test pages. A presence invariant asks whether a value occurs in its source; a relation invariant asks whether it occurs where the publication it describes is written. The review round of 2026-10-23 found eight defects in the published wiki data that every unit test had passed, each a value present in the source but taken from the wrong passage, or a whole class that a per-page fixture could not show. Each defect class therefore receives an invariant over all records, with known exceptions listed by identifier and reason so that a new case fails and a repaired one must leave the list. Fresh-context reviews of data fidelity, interface and tests run before each milestone and after each fix batch, and their findings count only after a check against code and data.
+
+Print and wiki check each other. Where a print entry stood near-verbatim in a wiki revision, the two are independent witnesses of the same publication, so comparing their fields measures the accuracy of the wiki fields by rule, without a human gold standard, and the reverse comparison measures the print fields.
+
 ## Plan
 
 The steps are ordered by dependency. Step 0 runs alongside the others and blocks only publication; step 3 decides how much of steps 5 to 7 is needed.
@@ -75,17 +79,22 @@ The steps are ordered by dependency. Step 0 runs alongside the others and blocks
 
 The first milestone, segmentation measured, closed step 2 on 2026-10-23: boundary and object scores on the frozen second sample are reported per volume against two blind agent annotators, with the scorer faults found by an independent review corrected, and the disagreement list exists. Its human decision is open and waits for the person who carries the subject checks (Frame).
 
-The next milestone, concordance measured, carries steps 5 to 7 far enough to judge the merge on all data.
+The next milestone, concordance measured, carries steps 5 to 7 far enough to judge the merge on all data. Done on 2026-10-23: both routes run over all records, field matches name the wiki publication where the matched line lies in a publication slice that hashes identically to the published one, silver pairs measure the loss of the field route, the errata of Addendum I are compiler claims, and the matches are visible in the lab view from a local file that is never published ([Coordination](coordination.md)). Open:
 
-- Fields that the concordance depends on are read better, first year and title (an author name before the title, a year inside the title, imprints in brackets), and inherited imprints count as a second field.
-- The two routes of step 7 run over all records: alignment with every wiki revision, and title, year and a second field against the latest text and page titles, with field matches mapped to the wiki publication whose source slice holds them.
-- Silver pairs, print entries that stood near-verbatim in some revision, measure the loss of the field route per volume; each field change is measured on them before it is kept.
+- Fields that the concordance depends on are read better, first year and title (an author name before the title, a year inside the title, imprints in brackets), each change measured on the silver pairs before it is kept.
 - A report states what exists only in print, only in the wiki or in both, per volume and kind of publication.
-- The errata of Addendum I are read as compiler claims.
-- The matches are visible in the lab view of the AI operator from a local file that is never published ([Coordination](coordination.md)).
+- The field comparison on silver pairs reports the agreement of wiki and print fields per field and volume.
 - A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document.
 
-The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically.
+The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically. Because the field route matches against wiki fields, it depends on the parallel milestone below.
+
+The parallel milestone, wiki data true to their source passage, makes the published wiki values hold the relation invariant, not only the presence invariant.
+
+- Every verified defect class of the review round of 2026-10-23 is fixed at its root cause with a real-record test and an invariant over all records ([Status](status.md)).
+- Original titles link a translation to its work, and the translations section becomes one structured statement per translation (language, title, place, year, translator), each bound to its source passage.
+- Flat fields on pages without edition headers follow an operator decision: shown only where a rule binds them to the described publication, otherwise a gap, or the edition segmentation is extended to these page types.
+- Every statement carries a typed producer (rule, LLM agent, person), which the shared claim schema of step 1 provides; until the operator decides whether delegation to agents confirms, displays name the producer next to the state.
+- A second fresh-context review round finds no new defect class, and the wiki-print field comparison gives the accuracy of the wiki fields on the silver pairs.
 
 ## Open questions
 
@@ -95,6 +104,9 @@ Frame and delivery
 - What does Stefan Zweig Digital accept as an object, does it want open claims in it, and which stylesheet renders it? Answered by Stefan Zweig Digital on the sample object; the answer decides between claims in TEI and a separate data stream.
 - Which institution publishes the merged bibliography, given that the project documents name the Literaturarchiv Salzburg and the delivery targets Stefan Zweig Digital in GAMS? Answered by the operator.
 - How much human review time exists for adjudication? Answered by the operator; it decides how much automatic confirmation the concordance needs.
+- Does a decision by LLM agents under the operator's delegation count as `confirmed`? Answered by the operator; until then interfaces name the producer next to the state.
+- On pages without edition headers, are flat fields shown only where a rule binds them to the described publication, or is the segmentation extended to these page types? Answered by the operator; the recommendation is the gap, because a gap is a valid result under the data integrity rule and a value from the wrong passage is not.
+- When are the local commits pushed and deployed? Answered by the operator; the public application, the blog post and commit citations in the follow-up proposal depend on it.
 
 Model
 - Is one group identifier per publication the right unit for citation and linking, and how are the compiler's addresses carried in it? Answered by the operator with a domain expert.

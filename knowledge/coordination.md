@@ -43,10 +43,10 @@ The operator set on 2026-10-23 that the whole project advances together: the mer
 | Track | Owner | Plan and milestones | Review before a milestone closes |
 |---|---|---|---|
 | Merged bibliography (print strand) | research coordinator | [Merged bibliography](print-wiki-merge.md), Milestones | independent agent review of method, code and document |
-| Published wiki data | research coordinator | defects verified, fixed with tests and a full pipeline run; [Status](status.md) | full gate of CLAUDE.md, spot checks of changed records |
+| Published wiki data | research coordinator | milestone wiki data true to their source passage in [Merged bibliography](print-wiki-merge.md), Milestones; [Status](status.md) | full gate of CLAUDE.md, invariants over all records, fresh-context reviews of data fidelity, interface and tests after each fix batch |
 | Lab frontend | AI operator | [Lab frontend](lab-frontend.md), L1 to L7 | independent reviews in the lab plan; coordinator's model check |
 | Blog post | AI operator | [Lab frontend](lab-frontend.md), B1 to B4 | claim check against the artefacts; fresh-context review of the text commissioned by the coordinator |
-| DIA-XAI proposal | AI operator drafts, operator decides | [Lab frontend](lab-frontend.md), A1 to A4 | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
+| DIA-XAI proposal | AI operator drafts, operator decides | [Lab frontend](lab-frontend.md), A1 to A4; since 2026-10-23 the operator's team draft "Grounds for Use" is the basis, the agent draft v1.4 supplies material | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
 | Vault knowledge | a session started in the vault | handoff list prepared by the coordinator; repository sessions read the vault, never write it | vault conventions and audit |
 
 The coordinator reports to the operator as a short presentation per milestone reached and on request, with result, meaning, risks and the decisions needed.
@@ -63,7 +63,9 @@ The research coordinator holds the overall plan ([Merged bibliography](print-wik
 | interface specification and its critical review (L2) | AI operator | coordinator's check of states, producer labels and print display against the model | steps 1 and 9, display of claim states |
 | running prototypes and evaluation (L4 to L6) | AI operator | coordinator's integration of findings; the adjudication view of step 9 builds on what holds | step 9, adjudication through the curation interface |
 | defects found in production data | either session | coordinator verifies, fixes and regenerates | correct wiki data |
-| operator decision on the twenty fixture-based place decisions | operator | blog B1, display wording, data.md | step 1, meaning of `confirmed` |
+| operator decision on the twenty fixture-based place decisions, taken 2026-10-23 (a fixture confirms nothing) | operator | blog B1, display wording, data.md | step 1, meaning of `confirmed` |
+| operator decision whether delegation to LLM agents confirms; until then the producer is named next to the state | operator | blog B1, lab and production labels | step 1, meaning of `confirmed` |
+| push and deploy of the local commits | operator | blog B4, proposal commit citations, public application | correct wiki data in public |
 
 A result of the AI operator enters canonical knowledge outside `lab-frontend.md` only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 
