@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Plan for the merged bibliography revised
+
+**Round.** Planning round with three agents (constructive, critical, user and infrastructure needs) on [Merged bibliography](print-wiki-merge.md), and rule development for the segmentation milestone from a survey of development pages.
+
+**Changed.** The target is called the merged Klawiter bibliography, not an edition. The plan gained a frame step for rights, admission of print and the delivery shape, overlap experiments that decide how much concordance work is needed, resolution tables, work and person links and adjudication through the existing curation interface; the separate review tool, several readings and three claim classes as separate types were dropped. The record model gained the group with a stable identifier. Open points are written as questions with who answers them. Boundary rules for sub-items, gaps and page tops and a scope-based object reader were added; their effect is measured on the frozen second sample.
+
+**Decided.** Human confirmation is the throughput limit of the project, so automatic confirmation needs rule classes with measured precision. Delivery to Stefan Zweig Digital is agreed on one sample object before a TEI profile is written.
+
+**Open.** The questions in [Merged bibliography](print-wiki-merge.md), first those of the frame; the scores of the second sample; about.md and production-readiness.md still call the merge a later option and the wiki release an edition.
+
+---
+
 ## 2026-10-23 — Print probes reviewed and benchmarked
 
 **Round.** Verification round with three agents: one skeptical reviewer of method, code and document, and two blind annotators of a held-out page sample, one with the conventions of [Print volumes](print-volumes.md), one with the PDFs only.
