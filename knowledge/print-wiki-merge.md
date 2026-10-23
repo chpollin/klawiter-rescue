@@ -55,7 +55,7 @@ Self-consistency checks (number sequences, contents ranges, reference resolution
 
 Two kinds of invariant hold over all records, not only over test pages. A presence invariant asks whether a value occurs in its source; a relation invariant asks whether it occurs where the publication it describes is written. The review round of 2026-10-23 found eight defects in the published wiki data that every unit test had passed, each a value present in the source but taken from the wrong passage, or a whole class that a per-page fixture could not show. Each defect class therefore receives an invariant over all records, with known exceptions listed by identifier and reason so that a new case fails and a repaired one must leave the list. Fresh-context reviews of data fidelity, interface and tests run before each milestone and after each fix batch, and their findings count only after a check against code and data.
 
-Print and wiki check each other. Where a print entry stood near-verbatim in a wiki revision, the two are independent witnesses of the same publication, so comparing their fields measures the accuracy of the wiki fields by rule, without a human gold standard, and the reverse comparison measures the print fields.
+Print and wiki check each other's extraction. Where a print entry stood near-verbatim in a wiki revision and year and title agree, the print strand and the production pipeline have read related text independently, so comparing their remaining fields checks both extractors by rule, without a human gold standard (`p08_field_check`). Because that wiki text descends from the compiler's print file, agreement shows consistency of the two readings, not correctness against the book; a disagreement shows that at least one reading is wrong. The check carries for Addendum II, whose text reached the early wiki; for the main volume and Addendum I the aligned text is mostly translation or review lists pasted into work pages, and the pairs that survive the title gate are too few to measure.
 
 ## Plan
 
@@ -83,7 +83,7 @@ The next milestone, concordance measured, carries steps 5 to 7 far enough to jud
 
 - Fields that the concordance depends on are read better, first year and title (an author name before the title, a year inside the title, imprints in brackets), each change measured on the silver pairs before it is kept.
 - A report states what exists only in print, only in the wiki or in both, per volume and kind of publication.
-- The field comparison on silver pairs reports the agreement of wiki and print fields per field and volume.
+- The field comparison on silver pairs reports the agreement of wiki and print fields per field and volume; done 2026-10-23 for Addendum II, where it carries.
 - A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document.
 
 The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically. Because the field route matches against wiki fields, it depends on the parallel milestone below.
