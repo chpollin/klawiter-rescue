@@ -43,14 +43,14 @@ MAX_RATE = 0.8
 VARIANTS = ("number", "indent", "gap", "bold")
 LETTERS = re.compile(r"[^\W\d_]")
 SUB_ITEM = re.compile(
-    r"^(?:\[(?:\d+[a-z]?|X|[a-z])\]\s?\.|Vols?\.\s?\(?\d+\)?\.?\s|Kassette|"
+    r"^(?:\[(?:\d+[a-z]?|X|[a-z])\]\s?\.|Vols?\.\s?\(?\d+\)?\.?\s|Kassette\b|"
     r"(?:Contents|Con-|Reprinted in|Printed in|Reviews? of|Reviews|Excerpts|EXCERPTS|"
     r"(?:Non-)?Fischer Editions/Reprints|Editions/Reprints|FIE|REP|EXC|REV|"
     r"TRANSLATIONS?)\s?:|of:|in:)"
 )
 CLOSED = re.compile(r"[.\])]\s*$")
 ABBREVIATION = re.compile(
-    r"(?:[A-Z]|Nos?|Vols?|pp?|Tr|Trl|[Ee]ds?|impr|ca|St|Dr)\.\s*$"
+    r"\b(?:[A-Z]|Nos?|Vols?|pp?|Tr|Trl|[Ee]ds?|impr|ca|St|Dr)\.\s*$"
 )
 SHORT_LINE = 30
 CONTINUATION_OPENER = re.compile(r"^[\d\[a-z(]")

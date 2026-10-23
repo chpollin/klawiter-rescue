@@ -20,7 +20,7 @@ from _common import part_of
 # "1." opens symposia entries in Addendum II; "10. Tsd." and "16. Auflage" do not.
 START_NUMBER = re.compile(
     r"^(?:[A-R](?:A[12])? ?)?(\d{1,4})([a-z])?"
-    r"(?=\s|$|\.\s+(?!(?:Tsd|Auflage|Aufl|Expl|Druck|Ausg)))"
+    r"(?=\s|$|\.\s+(?!(?:Tsd|Auflage|Aufl|Expl|Druck|Ausg)\b))"
 )
 STUB = re.compile(r"^\*{1,5}(?=\s|$)")
 DIGITS_ONLY = re.compile(r"^[\divxlcIVXLC]{1,5}$")

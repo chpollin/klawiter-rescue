@@ -57,7 +57,7 @@ MARKERS = {
 
 
 # The imprint of a reviewed book belongs to the review, not to a further object.
-REVIEWED = re.compile(r"REV:.*?(1[5-9]|20)\d\d")
+REVIEWED = re.compile(r"\bREV:.*?\b(1[5-9]|20)\d\d\b")
 
 
 def _profile(text: str) -> dict:

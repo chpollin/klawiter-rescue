@@ -26,7 +26,7 @@ import sys
 from collections import Counter, defaultdict
 from itertools import combinations
 
-from _common import DERIVED_DIR, load_lines, write_report
+from _common import DERIVED_DIR, SECTIONS, load_lines, write_report
 from _lines import annotate
 from _objects import count_objects
 from _segment import body_by_part, units, votes
@@ -41,21 +41,29 @@ def _norm(text: str) -> str:
     return re.sub(r"[^0-9a-z]", "", text.lower())
 
 
-def _locate(first_words: str, page_lines: list[dict]) -> int | None:
+def _locate(first_words: str, page_lines: list[dict], after: int = -1) -> int | None:
+    """Index of the line a gold unit opens on, searched after the previous unit.
+
+    Gold units are listed in reading order, so the search starts behind the
+    last located unit; otherwise units with identical openings ("Briefe",
+    "Rev.") all collapse onto the first matching line.
+    """
     key = _norm(first_words)[:24]
     if len(key) < 4:
         return None
-    for index, line in enumerate(page_lines):
+    candidates = list(enumerate(page_lines))[after + 1 :]
+    for index, line in candidates:
         text = _norm(line["text"])
         if text.startswith(key) or (len(text) >= 8 and key.startswith(text[:24])):
             return index
-    for index, line in enumerate(page_lines):
+    for index, line in candidates:
         if key[:12] and key[:12] in _norm(line["text"]):
             return index
     return None
 
 
-def _addresses(text: str) -> set[str]:
+def _addresses(text: str, own: str = "") -> set[str]:
+    """Cited addresses; own is the unit's printed address, which cites nothing."""
     found = set()
     for match in REFERENCE.finditer(text):
         letter, suffix, group = match.groups()
@@ -64,6 +72,7 @@ def _addresses(text: str) -> set[str]:
             continue
         targets, _ = _items(group)
         found.update(f"{letter}{suffix} {n}{s}" for n, s in targets)
+    found.discard(own)
     return found
 
 
@@ -72,55 +81,59 @@ def _pub_class(count: int) -> str:
 
 
 def _method_pages(volume: str, pages: set[int]) -> dict[int, dict]:
-    """Per sampled page: body lines, method boundaries and unit facts."""
+    """Per sampled page: body lines, method boundaries and unit facts.
+
+    Objects and references are counted on the part of a unit that lies on the
+    sampled page, as the annotators saw only that page.
+    """
     lines = annotate(load_lines(volume), volume)
+    suffix = SECTIONS["volumes"][volume]["suffix"]
     result: dict[int, dict] = {}
     for body in body_by_part(lines).values():
         votes(body)
         for unit in units(body):
             text = " ".join(ln["text"].strip() for ln in unit)
-            profile = _profile(text)
             kind = (
                 "heading"
                 if unit[0]["heading"] and len(unit) == 1
                 else "reference"
-                if _classify(text, profile) == "reference"
+                if _classify(text, _profile(text)) == "reference"
                 else "entry"
             )
-            publications = count_objects(text, unit[0]["part"], kind)
-            for line in unit:
-                if line["page"] not in pages:
-                    continue
-                page = result.setdefault(line["page"], {"lines": [], "units": {}})
-                page["lines"].append(line)
-                if line is unit[0] or line["page"] != unit[0]["page"]:
-                    page["units"].setdefault(
-                        id(unit),
-                        {
-                            "line": line,
-                            "starts": line is unit[0],
-                            "publications": publications,
-                            "references": _addresses(text),
-                        },
-                    )
+            start = unit[0]["start"]
+            own = f"{unit[0]['part']}{suffix} {start[0]}{start[1]}" if start else ""
+            for page_no in sorted({ln["page"] for ln in unit} & pages):
+                local = [ln for ln in unit if ln["page"] == page_no]
+                local_text = " ".join(ln["text"].strip() for ln in local)
+                page = result.setdefault(page_no, {"lines": [], "units": []})
+                page["lines"].extend(local)
+                page["units"].append(
+                    {
+                        "line": local[0],
+                        "starts": local[0] is unit[0],
+                        "publications": count_objects(
+                            local_text, unit[0]["part"], kind
+                        ),
+                        "references": _addresses(local_text, own),
+                    }
+                )
     for page in result.values():
         page["lines"].sort(key=lambda ln: ln["line"])
         order = {id(ln): i for i, ln in enumerate(page["lines"])}
-        page["starts"] = {
-            order[id(u["line"])]: u for u in page["units"].values() if u["starts"]
-        }
+        page["starts"] = {order[id(u["line"])]: u for u in page["units"] if u["starts"]}
     return result
 
 
 def _gold_starts(gold: dict, page_lines: list[dict]) -> tuple[dict, list]:
-    starts, missing = {}, []
+    starts, missing, last = {}, [], -1
     for unit in gold["units"]:
         if not unit.get("starts_on_this_page", True):
             continue
-        index = _locate(unit["first_words"], page_lines)
+        index = _locate(unit["first_words"], page_lines, last)
         if index is None:
             missing.append(unit["first_words"])
         else:
+            last = index
             starts[index] = {
                 "publications": int(unit.get("publications") or 0),
                 "references": {r.strip() for r in unit.get("references") or []},

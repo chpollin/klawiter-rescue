@@ -32,14 +32,25 @@ CITATION = re.compile(
     r"|\b(1[5-9]|20)\d\d\b"
 )
 LISTED_PARTS = ("K", "M")
+# Address lists ("see L 88, 120, 1585") carry numbers that look like years.
+ADDRESS_LIST = re.compile(
+    r"(?<![A-Za-z0-9])[A-R](?:A[12])? ?\d{1,4}[a-z]?(?:\s?[-,&/]\s?\d{1,4}[a-z]?)*"
+)
+# A volume of a collection gives extent and year only: "757/(3)p. 1983."
+EXTENT_YEAR_ONLY = re.compile(r"\d+(?:/\(?\d+\)?)?p\. \[?(1[5-9]|20)\d\d\b")
 
 
-def count_objects(text: str, part: str, kind: str) -> int:
-    """Number of objects a unit describes; kind is heading, reference or entry."""
+def split_objects(text: str, part: str, kind: str) -> list[str]:
+    """Text spans of the objects a unit describes, in reading order.
+
+    The head of the entry (before its first numbered item, without a Contents
+    list) is an object when it carries a citation; each object item runs to the
+    next numbered item. kind is heading, reference or entry.
+    """
     if kind in ("heading", "reference"):
-        return 0
+        return []
     items = list(ITEM.finditer(text))
-    objects = 0
+    spans: list[str] = []
     for index, match in enumerate(items):
         before = text[: match.start()]
         contents = CONTENTS.search(before)
@@ -51,13 +62,19 @@ def count_objects(text: str, part: str, kind: str) -> int:
         end = items[index + 1].start() if index + 1 < len(items) else len(text)
         body = text[match.end() : end]
         if label is not None or part in LISTED_PARTS:
-            objects += 1
+            spans.append(text[match.start() : end].strip())
         elif SECTION_CODE.match(body) or YEAR.search(body):
-            objects += 1
-    if objects and part in LISTED_PARTS:
+            spans.append(text[match.start() : end].strip())
+    if spans and part in LISTED_PARTS:
         # The head of a letter or review entry names the correspondent or the
         # reviewed work; only its items are objects.
-        return objects
+        return spans
     head = text[: items[0].start()] if items else text
     head = CONTENTS.split(head)[0]
-    return objects + (1 if CITATION.search(head) else 0)
+    cited = CITATION.search(ADDRESS_LIST.sub(" ", head))
+    return ([head.strip()] if cited else []) + spans
+
+
+def count_objects(text: str, part: str, kind: str) -> int:
+    """Number of objects a unit describes; kind is heading, reference or entry."""
+    return len(split_objects(text, part, kind))
