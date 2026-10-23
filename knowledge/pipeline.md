@@ -9,7 +9,7 @@ language: en
 version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-09-23
+updated: 2026-10-23
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -63,9 +63,11 @@ Stage 02 repairs known mojibake sequences section by section and idempotently. T
 
 Stage 03 combines structural wiki parsing and evidence-bound patterns. With bold-set edition headers such as `[1939]` or `[ca. 1965]`, the MediaWiki page title stays authoritative; the header is not emitted as a work title. The same fallback applies where the first line is a statement rather than a title, meaning a citation of an article in its container, a cross-reference, a credit, an extent, an imprint, an annotation, a label such as "Volume:" or a wiki heading (`NON_TITLE_CLASSES` in `03_parse_entries.py`). The corpus writes quotation marks escaped, so the quoted-title pattern rarely applies, and before this rule every article page carried its full citation as title. Empty source pages keep their page title as a stub.
 
+Since 23 October stage 03 reads year, publisher and extent of a page with a publication layer from its first publication (`publications.first_publication_fields`), so the flat record never mixes publications. Years skip quoted and linked titles, glosses after a title, life spans, issue numbers, URLs and printing counts; publishers skip editor credits and prose; a bracket gloss yields no place; the original title is the bracket after a translation header. The dump's quote escape stays in stage 01, because the reviewed Gate 1 selectors and hashes are defined on the dump form, and is resolved once at value level (`encoding.unescape_dump_quotes`) in stage 03c and in the publication layer.
+
 ## Frozen Enrichment
 
-Stage 03b fills empty fields only. It overwrites no parser value. The production cache contains result, source identifier and model provenance. The output is checked again for type, occurrence and encoding: a value that arrived as a Latin-1 or CP1252 misreading of UTF-8 bytes is repaired by the byte round-trip and recorded under `encodingRepairs` in the enrichment report, one the round-trip cannot restore is dropped, and a publisher value stating a contribution credit is refused. `inject_provenance.py` turns each recorded repair into a field-scoped review hint on the entry it reached. The separate local working cache is not part of the reproducible input.
+Stage 03b fills empty fields only. It overwrites no parser value. The production cache contains result, source identifier and model provenance. The output is checked again for type, whole-word occurrence in the source (page counts need a page token) and encoding: a value that arrived as a Latin-1 or CP1252 misreading of UTF-8 bytes is repaired by the byte round-trip and recorded under `encodingRepairs` in the enrichment report, one the round-trip cannot restore is dropped, and a publisher value stating a contribution credit is refused. `inject_provenance.py` turns each recorded repair into a field-scoped review hint on the entry it reached. The separate local working cache is not part of the reproducible input.
 
 Stage 03c normalizes places of publication, translators and pagination. It discards values whose form or value range violates the documented contract. Lower coverage is admissible where it removes an undocumented statement.
 

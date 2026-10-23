@@ -9,7 +9,7 @@ language: en
 version: 1.2
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
-updated: 2026-09-23
+updated: 2026-10-23
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
@@ -102,6 +102,12 @@ Gate 2 checks:
 `tests/test_frontend_logic.py` automatically discovers every `tests/*.test.js` behavior file and runs `node --check` for every `docs/js/*.js` module. Adding a file needs no manual Python bridge entry. Node tests cover occurrences, snippets, triage, editor sessions, search normalization, reconciliation, export, routing and queue order. These checks exercise logic and syntax; they do not prove DOM interactions, accessibility or performance in a browser. On 23 September a Playwright run at 320, 390 and 1440 pixels checked the repaired paths on real data, among them the mobile filter drawer, keyboard-only use, the publication route and its citation, co-imprints, series glosses, decided and source-revision claims and the map. Its scripts stay outside the repository, so it is dated evidence rather than a regression suite.
 
 Frontend, canonical JSON-LD and classified rows are shared session fixtures. Semantic diagnosis and its default guard use the same comparison and page-ID index. Edition tests share one corpus build but receive deep copies, so review overlays cannot leak between tests.
+
+### Invariants over all records
+
+`tests/test_record_invariants.py` checks every published record, not a sample: every LLM value occurs as a whole word in its source; flat year, publisher and extent agree with the first publication wherever a publication layer exists; a publisher is no editor credit, pronoun or sentence opening; a year lies between 1897 and the last revision year of the dump; the translations list keeps every language heading of its section; every regex value survives a round trip to the raw dump text; no published string carries a dump escape, U+FFFD or a C0 control character. Known exceptions are listed by page identifier with a reason, never as a count, so a new case fails and a repaired one must leave the list. `tests/test_record_regressions.py` holds the real-record cases of each defect class, with source texts in `tests/record_sources.json` checked against the dump. A further test forbids carriage returns in tracked evidence files, since a manifest hash taken on a Windows working copy cannot be reproduced from a clean checkout.
+
+The review round of 2026-10-23 is the reason for this layer: eight defects found by reviews had passed every unit test, because the tests used shortened or synthetic strings, asserted current behaviour, or ratcheted counts that a fix commit could raise. Coverage baselines now fail on movement in both directions beyond a small tolerance unless a reviewed update is recorded.
 
 ## Agentic Review
 
