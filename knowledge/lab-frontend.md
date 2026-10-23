@@ -4,7 +4,7 @@ aliases: [lab, lab frontend, scholar-centred prototypes]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
-status: proposal
+status: maintained
 language: en
 tags: [frontend, lab, user-stories, evaluation, provenance]
 created: 2026-10-23
@@ -366,18 +366,7 @@ The lab is complete when its three prototypes run on real data, keep origin and 
 | L6 Evaluation | tasks, heuristics, triaged simulated inspection, accessibility, optional expert session, report | L5, availability of Zweig specialists |
 | L7 Handover | process record completed, report to the research coordinator, commit | L6 |
 
-The related deliverables run on their own tracks. Their shared blocker, the meaning of `confirmed` for the twenty fixture-based place decisions, was resolved by the operator's decision of 2026-10-23 to demote them to `proposed`.
-
-| Milestone | Content | Depends on |
-|---|---|---|
-| B1 Blog wording of review states | "bestätigt" used only where the data support it | regeneration implementing the fixture decision; operator decision on agent-adjudicated place decisions |
-| B2 Blog figures | figures re-read from the regenerated artefacts | regeneration commit |
-| B3 Blog explainer | static snapshot from prototype 3 | L4 |
-| B4 Blog claim check | every statement checked against the artefacts, naming and editorship settled | B1 to B3, operator decisions on editorship |
-| A1 Proposal version | settled on 2026-10-23: the operator's team draft "Grounds for Use" (after v1.5, with questions to named team members) is the basis; the agent drafts v1.3 and v1.4 supply material only; changes go to the team draft as proposals, never as edits without the operator's go-ahead | operator |
-| A2 Proposal terms and literature | terms aligned with the vault decision of 2026-10-03, literature updated, gap claims checked | A1 |
-| A3 Proposal evidence | dated cases from this repository and from the vault inserted | A1, B1 for the fixture case |
-| A4 Proposal formalities | contractor role of DHCraft, disclosure of AI use in writing, CV decision, cost justification | operator |
+The blog post and the DIA-XAI proposal, which this document planned until 2026-10-23 as milestones B1 to B4 and A1 to A4, now run on their own tracks. The blog post lives as a revised version in the project's shared blog document and is checked against the artefacts in a claims table. The proposal is based on the operator's team draft, and agent work on it is filed as proposals and research in the working material of the DIA-XAI repository. Both tracks are listed in [Coordination](coordination.md).
 
 ## Process record
 
