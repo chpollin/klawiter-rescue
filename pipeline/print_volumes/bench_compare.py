@@ -16,9 +16,10 @@ cannot be located are listed rather than dropped.
 
 Output: data/print/derived/reports/bench_compare.json and a summary.
 
-Usage: python -m uv run python pipeline/print_volumes/bench_compare.py
+Usage: python -m uv run python pipeline/print_volumes/bench_compare.py [--bench v2]
 """
 
+import argparse
 import json
 import re
 import sys
@@ -170,20 +171,27 @@ def _pool(rows: list[dict]) -> dict:
 
 
 def main() -> int:
-    sample = json.loads((BENCH / "sample.json").read_text(encoding="utf-8"))["pages"]
-    annotators = sorted(p.name[5:] for p in BENCH.glob("gold-*") if p.is_dir())
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--bench", default="", help="sub-folder of bench/, e.g. v2; empty for v1"
+    )
+    args = parser.parse_args()
+    bench = BENCH / args.bench if args.bench else BENCH
+    sample = json.loads((bench / "sample.json").read_text(encoding="utf-8"))["pages"]
+    annotators = sorted(p.name[5:] for p in bench.glob("gold-*") if p.is_dir())
     if not annotators:
         sys.exit("FEHLER: no gold-* folders under data/print/derived/bench")
     rows: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
     missing: list[dict] = []
     absent: list[str] = []
     for volume, pages in sample.items():
+        pages = [int(p) for p in pages]
         method = _method_pages(volume, set(pages))
         for page in pages:
             page_lines = method.get(page, {}).get("lines", [])
             sources = {METHOD: method.get(page, {}).get("starts", {})}
             for name in annotators:
-                path = BENCH / f"gold-{name}" / f"{volume}-p{page}.json"
+                path = bench / f"gold-{name}" / f"{volume}-p{page}.json"
                 if not path.exists():
                     absent.append(f"{name}:{volume}-p{page}")
                     continue
@@ -213,7 +221,9 @@ def main() -> int:
         "unlocated_gold_units": missing,
         "absent_gold_pages": absent,
     }
-    path = write_report("bench_compare", report)
+    path = write_report(
+        f"bench_compare{'_' + args.bench if args.bench else ''}", report
+    )
 
     print("=" * 72)
     for key, by_volume in report["scores"].items():
