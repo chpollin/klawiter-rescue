@@ -826,14 +826,16 @@ def _decide_claim(claim: dict, decision: dict) -> None:
 
     confirm and correct accept the interpretation of their target. A reject
     accepts the reading its resolution names, such as a compound subject that
-    names two places, which then joins the interpretations.
+    names two places, which then joins the interpretations. A reject without
+    a resolution, as the editor records it, accepts the no-assignment reading.
     """
     claim_id = claim["@id"]
     interpretations = claim["klawiter:interpretation"]
-    if decision["action"] == "reject":
-        resolution = decision.get("resolution")
-        if not resolution:
-            raise ValueError(f"Rejection closing {claim_id} names no accepted reading")
+    if decision["action"] == "reject" and not decision.get("resolution"):
+        selected = f"{claim_id}/interpretation/no-assignment"
+        notes = []
+    elif decision["action"] == "reject":
+        resolution = decision["resolution"]
         selected = f"{claim_id}/interpretation/{resolution['reading']}"
         interpretations.append(
             {

@@ -32,45 +32,20 @@
     "publisher": "Company"
    }
   },
+  "313": {
+   "detectable": {
+    "publisher": "p. Hand-press"
+   }
+  },
   "320": {
    "notInSource": [
     "pageCount"
-   ]
-  },
-  "376": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "388": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "448": {
-   "notInSource": [
-    "translator"
    ]
   },
   "477": {
    "detectable": {
     "publisher": "2nd edition"
    }
-  },
-  "726": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "732": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "756": {
-   "notInSource": [
-    "translator"
-   ]
   },
   "805": {
    "notInSource": [
@@ -82,16 +57,6 @@
     "translator"
    ]
   },
-  "837": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "899": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
   "969": {
    "detectable": {
     "publisher": "Fredonia"
@@ -100,16 +65,6 @@
   "971": {
    "notInSource": [
     "location"
-   ]
-  },
-  "977": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "1451": {
-   "notInSource": [
-    "translator"
    ]
   },
   "1563": {
@@ -127,16 +82,6 @@
     "publisher"
    ]
   },
-  "1687": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "1692": {
-   "notInSource": [
-    "translator"
-   ]
-  },
   "1836": {
    "notInSource": [
     "publisher"
@@ -147,34 +92,9 @@
     "publisher"
    ]
   },
-  "1842": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "1844": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
   "1846": {
    "notInSource": [
     "translator"
-   ]
-  },
-  "1857": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "1872": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "1896": {
-   "notInSource": [
-    "publisher"
    ]
   },
   "1941": {
@@ -197,6 +117,11 @@
     "publisher"
    ]
   },
+  "2201": {
+   "detectable": {
+    "publisher": "Librairie Générale Francaise"
+   }
+  },
   "2275": {
    "detectable": {
     "publisher": "Company"
@@ -211,11 +136,6 @@
    "detectable": {
     "publisher": "Company"
    }
-  },
-  "2343": {
-   "notInSource": [
-    "publisher"
-   ]
   },
   "2360": {
    "detectable": {
@@ -233,16 +153,6 @@
    ]
   },
   "2383": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "2401": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "2423": {
    "notInSource": [
     "publisher"
    ]
@@ -297,19 +207,9 @@
     "publisher": "Revue Littéraire des Primaires"
    }
   },
-  "2944": {
-   "notInSource": [
-    "location"
-   ]
-  },
   "2960": {
    "notInSource": [
     "location"
-   ]
-  },
-  "3042": {
-   "notInSource": [
-    "translator"
    ]
   },
   "3180": {
@@ -326,11 +226,6 @@
    "detectable": {
     "publisher": "Argentina and Brazil"
    }
-  },
-  "3223": {
-   "notInSource": [
-    "publisher"
-   ]
   },
   "3265": {
    "detectable": {
@@ -352,41 +247,15 @@
     "publisher": "April 1940"
    }
   },
-  "3492": {
-   "notInSource": [
-    "translator"
-   ]
-  },
   "3549": {
    "detectable": {
     "publisher": "3rd edition"
    }
   },
-  "3563": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "3641": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "3656": {
-   "notInSource": [
-    "location",
-    "translator"
-   ]
-  },
   "3749": {
    "detectable": {
     "publisher": "2nd edition"
    }
-  },
-  "3863": {
-   "notInSource": [
-    "publisher"
-   ]
   },
   "3927": {
    "detectable": {
@@ -419,45 +288,9 @@
    ]
   },
   "4113": {
-   "notInSource": [
-    "publisher",
-    "translator"
-   ]
-  },
-  "4138": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4215": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4290": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4327": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "4329": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "4333": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "4335": {
-   "notInSource": [
-    "publisher"
-   ]
+   "detectable": {
+    "publisher": "Zürcher Institut für Interreligiösen Dialog"
+   }
   },
   "4336": {
    "detectable": {
@@ -467,16 +300,6 @@
   "4346": {
    "notInSource": [
     "publisher"
-   ]
-  },
-  "4399": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "4426": {
-   "notInSource": [
-    "translator"
    ]
   },
   "4472": {
@@ -494,91 +317,30 @@
     "translator": "Ilyich Tchaikovsky"
    }
   },
-  "4482": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4515": {
-   "notInSource": [
-    "translator"
-   ]
-  },
   "4546": {
    "detectable": {
     "publisher": "& Distribution"
    }
-  },
-  "4562": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4563": {
-   "notInSource": [
-    "publisher",
-    "location"
-   ]
-  },
-  "4575": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4589": {
-   "notInSource": [
-    "translator"
-   ]
   },
   "4593": {
    "detectable": {
     "publisher": "& Distribution"
    }
   },
-  "4606": {
-   "notInSource": [
-    "translator"
-   ]
-  },
   "4613": {
    "detectable": {
     "publisher": "Company"
    }
-  },
-  "4617": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4619": {
-   "notInSource": [
-    "translator"
-   ]
   },
   "4651": {
    "notInSource": [
     "location"
    ]
   },
-  "4704": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4705": {
-   "notInSource": [
-    "translator"
-   ]
-  },
   "4717": {
    "detectable": {
     "publisher": "& Distribution"
    }
-  },
-  "4742": {
-   "notInSource": [
-    "translator"
-   ]
   },
   "4743": {
    "detectable": {
@@ -600,21 +362,6 @@
     "publisher": "1st edition"
    }
   },
-  "4812": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "4826": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "4828": {
-   "notInSource": [
-    "translator"
-   ]
-  },
   "4841": {
    "notInSource": [
     "location"
@@ -629,11 +376,6 @@
    "detectable": {
     "publisher": "& Distribution"
    }
-  },
-  "4871": {
-   "notInSource": [
-    "translator"
-   ]
   },
   "4880": {
    "detectable": {
@@ -650,15 +392,15 @@
     "publisher"
    ]
   },
-  "4908": {
-   "notInSource": [
-    "translator"
-   ]
+  "4961": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
   },
-  "4945": {
-   "notInSource": [
-    "publisher"
-   ]
+  "4962": {
+   "detectable": {
+    "publisher": "is a social cataloging website for books"
+   }
   },
   "4980": {
    "detectable": {
@@ -671,11 +413,6 @@
    ]
   },
   "4989": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "5108": {
    "notInSource": [
     "publisher"
    ]
@@ -695,21 +432,6 @@
     "location"
    ]
   },
-  "5254": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "5255": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "5256": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
   "5415": {
    "notInSource": [
     "location"
@@ -720,44 +442,9 @@
     "publisher": "& Distribution"
    }
   },
-  "5466": {
-   "notInSource": [
-    "location"
-   ]
-  },
-  "5467": {
-   "notInSource": [
-    "location"
-   ]
-  },
-  "5468": {
-   "notInSource": [
-    "location"
-   ]
-  },
-  "5469": {
-   "notInSource": [
-    "location"
-   ]
-  },
-  "5470": {
-   "notInSource": [
-    "location"
-   ]
-  },
   "5504": {
    "notInSource": [
     "location"
-   ]
-  },
-  "5658": {
-   "notInSource": [
-    "translator"
-   ]
-  },
-  "5659": {
-   "notInSource": [
-    "translator"
    ]
   },
   "5834": {
@@ -900,20 +587,10 @@
     "publisher": "is a social cataloging website for books"
    }
   },
-  "6044": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
   "6048": {
    "detectable": {
     "publisher": "is a social cataloging website for books"
    }
-  },
-  "6184": {
-   "notInSource": [
-    "publisher"
-   ]
   },
   "6319": {
    "detectable": {
@@ -1024,11 +701,6 @@
    ]
   },
   "7399": {
-   "notInSource": [
-    "location"
-   ]
-  },
-  "7470": {
    "notInSource": [
     "location"
    ]

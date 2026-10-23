@@ -24,7 +24,7 @@ from lib.config import (
     write_json,
 )
 from lib.encoding import normalize_text as normalize
-from lib.encoding import strip_encoding_artifacts as strip_encoding
+from lib.encoding import value_in_content
 from lib.patterns import (
     PAGE_RANGE_RE,
     PARENS_PAGE_RE,
@@ -53,21 +53,6 @@ def load_raw_content_map():
                 "page_title": row.get("page_title", ""),
             }
     return content_map
-
-
-def value_in_content(value, content):
-    """Check if a value appears in the raw content.
-    Tries exact match first, then encoding-aware match.
-    """
-    if not value or not content:
-        return False
-    # Exact (case-insensitive, whitespace-normalized)
-    if normalize(value) in normalize(content):
-        return True
-    # Encoding-aware: strip mojibake from both sides
-    if normalize(strip_encoding(value)) in normalize(strip_encoding(content)):
-        return True
-    return False
 
 
 def page_count_in_content(page_count, content):

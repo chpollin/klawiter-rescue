@@ -255,21 +255,28 @@ def main() -> None:
 
     # Re-validate cached results with current validation rules. A misreading the
     # byte round-trip undoes is repaired and recorded, one it cannot undo empties
-    # the field, and a contribution credit never passes as a publisher.
-    from lib.llm_extract import repair_or_reject
+    # the field, and a contribution credit never passes as a publisher. A value
+    # the entry's source text does not attest is refused as well.
+    from lib.llm_extract import occurs_in_source, repair_or_reject
     from lib.patterns import names_a_contribution_credit
 
     revalidated_cache = {}
     rejected = 0
+    not_in_source = {"publisher": 0, "location": 0, "translator": 0}
     repairs = []
     for pid, validated in sorted(cache.items(), key=lambda item: int(item[0])):
         clean = {"page_id": validated["page_id"]}
+        source_row = row_index.get(pid, {})
+        source = source_row.get("raw_content", "") or source_row.get("content", "")
         for field in ["publisher", "location", "translator"]:
             val = validated.get(field)
             if not val:
                 continue
             kept = repair_or_reject(val)
             if kept and field == "publisher" and names_a_contribution_credit(kept):
+                kept = None
+            if kept and not occurs_in_source(kept, source):
+                not_in_source[field] += 1
                 kept = None
             if not kept:
                 rejected += 1
@@ -282,9 +289,11 @@ def main() -> None:
         revalidated_cache[pid] = clean
     if rejected or repairs:
         log.info(
-            "  Re-validation: repaired %d values, rejected %d from cache",
+            "  Re-validation: repaired %d values, rejected %d from cache "
+            "(%d not in source)",
             len(repairs),
             rejected,
+            sum(not_in_source.values()),
         )
 
     # Merge all cached results into rows
@@ -341,6 +350,7 @@ def main() -> None:
             "networkCallsAllowed": args.mode == "live",
             "networkCallsMade": args.mode == "live" and bool(to_process),
             "rejectedCachedValues": rejected,
+            "rejectedNotInSource": not_in_source,
             "encodingRepairs": repairs,
             "fieldsFilled": fields_filled,
         },

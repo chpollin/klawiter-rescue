@@ -163,12 +163,14 @@ def test_review_projection_is_derived_from_gate2_decisions() -> None:
     stage_05 = importlib.import_module("05_to_jsonld")
     index = stage_05.load_review_index()
     assert index, "Gate 2 decisions did not reach the review index"
-    entry = {"location": "Amsterdam", "translator": "not a reviewed name"}
+    entry = {"location": "Amstelveen", "translator": "not a reviewed name"}
     review = stage_05.build_review(entry, index)
     assert review["fields"] == {"location": "confirm"}
     assert review["scope"] == ["location"]
     assert review["status"] == "agent_verified"
-    assert review["reviewed_by"] == index[("location", "Amsterdam")]["decidedBy"]
+    # A test fixture confirms nothing (operator decision of 2026-10-23).
+    assert stage_05.build_review({"location": "Amsterdam"}, index) is None
+    assert review["reviewed_by"] == index[("location", "Amstelveen")]["decidedBy"]
     assert stage_05.build_review({"location": "not a reviewed place"}, index) is None
 
 
@@ -196,7 +198,7 @@ def test_rejection_verifies_nothing() -> None:
     confirmed place on the same entry still states its own field scope."""
     stage_05 = importlib.import_module("05_to_jsonld")
     reject = {"action": "reject", "decidedBy": "main-instance"}
-    confirm = {"action": "confirm", "decidedBy": "repository-ground-truth-fixture"}
+    confirm = {"action": "confirm", "decidedBy": "independent-verification-agent"}
     only_reject = stage_05.build_review(
         {"location": "Sofija, Varna"}, {("location", "Sofija, Varna"): reject}
     )
@@ -215,15 +217,15 @@ def test_rejection_verifies_nothing() -> None:
 
 
 def test_place_review_states_its_field_scope(all_entries) -> None:
-    """The ground-truth place decisions verify the place alone."""
-    fixture_reviews = [
-        entry["review"]
-        for entry in all_entries
-        if entry.get("review", {}).get("reviewed_by")
-        == "repository-ground-truth-fixture"
-    ]
-    assert fixture_reviews
-    assert all(review["scope"] == ["location"] for review in fixture_reviews)
+    """Place decisions verify the place alone, and the test fixture of twenty
+    places decides nothing since the operator decision of 2026-10-23."""
+    reviews = [entry["review"] for entry in all_entries if entry.get("review")]
+    assert reviews
+    assert all(review["scope"] == ["location"] for review in reviews)
+    assert not any(
+        review.get("reviewed_by") == "repository-ground-truth-fixture"
+        for review in reviews
+    )
 
 
 def test_display_values_are_flat(all_entries) -> None:

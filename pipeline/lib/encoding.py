@@ -277,3 +277,28 @@ def strip_encoding_artifacts(text):
         result = result.replace(garbled, clean)
     result = re.sub(r"[\u0300-\u036f]", "", result)
     return result
+
+
+# The dump escapes quotes (\") and the source mixes typographic and straight
+# quotes; neither difference makes a value unattested.
+_QUOTE_FOLD = str.maketrans({"‘": "'", "’": "'", "“": '"', "”": '"'})
+
+
+def _fold_quotes(text):
+    return text.replace('\\"', '"').translate(_QUOTE_FOLD)
+
+
+def value_in_content(value, content):
+    """Check if a value appears in the raw content.
+    Tries exact match first, then encoding-aware match.
+    """
+    if not value or not content:
+        return False
+    value, content = _fold_quotes(value), _fold_quotes(content)
+    # Exact (case-insensitive, whitespace-normalized)
+    if normalize_text(value) in normalize_text(content):
+        return True
+    # Encoding-aware: strip mojibake from both sides
+    return normalize_text(strip_encoding_artifacts(value)) in normalize_text(
+        strip_encoding_artifacts(content)
+    )

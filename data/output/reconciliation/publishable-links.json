@@ -55,12 +55,6 @@
       "qid": "Q9898",
       "uri": "http://www.wikidata.org/entity/Q9898"
     },
-    "Amsterdam": {
-      "decisionId": "location/Amsterdam/Q727",
-      "label": "Amsterdam",
-      "qid": "Q727",
-      "uri": "http://www.wikidata.org/entity/Q727"
-    },
     "Amsterdan": {
       "decisionId": "location/Amsterdan/Q727",
       "label": "Amsterdam",
@@ -193,12 +187,6 @@
       "qid": "Q1861",
       "uri": "http://www.wikidata.org/entity/Q1861"
     },
-    "Barcelona": {
-      "decisionId": "location/Barcelona/Q1492",
-      "label": "Barcelona",
-      "qid": "Q1492",
-      "uri": "http://www.wikidata.org/entity/Q1492"
-    },
     "Basel": {
       "decisionId": "location/Basel/Q78",
       "label": "Basel",
@@ -217,18 +205,6 @@
       "qid": "Q25475",
       "uri": "http://www.wikidata.org/entity/Q25475"
     },
-    "Beijing": {
-      "decisionId": "location/Beijing/Q956",
-      "label": "Beijing",
-      "qid": "Q956",
-      "uri": "http://www.wikidata.org/entity/Q956"
-    },
-    "Beirut": {
-      "decisionId": "location/Beirut/Q3820",
-      "label": "Beirut",
-      "qid": "Q3820",
-      "uri": "http://www.wikidata.org/entity/Q3820"
-    },
     "Beltershausen": {
       "decisionId": "location/Beltershausen/Q816204",
       "label": "Beltershausen",
@@ -246,12 +222,6 @@
       "label": "Berat",
       "qid": "Q170244",
       "uri": "http://www.wikidata.org/entity/Q170244"
-    },
-    "Berlin": {
-      "decisionId": "location/Berlin/Q64",
-      "label": "Berlin",
-      "qid": "Q64",
-      "uri": "http://www.wikidata.org/entity/Q64"
     },
     "Bern": {
       "decisionId": "location/Bern/Q70",
@@ -366,18 +336,6 @@
       "label": "Budapest",
       "qid": "Q1781",
       "uri": "http://www.wikidata.org/entity/Q1781"
-    },
-    "Buenos Aires": {
-      "decisionId": "location/Buenos-Aires/Q1486",
-      "label": "Buenos Aires",
-      "qid": "Q1486",
-      "uri": "http://www.wikidata.org/entity/Q1486"
-    },
-    "Cairo": {
-      "decisionId": "location/Cairo/Q85",
-      "label": "Cairo",
-      "qid": "Q85",
-      "uri": "http://www.wikidata.org/entity/Q85"
     },
     "Calcutta": {
       "decisionId": "location/Calcutta/Q1348",
@@ -597,12 +555,6 @@
     },
     "Frankfurt": {
       "decisionId": "location/Frankfurt/Q1794",
-      "label": "Frankfurt",
-      "qid": "Q1794",
-      "uri": "http://www.wikidata.org/entity/Q1794"
-    },
-    "Frankfurt am Main": {
-      "decisionId": "location/Frankfurt-am-Main/Q1794",
       "label": "Frankfurt",
       "qid": "Q1794",
       "uri": "http://www.wikidata.org/entity/Q1794"
@@ -997,12 +949,6 @@
       "qid": "Q65557",
       "uri": "http://www.wikidata.org/entity/Q65557"
     },
-    "Leipzig": {
-      "decisionId": "location/Leipzig/Q2079",
-      "label": "Leipzig",
-      "qid": "Q2079",
-      "uri": "http://www.wikidata.org/entity/Q2079"
-    },
     "Lelystad": {
       "decisionId": "location/Lelystad/Q166065",
       "label": "Lelystad",
@@ -1044,12 +990,6 @@
       "label": "Locarno",
       "qid": "Q11935",
       "uri": "http://www.wikidata.org/entity/Q11935"
-    },
-    "London": {
-      "decisionId": "location/London/Q84",
-      "label": "London",
-      "qid": "Q84",
-      "uri": "http://www.wikidata.org/entity/Q84"
     },
     "Longpont-sur-Orge": {
       "decisionId": "location/Longpont-sur-Orge/Q247627",
@@ -1255,12 +1195,6 @@
       "qid": "Q1489",
       "uri": "http://www.wikidata.org/entity/Q1489"
     },
-    "München": {
-      "decisionId": "location/Muenchen/Q1726",
-      "label": "Munich",
-      "qid": "Q1726",
-      "uri": "http://www.wikidata.org/entity/Q1726"
-    },
     "Münster": {
       "decisionId": "location/Munster/Q2742",
       "label": "Münster",
@@ -1327,12 +1261,6 @@
       "qid": "Q34404",
       "uri": "http://www.wikidata.org/entity/Q34404"
     },
-    "New York": {
-      "decisionId": "location/New-York/Q60",
-      "label": "New York City",
-      "qid": "Q60",
-      "uri": "http://www.wikidata.org/entity/Q60"
-    },
     "Nicosia, Cyprus": {
       "decisionId": "location/Nicosia-Cyprus/Q3856",
       "label": "Nicosia",
@@ -1393,12 +1321,6 @@
       "qid": "Q1930",
       "uri": "http://www.wikidata.org/entity/Q1930"
     },
-    "Paris": {
-      "decisionId": "location/Paris/Q90",
-      "label": "Paris",
-      "qid": "Q90",
-      "uri": "http://www.wikidata.org/entity/Q90"
-    },
     "Philadelphia": {
       "decisionId": "location/Philadelphia/Q1345",
       "label": "Philadelphia",
@@ -1449,12 +1371,6 @@
     },
     "Prague": {
       "decisionId": "location/Prague/Q1085",
-      "label": "Prague",
-      "qid": "Q1085",
-      "uri": "http://www.wikidata.org/entity/Q1085"
-    },
-    "Praha": {
-      "decisionId": "location/Praha/Q1085",
       "label": "Prague",
       "qid": "Q1085",
       "uri": "http://www.wikidata.org/entity/Q1085"
@@ -1579,12 +1495,6 @@
       "qid": "Q1773",
       "uri": "http://www.wikidata.org/entity/Q1773"
     },
-    "Salzburg": {
-      "decisionId": "location/Salzburg/Q34713",
-      "label": "Salzburg",
-      "qid": "Q34713",
-      "uri": "http://www.wikidata.org/entity/Q34713"
-    },
     "San Francisco": {
       "decisionId": "location/San-Francisco/Q62",
       "label": "San Francisco",
@@ -1675,12 +1585,6 @@
       "qid": "Q1025080",
       "uri": "http://www.wikidata.org/entity/Q1025080"
     },
-    "Sofija": {
-      "decisionId": "location/Sofija/Q472",
-      "label": "Sofia",
-      "qid": "Q472",
-      "uri": "http://www.wikidata.org/entity/Q472"
-    },
     "Soul-si [Seoul, South Korea]": {
       "decisionId": "location/Soul-si-Seoul-South-Korea/Q8684",
       "label": "Seoul",
@@ -1698,18 +1602,6 @@
       "label": "Stamford",
       "qid": "Q49169",
       "uri": "http://www.wikidata.org/entity/Q49169"
-    },
-    "Stockholm": {
-      "decisionId": "location/Stockholm/Q1754",
-      "label": "Stockholm",
-      "qid": "Q1754",
-      "uri": "http://www.wikidata.org/entity/Q1754"
-    },
-    "Stuttgart": {
-      "decisionId": "location/Stuttgart/Q1022",
-      "label": "Stuttgart",
-      "qid": "Q1022",
-      "uri": "http://www.wikidata.org/entity/Q1022"
     },
     "Surabaya": {
       "decisionId": "location/Surabaya/Q11462",
@@ -1861,12 +1753,6 @@
       "qid": "Q19689",
       "uri": "http://www.wikidata.org/entity/Q19689"
     },
-    "Tokyo": {
-      "decisionId": "location/Tokyo/Q1490",
-      "label": "Tokyo",
-      "qid": "Q1490",
-      "uri": "http://www.wikidata.org/entity/Q1490"
-    },
     "Toronto": {
       "decisionId": "location/Toronto/Q172",
       "label": "Toronto",
@@ -2016,12 +1902,6 @@
       "label": "Weimar",
       "qid": "Q3955",
       "uri": "http://www.wikidata.org/entity/Q3955"
-    },
-    "Wien": {
-      "decisionId": "location/Wien/Q1741",
-      "label": "Wien",
-      "qid": "Q1741",
-      "uri": "http://www.wikidata.org/entity/Q1741"
     },
     "Wiesbaden": {
       "decisionId": "location/Wiesbaden/Q1721",

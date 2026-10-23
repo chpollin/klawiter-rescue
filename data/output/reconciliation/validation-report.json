@@ -20,12 +20,12 @@
     "decidedAuthorityClaims": 5,
     "decidedEditionClaims": 1,
     "locationCandidates": 420,
-    "locationDecisions": 378,
+    "locationDecisions": 358,
     "locationSubjects": 382,
     "publishableAgentLinks": 0,
-    "publishableLocationLinks": 354,
+    "publishableLocationLinks": 334,
     "publishableWorkLinks": 3,
-    "reviewCases": 561,
+    "reviewCases": 581,
     "workCandidates": 853,
     "workDecisions": 3,
     "workSubjects": 447
@@ -41,5 +41,5 @@
     "shacl": [],
     "sourceRevisions": []
   },
-  "generatedAt": "2026-09-28T18:26:34.241775+00:00"
+  "generatedAt": "2026-10-23T19:40:41.677426+00:00"
 }

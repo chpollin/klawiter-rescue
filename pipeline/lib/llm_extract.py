@@ -14,7 +14,11 @@ from typing import Optional
 from google import genai
 from pydantic import BaseModel, Field
 
-from lib.encoding import is_encoding_damaged, repair_value_encoding
+from lib.encoding import (
+    is_encoding_damaged,
+    repair_value_encoding,
+    value_in_content,
+)
 from lib.patterns import names_a_contribution_credit
 
 log = logging.getLogger(__name__)
@@ -165,6 +169,16 @@ def repair_or_reject(value):
     if is_encoding_damaged(repaired) or _has_llm_mojibake(repaired):
         return None
     return repaired
+
+
+def occurs_in_source(value, source):
+    """Whether an LLM value is attested in the entry's source text.
+
+    A comma-joined value ("A, A, B") is judged per part, because the model
+    lists several credits that the source spells apart; every part must occur.
+    """
+    parts = [part for part in value.split(",") if part.strip()]
+    return bool(parts) and all(value_in_content(part, source) for part in parts)
 
 
 def validate_extraction(extraction):

@@ -183,16 +183,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Amsterdam/Q727",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q727",
-      "subject": "Amsterdam"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Amsterdan/Q727",
       "evidence": [
@@ -548,16 +538,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Barcelona/Q1492",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1492",
-      "subject": "Barcelona"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Basel/Q78",
       "evidence": [
@@ -597,26 +577,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q25475",
       "subject": "Batumi"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Beijing/Q956",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q956",
-      "subject": "Beijing"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Beirut/Q3820",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q3820",
-      "subject": "Beirut"
     },
     {
       "action": "correct",
@@ -662,16 +622,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q170244",
       "subject": "Berat"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Berlin/Q64",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q64",
-      "subject": "Berlin"
     },
     {
       "action": "confirm",
@@ -1034,26 +984,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q1781",
       "subject": "Budapest"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Buenos-Aires/Q1486",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1486",
-      "subject": "Buenos Aires"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Cairo/Q85",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q85",
-      "subject": "Cairo"
     },
     {
       "action": "confirm",
@@ -1623,16 +1553,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q1794",
       "subject": "Frankfurt"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Frankfurt-am-Main/Q1794",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1794",
-      "subject": "Frankfurt am Main"
     },
     {
       "action": "confirm",
@@ -2884,16 +2804,6 @@
       "subject": "Leikanger"
     },
     {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Leipzig/Q2079",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q2079",
-      "subject": "Leipzig"
-    },
-    {
       "action": "correct",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Lelystad/Q166065",
@@ -3007,16 +2917,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q11935",
       "subject": "Locarno"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/London/Q84",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q84",
-      "subject": "London"
     },
     {
       "action": "confirm",
@@ -3595,16 +3495,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Muenchen/Q1726",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1726",
-      "subject": "München"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Munster/Q2742",
       "evidence": [
@@ -3780,16 +3670,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/New-York/Q60",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q60",
-      "subject": "New York"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Nicosia-Cyprus/Q3856",
       "evidence": [
@@ -3942,16 +3822,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Paris/Q90",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q90",
-      "subject": "Paris"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Philadelphia/Q1345",
       "evidence": [
@@ -4099,16 +3969,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q1085",
       "subject": "Prague"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Praha/Q1085",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1085",
-      "subject": "Praha"
     },
     {
       "action": "confirm",
@@ -4454,16 +4314,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Salzburg/Q34713",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q34713",
-      "subject": "Salzburg"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/San-Francisco/Q62",
       "evidence": [
@@ -4706,16 +4556,6 @@
       "subject": "Soesterberg"
     },
     {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Sofija/Q472",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q472",
-      "subject": "Sofija"
-    },
-    {
       "action": "reject",
       "decidedBy": "main-instance",
       "decisionId": "location/Sofija-Varna/reject",
@@ -4810,26 +4650,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q49169",
       "subject": "Stamford, CT"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Stockholm/Q1754",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1754",
-      "subject": "Stockholm"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Stuttgart/Q1022",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1022",
-      "subject": "Stuttgart"
     },
     {
       "action": "unresolved",
@@ -5385,16 +5205,6 @@
     },
     {
       "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Tokyo/Q1490",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1490",
-      "subject": "Tokyo"
-    },
-    {
-      "action": "confirm",
       "decidedBy": "independent-verification-agent",
       "decisionId": "location/Toronto/Q172",
       "evidence": [
@@ -5860,16 +5670,6 @@
       "provenance": "reviewed by independent agents against the source and Wikidata on 2026-09-23 and adjudicated by the main instance after delegation by the operator, revisable",
       "qid": "Q3955",
       "subject": "Weimar"
-    },
-    {
-      "action": "confirm",
-      "decidedBy": "repository-ground-truth-fixture",
-      "decisionId": "location/Wien/Q1741",
-      "evidence": [
-        "tests/wikidata_ground_truth.json"
-      ],
-      "qid": "Q1741",
-      "subject": "Wien"
     },
     {
       "action": "confirm",

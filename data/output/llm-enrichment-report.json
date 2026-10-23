@@ -14,10 +14,15 @@
   },
   "frozenResultCount": 3905,
   "workingResultCount": 0,
-  "cacheMissCount": 67,
+  "cacheMissCount": 48,
   "networkCallsAllowed": false,
   "networkCallsMade": false,
-  "rejectedCachedValues": 24,
+  "rejectedCachedValues": 144,
+  "rejectedNotInSource": {
+    "publisher": 60,
+    "location": 25,
+    "translator": 35
+  },
   "encodingRepairs": [
     {
       "pageId": 396,
@@ -85,11 +90,6 @@
       "value": "Athēna"
     },
     {
-      "pageId": 726,
-      "field": "translator",
-      "value": "KÅ stēs Meranaios"
-    },
-    {
       "pageId": 727,
       "field": "location",
       "value": "Athēna"
@@ -120,19 +120,9 @@
       "value": "Athēna"
     },
     {
-      "pageId": 732,
-      "field": "translator",
-      "value": "KÅ nstantinos Kritsēs"
-    },
-    {
       "pageId": 733,
       "field": "location",
       "value": "Athēna"
-    },
-    {
-      "pageId": 756,
-      "field": "translator",
-      "value": "Ādarśa KumÄ rī"
     },
     {
       "pageId": 804,
@@ -175,11 +165,6 @@
       "value": "Slovenski knjižni zavod"
     },
     {
-      "pageId": 1451,
-      "field": "publisher",
-      "value": "PreŐernova druba"
-    },
-    {
       "pageId": 1528,
       "field": "publisher",
       "value": "Državna Založba Slovenije"
@@ -215,21 +200,6 @@
       "value": "Katja Špurova"
     },
     {
-      "pageId": 1687,
-      "field": "publisher",
-      "value": "DÄ r ḤawrÄ n li-l-ṬibÄ 'ah wa'l-Nashr wa'l-Tawzī"
-    },
-    {
-      "pageId": 1687,
-      "field": "translator",
-      "value": "FÄ ṭimah al-NiẓÄ mī"
-    },
-    {
-      "pageId": 1692,
-      "field": "translator",
-      "value": "DÄ r al-HilÄ l bi-Miṣr"
-    },
-    {
       "pageId": 1704,
       "field": "translator",
       "value": "Stjepan Krešić"
@@ -258,11 +228,6 @@
       "pageId": 1843,
       "field": "translator",
       "value": "Nika Milićević"
-    },
-    {
-      "pageId": 1845,
-      "field": "publisher",
-      "value": "IzdavaÄ ko preduzeće \"Veselin Masleša\""
     },
     {
       "pageId": 1845,
@@ -428,11 +393,6 @@
       "pageId": 3376,
       "field": "translator",
       "value": "Aḳaḳi Gelovani"
-    },
-    {
-      "pageId": 3377,
-      "field": "publisher",
-      "value": "SabÄ ̣ota AÄ ̣ara"
     },
     {
       "pageId": 3395,
@@ -605,16 +565,6 @@
       "value": "İstanbul"
     },
     {
-      "pageId": 3641,
-      "field": "publisher",
-      "value": "PÅ musa, P'urŭn Sup"
-    },
-    {
-      "pageId": 3641,
-      "field": "location",
-      "value": "SÅ ul T'ŭkpyÅ lsi, SÅ ul-si"
-    },
-    {
       "pageId": 3647,
       "field": "publisher",
       "value": "Koridor Yayıncılık"
@@ -623,11 +573,6 @@
       "pageId": 3647,
       "field": "location",
       "value": "İstanbul"
-    },
-    {
-      "pageId": 3656,
-      "field": "translator",
-      "value": "HūshyÄ r Muntaṣirī"
     },
     {
       "pageId": 3682,
@@ -660,26 +605,6 @@
       "value": "Tekin Yayınevi"
     },
     {
-      "pageId": 4079,
-      "field": "publisher",
-      "value": "al-Muttaḥidah li-l-SīnimÄ (Ṣubḥī FaraḥÄ t)"
-    },
-    {
-      "pageId": 4113,
-      "field": "publisher",
-      "value": "DÄ r al-FurÄ t li-l-Nashr wa'l-Tawzī"
-    },
-    {
-      "pageId": 4113,
-      "field": "translator",
-      "value": "FÄ ris YūwÄ kīm"
-    },
-    {
-      "pageId": 4138,
-      "field": "translator",
-      "value": "FÄ ris YūwÄ kīm"
-    },
-    {
       "pageId": 4158,
       "field": "location",
       "value": "Tel-ʾAviv"
@@ -698,16 +623,6 @@
       "pageId": 4191,
       "field": "translator",
       "value": "ʿUmar ʿAbd al-Azīz Amīn"
-    },
-    {
-      "pageId": 4215,
-      "field": "translator",
-      "value": "Aḥmad 'IṣÄ m al-Dīn"
-    },
-    {
-      "pageId": 4225,
-      "field": "publisher",
-      "value": "Muʾassasat al-AhrÄ m; al-Sharikah al-Sharqiyyah li-l-Nashr waʾl-Tawzīʿ"
     },
     {
       "pageId": 4229,
@@ -730,29 +645,9 @@
       "value": "Ṭurem"
     },
     {
-      "pageId": 4290,
-      "field": "translator",
-      "value": "FÄ ris YūwÄ kīm"
-    },
-    {
-      "pageId": 4292,
-      "field": "publisher",
-      "value": "DÄ r Bayrūt li-l-ṬibÄ ʿah waʾl-Nashr"
-    },
-    {
       "pageId": 4293,
       "field": "location",
       "value": "Tūnis"
-    },
-    {
-      "pageId": 4294,
-      "field": "location",
-      "value": "Tūnis / Ottawa, ON"
-    },
-    {
-      "pageId": 4312,
-      "field": "publisher",
-      "value": "DÄ r al-Yaqẓah al-ʿArabiyyah li-l-Taʾlīf waʾl-Tarjamah waʾl-Nashr"
     },
     {
       "pageId": 4317,
@@ -763,11 +658,6 @@
       "pageId": 4383,
       "field": "publisher",
       "value": "Valstybinė Grožinės Literatūros Leidykla"
-    },
-    {
-      "pageId": 4384,
-      "field": "publisher",
-      "value": "DÄ r al-Shaʿb"
     },
     {
       "pageId": 4389,
@@ -790,26 +680,6 @@
       "value": "Ceṉṉai"
     },
     {
-      "pageId": 4399,
-      "field": "publisher",
-      "value": "RÄ ʾil Ejukeshnal Buk Ḍipo"
-    },
-    {
-      "pageId": 4402,
-      "field": "publisher",
-      "value": "DÄ modara NÄ rÄ yaṇa Moghe"
-    },
-    {
-      "pageId": 4402,
-      "field": "location",
-      "value": "KolhÄ pūra"
-    },
-    {
-      "pageId": 4426,
-      "field": "translator",
-      "value": "Muḥammad IbrÄ hīm Joyo"
-    },
-    {
       "pageId": 4439,
       "field": "translator",
       "value": "ʿAlī Adham"
@@ -818,76 +688,6 @@
       "pageId": 4440,
       "field": "translator",
       "value": "ʿAlī Adham"
-    },
-    {
-      "pageId": 4452,
-      "field": "publisher",
-      "value": "DÄ r al-Yaqẓah al-ʿArabiyyah li-l-Taʾlʾf waʾl-Tarjamah waʾl-Nashr"
-    },
-    {
-      "pageId": 4515,
-      "field": "translator",
-      "value": "Sīrūsh-i ĀryÄ npūr"
-    },
-    {
-      "pageId": 4518,
-      "field": "publisher",
-      "value": "KitÄ b-Furūshī-yi Ibn-i SīnÄ"
-    },
-    {
-      "pageId": 4544,
-      "field": "publisher",
-      "value": "KitÄ bkhÄ nah-i ʿAlī Akbar ʿIlmī va ShurakÄ ʾ"
-    },
-    {
-      "pageId": 4552,
-      "field": "publisher",
-      "value": "Hinda SÄ hitya PrakÄ śana"
-    },
-    {
-      "pageId": 4562,
-      "field": "translator",
-      "value": "NÄ ṣir ĪrÄ ndūst"
-    },
-    {
-      "pageId": 4563,
-      "field": "publisher",
-      "value": "KÄ nūn-i Maʿrifat"
-    },
-    {
-      "pageId": 4564,
-      "field": "publisher",
-      "value": "Mawqiʿ wa-MuntadayÄ t Kafr al-ZayyÄ t"
-    },
-    {
-      "pageId": 4573,
-      "field": "publisher",
-      "value": "DÄ r al-KhÄ n li-l-Tarjamah waʾl-Nashr"
-    },
-    {
-      "pageId": 4575,
-      "field": "translator",
-      "value": "ʿAbdallÄ h Tawakkul"
-    },
-    {
-      "pageId": 4589,
-      "field": "translator",
-      "value": "IbtisÄ m ʿAbdallÄ h"
-    },
-    {
-      "pageId": 4606,
-      "field": "translator",
-      "value": "FÄ ris YūwÄ kīm [Fares Youakim]"
-    },
-    {
-      "pageId": 4617,
-      "field": "translator",
-      "value": "AbbÄ s al-Mufrijī"
-    },
-    {
-      "pageId": 4619,
-      "field": "translator",
-      "value": "IbtisÄ m ʿAbdallÄ h"
     },
     {
       "pageId": 4631,
@@ -995,16 +795,6 @@
       "value": "Bakı [Baku]"
     },
     {
-      "pageId": 4704,
-      "field": "translator",
-      "value": "NÄ ṣir Muḥammad al-Kindī"
-    },
-    {
-      "pageId": 4705,
-      "field": "translator",
-      "value": "NÄ ṣir Muḥammad al-Kindī"
-    },
-    {
       "pageId": 4712,
       "field": "publisher",
       "value": "Azərnəşr"
@@ -1020,11 +810,6 @@
       "value": "ʿUmar ʿAbd al-Azīz"
     },
     {
-      "pageId": 4742,
-      "field": "translator",
-      "value": "Aḥmad ShÄ fiʿī [Ahmed Shafie]"
-    },
-    {
       "pageId": 4743,
       "field": "location",
       "value": "Ḥimṣ"
@@ -1035,54 +820,9 @@
       "value": "İstanbul"
     },
     {
-      "pageId": 4812,
-      "field": "translator",
-      "value": "DallÄ l IbrÄ hīm"
-    },
-    {
-      "pageId": 4825,
-      "field": "publisher",
-      "value": "ManshūrÄ t WizÄ rat al-ThaqÄ fah"
-    },
-    {
-      "pageId": 4826,
-      "field": "publisher",
-      "value": "ManshūrÄ t WizÄ rat al-ThaqÄ fah"
-    },
-    {
-      "pageId": 4828,
-      "field": "translator",
-      "value": "DallÄ l IbrÄ hīm"
-    },
-    {
-      "pageId": 4871,
-      "field": "translator",
-      "value": "FÄ ris YūwÄ kīm [Fares Youakim]"
-    },
-    {
-      "pageId": 4908,
-      "field": "publisher",
-      "value": "MaskīliyÄ nÄ  li-l-Nashr waʾl-Tawzīʿ"
-    },
-    {
       "pageId": 4908,
       "field": "location",
       "value": "Tūnis"
-    },
-    {
-      "pageId": 4908,
-      "field": "translator",
-      "value": "ʿAbd al-Karīm Badr KhÄ n"
-    },
-    {
-      "pageId": 4945,
-      "field": "publisher",
-      "value": "Al-Miṣrī al-yawm lÄ yt"
-    },
-    {
-      "pageId": 4957,
-      "field": "publisher",
-      "value": "DÄ r al-KitÄ b al-ThaqÄ fī"
     },
     {
       "pageId": 4992,
@@ -1110,21 +850,6 @@
       "value": "Ṭurem"
     },
     {
-      "pageId": 5254,
-      "field": "publisher",
-      "value": "Al-MuntadÄ  al-Tanwīrī al-ThaqÄ fī al-Filasṭīnī - Tanwīr"
-    },
-    {
-      "pageId": 5255,
-      "field": "publisher",
-      "value": "ArÄ jīk"
-    },
-    {
-      "pageId": 5256,
-      "field": "publisher",
-      "value": "RūtÄ nÄ"
-    },
-    {
       "pageId": 5264,
       "field": "translator",
       "value": "ʿAlī Ḥasan"
@@ -1133,16 +858,6 @@
       "pageId": 5301,
       "field": "publisher",
       "value": "Tekin Yayınevi"
-    },
-    {
-      "pageId": 5755,
-      "field": "publisher",
-      "value": "SuvidyÄ  prakÄ śana [Suvidya Publications]"
-    },
-    {
-      "pageId": 5755,
-      "field": "location",
-      "value": "SÅ lÄ pūra [Solapur]"
     },
     {
       "pageId": 5895,
@@ -1181,9 +896,9 @@
     }
   ],
   "fieldsFilled": {
-    "publisher": 282,
-    "location": 249,
-    "translator": 322,
+    "publisher": 266,
+    "location": 240,
+    "translator": 243,
     "page_count": 35
   }
 }

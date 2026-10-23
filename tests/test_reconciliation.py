@@ -117,7 +117,8 @@ def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
     # 794 location and work cases before the agent place review of
     # 2026-09-23; its 344 decisions and the later decisions on Tyresö and
     # Kuwait leave twelve places unresolved, and decided places leave the queue.
-    assert queue["caseCount"] == 460 + 101
+    # The twenty fixture places returned to the queue on 2026-10-23.
+    assert queue["caseCount"] == 480 + 101
     queued = {(item["entityType"], item["subject"]): item for item in queue["cases"]}
     assert queued[("location", "Saint-Aignan")]["status"] == "unresolved"
     assert ("work", "klawiter:work/54") not in queued
@@ -202,6 +203,54 @@ def test_reconciliation_patch_supersedes_prior_decision(tmp_path: Path) -> None:
     )
     assert decision["action"] == "confirm"
     assert decision["supersedesDecisionId"] == "location/Saint-Aignan/unresolved"
+
+
+def test_editor_reject_closes_open_claim_with_no_assignment(classified_rows) -> None:
+    """A reject from the editor (edit.js decideLocation) carries no resolution;
+    on an open claim it accepts the no-assignment reading and links nothing."""
+
+    def read(path: str | Path) -> dict | list:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+
+    patch = {
+        "entityType": "location",
+        "subject": "Saint-Aignan",
+        "action": "reject",
+        "qid": None,
+        "label": None,
+        "decisionId": "location/Saint-Aignan/editor-2026-10-23T10:00:00Z",
+        "decidedBy": "Editor (SZD)",
+        "decidedAt": "2026-10-23T10:00:00Z",
+        "evidence": ["frontend-entry/1", "no-candidate"],
+        "source": "human",
+    }
+    decisions = merge_decision_patches(read(LOCATION_DECISIONS), [patch], "location")
+    result = build_reconciliation(
+        read(Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld"),
+        read(LOCATIONS_JSON),
+        read(LOCATION_RECONCILIATION_LOG),
+        read(LOCATION_REVIEW_EVIDENCE),
+        decisions,
+        read(WORK_DECISIONS),
+        parse_szd_work_index(Path(SZD_WORK_INDEX)),
+        classified_rows,
+        read(AGENT_RECONCILIATION),
+        read(AGENT_DECISIONS),
+        read(SOURCE_REVISION_DECISIONS),
+    )
+    claim = next(
+        claim
+        for claim in result["contestedClaims"]
+        if claim["klawiter:claimSubject"]["@id"] == "klawiter:location/Saint-Aignan"
+    )
+    assert claim["klawiter:decisionStatus"] == "decided"
+    accepted = [
+        item["@id"]
+        for item in claim["klawiter:interpretation"]
+        if item["klawiter:interpretationStatus"] == "accepted"
+    ]
+    assert accepted == [f"{claim['@id']}/interpretation/no-assignment"]
+    assert "Saint-Aignan" not in result["publishable"]["locations"]
 
 
 def test_generated_gate2_validation_passes() -> None:
@@ -423,7 +472,9 @@ def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
         )
         assert claim["klawiter:reviewNote"]
         assert name not in published
-    assert published["Sofija"]["qid"] == "Q472"
+    # Sofija alone rested on the test fixture, which confirms nothing since
+    # 2026-10-23; the compound decision rejects only the single-identity reading.
+    assert "Sofija" not in published
     assert published["Varna"]["qid"] == "Q6506"
     assert published["Bloemfontein"]["qid"] == "Q37701"
     assert published["Kaapstad (Capetown)"]["qid"] == "Q5465"

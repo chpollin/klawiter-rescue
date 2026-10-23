@@ -11,10 +11,10 @@ YEAR_RE = re.compile(r"\b(1[789]\d{2}|20[0-3]\d)\b")
 
 # Publisher patterns (expanded beyond the original 3)
 PUBLISHER_PATTERNS = [
-    # Explicit labels
+    # Explicit labels; case-sensitive, since lowercase prose ("publishing
+    # venture", "editorial staff") is no label.
     re.compile(
-        r"(?:Verlag|Publisher|Press|Publishing|Éditions?|Editore|Editorial|Editora|Wydawnictwo|Издательство)[\s:]+([^\n,.;()\[\]]{3,80})",
-        re.IGNORECASE,
+        r"\b(?:Verlag|Publisher|Press|Publishing|Éditions?|Editore|Editorial|Editora|Wydawnictwo|Издательство)[\s:]+([^\n,.;()\[\]]{3,80})"
     ),
     # "published by" variants
     re.compile(
@@ -325,12 +325,15 @@ _NAME_INITIALS = (
 _NAME_TOKEN = rf"(?:{_NAME_INITIALS}|{_NAME_WORD})"
 _TRANSLATOR_NAME = rf"({_NAME_TOKEN}(?:[ \t]+{_NAME_TOKEN})*)"
 _TRANSLATOR_NAME_RE = re.compile(_TRANSLATOR_NAME)
+# re has no \p{Lu}; Latin Extended capitals such as Ž, Ł, Ő must open a name.
+_UPPER_LETTER = "[" + "".join(c for c in map(chr, range(0x3000)) if c.isupper()) + "]"
 # The permissive form the credit selection has always used; it overruns into
 # the following sentence, so credited_name repairs it with the name grammar.
-_LOOSE_CREDIT_NAME_RE = re.compile(r"([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})")
+_LOOSE_CREDIT_NAME = rf"({_UPPER_LETTER}(?:{_NAME_LETTER}|[ \t.'-]){{2,60}})"
+_LOOSE_CREDIT_NAME_RE = re.compile(_LOOSE_CREDIT_NAME)
 # Keep the existing credit selection; repair only the name at that same anchor.
 TRANSLATOR_PATTERNS = [
-    re.compile(prefix + r"([A-Z][a-zA-ZÀ-ÿ \t.\'-]{2,60})")
+    re.compile(prefix + _LOOSE_CREDIT_NAME)
     for prefix in (
         r"[Tt]ranslated\s+by\s+",
         r"[Tt]ranslation\s+by\s+",
@@ -498,23 +501,29 @@ def extract_all_locations(text):
     )
 
 
+def _is_locator_form(match):
+    return bool(re.match(r"pp?\.", match.group(0), re.IGNORECASE))
+
+
 def extract_page_count(text):
     """Extract page count from text."""
     if not text:
         return None
-    for pattern in PAGE_COUNT_PATTERNS:
-        m = pattern.search(text)
-        if m:
-            if re.match(r"pp?\.", m.group(0), re.IGNORECASE):
-                before = text[text.rfind("\n", 0, m.start()) + 1 : m.start()]
-                after = text[m.end() :]
-                if _PAGE_LOCATOR_LABEL_RE.search(before) or re.match(
-                    r"\s*[,;]\s*\(?\d+\b", after
-                ):
-                    continue
-            count = int(m.group(1))
-            if 1 <= count <= 10000:
-                return count
+    # The earliest extent in the text is the first publication's; a later
+    # edition's extent must not win through pattern order. A "p. N" form is
+    # often a locator, so it stays a fallback behind every "N p." extent.
+    found = [m for m in (p.search(text) for p in PAGE_COUNT_PATTERNS) if m]
+    for m in sorted(found, key=lambda m: (_is_locator_form(m), m.start())):
+        if _is_locator_form(m):
+            before = text[text.rfind("\n", 0, m.start()) + 1 : m.start()]
+            after = text[m.end() :]
+            if _PAGE_LOCATOR_LABEL_RE.search(before) or re.match(
+                r"\s*[,;]\s*\(?\d+\b", after
+            ):
+                continue
+        count = int(m.group(1))
+        if 1 <= count <= 10000:
+            return count
     return None
 
 

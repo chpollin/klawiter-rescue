@@ -3,8 +3,8 @@
     "title": {
       "total_entries": 4758,
       "extracted": 4757,
-      "correct": 2517,
-      "correct_fallback": 2240,
+      "correct": 2525,
+      "correct_fallback": 2232,
       "false_positive": 0,
       "false_negative": 0,
       "coverage": 100.0,
@@ -22,52 +22,47 @@
     },
     "publisher": {
       "total_entries": 4758,
-      "extracted": 2640,
-      "correct": 2601,
+      "extracted": 2614,
+      "correct": 2602,
       "correct_fallback": 0,
-      "false_positive": 39,
-      "false_negative": 85,
-      "coverage": 55.5,
-      "precision": 98.5
+      "false_positive": 12,
+      "false_negative": 90,
+      "coverage": 54.9,
+      "precision": 99.5
     },
     "location": {
       "total_entries": 4758,
-      "extracted": 4271,
+      "extracted": 4262,
       "correct": 4231,
       "correct_fallback": 0,
-      "false_positive": 40,
+      "false_positive": 31,
       "false_negative": 0,
-      "coverage": 89.8,
-      "precision": 99.1
+      "coverage": 89.6,
+      "precision": 99.3
     },
     "translator": {
       "total_entries": 4758,
-      "extracted": 1921,
-      "correct": 1880,
+      "extracted": 2002,
+      "correct": 1998,
       "correct_fallback": 0,
-      "false_positive": 41,
+      "false_positive": 4,
       "false_negative": 2,
-      "coverage": 40.4,
-      "precision": 97.9
+      "coverage": 42.1,
+      "precision": 99.8
     },
     "page_count": {
       "total_entries": 4758,
-      "extracted": 2440,
-      "correct": 2439,
+      "extracted": 2445,
+      "correct": 2444,
       "correct_fallback": 0,
       "false_positive": 1,
       "false_negative": 0,
-      "coverage": 51.3,
+      "coverage": 51.4,
       "precision": 100.0
     }
   },
   "false_positive_examples": {
     "publisher": [
-      {
-        "page_id": 899,
-        "title": "Kuninganna tapalaval",
-        "extracted_value": "Uus Eesti / Virumaa Teataja"
-      },
       {
         "page_id": 1683,
         "title": "Kerschbaumer, Gert",
@@ -84,34 +79,39 @@
         "extracted_value": "Prosveta, Otokar Keršovani"
       },
       {
-        "page_id": 1842,
-        "title": "Đorđević, Miloš",
-        "extracted_value": "Izdavačko Preduzeće \"Rad\""
-      },
-      {
-        "page_id": 1844,
-        "title": "Fouché. Roman jednoga političara",
-        "extracted_value": "\"Binoza-Svjetski-Pisci\" Nakladni Zavod"
-      },
-      {
-        "page_id": 1857,
-        "title": "Magelan - Erazmo Roterdamski",
-        "extracted_value": "Izdavačka Radna Organizacija \"Rad\""
-      },
-      {
-        "page_id": 1872,
-        "title": "Sobranie sochinenii Stefana Tsveiga v vos'mi tomakh",
-        "extracted_value": "Izdatel'stvo \"AST\""
-      },
-      {
-        "page_id": 1896,
-        "title": "Litvinets, N.",
-        "extracted_value": "Izdatel'stvo \"Padura\""
-      },
-      {
         "page_id": 2060,
         "title": "Asadowski, Konstantin",
         "extracted_value": "Wremja” in Neue Deutsche Literatur"
+      },
+      {
+        "page_id": 2367,
+        "title": "Zweigheft / zweigheft",
+        "extracted_value": "edition of Zweig's Schachnovelle - for the first time published as written b"
+      },
+      {
+        "page_id": 2383,
+        "title": "Berlin, Jeffrey B.",
+        "extracted_value": "Imprint” in Germany and the Americas"
+      },
+      {
+        "page_id": 2637,
+        "title": "Resch, Stephan",
+        "extracted_value": "Office of the Neue Freie Presse"
+      },
+      {
+        "page_id": 2685,
+        "title": "Leconte, Patrice",
+        "extracted_value": "Unit of the The Upcoming in London"
+      },
+      {
+        "page_id": 4346,
+        "title": "Balzāk: sīrat ḥayāt",
+        "extracted_value": "Wizārat al-Thaqāfah, al-Hayʾah al-ʿĀmmah al-Sūriyyah li-l-Kitāb [Ministry of Culture, The Syrian General Organization of Books]"
+      },
+      {
+        "page_id": 4903,
+        "title": "Al-Khawf: nūfīlā",
+        "extracted_value": "Maskīliyānā li-l-Nashr waʾl-Tawzīʿ [Masciliana Editions]"
       }
     ],
     "location": [
@@ -161,42 +161,12 @@
         "extracted_value": "Wien"
       },
       {
-        "page_id": 2944,
-        "title": "Nash, Paul W. and A. J. Flavell",
-        "extracted_value": "Aldershot, Hants, England / Brookfield, Vt"
+        "page_id": 2960,
+        "title": "Spitzer, Leo",
+        "extracted_value": "Wien"
       }
     ],
     "translator": [
-      {
-        "page_id": 376,
-        "title": "Kali da buneba. Motxroba",
-        "extracted_value": "Āarlo J̇orṫaneli"
-      },
-      {
-        "page_id": 388,
-        "title": "Derṿakhung / Volume",
-        "extracted_value": "Ḥayim Braķazsh [J. Brakarz]"
-      },
-      {
-        "page_id": 448,
-        "title": "Netrpělivost srdce",
-        "extracted_value": "Božena Koseková, Božena Koseková, Božena Koselová"
-      },
-      {
-        "page_id": 726,
-        "title": "To gramma mias agnōstēs",
-        "extracted_value": "KÅ stēs Meranaios"
-      },
-      {
-        "page_id": 732,
-        "title": "Phovos",
-        "extracted_value": "KÅ nstantinos Kritsēs"
-      },
-      {
-        "page_id": 756,
-        "title": "Bhāgya kī viḍambanā. Bhāvapūrṇa do mārmika upanyāsoṃ ke hindī rūpāntara",
-        "extracted_value": "Ādarśa KumÄ rī"
-      },
       {
         "page_id": 805,
         "title": "Mardkut‘yan asteghayin zhamerě: Patmakan manrapatumner * Shakhmatayin novel",
@@ -208,14 +178,14 @@
         "extracted_value": "A. H. Sarian, V. B. Vardanian"
       },
       {
-        "page_id": 837,
-        "title": "Yingxiong jiaoxiangyue: Luoman Luolan zhuan",
-        "extracted_value": "Qihuang Jiang and Baoquan Ge"
+        "page_id": 1846,
+        "title": "Jučerašnji svijet",
+        "extracted_value": "Vladislav Šarić, Mary Melichar"
       },
       {
-        "page_id": 977,
-        "title": "Sanren shujian: Gaoerji, Luoman Luolan, Ciweige shuxin ji",
-        "extracted_value": "Piang'an Zang, Xinlong Fan, and Qinsun Jing"
+        "page_id": 1941,
+        "title": "Shadows of the Past. Austrian Literature of the Twentieth Century",
+        "extracted_value": "Matthew Pollard, Ka"
       }
     ],
     "page_count": [
@@ -244,6 +214,11 @@
         "detected_in_raw": "Company"
       },
       {
+        "page_id": 313,
+        "title": "Die Legende der dritten Taube (VIST)",
+        "detected_in_raw": "p. Hand-press"
+      },
+      {
         "page_id": 477,
         "title": "Guvernanten",
         "detected_in_raw": "2nd edition"
@@ -269,14 +244,9 @@
         "detected_in_raw": "NY 10021. The collection also contains Amann"
       },
       {
-        "page_id": 2275,
-        "title": "Liber Amicorum Friderike Maria Zweig",
-        "detected_in_raw": "Company"
-      },
-      {
-        "page_id": 2306,
-        "title": "Mann, Klaus",
-        "detected_in_raw": "Company"
+        "page_id": 2201,
+        "title": "Vergne-Cain, Brigitte and Gérard Rudent",
+        "detected_in_raw": "Librairie Générale Francaise"
       }
     ],
     "translator": [
@@ -449,7 +419,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 659,
+          "extracted": 219,
           "in_raw": true,
           "status": "correct"
         }
@@ -518,7 +488,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 274,
+          "extracted": 323,
           "in_raw": true,
           "status": "correct"
         }
@@ -646,7 +616,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 312,
+          "extracted": 293,
           "in_raw": true,
           "status": "correct"
         }
@@ -907,7 +877,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 659,
+          "extracted": 377,
           "in_raw": true,
           "status": "correct"
         }
@@ -1003,7 +973,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 390,
+          "extracted": 446,
           "in_raw": true,
           "status": "correct"
         }
@@ -1035,7 +1005,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 191,
+          "extracted": 332,
           "in_raw": true,
           "status": "correct"
         }
@@ -1067,7 +1037,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 375,
+          "extracted": 321,
           "in_raw": true,
           "status": "correct"
         }
@@ -1163,7 +1133,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 22,
+          "extracted": 370,
           "in_raw": true,
           "status": "correct"
         }
@@ -1227,7 +1197,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 571,
+          "extracted": 575,
           "in_raw": true,
           "status": "correct"
         }
@@ -1392,7 +1362,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 352,
+          "extracted": 328,
           "in_raw": true,
           "status": "correct"
         }
@@ -1643,7 +1613,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Der Morgen",
+          "extracted": "Herbert Reichner Verlag",
           "in_raw": true,
           "status": "correct"
         },
@@ -2571,7 +2541,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 439,
+          "extracted": 703,
           "in_raw": true,
           "status": "correct"
         }
@@ -2644,7 +2614,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 351,
+          "extracted": 369,
           "in_raw": true,
           "status": "correct"
         }
@@ -2681,7 +2651,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 418,
+          "extracted": 335,
           "in_raw": true,
           "status": "correct"
         }
@@ -2814,7 +2784,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "here my sincere gratitude to Ikuko Miura",
+          "extracted": "I wish to express",
           "in_raw": true,
           "status": "correct"
         },
@@ -2851,7 +2821,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "my most sincere gratitude to Tatiana Kovaleva",
+          "extracted": "Authorized edition",
           "in_raw": true,
           "status": "correct"
         },
@@ -3174,7 +3144,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 27,
+          "extracted": 13,
           "in_raw": true,
           "status": "correct"
         }
@@ -3334,7 +3304,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 122,
+          "extracted": 124,
           "in_raw": true,
           "status": "correct"
         }
@@ -3671,7 +3641,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "venture by the artist",
+          "extracted": "Eva von Seckendorff und Angelika Mundorff",
           "in_raw": true,
           "status": "correct"
         },
@@ -5307,7 +5277,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 143,
+          "extracted": 78,
           "in_raw": true,
           "status": "correct"
         }
@@ -5701,7 +5671,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 120,
+          "extracted": 92,
           "in_raw": true,
           "status": "correct"
         }
@@ -5893,7 +5863,7 @@
           "status": "false_positive"
         },
         "page_count": {
-          "extracted": 343,
+          "extracted": 517,
           "in_raw": true,
           "status": "correct"
         }
@@ -6149,7 +6119,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 149,
+          "extracted": 148,
           "in_raw": true,
           "status": "correct"
         }
@@ -6314,7 +6284,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 127,
+          "extracted": 273,
           "in_raw": true,
           "status": "correct"
         }
@@ -6633,7 +6603,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 121,
+          "extracted": 127,
           "in_raw": true,
           "status": "correct"
         }
@@ -6702,7 +6672,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 73,
+          "extracted": 30,
           "in_raw": true,
           "status": "correct"
         }
@@ -6905,10 +6875,9 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "printing",
-          "in_raw": true,
-          "status": "correct"
+        "publisher_false_negative": {
+          "detected_in_raw": "p. Hand-press",
+          "note": "publisher found in raw but not in output"
         },
         "location": {
           "extracted": "Berlin",
@@ -7508,7 +7477,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 586,
+          "extracted": 295,
           "in_raw": true,
           "status": "correct"
         }
@@ -7690,9 +7659,9 @@
       "fields": {
         "title": {
           "extracted": "Carta d’una desconeguda",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 1998,
@@ -7838,9 +7807,9 @@
       "fields": {
         "title": {
           "extracted": "Vint-i-quatre hores en la vida d’una dona",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 1929,
@@ -8092,9 +8061,9 @@
       "fields": {
         "title": {
           "extracted": "Novel·la d’escacs",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 1987,
@@ -8265,7 +8234,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 434,
+          "extracted": 641,
           "in_raw": true,
           "status": "correct"
         }
@@ -8302,7 +8271,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 99,
+          "extracted": 126,
           "in_raw": true,
           "status": "correct"
         }
@@ -8408,9 +8377,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Āarlo J̇orṫaneli",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Ḳarlo J̌orǰaneli",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 30,
@@ -8479,9 +8448,9 @@
       "fields": {
         "title": {
           "extracted": "T’aech’o e sarang i issotta",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 1996,
@@ -8573,12 +8542,12 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ḥayim Braķazsh [J. Brakarz]",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Ḥayim Braḳazsh",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
-          "extracted": 186,
+          "extracted": 185,
           "in_raw": true,
           "status": "correct"
         }
@@ -9650,7 +9619,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vladislav Ŝariĉ",
+          "extracted": "Kaćuša Maletin-Avakuinović",
           "in_raw": true,
           "status": "correct"
         },
@@ -10062,7 +10031,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 351,
+          "extracted": 341,
           "in_raw": true,
           "status": "correct"
         }
@@ -10131,12 +10100,12 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Božena Koseková, Božena Koseková, Božena Koselová",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Božena Koseková",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
-          "extracted": 348,
+          "extracted": 326,
           "in_raw": true,
           "status": "correct"
         }
@@ -10205,7 +10174,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Sergej Machonin",
+          "extracted": "Věra Saudková",
           "in_raw": true,
           "status": "correct"
         },
@@ -10623,7 +10592,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 196,
+          "extracted": 233,
           "in_raw": true,
           "status": "correct"
         }
@@ -10697,7 +10666,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 121,
+          "extracted": 139,
           "in_raw": true,
           "status": "correct"
         }
@@ -12424,9 +12393,9 @@
       "fields": {
         "title": {
           "extracted": "Adolescenza. Quattro storie del paese dell’infanzia",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 1933,
@@ -12498,9 +12467,9 @@
       "fields": {
         "title": {
           "extracted": "L’impazienza del cuore",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 2004,
@@ -12918,7 +12887,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dương Tường, Phùng Đệ and Lê Thi",
+          "extracted": "Dương Tường",
           "in_raw": true,
           "status": "correct"
         },
@@ -14795,7 +14764,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 178,
+          "extracted": 193,
           "in_raw": true,
           "status": "correct"
         }
@@ -14906,7 +14875,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 111,
+          "extracted": 124,
           "in_raw": true,
           "status": "correct"
         }
@@ -16192,9 +16161,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "KÅ stēs Meranaios",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Kōstēs Meranaios",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 53,
@@ -16377,7 +16346,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Tatiana Lianē",
+          "extracted": "Dēmētrēs Dēmokidēs",
           "in_raw": true,
           "status": "correct"
         },
@@ -16414,9 +16383,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "KÅ nstantinos Kritsēs",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Kōnstantinos Kritsēs",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 114,
@@ -16800,9 +16769,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ādarśa KumÄ rī",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Ādarśa Kumārī",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 132,
@@ -17128,6 +17097,11 @@
           "extracted": "New Delhi",
           "in_raw": true,
           "status": "correct"
+        },
+        "translator": {
+          "extracted": "Yaśapāla Jaina",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -17178,6 +17152,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Yaśapāla Jaina",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 154,
           "in_raw": true,
@@ -17204,6 +17183,11 @@
           "extracted": "Delhi",
           "in_raw": true,
           "status": "correct"
+        },
+        "translator": {
+          "extracted": "Yaśapāla Jaina",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -17228,7 +17212,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Vijaya Chauhan and Shivdan Singh Chauhan",
+          "extracted": "Yaśapāla Jaina",
           "in_raw": true,
           "status": "correct"
         }
@@ -17563,7 +17547,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 342,
+          "extracted": 359,
           "in_raw": true,
           "status": "correct"
         }
@@ -17743,7 +17727,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 465,
+          "extracted": 152,
           "in_raw": true,
           "status": "correct"
         }
@@ -17844,7 +17828,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 192,
+          "extracted": 90,
           "in_raw": true,
           "status": "correct"
         }
@@ -17913,7 +17897,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 10,
+          "extracted": 116,
           "in_raw": true,
           "status": "correct"
         }
@@ -18411,7 +18395,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 134,
+          "extracted": 262,
           "in_raw": true,
           "status": "correct"
         }
@@ -18485,7 +18469,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 9,
+          "extracted": 342,
           "in_raw": true,
           "status": "correct"
         }
@@ -18860,11 +18844,6 @@
           "extracted": "Changsha",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "Qihuang Jiang and Baoquan Ge",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 244,
@@ -19745,7 +19724,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 292,
+          "extracted": 361,
           "in_raw": true,
           "status": "correct"
         }
@@ -20115,7 +20094,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 238,
+          "extracted": 237,
           "in_raw": true,
           "status": "correct"
         }
@@ -20315,11 +20294,6 @@
           "extracted": 1935,
           "in_raw": true,
           "status": "correct"
-        },
-        "publisher": {
-          "extracted": "Uus Eesti / Virumaa Teataja",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "location": {
           "extracted": "Tallinn",
@@ -20660,7 +20634,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 32,
+          "extracted": 126,
           "in_raw": true,
           "status": "correct"
         }
@@ -20845,7 +20819,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 376,
+          "extracted": 413,
           "in_raw": true,
           "status": "correct"
         }
@@ -21104,7 +21078,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 440,
+          "extracted": 485,
           "in_raw": true,
           "status": "correct"
         }
@@ -22259,8 +22233,8 @@
         },
         "translator": {
           "extracted": "Piang'an Zang, Xinlong Fan, and Qinsun Jing",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 382,
@@ -30315,7 +30289,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 122,
+          "extracted": 142,
           "in_raw": true,
           "status": "correct"
         }
@@ -30793,11 +30767,6 @@
           "extracted": "Ljubljana",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "Katja purova",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 179,
@@ -31830,6 +31799,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Dušan Ludvik",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 194,
           "in_raw": true,
@@ -32550,11 +32524,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "foreword: \\\"Literature and the Wisdom of Human Life\\\"",
-          "in_raw": true,
-          "status": "correct"
-        },
         "location": {
           "extracted": "T'aipei",
           "in_raw": true,
@@ -32922,11 +32891,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "foreword: \\\"Hoping for Great Things from Literature for a Thorough Transformatio",
-          "in_raw": true,
-          "status": "correct"
-        },
         "location": {
           "extracted": "T'aipei",
           "in_raw": true,
@@ -33104,11 +33068,6 @@
         },
         "year": {
           "extracted": 1998,
-          "in_raw": true,
-          "status": "correct"
-        },
-        "publisher": {
-          "extracted": "foreword: \\\"Open Wide Your Heart",
           "in_raw": true,
           "status": "correct"
         },
@@ -33464,7 +33423,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 239,
+          "extracted": 187,
           "in_raw": true,
           "status": "correct"
         }
@@ -34345,6 +34304,11 @@
           "extracted": "Berlin",
           "in_raw": true,
           "status": "correct"
+        },
+        "page_count": {
+          "extracted": 897,
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -34528,7 +34492,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 551,
+          "extracted": 580,
           "in_raw": true,
           "status": "correct"
         }
@@ -34591,6 +34555,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Quṣayy Atāsī and Mīshīl Wākīm",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 218,
           "in_raw": true,
@@ -34604,9 +34573,9 @@
       "fields": {
         "title": {
           "extracted": "Al-Armalah al-‘āshiqah",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 1956,
@@ -34698,9 +34667,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "FÄ ṭimah al-NiẓÄ mī",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Fāṭimah al-Niẓāmī",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 107,
@@ -34771,6 +34740,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fuʾād Ayyūb",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 278,
           "in_raw": true,
@@ -34802,11 +34776,6 @@
           "extracted": "al-Qāhirah",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "DÄ r al-HilÄ l bi-Miṣr",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 161,
@@ -34840,6 +34809,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 306,
           "in_raw": true,
@@ -34869,6 +34843,11 @@
         },
         "location": {
           "extracted": "al-Qāhira",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḥabīb Jāmātī",
           "in_raw": true,
           "status": "correct"
         },
@@ -35006,7 +34985,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Abrahao Koogan",
+          "extracted": "s Brasilian publisher",
           "in_raw": true,
           "status": "correct"
         },
@@ -35248,6 +35227,11 @@
         },
         "location": {
           "extracted": "Bayrūt/Dimashq",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
           "in_raw": true,
           "status": "correct"
         },
@@ -36147,7 +36131,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "A. Podvŭrzachova",
+          "extracted": "Enŭo Kolev",
           "in_raw": true,
           "status": "correct"
         },
@@ -37950,8 +37934,8 @@
         },
         "publisher": {
           "extracted": "Izdavačko Preduzeće \"Rad\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Beograd",
@@ -38019,8 +38003,8 @@
         },
         "publisher": {
           "extracted": "\"Binoza-Svjetski-Pisci\" Nakladni Zavod",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Zagreb",
@@ -38384,8 +38368,8 @@
         },
         "publisher": {
           "extracted": "Izdavačka Radna Organizacija \"Rad\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Beograd",
@@ -38393,7 +38377,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nika Milićević",
+          "extracted": "Boško Petrović",
           "in_raw": true,
           "status": "correct"
         }
@@ -38605,7 +38589,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 480,
+          "extracted": 638,
           "in_raw": true,
           "status": "correct"
         }
@@ -38628,8 +38612,8 @@
         },
         "publisher": {
           "extracted": "Izdatel'stvo \"AST\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Moskva",
@@ -38642,7 +38626,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 702,
+          "extracted": 638,
           "in_raw": true,
           "status": "correct"
         }
@@ -39257,8 +39241,8 @@
         },
         "publisher": {
           "extracted": "Izdatel'stvo \"Padura\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Moskva",
@@ -40547,7 +40531,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 112,
+          "extracted": 381,
           "in_raw": true,
           "status": "correct"
         }
@@ -40616,7 +40600,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 94,
+          "extracted": 157,
           "in_raw": true,
           "status": "correct"
         }
@@ -41155,7 +41139,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 232,
+          "extracted": 157,
           "in_raw": true,
           "status": "correct"
         }
@@ -43482,7 +43466,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 31,
+          "extracted": 223,
           "in_raw": true,
           "status": "correct"
         }
@@ -44717,6 +44701,11 @@
         },
         "location": {
           "extracted": "Berlin",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 24,
           "in_raw": true,
           "status": "correct"
         }
@@ -46141,10 +46130,9 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "originale est en langue portugaise",
-          "in_raw": true,
-          "status": "correct"
+        "publisher_false_negative": {
+          "detected_in_raw": "Librairie Générale Francaise",
+          "note": "publisher found in raw but not in output"
         },
         "location": {
           "extracted": "Paris",
@@ -46306,7 +46294,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 82,
+          "extracted": 276,
           "in_raw": true,
           "status": "correct"
         }
@@ -46506,7 +46494,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 200,
+          "extracted": 292,
           "in_raw": true,
           "status": "correct"
         }
@@ -46894,7 +46882,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 72,
+          "extracted": 168,
           "in_raw": true,
           "status": "correct"
         }
@@ -47497,7 +47485,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 312,
+          "extracted": 351,
           "in_raw": true,
           "status": "correct"
         }
@@ -47534,7 +47522,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 258,
+          "extracted": 433,
           "in_raw": true,
           "status": "correct"
         }
@@ -47571,7 +47559,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 314,
+          "extracted": 285,
           "in_raw": true,
           "status": "correct"
         }
@@ -48951,8 +48939,8 @@
         },
         "publisher": {
           "extracted": "Vidavnitstvo \"Siaivo\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Kiïv/Kiev",
@@ -49628,9 +49616,9 @@
       "fields": {
         "title": {
           "extracted": "\"Ich liebte Frankreich wie eine zweite Heimat\". Neue Studien zu Stefan Zweig",
-          "in_raw": false,
-          "status": "correct_fallback",
-          "title_source": "page_title_fallback"
+          "in_raw": true,
+          "status": "correct",
+          "title_source": "wiki_extract"
         },
         "year": {
           "extracted": 2011,
@@ -49680,7 +49668,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 295,
+          "extracted": 655,
           "in_raw": true,
           "status": "correct"
         }
@@ -50094,8 +50082,8 @@
         },
         "publisher": {
           "extracted": "l'Université Charles-de-Gaulle - Lille 3",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Villeneuve d’Ascq",
@@ -50665,9 +50653,9 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "du Monde d'hier montre les insouciances et les inquiétudes d'une génération",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Quand Stefan Zweig fuyait une Europe tragique. La réédition",
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Lausanne",
@@ -51229,7 +51217,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "des Vereines",
+          "extracted": "Selbstverlag",
           "in_raw": true,
           "status": "correct"
         },
@@ -51430,7 +51418,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 162,
+          "extracted": 78,
           "in_raw": true,
           "status": "correct"
         }
@@ -51580,7 +51568,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 116,
+          "extracted": 89,
           "in_raw": true,
           "status": "correct"
         }
@@ -52558,7 +52546,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 176,
+          "extracted": 156,
           "in_raw": true,
           "status": "correct"
         }
@@ -52789,7 +52777,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "originale est en langue portugaise",
+          "extracted": "of Zweig during the summer of 1941 sitting in front of his house",
           "in_raw": true,
           "status": "correct"
         },
@@ -53720,6 +53708,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Mītrā Maʿṣūmī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 124,
           "in_raw": true,
@@ -54564,7 +54557,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 330,
+          "extracted": 473,
           "in_raw": true,
           "status": "correct"
         }
@@ -54738,7 +54731,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 147,
+          "extracted": 127,
           "in_raw": true,
           "status": "correct"
         }
@@ -56499,7 +56492,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Éditions",
+          "extracted": "Express Éditions",
           "in_raw": true,
           "status": "correct"
         },
@@ -56964,6 +56957,11 @@
         },
         "translator": {
           "extracted": "Pierre Deshusses",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "page_count": {
+          "extracted": 471,
           "in_raw": true,
           "status": "correct"
         }
@@ -57604,7 +57602,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 4,
+          "extracted": 150,
           "in_raw": true,
           "status": "correct"
         }
@@ -57727,7 +57725,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 122,
+          "extracted": 179,
           "in_raw": true,
           "status": "correct"
         }
@@ -58270,7 +58268,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 334,
+          "extracted": 357,
           "in_raw": true,
           "status": "correct"
         }
@@ -58986,7 +58984,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Antony Shugaar",
+          "extracted": "Aḥmad Shāfiʿī",
           "in_raw": true,
           "status": "correct"
         }
@@ -59038,11 +59036,6 @@
           "extracted": "/ Brookfield",
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Aldershot, Hants, England / Brookfield, Vt",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 245,
@@ -59908,7 +59901,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 524,
+          "extracted": 574,
           "in_raw": true,
           "status": "correct"
         }
@@ -60545,6 +60538,11 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
+        },
+        "page_count": {
+          "extracted": 206,
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -60564,7 +60562,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Der Morgen",
+          "extracted": "Buchverlag",
           "in_raw": true,
           "status": "correct"
         },
@@ -60882,9 +60880,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Aḱaḱi Gelovani and Šalva Buačiże",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Aḳaḳi Gelovani and Šalva Buačije",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 438,
@@ -61183,7 +61181,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 220,
+          "extracted": 163,
           "in_raw": true,
           "status": "correct"
         }
@@ -61368,7 +61366,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 330,
+          "extracted": 282,
           "in_raw": true,
           "status": "correct"
         }
@@ -62146,7 +62144,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 106,
+          "extracted": 90,
           "in_raw": true,
           "status": "correct"
         }
@@ -62328,7 +62326,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 50,
+          "extracted": 197,
           "in_raw": true,
           "status": "correct"
         }
@@ -62675,7 +62673,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 99,
+          "extracted": 120,
           "in_raw": true,
           "status": "correct"
         }
@@ -63701,8 +63699,8 @@
         },
         "publisher": {
           "extracted": "Vereines \"Freunde der Salzburger Geschichte\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Salzburg",
@@ -63944,7 +63942,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 476,
+          "extracted": 112,
           "in_raw": true,
           "status": "correct"
         }
@@ -64008,7 +64006,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 397,
+          "extracted": 299,
           "in_raw": true,
           "status": "correct"
         }
@@ -64158,7 +64156,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 80,
+          "extracted": 79,
           "in_raw": true,
           "status": "correct"
         }
@@ -64431,7 +64429,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 148,
+          "extracted": 87,
           "in_raw": true,
           "status": "correct"
         }
@@ -64664,7 +64662,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 333,
+          "extracted": 149,
           "in_raw": true,
           "status": "correct"
         }
@@ -64901,7 +64899,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 188,
+          "extracted": 128,
           "in_raw": true,
           "status": "correct"
         }
@@ -65194,7 +65192,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 13,
+          "extracted": 216,
           "in_raw": true,
           "status": "correct"
         }
@@ -66131,7 +66129,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "companies",
+          "extracted": "pp. 478-497. Revised edition",
           "in_raw": true,
           "status": "correct"
         },
@@ -66329,6 +66327,11 @@
         },
         "location": {
           "extracted": "Tbilisi",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḳarlo J̌orǰaneli",
           "in_raw": true,
           "status": "correct"
         },
@@ -66571,6 +66574,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ḳarlo J̌orǰaneli",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 202,
           "in_raw": true,
@@ -66629,6 +66637,11 @@
           "extracted": "Tbilisi",
           "in_raw": true,
           "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḳarlo J̌orǰaneli",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -66663,7 +66676,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 216,
+          "extracted": 235,
           "in_raw": true,
           "status": "correct"
         }
@@ -67390,7 +67403,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Al. Galēnou",
+          "extracted": "Dēmētrēs Kōstelenos",
           "in_raw": true,
           "status": "correct"
         },
@@ -67481,7 +67494,7 @@
           "title_source": "wiki_extract"
         },
         "publisher": {
-          "extracted": "or city indicated",
+          "extracted": "No publisher",
           "in_raw": true,
           "status": "correct"
         },
@@ -67518,7 +67531,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Othon Argyropoulos and Tzimmey Korini",
+          "extracted": "Leōn Koukoulas",
           "in_raw": true,
           "status": "correct"
         },
@@ -67656,9 +67669,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "KŁstēs Meranaios",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Kōstēs Meranaios",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 267,
@@ -69019,11 +69032,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "Ring-Film / Kammerspiel-Film",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Wien",
           "in_raw": true,
@@ -69121,7 +69129,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 172,
+          "extracted": 94,
           "in_raw": true,
           "status": "correct"
         }
@@ -69719,7 +69727,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 215,
+          "extracted": 292,
           "in_raw": true,
           "status": "correct"
         }
@@ -70054,9 +70062,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "YÅ ng-ok O, YÅ ng-gu Pak",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Yŏng-ok O",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 194,
@@ -70203,15 +70211,10 @@
           "in_raw": true,
           "status": "correct"
         },
-        "location": {
-          "extracted": "TihrÄ n",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "translator": {
-          "extracted": "HūshyÄ r Muntaṣirī",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Hūshyār Muntaṣirī",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 93,
@@ -72798,7 +72801,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "these ideals",
+          "extracted": "came to express",
           "in_raw": true,
           "status": "correct"
         },
@@ -73008,7 +73011,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "für die Schule",
+          "extracted": "RAABE Fachverlag",
           "in_raw": true,
           "status": "correct"
         },
@@ -73726,8 +73729,8 @@
         },
         "publisher": {
           "extracted": "Combinatul poligrafic \"Casa Scînteii\"",
-          "in_raw": false,
-          "status": "false_positive"
+          "in_raw": true,
+          "status": "correct"
         },
         "location": {
           "extracted": "Bucureşti",
@@ -76733,7 +76736,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 213,
+          "extracted": 202,
           "in_raw": true,
           "status": "correct"
         }
@@ -77372,20 +77375,14 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "DÄ r al-FurÄ t li-l-Nashr wa'l-Tawzī",
-          "in_raw": false,
-          "status": "false_positive"
+        "publisher_false_negative": {
+          "detected_in_raw": "Zürcher Institut für Interreligiösen Dialog",
+          "note": "publisher found in raw but not in output"
         },
         "location": {
           "extracted": "London",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "FÄ ris YūwÄ kīm",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 223,
@@ -77494,7 +77491,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 345,
+          "extracted": 421,
           "in_raw": true,
           "status": "correct"
         }
@@ -77563,7 +77560,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Niqūlā Qurbān and Nadīm Marʿashlī",
+          "extracted": "Muḥammad Abū Ṭāʾilah",
           "in_raw": true,
           "status": "correct"
         },
@@ -77695,11 +77692,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "translator": {
-          "extracted": "FÄ ris YūwÄ kīm",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "page_count": {
           "extracted": 223,
           "in_raw": true,
@@ -77729,6 +77721,11 @@
         },
         "location": {
           "extracted": "Jounieh",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḥilmī Murād",
           "in_raw": true,
           "status": "correct"
         },
@@ -77976,6 +77973,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Mufīd al-Shūbāshī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 307,
           "in_raw": true,
@@ -78051,7 +78053,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 83,
+          "extracted": 158,
           "in_raw": true,
           "status": "correct"
         }
@@ -78402,8 +78404,13 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fuʾād Ayyūb",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
-          "extracted": 197,
+          "extracted": 208,
           "in_raw": true,
           "status": "correct"
         }
@@ -78620,9 +78627,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Aḥmad 'IṣÄ m al-Dīn",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Aḥmad 'Iṣām al-Dīn",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 77,
@@ -78915,6 +78922,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū 'l-'Īd Dūdū",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 69,
           "in_raw": true,
@@ -78990,7 +79002,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 192,
+          "extracted": 197,
           "in_raw": true,
           "status": "correct"
         }
@@ -79156,6 +79168,11 @@
         },
         "location": {
           "extracted": "Ṿarshe",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḥ. Braḳazsh",
           "in_raw": true,
           "status": "correct"
         },
@@ -79340,7 +79357,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Kalīm Abū Sayf and Anṭūn al-ʿUbaydī",
+          "extracted": "Anṭūn al-ʿUbaydī",
           "in_raw": true,
           "status": "correct"
         },
@@ -79583,6 +79600,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Muḥammad Faraj",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 197,
           "in_raw": true,
@@ -79647,6 +79669,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 367,
           "in_raw": true,
@@ -79680,9 +79707,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "FÄ ris YūwÄ kīm",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 223,
@@ -79750,6 +79777,11 @@
         },
         "location": {
           "extracted": "Tūnis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
           "in_raw": true,
           "status": "correct"
         },
@@ -79984,6 +80016,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fuʾād Ayyūb",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 208,
           "in_raw": true,
@@ -80112,13 +80149,13 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "null",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū ʾl-ʿĪd Dūdū",
           "in_raw": true,
           "status": "correct"
         }
@@ -80139,13 +80176,13 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "null",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū ʾl-ʿĪd Dūdū",
           "in_raw": true,
           "status": "correct"
         }
@@ -80166,13 +80203,13 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "null",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū ʾl-ʿĪd Dūdū",
           "in_raw": true,
           "status": "correct"
         }
@@ -80192,11 +80229,6 @@
           "extracted": 2014,
           "in_raw": true,
           "status": "correct"
-        },
-        "publisher": {
-          "extracted": "null",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "location": {
           "extracted": "London",
@@ -80231,6 +80263,11 @@
         },
         "location": {
           "extracted": "London",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
           "in_raw": true,
           "status": "correct"
         },
@@ -80391,6 +80428,11 @@
         },
         "location": {
           "extracted": "Dimashq",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
           "in_raw": true,
           "status": "correct"
         },
@@ -81121,6 +81163,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ḥilmī Murād",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 230,
           "in_raw": true,
@@ -81355,13 +81402,13 @@
           "status": "correct_fallback",
           "title_source": "page_title_fallback"
         },
-        "publisher": {
-          "extracted": "RÄ ʾil Ejukeshnal Buk Ḍipo",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Delhi",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Jamīl Aḥmad",
           "in_raw": true,
           "status": "correct"
         },
@@ -81394,6 +81441,11 @@
         },
         "location": {
           "extracted": "Kolhāpūra",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Baḷkṛṣṇa Bhagvant Borkar",
           "in_raw": true,
           "status": "correct"
         },
@@ -81611,6 +81663,11 @@
         },
         "location": {
           "extracted": "Berlin",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Fuʾād Ayyūb",
           "in_raw": true,
           "status": "correct"
         },
@@ -81874,11 +81931,6 @@
           "extracted": "Ḥaydarābād",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "Muḥammad IbrÄ hīm Joyo",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 274,
@@ -82234,6 +82286,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Yaḥyā Ḥaqqī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 79,
           "in_raw": true,
@@ -82257,7 +82314,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "house Dār al-Hilāl",
+          "extracted": "the Cairene publishing house Dār al-Hilāl",
           "in_raw": true,
           "status": "correct"
         },
@@ -82267,7 +82324,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 178,
+          "extracted": 214,
           "in_raw": true,
           "status": "correct"
         }
@@ -82295,6 +82352,11 @@
         },
         "location": {
           "extracted": "Dimashq",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Fuʾād Ayyūb",
           "in_raw": true,
           "status": "correct"
         },
@@ -82327,6 +82389,11 @@
         },
         "location": {
           "extracted": "al-Qāhirah",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Maḥmūd Masʿūd",
           "in_raw": true,
           "status": "correct"
         }
@@ -82895,11 +82962,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "translator": {
-          "extracted": "Hayfāʾ Shuʿayṭānī",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "page_count": {
           "extracted": 80,
           "in_raw": true,
@@ -83052,6 +83114,11 @@
         },
         "location": {
           "extracted": "al-Riyāḍ",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
           "in_raw": true,
           "status": "correct"
         },
@@ -83318,6 +83385,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 78,
           "in_raw": true,
@@ -83337,6 +83409,11 @@
         },
         "year": {
           "extracted": 2017,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
           "in_raw": true,
           "status": "correct"
         },
@@ -83497,13 +83574,13 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "articles and poems",
+        "location": {
+          "extracted": "Iraq",
           "in_raw": true,
           "status": "correct"
         },
-        "location": {
-          "extracted": "Iraq",
+        "translator": {
+          "extracted": "Muḥammad Quṭb",
           "in_raw": true,
           "status": "correct"
         }
@@ -83535,9 +83612,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Sīrūsh-i ĀryÄ npūr",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Sīrūsh-i Āryānpūr",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 252,
@@ -83608,6 +83685,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ḥasan ʿAlī Naṣr",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 64,
           "in_raw": true,
@@ -83674,6 +83756,11 @@
         },
         "location": {
           "extracted": "Tihrān",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ẕabīḥ Allāh Manṣūrī",
           "in_raw": true,
           "status": "correct"
         },
@@ -83874,6 +83961,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ẕabīḥ Allāh Manṣūrī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 15,
           "in_raw": true,
@@ -83903,6 +83995,11 @@
         },
         "location": {
           "extracted": "Tihrān",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad ʿAlī Karīmī",
           "in_raw": true,
           "status": "correct"
         },
@@ -84001,6 +84098,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Yaśapāla Jaina",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 76,
           "in_raw": true,
@@ -84030,6 +84132,11 @@
         },
         "location": {
           "extracted": "Tihrān",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad ʿAlī Karīmī",
           "in_raw": true,
           "status": "correct"
         },
@@ -84253,9 +84360,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "NÄ ṣir ĪrÄ ndūst",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Nāṣir Īrāndūst",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 221,
@@ -84273,16 +84380,6 @@
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
-        },
-        "publisher": {
-          "extracted": "KÄ nūn-i Maʿrifat",
-          "in_raw": false,
-          "status": "false_positive"
-        },
-        "location": {
-          "extracted": "TihrÄ n [Tehran]",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "translator": {
           "extracted": "Farhād Dādsitān",
@@ -84350,6 +84447,11 @@
         },
         "location": {
           "extracted": "al-Qāhirah",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Quṭb",
           "in_raw": true,
           "status": "correct"
         },
@@ -84578,11 +84680,6 @@
           "extracted": "Tihrān",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "ʿAbdallÄ h Tawakkul",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 277,
@@ -84892,11 +84989,6 @@
           "extracted": "London",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "IbtisÄ m ʿAbdallÄ h",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },
@@ -84983,6 +85075,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 306,
           "in_raw": true,
@@ -85012,6 +85109,11 @@
         },
         "location": {
           "extracted": "London",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
           "in_raw": true,
           "status": "correct"
         },
@@ -85102,9 +85204,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "FÄ ris YūwÄ kīm [Fares Youakim]",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 223,
@@ -85245,6 +85347,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 367,
           "in_raw": true,
@@ -85321,11 +85428,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "translator": {
-          "extracted": "AbbÄ s al-Mufrijī",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "page_count": {
           "extracted": 13,
           "in_raw": true,
@@ -85394,11 +85496,6 @@
           "extracted": "London",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "IbtisÄ m ʿAbdallÄ h",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 9,
@@ -85962,6 +86059,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 78,
           "in_raw": true,
@@ -86071,7 +86173,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Abū ʾl-ʿĪd Dūdū [Abou El Aid Doudou]",
+          "extracted": "Abū ʾl-ʿĪd Dūdū",
           "in_raw": true,
           "status": "correct"
         }
@@ -86602,7 +86704,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Zahid Məmmədov",
+          "extracted": "Çərkəz Qurbanlı",
           "in_raw": true,
           "status": "correct"
         },
@@ -86634,7 +86736,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ağalar",
+          "extracted": "Ağalar Məmmədov",
           "in_raw": true,
           "status": "correct"
         },
@@ -86722,9 +86824,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "NÄ ṣir Muḥammad al-Kindī",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Nāṣir Muḥammad al-Kindī",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -86749,9 +86851,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "NÄ ṣir Muḥammad al-Kindī",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Nāṣir Muḥammad al-Kindī",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -87234,6 +87336,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 736,
           "in_raw": true,
@@ -87266,6 +87373,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Yaḥyā Ḥaqqī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -87295,6 +87407,11 @@
         },
         "location": {
           "extracted": "Beirut",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Yaḥyā Ḥaqqī",
           "in_raw": true,
           "status": "correct"
         },
@@ -87359,6 +87476,11 @@
         },
         "location": {
           "extracted": "Beirut",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Fāris Yūwākīm",
           "in_raw": true,
           "status": "correct"
         },
@@ -87491,9 +87613,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Aḥmad ShÄ fiʿī [Ahmed Shafie]",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Aḥmad Shāfiʿī",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -87745,7 +87867,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 9,
+          "extracted": 8,
           "in_raw": true,
           "status": "correct"
         }
@@ -88472,11 +88594,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "translator": {
-          "extracted": "DallÄ l IbrÄ hīm",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "page_count": {
           "extracted": 636,
           "in_raw": true,
@@ -88696,6 +88813,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 243,
           "in_raw": true,
@@ -88718,13 +88840,13 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "ManshūrÄ t WizÄ rat al-ThaqÄ fah",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "London",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
           "in_raw": true,
           "status": "correct"
         },
@@ -88760,6 +88882,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 243,
           "in_raw": true,
@@ -88791,11 +88918,6 @@
           "extracted": "Paris",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "DallÄ l IbrÄ hīm",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 48,
@@ -89250,6 +89372,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 223,
           "in_raw": true,
@@ -89283,7 +89410,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 253,
+          "extracted": 204,
           "in_raw": true,
           "status": "correct"
         }
@@ -89481,6 +89608,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 223,
           "in_raw": true,
@@ -89510,6 +89642,11 @@
         },
         "location": {
           "extracted": "Beirut",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Fāris Yūwākīm",
           "in_raw": true,
           "status": "correct"
         },
@@ -89607,9 +89744,9 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "FÄ ris YūwÄ kīm [Fares Youakim]",
-          "in_raw": false,
-          "status": "false_positive"
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -90010,6 +90147,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 223,
           "in_raw": true,
@@ -90258,6 +90400,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fāris Yūwākīm",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 223,
           "in_raw": true,
@@ -90335,7 +90482,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Nāẓim Bin Ibrāhīm [Nadhem Ben Brahim]",
+          "extracted": "Nāẓim Bin Ibrāhīm",
           "in_raw": true,
           "status": "correct"
         },
@@ -90368,6 +90515,11 @@
         },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -90457,6 +90609,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -90488,11 +90645,6 @@
           "extracted": "Tūnis",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "ʿAbd al-Karīm Badr KhÄ n",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 109,
@@ -90577,6 +90729,11 @@
         },
         "publisher": {
           "extracted": "The Talk of Books",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
           "in_raw": true,
           "status": "correct"
         },
@@ -90679,7 +90836,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "house Dār al-Hilāl and subsequently was republished several times",
+          "extracted": "first appeared in 1951 with the Cairene publishing house",
           "in_raw": true,
           "status": "correct"
         },
@@ -90715,6 +90872,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ḥabīb Jāmātī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 143,
           "in_raw": true,
@@ -90738,7 +90900,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "house Al-Dār al-Qawmiyyah li-l-Ṭibāʿah waʾl-Nashr",
+          "extracted": "the Jamʿiyyat al-Najāt al-Khayriyyah",
           "in_raw": true,
           "status": "correct"
         },
@@ -90793,6 +90955,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ḥabīb Jāmātī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 143,
           "in_raw": true,
@@ -90822,6 +90989,11 @@
         },
         "location": {
           "extracted": "Iraq",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḥabīb Jāmātī",
           "in_raw": true,
           "status": "correct"
         },
@@ -91244,11 +91416,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "Al-Miṣrī al-yawm lÄ yt",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Cairo",
           "in_raw": true,
@@ -91561,10 +91728,9 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "house Dār Usāmah",
-          "in_raw": true,
-          "status": "correct"
+        "publisher_false_negative": {
+          "detected_in_raw": "is a social cataloging website for books",
+          "note": "publisher found in raw but not in output"
         },
         "location": {
           "extracted": "San Francisco",
@@ -91593,10 +91759,9 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "house Dār Usāmah",
-          "in_raw": true,
-          "status": "correct"
+        "publisher_false_negative": {
+          "detected_in_raw": "is a social cataloging website for books",
+          "note": "publisher found in raw but not in output"
         },
         "location": {
           "extracted": "San Francisco",
@@ -92140,7 +92305,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 1312,
+          "extracted": 1284,
           "in_raw": true,
           "status": "correct"
         }
@@ -92791,6 +92956,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Quṭb",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 207,
           "in_raw": true,
@@ -93258,7 +93428,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 45,
+          "extracted": 12,
           "in_raw": true,
           "status": "correct"
         }
@@ -93460,7 +93630,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 265,
+          "extracted": 266,
           "in_raw": true,
           "status": "correct"
         }
@@ -93864,7 +94034,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Ḥayim Braḳazsh [J. Brakarz]",
+          "extracted": "Ḥayim Braḳazsh",
           "in_raw": true,
           "status": "correct"
         },
@@ -94100,7 +94270,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 232,
+          "extracted": 157,
           "in_raw": true,
           "status": "correct"
         }
@@ -94134,7 +94304,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "release by the Austrian Embassy in Mexico",
+          "extracted": "in Mexico City in the precinct of the former\n\nSee the press",
           "in_raw": true,
           "status": "correct"
         },
@@ -94537,6 +94707,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Jadīd",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 406,
           "in_raw": true,
@@ -94575,11 +94750,6 @@
           "in_raw": true,
           "status": "correct",
           "title_source": "wiki_extract"
-        },
-        "publisher": {
-          "extracted": "DÄ r al-Qalam",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "location": {
           "extracted": "Beirut",
@@ -94927,7 +95097,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 224,
+          "extracted": 213,
           "in_raw": true,
           "status": "correct"
         }
@@ -95899,7 +96069,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Thái Hà",
+          "extracted": "Trịnh Xuân Hoành",
           "in_raw": true,
           "status": "correct"
         },
@@ -96111,7 +96281,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Dương Tường, Phùng Đệ, Lê Phát, and Trịnh Xuân Hoành",
+          "extracted": "Dương Tường",
           "in_raw": true,
           "status": "correct"
         },
@@ -96527,6 +96697,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ḥayim Braḳazsh",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 302,
           "in_raw": true,
@@ -96583,6 +96758,11 @@
         },
         "location": {
           "extracted": "Buenos Ayres",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḥayim Braḳazsh",
           "in_raw": true,
           "status": "correct"
         },
@@ -96738,6 +96918,11 @@
         },
         "location": {
           "extracted": "Ṿarshe",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Ḥayim Braḳazsh",
           "in_raw": true,
           "status": "correct"
         },
@@ -97490,12 +97675,17 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "field",
+          "extracted": "a newcomer in the Arabic publishing field",
           "in_raw": true,
           "status": "correct"
         },
         "location": {
           "extracted": "Kafr El Sheikh, Egypt",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Amānī Lāzār",
           "in_raw": true,
           "status": "correct"
         }
@@ -97543,11 +97733,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "Al-MuntadÄ  al-Tanwīrī al-ThaqÄ fī al-Filasṭīnī - Tanwīr",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Nablus",
           "in_raw": true,
@@ -97570,11 +97755,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "ArÄ jīk",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "USA",
           "in_raw": true,
@@ -97596,11 +97776,6 @@
           "extracted": 2017,
           "in_raw": true,
           "status": "correct"
-        },
-        "publisher": {
-          "extracted": "RūtÄ nÄ",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "location": {
           "extracted": "Abu Dhabi",
@@ -99273,7 +99448,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Agency",
+          "extracted": "Agjencioni Floripress",
           "in_raw": true,
           "status": "correct"
         },
@@ -100394,6 +100569,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Muḥammad Quṭb",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 207,
           "in_raw": true,
@@ -100673,7 +100853,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Lassaad Ben Hsin",
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -100696,6 +100876,11 @@
         },
         "year": {
           "extracted": 2017,
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Amānī Lāzār",
           "in_raw": true,
           "status": "correct"
         }
@@ -101554,11 +101739,6 @@
           "extracted": 1920,
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Kiiv",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },
@@ -101576,11 +101756,6 @@
           "extracted": 1920,
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Kiiv",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },
@@ -101598,11 +101773,6 @@
           "extracted": 1920,
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Kiiv",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },
@@ -101620,11 +101790,6 @@
           "extracted": 1920,
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Kiiv",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },
@@ -101642,11 +101807,6 @@
           "extracted": 1920,
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Kiiv",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },
@@ -102567,7 +102727,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Agency",
+          "extracted": "Agjencioni Floripress",
           "in_raw": true,
           "status": "correct"
         },
@@ -104893,7 +105053,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "platform and a blog host owned by A Medium Corporation",
+          "extracted": "Notes on Books",
           "in_raw": true,
           "status": "correct"
         },
@@ -104966,11 +105126,6 @@
           "in_raw": true,
           "status": "correct"
         },
-        "translator": {
-          "extracted": "Rajja",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "page_count": {
           "extracted": 128,
           "in_raw": true,
@@ -105002,11 +105157,6 @@
           "extracted": "Kōvai",
           "in_raw": true,
           "status": "correct"
-        },
-        "translator": {
-          "extracted": "Pu Rajja",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "page_count": {
           "extracted": 100,
@@ -105535,6 +105685,11 @@
         },
         "location": {
           "extracted": "Mumbai",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Baḷkṛṣṇa Bhagvant Borkar",
           "in_raw": true,
           "status": "correct"
         },
@@ -106275,6 +106430,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Baḷkṛṣṇa Bhagvant Borkar",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 103,
           "in_raw": true,
@@ -106968,6 +107128,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Baḷkṛṣṇa Bhagvant Borkar",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 103,
           "in_raw": true,
@@ -106997,6 +107162,11 @@
         },
         "location": {
           "extracted": "Gurugram",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Baḷkṛṣṇa Bhagvant Borkar",
           "in_raw": true,
           "status": "correct"
         },
@@ -107824,7 +107994,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "house and another Telugu online bookshop",
+          "extracted": "47p.\n\nSee the ad by the Telugu publishing house",
           "in_raw": true,
           "status": "correct"
         },
@@ -109026,7 +109196,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Abū Bakr al-ʿAyyādī [Boubaker Ayadi]",
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -109791,6 +109961,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Fuʾād Ayyūb",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 207,
           "in_raw": true,
@@ -109859,6 +110034,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -109887,6 +110067,11 @@
         },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -109921,6 +110106,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -109949,6 +110139,11 @@
         },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -109983,6 +110178,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -110014,6 +110214,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -110042,6 +110247,11 @@
         },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -110107,6 +110317,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 83,
           "in_raw": true,
@@ -110132,6 +110347,11 @@
         "publisher_false_negative": {
           "detected_in_raw": "is a social cataloging website for books",
           "note": "publisher found in raw but not in output"
+        },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
+          "in_raw": true,
+          "status": "correct"
         },
         "page_count": {
           "extracted": 83,
@@ -110187,6 +110407,11 @@
         },
         "location": {
           "extracted": "Beirut",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Muḥammad Binʿabbūd",
           "in_raw": true,
           "status": "correct"
         },
@@ -110421,6 +110646,11 @@
         },
         "location": {
           "extracted": "Riyadh",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Saḥar Sattālah",
           "in_raw": true,
           "status": "correct"
         },
@@ -111203,13 +111433,13 @@
           "in_raw": true,
           "status": "correct"
         },
-        "publisher": {
-          "extracted": "MaskÄ",
-          "in_raw": false,
-          "status": "false_positive"
-        },
         "location": {
           "extracted": "Tunis",
+          "in_raw": true,
+          "status": "correct"
+        },
+        "translator": {
+          "extracted": "Abū Bakr al-ʿAyyādī",
           "in_raw": true,
           "status": "correct"
         },
@@ -111289,7 +111519,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "Oskar Hellmann",
+          "extracted": "made a contribution to this article about the author and publisher",
           "in_raw": true,
           "status": "correct"
         },
@@ -112302,7 +112532,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 351,
+          "extracted": 415,
           "in_raw": true,
           "status": "correct"
         }
@@ -112613,7 +112843,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 112,
+          "extracted": 79,
           "in_raw": true,
           "status": "correct"
         }
@@ -113056,7 +113286,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "department of the publishing house",
+          "extracted": "is a foreword by the editorial department of the publishing house",
           "in_raw": true,
           "status": "correct"
         },
@@ -113081,11 +113311,6 @@
           "extracted": 1982,
           "in_raw": true,
           "status": "correct"
-        },
-        "publisher": {
-          "extracted": "foreword to a Chinese translation of Ungeduld des Herzens",
-          "in_raw": false,
-          "status": "false_positive"
         },
         "location": {
           "extracted": "Nanjing",
@@ -113175,11 +113400,6 @@
         },
         "year": {
           "extracted": 2002,
-          "in_raw": true,
-          "status": "correct"
-        },
-        "publisher": {
-          "extracted": "foreword about Stefan Zweig",
           "in_raw": true,
           "status": "correct"
         },
@@ -113831,7 +114051,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 210,
+          "extracted": 249,
           "in_raw": true,
           "status": "correct"
         }
@@ -113890,7 +114110,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 83,
+          "extracted": 122,
           "in_raw": true,
           "status": "correct"
         }
@@ -114620,7 +114840,7 @@
           "status": "correct"
         },
         "publisher": {
-          "extracted": "der Buchhändler-Vereinigung",
+          "extracted": "The European Press",
           "in_raw": true,
           "status": "correct"
         },
@@ -114731,7 +114951,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 360,
+          "extracted": 246,
           "in_raw": true,
           "status": "correct"
         }
@@ -114942,7 +115162,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 244,
+          "extracted": 300,
           "in_raw": true,
           "status": "correct"
         }
@@ -115060,7 +115280,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 232,
+          "extracted": 285,
           "in_raw": true,
           "status": "correct"
         }
@@ -116064,6 +116284,11 @@
           "extracted": "Frankfurt am Main",
           "in_raw": true,
           "status": "correct"
+        },
+        "page_count": {
+          "extracted": 427,
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -116169,7 +116394,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 191,
+          "extracted": 216,
           "in_raw": true,
           "status": "correct"
         }
@@ -116201,7 +116426,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 98,
+          "extracted": 152,
           "in_raw": true,
           "status": "correct"
         }
@@ -116575,7 +116800,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 72,
+          "extracted": 192,
           "in_raw": true,
           "status": "correct"
         }
@@ -117000,7 +117225,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 45,
+          "extracted": 84,
           "in_raw": true,
           "status": "correct"
         }
@@ -118243,6 +118468,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Omā Śarmā",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 384,
           "in_raw": true,
@@ -118335,7 +118565,7 @@
           "status": "correct"
         },
         "translator": {
-          "extracted": "Omā Śarmā [Oma Sharma]",
+          "extracted": "Omā Śarmā",
           "in_raw": true,
           "status": "correct"
         },
@@ -118402,6 +118632,11 @@
           "extracted": "New Delhi",
           "in_raw": true,
           "status": "correct"
+        },
+        "translator": {
+          "extracted": "Omā Śarmā",
+          "in_raw": true,
+          "status": "correct"
         }
       }
     },
@@ -118452,6 +118687,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Omā Śarmā",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 308,
           "in_raw": true,
@@ -118490,7 +118730,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 291,
+          "extracted": 466,
           "in_raw": true,
           "status": "correct"
         }
@@ -119259,7 +119499,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 23,
+          "extracted": 181,
           "in_raw": true,
           "status": "correct"
         }
@@ -120877,7 +121117,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 275,
+          "extracted": 361,
           "in_raw": true,
           "status": "correct"
         }
@@ -122356,7 +122596,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 291,
+          "extracted": 466,
           "in_raw": true,
           "status": "correct"
         }
@@ -123629,7 +123869,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 157,
+          "extracted": 109,
           "in_raw": true,
           "status": "correct"
         }
@@ -131110,6 +131350,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Ẕabīḥ Allāh Manṣūrī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 15,
           "in_raw": true,
@@ -131212,7 +131457,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 79,
+          "extracted": 261,
           "in_raw": true,
           "status": "correct"
         }
@@ -134768,6 +135013,11 @@
           "in_raw": true,
           "status": "correct"
         },
+        "translator": {
+          "extracted": "Yaḥyā Ḥaqqī",
+          "in_raw": true,
+          "status": "correct"
+        },
         "page_count": {
           "extracted": 197,
           "in_raw": true,
@@ -134940,7 +135190,7 @@
           "status": "correct"
         },
         "page_count": {
-          "extracted": 30,
+          "extracted": 249,
           "in_raw": true,
           "status": "correct"
         }
@@ -135149,11 +135399,6 @@
           "extracted": "Wallstein Verlag",
           "in_raw": true,
           "status": "correct"
-        },
-        "location": {
-          "extracted": "Göttingen",
-          "in_raw": false,
-          "status": "false_positive"
         }
       }
     },

@@ -215,6 +215,19 @@ class TestExtractPageCount:
         assert extract_page_count("444/(3)p. Contents: pp. (371)-(445)") == 444
         assert extract_page_count("pp. 254, 2nd edition") == 254
 
+    def test_first_edition_extent_precedes_later_edition(self):
+        # Page 448: the 1st edition's N/(M)p. precedes the 2nd edition's Np.
+        text = (
+            "Translated by Božena Koseková. 326/(2)p.\n\n"
+            "Translated by Božena Koseková. 2nd edition. 348p."
+        )
+        assert extract_page_count(text) == 326
+
+    def test_earlier_locator_does_not_displace_extent(self):
+        # Page 23: an article locator precedes the volume extent.
+        text = "''Gerechtigkeit'' [Wien], 4 [1936], p. 4\n''Castellio''. 274/(4)p."
+        assert extract_page_count(text) == 274
+
     def test_rejects_page_ranges(self):
         """pp. N-M is a page range (start-end), not a page count."""
         assert extract_page_count("pp. 111-118") is None
@@ -278,7 +291,9 @@ class TestExtractTranslator:
     def test_irregular_period_before_initial_remains_for_source_review(self):
         text = "Translated by Anna. S. Kulisher. Afterword by Evgeniĭ Necheporuk."
         # Preserve the legacy value instead of truncating the credited name to Anna.
-        assert extract_translator(text) == "Anna. S. Kulisher. Afterword by Evgeni"
+        assert extract_translator(text) == (
+            "Anna. S. Kulisher. Afterword by Evgeniĭ Necheporuk"
+        )
 
     def test_final_initial_preserved_before_next_credit(self):
         text = "Translated by Sandra S. Cover design by Cîrţu Lucia. 95p."
@@ -312,12 +327,24 @@ class TestExtractTranslator:
         # Retain the existing scalar behavior; organizational scope is unresolved.
         assert extract_translator(text) == "Alfredo Cahn"
 
-    def test_unicode_repair_does_not_switch_selected_credit(self):
+    def test_latin_extended_name_is_the_first_credit(self):
         text = "Translated by Kaćuša Maletin.\nTranslated by Vladislav Šarić."
-        assert extract_translator(text) == "Vladislav Šarić"
+        assert extract_translator(text) == "Kaćuša Maletin"
 
-    def test_missing_credit_requires_separate_scope_review(self):
-        assert extract_translator("Translated by Ḳarlo J̌orǰaneli. 192p.") is None
+    def test_latin_extended_letters_open_and_continue_names(self):
+        for name in (
+            "Božena Němcová",
+            "Łukasz Nowak",
+            "Ödön von Horváth",
+            "Karel Čapek",
+            "Ḳarlo J̌orǰaneli",
+        ):
+            assert extract_translator(f"Translated by {name}. 192p.") == name
+        assert extract_translator("Translated by Božena Němcová.") == "Božena Němcová"
+
+    def test_lowercase_or_numeric_credit_is_not_a_name(self):
+        assert extract_translator("Translated by the author. 192p.") is None
+        assert extract_translator("Translated by 1923. 192p.") is None
 
     def test_name_must_start_uppercase(self):
         assert extract_translator("Translated by someone unknown") is None
@@ -392,6 +419,20 @@ class TestPublisherRejectsCreditPhrases:
             )
             is None
         )
+
+    def test_lowercase_prose_is_not_a_label(self):
+        # Page 166: "publishing" in a bracketed note is no publisher label.
+        text = (
+            "Water-color illustrations by Ekaterina G. Michailovski. "
+            "(St.-Peterburg): [Private publishing venture by the artist], 1997"
+        )
+        assert extract_publisher(text) is None
+
+    def test_capitalized_labels_still_match(self):
+        assert extract_publisher("Publisher: Insel, Leipzig") == "Insel"
+        assert extract_publisher("[1952-1978]: Editorial Juventud") == "Juventud"
+        assert extract_publisher("[1934-1950]: Editora Guanabara") == "Guanabara"
+        assert extract_publisher("[1983]: Wydawnictwo Slask") == "Slask"
 
     def test_a_real_publisher_name_survives(self):
         assert extract_publisher("Published by Insel-Verlag") == "Insel-Verlag"
