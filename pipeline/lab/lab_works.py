@@ -416,8 +416,9 @@ def build_works(
                     "germanWorkPage": any(
                         pages[p].get("language") == "German" for p in anchor_ids
                     ),
+                    # Members carry their publications for the editions table.
                     "members": [
-                        {"pageId": p, "title": pages[p]["title"], "reason": r}
+                        _row(p, pages, pubs) | {"reason": r}
                         for p, r in sorted(anchor["members"].items())
                     ],
                     "publicationsOnAnchorPages": anchor_pubs,

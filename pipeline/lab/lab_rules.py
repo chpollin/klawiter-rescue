@@ -10,8 +10,11 @@ Rules and their origin in the specification:
   matched on its own, the occurrence inside the own passage first;
 - the page-level boundary check (S2.2), including the shared-year and
   missing-year cases;
-- the provisional producer labels, with the operator decision of 2026-10-23
-  that the twenty fixture-based place decisions read as `proposed`;
+- the provisional producer labels with the research coordinator's ruling of
+  2026-10-23 (every agent label names LLM agents and "no person"), reader
+  labels for deciders and evidence files, and decision dates read from the
+  basis sentence where no date field exists;
+- the section heading that holds a value outside every publication passage;
 - title keys and the classification of bracketed original titles (relation 3
   of "What a work is in this data");
 - the parse of the compiler's "Translations" section (relation 2).
@@ -26,7 +29,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 
-RULES_VERSION = "lab-rules-1"
+RULES_VERSION = "lab-rules-2"
 
 # Occurrence matching (S2.1)
 
@@ -98,14 +101,15 @@ def value_occurrences(
         rows = []
         for span in spans:
             holder = passage_of(span, passages)
-            rows.append(
-                {
-                    "start": span[0],
-                    "end": span[1],
-                    "publicationId": holder.pub_id if holder else None,
-                    "own": bool(holder and holder.pub_id in own_ids),
-                }
-            )
+            row = {
+                "start": span[0],
+                "end": span[1],
+                "publicationId": holder.pub_id if holder else None,
+                "own": bool(holder and holder.pub_id in own_ids),
+            }
+            if holder is None and passages:
+                row |= section_of(text, span[0])
+            rows.append(row)
         rows.sort(key=lambda row: (not row["own"], row["start"]))
         parts.append({"part": part, "occurrences": rows, "noExactOccurrence": not rows})
     return {
@@ -196,17 +200,59 @@ def _boundary_part(
 
 # Provisional producer labels
 
-FIXTURE_DECIDER = "repository-ground-truth-fixture"
 LABEL_MAPPING_NOTE = (
     "Provisional mapping from decider strings to producer labels "
     "(knowledge/lab-frontend.md, Provisional producer labels) until the shared "
     "claim schema provides a typed producer class."
 )
+NO_PERSON = "no person"
+NO_SOURCE_OCCURRENCE = "no source occurrence"
+# Every decider stored today is an LLM agent or a test fixture; none is a person.
+# The research coordinator's ruling of 2026-10-23 requires every agent label to
+# say "LLM" and "no person" until the operator decides on the delegation.
 DECIDER_LABELS = {
-    "independent-verification-agent": "agent review",
-    "main-instance": "main agent under operator delegation",
-    FIXTURE_DECIDER: "test fixture of twenty places",
+    "independent-verification-agent": "independent LLM agent review, no person",
+    "main-instance": "the main LLM agent under operator delegation, no person",
+    "repository-ground-truth-fixture": (
+        "a test fixture of twenty places, no source occurrence, no person"
+    ),
+    "klawiter:agent/sample-reviewer-a": "LLM agent reviewer A, no person",
+    "klawiter:agent/sample-reviewer-b": "LLM agent reviewer B, no person",
+    "klawiter:agent/reconciliation-verifier": (
+        "LLM agent for verification and reconciliation, no person"
+    ),
+    "klawiter:agent/main-instance": (
+        "the main LLM agent under operator delegation, no person"
+    ),
 }
+# Short producer labels beside the state word, the same as the production
+# frontend shows them (DECIDER_PRODUCERS in docs/js), so both views agree.
+DECIDER_SHORT = {
+    "independent-verification-agent": "LLM agent, delegated",
+    "main-instance": "LLM agent, delegated",
+    "klawiter:agent/main-instance": "LLM agent, delegated",
+    "repository-ground-truth-fixture": "test fixture",
+    "klawiter:agent/sample-reviewer-a": "LLM agent",
+    "klawiter:agent/sample-reviewer-b": "LLM agent",
+    "klawiter:agent/reconciliation-verifier": "LLM agent",
+}
+PERSON_DECIDERS: frozenset[str] = frozenset()
+
+
+def decider_label(decider: str | None) -> str:
+    """Reader label of a decider string; unknown deciders stay visible as such."""
+    if not decider:
+        return "decider not recorded"
+    return DECIDER_LABELS.get(decider, f"unlabelled decider {decider}")
+
+
+def decider_short(decider: str | None) -> str:
+    """Short producer label beside a state word."""
+    if not decider:
+        return "producer not recorded"
+    if decider in PERSON_DECIDERS:
+        return "person"
+    return DECIDER_SHORT.get(decider, decider)
 
 
 def has_source_occurrence(evidence: list[str]) -> bool:
@@ -214,60 +260,196 @@ def has_source_occurrence(evidence: list[str]) -> bool:
 
 
 def producer_label(decision: dict) -> dict:
-    """State, producer and link flag of one stored place decision.
+    """State, producer, warning and link flag of one stored place decision.
 
-    The fixture row follows the operator decision of 2026-10-23: a test
-    fixture does not confirm, so its `confirm` reads as `proposed` and yields
-    no link, whatever the snapshot still publishes.
+    Follows the table "Provisional producer labels" of the specification. A
+    confirmation without a source occurrence keeps the state word but carries
+    the warning "no source occurrence", which the interface shows beside it.
     """
     action = decision.get("action")
     decider = decision.get("decidedBy")
-    evidence = decision.get("evidence") or []
-    with_occurrence = has_source_occurrence(evidence)
-    if action in ("confirm", "correct") and decider == FIXTURE_DECIDER:
-        return {
-            "state": "proposed",
-            "producer": "test fixture of twenty places, no source occurrence",
-            "link": False,
-        }
+    with_occurrence = has_source_occurrence(decision.get("evidence") or [])
+    label = {
+        "warning": None,
+        "person": decider in PERSON_DECIDERS,
+        "producerShort": decider_short(decider),
+    }
     if action in ("confirm", "correct") and decider == "independent-verification-agent":
-        producer = (
-            "independent agents against source and Wikidata, adjudicated by the "
-            "main agent under operator delegation"
-            if with_occurrence
-            else "agent review, no source occurrence"
-        )
-        return {"state": "confirmed", "producer": producer, "link": True}
+        if with_occurrence:
+            producer = (
+                "independent LLM agents against source and Wikidata, adjudicated "
+                "by the main LLM agent under operator delegation, no person"
+            )
+        else:
+            producer = "LLM agent review, no source occurrence, no person"
+            label["warning"] = NO_SOURCE_OCCURRENCE
+        return label | {"state": "confirmed", "producer": producer, "link": True}
     if action in ("confirm", "correct") and decider == "main-instance":
-        return {
+        return label | {
             "state": "confirmed",
-            "producer": "main agent under operator delegation",
+            "producer": "main LLM agent under operator delegation, no person",
             "link": True,
         }
     if action == "reject":
-        label = DECIDER_LABELS.get(decider, decider or "unknown decider")
-        return {
+        return label | {
             "state": None,
-            "producer": f"candidate rejected by {label}",
+            "producer": f"candidate rejected by {decider_label(decider)}",
             "link": False,
         }
     if action == "unresolved":
-        return {
+        return label | {
             "state": "contested",
-            "producer": "open, readings listed",
+            "producer": f"open, readings listed; left open by {decider_label(decider)}",
             "link": False,
         }
-    return {"state": None, "producer": f"unmapped decision {action}", "link": False}
+    return label | {
+        "state": None,
+        "producer": f"unmapped decision {action} by {decider_label(decider)}",
+        "link": False,
+    }
 
 
-def link_sentence(qid: str | None, label: dict) -> str:
-    """One sentence naming object, state and producer, as the spec requires."""
-    obj = f"Wikidata link {qid}" if qid else "Wikidata link"
-    if label["state"] is None:
-        return f"{obj}: no link, {label['producer']}"
-    if label["state"] == "contested":
-        return f"{obj}: contested, {label['producer']}"
-    return f"{obj}: {label['state']}, by {label['producer']}"
+SAMPLE_REVIEW_PRODUCER = (
+    "two independent LLM agent reviews, reconciled by an LLM agent for "
+    "verification, no person"
+)
+SAMPLE_DISPOSITIONS = {
+    "confirm": "segment and fields confirmed",
+    "correct": "confirmed with a documented field correction",
+    "reject-proposal": "confirmed after a reviewer's alternative reading was rejected",
+    "unresolved": "left open",
+}
+
+
+def edition_assignment(
+    review_status: str | None,
+    edition_id: str | None,
+    sample_case: dict | None,
+    sample_date: str | None,
+    claim: dict | None,
+) -> dict:
+    """State and producer of a publication's edition assignment (S2.3).
+
+    The published side files hold the state only. The producer comes from the
+    tracked edition-sample reconciliation, or from a decided edition claim in
+    the published reconciliation data; otherwise it reads "producer not
+    recorded".
+    """
+    state = review_status or "proposed"
+    base = {"state": state, "inEditionModel": edition_id is not None}
+    if state == "proposed":
+        return base | {
+            "producer": "a deterministic rule, not reviewed",
+            "producerShort": "rule",
+        }
+    decisions = [
+        r
+        for r in (claim or {}).get("reviewHistory") or []
+        if r.get("outcome") in ("confirm", "correct")
+    ]
+    if decisions:
+        last = decisions[-1]
+        when = decision_date(last.get("date"), last.get("basis"))
+        return base | {
+            "producer": decider_label(last.get("reviewer")),
+            "producerShort": decider_short(last.get("reviewer")),
+            "date": when["date"],
+            "detail": "decided as an edition claim with review history",
+        }
+    if sample_case:
+        return base | {
+            "producer": SAMPLE_REVIEW_PRODUCER,
+            "producerShort": "LLM agent",
+            "date": sample_date,
+            "detail": SAMPLE_DISPOSITIONS.get(
+                sample_case.get("disposition"), sample_case.get("disposition")
+            ),
+        }
+    return base | {
+        "producer": "producer not recorded",
+        "producerShort": "producer not recorded",
+    }
+
+
+_BASIS_DATE = re.compile(r"\bon (\d{4}-\d{2}-\d{2})\b")
+
+
+def decision_date(decided_at: str | None, basis: str | None) -> dict:
+    """The decision date, from its field or else from the basis sentence."""
+    if decided_at:
+        return {"date": str(decided_at)[:10], "dateSource": "recorded"}
+    m = _BASIS_DATE.search(basis or "")
+    if m:
+        return {"date": m.group(1), "dateSource": "basis text"}
+    return {"date": None, "dateSource": None}
+
+
+_OCCURRENCE_REF = re.compile(r"^klawiter:sourceOccurrence/location/(\d+)/(\d+)/(\d+)$")
+_AGENT_REVIEW_FILE = re.compile(r"location-agent-review-(\d{4}-\d{2}-\d{2})\.json$")
+
+
+def evidence_label(ref: str) -> dict:
+    """An evidence reference in reader terms, the raw reference kept beside it.
+
+    File paths and anchors are internal names, so they are translated into
+    what the file is; source occurrences keep page and text for a link.
+    """
+    ref = str(ref)
+    m = _OCCURRENCE_REF.match(ref)
+    if m:
+        return {
+            "kind": "source-occurrence",
+            "pageId": int(m.group(1)),
+            "textId": int(m.group(2)),
+            "n": int(m.group(3)),
+            "ref": ref,
+        }
+    path = ref.split("#", 1)[0]
+    if path.endswith("location-low-score-review.json"):
+        label = "LLM agent review of low-scoring Wikidata candidates"
+    elif m := _AGENT_REVIEW_FILE.search(path):
+        label = f"LLM agent review of {m.group(1)}"
+    elif path.endswith("wikidata_ground_truth.json"):
+        label = "test fixture of twenty places"
+    else:
+        label = f"file {path.rsplit('/', 1)[-1]}"
+    return {"kind": "file", "label": label, "ref": ref}
+
+
+_WIKI_LINK = re.compile(r"\[\[([^\[\]|]*\|)?([^\[\]]*)\]\]")
+
+
+def plain_wiki_text(text: str | None) -> str | None:
+    """Wiki markup removed from a quoted source line: bold, italics, links."""
+    if text is None:
+        return None
+    text = _WIKI_LINK.sub(lambda m: m.group(2), text)
+    return re.sub(r"'{2,}", "", text)
+
+
+_LABEL_LINE_AT = re.compile(r"^[ \t]*([^\n:\[\]\d]{2,40}?)[ \t]*:[ \t]*$", re.MULTILINE)
+# Matched at a line start through `match(text, pos)`, so it carries no `^`.
+_INLINE_LABEL = re.compile(r"[ \t]*([^\n:\[\]\d]{2,40}?)[ \t]*:\s")
+
+
+def section_of(text: str, offset: int) -> dict:
+    """The compiler's section heading before an offset, and an inline line label.
+
+    Headings are bare label lines such as "Translations:" or "Contents:"; a
+    line such as "Albanian: Padurimi ..." also names its language. The result
+    says where a value outside every publication passage stands.
+    """
+    heading = None
+    for m in _LABEL_LINE_AT.finditer(text, 0, offset):
+        heading = m.group(1).strip()
+    line_start = text.rfind("\n", 0, offset) + 1
+    inline = _INLINE_LABEL.match(text, line_start)
+    return {
+        "section": heading,
+        "lineLabel": inline.group(1).strip()
+        if inline and inline.end() <= offset
+        else None,
+    }
 
 
 # Title keys and bracket classes (relation 3)
@@ -416,6 +598,35 @@ def first_bracket_after_title(text: str, titles: list[str]) -> dict | None:
             return None
         return {"titleFound": title, "gap": gap, "content": m.group(2).strip()}
     return None
+
+
+# Search folding (S1.1)
+
+_FOLD_LETTERS = str.maketrans(
+    {"ß": "ss", "ı": "i", "ł": "l", "ø": "o", "đ": "d", "æ": "ae", "œ": "oe", "þ": "th"}
+)
+_UMLAUT_DIGRAPHS = (("ae", "a"), ("oe", "o"), ("ue", "u"))
+
+
+def fold_search(text: str) -> str:
+    """Search key: diacritics stripped, German umlauts folded, punctuation spaced.
+
+    "Netrpělivost" and "Netrpelivost", "Müller" and "Mueller", "ʿĀṣifah" and
+    "Asifah" fold alike. The digraph step applies to every word on both sides
+    of the comparison, so it never hides a substring match. docs/lab/js/lab.js
+    mirrors this function for the query; keep both in step.
+    """
+    text = unicodedata.normalize("NFKC", text or "").lower().translate(_FOLD_LETTERS)
+    text = "".join(
+        c
+        for c in unicodedata.normalize("NFD", text)
+        if not unicodedata.category(c).startswith("M")
+        and unicodedata.category(c) not in ("Lm", "Sk")
+        and c not in "'’‘`´"
+    )
+    for digraph, vowel in _UMLAUT_DIGRAPHS:
+        text = text.replace(digraph, vowel)
+    return " ".join("".join(c if c.isalnum() else " " for c in text).split())
 
 
 # Relation 2: the compiler's "Translations" section

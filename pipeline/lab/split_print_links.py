@@ -60,11 +60,21 @@ def split(data: dict) -> tuple[dict, dict[str, dict]]:
     return index, files
 
 
+LOCAL = REPO / "docs" / "lab" / "local"
+
+
 def assert_untracked(out: Path) -> None:
-    # Trust boundary: these files must never enter Git while rights are unresolved.
-    rel = out.resolve().relative_to(REPO)
+    """Refuse an output folder outside docs/lab/local/, tracked or not ignored.
+
+    Trust boundary: print text and everything derived from it must never enter
+    Git or the published lab while the rights are unresolved.
+    """
+    resolved = out.resolve()
+    if not resolved.is_relative_to(LOCAL.resolve()):
+        sys.exit(f"refusing to write: {out} lies outside {LOCAL}")
+    rel = resolved.relative_to(REPO)
     tracked = subprocess.run(
-        ["git", "ls-files", "--", str(rel)],
+        ["git", "ls-files", "--", rel.as_posix()],
         cwd=REPO,
         capture_output=True,
         text=True,
@@ -72,7 +82,7 @@ def assert_untracked(out: Path) -> None:
     ).stdout.strip()
     ignored = (
         subprocess.run(
-            ["git", "check-ignore", "-q", str(rel / "index.json")], cwd=REPO
+            ["git", "check-ignore", "-q", (rel / "index.json").as_posix()], cwd=REPO
         ).returncode
         == 0
     )

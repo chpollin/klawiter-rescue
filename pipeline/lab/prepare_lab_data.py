@@ -7,14 +7,26 @@ disk instead; use it only after the published data is stable.
 
 Inputs: docs/data/klawiter.json, docs/data/publications/<id>.json,
 docs/data/reconciliation.json, data/output/verification-report.json,
-data/reconciliation/location-decisions.json, the provenance block of
-data/provenance/llm-enrichment-cache.json and docs/js/constants.js.
+data/reconciliation/location-decisions.json, the edition-sample
+reconciliation data/output/edition-samples/reviews/reconciliation.json, the
+provenance block of data/provenance/llm-enrichment-cache.json and
+docs/js/constants.js. The baseline of the record history is klawiter.json
+before the last commit that changed it.
 
 Outputs in docs/lab/data/: meta.json, pages/<pageId>.json, works.json,
-coverage.json, history/<pageId>.json, reference-records.json, report.json.
+coverage.json, reference-records.json, report.json, search.json.
 Every file carries `dataState`, the input commit and a content hash over the
 inputs, so a citation can name the data state. Outputs hold no timestamps, so
 two runs over the same snapshot are byte-identical.
+
+Design decisions: sentences that hold for every page (notes on the source
+text, the boundary check, the verification stage, the scope of a place
+decision) are written once to meta.json, not into each page file; a page file
+carries only facts. The record history is assembled in the browser from the
+page file, meta.json and the page's `history` block, so it exists for every
+page. The edition-sample reconciliation lies under data/output; it is read
+because it is the tracked decision file behind the confirmed edition
+assignments, whose producer the published side files do not name.
 
 Usage:
     python -m uv run python pipeline/lab/prepare_lab_data.py [--ref HEAD]
@@ -41,11 +53,18 @@ from lab_rules import (
     BOUNDARY_FIELDS,
     LABEL_MAPPING_NOTE,
     RULES_VERSION,
+    SAMPLE_REVIEW_PRODUCER,
     Passage,
     boundary_check,
-    link_sentence,
+    decider_label,
+    decider_short,
+    decision_date,
+    edition_assignment,
+    evidence_label,
+    fold_search,
     normalise_title,
     parse_zweig_author_types,
+    plain_wiki_text,
     producer_label,
     value_occurrences,
 )
@@ -60,6 +79,7 @@ RECONCILIATION = "docs/data/reconciliation.json"
 VERIFICATION = "data/output/verification-report.json"
 LOCATION_DECISIONS = "data/reconciliation/location-decisions.json"
 LLM_CACHE = "data/provenance/llm-enrichment-cache.json"
+EDITION_SAMPLE = "data/output/edition-samples/reviews/reconciliation.json"
 CONSTANTS = "docs/js/constants.js"
 FIXED_INPUTS = (
     KLAWITER,
@@ -67,6 +87,7 @@ FIXED_INPUTS = (
     VERIFICATION,
     LOCATION_DECISIONS,
     LLM_CACHE,
+    EDITION_SAMPLE,
     CONSTANTS,
 )
 
@@ -93,23 +114,51 @@ VERIFICATION_FIELDS = {
     "translator": "translator",
     "pageCount": "page_count",
 }
-ORIGIN_LABELS = {
-    "regex": "rule",
-    "llm": "LLM gap fill",
-    "editor": "editor",
-    "missing": "no value recorded",
-}
+VERIFICATION_STATUS = {"correct": "found", "false_positive": "not-found"}
 NO_VALUE_NOTE = (
     "no value recorded, a gap in the source and a value not extracted are not "
     "yet distinguished"
 )
-VERIFICATION_NOTE = (
-    "the automatic check did not find this value in the raw text; the check "
-    "covers page-level values only"
-)
-SEVERAL_YEARS_NOTE = (
-    "the page has no publication breakdown and records several years, so its "
-    "values may come from different publications"
+# Sentences that hold for every page; meta.json carries them once.
+TEXTS = {
+    "noValue": NO_VALUE_NOTE,
+    "source": "plain text the pipeline derived from the wiki page",
+    "restored": (
+        "the page is published from the last human revision before a Redirect "
+        "fixer overwrite"
+    ),
+    "record": (
+        "one record for the whole page, used by search and exports; it can "
+        "combine values of different publications"
+    ),
+    "verificationNotFound": (
+        "the automatic check did not find this value in the raw text; the check "
+        "covers page-level values only"
+    ),
+    "verificationWholeValue": (
+        "the automatic check compares the whole value, the lab compares each "
+        "comma-separated part"
+    ),
+    "severalYears": (
+        "the page has no publication breakdown and records several years, so "
+        "its values may come from different publications"
+    ),
+    "sliceHash": (
+        "the source slice hash is computed over raw text the site does not "
+        "publish, so a browser cannot verify it"
+    ),
+    "placeScope": (
+        "a place decision applies to the Wikidata identity of the place name on "
+        "every page that carries it, not to its assignment to a publication"
+    ),
+    "occurrence": (
+        "an exact occurrence shows that the value exists in the source, not "
+        "that it is the relevant value or complete"
+    ),
+}
+FIXTURE_DEMOTION = (
+    "The operator decided on 2026-10-23 to demote the twenty place decisions "
+    "of a test fixture; since then these places carry no decision."
 )
 EXTRA_LANGUAGE_WORDS = frozenset(
     "czechoslovakian rumanian romanian slovakian slovene byelorussian belarusian "
@@ -247,6 +296,9 @@ class Context:
     suffix_words: frozenset[str]
     language_words: frozenset[str]
     duplicate_subjects: list[str]
+    sample_cases: dict[str, dict]
+    sample_date: str | None
+    edition_claims: dict[str, dict]
 
 
 def build_context(snap: Snapshot) -> Context:
@@ -311,6 +363,16 @@ def build_context(snap: Snapshot) -> Context:
             place_names.add(decision["label"])
     places = frozenset(normalise_title(p) for p in place_names if p)
 
+    sample = snap.json(EDITION_SAMPLE)
+    sample_cases = {c["edition_id"]: c for c in sample.get("case_decisions") or []}
+    sample_date = (sample.get("verifier_provenance") or {}).get("verified_at")
+    edition_claims = {
+        c["subject"]: c
+        for claims in (recon.get("editionClaims") or {}).values()
+        for c in claims
+        if c.get("subject")
+    }
+
     return Context(
         pages=pages,
         pubs=pubs,
@@ -325,6 +387,9 @@ def build_context(snap: Snapshot) -> Context:
         suffix_words=suffix_words,
         language_words=language_words,
         duplicate_subjects=duplicates,
+        sample_cases=sample_cases,
+        sample_date=sample_date[:10] if sample_date else None,
+        edition_claims=edition_claims,
     )
 
 
@@ -344,40 +409,36 @@ def passages_of(publications: list[dict]) -> list[Passage]:
 def place_decision(
     ctx: Context, place: str | None, snapshot_link: str | None = None
 ) -> dict | None:
-    """State and producer of the place's Wikidata link, with the decision record."""
+    """State, producer and warning of the place's Wikidata link, with its record.
+
+    A place without a decision carries `decision: null`; the interface states
+    that default once per page instead of under every place.
+    """
     if not place:
         return None
     decision = ctx.decisions.get(place)
     claims = [claim_view(c) for c in ctx.claims_by_place.get(place, [])]
     if decision is None:
-        return {
-            "place": place,
-            "state": None,
-            "sentence": "Wikidata link: no decision recorded, no link",
-            "decision": None,
-            "claims": claims,
-        }
+        return {"place": place, "state": None, "decision": None, "claims": claims}
     label = producer_label(decision)
-    qid = decision.get("qid")
+    when = decision_date(decision.get("decidedAt"), decision.get("provenance"))
     return {
         "place": place,
         "state": label["state"],
         "producer": label["producer"],
+        "producerShort": label["producerShort"],
+        "warning": label["warning"],
+        "person": label["person"],
         "link": label["link"],
-        "qid": qid,
-        "sentence": link_sentence(qid, label),
-        "labelMapping": "provisional",
-        "scopeNote": (
-            "The decision applies to the Wikidata identity of the place name on "
-            "every page that carries it, not to its assignment to a publication."
-        ),
+        "qid": decision.get("qid"),
         "decision": {
             "decisionId": decision.get("decisionId"),
             "storedAction": decision.get("action"),
-            "decider": decision.get("decidedBy"),
+            "decider": decider_label(decision.get("decidedBy")),
+            "deciderRaw": decision.get("decidedBy"),
             "basis": decision.get("provenance"),
-            "evidence": decision.get("evidence") or [],
-            "date": decision.get("decidedAt") or "no date recorded",
+            "evidence": [evidence_label(e) for e in decision.get("evidence") or []],
+            **when,
             "supersedes": (decision.get("supersedes") or {}).get("decisionId"),
         },
         # Only the page-level record carries a published link in the snapshot.
@@ -387,16 +448,32 @@ def place_decision(
 
 
 def claim_view(claim: dict) -> dict:
-    """Readings side by side with evidence lines and review history."""
+    """Readings side by side with evidence lines and review history.
+
+    Evidence lines are quoted without wiki markup; deciders and evidence
+    files appear in reader terms with the raw strings kept for the export.
+    """
     evidence = [
         {
             "pageId": e.get("sourcePageId"),
             "line": e.get("sourceLine"),
-            "text": e.get("sourceText"),
-            "matchMode": e.get("sourceMatchMode"),
+            "text": plain_wiki_text(e.get("sourceText")),
         }
         for e in claim.get("sourceEvidence") or []
     ]
+    history = []
+    for r in claim.get("reviewHistory") or []:
+        decider = r.get("decidedBy") or r.get("reviewer")
+        history.append(
+            {
+                "action": r.get("action") or r.get("outcome"),
+                "decider": decider_label(decider),
+                "deciderRaw": decider,
+                "basis": r.get("basis"),
+                **decision_date(r.get("decidedAt") or r.get("date"), r.get("basis")),
+                "evidence": [evidence_label(e) for e in r.get("evidence") or []],
+            }
+        )
     return {
         "claimId": claim.get("claimId"),
         "entityType": claim.get("entityType"),
@@ -413,27 +490,14 @@ def claim_view(claim: dict) -> dict:
             for i in claim.get("interpretations") or []
         ],
         "evidence": evidence,
-        "reviewHistory": [
-            {
-                "action": r.get("action") or r.get("outcome"),
-                "decider": r.get("decidedBy") or r.get("reviewer"),
-                "basis": r.get("basis"),
-                "date": r.get("decidedAt") or "no date recorded",
-                "evidence": r.get("evidence") or [],
-            }
-            for r in claim.get("reviewHistory") or []
-        ],
+        "reviewHistory": history,
     }
 
 
 def _field(value, origin: str | None) -> dict:
-    origin = origin or ("missing" if value in (None, "") else None)
-    return {
-        "value": value,
-        "origin": origin,
-        "originLabel": ORIGIN_LABELS.get(origin, origin),
-        **({"note": NO_VALUE_NOTE} if value in (None, "") else {}),
-    }
+    if value in (None, ""):
+        return {"value": None, "origin": "missing"}
+    return {"value": value, "origin": origin}
 
 
 def publication_view(
@@ -452,44 +516,47 @@ def publication_view(
     translators = [
         c["name"] for c in pub.get("credits") or [] if c.get("role") == "translator"
     ]
+    extent = pub.get("extent") or {}
     fields = {
         "publisher": located(pub.get("publisher"), "publisher"),
         "places": [located(p, "places") for p in pub.get("places") or []],
         "translators": [located(t, "credits") for t in translators],
-        "extent": located((pub.get("extent") or {}).get("raw"), "extent"),
+        "extent": located(extent.get("raw"), "extent"),
         "language": _field(pub.get("language"), prov.get("language")),
         "editionStatement": _field(
             pub.get("editionStatement"), prov.get("editionStatement")
         ),
         "series": _field(pub.get("series"), prov.get("series")),
     }
+    edition_id = pub.get("editionId")
     return {
         "id": pub["id"],
         "year": pub.get("year"),
         "yearRaw": pub.get("yearRaw"),
         "title": pub.get("title"),
         "imprint": pub.get("imprint"),
-        "editionId": pub.get("editionId"),
-        "reviewStatus": pub.get("reviewStatus"),
-        "editionAssignment": (
-            f"edition assignment: {pub.get('reviewStatus')}"
-            + ("" if pub.get("editionId") else ", outside the Gate 1 corpus")
+        "editionId": edition_id,
+        "editionAssignment": edition_assignment(
+            pub.get("reviewStatus"),
+            edition_id,
+            ctx.sample_cases.get(edition_id),
+            ctx.sample_date,
+            ctx.edition_claims.get(edition_id),
         ),
+        "extentNumbered": extent.get("numbered"),
         "textStart": sl.get("textStart"),
         "textEnd": sl.get("textEnd"),
         "passageLocated": sl.get("textStart") is not None,
         "sourceSliceSha256": sl.get("sha256"),
-        "sourceSliceNote": (
-            "computed over raw text the site does not publish, so a browser "
-            "cannot verify it"
-        ),
         "fields": fields,
         "placeDecisions": [place_decision(ctx, p) for p in pub.get("places") or []],
         "reviewFlags": pub.get("reviewFlags") or [],
     }
 
 
-def page_view(ctx: Context, pid: int, membership: dict) -> dict:
+def page_view(
+    ctx: Context, pid: int, membership: dict, base_pages: dict | None
+) -> dict:
     entry = ctx.pages[pid]
     text = entry.get("fullBibliographicEntry") or ""
     publications = ctx.pubs.get(pid) or []
@@ -504,9 +571,8 @@ def page_view(ctx: Context, pid: int, membership: dict) -> dict:
         row = _field(value, prov.get(field))
         if field in BOUNDARY_FIELDS and value not in (None, ""):
             row["occurrences"] = value_occurrences(text, value, passages, year_ids)
-            vfield = VERIFICATION_FIELDS[field]
-            if (verification.get(vfield) or {}).get("status") == "false_positive":
-                row["verificationNote"] = VERIFICATION_NOTE
+            status = (verification.get(VERIFICATION_FIELDS[field]) or {}).get("status")
+            row["verification"] = VERIFICATION_STATUS.get(status)
         record[field] = row
 
     check = boundary_check(
@@ -517,7 +583,7 @@ def page_view(ctx: Context, pid: int, membership: dict) -> dict:
 
     years = entry.get("allYears") or []
     claims = [claim_view(c) for c in ctx.claims_by_page.get(pid, [])]
-    return {
+    view = {
         "pageId": pid,
         "title": entry["title"],
         "entryType": entry["entryType"],
@@ -527,43 +593,83 @@ def page_view(ctx: Context, pid: int, membership: dict) -> dict:
         "pageKind": entry.get("pageKind"),
         "allYears": years,
         "source": {
-            "note": "plain text the pipeline derived from the wiki page",
             "textId": entry.get("sourceTextId"),
             "text": text,
             "restoredRevision": entry.get("sourceRevision"),
-            "restoredNote": (
-                "the page is published from the last human revision before a "
-                "Redirect fixer overwrite"
-                if entry.get("sourceRevision")
-                else None
-            ),
         },
         "publications": [
             publication_view(ctx, p, text, passages) for p in publications
         ],
-        "record": {
-            "note": (
-                "one record for the whole page, used by search and exports; it "
-                "can combine values of different publications"
-            ),
-            "fields": record,
-            "yearPublications": sorted(year_ids),
-        },
+        "record": {"fields": record, "yearPublications": sorted(year_ids)},
         "boundaryCheck": {k: v for k, v in check.items() if k != "fields"},
-        "severalYearsWithoutBreakdown": (
-            {"note": SEVERAL_YEARS_NOTE}
-            if not publications and len(years) > 1
-            else None
-        ),
+        "severalYearsWithoutBreakdown": not publications and len(years) > 1,
         "placeDecision": place_decision(
             ctx, entry.get("location"), entry.get("locationSameAs")
         ),
         "pageClaims": claims,
         "works": membership.get(pid, []),
     }
+    facts = history_facts(entry, (base_pages or {}).get(pid), base_pages is not None)
+    if facts:
+        view["history"] = facts
+    return view
 
 
-# Works, coverage, histories, reference records
+def _record_values(entry: dict | None) -> dict:
+    if entry is None:
+        return {}
+    prov = entry.get("_provenance") or {}
+    return {
+        f: {"value": entry.get(f), "origin": prov.get(f)} for f in RECORD_FIELDS
+    } | {"locationSameAs": {"value": entry.get("locationSameAs"), "origin": None}}
+
+
+def _review_of(entry: dict | None) -> dict | None:
+    """The published review block of a record, with its decider in reader terms."""
+    review = (entry or {}).get("review")
+    if not review:
+        return None
+    return {
+        "status": review.get("status"),
+        "decider": decider_label(review.get("reviewed_by")),
+        "deciderShort": decider_short(review.get("reviewed_by")),
+        "fields": sorted((review.get("fields") or {}).keys()),
+    }
+
+
+def history_facts(entry: dict, base: dict | None, has_baseline: bool) -> dict:
+    """What the record history needs beyond the page view: repairs and changes.
+
+    Changes compare the published record with the baseline, the published data
+    before the last change of klawiter.json. A change of the place link names
+    the review that produced the earlier link, as the published record held it.
+    """
+    facts = {}
+    repaired = [
+        f["field"]
+        for f in entry.get("reviewFlags") or []
+        if f.get("code") == "encoding-repaired"
+    ]
+    if repaired:
+        facts["encodingRepaired"] = repaired
+    if not has_baseline:
+        return facts
+    before, after = _record_values(base), _record_values(entry)
+    changes = []
+    for field in after:
+        if before.get(field) == after.get(field):
+            continue
+        change = {"field": field, "before": before.get(field), "after": after[field]}
+        if field == "locationSameAs":
+            change["beforeReview"] = _review_of(base)
+            change["afterReview"] = _review_of(entry)
+        changes.append(change)
+    if changes:
+        facts["changes"] = changes
+    return facts
+
+
+# Works, coverage, reference records
 
 
 def membership_index(works: list[dict]) -> dict[int, list]:
@@ -644,143 +750,6 @@ def coverage(ctx: Context, works: list[dict]) -> dict:
     }
 
 
-def _record_values(entry: dict | None) -> dict:
-    if entry is None:
-        return {}
-    prov = entry.get("_provenance") or {}
-    return {
-        f: {"value": entry.get(f), "origin": prov.get(f)} for f in RECORD_FIELDS
-    } | {"locationSameAs": {"value": entry.get("locationSameAs"), "origin": None}}
-
-
-def history(ctx: Context, pid: int, page: dict, baseline: tuple) -> dict:
-    entry = ctx.pages[pid]
-    prov = entry.get("_provenance") or {}
-    changed_in, base_commit, base_pages = baseline
-    llm_fields = [f for f in RECORD_FIELDS if prov.get(f) == "llm"]
-    repaired = [
-        f
-        for f in entry.get("reviewFlags") or []
-        if f.get("code") == "encoding-repaired"
-    ]
-    after_parse = {
-        f: (
-            {
-                "value": None,
-                "note": "empty after the rule stage (implied by the gap-filler contract)",
-            }
-            if prov.get(f) == "llm"
-            else {"value": entry.get(f), "origin": prov.get(f)}
-        )
-        for f in RECORD_FIELDS
-    }
-    record = page["record"]["fields"]
-    place = page["placeDecision"]
-    stages = [
-        {
-            "stage": 1,
-            "name": "Wiki text",
-            "actor": "MediaWiki dump, current revision of the page",
-            "values": {
-                "textId": entry.get("sourceTextId"),
-                "textLength": len(entry.get("fullBibliographicEntry") or ""),
-                "restoredRevision": entry.get("sourceRevision"),
-            },
-            "notStored": [
-                "the raw wikitext with markup is not published; the lab shows the "
-                "plain text the pipeline derived from it",
-                "source slice hashes are computed over that raw text and cannot "
-                "be verified in a browser",
-            ],
-        },
-        {
-            "stage": 2,
-            "name": "Repair",
-            "actor": "rule (encoding repair)",
-            "values": {"encodingRepaired": [f["field"] for f in repaired]},
-            "change": bool(repaired),
-            "summary": None if repaired else "no change on this record recorded",
-            "notStored": ["the text and values before repair are not published"],
-        },
-        {
-            "stage": 3,
-            "name": "Parse",
-            "actor": "rule",
-            "values": after_parse,
-            "publications": len(ctx.pubs.get(pid) or []),
-            "notStored": [
-                "intermediate stage outputs (data/intermediate) are regenerable "
-                "and not tracked; the values after this stage are inferred from "
-                "the published origins"
-            ],
-        },
-        {
-            "stage": 4,
-            "name": "Fill gaps",
-            "actor": f"LLM {ctx.llm.get('model')}, answers frozen on {ctx.llm.get('frozenAt')}",
-            "promptTemplateSha256": ctx.llm.get("promptSha256"),
-            "values": {f: record[f] for f in llm_fields},
-            "change": bool(llm_fields),
-            "summary": None if llm_fields else "no change on this record",
-            "notStored": [
-                "per-record prompt and raw response not stored, prompt template hash recorded"
-            ],
-        },
-        {
-            "stage": 5,
-            "name": "Link places",
-            "actor": (place or {}).get("producer") or "no decision",
-            "values": place,
-            "notStored": (
-                ["no decision date recorded"]
-                if place
-                and (place.get("decision") or {}).get("date") == "no date recorded"
-                else []
-            ),
-        },
-        {
-            "stage": 6,
-            "name": "Published record",
-            "actor": "pipeline stages 05 and 06, patch replay",
-            "values": {
-                f: {
-                    k: record[f].get(k)
-                    for k in ("value", "origin", "verificationNote", "boundary")
-                    if k in record[f]
-                }
-                for f in RECORD_FIELDS
-            },
-            "editorFields": [f for f in RECORD_FIELDS if prov.get(f) == "editor"],
-        },
-    ]
-    changes = []
-    if base_pages is not None:
-        before, after = _record_values(base_pages.get(pid)), _record_values(entry)
-        for field in after:
-            if before.get(field) != after.get(field):
-                changes.append(
-                    {
-                        "field": field,
-                        "before": before.get(field),
-                        "beforeCommit": base_commit,
-                        "after": after.get(field),
-                        "afterCommit": changed_in,
-                    }
-                )
-    stages[-1]["changesSinceBaseline"] = changes
-    stages[-1]["baseline"] = {
-        "commit": base_commit,
-        "changedIn": changed_in,
-        "note": (
-            "baseline is the published data before the last commit that changed "
-            "docs/data/klawiter.json"
-            if base_commit
-            else "no baseline available"
-        ),
-    }
-    return {"pageId": pid, "title": entry["title"], "stages": stages}
-
-
 def select_reference_records(ctx: Context, page_views: dict[int, dict]) -> dict:
     fires, several, contested = [], [], []
     for pid in sorted(page_views):
@@ -837,6 +806,90 @@ def select_reference_records(ctx: Context, page_views: dict[int, dict]) -> dict:
             "reason": "the case changed by the October pipeline fixes",
         },
     }
+
+
+def search_index(
+    pages: dict[int, dict],
+    pubs: dict[int, list],
+    works: list[dict],
+    brackets: dict[int, dict],
+    membership: dict[int, list],
+) -> dict:
+    """Prebuilt search and language-facet rows for prototype 2 (S1.1, S1.4).
+
+    Keys are folded with `fold_search`, so the browser compares substrings
+    without a search library. `kt`, `kp` and `kb` keep page title,
+    publication titles and bracketed original title apart, so a hit can say
+    which of them matched. A publication row is `[id, year, language,
+    imprint]`; a page without breakdown has `p: null` and its page values.
+    """
+    rows = []
+    for pid in sorted(pages):
+        entry = pages[pid]
+        publications = pubs.get(pid) or []
+        pub_titles = sorted(
+            {p.get("title") for p in publications if p.get("title")} - {entry["title"]}
+        )
+        bracket = (brackets.get(pid) or {}).get("content")
+        row = {
+            "id": pid,
+            "t": entry["title"],
+            "e": entry["entryType"],
+            "l": entry.get("language"),
+            "kt": fold_search(entry["title"]),
+            "w": sorted(dict.fromkeys(m["workId"] for m in membership.get(pid, []))),
+        }
+        if pub_titles:
+            row["kp"] = fold_search(" ".join(pub_titles))
+        if bracket:
+            row["b"] = bracket
+            row["kb"] = fold_search(bracket)
+        if publications:
+            row["p"] = [
+                [p["id"], p.get("year"), p.get("language"), p.get("imprint")]
+                for p in publications
+            ]
+        else:
+            row["p"] = None
+            row["y"] = entry.get("allYears") or (
+                [entry["year"]] if entry.get("year") else []
+            )
+        rows.append(row)
+    work_rows = []
+    for w in works:
+        anchor = w["anchor"]
+        reason = next(
+            (
+                m.get("reason")
+                for m in anchor["members"]
+                if m["pageId"] == anchor["pageId"]
+            ),
+            None,
+        )
+        work_rows.append(
+            {
+                "id": w["workId"],
+                "t": w["title"],
+                "a": anchor["pageId"],
+                "v": anchor["vist"],
+                "r": reason,
+                "u": w["union"]["count"],
+                "k": fold_search(w["title"]),
+                # Anchor page titles, so a hit can say which title matched.
+                "m": [[m["title"], fold_search(m["title"])] for m in anchor["members"]],
+            }
+        )
+    return {
+        "fold": "fold_search in pipeline/lab/lab_rules.py, mirrored by fold() in docs/lab/js/lab.js",
+        "works": sorted(work_rows, key=lambda w: (w["k"], w["id"])),
+        "pages": rows,
+    }
+
+
+def commit_date(commit: str | None) -> str | None:
+    if not commit or commit == "WORKTREE":
+        return None
+    return _git("log", "-1", "--format=%cs", commit).decode().strip() or None
 
 
 # Report
@@ -923,6 +976,33 @@ def boundary_counts(page_views: dict[int, dict]) -> dict:
     }
 
 
+def producer_counts(page_views: dict[int, dict]) -> dict:
+    """State and producer pairs as the pages show them, counted per occurrence."""
+    places: Counter = Counter()
+    editions: Counter = Counter()
+    for view in page_views.values():
+        decisions = [view["placeDecision"]] + [
+            d for p in view["publications"] for d in p["placeDecisions"]
+        ]
+        for d in decisions:
+            if d and d["decision"]:
+                places[(d["state"], d["producer"], d["warning"])] += 1
+        for p in view["publications"]:
+            ea = p["editionAssignment"]
+            editions[(ea["state"], ea["producer"])] += 1
+
+    def rows(counter: Counter, keys: tuple[str, ...]) -> list[dict]:
+        return [
+            dict(zip(keys, k, strict=True)) | {"count": n}
+            for k, n in sorted(counter.items(), key=lambda kv: (-kv[1], str(kv[0])))
+        ]
+
+    return {
+        "placeProducers": rows(places, ("state", "producer", "warning")),
+        "editionProducers": rows(editions, ("state", "producer")),
+    }
+
+
 # Writing
 
 
@@ -981,11 +1061,12 @@ def main(argv: list[str] | None = None) -> int:
     errors, page_views = [], {}
     for pid in sorted(ctx.pages):
         try:
-            page_views[pid] = page_view(ctx, pid, membership)
+            page_views[pid] = page_view(ctx, pid, membership, baseline[2])
         except (KeyError, TypeError, ValueError) as exc:
             errors.append({"pageId": pid, "error": f"{type(exc).__name__}: {exc}"})
 
     out: Path = args.out
+    # history/ is the per-record history of earlier runs, now in the page files.
     for sub in ("pages", "history"):
         if (out / sub).exists():
             shutil.rmtree(out / sub)
@@ -994,13 +1075,17 @@ def main(argv: list[str] | None = None) -> int:
             out / "pages" / f"{pid}.json", {"dataState": state, **view}, compact=True
         )
 
+    write_json(
+        out / "search.json",
+        {
+            "dataState": state,
+            **search_index(ctx.pages, ctx.pubs, works, built["brackets"], membership),
+        },
+        compact=True,
+    )
+
     refs = select_reference_records(ctx, page_views)
-    ref_ids = [c["pageId"] for c in refs["classes"].values() if c["pageId"]] + [448]
-    for pid in dict.fromkeys(ref_ids):
-        write_json(
-            out / "history" / f"{pid}.json",
-            {"dataState": state, **history(ctx, pid, page_views[pid], baseline)},
-        )
+    dates = {c: commit_date(c) for c in baseline[:2] if c}
     write_json(out / "reference-records.json", {"dataState": state, **refs})
 
     cov = coverage(ctx, works)
@@ -1069,6 +1154,7 @@ def main(argv: list[str] | None = None) -> int:
         ],
         "duplicateDecisionSubjects": ctx.duplicate_subjects,
         "labelMapping": LABEL_MAPPING_NOTE,
+        **producer_counts(page_views),
         "errors": errors,
     }
     write_json(out / "report.json", report)
@@ -1079,13 +1165,23 @@ def main(argv: list[str] | None = None) -> int:
             "inputs": sorted(snap.files),
             "inputsHashRule": "SHA-256 over path, NUL, byte length, NUL and bytes of every input, in path order",
             "llm": ctx.llm,
-            "labelMapping": LABEL_MAPPING_NOTE,
-            "fixtureDecision": (
-                "The twenty decisions of repository-ground-truth-fixture read as "
-                "proposed per the operator decision of 2026-10-23, whatever the "
-                "snapshot stores."
+            "llmNotStored": (
+                "per-record prompt and raw response not stored, prompt template "
+                "hash recorded"
             ),
-            "baseline": {"changedIn": baseline[0], "commit": baseline[1]},
+            "editionSample": {
+                "producer": SAMPLE_REVIEW_PRODUCER,
+                "date": ctx.sample_date,
+            },
+            "labelMapping": LABEL_MAPPING_NOTE,
+            "texts": TEXTS,
+            "fixtureDemotion": FIXTURE_DEMOTION,
+            "baseline": {
+                "changedIn": baseline[0],
+                "changedInDate": dates.get(baseline[0]),
+                "commit": baseline[1],
+                "commitDate": dates.get(baseline[1]),
+            },
             "counts": {
                 "pages": len(page_views),
                 "pagesWithBreakdown": sum(
@@ -1093,7 +1189,6 @@ def main(argv: list[str] | None = None) -> int:
                 ),
                 "publications": sum(len(v) for v in ctx.pubs.values()),
                 "works": len(works),
-                "histories": len(dict.fromkeys(ref_ids)),
                 "zweigAuthorPages": cov["denominator"]["count"],
             },
         },

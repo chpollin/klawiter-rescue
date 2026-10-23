@@ -1,0 +1,93 @@
+{
+ "note": "Shared samples: pytest checks fold_search in lab_rules.py, node checks fold() in docs/lab/js/lab.js against the same expected keys.",
+ "samples": [
+  {
+   "input": "Netrpělivost srdce",
+   "expected": "netrpelivost srdce"
+  },
+  {
+   "input": "Müller",
+   "expected": "muller"
+  },
+  {
+   "input": "Mueller",
+   "expected": "muller"
+  },
+  {
+   "input": "Straße",
+   "expected": "strasse"
+  },
+  {
+   "input": "ẞ",
+   "expected": "ss"
+  },
+  {
+   "input": "ʿĀṣifah fī ʾl-jannah",
+   "expected": "asifah fi l jannah"
+  },
+  {
+   "input": "Yayıları, İstanbul",
+   "expected": "yayilari istanbul"
+  },
+  {
+   "input": "Łódź",
+   "expected": "lodz"
+  },
+  {
+   "input": "Ærøskøbing",
+   "expected": "aroskobing"
+  },
+  {
+   "input": "Œuvres complètes",
+   "expected": "ouvres completes"
+  },
+  {
+   "input": "Þórbergur",
+   "expected": "thorbergur"
+  },
+  {
+   "input": "Đorđe",
+   "expected": "dorde"
+  },
+  {
+   "input": "Dvořák",
+   "expected": "dvorak"
+  },
+  {
+   "input": "naïve café",
+   "expected": "naive cafe"
+  },
+  {
+   "input": "Ungeduld des Herzens (VIST)",
+   "expected": "ungeduld des herzens vist"
+  },
+  {
+   "input": "Erasmus’ Tod",
+   "expected": "erasmus tod"
+  },
+  {
+   "input": "ﬁnal ²",
+   "expected": "final 2"
+  },
+  {
+   "input": "Ёлка",
+   "expected": "елка"
+  },
+  {
+   "input": "ΟΔΥΣΣΕΑΣ",
+   "expected": "οδυσσεας"
+  },
+  {
+   "input": "Tōkyō",
+   "expected": "tokyo"
+  },
+  {
+   "input": "Schachnovelle / Volume",
+   "expected": "schachnovelle volume"
+  },
+  {
+   "input": "ß",
+   "expected": "ss"
+  }
+ ]
+}
