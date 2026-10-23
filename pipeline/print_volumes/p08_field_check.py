@@ -122,7 +122,7 @@ def _print_side(obj: dict) -> dict:
         for part in groups:
             numbers.update(int(n) for n in _tokens(part) if n.isdigit())
     return {
-        "title": fields.get("title") or "",
+        "title": fields.get("title") or (obj.get("inherited") or {}).get("title", ""),
         "publisher": fields.get("publisher") or "",
         "place": fields.get("place") or "",
         "translator": [fields["translator"]] if fields.get("translator") else [],

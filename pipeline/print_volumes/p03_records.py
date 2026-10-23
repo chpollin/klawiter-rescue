@@ -61,6 +61,19 @@ AUTHOR = re.compile(r"^(?P<author>[A-ZÀ-Þ][^,.\[\]]{1,40}, [A-ZÀ-Þ][^.\[\]]{
 # substitute font ("\"stanbul: Varlik, 1954").
 OWN_IMPRINT = re.compile(r"\S: [A-Z][^.;:\[\]]{1,60}, [\[(]?(1[5-9]|20)\d\d|\bVerlag\b")
 QUOTED = re.compile(r"[\"“„‘']([^\"”“‘’']{3,200})[\"”“’']")
+# An edition line under a work heading opens with its publisher and goes on
+# with extent or printing ("Bertelsmann: 383p. Gütersloh, 1952", "S. Fischer:
+# 1.-16. Tsd. 593/(1)p. Frankfurt am Main, 1951"); its title is the heading's.
+EDITION_LINE = re.compile(
+    r"^(?P<publisher>(?:[A-Z]\. )*[A-Z][^:.\[\]]{1,60}?):\s(?=[\[(]?\d)"
+)
+PLACE_YEAR = re.compile(
+    r"(?<![\w-])(?P<place>[A-Z][\w'’/ -]{1,60}?), [\[(]?(?P<year>1[5-9]\d\d|20[0-2]\d)"
+)
+# A heading that only points elsewhere ("RAHEL RECHTET MIT GOTT. See A 169.")
+# heads no editions.
+REFERENCE_HEADING = re.compile(r"\bSee\b")
+SECTION_HEADING = re.compile(r"^[A-Z]{1,3}\d? / ")
 
 
 def _language(headings: list[str]) -> str:
@@ -96,13 +109,22 @@ def _fields(text: str, headings: list[str]) -> dict:
         found = YEAR.search(plain)
         year = found.group(1) if found else None
     translator = TRANSLATOR.search(text)
+    # The lazy place group can still start inside a preceding sentence.
+    place = imprint.group("place").split(". ")[-1].strip() if imprint else ""
+    publisher = imprint.group("publisher").strip() if imprint else ""
+    body = START_NUMBER.sub("", text, count=1).strip()
+    edition = None if imprint else EDITION_LINE.match(body)
+    if edition:
+        title, publisher = "", edition.group("publisher").strip()
+        located = PLACE_YEAR.search(REFERENCE.sub(" ", body[edition.end() :]))
+        if located:
+            place, year = located.group("place").strip(), located.group("year")
     return {
         "title": title,
         "author": author,
         "year": int(year) if year else None,
-        # The lazy place group can still start inside a preceding sentence.
-        "place": imprint.group("place").split(". ")[-1].strip() if imprint else "",
-        "publisher": imprint.group("publisher").strip() if imprint else "",
+        "place": place,
+        "publisher": publisher,
         "translator": translator.group(1).strip() if translator else "",
         "language": _language(headings),
     }
@@ -132,6 +154,7 @@ def build(volume: str) -> tuple[list[dict], Counter]:
         votes(body)
         headings: list[str] = []
         collection: dict | None = None
+        work: dict | None = None
         for unit in units(body):
             first = unit[0]
             text = unit_text(unit)
@@ -162,6 +185,9 @@ def build(volume: str) -> tuple[list[dict], Counter]:
                         "from": collection["id"],
                         "imprint": collection["imprint"],
                     }
+                elif work and not fields["title"] and fields["publisher"]:
+                    # An edition line takes its title from the work heading.
+                    inherited = {"from": work["id"], "title": work["title"]}
                 objects.append(
                     {
                         "id": f"{key}#{n}",
@@ -191,6 +217,16 @@ def build(volume: str) -> tuple[list[dict], Counter]:
             stats["objects_inheriting"] += sum(1 for o in objects if o["inherited"])
             if kind == "heading":
                 headings.append(text)
+                label = text.strip("* .")
+                if SECTION_HEADING.match(label) or REFERENCE_HEADING.search(label):
+                    work = None
+                elif len(re.sub(r"[^A-Za-z]", "", REFERENCE.sub(" ", label))) < 4:
+                    # An address list under the work heading ("D 29 / H 37,
+                    # 113") keeps the work it follows.
+                    pass
+                elif label.capitalize() not in LANGUAGES:
+                    # A language heading groups translations under the work.
+                    work = {"id": key, "title": label}
             elif not first["start"] and objects and part in COLLECTION_PARTS:
                 # An unnumbered unit with its own imprint heads the numbered
                 # volumes that follow it (collection header). Elsewhere an

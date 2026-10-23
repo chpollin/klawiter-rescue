@@ -224,7 +224,7 @@ def _field_tokens(fields: dict, inherited: dict | None, text: str) -> set[str]:
     surname = _tokens(fields.get("translator") or "")[-1:]
     texts.extend(surname)
     if inherited:
-        texts.append(inherited["imprint"])
+        texts.append(inherited.get("imprint", ""))
     found = set()
     for value in texts:
         for token in _tokens(value or ""):
@@ -260,7 +260,8 @@ def _field_matches(
     enough when the page title is exactly that word.
     """
     fields = obj["fields"]
-    title = fields.get("title") or ""
+    # An edition line has no title of its own; it reads the work heading's.
+    title = fields.get("title") or (obj.get("inherited") or {}).get("title", "")
     words = _title_key(title)
     year = fields.get("year")
     if not year:
