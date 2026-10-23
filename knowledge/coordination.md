@@ -69,6 +69,17 @@ The research coordinator holds the overall plan ([Merged bibliography](print-wik
 
 A result of the AI operator enters canonical knowledge outside `lab-frontend.md` only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 
+## State at the pause of 2026-10-23
+
+Both sessions paused on 2026-10-23 at the operator's request; all commits are local and unpushed.
+
+- Lab: concept, specification and data preparation done; prototypes built and reviewed twice, with the review fixes applied in part. Not built: the provenance chain per value (S2.6, data in place), the work view as a language-by-year table, search ranking, RIS typing. Next: S2.6, then the work view ([Lab frontend](lab-frontend.md)).
+- Blog: v4 verified against the repository ([claim check](evaluations/2026-10-23/blog-v4-claims.md)); a v5 tab in the shared blog document awaits the operator's slots and the deploy.
+- Proposal: the team draft "Grounds for Use" is the basis; a v1.7 with evidence corrections and new team questions lies with the operator; reviews and research reports are filed in the dia-xai repository.
+- Wiki data: the frontend fix batch is committed; the pipeline fix batch (corpus-wide defects, invariants over all records) is verified and committed before the pause or resumed after it ([Status](status.md)).
+- Print strand: concordance with publication resolution and ranking, field check, edition lines and language scope fixed, blind sample frozen and waiting for a person ([Merged bibliography](print-wiki-merge.md)).
+- Open for a later round: one shared source for the producer vocabulary used by the production frontend and the lab labels; compaction of the journal.
+
 ## Decisions that stay with the operator
 
 - Display vocabulary that would change the statement states (`proposed`, `confirmed`, `contested`) or their meaning. A display may name the producer next to the state (rule, LLM agent, person); a fourth state needs a decision.

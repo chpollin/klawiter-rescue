@@ -42,6 +42,7 @@ These are dated observations, not live task lists. Follow their status links bef
 | [Technical remediation](technical-remediation-2026-09-05.md) | implemented corrections, reviewed impact and verification |
 | [Evaluation artifacts](evaluations/2026-09-05/manifest.json) | hashed source excerpts and machine-readable review results |
 | [Owner worksheet](evaluations/2026-09-05/owner-evaluation.md) | five concrete domain and usability acceptance cases |
+| [Blog claim check](evaluations/2026-10-23/blog-v4-claims.md) | every statement of the blog post v4 against the repository at b0c63ea, German, with operator slots |
 
 ## Reading paths
 
