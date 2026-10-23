@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Print records, compiler claims and first concordance
+
+**Round.** Implementation round toward the first full result of the print strand, after an independent milestone review; from this round on a second session works in parallel as AI operator on a frontend prototype, coordinated as recorded in [Coordination](coordination.md).
+
+**Changed.** `bench_compare.py` locates gold units in reading order, drops a unit's own address from its references and counts objects page-locally; five regular expressions of the print rules held a backspace byte instead of a word boundary, introduced by shell editing, and now match as intended. `p03_records.py` writes entry and object records for all three volumes, with imprints inherited from collection headers of part A kept apart from an object's own fields. `p06_claims.py` writes typed compiler reference claims with resolved targets and print-wiki concordance candidates by normalised title and year, all `proposed`, matched against the publication layer and, for the other pages, the flat wiki entries. [Print volumes](print-volumes.md) carries the corrected benchmark account and the new stages.
+
+**Decided.** Inherited values are context with a link to their source, never the object's own reading. Compiler claims stay `proposed` until their precision is measured. Changes to regular expressions go through the editor, not shell heredocs.
+
+**Open.** Exact title and year equality finds wiki candidates for only a small share of print objects and almost none in secondary literature and reviews; whether this reflects the overlap or the keying (compound wiki pages, damaged diacritics, title forms) is open until the overlap experiments report. The errata of Addendum I stand in its front matter and are not yet read, so correction claims are almost absent. A person has not yet checked a sample of candidates or decided the benchmark disagreements.
+
+---
+
 ## 2026-10-23 — Plan for the merged bibliography revised
 
 **Round.** Planning round with three agents (constructive, critical, user and infrastructure needs) on [Merged bibliography](print-wiki-merge.md), and rule development for the segmentation milestone from a survey of development pages.
