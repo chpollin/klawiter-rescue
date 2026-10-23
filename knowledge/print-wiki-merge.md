@@ -97,9 +97,7 @@ Model
 - Do unnumbered units such as collection headers and commentary paragraphs become entries of their own or context of the following entries? Answered by data analysis and the operator.
 
 Data
-- Do the earliest wiki revisions carry the print text nearly verbatim? Answered by searching a small sample of print titles in the first revisions; if yes, identity can be confirmed deterministically by alignment, and the address anchor loses weight.
-- How large is the overlap of print and wiki? Answered by the same sample in both directions; a small overlap shifts the work from concordance to describing both side by side.
-- Which relation types do the print addresses cited in the wiki history have, and how often is a cited address an identity? Answered by typing a sample by hand.
+- The three overlap experiments of step 3 have a first answer on small agent-judged samples ([Print volumes](print-volumes.md), Print and wiki). Addendum II can be aligned with the early wiki revisions character by character, the main volume and Addendum I only through fields. The overlap is partial: book editions mostly overlap, periodical items mostly exist in print only. A cited address is never evidence for identity. The concordance of step 7 therefore takes two routes, alignment for Addendum II and title-and-year blocking with a second agreeing field for the other volumes, and it matches print entries also against the contents lines of the wiki, not only its publications. Does the first answer hold on a larger sample checked by a person? Answered by the human control of step 7.
 - Does the open-access bibliography of 1965 resolve sigla of the main volume? Answered by comparing its abbreviations.
 - What do `G 379*` and the end of section D at 223 against 227 in the contents mean? Answered by a domain expert or further print evidence.
 

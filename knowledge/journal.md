@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Overlap experiments, refactoring and production defects
+
+**Round.** Three agent experiments on print-wiki overlap; refactoring of the print strand; knowledge curation; verification of production defects reported by the AI operator session.
+
+**Changed.** Stages of the print strand no longer import from the probes (`_addresses.py`, `_objects.py`), with byte-identical records, claims and scores. [Print volumes](print-volumes.md) records the overlap findings, [Merged bibliography](print-wiki-merge.md) the two concordance routes that follow from them and a blindly annotated part of the human control, [Data](data.md) the meaning of the review vocabulary and the fixture-based place decisions; about.md and production-readiness.md describe the print merge as a running strand outside the production run. An independent agent confirmed the defects reported by the operator session (Gate 2 abort on a UI reject of an open claim, Latin Extended names dropped, no source-occurrence check in 03b, page-count order, a publisher label false positive); a fix round is under way.
+
+**Decided.** Addendum II is aligned with the early wiki character by character, the other volumes are matched through fields with a second agreeing field; a cited address is a work or containment edge. The operator is project lead, not a data annotator: subject checks go to a person with domain expertise, whose appointment is an operator decision.
+
+**Open.** Whether test-fixture place decisions may count as confirmed; who carries the human control; the frame questions.
+
+---
+
 ## 2026-10-23 — Print records, compiler claims and first concordance
 
 **Round.** Implementation round toward the first full result of the print strand, after an independent milestone review; from this round on a second session works in parallel as AI operator on a frontend prototype, coordinated as recorded in [Coordination](coordination.md).
