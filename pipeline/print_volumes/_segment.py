@@ -12,9 +12,23 @@ determined by the layout:
 - bold: the first font run is bold and the line sits at the left margin
 
 Headings (mostly capitals, no leading number) open their own unit in every
-variant and are counted separately. The consensus boundary is the majority
-of the variants that carry a signal in the part (see _informative); ties
-open a boundary.
+variant and are counted separately.
+
+The boundary decision (consensus) adds three rules from a survey of the
+development pages (2026-10-23) to the vote:
+
+- R1: a sub-item opener ("[5].", "[X].", "Vol. 2.", "Contents:", "Reprinted
+  in:" and similar labels) never opens a unit; it starts an object inside one.
+- R2: in a part without running numbers, a mid-page line opens a unit only
+  after a vertical gap; bold alone is a title wrapping onto the next line.
+- R3: at a page top of such a part, the line opens a unit when the previous
+  page ends in a heading, or in closing punctuation that is no abbreviation
+  and either falls short of the right margin or is followed by a bold opener
+  after a non-bold end.
+Parts with running numbers keep the majority of their informative variants,
+ties opening a boundary, except that a line which is neither a numbered start
+nor a stub and opens with a digit, a lowercase letter or a bracket continues
+the entry ("1966), 307-312 [DAP].", "[RJS].").
 """
 
 import re
@@ -28,12 +42,28 @@ GAP_FACTOR = 1.5
 MAX_RATE = 0.8
 VARIANTS = ("number", "indent", "gap", "bold")
 LETTERS = re.compile(r"[^\W\d_]")
+SUB_ITEM = re.compile(
+    r"^(?:\[(?:\d+[a-z]?|X|[a-z])\]\s?\.|Vols?\.\s?\(?\d+\)?\.?\s|Kassette|"
+    r"(?:Contents|Con-|Reprinted in|Printed in|Reviews? of|Reviews|Excerpts|EXCERPTS|"
+    r"(?:Non-)?Fischer Editions/Reprints|Editions/Reprints|FIE|REP|EXC|REV|"
+    r"TRANSLATIONS?)\s?:|of:|in:)"
+)
+CLOSED = re.compile(r"[.\])]\s*$")
+ABBREVIATION = re.compile(
+    r"(?:[A-Z]|Nos?|Vols?|pp?|Tr|Trl|[Ee]ds?|impr|ca|St|Dr)\.\s*$"
+)
+SHORT_LINE = 30
+CONTINUATION_OPENER = re.compile(r"^[\d\[a-z(]")
 
 
 def is_heading(line: dict) -> bool:
     text = line["text"].strip()
     letters = LETTERS.findall(text)
     if len(letters) < 3 or len(text) > 90 or numbered_start(line):
+        return False
+    # Sigla and citations in capitals ("[RJS].", "1966), 307-312 [DAP].") are
+    # wrapped tails, not headings.
+    if re.match(r"^[\d\[(]", text):
         return False
     upper = sum(1 for ch in letters if ch.isupper())
     return upper / len(letters) >= 0.8
@@ -56,9 +86,14 @@ def _part_geometry(lines: list[dict]) -> tuple[float, float]:
 def votes(body: list[dict]) -> list[dict]:
     """Attach per-variant boundary votes to each body line of one part."""
     left, pitch = _part_geometry(body)
+    right = sorted(ln["x1"] for ln in body)[int(0.95 * (len(body) - 1))]
     has_numbers = any(numbered_start(line) or is_stub(line) for line in body)
     previous = None
     for line in body:
+        line["numbered_part"] = has_numbers
+        line["page_top"] = previous is None or previous["page"] != line["page"]
+        line["previous"] = previous
+        line["right"] = right
         at_left = abs(line["x0"] - left) <= 2
         new_page = previous is None or previous["page"] != line["page"]
         gap = None if new_page else line["top"] - previous["top"]
@@ -94,9 +129,30 @@ def _informative(body: list[dict]) -> tuple[str, ...]:
     return tuple(v for v, rate in rates.items() if 0.25 * reference <= rate <= MAX_RATE)
 
 
+def _page_top_start(line: dict) -> bool:
+    """R3: decide a page-top line of an unnumbered part from the previous page."""
+    previous = line["previous"]
+    if previous is None or previous["heading"]:
+        return True
+    text = previous["text"].rstrip()
+    if not CLOSED.search(text) or ABBREVIATION.search(text):
+        return False
+    short = previous["x1"] < line["right"] - SHORT_LINE
+    bold_opener = is_bold(line["runs"][0][0]) and not is_bold(previous["runs"][-1][0])
+    return short or bold_opener
+
+
 def consensus(line: dict) -> bool:
     if line["heading"]:
         return True
+    if SUB_ITEM.match(line["text"].lstrip()):
+        return False
+    if not line["numbered_part"]:
+        if line["page_top"]:
+            return _page_top_start(line)
+        return bool(line["votes"]["gap"])
+    if line["votes"]["number"] is False and CONTINUATION_OPENER.match(line["text"]):
+        return False
     cast = [line["votes"][v] for v in line["active"] if line["votes"][v] is not None]
     return bool(cast) and any(cast) and sum(cast) * 2 >= len(cast)
 

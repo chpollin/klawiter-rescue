@@ -7,7 +7,7 @@ and compares three things per page:
 - boundaries: which body lines open a unit. A gold unit is located by its
   first words; precision, recall and F1 count located unit starts.
 - publications: the number of objects a unit describes, as gold count versus
-  the citation count of probe_signatures.py, compared as classes 0, 1 and 2+.
+  _objects.count_objects, compared as classes 0, 1 and 2+.
 - references: the addresses a unit cites, as sets per unit.
 
 Every pair of annotators is scored the same way, so the agreement between
@@ -28,6 +28,7 @@ from itertools import combinations
 
 from _common import DERIVED_DIR, load_lines, write_report
 from _lines import annotate
+from _objects import count_objects
 from _segment import body_by_part, units, votes
 from probe_addresses import REFERENCE, SUFFIX_TO_VOLUME, _items
 from probe_signatures import _classify, _profile
@@ -79,12 +80,14 @@ def _method_pages(volume: str, pages: set[int]) -> dict[int, dict]:
         for unit in units(body):
             text = " ".join(ln["text"].strip() for ln in unit)
             profile = _profile(text)
-            kind = _classify(text, profile)
-            citations = sum(
-                profile[k] for k in ("imprints", "periodicals", "hosts", "extent_years")
+            kind = (
+                "heading"
+                if unit[0]["heading"] and len(unit) == 1
+                else "reference"
+                if _classify(text, profile) == "reference"
+                else "entry"
             )
-            publications = 0 if kind == "reference" or unit[0]["heading"] else citations
-            publications = max(publications, profile["subitems"])
+            publications = count_objects(text, unit[0]["part"], kind)
             for line in unit:
                 if line["page"] not in pages:
                     continue
