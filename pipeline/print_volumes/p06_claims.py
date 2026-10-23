@@ -35,8 +35,8 @@ import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from _addresses import REFERENCE, SUFFIX_TO_VOLUME, intro_of, parse_items
 from _common import DERIVED_DIR, SECTIONS, VOLUMES, write_report
-from probe_addresses import INTRO, REFERENCE, SUFFIX_TO_VOLUME, _items
 
 RECORDS = DERIVED_DIR / "records"
 CLAIMS = DERIVED_DIR / "claims"
@@ -93,13 +93,12 @@ def _compiler_claims(record: dict, index: dict[str, str]) -> list[dict]:
             continue
         if match.start() == 0 and record["address"]:
             continue  # the entry's own printed address
-        before = text[max(0, match.start() - 40) : match.start()]
-        found = next((name for name, p in INTRO if p.search(before)), "inline")
+        found = intro_of(text[max(0, match.start() - 40) : match.start()])
         if found != "list":
             kind = found
         if record["kind"] == "reference" and kind == "inline":
             kind = "see"
-        targets, _ = _items(group)
+        targets, _ = parse_items(group)
         for number, letter_suffix in targets:
             address = f"{letter}{suffix} {number}{letter_suffix}"
             if address == record["address"]:

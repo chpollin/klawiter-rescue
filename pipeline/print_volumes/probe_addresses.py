@@ -20,67 +20,12 @@ stdout. The report carries text snippets and therefore stays local.
 Usage: python -m uv run python pipeline/print_volumes/probe_addresses.py
 """
 
-import re
 import sys
 from collections import Counter, defaultdict
 
+from _addresses import REFERENCE, SUFFIX_TO_VOLUME, intro_of, parse_items
 from _common import SECTIONS, VOLUMES, load_lines, write_report
 from _lines import START_NUMBER, annotate, is_stub, numbered_start
-
-SUFFIX_TO_VOLUME = {"": "I", "A1": "A1", "A2": "A2"}
-# Address head, then optional continuation items sharing its section letter.
-ITEM = r"\d{1,4}[a-z]?(?:\s?-\s?\d{1,4}[a-z]?)?\*?"
-REFERENCE = re.compile(
-    rf"(?<![A-Za-z0-9])([A-R])(A[12])?\s?({ITEM}(?:\s?(?:,|&)\s?{ITEM}(?![A-Za-z]))*)"
-)
-INTRO = (
-    ("correction", re.compile(r"Correction to\s*$")),
-    ("continuation", re.compile(r"Cont\.(?: of)?\s*$")),
-    ("reprint", re.compile(r"(?:Rep|REP):\s*$")),
-    ("contents", re.compile(r"Contents:\s*$")),
-    ("see", re.compile(r"(?:See|see)(?: also)?:?\s*$")),
-    ("index", re.compile(r"Index\s*$")),
-    ("bracket", re.compile(r"\[\s*$")),
-    ("list", re.compile(r"[/,&=]\s*$")),
-)
-MAX_RANGE = 60
-
-
-def _items(group: str) -> tuple[list[tuple[int, str]], Counter]:
-    targets: list[tuple[int, str]] = []
-    forms: Counter = Counter()
-    parts = re.split(r"\s?(?:,|&)\s?", group)
-    if len(parts) > 1:
-        forms["list"] += 1
-    for part in parts:
-        if part.endswith("*"):
-            forms["starred"] += 1
-            part = part[:-1]
-        if "-" in part:
-            forms["range"] += 1
-            low, high = (p.strip() for p in part.split("-", 1))
-            lo, hi = (
-                int(re.match(r"\d+", low).group()),
-                int(re.match(r"\d+", high).group()),
-            )
-            if 0 < hi - lo <= MAX_RANGE:
-                targets.extend((n, "") for n in range(lo, hi + 1))
-            else:
-                forms["range_unexpanded"] += 1
-                targets.append((lo, ""))
-            continue
-        match = re.match(r"(\d+)([a-z]?)", part)
-        if match.group(2):
-            forms["letter_suffix"] += 1
-        targets.append((int(match.group(1)), match.group(2)))
-    return targets, forms
-
-
-def _intro(before: str) -> str:
-    for name, pattern in INTRO:
-        if pattern.search(before):
-            return name
-    return "inline"
 
 
 def _sequence(starts: list[tuple[int, str]]) -> dict:
@@ -145,10 +90,10 @@ def main() -> int:
                 letter, suffix, group = match.groups()
                 suffix = suffix or ""
                 target_volume = SUFFIX_TO_VOLUME[suffix]
-                targets, item_forms = _items(group)
+                targets, item_forms = parse_items(group)
                 forms.update(item_forms)
                 forms[f"suffix_{suffix or 'none'}"] += 1
-                intros[_intro(text[: match.start()])] += 1
+                intros[intro_of(text[: match.start()])] += 1
                 for number, letter_suffix in targets:
                     key = f"{volume}->{target_volume}"
                     if (number, letter_suffix) in starts[target_volume].get(letter, ()):

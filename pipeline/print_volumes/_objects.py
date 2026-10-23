@@ -13,9 +13,16 @@ Without object items, an entry describes one object if it carries a citation
 and none if it is a heading or a pure cross-reference. Printings of one
 edition ("2. Auflage", "[Rep. 1931]") are not counted separately; this is a
 deliberate simplification that the benchmark measures.
+
+The citation profile (imprints, periodical citations, host references, extent
+with year) decides whether a unit is a pure cross-reference; it was first a
+measurement of probe_signatures.py and is shared here by the record stage, the
+benchmark and that probe.
 """
 
 import re
+
+from _lines import STUB
 
 ITEM = re.compile(r"\[(\d+[a-z]?|X|[a-z])\]\s?\.\s*")
 CONTENTS = re.compile(r"\bContents\s?:|\bCon-\s*tents\s?:|\bContains\s?:")
@@ -36,8 +43,6 @@ LISTED_PARTS = ("K", "M")
 ADDRESS_LIST = re.compile(
     r"(?<![A-Za-z0-9])[A-R](?:A[12])? ?\d{1,4}[a-z]?(?:\s?[-,&/]\s?\d{1,4}[a-z]?)*"
 )
-# A volume of a collection gives extent and year only: "757/(3)p. 1983."
-EXTENT_YEAR_ONLY = re.compile(r"\d+(?:/\(?\d+\)?)?p\. \[?(1[5-9]|20)\d\d\b")
 
 
 def split_objects(text: str, part: str, kind: str) -> list[str]:
@@ -75,6 +80,77 @@ def split_objects(text: str, part: str, kind: str) -> list[str]:
     return ([head.strip()] if cited else []) + spans
 
 
-def count_objects(text: str, part: str, kind: str) -> int:
-    """Number of objects a unit describes; kind is heading, reference or entry."""
-    return len(split_objects(text, part, kind))
+def unit_text(lines: list[dict]) -> str:
+    """The text of a unit or of its lines on one page, lines joined by a space."""
+    return " ".join(ln["text"].strip() for ln in lines)
+
+
+def unit_kind(unit: list[dict], text: str) -> str:
+    """heading (a single heading line), reference (a stub or a bare See) or entry."""
+    if unit[0]["heading"] and len(unit) == 1:
+        return "heading"
+    if classify_unit(text, citation_profile(text)) == "reference":
+        return "reference"
+    return "entry"
+
+
+# Citation forms of a unit, used to tell a pure cross-reference from an entry.
+IMPRINT = re.compile(
+    r"(?<![\w-])[A-Z][\w.'’/ -]{1,40}: [^.;:\[\]]{2,60}?, [\[(]?(1[5-9]|20)\d\d"
+)
+MONTH = r"(?:Jan|Feb|Mar|Apr|May|June?|July?|Aug|Sept?|Oct|Nov|Dec)[a-z]*\.?"
+PERIODICAL = re.compile(
+    rf"\d{{1,3}}:\d{{1,3}}[a-z]? \(|\b\d{{1,2}}\.? {MONTH} (1[89]|20)\d\d\b"
+)
+# A contribution citing its host volume by address: "in Romans et Nouvelles [BA1 5]".
+HOST = re.compile(r"\bin\b[^\[]{2,120}\[[A-R](?:A[12])? ?\d{1,4}")
+# A volume whose imprint stands once in a collection header: "757/(3)p. 1983."
+EXTENT_YEAR = re.compile(r"\d+(?:/\(?\d+\)?)?p\. \[?(1[5-9]|20)\d\d\b")
+SUBITEM = re.compile(r"\[\d{1,2}\]\.")
+SIGLUM = re.compile(r"\[([A-Z][A-Za-z]{1,4})\]")
+MARKERS = {
+    "Tr.": re.compile(r"\bTr\."),
+    "Rep:": re.compile(r"\b(?:Rep|REP):"),
+    "REV:": re.compile(r"\bREV:"),
+    "EXC": re.compile(r"\bEXC\b"),
+    "FAC": re.compile(r"\bFAC\b"),
+    "Contents:": re.compile(r"\bContents:"),
+    "See": re.compile(r"\bSee\b"),
+    "Frw.": re.compile(r"\bFrw\."),
+    "Aftw.": re.compile(r"\bAftw\."),
+    "Tsd.": re.compile(r"\bTsd\."),
+}
+
+
+# The imprint of a reviewed book belongs to the review, not to a further object.
+REVIEWED = re.compile(r"\bREV:.*?\b(1[5-9]|20)\d\d\b")
+
+
+def citation_profile(text: str) -> dict:
+    own = REVIEWED.sub("REV:", text)
+    # Numbered items of a Contents list are contained works, not publications.
+    listed = own.split("Contents:", 1)[0]
+    return {
+        "imprints": len(IMPRINT.findall(own)),
+        "periodicals": len(PERIODICAL.findall(own)),
+        "hosts": len(HOST.findall(own)),
+        "extent_years": len(EXTENT_YEAR.findall(own)),
+        "subitems": len(SUBITEM.findall(listed)),
+        "markers": [m for m, rx in MARKERS.items() if rx.search(text)],
+        "sigla": SIGLUM.findall(text),
+    }
+
+
+def classify_unit(text: str, profile: dict) -> str:
+    citations = sum(
+        profile[k] for k in ("imprints", "periodicals", "hosts", "extent_years")
+    )
+    if STUB.match(text) or (
+        citations == 0 and "See" in profile["markers"] and len(text) < 200
+    ):
+        return "reference"
+    if profile["subitems"] >= 2 or citations >= 2:
+        return "multi"
+    if citations == 1:
+        return "single"
+    return "note"

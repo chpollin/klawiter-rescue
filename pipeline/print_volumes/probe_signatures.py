@@ -21,73 +21,13 @@ Output: data/print/derived/reports/probe_signatures.json and a summary.
 Usage: python -m uv run python pipeline/print_volumes/probe_signatures.py
 """
 
-import re
 import sys
 from collections import Counter, defaultdict
 
 from _common import VOLUMES, load_lines, write_report
-from _lines import STUB, annotate
+from _lines import annotate
+from _objects import citation_profile, classify_unit, unit_text
 from _segment import body_by_part, units, votes
-
-IMPRINT = re.compile(
-    r"(?<![\w-])[A-Z][\w.'’/ -]{1,40}: [^.;:\[\]]{2,60}?, [\[(]?(1[5-9]|20)\d\d"
-)
-MONTH = r"(?:Jan|Feb|Mar|Apr|May|June?|July?|Aug|Sept?|Oct|Nov|Dec)[a-z]*\.?"
-PERIODICAL = re.compile(
-    rf"\d{{1,3}}:\d{{1,3}}[a-z]? \(|\b\d{{1,2}}\.? {MONTH} (1[89]|20)\d\d\b"
-)
-# A contribution citing its host volume by address: "in Romans et Nouvelles [BA1 5]".
-HOST = re.compile(r"\bin\b[^\[]{2,120}\[[A-R](?:A[12])? ?\d{1,4}")
-# A volume whose imprint stands once in a collection header: "757/(3)p. 1983."
-EXTENT_YEAR = re.compile(r"\d+(?:/\(?\d+\)?)?p\. \[?(1[5-9]|20)\d\d\b")
-SUBITEM = re.compile(r"\[\d{1,2}\]\.")
-SIGLUM = re.compile(r"\[([A-Z][A-Za-z]{1,4})\]")
-MARKERS = {
-    "Tr.": re.compile(r"\bTr\."),
-    "Rep:": re.compile(r"\b(?:Rep|REP):"),
-    "REV:": re.compile(r"\bREV:"),
-    "EXC": re.compile(r"\bEXC\b"),
-    "FAC": re.compile(r"\bFAC\b"),
-    "Contents:": re.compile(r"\bContents:"),
-    "See": re.compile(r"\bSee\b"),
-    "Frw.": re.compile(r"\bFrw\."),
-    "Aftw.": re.compile(r"\bAftw\."),
-    "Tsd.": re.compile(r"\bTsd\."),
-}
-
-
-# The imprint of a reviewed book belongs to the review, not to a further object.
-REVIEWED = re.compile(r"\bREV:.*?\b(1[5-9]|20)\d\d\b")
-
-
-def _profile(text: str) -> dict:
-    own = REVIEWED.sub("REV:", text)
-    # Numbered items of a Contents list are contained works, not publications.
-    listed = own.split("Contents:", 1)[0]
-    return {
-        "imprints": len(IMPRINT.findall(own)),
-        "periodicals": len(PERIODICAL.findall(own)),
-        "hosts": len(HOST.findall(own)),
-        "extent_years": len(EXTENT_YEAR.findall(own)),
-        "subitems": len(SUBITEM.findall(listed)),
-        "markers": [m for m, rx in MARKERS.items() if rx.search(text)],
-        "sigla": SIGLUM.findall(text),
-    }
-
-
-def _classify(text: str, profile: dict) -> str:
-    citations = sum(
-        profile[k] for k in ("imprints", "periodicals", "hosts", "extent_years")
-    )
-    if STUB.match(text) or (
-        citations == 0 and "See" in profile["markers"] and len(text) < 200
-    ):
-        return "reference"
-    if profile["subitems"] >= 2 or citations >= 2:
-        return "multi"
-    if citations == 1:
-        return "single"
-    return "note"
 
 
 def main() -> int:
@@ -106,9 +46,9 @@ def main() -> int:
                 if unit[0]["heading"] and len(unit) == 1:
                     headings += 1
                     continue
-                text = " ".join(ln["text"].strip() for ln in unit)
-                profile = _profile(text)
-                kind = _classify(text, profile)
+                text = unit_text(unit)
+                profile = citation_profile(text)
+                kind = classify_unit(text, profile)
                 classes[part][kind] += 1
                 markers.update(profile["markers"])
                 for key in ("imprints", "periodicals", "hosts", "extent_years"):

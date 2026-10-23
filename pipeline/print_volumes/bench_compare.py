@@ -7,7 +7,7 @@ and compares three things per page:
 - boundaries: which body lines open a unit. A gold unit is located by its
   first words; precision, recall and F1 count located unit starts.
 - publications: the number of objects a unit describes, as gold count versus
-  _objects.count_objects, compared as classes 0, 1 and 2+.
+  _objects.split_objects, compared as classes 0, 1 and 2+.
 - references: the addresses a unit cites, as sets per unit.
 
 Every pair of annotators is scored the same way, so the agreement between
@@ -26,12 +26,11 @@ import sys
 from collections import Counter, defaultdict
 from itertools import combinations
 
+from _addresses import cited_addresses
 from _common import DERIVED_DIR, SECTIONS, load_lines, write_report
 from _lines import annotate
-from _objects import count_objects
+from _objects import split_objects, unit_kind, unit_text
 from _segment import body_by_part, units, votes
-from probe_addresses import REFERENCE, SUFFIX_TO_VOLUME, _items
-from probe_signatures import _classify, _profile
 
 BENCH = DERIVED_DIR / "bench"
 METHOD = "method"
@@ -62,20 +61,6 @@ def _locate(first_words: str, page_lines: list[dict], after: int = -1) -> int | 
     return None
 
 
-def _addresses(text: str, own: str = "") -> set[str]:
-    """Cited addresses; own is the unit's printed address, which cites nothing."""
-    found = set()
-    for match in REFERENCE.finditer(text):
-        letter, suffix, group = match.groups()
-        suffix = suffix or ""
-        if suffix not in SUFFIX_TO_VOLUME:
-            continue
-        targets, _ = _items(group)
-        found.update(f"{letter}{suffix} {n}{s}" for n, s in targets)
-    found.discard(own)
-    return found
-
-
 def _pub_class(count: int) -> str:
     return "0" if count <= 0 else "1" if count == 1 else "2+"
 
@@ -92,29 +77,22 @@ def _method_pages(volume: str, pages: set[int]) -> dict[int, dict]:
     for body in body_by_part(lines).values():
         votes(body)
         for unit in units(body):
-            text = " ".join(ln["text"].strip() for ln in unit)
-            kind = (
-                "heading"
-                if unit[0]["heading"] and len(unit) == 1
-                else "reference"
-                if _classify(text, _profile(text)) == "reference"
-                else "entry"
-            )
+            kind = unit_kind(unit, unit_text(unit))
             start = unit[0]["start"]
             own = f"{unit[0]['part']}{suffix} {start[0]}{start[1]}" if start else ""
             for page_no in sorted({ln["page"] for ln in unit} & pages):
                 local = [ln for ln in unit if ln["page"] == page_no]
-                local_text = " ".join(ln["text"].strip() for ln in local)
+                local_text = unit_text(local)
                 page = result.setdefault(page_no, {"lines": [], "units": []})
                 page["lines"].extend(local)
                 page["units"].append(
                     {
                         "line": local[0],
                         "starts": local[0] is unit[0],
-                        "publications": count_objects(
-                            local_text, unit[0]["part"], kind
+                        "publications": len(
+                            split_objects(local_text, unit[0]["part"], kind)
                         ),
-                        "references": _addresses(local_text, own),
+                        "references": cited_addresses(local_text, own),
                     }
                 )
     for page in result.values():

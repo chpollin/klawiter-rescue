@@ -30,12 +30,11 @@ import re
 import sys
 from collections import Counter
 
+from _addresses import REFERENCE
 from _common import DERIVED_DIR, SECTIONS, VOLUMES, load_lines, write_report
 from _lines import START_NUMBER, annotate
-from _objects import EXTENT_YEAR_ONLY, split_objects
+from _objects import EXTENT_YEAR, split_objects, unit_kind, unit_text
 from _segment import body_by_part, units, votes
-from probe_addresses import REFERENCE
-from probe_signatures import _classify, _profile
 
 RECORDS = DERIVED_DIR / "records"
 # Collected works are the only part documented to group volumes under a header.
@@ -135,13 +134,8 @@ def build(volume: str) -> tuple[list[dict], Counter]:
         collection: dict | None = None
         for unit in units(body):
             first = unit[0]
-            text = " ".join(ln["text"].strip() for ln in unit)
-            if first["heading"] and len(unit) == 1:
-                kind = "heading"
-            elif _classify(text, _profile(text)) == "reference":
-                kind = "reference"
-            else:
-                kind = "entry"
+            text = unit_text(unit)
+            kind = unit_kind(unit, text)
             if first["start"]:
                 key = f"{volume}/{part}/{first['start'][0]}{first['start'][1]}"
                 address = _address(volume, part, first)
@@ -160,7 +154,7 @@ def build(volume: str) -> tuple[list[dict], Counter]:
                     collection
                     and not fields["publisher"]
                     and not OWN_IMPRINT.search(span)
-                    and EXTENT_YEAR_ONLY.search(span)
+                    and EXTENT_YEAR.search(span)
                 ):
                     # Inherited values stay apart from the object's own
                     # reading; a header may carry several imprints by period.
