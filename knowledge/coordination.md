@@ -38,7 +38,7 @@ The sessions exchange messages directly (Claude Code cross-session messages). A 
 
 ## Orchestration
 
-The research coordinator holds the overall plan ([Merged bibliography](print-wiki-merge.md), Plan and Milestones) and orchestrates the AI operator's work through the table below. The table holds only the dependencies between the two sessions. The milestones of the lab stay in [Lab frontend](lab-frontend.md, Plan) and the steps of the merge in the plan. When a dependency is met, the session that delivers it messages the other; when the coordinator needs the operator's next result, it asks to be notified when the operator session goes idle instead of polling.
+The research coordinator holds the overall plan ([Merged bibliography](print-wiki-merge.md), Plan and Milestones) and orchestrates the AI operator's work through the table below. The table holds only the dependencies between the two sessions. The milestones of the lab stay in [Lab frontend](lab-frontend.md) (Plan) and the steps of the merge in the plan. When a dependency is met, the session that delivers it messages the other; when the coordinator needs the operator's next result, it asks to be notified when the operator session goes idle instead of polling.
 
 | Dependency | Delivered by | Needed for | Serves in the overall plan |
 |---|---|---|---|
