@@ -23,7 +23,7 @@ import argparse
 import json
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from itertools import combinations
 
 from _common import DERIVED_DIR, load_lines, write_report
@@ -128,6 +128,42 @@ def _gold_starts(gold: dict, page_lines: list[dict]) -> tuple[dict, list]:
     return starts, missing
 
 
+def _disagreements(
+    volume: str, page: int, page_lines: list[dict], sources: dict[str, dict]
+) -> list[dict]:
+    """Lines where sources differ on a unit start or on its publication class.
+
+    This is the list a person decides; it also records where the annotators
+    themselves disagree.
+    """
+    found = []
+    for index in sorted(set().union(*sources.values())):
+        starts = {name: index in starts for name, starts in sources.items()}
+        classes = {
+            name: _pub_class(s[index]["publications"])
+            for name, s in sources.items()
+            if index in s
+        }
+        kind = (
+            "boundary"
+            if len(set(starts.values())) > 1
+            else "publications"
+            if len(set(classes.values())) > 1
+            else None
+        )
+        if kind:
+            found.append(
+                {
+                    "page": f"{volume}-p{page}",
+                    "kind": kind,
+                    "starts": starts,
+                    "publication_class": classes,
+                    "text": page_lines[index]["text"][:90],
+                }
+            )
+    return found
+
+
 def _score(a: dict, b: dict) -> dict:
     """Boundary P/R/F1 of b against reference a, plus agreement on shared starts."""
     shared = set(a) & set(b)
@@ -187,6 +223,7 @@ def main() -> int:
     rows: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
     missing: list[dict] = []
     absent: list[str] = []
+    disagreements: list[dict] = []
     for volume, pages in sample.items():
         pages = [int(p) for p in pages]
         method = _method_pages(volume, set(pages))
@@ -205,6 +242,7 @@ def main() -> int:
                     {"annotator": name, "page": f"{volume}-p{page}", "first_words": w}
                     for w in lost
                 )
+            disagreements.extend(_disagreements(volume, page, page_lines, sources))
             for ref, other in combinations(sorted(sources), 2):
                 if METHOD in (ref, other):
                     gold_name = other if ref == METHOD else ref
@@ -223,6 +261,7 @@ def main() -> int:
         },
         "unlocated_gold_units": missing,
         "absent_gold_pages": absent,
+        "disagreements": disagreements,
     }
     path = write_report(
         f"bench_compare{'_' + args.bench if args.bench else ''}", report
@@ -240,6 +279,8 @@ def main() -> int:
                 f"refR={s['reference_recall']} refP={s['reference_precision']}"
             )
     print(f"unlocated gold units: {len(missing)}, absent gold pages: {len(absent)}")
+    kinds = Counter(d["kind"] for d in disagreements)
+    print(f"disagreements for a human decision: {dict(kinds)}")
     print(f"OK report {path}")
     return 0
 
