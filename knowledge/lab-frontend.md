@@ -358,7 +358,7 @@ The related deliverables run on their own tracks. Their shared blocker, the mean
 
 | Milestone | Content | Depends on |
 |---|---|---|
-| B1 Blog wording of review states | "bestätigt" used only where the data support it | regeneration implementing the fixture decision |
+| B1 Blog wording of review states | "bestätigt" used only where the data support it | regeneration implementing the fixture decision; operator decision on agent-adjudicated place decisions |
 | B2 Blog figures | figures re-read from the regenerated artefacts | regeneration commit |
 | B3 Blog explainer | static snapshot from prototype 3 | L4 |
 | B4 Blog claim check | every statement checked against the artefacts, naming and editorship settled | B1 to B3, operator decisions on editorship |
@@ -376,6 +376,9 @@ The record lists the human decisions, the agent briefs with their guardrails, th
 - A verification agent found that the blog handover described four of its five example pages inaccurately and discovered five pipeline defects. The AI operator checked the central counts and the translator name class against the files, and the research coordinator had them verified independently before fixing them.
 - An independent review of the first interface specification found four blocking defects. The boundary check had no data on its own reference case and targeted the wrong layer, the grouping by bracketed title could not place the German original and grouped by name form against the vault's pattern of evidence-faithful counting, gaps were labelled with reasons the data does not hold, and the citation had no determinable data state. It also showed that the specification's reference values would change with the pending pipeline fixes. The specification was revised on the same day.
 - A literature agent put the operator's e-mail address into a request to a bibliographic web service once, against its brief, and reported this itself. Later briefs name the prohibition explicitly.
+- A second independent review of the revised specification found further defects, among them example values in the wireframes that the AI operator session had invented rather than read from the data, and a claim that a reference work had no linked pages, which came from measuring the German page of the same title instead of its VIST page. Wireframes now carry placeholders, and every figure in this document was re-read from the data.
+- Measuring the work model against the data showed that the compiler encodes it in the pages themselves (VIST page, see-also list, "Translations" section, bracketed original title), and that the published `translations` field keeps only the first language of that section. The lab therefore keeps the three relations apart by their evidence, and the truncation went to the research coordinator as a production defect.
+- The working rule that emerged for prompting interfaces is to measure each user story against the real data before writing any interface code, and to have the specification reviewed independently against stories and data. Both reviews of 2026-10-23 found blocking defects at a point where fixing them cost a text edit.
 
 ## Sources
 
