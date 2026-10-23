@@ -9,7 +9,7 @@ language: en
 version: 1.7
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
-updated: 2026-09-23
+updated: 2026-10-23
 authors: [Christopher Pollin]
 related: [data, pipeline, testing, production-readiness]
 ---
@@ -157,11 +157,11 @@ Confirmed relations and contested statements are rendered separately. An open au
 
 A decided authority claim, such as the compound places "Sofija, Varna" or "Bloemfontein, Kaapstad", appears under "Place assignment decided" on the pages whose place or imprint line carries its subject, with each reading's status, the basis of each review step and the review notes. It sets no value mark and no citation note.
 
-The review label of an entry reads its `scope`, so an entry whose place authority was decided reads "Place authority agent-verified" and a rejected candidate reads "Place authority candidate rejected". The confirmed mark and the Wikidata link stand at the decided place alone. Each publication heading states its edition as proposed, confirmed or contested. A co-imprint reads as one imprint row of publisher and place pairs, and a series gloss stands in brackets after the series.
+The review label of an entry reads its `scope`, so an entry whose place authority was decided reads "Place authority agent-verified" and a rejected candidate reads "Place authority candidate rejected". The state word and the Wikidata link stand at the decided place alone, and beside the state the producer of the decision stands as visible text, derived from the decider: "LLM agent, delegated" for the agent roles, "person" only for a released human patch, "test fixture" for the former fixture role (operator decision of 2026-10-23 pending on whether delegation confirms, see [Data](data.md)). The producer note carries the same weight as the edition state, and status information formerly held only in title attributes is visible or screen-reader text. The regex badge of a place names the wording of the value, never the authority link. The About and Data pages state that authority links were decided by LLM agents under delegation and that no human review has been released. Each publication heading states its edition as proposed, confirmed or contested. A co-imprint reads as one imprint row of publisher and place pairs, and a series gloss stands in brackets after the series.
 
 A page restored from before a Redirect fixer overwrite shows a source-revision note above the Klawiter source naming the published revision, its author and date and the reason, with the later fixer revisions in a collapsed list. A withheld redirect, reached by `#entry=` or `#title=`, shows "Redirect withheld" with its open claim, and a reference to it carries the same note.
 
-The interface does not turn a contested candidate into a clickable confirmed authority link. Figures count publishable relations only. The number of open claims is reported separately.
+The interface does not turn a contested candidate into a clickable confirmed authority link. Figures count publishable relations only. The number of open claims is reported separately. The home page counts entries as wiki pages and places as distinct published Wikidata links among the raw place spellings, with the year range computed from the data. The flat fallback citation, used for pages without a publication file, leaves out a translator that no publication binds, and a publication without container is exported as a book in RIS and BibTeX. A search in non-Latin script that finds nothing explains that titles are recorded romanised.
 
 ## Data Page and JSON-LD Playground
 

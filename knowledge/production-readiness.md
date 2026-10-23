@@ -2,7 +2,7 @@
 title: Production Readiness and Acceptance
 status: maintained
 language: en
-updated: 2026-09-23
+updated: 2026-10-23
 related: [status, data, pipeline, testing, frontend, journal]
 ---
 

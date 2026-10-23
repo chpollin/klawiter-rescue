@@ -9,7 +9,7 @@ language: en
 version: 1.0
 tags: [project, context, provenance]
 created: 2026-03-29
-updated: 2026-09-23
+updated: 2026-10-23
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, testing, production-readiness]
 ---

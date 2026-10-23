@@ -2,7 +2,7 @@
 title: Data and Model
 status: maintained
 language: en
-updated: 2026-09-23
+updated: 2026-10-23
 related: [about, pipeline, frontend, testing, production-readiness, status]
 ---
 
