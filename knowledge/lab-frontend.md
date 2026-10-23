@@ -374,7 +374,7 @@ The related deliverables run on their own tracks. Their shared blocker, the mean
 | B2 Blog figures | figures re-read from the regenerated artefacts | regeneration commit |
 | B3 Blog explainer | static snapshot from prototype 3 | L4 |
 | B4 Blog claim check | every statement checked against the artefacts, naming and editorship settled | B1 to B3, operator decisions on editorship |
-| A1 Proposal version | choice of the working tab and of the role of Promptotyping as instrument or object of study | operator |
+| A1 Proposal version | settled on 2026-10-23: the operator's team draft "Grounds for Use" (after v1.5, with questions to named team members) is the basis; the agent drafts v1.3 and v1.4 supply material only; changes go to the team draft as proposals, never as edits without the operator's go-ahead | operator |
 | A2 Proposal terms and literature | terms aligned with the vault decision of 2026-10-03, literature updated, gap claims checked | A1 |
 | A3 Proposal evidence | dated cases from this repository and from the vault inserted | A1, B1 for the fixture case |
 | A4 Proposal formalities | contractor role of DHCraft, disclosure of AI use in writing, CV decision, cost justification | operator |
