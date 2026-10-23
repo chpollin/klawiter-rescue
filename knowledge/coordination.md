@@ -59,7 +59,7 @@ The research coordinator holds the overall plan ([Merged bibliography](print-wik
 |---|---|---|---|
 | verified regeneration of `docs/data` and `data/output` after the pipeline fixes | coordinator | lab L3 data preparation, blog B2 | correct wiki data as the base of every concordance |
 | local print matches `data/print/derived/lab/print-links.json`, copied by the operator to the ignored `docs/lab/local/` | coordinator (p07) | lab print slot (E6) | next milestone, matches visible to the operator |
-| `publicationId` on field matches | coordinator (p07) | edition-level print slot | step 7, matches at publication level |
+| `publicationIds` on field matches, delivered 2026-10-23 (a4dbd63) where the wiki line lies in a hash-verified publication slice | coordinator (p07) | edition-level print slot | step 7, matches at publication level |
 | interface specification and its critical review (L2) | AI operator | coordinator's check of states, producer labels and print display against the model | steps 1 and 9, display of claim states |
 | running prototypes and evaluation (L4 to L6) | AI operator | coordinator's integration of findings; the adjudication view of step 9 builds on what holds | step 9, adjudication through the curation interface |
 | defects found in production data | either session | coordinator verifies, fixes and regenerates | correct wiki data |
