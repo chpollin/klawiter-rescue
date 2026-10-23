@@ -61,7 +61,7 @@ On 23 September the operator approved the recommended course after four read-onl
 
 - A page the wiki's Redirect fixer overwrote with an unrelated redirect is published from the compiler's last revision before the overwrite, and the fixer redirect resolves no reference. Where that revision is not delivered, the redirect is withheld under an open claim. See [Data](data.md#pages-overwritten-by-the-redirect-fixer).
 - The 26 Maria Stuart references resolve to the restored page 35.
-- The compound place claims "Sofija, Varna", "Varna, Sofija" and "Bloemfontein, Kaapstad" are decided as two places each, and their components are confirmed. Tyresö and Saint-Aignan stay open.
+- The compound place claims "Sofija, Varna", "Varna, Sofija" and "Bloemfontein, Kaapstad" are decided as two places each, and their components are decided on their own, except Sofija, whose standalone decision left with the fixture demotion of 2026-10-23. Tyresö is decided for the municipality; Saint-Aignan stays open.
 - Systematic false review flags are removed by rule for version 1.0. Genuine source conflicts stay open claims, and version 1.0 does not require their resolution.
 - Editing per publication stays outside version 1.0.
 
