@@ -36,7 +36,7 @@ The current census and coverage are in [Status](status.md). The exact source/can
 
 ## Flat compatibility model
 
-The flat record uses Schema.org, Dublin Core and `klawiter:` terms. It retains title, year, publisher, place, language, translator, extent, categories, cross-references and source identifiers. A populated field can belong to a different publication block from another field on the same page. A first match is a compatibility choice, not a universal scholarly rule.
+The flat record uses Schema.org, Dublin Core and `klawiter:` terms. It retains title, year, publisher, place, language, translator, extent, categories, cross-references and source identifiers. On a page with a publication layer, year, publisher and extent come from its first publication since 2026-10-23, so they belong to one block; on a page without edition headers a populated field can still belong to a different passage from another field on the same page. A first match is a compatibility choice, not a universal scholarly rule. `originalTitle` is the bracket after the first title statement of a translation page ("[Schachnovelle]"), read only for non-German pages of the work categories, and `translations` keeps one item per language heading of the translations section.
 
 Language is category-derived under the existing selection precedence. Its human label is retained separately from its registered BCP-47 subtag. The historical source label “Serbo-Croatian” uses the registered macrolanguage `sh`; it is not silently narrowed to Serbian or Croatian. See the [IANA registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry). Publication-scoped language lives in the publication layer described below.
 
