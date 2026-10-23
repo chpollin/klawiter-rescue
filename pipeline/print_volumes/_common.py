@@ -43,10 +43,18 @@ def load_lines(volume: str) -> list[dict]:
         return [json.loads(line) for line in handle]
 
 
-def part_of(volume: str, page: int) -> tuple[str, str]:
-    """Return (part name, kind) for a PDF page; the earlier part wins a boundary."""
-    for name, kind, first, last in SECTIONS["volumes"][volume]["parts"]:
-        if first <= page <= last:
+def part_of(volume: str, page: int, top: float = 0.0) -> tuple[str, str]:
+    """Return (part name, kind) for a line; the earlier part wins a boundary page.
+
+    A part whose heading starts mid-page carries that heading's top as a fifth
+    value and claims the lines from there on.
+    """
+    parts = SECTIONS["volumes"][volume]["parts"]
+    for name, kind, first, last, *start in parts:
+        if start and page == first and top >= start[0]:
+            return name, kind
+    for name, kind, first, last, *start in parts:
+        if first <= page <= last and not (start and page == first):
             return name, kind
     return "unassigned", "front"
 

@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Print probes reviewed and benchmarked
+
+**Round.** Verification round with three agents: one skeptical reviewer of method, code and document, and two blind annotators of a held-out page sample, one with the conventions of [Print volumes](print-volumes.md), one with the PDFs only.
+
+**Changed.** The review found running heads read as entries, letter-suffixed insertions counted as duplicates, a false number start rule in Addendum II, page-granular section starts, two checks that could not fail, a false tolerance claim and an invalid publication count. The probes now treat 12 pt running heads as furniture, key duplicates by number and suffix, list number jumps, let the gap signal abstain at page tops, start sections mid-page where needed, and call their two self-checks invariants. `bench_sample.py` and `bench_compare.py` were added. The document now separates what the reports support from what they do not and records the first benchmark.
+
+**Decided.** Reference resolution counts as a check of the numbering, not of the boundaries. The signature shares are withdrawn as a measure of publications per entry. The benchmark pages are no longer held out once rules are tuned on their error classes.
+
+**Open.** Rules for sub-item lines and wrapped continuations in Addendum II, built on development pages; a larger, hard-case stratified sample frozen before inspection; a human decision on annotator disagreements and on a control sample; a content check of references against target entries.
+
+---
+
 ## 2026-10-23 — Print volumes probed
 
 **Round.** Implementation round, first stage of the print strand and three deterministic probes, outside the production run.

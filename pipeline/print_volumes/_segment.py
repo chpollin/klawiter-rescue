@@ -7,8 +7,8 @@ determined by the layout:
 - number: a numbered entry start or a stub at the part's entry margin
 - indent: the line sits at the part's left margin (hanging indent)
 - gap: the vertical gap to the previous line exceeds GAP_FACTOR times the
-  part's median line pitch; at a page top, where no gap exists, the line
-  opens a unit when it sits at the left margin
+  part's median line pitch; at a page top no gap exists and the variant
+  abstains, so that it does not merely repeat the indent signal there
 - bold: the first font run is bold and the line sits at the left margin
 
 Headings (mostly capitals, no leading number) open their own unit in every
@@ -68,7 +68,7 @@ def votes(body: list[dict]) -> list[dict]:
             if has_numbers
             else None,
             "indent": at_left,
-            "gap": at_left if gap is None else gap > GAP_FACTOR * pitch,
+            "gap": None if gap is None else gap > GAP_FACTOR * pitch,
             "bold": at_left and is_bold(line["runs"][0][0]),
         }
         previous = line
@@ -97,7 +97,7 @@ def _informative(body: list[dict]) -> tuple[str, ...]:
 def consensus(line: dict) -> bool:
     if line["heading"]:
         return True
-    cast = [line["votes"][v] for v in line["active"]]
+    cast = [line["votes"][v] for v in line["active"] if line["votes"][v] is not None]
     return bool(cast) and any(cast) and sum(cast) * 2 >= len(cast)
 
 

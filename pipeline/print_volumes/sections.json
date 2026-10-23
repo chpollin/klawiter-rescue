@@ -1,5 +1,5 @@
 {
-  "_note": "PDF page ranges per part, from the verified tables in knowledge/print-volumes.md. Where two parts share a boundary page, the page belongs to the earlier part. kind: body parts carry numbered or unnumbered entries; index, front and tail parts are never entries.",
+  "_note": "PDF page ranges per part, from the verified tables in knowledge/print-volumes.md. Where two parts share a boundary page, the page belongs to the earlier part, unless the later part names an optional fifth value, the top coordinate of its heading; lines from that top on belong to the later part. kind: body parts carry numbered or unnumbered entries; index, front and tail parts are never entries.",
   "volumes": {
     "I": {
       "file": "I Bibliography.pdf",
@@ -92,11 +92,11 @@
         ["J", "body", 775, 778],
         ["K", "body", 779, 804],
         ["L", "body", 805, 1388],
-        ["M", "body", 1389, 1392],
+        ["M", "body", 1388, 1392, 300],
         ["P 1981", "tail", 1393, 1397],
         ["English list", "tail", 1398, 1408],
         ["Advertisements duplicate", "tail", 1409, 1413],
-        ["P", "body", 1414, 1422],
+        ["P", "body", 1413, 1422, 550],
         ["Internet and abbreviations", "tail", 1423, 1424],
         ["Letter 2009", "tail", 1425, 1425]
       ]

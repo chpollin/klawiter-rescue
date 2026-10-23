@@ -83,15 +83,20 @@ def _intro(before: str) -> str:
     return "inline"
 
 
-def _sequence(numbers: list[int]) -> dict:
-    counts = Counter(numbers)
+def _sequence(starts: list[tuple[int, str]]) -> dict:
+    """Gaps over numbers; duplicates over number plus letter suffix (20 vs 20a)."""
+    numbers = [n for n, _ in starts]
+    counts = Counter(starts)
     top = max(numbers)
     return {
-        "count": len(numbers),
+        "count": len(starts),
         "max": top,
+        "inserted": sum(1 for _, suffix in starts if suffix),
         "gaps": sorted(set(range(1, top + 1)) - set(numbers)),
-        "duplicates": sorted(n for n, c in counts.items() if c > 1),
+        "duplicates": sorted(f"{n}{s}" for (n, s), c in counts.items() if c > 1),
         "backward_steps": [[a, b] for a, b in zip(numbers, numbers[1:]) if b < a],
+        # Steps above 2 are where a stray number may have joined the chain.
+        "jumps": [[a, b] for a, b in zip(numbers, numbers[1:]) if b - a > 2],
     }
 
 
@@ -102,13 +107,13 @@ def main() -> int:
     for volume in VOLUMES:
         lines = annotate(load_lines(volume), volume)
         all_lines[volume] = lines
-        sequence: dict[str, list[int]] = defaultdict(list)
+        sequence: dict[str, list[tuple[int, str]]] = defaultdict(list)
         keys: dict[str, set] = defaultdict(set)
         stubs: Counter = Counter()
         for line in lines:
             start = numbered_start(line)
             if start:
-                sequence[line["part"]].append(start[0])
+                sequence[line["part"]].append(start)
                 keys[line["part"]].add(start)
                 keys[line["part"]].add((start[0], ""))
             elif is_stub(line):
@@ -120,7 +125,7 @@ def main() -> int:
             info = _sequence(numbers)
             info["toc_max"] = toc.get(part)
             info["stubs"] = stubs[part]
-            for key in ("gaps", "duplicates", "backward_steps"):
+            for key in ("gaps", "duplicates", "backward_steps", "jumps"):
                 info[f"n_{key}"] = len(info[key])
                 info[key] = info[key][:40]
             sections[part] = info

@@ -17,10 +17,20 @@ from collections.abc import Callable
 
 from _common import part_of
 
-START_NUMBER = re.compile(r"^(?:[A-R](?:A[12])? ?)?(\d{1,4})([a-z])?(?=[\s.]|$)")
+# "1." opens symposia entries in Addendum II; "10. Tsd." and "16. Auflage" do not.
+START_NUMBER = re.compile(
+    r"^(?:[A-R](?:A[12])? ?)?(\d{1,4})([a-z])?"
+    r"(?=\s|$|\.\s+(?!(?:Tsd|Auflage|Aufl|Expl|Druck|Ausg)))"
+)
 STUB = re.compile(r"^\*{1,5}(?=\s|$)")
 DIGITS_ONLY = re.compile(r"^[\divxlcIVXLC]{1,5}$")
-MAX_STEP = 50
+MAX_STEP = 10
+# Running head of the main volume set in 12 pt: "186 Historical and Biographical
+# Studies", or the title first and the page number last.
+RUNNING_HEAD = re.compile(
+    r"^\d{1,4} [A-Z][^.\[\]]{3,60}$|^[A-Z][^.\[\]]{3,60} \d{1,4}$"
+)
+HEAD_ZONE = 85
 
 
 def is_furniture(line: dict) -> bool:
@@ -31,6 +41,8 @@ def is_furniture(line: dict) -> bool:
     if line["runs"][0][1] < 11:
         return True
     if line["top"] < 50:
+        return True
+    if line["top"] < HEAD_ZONE and RUNNING_HEAD.match(text):
         return True
     return bool(DIGITS_ONLY.match(text)) and (line["top"] < 90 or line["top"] > 700)
 
@@ -47,7 +59,7 @@ def annotate(lines: list[dict], volume: str) -> list[dict]:
     """Add part, kind, furniture, margin flag and entry start to each line."""
     parts: dict[str, list[dict]] = {}
     for line in lines:
-        line["part"], line["kind"] = part_of(volume, line["page"])
+        line["part"], line["kind"] = part_of(volume, line["page"], line["top"])
         line["furniture"] = is_furniture(line)
         line["start"] = None
         line["at_margin"] = False

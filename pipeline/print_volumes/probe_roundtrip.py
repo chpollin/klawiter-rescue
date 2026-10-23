@@ -1,12 +1,14 @@
-"""Probe 2, roundtrip: is the segmentation lossless, and how robust is it?
+"""Probe 2, roundtrip: do the units partition the lines, and how robust are they?
 
 For every volume the probe assigns each p01 line exactly one role (furniture,
-non-body part, heading, unit start, continuation), rebuilds the page texts from
-those roles and compares their hash with the p01 hash, so that no line is lost
-or duplicated. It then compares the four single-signal boundary variants of
+non-body part, heading, unit start, continuation). Two invariants guard the
+code rather than the data: the roles rebuild the page texts with the p01 hash,
+and each part's units, read in order without re-sorting, are contiguous and
+reproduce the part's lines in their original order. It then compares the four single-signal boundary variants of
 _segment.py per part: pairwise agreement (Jaccard over boundary sets), the share
-of lines on which all signal-carrying variants agree, and the residue of lines
-on which they disagree. The residue is what no single layout rule decides and
+of lines on which all signal-carrying variants agree, the residue of lines
+on which they disagree, and that residue per consensus unit, the comparable
+figure across files because continuation lines inflate the line share. The residue is what no single layout rule decides and
 what review or a further rule has to settle.
 
 Output: data/print/derived/reports/probe_roundtrip.json and a summary.
@@ -50,11 +52,14 @@ def _part_report(body: list[dict]) -> dict:
     samples = []
     for line in body:
         cast = tuple(line["votes"][v] for v in active)
-        if line["heading"] or len(set(cast)) == 1:
+        if line["heading"] or len({c for c in cast if c is not None}) <= 1:
             agree += 1
             continue
         residue += 1
-        key = "".join(v[0].upper() if c else v[0] for v, c in zip(active, cast))
+        key = "".join(
+            "-" if c is None else v[0].upper() if c else v[0]
+            for v, c in zip(active, cast)
+        )
         patterns[key] += 1
         if len(samples) < 12:
             samples.append(
@@ -96,29 +101,39 @@ def main() -> int:
             elif line["kind"] != "body":
                 roles[f"non-body:{line['kind']}"] += 1
         sections = {}
+        ordered = True
         rebuilt: list[dict] = [
             ln for ln in lines if ln["furniture"] or ln["kind"] != "body"
         ]
         for part, body in parts.items():
             sections[part] = _part_report(body)
+            flat = []
             for unit in units(body):
                 roles["heading" if unit[0]["heading"] else "unit"] += 1
                 roles["continuation"] += len(unit) - 1
-                rebuilt.extend(unit)
+                flat.extend(unit)
+            ordered &= len(flat) == len(body) and all(
+                a is b for a, b in zip(flat, body)
+            )
+            rebuilt.extend(flat)
         rebuilt.sort(key=lambda ln: (ln["page"], ln["line"]))
-        lossless = (
+        partition = (
             len(rebuilt) == len(lines)
             and _text_hash(rebuilt) == p01[volume]["text_sha256"]
         )
-        failures += not lossless
+        failures += not (partition and ordered)
         body_lines = sum(s["lines"] for s in sections.values())
         residue = sum(s["residue"] for s in sections.values())
         report[volume] = {
-            "lossless": lossless,
+            "partition_invariant": partition,
+            "order_invariant": ordered,
             "roles": dict(roles),
             "body_lines": body_lines,
             "residue": residue,
             "residue_share": round(residue / body_lines, 4),
+            "residue_per_unit": round(
+                residue / max(1, sum(s["units"] for s in sections.values())), 3
+            ),
             "sections": sections,
         }
     path = write_report("probe_roundtrip", report)
@@ -126,7 +141,9 @@ def main() -> int:
     print("=" * 72)
     for volume, data in report.items():
         print(
-            f"{volume}: lossless={data['lossless']} body={data['body_lines']} "
+            f"{volume}: partition={data['partition_invariant']} "
+            f"order={data['order_invariant']} body={data['body_lines']} "
+            f"residue/unit={data['residue_per_unit']} "
             f"residue={data['residue']} ({data['residue_share']:.1%}) roles={data['roles']}"
         )
         for part, s in sorted(data["sections"].items()):

@@ -56,13 +56,20 @@ MARKERS = {
 }
 
 
+# The imprint of a reviewed book belongs to the review, not to a further object.
+REVIEWED = re.compile(r"REV:.*?(1[5-9]|20)\d\d")
+
+
 def _profile(text: str) -> dict:
+    own = REVIEWED.sub("REV:", text)
+    # Numbered items of a Contents list are contained works, not publications.
+    listed = own.split("Contents:", 1)[0]
     return {
-        "imprints": len(IMPRINT.findall(text)),
-        "periodicals": len(PERIODICAL.findall(text)),
-        "hosts": len(HOST.findall(text)),
-        "extent_years": len(EXTENT_YEAR.findall(text)),
-        "subitems": len(SUBITEM.findall(text)),
+        "imprints": len(IMPRINT.findall(own)),
+        "periodicals": len(PERIODICAL.findall(own)),
+        "hosts": len(HOST.findall(own)),
+        "extent_years": len(EXTENT_YEAR.findall(own)),
+        "subitems": len(SUBITEM.findall(listed)),
         "markers": [m for m, rx in MARKERS.items() if rx.search(text)],
         "sigla": SIGLUM.findall(text),
     }
