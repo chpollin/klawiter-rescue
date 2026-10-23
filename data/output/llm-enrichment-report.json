@@ -14,21 +14,21 @@
   },
   "frozenResultCount": 3905,
   "workingResultCount": 0,
-  "cacheMissCount": 48,
+  "cacheMissCount": 119,
   "networkCallsAllowed": false,
   "networkCallsMade": false,
-  "rejectedCachedValues": 144,
+  "rejectedCachedValues": 1003,
   "rejectedNotInSource": {
-    "publisher": 60,
-    "location": 25,
-    "translator": 35
+    "publisher": 12,
+    "location": 26,
+    "translator": 38,
+    "page_count": 24
+  },
+  "rejectedPublicationScoped": {
+    "publisher": 736,
+    "page_count": 139
   },
   "encodingRepairs": [
-    {
-      "pageId": 396,
-      "field": "publisher",
-      "value": "Xi’an Chubanshe"
-    },
     {
       "pageId": 396,
       "field": "location",
@@ -46,11 +46,6 @@
     },
     {
       "pageId": 562,
-      "field": "publisher",
-      "value": "Abeona. Casa Editorială Pentru Turism şi Cultură"
-    },
-    {
-      "pageId": 562,
       "field": "location",
       "value": "Bucureşti"
     },
@@ -58,11 +53,6 @@
       "pageId": 564,
       "field": "location",
       "value": "Bucureşti"
-    },
-    {
-      "pageId": 565,
-      "field": "publisher",
-      "value": "Editura librărici Socec et Co"
     },
     {
       "pageId": 565,
@@ -125,59 +115,14 @@
       "value": "Athēna"
     },
     {
-      "pageId": 804,
-      "field": "publisher",
-      "value": "“Hayastan” Hratarakch‘ut‘yun"
-    },
-    {
-      "pageId": 846,
-      "field": "publisher",
-      "value": "Otokar Keršovani"
-    },
-    {
       "pageId": 846,
       "field": "translator",
       "value": "Vladislav Šarić"
     },
     {
-      "pageId": 926,
-      "field": "publisher",
-      "value": "Nikolaĭ Ĭonchev"
-    },
-    {
-      "pageId": 936,
-      "field": "publisher",
-      "value": "Vŭzrazhdane"
-    },
-    {
-      "pageId": 1388,
-      "field": "publisher",
-      "value": "Can Sanat Yayınları"
-    },
-    {
-      "pageId": 1438,
-      "field": "publisher",
-      "value": "Mlada založba"
-    },
-    {
-      "pageId": 1439,
-      "field": "publisher",
-      "value": "Slovenski knjižni zavod"
-    },
-    {
-      "pageId": 1528,
-      "field": "publisher",
-      "value": "Državna Založba Slovenije"
-    },
-    {
       "pageId": 1528,
       "field": "translator",
       "value": "Helena Menaše"
-    },
-    {
-      "pageId": 1570,
-      "field": "publisher",
-      "value": "Založba Lipa"
     },
     {
       "pageId": 1651,
@@ -210,16 +155,6 @@
       "value": "Pechat S. M. Staĭkov"
     },
     {
-      "pageId": 1789,
-      "field": "publisher",
-      "value": "Qanun Nəşriyyatı"
-    },
-    {
-      "pageId": 1792,
-      "field": "publisher",
-      "value": "M. G. Smrikarov, Slavcho Atanasov, Prometeĭ"
-    },
-    {
       "pageId": 1840,
       "field": "translator",
       "value": "Miodrag Petrović"
@@ -236,18 +171,8 @@
     },
     {
       "pageId": 1846,
-      "field": "publisher",
-      "value": "Otokar Keršovani, Izdanja Antibarbarus"
-    },
-    {
-      "pageId": 1846,
       "field": "translator",
       "value": "Vladislav Šarić, Mary Melichar"
-    },
-    {
-      "pageId": 1869,
-      "field": "publisher",
-      "value": "Izdatel’stvo \"Pravda\""
     },
     {
       "pageId": 1876,
@@ -255,39 +180,9 @@
       "value": "Izdatel’stvo “Bibliosfera”"
     },
     {
-      "pageId": 1878,
-      "field": "publisher",
-      "value": "Gosudarstvennoe Izdatel’stvo “Khudozhestvennaia Literatura”"
-    },
-    {
-      "pageId": 1880,
-      "field": "publisher",
-      "value": "Izdatel’stvo “Druzhba Narodov” / SP “Lexica”"
-    },
-    {
-      "pageId": 1887,
-      "field": "publisher",
-      "value": "Izdatel’stvo “Politizdat”"
-    },
-    {
-      "pageId": 1891,
-      "field": "publisher",
-      "value": "Kavkazskiĭ Krai"
-    },
-    {
       "pageId": 1891,
       "field": "location",
       "value": "Stavropol’"
-    },
-    {
-      "pageId": 1972,
-      "field": "publisher",
-      "value": "Izdatel’stvo Drofa"
-    },
-    {
-      "pageId": 2362,
-      "field": "publisher",
-      "value": "Everest Yayınları"
     },
     {
       "pageId": 2526,
@@ -298,11 +193,6 @@
       "pageId": 2528,
       "field": "location",
       "value": "İstanbul"
-    },
-    {
-      "pageId": 2529,
-      "field": "publisher",
-      "value": "Babil Yayıları"
     },
     {
       "pageId": 2529,
@@ -336,11 +226,6 @@
     },
     {
       "pageId": 3052,
-      "field": "publisher",
-      "value": "Izdevniecība Liesma"
-    },
-    {
-      "pageId": 3052,
       "field": "location",
       "value": "Rīga"
     },
@@ -361,33 +246,13 @@
     },
     {
       "pageId": 3313,
-      "field": "publisher",
-      "value": "Tekin Yayınevi"
-    },
-    {
-      "pageId": 3313,
       "field": "location",
       "value": "İstanbul"
-    },
-    {
-      "pageId": 3368,
-      "field": "publisher",
-      "value": "Šroma"
-    },
-    {
-      "pageId": 3369,
-      "field": "publisher",
-      "value": "Liṭeraṭura da Xelovneba"
     },
     {
       "pageId": 3370,
       "field": "translator",
       "value": "Aḳaḳi Gelovani"
-    },
-    {
-      "pageId": 3375,
-      "field": "publisher",
-      "value": "Liṭeraṭura da Xelovneba"
     },
     {
       "pageId": 3376,
@@ -398,11 +263,6 @@
       "pageId": 3395,
       "field": "location",
       "value": "Athēna"
-    },
-    {
-      "pageId": 3422,
-      "field": "publisher",
-      "value": "Ekdoseis Patakē"
     },
     {
       "pageId": 3422,
@@ -421,11 +281,6 @@
     },
     {
       "pageId": 3430,
-      "field": "publisher",
-      "value": "Diethneis Ekdoseis Delēchryso"
-    },
-    {
-      "pageId": 3430,
       "field": "location",
       "value": "Athēna"
     },
@@ -433,11 +288,6 @@
       "pageId": 3441,
       "field": "location",
       "value": "Athēna"
-    },
-    {
-      "pageId": 3442,
-      "field": "publisher",
-      "value": "Ekdoseis Gkovostē, Athēna"
     },
     {
       "pageId": 3442,
@@ -461,18 +311,8 @@
     },
     {
       "pageId": 3466,
-      "field": "publisher",
-      "value": "Ekdoseis Patakēs"
-    },
-    {
-      "pageId": 3466,
       "field": "location",
       "value": "Athēna"
-    },
-    {
-      "pageId": 3472,
-      "field": "publisher",
-      "value": "Ekdoseis Technē, Athēna"
     },
     {
       "pageId": 3472,
@@ -546,28 +386,13 @@
     },
     {
       "pageId": 3604,
-      "field": "publisher",
-      "value": "Ayrıntı Yayınları"
-    },
-    {
-      "pageId": 3604,
       "field": "location",
       "value": "İstanbul"
     },
     {
       "pageId": 3607,
-      "field": "publisher",
-      "value": "Koridor Yayıncılık"
-    },
-    {
-      "pageId": 3607,
       "field": "location",
       "value": "İstanbul"
-    },
-    {
-      "pageId": 3647,
-      "field": "publisher",
-      "value": "Koridor Yayıncılık"
     },
     {
       "pageId": 3647,
@@ -586,33 +411,13 @@
     },
     {
       "pageId": 3860,
-      "field": "publisher",
-      "value": "Revistei Ştiinţa şi Tehnică"
-    },
-    {
-      "pageId": 3860,
       "field": "location",
       "value": "Bucureşti"
-    },
-    {
-      "pageId": 3866,
-      "field": "publisher",
-      "value": "Koridor Yayıncılık"
-    },
-    {
-      "pageId": 3871,
-      "field": "publisher",
-      "value": "Tekin Yayınevi"
     },
     {
       "pageId": 4158,
       "field": "location",
       "value": "Tel-ʾAviv"
-    },
-    {
-      "pageId": 4163,
-      "field": "publisher",
-      "value": "Maṭba'at al-Baṣīr"
     },
     {
       "pageId": 4171,
@@ -625,49 +430,14 @@
       "value": "ʿUmar ʿAbd al-Azīz Amīn"
     },
     {
-      "pageId": 4229,
-      "field": "publisher",
-      "value": "Hotsat ʿOfer"
-    },
-    {
-      "pageId": 4231,
-      "field": "publisher",
-      "value": "al-Sharikah al-Waṭanīyah li-l-Nashr wa'l-Tawzī"
-    },
-    {
       "pageId": 4243,
       "field": "location",
       "value": "Athēna"
     },
     {
-      "pageId": 4247,
-      "field": "publisher",
-      "value": "Ṭurem"
-    },
-    {
       "pageId": 4293,
       "field": "location",
       "value": "Tūnis"
-    },
-    {
-      "pageId": 4317,
-      "field": "publisher",
-      "value": "Vydavatelʾstvo Smena"
-    },
-    {
-      "pageId": 4383,
-      "field": "publisher",
-      "value": "Valstybinė Grožinės Literatūros Leidykla"
-    },
-    {
-      "pageId": 4389,
-      "field": "publisher",
-      "value": "Cankarjeva Založba"
-    },
-    {
-      "pageId": 4392,
-      "field": "publisher",
-      "value": "Putuppuṉal"
     },
     {
       "pageId": 4392,
@@ -696,28 +466,13 @@
     },
     {
       "pageId": 4647,
-      "field": "publisher",
-      "value": "Alatoran Yayınları"
-    },
-    {
-      "pageId": 4647,
       "field": "location",
       "value": "Bakı"
     },
     {
       "pageId": 4648,
-      "field": "publisher",
-      "value": "Alatoran yayınları"
-    },
-    {
-      "pageId": 4648,
       "field": "location",
       "value": "Bakı [Baku]"
-    },
-    {
-      "pageId": 4649,
-      "field": "publisher",
-      "value": "Alatoran Yayınları"
     },
     {
       "pageId": 4649,
@@ -751,18 +506,8 @@
     },
     {
       "pageId": 4681,
-      "field": "publisher",
-      "value": "Maarif, Qanun Nəşriyyatı"
-    },
-    {
-      "pageId": 4681,
       "field": "location",
       "value": "Bakı"
-    },
-    {
-      "pageId": 4682,
-      "field": "publisher",
-      "value": "Qanun Nəşriyyatı"
     },
     {
       "pageId": 4682,
@@ -776,28 +521,13 @@
     },
     {
       "pageId": 4695,
-      "field": "publisher",
-      "value": "Şərq-Qərb"
-    },
-    {
-      "pageId": 4695,
       "field": "location",
       "value": "Bakı [Baku]"
     },
     {
       "pageId": 4697,
-      "field": "publisher",
-      "value": "Şərq-Qərb"
-    },
-    {
-      "pageId": 4697,
       "field": "location",
       "value": "Bakı [Baku]"
-    },
-    {
-      "pageId": 4712,
-      "field": "publisher",
-      "value": "Azərnəşr"
     },
     {
       "pageId": 4712,
@@ -825,39 +555,14 @@
       "value": "Tūnis"
     },
     {
-      "pageId": 4992,
-      "field": "publisher",
-      "value": "Adabiyot va sanʼat nashriyoti"
-    },
-    {
-      "pageId": 5004,
-      "field": "publisher",
-      "value": "Oʻzadabiynashr"
-    },
-    {
-      "pageId": 5093,
-      "field": "publisher",
-      "value": "Boḳer"
-    },
-    {
       "pageId": 5191,
       "field": "translator",
       "value": "Mo. Ānisula Haka"
     },
     {
-      "pageId": 5198,
-      "field": "publisher",
-      "value": "Ṭurem"
-    },
-    {
       "pageId": 5264,
       "field": "translator",
       "value": "ʿAlī Ḥasan"
-    },
-    {
-      "pageId": 5301,
-      "field": "publisher",
-      "value": "Tekin Yayınevi"
     },
     {
       "pageId": 5895,
@@ -868,11 +573,6 @@
       "pageId": 5896,
       "field": "location",
       "value": "Tūnis [Tunis]"
-    },
-    {
-      "pageId": 5956,
-      "field": "publisher",
-      "value": "Ayrıntı Yayınları"
     },
     {
       "pageId": 5956,
@@ -896,9 +596,9 @@
     }
   ],
   "fieldsFilled": {
-    "publisher": 266,
+    "publisher": 259,
     "location": 240,
-    "translator": 243,
-    "page_count": 35
+    "translator": 240,
+    "page_count": 1
   }
 }

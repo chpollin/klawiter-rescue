@@ -39,6 +39,7 @@ from lib.editions import (
     protected_mask,
     segment_page,
 )
+from lib.encoding import unescape_dump_quotes
 from lib.patterns import ABSENCE_MARKS, CATEGORY_LANGUAGE_RE, credited_name
 from lib.vocabulary import LANGUAGE_MAP, language_to_iso
 from lib.wiki_parser import (
@@ -240,6 +241,24 @@ def _flat(value: str) -> str:
     return " ".join(value.split())
 
 
+def _unescaped(value):
+    """The record with the dump's quote escape undone in every string.
+
+    The source slice and its offsets stay in the dump's form; only the values
+    read from it leave the source, so the escape ends here.
+    """
+    if isinstance(value, str):
+        return unescape_dump_quotes(value)
+    if isinstance(value, list):
+        return [_unescaped(item) for item in value]
+    if isinstance(value, dict):
+        return {
+            key: item if key == "sourceSlice" else _unescaped(item)
+            for key, item in value.items()
+        }
+    return value
+
+
 def _unique(values: list) -> list:
     return list(dict.fromkeys(values))
 
@@ -296,6 +315,12 @@ def _attested_place(value: str, attested: set[str]) -> bool:
     return value in attested or all(part in attested for part in value.split("/"))
 
 
+_DATE_SEGMENT_RE = re.compile(
+    r"^\d{1,2}\.?\s+(?:January|February|March|April|May|June|July|August|"
+    r"September|October|November|December)\b"
+)
+
+
 def _split_imprint(
     fields: HeaderFields, attested: set[str]
 ) -> tuple[str | None, list[str], list[dict], dict | None]:
@@ -328,7 +353,14 @@ def _split_imprint(
         else item
         for item in imprints
     ]
-    publishers = [_flat(item.publisher) for item in imprints if item.publisher]
+    # A film header can set its broadcast date where an imprint names the
+    # publisher ("'''[1973]: 13 February and 31 October, Warszawa'''", page
+    # 4474); a date is no publisher.
+    publishers = [
+        _flat(item.publisher)
+        for item in imprints
+        if item.publisher and not _DATE_SEGMENT_RE.match(_flat(item.publisher))
+    ]
     places = _unique(
         [_flat(item.place) for item in imprints if item.place] + run_places
     )
@@ -482,7 +514,35 @@ def _series_start(block_body: str) -> int | None:
         opening += 1
     if opening < 0 or opening > 60:
         return None
+    # A bracket after an italic or quoted title glosses, places or credits that
+    # title ("serialized in ''Le Monde'' [Paris]", page 675; "\"Predislovie\"
+    # [Ivan Inozemtsev]", page 2485), and one after a contribution label names
+    # its author ("Afterword [Josef Polišenský]", page 2598); neither is a
+    # series statement.
+    gap = line[:opening]
+    if (
+        "''" in gap
+        or '"' in gap
+        or "“" in gap
+        or _CONTRIBUTION_LABEL_END_RE.search(gap)
+    ):
+        return None
     return extent.end() + opening
+
+
+_CONTRIBUTION_LABEL_END_RE = re.compile(
+    r"\b(?:Afterword|Foreword|Preface|Introduction|Epilogue|Postface|Notes|"
+    r"Commentary|Nachwort|Vorwort|Einleitung)\s*:?\s*$"
+)
+# A bracket that records a printing, a reprint, a source edition or a copy
+# count is a note, not a series ("[Reprinted 1967]", pages 846 and 1848; "[4th
+# impression 1961. 8th impression 1973 …]", page 151; "[Based on the 1957
+# Reclam edition]", page 2336; "[111.-130. Tsd.]", page 263).
+_SERIES_NOTE_RE = re.compile(
+    r"^(?:Reprint|Reissu|Based on|This is|Licen[cs]ed|Braille|School edition|"
+    r"Illustrated by|Translated|Edited by|First|No\.\s*\d|\d)"
+    r"|\b(?:edition|edtion|impression|printing|reprint(?:ed)?|copies)\b"
+)
 
 
 def _series(block_body: str) -> dict | None:
@@ -521,6 +581,10 @@ def _series(block_body: str) -> dict | None:
         content, gloss = glossed.group(1), glossed.group(2).strip()
     if not content or "[" in content or "]" in content:
         return None
+    # A parenthesized gloss may translate "edition" inside a series name
+    # ("iṣdār jadīd (‘My Book’-Prints: New edition)", page 1685).
+    if _SERIES_NOTE_RE.search(re.sub(r"\([^()]*\)", "", content)):
+        return None
     if block_body[end + 1 : end + 2] == "]":
         end += 1
     return {"series": content, "volume": volume, "gloss": gloss, "end": end + 1}
@@ -548,9 +612,26 @@ def _series_note(block_body: str, series_end: int) -> str | None:
     return note if len(note) >= 20 else None
 
 
+# A verb of publication history before "in ''…''" says where the publication
+# appeared besides ("This edition was serialized in ''Le Monde'' [Paris], 29
+# August - 8 September 1972", page 675); the journal is then no container.
+_HISTORY_BEFORE_IN_RE = re.compile(
+    r"\b(?:seriali[sz]ed|reprinted|printed|published|appeared|excerpted|"
+    r"reviewed|announced|quoted|reproduced)\s*$",
+    re.IGNORECASE,
+)
+
+
 def _container(block_body: str) -> dict | None:
     """Journal, place, issue and pages of an article-shaped publication."""
-    match = _CONTAINER_RE.search(block_body)
+    match = next(
+        (
+            m
+            for m in _CONTAINER_RE.finditer(block_body)
+            if not _HISTORY_BEFORE_IN_RE.search(block_body[: m.start()])
+        ),
+        None,
+    )
     if not match:
         return None
     container: dict = {"title": _flat(match.group(1))}
@@ -613,8 +694,24 @@ def _credits(text: str) -> list[dict]:
         name = credited_name(text, match.end())
         if not name:
             continue
-        add({"role": role, "name": name, "creditLabel": label})
+        credit = {"role": role, "name": name, "creditLabel": label}
+        if _uncertain_after(text, match.end(), name):
+            credit["uncertain"] = True
+        add(credit)
     return credits
+
+
+# The source's mark of a doubtful attribution right after a name ("Translated
+# by Jacqueline Des Gouttes (?)", page 675).
+_UNCERTAINTY_MARK_RE = re.compile(r"\s*\(\?\)")
+
+
+def _uncertain_after(text: str, start: int, name: str) -> bool:
+    """Whether the credited name at start is followed by the mark "(?)"."""
+    offset = text.find(name, start, start + len(name) + 8)
+    if offset < 0:
+        return False
+    return bool(_UNCERTAINTY_MARK_RE.match(text, offset + len(name)))
 
 
 def _outside_brackets(text: str, offset: int) -> bool:
@@ -917,7 +1014,11 @@ def _build_publication(
     _put(publication, "imprints", pairs)
     _put(publication, "language", language)
     _put(publication, "languageCode", language_to_iso(language) if language else None)
-    _put(publication, "editionStatement", _edition_statement(masked_body))
+    _put(
+        publication,
+        "editionStatement",
+        _edition_statement(masked_body, edition.get("schema:datePublished")),
+    )
     _put(
         publication,
         "extent",
@@ -961,10 +1062,34 @@ def _build_publication(
     return publication
 
 
-def _edition_statement(block_body: str) -> str | None:
-    without_brackets = _BRACKET_RE.sub(" ", block_body)
-    match = _EDITION_STATEMENT_RE.search(without_brackets)
-    return _flat(match.group(1)) if match else None
+# What follows an edition statement that dates it: ", 1945", " of 1936", a
+# bracketed extent before the year ("5th edition [116p.], 2000", page 675), or
+# an imprint closing the same clause ("23rd edition, Éditions Grasset, Paris,
+# 2004", page 675). A sentence break or semicolon ends the clause.
+_EDITION_DATE_RE = re.compile(
+    r"\s*(?:,|:|\bof\b|\bin\b)?\s*(?:\[[^\[\]\n]*\]\s*,?\s*)?\(?(\d{4})\b"
+    r"|,(?:[^;.\n]|\.(?=\S)){0,80}?\b(\d{4})\b"
+)
+
+
+def _edition_statement(block_body: str, year: int | str | None = None) -> str | None:
+    """The edition statement of this publication, or None.
+
+    A statement dated with another year than the publication's records a later
+    printing ("124/(1)p. … 2nd edition, 1945; 3rd edition, 1946" under the 1944
+    header of page 675; "2nd edition of 1936 published online" under 1933 on
+    page 4124), not the edition this block describes.
+    """
+    # Blank bracket contents in place, so offsets still address block_body.
+    without_brackets = _BRACKET_RE.sub(lambda m: " " * len(m.group(0)), block_body)
+    for match in _EDITION_STATEMENT_RE.finditer(without_brackets):
+        dated = _EDITION_DATE_RE.match(block_body, match.end())
+        if dated and (dated.group(1) or dated.group(2)) != str(year):
+            # The reprint history starts here; what follows lists later
+            # printings ("2nd edition 1936. … 3rd edition. 370p. 1938").
+            return None
+        return _flat(match.group(1))
+    return None
 
 
 def imprint_publisher(text: str, attested_places: set[str]) -> str | None:
@@ -993,6 +1118,48 @@ def imprint_publisher(text: str, attested_places: set[str]) -> str | None:
             if publisher and places:
                 return publisher
     return None
+
+
+def first_publication_fields(
+    page_id: int,
+    text: str,
+    page_title: str,
+    categories: list[str],
+    attested_places: set[str],
+) -> dict | None:
+    """Flat year, extent and publisher of the page's first publication.
+
+    Returns None for a page without a publication layer, whose flat fields
+    keep coming from the body patterns. On a page with a layer the three flat
+    fields describe one publication, the first in source order, so the flat
+    record never joins one publication's year to another's extent (page 23:
+    the 1936 imprint beside the 274 pages of the 1954 edition). A field the
+    first publication lacks stays empty. The publisher is taken only where the
+    publication also names a place, as before; an attested absence mark
+    ("[s.n.], Tiranë", page 5126) is kept, because the flat layer has no other
+    state for it and an empty field would be filled by the enrichment.
+    """
+    layer = build_page_publications(
+        page_id=page_id,
+        text=text,
+        page_title=page_title,
+        categories=categories,
+        attested_places=attested_places,
+    )
+    if not layer:
+        return None
+    first = layer["publications"][0]
+    publisher = None
+    if first.get("places"):
+        publisher = first.get("publisher")
+        if not publisher:
+            mark = _flat((first.get("imprint") or "").split(",")[0])
+            publisher = mark if mark in ABSENCE_MARKS else None
+    return {
+        "year": first.get("year"),
+        "page_count": (first.get("extent") or {}).get("numbered"),
+        "publisher": publisher,
+    }
 
 
 def build_page_publications(
@@ -1060,7 +1227,7 @@ def build_page_publications(
         publication["provenance"] = {
             key: "regex" for key in publication if key not in _PROVENANCE_EXCLUDED
         }
-        publications.append(publication)
+        publications.append(_unescaped(publication))
 
     return {
         "pageKind": _page_kind(categories, len(publications)),
@@ -1073,7 +1240,7 @@ def build_page_publications(
         "publicationLanguages": _unique(
             [p["language"] for p in publications if "language" in p]
         ),
-        "nameVariants": _name_variants(text, _credited_names(publications)),
+        "nameVariants": _unescaped(_name_variants(text, _credited_names(publications))),
     }
 
 

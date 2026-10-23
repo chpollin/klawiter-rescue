@@ -26,7 +26,7 @@ from lib.config import (
     setup_logging,
     write_csv,
 )
-from lib.encoding import fix_encoding, has_mojibake
+from lib.encoding import fix_encoding, has_mojibake, unescape_dump_quotes
 
 log = setup_logging("normalize")
 
@@ -86,11 +86,17 @@ def normalize_all_locations(value, loc_map):
 
 
 def clean_publisher(value, reject_patterns):
-    """Reject garbage publisher values. Returns value or empty string."""
+    """Reject garbage publisher values. Returns value or empty string.
+
+    The table's patterns are case-sensitive and spell out the cases they mean
+    ("^(Company|House|company|house)$"); read without case, the locator
+    pattern "^p\\.\\s" refused names opening with an initial ("P. A. Norstedt
+    Förlag", page 5056; "P. S. King & Son", page 6930).
+    """
     if not value:
         return value
     for pattern in reject_patterns:
-        if re.search(pattern, value, re.IGNORECASE):
+        if re.search(pattern, value):
             return ""
     return value
 
@@ -133,6 +139,42 @@ def validate_page_count(value):
     return value
 
 
+# Value fields read from the dump text. Stage 01 keeps the text in the dump's
+# form (the escaped quote \" included) because reviewed selectors and hashes address it; a value
+# leaves that form here, before the mapping tables compare it. The JSON list
+# fields are unescaped per item.
+UNESCAPED_SCALAR_FIELDS = (
+    "page_title",
+    "redirect_target",
+    "title",
+    "original_title",
+    "publisher",
+    "location",
+    "translator",
+)
+UNESCAPED_LIST_FIELDS = (
+    "all_locations",
+    "see_also",
+    "reprints",
+    "translations",
+    "content_items",
+)
+
+
+def unescape_row(row):
+    """Undo the dump's quote escape in every value field of a row."""
+    for field in UNESCAPED_SCALAR_FIELDS:
+        if row.get(field):
+            row[field] = unescape_dump_quotes(row[field])
+    for field in UNESCAPED_LIST_FIELDS:
+        if row.get(field) and "\\" in row[field]:
+            items = json.loads(row[field])
+            row[field] = json.dumps(
+                [unescape_dump_quotes(item) for item in items], ensure_ascii=False
+            )
+    return row
+
+
 # --- Main ---
 
 
@@ -171,6 +213,8 @@ def main() -> None:
     }
 
     for row in rows:
+        unescape_row(row)
+
         # Location
         old_loc = row.get("location", "")
         row["location"] = normalize_location(old_loc, loc_map)

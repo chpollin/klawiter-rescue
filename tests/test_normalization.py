@@ -38,7 +38,9 @@ def test_no_location_variants(ns0_entries):
 # Reject patterns come straight from the pipeline's reject table.
 with open(_DATA_DIR / "publisher_reject_patterns.json", encoding="utf-8") as _f:
     _PUBLISHER_REJECT_PATTERNS = [
-        re.compile(p, re.IGNORECASE) for p in json.load(_f).get("patterns", [])
+        # Case-sensitive like 03c.clean_publisher: "P. S. King & Son" is a name.
+        re.compile(p)
+        for p in json.load(_f).get("patterns", [])
     ]
 
 

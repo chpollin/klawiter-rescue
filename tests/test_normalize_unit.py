@@ -145,6 +145,11 @@ class TestCleanPublisher:
             == "S. Fischer Verlag"
         )
 
+    def test_a_name_opening_with_an_initial_is_no_locator(self, m, reject_patterns):
+        # Pages 5056 and 6930: the locator pattern "^p\.\s" is case-sensitive.
+        for name in ("P. A. Norstedt Förlag", "P. S. King & Son"):
+            assert m.clean_publisher(name, reject_patterns) == name
+
     def test_empty_value(self, m, reject_patterns):
         assert m.clean_publisher("", reject_patterns) == ""
         assert m.clean_publisher(None, reject_patterns) is None

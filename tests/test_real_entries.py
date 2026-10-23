@@ -17,8 +17,8 @@ from lib.patterns import (
     extract_publisher,
     extract_translator,
 )
-from lib.publications import imprint_publisher, load_attested_places
-from lib.wiki_parser import extract_structured_data
+from lib.publications import first_publication_fields, load_attested_places
+from lib.wiki_parser import blank_translations_block, extract_structured_data
 
 FIELDS = ("publisher", "location", "translator", "page_count", "language")
 
@@ -27,22 +27,31 @@ FIELDS = ("publisher", "location", "translator", "page_count", "language")
 def extracted_sample(real_entries):
     """Extract exactly as stage 03 does.
 
-    The publisher combines the source-bound publication header with the body
-    patterns; measuring the body patterns alone would test a path the pipeline
-    no longer takes.
+    On a page with a publication layer the publisher and extent are the first
+    publication's, elsewhere the body patterns'; a German page reads no credit
+    from its translations section. Measuring the body patterns alone would
+    test a path the pipeline no longer takes.
     """
     attested = load_attested_places()
     results = {}
     for entry in real_entries:
         text = entry["text"]
         structured = extract_structured_data(text)
+        categories = structured.get("categories", [])
+        language = extract_language_from_category(categories)
+        scoped = first_publication_fields(
+            entry["page_id"], text, entry["page_title"], categories, attested
+        )
+        translator_text = (
+            blank_translations_block(text) if language == "German" else text
+        )
         results[entry["page_id"]] = {
             "structured": structured,
-            "publisher": imprint_publisher(text, attested) or extract_publisher(text),
+            "publisher": scoped["publisher"] if scoped else extract_publisher(text),
             "location": extract_location(text),
-            "translator": extract_translator(text),
-            "page_count": extract_page_count(text),
-            "language": extract_language_from_category(structured["categories"]),
+            "translator": extract_translator(translator_text),
+            "page_count": scoped["page_count"] if scoped else extract_page_count(text),
+            "language": language,
         }
     return results
 

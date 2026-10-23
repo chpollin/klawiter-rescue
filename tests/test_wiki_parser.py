@@ -164,14 +164,34 @@ class TestExtractTitle:
 
 
 class TestExtractOriginalTitle:
-    def test_in_parentheses(self):
-        assert extract_original_title("'''Title''' (Original)") == "Original"
+    """The bracket after the title statement, read only there."""
 
-    def test_in_brackets(self):
-        assert extract_original_title("'''Title''' [Originalwerk]") == "Originalwerk"
+    def test_translation_header_bracket(self, record_sources):
+        _, text = extract_categories(record_sources[675]["text"])
+        assert extract_original_title(text) == "Schachnovelle"
 
-    def test_real_entry(self, entry_bold_title):
-        assert extract_original_title(entry_bold_title) == "Original German Title"
+    def test_contents_heading_bracket_is_not_the_original_title(self, record_sources):
+        # Page 846: the first block brackets the volume's original title; the
+        # bold contents heading "Tri majstora [Drei Meister]" below is a part.
+        _, text = extract_categories(record_sources[846]["text"])
+        assert extract_original_title(text) == "Baumeister der Welt"
+
+    def test_a_date_bracket_is_no_title(self, record_sources):
+        # Page 971 brackets the symposium dates after its bold title.
+        _, text = extract_categories(record_sources[971]["text"])
+        assert extract_original_title(text) is None
+
+    def test_bold_spans_on_different_lines_never_join(self, record_sources):
+        # Pages 41, 272 and 2343 yielded "1", "[Die Kette. …" and "[Noveli /
+        # Ukrainian" from a match across the bold markup of two lines.
+        for page_id in (41, 272, 2343):
+            _, text = extract_categories(record_sources[page_id]["text"])
+            assert extract_original_title(text) is None, page_id
+
+    def test_a_credit_inside_the_bracket_is_cut(self, record_sources):
+        # Page 4779 writes the translator into the bracket.
+        _, text = extract_categories(record_sources[4779]["text"])
+        assert extract_original_title(text) == "Schachnovelle"
 
     def test_no_original_title(self):
         assert extract_original_title("'''Just a Title'''\nContent") is None
@@ -239,6 +259,17 @@ class TestExtractTranslationsBlock:
     def test_singular_header(self):
         content = "'''Translation:'''\nEnglish: The Royal Game\n\n[[Category:Test]]"
         assert len(extract_translations_block(content)) >= 1
+
+    def test_every_language_paragraph_of_a_real_page(self, record_sources):
+        # Page 17 sets each language in its own bold paragraph; the block used
+        # to stop at the second heading and keep only Bulgarian.
+        items = extract_translations_block(record_sources[17]["text"])
+        assert [item.split(":")[0] for item in items] == ["Bulgarian", "Dutch"]
+
+    def test_long_translation_sections_are_read_whole(self, record_sources):
+        # Pages 54 and 249: one item per language paragraph up to the end.
+        assert len(extract_translations_block(record_sources[54]["text"])) == 34
+        assert len(extract_translations_block(record_sources[249]["text"])) == 37
 
 
 class TestExtractContentsBlock:

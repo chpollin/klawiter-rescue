@@ -42,6 +42,13 @@ SERIES_RE = re.compile(r"\s*(\[[^\]]+\])\s*$")
 # lib/patterns.PARENS_PAGE_RE. Same notation, different question — kept as
 # separate grammars with this pointer instead of a false unification.
 STANDARD_PAGE_COUNT_RE = re.compile(r"(?<!\()\b(\d+)(?:/\(\d+\))?p\.")
+# Prefatory pages counted apart before the numbered pages, in roman numerals or
+# unnumbered ("xi/237/(1)p.", page 892; "(4)/382p.", page 6416). They belong to
+# the raw extent notation; the numbered count stays the arabic one. "Vol. I/"
+# names a volume, not prefatory pages.
+PREFATORY_PAGES_RE = re.compile(
+    r"(?:^|(?<=[\s.,;]))(?<!Vol\. )((?:(?:[ivxlcdm]+|[IVXLCDM]+|\(\d+\))/)+)\Z"
+)
 PAREN_PAGE_COUNT_RE = re.compile(r"\((\d+)\)p\.")
 MALFORMED_PAGE_COUNT_RE = re.compile(r"\b(\d+)/(\d+)\)p\.")
 PUBLISHER_PERIOD_RE = re.compile(
@@ -466,7 +473,9 @@ def _page_count(
 ) -> tuple[int | None, int | None, str | None, tuple[str, ...]]:
     standard = STANDARD_PAGE_COUNT_RE.search(block)
     if standard:
-        return int(standard.group(1)), None, standard.group(0), ()
+        prefix = PREFATORY_PAGES_RE.search(block, 0, standard.start())
+        raw = (prefix.group(1) if prefix else "") + standard.group(0)
+        return int(standard.group(1)), None, raw, ()
     parenthesized = PAREN_PAGE_COUNT_RE.search(block)
     if parenthesized:
         return (

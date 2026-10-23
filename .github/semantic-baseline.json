@@ -16,16 +16,6 @@
       "actual": 100
     },
     {
-      "pageId": 285,
-      "field": "translator",
-      "actual": "Alzir Hella and Olivier Bournac"
-    },
-    {
-      "pageId": 1166,
-      "field": "year",
-      "actual": 1815
-    },
-    {
       "pageId": 1308,
       "field": "pageCount",
       "actual": 23
@@ -64,11 +54,6 @@
       "pageId": 5487,
       "field": "title",
       "actual": "Leporella / Catalan"
-    },
-    {
-      "pageId": 6342,
-      "field": "location",
-      "actual": "Berlin"
     },
     {
       "pageId": 6342,
@@ -159,6 +144,30 @@
           "after": "Leporella / Catalan",
           "expectedRemains": "Leporella",
           "reason": "The citation line gives way to the exact source page title. Its ' / Catalan' part disambiguates the wiki page and is not part of the title; stripping it would be a generic suffix rule, which the title comparison refuses."
+        }
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "evidence": "pipeline/lib/patterns.py (extract_year, LOCATION_RE), pipeline/03_parse_entries.py (translator outside the translations section)",
+      "resolved": [
+        {
+          "pageId": 285,
+          "field": "translator",
+          "was": "Alzir Hella and Olivier Bournac",
+          "reason": "On a German page the credits of the translations section belong to the translations it lists; the Hella/Bournac credit of the French translation is no translator of the German original, which names none."
+        },
+        {
+          "pageId": 1166,
+          "field": "year",
+          "was": 1815,
+          "reason": "Years inside a contribution's title statement and its gloss ('[Die Weltminute von Waterloo: Napoleon, 18. Juni 1815]') are no publication years; the year is that of the collection the contribution appeared in, 1983."
+        },
+        {
+          "pageId": 6342,
+          "field": "location",
+          "was": "Berlin",
+          "reason": "A known city joined to a word by a hyphen is no city of its own, so the header place stays in its source wording 'Berlin-Wilmersdorf' instead of being cut to 'Berlin'."
         }
       ]
     }

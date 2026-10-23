@@ -5,26 +5,54 @@ Regex patterns for extracting bibliographic metadata from Klawiter entries.
 import re
 
 from lib.config import MAX_VALID_YEAR, MIN_VALID_YEAR
+from lib.vocabulary import LANGUAGE_MAP, LANGUAGES_WITHOUT_CODE
 
 # Year patterns
 YEAR_RE = re.compile(r"\b(1[789]\d{2}|20[0-3]\d)\b")
+
+# re has no \p{Lu}; Latin Extended capitals such as Ž, Ł, Ő must open a name.
+_UPPER_LETTER = "[" + "".join(c for c in map(chr, range(0x3000)) if c.isupper()) + "]"
+
+# A capitalized word of a publisher name ("Insel-", "S.", "Reclam's").
+_PUBLISHER_WORD = rf"{_UPPER_LETTER}(?:[\w&’-]|'(?!')|(?<=\b[A-Z])\.)*"
+# Lowercase particles inside a name ("Verlag Mensch und Arbeit", "Éditions de
+# l'Aube"); a preposition such as "im" is none ("Auswahl von Goethes Gedichten
+# im Verlag", page 119).
+_NAME_PARTICLE = (
+    r"(?:&|and|of|the|de|der|des|du|di|da|do|dos|la|le|les|et|y|e|und|van|von)"
+)
+# A publisher name after a label: capitalized words with particles between
+# them, ending in a word. Prose after the name ("Éditions Stock is responsible
+# for the French translation", page 2083; "published by Pushkin Press in 2000",
+# page 486), a quote and wiki italics ("Verlag Wremja” in ''Neue Deutsche
+# Literatur''", page 2060) end it.
+_PUBLISHER_NAME = rf"{_PUBLISHER_WORD}(?:[ ](?:{_NAME_PARTICLE}[ ])*{_PUBLISHER_WORD})*"
 
 # Publisher patterns (expanded beyond the original 3)
 PUBLISHER_PATTERNS = [
     # Explicit labels; case-sensitive, since lowercase prose ("publishing
     # venture", "editorial staff") is no label.
     re.compile(
-        r"\b(?:Verlag|Publisher|Press|Publishing|Éditions?|Editore|Editorial|Editora|Wydawnictwo|Издательство)[\s:]+([^\n,.;()\[\]]{3,80})"
+        r"\b(?:Verlag|Publisher|Press|Publishing|Éditions?|Editore|Editorial|Editora|Wydawnictwo|Издательство)[ \t:]+"
+        rf"({_PUBLISHER_NAME})"
     ),
-    # "published by" variants
+    # "published by" variants. "herausgegeben von" and "édité par" are left
+    # out: they credit an editor ("Herausgegeben von Eva von Seckendorff und
+    # Angelika Mundorff", page 166; "Bulletin … édité par Martin Bircher",
+    # page 2094), never a publishing house.
     re.compile(
-        r"(?:published by|verlegt bei|herausgegeben von|édité par|publicado por)\s+([^\n,.;()\[\]]{3,80})",
-        re.IGNORECASE,
+        rf"(?i:published by|verlegt bei|publicado por)[ \t]+({_PUBLISHER_NAME})"
     ),
-    # Known publisher name patterns (ends with Verlag, Press, etc.)
+    # A name ending in Verlag, Press, etc., made of capitalized words and the
+    # particles names use. Case-sensitive and on one line, so prose ending in
+    # "books" or "house" (page 4512 "community contribute short reviews and
+    # critiques of the books") or running into the name ("Memoiren repeatedly
+    # published by the Brockhaus Verlag", page 3981) is no name; a period
+    # stands only after an initial ("S. Fischer Verlag"), and wiki italics end
+    # a word, so a match crosses neither a sentence break nor markup.
     re.compile(
-        r"\b([\w\s&.-]{2,60}(?:Verlag|Press|Publishers?|Books|Edition|Éditions?|Editore|House))\b",
-        re.IGNORECASE,
+        rf"\b({_PUBLISHER_WORD}(?:[ ](?:{_PUBLISHER_WORD}|{_NAME_PARTICLE})){{0,7}}"
+        r"[ -]?(?:Verlag|Press|Publishers?|Books|Edition|Éditions?|Editore|House))\b"
     ),
 ]
 
@@ -139,7 +167,9 @@ KNOWN_LOCATIONS = [
 # Build a regex for location detection (sorted by length descending to match longer names first)
 _loc_sorted = sorted(KNOWN_LOCATIONS, key=len, reverse=True)
 _loc_pattern = "|".join(re.escape(loc) for loc in _loc_sorted)
-LOCATION_RE = re.compile(rf"\[?\b({_loc_pattern})\b\]?")
+# A city joined by a hyphen to a word is an affiliation, not a place of
+# publication ("a Delhi-based writer", page 6819).
+LOCATION_RE = re.compile(rf"\[?\b({_loc_pattern})\b(?!-\w)\]?")
 
 # Edition-header year grammar, the single origin shared with lib/editions.py:
 # a header year is '1943' or 'ca. 1943' (any case). Both layers build their
@@ -158,9 +188,18 @@ PUBLICATION_LINE_RE = re.compile(
     rf"'''\s*\[{EDITION_YEAR_PREFIX}[^\]]*\]\s*[:.]\s*(.+?)'''", re.IGNORECASE
 )
 # Headerless excerpt/review entries carry the place in a [City, year] reference.
-BRACKET_PLACE_RE = re.compile(r"\[([A-ZÀ-Ý][^\[\];]{1,38}?),\s*\d{4}")
-# A known city sitting right after an opening bracket, e.g. "[London]", "[Wien],".
-BRACKET_KNOWN_RE = re.compile(rf"\[({_loc_pattern})\b")
+# The bracket closes after the year (or a run of years), so a gloss that merely
+# opens with a name and a year ("[Stefan Zweig, 1881, died 1942, Austria]",
+# page 4512) is no place reference.
+# A place name holds no digit ("[Reprinted 1938, 1941, 1943, 1948]", page 6346).
+BRACKET_PLACE_RE = re.compile(
+    r"\[([A-ZÀ-Ý][^\[\];\d]{1,38}?),\s*\d{4}(?:\s*[-–/]\s*\d{2,4})*\]"
+)
+# A known city standing alone at the start of a bracket, e.g. "[London]",
+# "[Wien],", "[Berlin/Leipzig, 1982]", "[London: Pushkin Press, 2004]"; a
+# bracket that continues in prose describes something ("[Moscow during the
+# 1928 centennial …", page 103).
+BRACKET_KNOWN_RE = re.compile(rf"\[({_loc_pattern})(?=\s*[\],/;:(])")
 # Two-letter uppercase token, e.g. a US state code trailing "City, ST".
 _US_STATE_RE = re.compile(r"^[A-Z]{2}$")
 
@@ -325,8 +364,6 @@ _NAME_INITIALS = (
 _NAME_TOKEN = rf"(?:{_NAME_INITIALS}|{_NAME_WORD})"
 _TRANSLATOR_NAME = rf"({_NAME_TOKEN}(?:[ \t]+{_NAME_TOKEN})*)"
 _TRANSLATOR_NAME_RE = re.compile(_TRANSLATOR_NAME)
-# re has no \p{Lu}; Latin Extended capitals such as Ž, Ł, Ő must open a name.
-_UPPER_LETTER = "[" + "".join(c for c in map(chr, range(0x3000)) if c.isupper()) + "]"
 # The permissive form the credit selection has always used; it overruns into
 # the following sentence, so credited_name repairs it with the name grammar.
 _LOOSE_CREDIT_NAME = rf"({_UPPER_LETTER}(?:{_NAME_LETTER}|[ \t.'-]){{2,60}})"
@@ -360,28 +397,118 @@ PAGE_RANGE_RE = re.compile(r"pp?\.\s*\(?(\d+)\)?[-–](\d+)")
 CATEGORY_LANGUAGE_RE = re.compile(r"\(([\w-]+)\)\s*$")
 
 
+# Spans whose years are no publication years. A quoted or linked title carries
+# the dates of its subject ("[Die Weltminute von Waterloo: Napoleon, 18. Juni
+# 1815]", page 1092; "[[Stefan Zweig 1881/1981. Aufsätze und Dokumente]]", page
+# 2217), and the bracket directly after a title glosses that title ("[Stefan
+# Zweig, 1881, died 1942, Austria]", page 4512). A range of more than ten years
+# is a life or period span ("Stefan Zweig, 1881-1942", page 972; "1848-1938",
+# page 2193), a number after "No." an issue (page 4840), a year glued to a
+# preceding number an accession number ("Zugangsnummer 64.1893", page 3659),
+# and a year inside a URL a path segment ("?p=2028", page 4779).
+# A quoted title holds no italic markup; a quote the source left open
+# ("'Tagebuch\" in ''Neues Wiener Journal'' … \"Die Augen", page 7396)
+# therefore does not swallow the citation up to the next quote.
+_QUOTED_TITLE_RE = re.compile(r'\\?["“„](?:[^"“”„\n\']|\'(?!\')){1,300}?\\?["”“]')
+_ITALIC_TITLE_RE = re.compile(r"(?<!')''(?!')(?:(?!'').){1,300}?(?<!')''(?!')")
+_LINK_TITLE_RE = re.compile(r"\[\[[^\[\]\n]{1,300}\]\]")
+_TITLE_GLOSS_RE = re.compile(r"\s*\[[^\[\]\n]{1,300}\]")
+# A "[Place, YEAR]" reference after a title states where and when it appeared.
+_PLACE_YEAR_BRACKET_RE = re.compile(r",\s*\d{4}(?:/\d{2,4})?\]$")
+# A span closed by a bracket ("'''[1949-1966]: Cassell", page 94; "[Barcelona,
+# 1952-1978]") is the publication period of a set and stays readable; a slash
+# joins the years of several printings ("[Leipzig, 1906/1920]", page 7339).
+_YEAR_SPAN_RE = re.compile(
+    r"\b(1[789]\d{2}|20[0-3]\d)\.?\s*[-–]\s*(1[789]\d{2}|20[0-3]\d)\b(?!\.?\s*\])"
+)
+_NON_PUBLICATION_YEAR_RE = re.compile(
+    r"\bNo\.\s*\d{4}\b|\d[.,]\d{4}\b|https?://\S+|www\.\S+"
+    # A decade ("1920s", Russian "1920-X", page 4042).
+    r"|\b\d{4}(?:s|-[^\W\d_]{1,3})\b"
+    # Page numbers after "p."/"pp." ("pp. 1201, 1335, … 2024", page 2225) and
+    # the thousands of a print run ("[2029.-2058. Tsd.]", page 279).
+    r"|\bpp?\.\s*\(?\d[\d()\s,;–-]*"
+    r"|\b\d{1,6}\.\s*-\s*\d{1,6}\.\s*Tsd\b"
+)
+
+
+# The title statement of a contribution: a quoted title or a bracketed gloss
+# opening the page and running to "in" before its container ("[Die Weltminute
+# von Waterloo. Napoleon, 18. Juni 1815] in [[Zvezdni trenutki …]]", page 1504;
+# "\"Der Märtyrer. Dostojewski, 22. Dezember 1849 in ''Insel-Almanach …''",
+# page 3150, whose quote the source never closes).
+_CONTRIBUTION_TITLE_RE = re.compile(
+    r"\s*(?:\\?[\"“„]|\[)[^\n]*?[\s\]\"”]in\b\s*:?\s*(?=''|\[\[|\n|\Z)"
+)
+
+
+def _blank(text, spans):
+    chars = list(text)
+    for start, end in spans:
+        chars[start:end] = " " * (end - start)
+    return "".join(chars)
+
+
+def _publication_year_text(text, mask_italics=True):
+    """The text with every span blanked whose years are no publication years.
+
+    Blanking keeps offsets, so the first remaining year is still the earliest
+    statement of the text. Italics are blanked only in the first pass: a
+    container title such as ''Insel-Almanach auf das Jahr 1913'' can be the
+    only dated statement of an entry.
+    """
+    spans = [m.span() for m in _NON_PUBLICATION_YEAR_RE.finditer(text)]
+    statement = _CONTRIBUTION_TITLE_RE.match(text)
+    if statement:
+        spans.append(statement.span())
+    spans += [
+        m.span()
+        for m in _YEAR_SPAN_RE.finditer(text)
+        if int(m.group(2)) - int(m.group(1)) > 10
+    ]
+    spans += [m.span() for m in _LINK_TITLE_RE.finditer(text)]
+    title_res = (
+        [_QUOTED_TITLE_RE, _ITALIC_TITLE_RE] if mask_italics else [_QUOTED_TITLE_RE]
+    )
+    for title_re in title_res:
+        for m in title_re.finditer(text):
+            spans.append(m.span())
+            gloss = _TITLE_GLOSS_RE.match(text, m.end())
+            if gloss and not _PLACE_YEAR_BRACKET_RE.search(gloss.group(0)):
+                spans.append(gloss.span())
+    return _blank(text, spans)
+
+
+def _valid_years(text):
+    return [
+        int(y)
+        for y in YEAR_RE.findall(text)
+        if MIN_VALID_YEAR <= int(y) <= MAX_VALID_YEAR
+    ]
+
+
 def extract_year(text):
-    """Extract the most likely publication year from text."""
+    """The first publication year the text states, or None.
+
+    Years inside titles, title glosses, life and period spans, issue numbers
+    and URLs are skipped. Where nothing else is dated, an italic container
+    title may carry the year; otherwise the field stays empty, because a
+    subject's date is no publication year.
+    """
     if not text:
         return None
-    matches = YEAR_RE.findall(text)
-    if not matches:
-        return None
-    # Prefer years near the beginning of the text
-    years = [int(y) for y in matches]
-    # Filter out obviously wrong years (page numbers, etc.)
-    valid = [y for y in years if MIN_VALID_YEAR <= y <= MAX_VALID_YEAR]
-    return valid[0] if valid else None
+    for mask_italics in (True, False):
+        years = _valid_years(_publication_year_text(text, mask_italics))
+        if years:
+            return years[0]
+    return None
 
 
 def extract_all_years(text):
-    """Extract all years from text."""
+    """Every publication year the text states, by the rules of extract_year."""
     if not text:
         return []
-    matches = YEAR_RE.findall(text)
-    return sorted(
-        set(int(y) for y in matches if MIN_VALID_YEAR <= int(y) <= MAX_VALID_YEAR)
-    )
+    return sorted(set(_valid_years(_publication_year_text(text, mask_italics=False))))
 
 
 # Phrases that are metadata, not publisher names
@@ -407,13 +534,60 @@ def names_a_contribution_credit(value):
     return bool(value and _CONTRIBUTION_CREDIT_RE.search(value))
 
 
+# An editor credit in the languages of the corpus; it names a person, so it is
+# never a publisher ("herausgegeben von", "Hrsg. von", "edited by").
+_EDITOR_CREDIT_RE = re.compile(
+    r"\b(?:herausgegeben|hrsg\.|edited|ed\.|compiled)\s+(?:von|by)\b", re.IGNORECASE
+)
+# Lowercase openings a publisher name has in the source: the Arabic article
+# ("al-Dār al-Qawmiyyah", page 4194) and the French elided article
+# ("l'Université Charles-de-Gaulle - Lille 3", page 2401).
+_LOWERCASE_NAME_OPENING_RE = re.compile(r"^(?:a[lnrstdz]|ash|el)-|^[ld]['’]\S")
+# A pronoun, a determiner other than "The", a conjunction or a preposition opens
+# a sentence, not a publisher name (page 103 "I wish to express").
+# The articles "A" and "An" stay allowed: they open names in Portuguese and
+# Breton ("A Esfera dos Livros", page 1794; "An Alarc'h embannadurioù", page
+# 4212). German prepositions open a phrase ("Im Verlag der …", page 153).
+_SENTENCE_OPENINGS = frozenset(
+    "I We He She It They You My Our His Her Its Their Your This These That Those "
+    "There Here When While After Before Although Because Since If In On At By "
+    "For From With Of And But Or As Im Am Beim Bei Zum Zur Vom".split()
+)
+
+
+def publisher_shape_ok(value):
+    """Whether a candidate has the shape of a publisher name.
+
+    A name opens with a capital (after quotes), or with one of the lowercase
+    articles the source writes; it stays on one line and is no editor
+    credit and no sentence. A candidate failing this is prose the patterns
+    caught, and the field stays empty rather than holding it.
+    """
+    if not value or "\n" in value:
+        return False
+    if _EDITOR_CREDIT_RE.search(value) or names_a_contribution_credit(value):
+        return False
+    # Quotes, and the ʿayn and hamza of a transliteration ("ʿAṭāʾī", page
+    # 3656), stand before the first letter of a name.
+    name = value.lstrip("\"'“”„«‘’ \\ʿʾ")
+    if not name:
+        return False
+    if not (name[0].isupper() or _LOWERCASE_NAME_OPENING_RE.match(name)):
+        return False
+    return name.split()[0] not in _SENTENCE_OPENINGS
+
+
 def extract_publisher(text):
-    """Extract publisher name from text."""
+    """Extract publisher name from text.
+
+    Every match of a pattern is tried in source order, so prose the pattern
+    catches first does not hide a name that follows it; a gap is the result
+    where no candidate has the shape of a name.
+    """
     if not text:
         return None
     for pattern in PUBLISHER_PATTERNS:
-        m = pattern.search(text)
-        if m:
+        for m in pattern.finditer(text):
             pub = m.group(1).strip().rstrip(".,;:")
             # Clean wiki markup from publisher
             pub = re.sub(r"'{2,3}", "", pub).strip()
@@ -422,7 +596,7 @@ def extract_publisher(text):
             # Reject metadata phrases
             if any(p in pub.lower() for p in _PUBLISHER_REJECT):
                 continue
-            if names_a_contribution_credit(pub):
+            if not publisher_shape_ok(pub):
                 continue
             return pub
     return None
@@ -544,8 +718,15 @@ def credited_name(text, start):
         return None
     name_match = _TRANSLATOR_NAME_RE.match(text, start)
     if name_match:
-        # A stray period before an initial can be internal name punctuation.
-        if re.match(r"\.[ \t]+[A-Z]\.", text[name_match.end() :]):
+        # A stray period before an initial can be internal name punctuation
+        # ("Anna. S. Kulisher. Afterword by …", page 2485): the name continues
+        # after it and ends where the name grammar ends.
+        stray = re.match(r"\.([ \t]+)(?=[A-Z]\.)", text[name_match.end() :])
+        if stray:
+            rest = _TRANSLATOR_NAME_RE.match(text, name_match.end() + stray.end())
+            if rest:
+                tail = _TRANSLATOR_NOTE_RE.split(rest.group(1), maxsplit=1)[0]
+                return f"{name_match.group(1)}.{stray.group(1)}{tail}".strip()
             return legacy_name
         name = _TRANSLATOR_NOTE_RE.split(name_match.group(1), maxsplit=1)[0]
         name = name.strip()
@@ -576,8 +757,10 @@ def extract_language_from_category(categories):
         m = CATEGORY_LANGUAGE_RE.search(cat)
         if m:
             lang = m.group(1)
-            # Fill gaps without changing an existing multilingual scalar choice.
-            if lang in ("Serbo-Croatian", "Estonian", "Afrikaans"):
+            # Any other language the vocabulary knows fills a gap without
+            # changing an existing multilingual scalar choice (page 5657,
+            # "Azerbaijani").
+            if lang in LANGUAGE_MAP or lang in LANGUAGES_WITHOUT_CODE:
                 missing_language = missing_language or lang
             # Common language names in categories
             if lang in (

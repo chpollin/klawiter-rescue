@@ -175,3 +175,27 @@ def test_cli_uses_head_reference_and_fails_if_git_reference_missing(
 
     monkeypatch.setattr(subprocess, "check_output", missing)
     assert evidence.main() == 1
+
+
+# Versioned inputs and generated evidence are hashed by the gate manifests; a
+# CR byte written on Windows makes the working tree differ from the LF blob a
+# clean checkout produces (location-decisions.json, 2026-10-23).
+_LF_ONLY_ROOTS = ("data/reconciliation", "data/provenance", "data/output", "docs/data")
+
+
+def test_no_tracked_evidence_file_carries_a_carriage_return():
+    root = Path(__file__).parent.parent
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "--", *_LF_ONLY_ROOTS],
+        cwd=root,
+        capture_output=True,
+        check=True,
+    ).stdout.split(b"\0")
+    with_cr = [
+        name.decode("utf-8")
+        for name in tracked
+        if name
+        and (root / name.decode("utf-8")).exists()
+        and b"\r" in (root / name.decode("utf-8")).read_bytes()
+    ]
+    assert not with_cr, f"CR bytes in tracked evidence files: {with_cr}"

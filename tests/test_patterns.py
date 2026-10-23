@@ -13,6 +13,7 @@ from lib.patterns import (
     extract_translator,
     extract_year,
 )
+from lib.publications import first_publication_fields, load_attested_places
 
 
 class TestExtractYear:
@@ -224,9 +225,27 @@ class TestExtractPageCount:
         assert extract_page_count(text) == 326
 
     def test_earlier_locator_does_not_displace_extent(self):
-        # Page 23: an article locator precedes the volume extent.
+        # An article locator before a volume extent is no extent.
         text = "''Gerechtigkeit'' [Wien], 4 [1936], p. 4\n''Castellio''. 274/(4)p."
         assert extract_page_count(text) == 274
+
+    def test_flat_extent_of_a_layered_page_is_the_first_publications(
+        self, record_sources
+    ):
+        # Page 23: the flat record used to join the 1936 imprint to the 274
+        # pages of the 1954 edition. All three flat fields now describe the
+        # first publication; its extent "333/(2)." lacks the page mark the
+        # extent grammar reads, so the field stays empty rather than borrow
+        # the 1954 extent.
+        entry = record_sources[23]
+        fields = first_publication_fields(
+            23, entry["text"], entry["page_title"], [], load_attested_places()
+        )
+        assert fields == {
+            "year": 1936,
+            "page_count": None,
+            "publisher": "Herbert Reichner Verlag",
+        }
 
     def test_rejects_page_ranges(self):
         """pp. N-M is a page range (start-end), not a page count."""
@@ -288,12 +307,12 @@ class TestExtractTranslator:
         text = "Translated by Iso Velikanović. Illustrated by Another Person."
         assert extract_translator(text) == "Iso Velikanović"
 
-    def test_irregular_period_before_initial_remains_for_source_review(self):
+    def test_irregular_period_before_initial_keeps_the_whole_name(self):
+        # Page 2489 writes "Anna. S. Kulisher": the name runs on past the stray
+        # period and ends before the afterword credit, neither truncated to
+        # "Anna" nor overrunning into "Afterword by …".
         text = "Translated by Anna. S. Kulisher. Afterword by Evgeniĭ Necheporuk."
-        # Preserve the legacy value instead of truncating the credited name to Anna.
-        assert extract_translator(text) == (
-            "Anna. S. Kulisher. Afterword by Evgeniĭ Necheporuk"
-        )
+        assert extract_translator(text) == "Anna. S. Kulisher"
 
     def test_final_initial_preserved_before_next_credit(self):
         text = "Translated by Sandra S. Cover design by Cîrţu Lucia. 95p."
@@ -420,13 +439,13 @@ class TestPublisherRejectsCreditPhrases:
             is None
         )
 
-    def test_lowercase_prose_is_not_a_label(self):
-        # Page 166: "publishing" in a bracketed note is no publisher label.
-        text = (
-            "Water-color illustrations by Ekaterina G. Michailovski. "
-            "(St.-Peterburg): [Private publishing venture by the artist], 1997"
-        )
-        assert extract_publisher(text) is None
+    def test_lowercase_prose_and_an_editor_credit_are_no_publisher(
+        self, record_sources
+    ):
+        # Page 166: "publishing" in the bracketed note is no label, and the
+        # catalogue's "Herausgegeben von Eva von Seckendorff und Angelika
+        # Mundorff" credits its editors; the page names no publisher.
+        assert extract_publisher(record_sources[166]["text"]) is None
 
     def test_capitalized_labels_still_match(self):
         assert extract_publisher("Publisher: Insel, Leipzig") == "Insel"

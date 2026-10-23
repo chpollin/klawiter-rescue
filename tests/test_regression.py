@@ -5,6 +5,7 @@ Fixtures (quality_report, baseline) are defined in conftest.py.
 """
 
 import pytest
+from test_record_invariants import EARLIEST_PUBLICATION_YEAR, EARLY_YEAR_ALLOWLIST
 
 # ---------------------------------------------------------------------------
 # Entry count stability
@@ -18,14 +19,6 @@ class TestEntryCounts:
         actual = quality_report["summary"]["total_entries"]
         assert actual >= minimum, (
             f"Total entries dropped to {actual} (minimum: {minimum})"
-        )
-
-    def test_main_namespace_above_minimum(self, quality_report, baseline):
-        """Main namespace (ns 0) entry count stays stable."""
-        minimum = baseline["thresholds"]["non_redirects_main_min"]
-        actual = quality_report["summary"]["non_redirects_main"]
-        assert actual >= minimum, (
-            f"Main namespace entries dropped to {actual} (minimum: {minimum})"
         )
 
     def test_no_significant_entry_loss(self, quality_report, baseline):
@@ -43,7 +36,12 @@ class TestEntryCounts:
 
 
 class TestFieldCoverage:
-    CRITICAL_FIELDS = ["name", "datePublished", "bibliographicCitation"]
+    """Coverage stays within 0.3 percentage points of the frozen baseline in
+    both directions. A larger change, up or down, is a change of extraction
+    and needs a reviewed baseline update with a reason per value
+    (.github/baseline-metrics.json, reviewedUpdates)."""
+
+    TOLERANCE_PP = 0.3
     TRACKED_FIELDS = [
         "name",
         "datePublished",
@@ -52,29 +50,19 @@ class TestFieldCoverage:
         "inLanguage",
         "numberOfPages",
         "translator",
+        "bibliographicCitation",
     ]
 
-    def test_critical_fields_no_regression(self, quality_report, baseline):
-        """Critical fields (name, year, bibCitation) don't drop >1pp."""
-        max_drop = baseline["thresholds"]["critical_field_max_drop_pp"]
-        for field in self.CRITICAL_FIELDS:
-            baseline_pct = baseline["field_coverage"][field]["percentage"]
-            current_pct = quality_report["field_coverage"][field]["percentage"]
-            drop = baseline_pct - current_pct
-            assert drop <= max_drop, (
-                f"{field} coverage dropped {drop:.1f}pp: "
-                f"{baseline_pct}% → {current_pct}%"
-            )
-
     @pytest.mark.parametrize("field", TRACKED_FIELDS)
-    def test_tracked_field_coverage_stable(self, quality_report, baseline, field):
-        """No tracked field drops more than 1pp from baseline."""
+    def test_field_coverage_matches_the_reviewed_baseline(
+        self, quality_report, baseline, field
+    ):
         baseline_pct = baseline["field_coverage"][field]["percentage"]
         current_pct = quality_report["field_coverage"][field]["percentage"]
-        drop = baseline_pct - current_pct
-        assert drop <= 1.0, (
-            f"{field} coverage dropped {drop:.1f}pp: "
-            f"{baseline_pct}% → {current_pct}% (threshold: 1pp)"
+        assert abs(current_pct - baseline_pct) <= self.TOLERANCE_PP, (
+            f"{field} coverage moved {current_pct - baseline_pct:+.1f}pp: "
+            f"{baseline_pct}% -> {current_pct}% (tolerance "
+            f"{self.TOLERANCE_PP}pp; record a reviewed baseline update)"
         )
 
 
@@ -119,14 +107,19 @@ class TestDataIntegrity:
         assert "field_coverage" in quality_report
         assert "entry_type_distribution" in quality_report
 
-    def test_year_range_sane(self, quality_report):
-        """Year range spans the expected bounds without data loss at the edges."""
+    def test_year_range_sane(self, quality_report, ns0_by_id):
+        """The earliest flat year is a publication year: not before Zweig's
+        first publications, unless the page is an allowlisted genuine early
+        publication (test_record_invariants). The latest is not after the
+        dump's last revision."""
         year_range = quality_report["year_range"]
-        assert year_range["min"] <= 1820, (
-            f"Earliest year {year_range['min']} > 1820 — possible data loss at lower bound"
-        )
-        assert year_range["max"] >= 2015, (
-            f"Latest year {year_range['max']} < 2015 — possible data loss at upper bound"
+        allowed_early = {ns0_by_id[pid]["year"] for pid in EARLY_YEAR_ALLOWLIST}
+        assert (
+            year_range["min"] >= EARLIEST_PUBLICATION_YEAR
+            or year_range["min"] in allowed_early
+        ), f"Earliest year {year_range['min']} is no publication year"
+        assert 2015 <= year_range["max"] <= 2021, (
+            f"Latest year {year_range['max']} outside 2015..2021 (last revision)"
         )
         assert year_range["count"] >= 4000, (
             f"Only {year_range['count']} entries have year data — expected ≥ 4000"

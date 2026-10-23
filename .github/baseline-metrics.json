@@ -1,6 +1,6 @@
 {
-  "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json and the frontend dataset. Direction-sensitive: tests fail when a count increases and warn when it decreases; a decrease is frozen here in the next evidence-freeze commit.",
-  "date": "2026-09-23-redirect-fixer-restoration",
+  "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json and the frontend dataset. Field coverage is two-sided: tests fail when a percentage moves more than 0.3 pp either way; a reviewed change is frozen here with a reason per value under reviewedUpdates.",
+  "date": "2026-10-23-record-fidelity-batch",
   "summary": {
     "total_entries": 6725,
     "redirects": 1538,
@@ -14,70 +14,70 @@
   },
   "field_coverage": {
     "name": {
-      "count": 4751,
+      "count": 4758,
       "percentage": 100.0
     },
     "datePublished": {
-      "count": 4429,
-      "percentage": 93.2
+      "count": 4425,
+      "percentage": 93.0
     },
     "publisher": {
-      "count": 2483,
-      "percentage": 52.3
+      "count": 2439,
+      "percentage": 51.3
     },
     "locationCreated": {
-      "count": 4265,
-      "percentage": 89.8
+      "count": 4257,
+      "percentage": 89.5
     },
     "inLanguage": {
-      "count": 4309,
-      "percentage": 90.7
+      "count": 4477,
+      "percentage": 94.1
     },
     "languageCode": {
       "count": 0,
       "percentage": 0.0
     },
     "numberOfPages": {
-      "count": 2435,
-      "percentage": 51.3
+      "count": 2335,
+      "percentage": 49.1
     },
     "translator": {
-      "count": 1920,
-      "percentage": 40.4
+      "count": 1948,
+      "percentage": 40.9
     },
     "categories": {
-      "count": 4740,
+      "count": 4747,
       "percentage": 99.8
     },
     "mainCategory": {
-      "count": 4740,
+      "count": 4747,
       "percentage": 99.8
     },
     "bibliographicCitation": {
-      "count": 4719,
+      "count": 4726,
       "percentage": 99.3
     },
     "relation": {
-      "count": 680,
-      "percentage": 14.3
+      "count": 684,
+      "percentage": 14.4
     },
     "reprints": {
-      "count": 418,
+      "count": 420,
       "percentage": 8.8
     },
     "workTranslation": {
-      "count": 177,
-      "percentage": 3.7
+      "count": 179,
+      "percentage": 3.8
     },
     "hasPart": {
-      "count": 934,
+      "count": 938,
       "percentage": 19.7
     }
   },
   "year_range": {
-    "min": 1815,
+    "min": 1857,
     "max": 2020,
-    "count": 4440
+    "count": 4436
   },
   "entry_type_distribution": {
     "redirect": 1538,
@@ -105,13 +105,12 @@
   "thresholds": {
     "total_entries_min": 6700,
     "non_redirects_main_min": 4700,
-    "critical_field_max_drop_pp": 1.0,
     "mojibake_warnings_max": 10,
     "error_severity_max": 0
   },
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better; when extraction improves, update the value in an evidence-freeze commit.",
-    "redirect_map_size": 1557,
+    "redirect_map_size": 1523,
     "german_translator_fp": 113,
     "film_pagecount": 9,
     "publisher_equals_location": 2,
@@ -123,7 +122,7 @@
     "publisher_wiki_markup": 0,
     "publisher_metadata": 0,
     "publisher_mojibake": 0,
-    "semantic_field_mismatches": 14
+    "semantic_field_mismatches": 11
   },
   "reviewedUpdates": [
     {
@@ -145,6 +144,27 @@
       "date": "2026-09-23",
       "evidence": "pipeline/03_parse_entries.py (NON_TITLE_CLASSES), pipeline/lib/wiki_parser.py (extract_title)",
       "reason": "Stage 03 also takes the page title where the first line is a holdings statement (pages 1768, 2980, 2981, 3657), a postal address (2712), a compiler's note (187, 3262, 3677, 6416), an academic paper statement (3818), a URL (6807), a quoted contribution title followed by its host work (6991), the credit of the author page's own person (6060), a bold label restating a page category or its language (162, 1855), a bold heading directly above a list (513, 1014) or the tail of a broken category link (3923). Those 18 page titles were page-title aliases in the redirect map and are now the entry titles of the same pages, so the map shrinks from 1575 to 1557 without losing a resolution: each removed key is now the unique entry title of the page it pointed to, no key was added and no key changed its target."
+    },
+    {
+      "date": "2026-10-23",
+      "evidence": "pipeline/lib/patterns.py, pipeline/lib/publications.py, pipeline/lib/wiki_parser.py, pipeline/03_parse_entries.py, pipeline/03b_llm_enrich.py, pipeline/03c_normalize.py; tests/test_record_invariants.py, tests/test_record_regressions.py",
+      "reason": "Record-fidelity batch. Redirect map 1557 -> 1523: commit 0b6dba5 made pages 3436 and 6503 carry their page titles, so their two aliases left the map (1557 -> 1555); the dump's quote escape is now undone in titles, so 55 escaped keys left, 32 of them are now entry titles and 23 return unescaped, with every former key still resolving to the same page. Year range minimum 1815 -> 1857: the remaining early year is page 6416, Les Fleurs du mal of 1857.",
+      "fieldCoverage": {
+        "name": "100.0% -> 100.0%: the earlier baseline predated the eight restored Redirect-fixer pages and other title repairs; the count equals the ns0 entries",
+        "datePublished": "93.2% -> 93.0%: years inside titles, title glosses, life spans, issue and page numbers, URLs and print-run thousands are no publication years; on a page with a publication layer the year is the first publication's",
+        "publisher": "52.3% -> 51.3%: a publisher on a layered page is the first publication's; editor credits ('herausgegeben von'), lowercase prose, sentence openings and case-insensitive '…books' prose are no publisher; 03c no longer refuses names opening with 'P.'",
+        "locationCreated": "89.8% -> 89.5%: a [Name, year] bracket counts as a place reference only when it closes after the year; a bracket that continues in prose and a city joined to a word by a hyphen ('Delhi-based') are no place",
+        "inLanguage": "90.7% -> 94.1%: category languages outside the former closed list (Azerbaijani, Rumanian, Belorussian, Mongolian, Tamil and others) are kept with their registry subtag",
+        "numberOfPages": "51.3% -> 49.1%: on a layered page the extent is the first publication's, a gap there stays a gap; cached model page counts need an extent statement in the source and are refused on layered pages",
+        "translator": "40.4% -> 40.9%: credits with Latin Extended letters are read by rule (7994ccb); on a German page the translations section's credits are no translator of the original",
+        "categories": "99.8% -> 99.8%: follows the ns0 count",
+        "mainCategory": "99.8% -> 99.8%: follows the ns0 count",
+        "bibliographicCitation": "99.3% -> 99.3%: follows the ns0 count",
+        "relation": "14.3% -> 14.4%: follows the restored pages and title repairs since the earlier baseline",
+        "reprints": "8.8% -> 8.8%: follows the restored pages since the earlier baseline",
+        "workTranslation": "3.7% -> 3.8%: the translations block no longer stops at the second bold language heading",
+        "hasPart": "19.7% -> 19.7%: follows the restored pages since the earlier baseline"
+      }
     }
   ]
 }

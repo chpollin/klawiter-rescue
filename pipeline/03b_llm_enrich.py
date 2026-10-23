@@ -57,7 +57,6 @@ from lib.llm_extract import (
     save_cache,
     validate_extraction,
 )
-from lib.patterns import PAGE_RANGE_RE
 
 log = setup_logging(__name__)
 
@@ -89,30 +88,13 @@ def filter_entries(
     return candidates
 
 
-def _correct_page_count(page_count: int | None, raw_content: str) -> int | None:
-    """Fix off-by-one errors in LLM page range calculations.
-    When text has 'pp. (X)-Y', correct count is Y - X + 1.
-    """
-    if not page_count or not raw_content:
-        return page_count
-    for m in PAGE_RANGE_RE.finditer(raw_content):
-        start, end = int(m.group(1)), int(m.group(2))
-        correct = end - start + 1
-        # LLM often computes end - start (off by one)
-        if page_count == end - start:
-            return correct
-    return page_count
-
-
 def merge_result(row: dict[str, str], validated: dict[str, object]) -> dict[str, str]:
     """Merge LLM result into row, filling gaps only."""
     for field in ["publisher", "location", "translator"]:
         if not row.get(field) and validated.get(field):
             row[field] = validated[field]
     if not row.get("page_count") and validated.get("page_count"):
-        raw = row.get("raw_content", "") or row.get("content", "")
-        corrected = _correct_page_count(int(validated["page_count"]), raw)
-        row["page_count"] = str(corrected)
+        row["page_count"] = str(validated["page_count"])
     return row
 
 
@@ -257,23 +239,41 @@ def main() -> None:
     # byte round-trip undoes is repaired and recorded, one it cannot undo empties
     # the field, and a contribution credit never passes as a publisher. A value
     # the entry's source text does not attest is refused as well.
-    from lib.llm_extract import occurs_in_source, repair_or_reject
-    from lib.patterns import names_a_contribution_credit
+    # On a page with a publication header the flat publisher and extent are
+    # those of the first publication (stage 03); a gap there is that
+    # publication's gap, and a model value would join another publication's
+    # fact to it.
+    from lib.llm_extract import (
+        occurs_in_source,
+        page_count_in_source,
+        repair_or_reject,
+    )
+    from lib.patterns import names_a_contribution_credit, publisher_shape_ok
 
     revalidated_cache = {}
     rejected = 0
-    not_in_source = {"publisher": 0, "location": 0, "translator": 0}
+    not_in_source = {"publisher": 0, "location": 0, "translator": 0, "page_count": 0}
+    publication_scoped = {"publisher": 0, "page_count": 0}
     repairs = []
     for pid, validated in sorted(cache.items(), key=lambda item: int(item[0])):
         clean = {"page_id": validated["page_id"]}
         source_row = row_index.get(pid, {})
         source = source_row.get("raw_content", "") or source_row.get("content", "")
+        scoped = csv_bool(source_row.get("publication_scoped"))
         for field in ["publisher", "location", "translator"]:
             val = validated.get(field)
             if not val:
                 continue
             kept = repair_or_reject(val)
-            if kept and field == "publisher" and names_a_contribution_credit(kept):
+            if kept and field == "publisher" and scoped:
+                publication_scoped[field] += 1
+                rejected += 1
+                continue
+            if (
+                kept
+                and field == "publisher"
+                and (names_a_contribution_credit(kept) or not publisher_shape_ok(kept))
+            ):
                 kept = None
             if kept and not occurs_in_source(kept, source):
                 not_in_source[field] += 1
@@ -284,8 +284,15 @@ def main() -> None:
             if kept != val:
                 repairs.append({"pageId": int(pid), "field": field, "value": kept})
             clean[field] = kept
-        if "page_count" in validated:
-            clean["page_count"] = validated["page_count"]
+        if validated.get("page_count"):
+            if scoped:
+                publication_scoped["page_count"] += 1
+                rejected += 1
+            elif not page_count_in_source(validated["page_count"], source):
+                not_in_source["page_count"] += 1
+                rejected += 1
+            else:
+                clean["page_count"] = validated["page_count"]
         revalidated_cache[pid] = clean
     if rejected or repairs:
         log.info(
@@ -351,6 +358,7 @@ def main() -> None:
             "networkCallsMade": args.mode == "live" and bool(to_process),
             "rejectedCachedValues": rejected,
             "rejectedNotInSource": not_in_source,
+            "rejectedPublicationScoped": publication_scoped,
             "encodingRepairs": repairs,
             "fieldsFilled": fields_filled,
         },

@@ -185,6 +185,16 @@ def real_entries():
     return _load_test_sample()
 
 
+RECORD_SOURCES_PATH = PROJECT_ROOT / "tests" / "record_sources.json"
+
+
+@pytest.fixture(scope="session")
+def record_sources():
+    """Complete source texts of the pages the record-level regression tests
+    name, keyed by page id; test_source_tables checks them against the dump."""
+    return {e["page_id"]: e for e in _read_committed_json(RECORD_SOURCES_PATH)}
+
+
 def _load_wiki_ground_truth():
     """Validate the reviewed oracle before it defines the collected test cases."""
     entries = _read_committed_json(WIKI_GROUND_TRUTH)

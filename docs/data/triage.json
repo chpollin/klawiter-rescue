@@ -7,19 +7,65 @@
   "note": "Per-entry attention hints from existing data signals; not a quality or workflow metric."
  },
  "entries": {
-  "92": {
+  "34": {
    "detectable": {
-    "publisher": "p. 1968. 2nd edition"
+    "publisher": "Jürgen Beck"
    }
   },
-  "103": {
-   "notInSource": [
-    "location"
-   ]
+  "40": {
+   "detectable": {
+    "translator": "Donika Omari"
+   }
+  },
+  "54": {
+   "detectable": {
+    "translator": "Jorgi Doksani"
+   }
+  },
+  "119": {
+   "detectable": {
+    "publisher": "December 1945"
+   }
+  },
+  "147": {
+   "detectable": {
+    "translator": "Eden and Cedar Paul"
+   }
+  },
+  "163": {
+   "detectable": {
+    "publisher": "Fredonia.\n\nCategory"
+   }
+  },
+  "165": {
+   "detectable": {
+    "publisher": "Niemeyer Verlag"
+   }
+  },
+  "172": {
+   "detectable": {
+    "publisher": "Im Verlag der Internationalen Stefan-Zweig-Gesellschaft",
+    "translator": "Harry Zohn"
+   }
   },
   "174": {
    "detectable": {
     "publisher": "Amalthea-Veralg"
+   }
+  },
+  "249": {
+   "detectable": {
+    "translator": "Mahmud Bobrati"
+   }
+  },
+  "259": {
+   "detectable": {
+    "translator": "Stefan Peĭkov"
+   }
+  },
+  "261": {
+   "detectable": {
+    "translator": "Wei Xie"
    }
   },
   "271": {
@@ -27,24 +73,101 @@
     "location"
    ]
   },
+  "272": {
+   "detectable": {
+    "translator": "Mien Labberton"
+   }
+  },
+  "273": {
+   "detectable": {
+    "translator": "Oswald Burkard"
+   }
+  },
+  "285": {
+   "detectable": {
+    "translator": "Alzir Hella and Olivier Bournac"
+   }
+  },
+  "289": {
+   "detectable": {
+    "translator": "Enver Fico"
+   }
+  },
   "297": {
    "detectable": {
-    "publisher": "Company"
+    "publisher": "Company",
+    "translator": "Afrim Koçi"
+   }
+  },
+  "303": {
+   "detectable": {
+    "translator": "Hymne Weiss"
+   }
+  },
+  "306": {
+   "detectable": {
+    "translator": "Vladislav"
+   }
+  },
+  "307": {
+   "detectable": {
+    "translator": "Dimitūr Stoevski"
+   }
+  },
+  "308": {
+   "detectable": {
+    "translator": "Rongchang Zhang"
+   }
+  },
+  "310": {
+   "detectable": {
+    "translator": "Mahmut Bobrati"
+   }
+  },
+  "311": {
+   "detectable": {
+    "translator": "Nikolaĭ Donchev"
    }
   },
   "313": {
    "detectable": {
-    "publisher": "p. Hand-press"
+    "translator": "Afrim Koçi"
    }
   },
-  "320": {
-   "notInSource": [
-    "pageCount"
-   ]
-  },
-  "477": {
+  "314": {
    "detectable": {
-    "publisher": "2nd edition"
+    "translator": "K. A. Meranaios"
+   }
+  },
+  "317": {
+   "detectable": {
+    "translator": "Laure Bernardi"
+   }
+  },
+  "319": {
+   "detectable": {
+    "translator": "Alzir Hella"
+   }
+  },
+  "323": {
+   "detectable": {
+    "translator": "Pingxiu Xu"
+   }
+  },
+  "324": {
+   "detectable": {
+    "translator": "Liliana Scalero"
+   }
+  },
+  "329": {
+   "detectable": {
+    "publisher": "Verlag des Gesamtverbandes schaffender Künstler Österreichs",
+    "translator": "Ramon Monton"
+   }
+  },
+  "782": {
+   "detectable": {
+    "translator": "Dimitŭr Stoevski"
    }
   },
   "805": {
@@ -72,15 +195,16 @@
     "publisher": "NY. No date indicated. Willey Hance"
    }
   },
-  "1628": {
+  "1705": {
    "detectable": {
-    "publisher": "2nd edition"
+    "publisher": "Fredonia",
+    "translator": "Boris Buden"
    }
   },
-  "1683": {
-   "notInSource": [
-    "publisher"
-   ]
+  "1818": {
+   "detectable": {
+    "publisher": "Klincksieck"
+   }
   },
   "1836": {
    "notInSource": [
@@ -97,10 +221,25 @@
     "translator"
    ]
   },
-  "1941": {
-   "notInSource": [
-    "translator"
-   ]
+  "1874": {
+   "detectable": {
+    "publisher": "Sonnabend"
+   }
+  },
+  "1925": {
+   "detectable": {
+    "publisher": "Sonnabend"
+   }
+  },
+  "1987": {
+   "detectable": {
+    "publisher": "Verlag der Stefan-Zweig-Gesellschaft"
+   }
+  },
+  "2003": {
+   "detectable": {
+    "publisher": "Edition Büchergilde"
+   }
   },
   "2026": {
    "detectable": {
@@ -112,14 +251,29 @@
     "location"
    ]
   },
-  "2060": {
-   "notInSource": [
-    "publisher"
-   ]
+  "2080": {
+   "detectable": {
+    "publisher": "Kindler Verlag"
+   }
+  },
+  "2112": {
+   "detectable": {
+    "publisher": "Fischer Bücherei"
+   }
   },
   "2201": {
    "detectable": {
     "publisher": "Librairie Générale Francaise"
+   }
+  },
+  "2216": {
+   "detectable": {
+    "translator": "Jean-Baptiste Para"
+   }
+  },
+  "2271": {
+   "detectable": {
+    "translator": "Erling Nielsen"
    }
   },
   "2275": {
@@ -127,14 +281,44 @@
     "publisher": "Company"
    }
   },
+  "2277": {
+   "detectable": {
+    "translator": "Nicolaĭ Donchev"
+   }
+  },
+  "2281": {
+   "detectable": {
+    "publisher": "Verlag der Stefan-Zweig-Gesellschaft"
+   }
+  },
+  "2289": {
+   "detectable": {
+    "publisher": "Sportverlag"
+   }
+  },
   "2299": {
    "notInSource": [
     "location"
    ]
   },
+  "2304": {
+   "detectable": {
+    "translator": "Nobuo Iizuka"
+   }
+  },
   "2306": {
    "detectable": {
     "publisher": "Company"
+   }
+  },
+  "2330": {
+   "detectable": {
+    "translator": "Jacques Legrand"
+   }
+  },
+  "2336": {
+   "detectable": {
+    "translator": "Mahmud Bobrati"
    }
   },
   "2360": {
@@ -142,45 +326,55 @@
     "publisher": "Publications de la Sorbonne"
    }
   },
-  "2367": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
   "2382": {
    "notInSource": [
     "location"
    ]
   },
-  "2383": {
-   "notInSource": [
-    "publisher"
-   ]
+  "2407": {
+   "detectable": {
+    "publisher": "Librairie Arthème Fayard"
+   }
+  },
+  "2408": {
+   "detectable": {
+    "publisher": "Librairie Gallimard"
+   }
+  },
+  "2418": {
+   "detectable": {
+    "translator": "M. Pres"
+   }
+  },
+  "2450": {
+   "detectable": {
+    "publisher": "Bernard Grasset"
+   }
   },
   "2502": {
    "notInSource": [
     "location"
    ]
   },
-  "2587": {
+  "2613": {
    "detectable": {
-    "publisher": "1st edition"
+    "publisher": "S. Fischer Verlag"
    }
   },
-  "2637": {
-   "notInSource": [
-    "publisher"
-   ]
+  "2622": {
+   "detectable": {
+    "publisher": "Insel Verlag"
+   }
+  },
+  "2624": {
+   "detectable": {
+    "publisher": "Insel Verlag"
+   }
   },
   "2648": {
    "detectable": {
     "publisher": "House"
    }
-  },
-  "2685": {
-   "notInSource": [
-    "publisher"
-   ]
   },
   "2686": {
    "detectable": {
@@ -190,16 +384,19 @@
   "2722": {
    "notInSource": [
     "location"
-   ]
+   ],
+   "detectable": {
+    "translator": "N. N. Zhegalov"
+   }
   },
   "2787": {
    "notInSource": [
     "location"
    ]
   },
-  "2795": {
+  "2826": {
    "detectable": {
-    "publisher": "P. S. King & Sons"
+    "translator": "Marion Sonnenfeld"
    }
   },
   "2863": {
@@ -207,19 +404,39 @@
     "publisher": "Revue Littéraire des Primaires"
    }
   },
+  "2944": {
+   "detectable": {
+    "publisher": "Company"
+   }
+  },
   "2960": {
    "notInSource": [
     "location"
    ]
   },
+  "2993": {
+   "detectable": {
+    "publisher": "Verlag des Vereins"
+   }
+  },
+  "3015": {
+   "detectable": {
+    "publisher": "Buchverlag Der Morgen"
+   }
+  },
+  "3122": {
+   "detectable": {
+    "publisher": "Bergstedter Schachklub"
+   }
+  },
   "3180": {
    "detectable": {
-    "publisher": "2nd edition"
+    "publisher": "Bonnier"
    }
   },
   "3181": {
    "detectable": {
-    "publisher": "2nd edition"
+    "publisher": "Bonnier"
    }
   },
   "3195": {
@@ -227,9 +444,29 @@
     "publisher": "Argentina and Brazil"
    }
   },
+  "3197": {
+   "detectable": {
+    "publisher": "Auction 460"
+   }
+  },
+  "3224": {
+   "detectable": {
+    "translator": "Wu Mei"
+   }
+  },
+  "3240": {
+   "detectable": {
+    "publisher": "Edition Büchergilde"
+   }
+  },
   "3265": {
    "detectable": {
     "publisher": "Calmann Lévy"
+   }
+  },
+  "3278": {
+   "detectable": {
+    "publisher": "Philipp Reclam jun. Verlag"
    }
   },
   "3279": {
@@ -247,14 +484,44 @@
     "publisher": "April 1940"
    }
   },
-  "3549": {
+  "3447": {
    "detectable": {
-    "publisher": "3rd edition"
+    "publisher": "Rote Hilfe Deutschlands"
    }
   },
-  "3749": {
+  "3529": {
    "detectable": {
-    "publisher": "2nd edition"
+    "translator": "William G. Phelps"
+   }
+  },
+  "3546": {
+   "detectable": {
+    "publisher": "Neue Literaturanstalt"
+   }
+  },
+  "3553": {
+   "detectable": {
+    "publisher": "Messer & Cie. Verlag"
+   }
+  },
+  "3719": {
+   "detectable": {
+    "publisher": "Sportverlag"
+   }
+  },
+  "3815": {
+   "detectable": {
+    "publisher": "Verlag des Allgemeinen Österreichischen Frauenvereins"
+   }
+  },
+  "3817": {
+   "detectable": {
+    "publisher": "Reading traces in Zweig's Library"
+   }
+  },
+  "3850": {
+   "detectable": {
+    "publisher": "Hutchinson & Co. Publishers"
    }
   },
   "3927": {
@@ -267,9 +534,9 @@
     "publisher": "Librairie Simon Kra"
    }
   },
-  "3993": {
+  "3996": {
    "detectable": {
-    "publisher": "2nd edition"
+    "publisher": "Kiesel Verlag"
    }
   },
   "4019": {
@@ -287,20 +554,30 @@
     "location"
    ]
   },
+  "4042": {
+   "detectable": {
+    "publisher": "House"
+   }
+  },
+  "4101": {
+   "detectable": {
+    "publisher": "Cassell and Company"
+   }
+  },
   "4113": {
    "detectable": {
     "publisher": "Zürcher Institut für Interreligiösen Dialog"
-   }
-  },
-  "4336": {
-   "detectable": {
-    "publisher": "& Distribution"
    }
   },
   "4346": {
    "notInSource": [
     "publisher"
    ]
+  },
+  "4411": {
+   "detectable": {
+    "translator": "Fuʾād Ayyūb"
+   }
   },
   "4472": {
    "notInSource": [
@@ -317,35 +594,20 @@
     "translator": "Ilyich Tchaikovsky"
    }
   },
-  "4546": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "4593": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
   "4613": {
    "detectable": {
     "publisher": "Company"
+   }
+  },
+  "4618": {
+   "detectable": {
+    "publisher": "Granta"
    }
   },
   "4651": {
    "notInSource": [
     "location"
    ]
-  },
-  "4717": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "4743": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
   },
   "4748": {
    "notInSource": [
@@ -357,29 +619,14 @@
     "location"
    ]
   },
-  "4765": {
-   "detectable": {
-    "publisher": "1st edition"
-   }
-  },
   "4841": {
    "notInSource": [
     "location"
    ]
   },
-  "4847": {
+  "4860": {
    "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "4848": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "4880": {
-   "detectable": {
-    "publisher": "1st edition"
+    "publisher": "S. Fischer Verlag"
    }
   },
   "4897": {
@@ -388,26 +635,6 @@
    ]
   },
   "4903": {
-   "notInSource": [
-    "publisher"
-   ]
-  },
-  "4961": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "4962": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "4980": {
-   "detectable": {
-    "publisher": "p. 199\n\nThis is a review of the first German edition"
-   }
-  },
-  "4985": {
    "notInSource": [
     "publisher"
    ]
@@ -437,159 +664,19 @@
     "location"
    ]
   },
-  "5416": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
   "5504": {
    "notInSource": [
     "location"
    ]
-  },
-  "5834": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5897": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5899": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5906": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5907": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5912": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5913": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5914": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5920": {
-   "detectable": {
-    "publisher": "& Distribution"
-   }
-  },
-  "5950": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5951": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5955": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5960": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5961": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5962": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5963": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5964": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5965": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5966": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5967": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5968": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5969": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5970": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5971": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5972": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
   },
   "5973": {
    "detectable": {
     "publisher": "German"
    }
   },
-  "5981": {
+  "6254": {
    "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "5982": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
-   }
-  },
-  "6048": {
-   "detectable": {
-    "publisher": "is a social cataloging website for books"
+    "publisher": "Im Verlag der Internationalen Stefan-Zweig-Gesellschaft"
    }
   },
   "6319": {
@@ -601,6 +688,11 @@
    "notInSource": [
     "location"
    ]
+  },
+  "6676": {
+   "detectable": {
+    "publisher": "Berlin-Grunewald"
+   }
   },
   "6725": {
    "notInSource": [
@@ -640,9 +732,9 @@
     "location"
    ]
   },
-  "6815": {
+  "6820": {
    "detectable": {
-    "publisher": "p. VII. Written by Stefan Zweig for this edition"
+    "translator": "Klio Evangjeli"
    }
   },
   "6864": {
@@ -670,9 +762,9 @@
     "publisher": "Fredonia NY\n\nSee"
    }
   },
-  "6930": {
+  "6920": {
    "detectable": {
-    "publisher": "P. S. King & Son"
+    "publisher": "Fredonia NY\n\nSee"
    }
   },
   "6953": {
@@ -690,20 +782,81 @@
     "publisher": "Fredonia\n\nFrench translation"
    }
   },
+  "7055": {
+   "detectable": {
+    "translator": "Brigitte Vergne-Cain and Gérard Rudent"
+   }
+  },
+  "7207": {
+   "detectable": {
+    "translator": "Joan Fontcuberta i Gel"
+   }
+  },
+  "7218": {
+   "detectable": {
+    "translator": "Ẕabīḥ Allāh Manṣūrī"
+   }
+  },
+  "7224": {
+   "detectable": {
+    "translator": "Alzir Hella and Olivier Bouranc"
+   }
+  },
+  "7347": {
+   "detectable": {
+    "publisher": "Verlag der Dichtergabe"
+   }
+  },
   "7369": {
    "detectable": {
     "publisher": "November 1904"
    }
   },
+  "7378": {
+   "detectable": {
+    "publisher": "Philipp Reclam jun. Verlag"
+   }
+  },
+  "7383": {
+   "detectable": {
+    "translator": "Oriana Tamburi"
+   }
+  },
   "7393": {
    "notInSource": [
     "location"
-   ]
+   ],
+   "detectable": {
+    "translator": "Yan Zhu"
+   }
   },
   "7399": {
    "notInSource": [
     "location"
-   ]
+   ],
+   "detectable": {
+    "translator": "Yan Zhu"
+   }
+  },
+  "7400": {
+   "detectable": {
+    "translator": "Erna McArthur"
+   }
+  },
+  "7406": {
+   "detectable": {
+    "translator": "Brigitte Vergne-Cain and Gérard Rudent"
+   }
+  },
+  "7460": {
+   "detectable": {
+    "translator": "Robert Shvarc"
+   }
+  },
+  "7525": {
+   "detectable": {
+    "translator": "Dimitŭr Stoevski"
+   }
   },
   "2979": {
    "census": "Quellseitig geleerte Seite (Census-Anomalie)"

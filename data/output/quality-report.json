@@ -24,32 +24,32 @@
       "percentage": 100.0
     },
     "datePublished": {
-      "count": 4435,
-      "percentage": 93.2
+      "count": 4425,
+      "percentage": 93.0
     },
     "publisher": {
-      "count": 2614,
-      "percentage": 54.9
+      "count": 2439,
+      "percentage": 51.3
     },
     "locationCreated": {
-      "count": 4262,
-      "percentage": 89.6
+      "count": 4257,
+      "percentage": 89.5
     },
     "inLanguage": {
-      "count": 4314,
-      "percentage": 90.7
+      "count": 4477,
+      "percentage": 94.1
     },
     "languageCode": {
       "count": 0,
       "percentage": 0.0
     },
     "numberOfPages": {
-      "count": 2445,
-      "percentage": 51.4
+      "count": 2335,
+      "percentage": 49.1
     },
     "translator": {
-      "count": 2002,
-      "percentage": 42.1
+      "count": 1948,
+      "percentage": 40.9
     },
     "categories": {
       "count": 4747,
@@ -128,24 +128,24 @@
     "sv": 28,
     "et": 27,
     "hu": 22,
-    "sh": 22,
     "bn": 22,
     "hy": 21,
+    "sh": 18,
     "sk": 18,
-    "yi": 17,
-    "ja": 16
+    "ro": 17,
+    "yi": 17
   },
   "time_period_distribution": {
-    "contemporary": 1333,
-    "lifetime": 1127,
-    "late-20c": 1051,
-    "post-wwii": 874,
-    "pre-zweig": 61
+    "contemporary": 1416,
+    "late-20c": 1116,
+    "lifetime": 966,
+    "post-wwii": 937,
+    "pre-zweig": 1
   },
   "year_range": {
-    "min": 1815,
+    "min": 1857,
     "max": 2020,
-    "count": 4446
+    "count": 4436
   },
   "sample_issues": [
     {

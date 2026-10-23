@@ -21,8 +21,9 @@ from pathlib import Path
 # node and review status per publication, the page's publication flag codes,
 # the co-imprint pairs and series gloss, the release license and version, and
 # the review scope and reviewed status that main added while 1.3 still stood,
-# 1.5 the source revision a restored page is published from.
-FRONTEND_SCHEMA_VERSION = "1.5"
+# 1.5 the source revision a restored page is published from, 1.6 the
+# "uncertain" mark of a credit the source qualifies with "(?)".
+FRONTEND_SCHEMA_VERSION = "1.6"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -350,7 +351,9 @@ def test_every_side_file_matches_the_declared_contract(all_entries) -> None:
             assert set(publication["sourceSlice"]) <= SOURCE_SLICE_KEYS
             assert set(publication["provenance"].values()) <= PROVENANCE_CLASSES
             for credit in publication.get("credits", []):
-                assert set(credit) == {"role", "name", "creditLabel"}
+                assert {"role", "name", "creditLabel"} <= set(credit)
+                assert set(credit) <= {"role", "name", "creditLabel", "uncertain"}
+                assert credit.get("uncertain", True) is True
                 assert credit["role"] in CREDIT_ROLES
             for flag in publication.get("reviewFlags", []):
                 assert set(flag) == {"code", "detail"}

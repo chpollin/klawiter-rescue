@@ -1,14 +1,14 @@
 {
   "algorithmVersion": "1.2",
   "artifacts": {
-    "candidates.json": "62519eebcb9d74c9ecd9736857c37ff4ec991f79fe622b592d8a928e23bbf7ee",
+    "candidates.json": "2e86942366f8fd9acac0837a994b89a3f5b63ad587d92e8e4f44c5d30330d909",
     "contested-claims.json": "6b3261c85ac2bf3324a4781c685ed1c69f0a4eb096fe3db5f4d8c64d6d6646b5",
     "decisions.json": "0dfce3131144e45e67cd1d6d7e5148fb6c04898c4a96b5dc56ed4b23193b8c52",
-    "earl.jsonld": "09abd917fd05cf4b7ea7d35bc10a9b8651a0897f964a6f514debb2473c41802d",
-    "provenance.jsonld": "392e3f6a6e511bae166237ea523b40629b5f5d3ed1f415f974e3ddc5930f0291",
+    "earl.jsonld": "569b5d632100c89ff18bf61fc8b240c77825f6f9d319d5d6910c10afbb9250b1",
+    "provenance.jsonld": "51e5e37dff188c5ecc9e2979e27299fd5fed896c38bd5ca095c041e4b8651102",
     "publishable-links.json": "6d35bf89b77d9bb4d747e52fa8244c6ed7fc2b87cff240fb6b742c3ae8ac08a5",
-    "review-queue.json": "f07c1e6f93afb848002348ddcfb7cae11d3ea26f7f53e7a1e7edec4f9c54b75d",
-    "validation-report.json": "42586763d362ff347154d3c864516b6ed27715ca12a1ca82afeaebc28967e8fa"
+    "review-queue.json": "2cdd2c367e94a82310af5bab9f9d8b599215b6bc4c68b32a2574e441120d1304",
+    "validation-report.json": "6f813b5c5602fb877d67583eb7991e7ea5758330cc73cd1eed43b7fe736a1754"
   },
   "codeSha256": "d25630f0e120869462912364b982872addf38eea16d85499aa2a8993f1b48d77",
   "counts": {
@@ -32,9 +32,9 @@
   },
   "frontendArtifact": {
     "path": "docs/data/reconciliation.json",
-    "sha256": "52ab6df57c6f6de0823536dcdd235a2efc5ba84a2c10350f4ec77cd82facf52d"
+    "sha256": "8f100fcfadd5f313823cc471d0475c23bb00503db13cbe61aeaaff40e41e6c26"
   },
-  "generatedAt": "2026-10-23T19:39:21.844906+00:00",
+  "generatedAt": "2026-10-23T21:26:55.044677+00:00",
   "inputs": {
     "agent-decisions": {
       "path": "data/reconciliation/agent-decisions.json",
@@ -46,7 +46,7 @@
     },
     "classified-source": {
       "path": "data/intermediate/04_classified.csv",
-      "sha256": "fc8d59833c661dd7c9f91b8db6fc6e69ddfaabc44a6afc304abc62683d8ed3e9"
+      "sha256": "820504bf7fdfd45868e3a1c499f4912877b3f70d06e0e3ae8feec063042aeaa4"
     },
     "edition-modeling-decisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
@@ -54,11 +54,11 @@
     },
     "editions": {
       "path": "data/output/editions/work-editions.jsonld",
-      "sha256": "234d49683cecadd0c5851a9ec51ce379253fa5a4da219df2bd231d370ff8038b"
+      "sha256": "686f8a96774f0c11e31ca65b6717d324c3d012fd79f8a9228da9d7d9d5647d70"
     },
     "location-decisions": {
       "path": "data/reconciliation/location-decisions.json",
-      "sha256": "1cb9acca738085a9defb8b3741193fd8c297d33fbcfbe921519e73b5bcd64331"
+      "sha256": "788f2b855959d667ed6ac0136f453b6f1231abddcb6b269742ea5dfdfd5a6b60"
     },
     "location-log": {
       "path": "data/provenance/locations-reconciliation-log.json",

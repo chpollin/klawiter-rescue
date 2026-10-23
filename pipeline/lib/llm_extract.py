@@ -181,6 +181,21 @@ def occurs_in_source(value, source):
     return bool(parts) and all(value_in_content(part, source) for part in parts)
 
 
+def page_count_in_source(count, source):
+    """Whether the source states ``count`` as an extent.
+
+    The number must stand alone and carry a page token ("124p.", "124/(1)p.",
+    "124 pages", "124 S."), or follow "pp." without opening a range; a bare
+    number elsewhere (a year, an issue, a range start) attests no extent.
+    """
+    if count is None or not source:
+        return False
+    number = rf"(?<![\d/]){int(count)}(?!\d)"
+    extent = rf"{number}\s*(?:/\s*\(?\d+\)?\s*)?(?:pp?\.|p\b|pages?\b|Seiten\b|S\.)"
+    locator = rf"\bpp?\.\s*{number}(?!\s*[-–—]\s*[\d(])"
+    return re.search(f"{extent}|{locator}", source, re.IGNORECASE) is not None
+
+
 def validate_extraction(extraction):
     """Validate a single LLM extraction result. Returns cleaned dict."""
     result = {"page_id": extraction.page_id}
@@ -232,9 +247,15 @@ def load_cache(cache_path):
 
 def save_cache(cache_path, cache):
     """Save LLM results cache atomically — a crash during the periodic save
-    must not destroy the cache that resume depends on."""
+    must not destroy the cache that resume depends on.
+
+    The reviewed cache is frozen into data/provenance/, whose bytes the gate
+    manifests hash; newline="\\n" keeps them identical on Windows and Linux
+    (the frozen cache had CRLF line endings in the working tree on
+    2026-10-23, so a clean checkout could not reproduce the recorded hash).
+    """
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     tmp_path = cache_path + ".tmp"
-    with open(tmp_path, "w", encoding="utf-8") as f:
+    with open(tmp_path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
     os.replace(tmp_path, cache_path)

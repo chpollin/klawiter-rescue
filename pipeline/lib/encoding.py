@@ -288,17 +288,49 @@ def _fold_quotes(text):
     return text.replace('\\"', '"').translate(_QUOTE_FOLD)
 
 
+def unescape_dump_quotes(text):
+    """Undo the SQL escape of a double quote in a value read from the dump.
+
+    Stage 01 keeps the page text in the dump's form, \\" included, because the
+    reviewed Gate 1 selectors and slice hashes and the source-revision text
+    hashes are defined over that form. A value taken from the text is no
+    coordinate, so the escape is undone where the value leaves the source.
+    One pass over the escape pairs, so an escaped backslash before a quote
+    cannot be unescaped twice.
+    """
+    if not text or "\\" not in text:
+        return text
+    return re.sub(r"\\([\\\"])", r"\1", text)
+
+
+def _whole_word_in(needle, haystack):
+    """needle occurs in haystack without starting or ending inside a word.
+
+    A boundary is required only at an edge where the needle itself has a
+    word character, so a value ending in a quote or bracket still matches.
+    """
+    if not needle:
+        return False
+    lead = r"(?<!\w)" if re.match(r"\w", needle) else ""
+    trail = r"(?!\w)" if re.search(r"\w$", needle) else ""
+    return re.search(lead + re.escape(needle) + trail, haystack) is not None
+
+
 def value_in_content(value, content):
-    """Check if a value appears in the raw content.
-    Tries exact match first, then encoding-aware match.
+    """Whether a value occurs as whole words in the raw content.
+
+    Tries the case-insensitive, whitespace-normalized match first, then the
+    encoding-aware match. The match must not start or end inside a word: a
+    fragment such as "Ka" of "Katharina" or "Dam" of "Damascus" is no
+    occurrence of the value.
     """
     if not value or not content:
         return False
     value, content = _fold_quotes(value), _fold_quotes(content)
-    # Exact (case-insensitive, whitespace-normalized)
-    if normalize_text(value) in normalize_text(content):
+    if _whole_word_in(normalize_text(value), normalize_text(content)):
         return True
     # Encoding-aware: strip mojibake from both sides
-    return normalize_text(strip_encoding_artifacts(value)) in normalize_text(
-        strip_encoding_artifacts(content)
+    return _whole_word_in(
+        normalize_text(strip_encoding_artifacts(value)),
+        normalize_text(strip_encoding_artifacts(content)),
     )

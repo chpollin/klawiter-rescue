@@ -38,6 +38,7 @@ from lib.config import (
     setup_logging,
     write_json,
 )
+from lib.encoding import unescape_dump_quotes
 from lib.publications import (
     attach_edition_state,
     build_page_publications,
@@ -161,8 +162,14 @@ def load_source_revision_restorations():
                 key: human[key]
                 for key in ("revisionId", "timestamp", "actor", "textId")
             },
+            # The recorded comment keeps the dump's quote escape; the reader
+            # sees the comment as the wiki showed it.
             "fixerRevisions": [
-                {key: rev[key] for key in ("revisionId", "timestamp", "comment")}
+                {
+                    "revisionId": rev["revisionId"],
+                    "timestamp": rev["timestamp"],
+                    "comment": unescape_dump_quotes(rev["comment"]),
+                }
                 for rev in decision["fixerRevisions"]
             ],
             "decidedBy": document["provenance"],
@@ -670,7 +677,7 @@ def load_pagelink_resolver():
     for row in load_csv(STEP_01_PAGELINKS):
         if row["pl_namespace"] != "0":
             continue
-        title = row["pl_title"]
+        title = unescape_dump_quotes(row["pl_title"])
         resolver.setdefault(int(row["pl_from"]), {})[_normalize_title(title)] = title
     return resolver
 
@@ -899,8 +906,9 @@ def main():
         # into per-page side files, 1.4 the edition node and review status
         # per publication, the page's publication flag codes, the imprint
         # pairs and series gloss, the release license and version, and the
-        # review scope and reviewed status.
-        "frontendSchemaVersion": "1.5",
+        # review scope and reviewed status, 1.5 the source revision of a
+        # restored page, 1.6 the "uncertain" mark of a credit.
+        "frontendSchemaVersion": "1.6",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,

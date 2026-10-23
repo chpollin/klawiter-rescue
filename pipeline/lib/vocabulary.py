@@ -201,7 +201,45 @@ LANGUAGE_MAP = {
     "Yiddish": "yi",
     "Esperanto": "eo",
     "Latin": "la",
+    # Category labels of the source that the map lacked (2026-10-23), each
+    # with its subtag in the IANA language subtag registry. "Rumanian" and
+    # "Moldavian" are the source's labels for Romanian; the registry deprecates
+    # "mo" in favour of "ro". "Belorussian" is the source's spelling of
+    # Belarusian.
+    "Azerbaijani": "az",
+    "Rumanian": "ro",
+    "Moldavian": "ro",
+    "Belorussian": "be",
+    "Mongolian": "mn",
+    "Faeroese": "fo",
+    "Icelandic": "is",
+    "Marathi": "mr",
+    "Bosnian": "bs",
+    "Tamil": "ta",
+    "Kazakh": "kk",
+    "Luxembourgish": "lb",
+    "Uzbek": "uz",
+    "Breton": "br",
+    "Uyghur": "ug",
+    "Kyrgyz": "ky",
+    "Malayalam": "ml",
+    "Macedonian": "mk",
+    "Telugu": "te",
+    "Chuvash": "cv",
+    "Gujarati": "gu",
+    "Friulian": "fur",
+    "Karakalpak": "kaa",
+    "Sindhi": "sd",
+    "Maltese": "mt",
+    "Corsican": "co",
+    "Tajik": "tg",
+    "Khmer": "km",
+    "Oriya": "or",
 }
+# Languages the source names whose registry subtag would narrow the label: the
+# registry's "arc" is Official (Imperial) Aramaic of 700-300 BCE, not Aramaic
+# as such. The label is kept without a code.
+LANGUAGES_WITHOUT_CODE = frozenset({"Aramaic"})
 
 
 def resource_iri(kind, name):

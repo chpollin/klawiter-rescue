@@ -33,11 +33,21 @@ from lib.patterns import (
     extract_translator,
     extract_year,
 )
-from lib.publications import imprint_publisher, load_attested_places
+from lib.publications import first_publication_fields, load_attested_places
 from lib.vocabulary import LANGUAGE_MAP, language_to_iso
-from lib.wiki_parser import extract_structured_data, remove_wiki_markup
+from lib.wiki_parser import (
+    blank_translations_block,
+    extract_structured_data,
+    remove_wiki_markup,
+)
 
 log = setup_logging(__name__)
+
+# Main categories of Zweig's own works, whose translations bracket the
+# original title after their title statement.
+ORIGINAL_TITLE_CATEGORIES = frozenset(
+    {"Fiction", "Essays", "Historical Studies", "Poetry", "Dramas"}
+)
 
 # Section headers that are not real titles (extracted from ==Header== or '''Header:''')
 SECTION_HEADER_RE = re.compile(
@@ -319,7 +329,6 @@ def process_entry(row, attested_places=None):
     # Clean any remaining wiki markup from title (e.g. page_title fallbacks)
     if result["title"]:
         result["title"] = remove_wiki_markup(result["title"])
-    result["original_title"] = parsed.get("original_title", "")
     result["sortkey"] = parsed.get("sortkey", "")
 
     # Categories
@@ -333,19 +342,27 @@ def process_entry(row, attested_places=None):
     clean = parsed.get("clean_content", "")
     result["clean_content"] = clean
 
-    # Year
-    result["year"] = extract_year(content) or ""
+    # Year, publisher and extent: on a page with a publication layer they are
+    # the first publication's, so the three describe one publication; the body
+    # patterns keep the entries that never carried a header.
+    scoped = first_publication_fields(
+        int(row["page_id"]),
+        content,
+        page_title,
+        categories,
+        attested_places or set(),
+    )
+    result["publication_scoped"] = "true" if scoped is not None else ""
+    if scoped is not None:
+        result["year"] = scoped["year"] or ""
+        result["publisher"] = scoped["publisher"] or ""
+        result["page_count"] = scoped["page_count"] or ""
+    else:
+        result["year"] = extract_year(content) or ""
+        result["publisher"] = extract_publisher(content) or ""
+        result["page_count"] = extract_page_count(content) or ""
     all_years = extract_all_years(content)
     result["all_years"] = json.dumps(all_years) if all_years else ""
-
-    # Publisher: the publication header is the source-bound imprint statement,
-    # so it takes precedence over the loose body patterns; those keep the
-    # entries that never carried a header.
-    result["publisher"] = (
-        imprint_publisher(content, attested_places or set())
-        or extract_publisher(content)
-        or ""
-    )
 
     # Location
     result["location"] = extract_location(content) or ""
@@ -359,11 +376,27 @@ def process_entry(row, attested_places=None):
     result["language"] = lang_name or ""
     result["language_iso"] = language_to_iso(lang_name) if lang_name else ""
 
-    # Page count
-    result["page_count"] = extract_page_count(content) or ""
+    # The bracket after the title statement gives the original title only on a
+    # translation of one of Zweig's works. On a German page it names a cycle or
+    # series ("[Die Kette. Ein Novellenkreis. Der 2. Ring]", page 3), and on
+    # secondary literature, correspondence and collections it glosses the
+    # title in English ("[Stefan Zweig, 1881, died 1942, Austria]", page 4512).
+    translated_work = (
+        lang_name
+        and lang_name != "German"
+        and result["main_category"] in ORIGINAL_TITLE_CATEGORIES
+    )
+    result["original_title"] = (
+        parsed.get("original_title", "") if translated_work else ""
+    )
 
-    # Translator
-    result["translator"] = extract_translator(content) or ""
+    # Translator. On a German page the credits of the translations section
+    # belong to the translations it lists ("Translated by Mien Labberton" of the
+    # Dutch translation on page 272), never to the German original.
+    translator_text = content
+    if lang_name == "German":
+        translator_text = blank_translations_block(content)
+    result["translator"] = extract_translator(translator_text) or ""
 
     # Cross-references
     see_also = parsed.get("see_also", [])

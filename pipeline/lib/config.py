@@ -187,6 +187,9 @@ PARSED_FIELDS = [
     "content_items",
     "clean_content",
     "raw_content",
+    # "true" where the page has a publication layer, whose first publication
+    # then owns the flat year, publisher and extent (stage 03).
+    "publication_scoped",
 ]
 
 # Step 04 adds entry_type and time_period

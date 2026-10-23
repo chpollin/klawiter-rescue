@@ -194,8 +194,9 @@ def test_titles_are_not_classified_as_statements(parser, title) -> None:
             ["Secondary Literature / Authors (Arabic)"],
             None,
         ),
-        # A language label is read only against the page's own categories.
-        ("Bosnian", "Balzak", [], None),
+        # A category language outside the vocabulary is a label only against
+        # the page's own categories ("Belgian", a category label of the source).
+        ("Belgian", "Balzak", [], None),
         # Page 3436 opens with the repository holding Hasenclever's letters.
         (
             "The Stefan Zweig Collection",

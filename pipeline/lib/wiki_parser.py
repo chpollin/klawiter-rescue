@@ -160,20 +160,59 @@ def extract_title(content):
     return None
 
 
+# The title statement of a page or of its first publication block: an italic,
+# bold or quoted title opening the line, followed by the bracket in which the
+# source gives the original title ("''Je Joueur d'échecs'' [Schachnovelle]",
+# page 675; "''Graditelji svijeta'' [Baumeister der Welt]", page 846).
+# A title may hold a single apostrophe ("Je Joueur d'échecs"), never markup.
+_TITLE_TEXT = r"(?:[^'\n]|'(?!'))+?"
+_TITLE_WITH_BRACKET_RE = re.compile(
+    rf"^\s*(?:'''''{_TITLE_TEXT}'''''|'''{_TITLE_TEXT}'''|''{_TITLE_TEXT}''"
+    r"|\\?\"[^\"\n]+\\?\")"
+    r"\s*\[([^\[\]\n]+)\]"
+)
+_HEADER_LINE_RE = re.compile(r"^\s*'''\s*\[")
+# A credit the source appends inside the bracket ("[Schachnovelle. Translated
+# by A'. Salykbai']", page 4779) is no part of the original title.
+_BRACKET_CREDIT_RE = re.compile(
+    r"\.\s+(?=(?:Translated|Translation|Übersetzt|Edited|Illustrated|Adapted|"
+    r"Retold|Abridged)\b)"
+)
+
+
+# An editorial note in the bracket ("[This is a review of the novel Le Feu …]",
+# page 5768).
+_BRACKET_NOTE_RE = re.compile(
+    r"(?:This|These|See|Excerpt|An excerpt|A review|Review|Individual|"
+    r"Original version)\b"
+)
+
+
 def extract_original_title(content):
-    """Extract original title if present (often in parentheses or brackets after main title)."""
-    # Pattern: (Original Title) or [Original Title] after main title
-    # Reject bare years (e.g. [1931]) which are publication dates, not titles
-    m = re.search(r"'''[^']+'''\s*\(([^)]+)\)", content)
-    if m:
-        candidate = m.group(1).strip()
-        if not re.match(r"^\d{4}$", candidate):
-            return candidate
-    m = re.search(r"'''[^']+'''\s*\[([^\]]+)\]", content)
-    if m:
-        candidate = m.group(1).strip()
-        if not re.match(r"^\d{4}$", candidate):
-            return candidate
+    """The original title the source brackets after the page's title statement.
+
+    Only the first statement line counts: the page's first line, or the first
+    line after a leading publication header. A bracket that opens with a digit
+    states a date or a list number ("[30 November-2 December 1981]", page 971),
+    not a title. A bracket elsewhere on the page belongs to a part of the work
+    ("'''Tri majstora''' [Drei Meister]" in the contents of page 846) and is
+    never read. None where the title statement brackets nothing.
+    """
+    if not content:
+        return None
+    for line in content.splitlines():
+        if not line.strip() or _HEADER_LINE_RE.match(line):
+            continue
+        if re.match(r"\s*__[A-Z]+__\s*$", line):
+            continue
+        match = _TITLE_WITH_BRACKET_RE.match(line)
+        if not match:
+            return None
+        candidate = _BRACKET_CREDIT_RE.split(match.group(1), maxsplit=1)[0]
+        candidate = remove_wiki_markup(candidate).strip().rstrip(".,;:").strip()
+        if not candidate or candidate[0].isdigit() or _BRACKET_NOTE_RE.match(candidate):
+            return None
+        return candidate
     return None
 
 
@@ -207,12 +246,33 @@ def extract_see_references(content):
     return refs
 
 
-def _extract_wiki_section(content, pattern, min_length=5):
+# A translations block lists one bold language heading per paragraph
+# ('''Bulgarian:''' ... blank line ... '''Dutch:'''); such a heading continues
+# the block. Section words, edition headers ('''[1982]: ...''') and numbered
+# parts end it.
+_LANGUAGE_HEAD = (
+    r"(?!(?:Secondary|Contents|Reprinted|Translations?\b|Excerpts|Reviews"
+    r"|Part\b|Individual|Article|Collected|L\.))"
+    r"[A-Z][^\W\d_]+(?:[ /-][^\W\d_]+)*(?: \([^)\n]*\))?:?'''"
+)
+
+
+def _wiki_section(content, pattern, inner_head=None):
+    """The match of a bold-header section; group 1 holds the block body.
+
+    The block ends at the next bold paragraph start unless that bold text
+    matches inner_head, which marks a sub-heading inside the block.
+    """
+    stop = r"\n\n'''" if inner_head is None else rf"\n\n'''(?!{inner_head})"
+    return re.search(
+        pattern + rf"\s*(.+?)(?:{stop}|\n\n\[\[Category|\Z)", content, re.DOTALL
+    )
+
+
+def _extract_wiki_section(content, pattern, min_length=5, inner_head=None):
     """Generic extractor for bold-header wiki sections (Reprinted in, Translations, Contents)."""
     items = []
-    block = re.search(
-        pattern + r"\s*(.+?)(?:\n\n'''|\n\n\[\[Category|\Z)", content, re.DOTALL
-    )
+    block = _wiki_section(content, pattern, inner_head)
     if block:
         for line in block.group(1).split("\n"):
             line = line.strip()
@@ -230,7 +290,25 @@ def extract_reprints(content):
 
 def extract_translations_block(content):
     """Extract '''Translations:''' or '''Translation:''' block."""
-    return _extract_wiki_section(content, r"'''Translations?:?'''", min_length=5)
+    return _extract_wiki_section(
+        content, _TRANSLATIONS_HEAD, min_length=5, inner_head=_LANGUAGE_HEAD
+    )
+
+
+_TRANSLATIONS_HEAD = r"'''Translations?:?'''"
+
+
+def blank_translations_block(content):
+    """The content with the translations section blanked in place.
+
+    The section is the one extract_translations_block reads; its credits
+    belong to the translations it lists. Blanking keeps every offset.
+    """
+    block = _wiki_section(content or "", _TRANSLATIONS_HEAD, _LANGUAGE_HEAD)
+    if not block:
+        return content
+    start, end = block.start(), block.end(1)
+    return content[:start] + " " * (end - start) + content[end:]
 
 
 def extract_contents_block(content):

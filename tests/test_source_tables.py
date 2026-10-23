@@ -35,6 +35,20 @@ def test_extraction_fixtures_match_complete_sources(real_entries, source_rows):
         )
 
 
+def test_record_source_fixtures_match_complete_sources(record_sources, source_rows):
+    by_id = {int(row["page_id"]): row for row in source_rows}
+    for page_id, entry in record_sources.items():
+        row = by_id[page_id]
+        assert entry["text"] == row["content"], page_id
+        assert entry["page_title"] == row["page_title"]
+        assert entry["source"]["textId"] == int(row["text_id"])
+        assert entry["source"]["path"] == f"data/raw/zt_0{row['blob_id']}"
+        assert (
+            entry["source"]["textSha256"]
+            == hashlib.sha256(row["content"].encode("utf-8")).hexdigest()
+        )
+
+
 @pytest.fixture(scope="module")
 def sql_text() -> str:
     with open(SQL_DUMP_PATH, "rb") as f:
