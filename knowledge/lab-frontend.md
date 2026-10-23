@@ -42,7 +42,7 @@ Source beside value
 : Every bibliographic value can be traced to its passage in the wiki text, and the passage is shown, not only linked. This follows EIL-01 and EIL-02 of the vault's interface contract and the field-to-source marking already built in the sibling repository klawiter-compare-lab. Explanations that lower the cost of checking reduced overreliance on machine output in controlled studies (Vasconcelos et al. 2023), while persuasive model-written rationales raised acceptance regardless of correctness (Bansal et al. 2021). The lab therefore shows the source passage and no model rationale.
 
 State, producer and origin kept apart
-: Origin (`regex`, `llm`, `missing`, `editor`) describes how a value came about and appears as neutral text. State (`proposed`, `confirmed`, `contested`) appears as a word with its producer and names the object it applies to, for example "Wikidata link Q1085: proposed by test fixture of twenty places, no source occurrence". Colour marks only a contested statement, always together with a word. Gaps, confirmed and proposed states and the warnings of the boundary check and of the automatic verification appear as words, the warnings with a marker symbol, so that frequent states do not outweigh the few that need attention. Absent values are the majority state for several fields, so colouring them would colour most records. In an experiment with news images, participants read the colour of a provenance indicator as a verdict on the content (Feng et al. 2023). An unexplained label for AI involvement lowered trust even in true headlines, and the effect disappeared when the label explained the limited role of the model (Altay and Gilardi 2024). Transferring both findings to bibliographic fields is an inference the lab will test in its evaluation.
+: Origin (`regex`, `llm`, `missing`, `editor`) describes how a value came about and appears as neutral text. State (`proposed`, `confirmed`, `contested`) appears as a word with its producer and names the object it applies to, for example "Wikidata link Q1085: confirmed by LLM agents under operator delegation, no person, for the name 'Praha', not for this publication". Colour marks only a contested statement, always together with a word. Gaps, confirmed and proposed states and the warnings of the boundary check and of the automatic verification appear as words, the warnings with a marker symbol, so that frequent states do not outweigh the few that need attention. Absent values are the majority state for several fields, so colouring them would colour most records. In an experiment with news images, participants read the colour of a provenance indicator as a verdict on the content (Feng et al. 2023). An unexplained label for AI involvement lowered trust even in true headlines, and the effect disappeared when the label explained the limited role of the model (Altay and Gilardi 2024). Transferring both findings to bibliographic fields is an inference the lab will test in its evaluation.
 
 Gaps named where they occur
 : A value that is not documented in the source appears as a labelled state inside the normal layout, and overviews carry an explicit group for undated or unlocated records. Leaving missing values out produced the lowest perceived credibility in charts with missing data (Song and Szafir 2019), and a review of digital humanities visualisation documents dedicated unknown values and visible buckets for missing places as scholarly practice (Panagiotidou et al. 2023). The vault's pattern of evidence-faithful counting adds that every count names its denominator and opens the list of exactly the records it counts.
@@ -55,6 +55,9 @@ Search and lists stay first-class
 
 Coverage and editorial scope visible
 : The interface states which states of the bibliography it holds, which time span the wiki covers and which modelling limits apply. Scholars in the study cited above relied on knowing a tool's scope and criticised online resources that hide it (Brockman et al. 2001).
+
+Exceptions before defaults
+: A state that holds for most values of a page, such as "rule" as origin or "no decision recorded", is stated once per page, and each value shows only what deviates from it. The first review of the running prototypes counted hundreds of repeated state lines on a single work page, which buried the few warnings. Internal names (decider strings, file paths, gate names, wiki markup) are translated into the reader's terms or left out.
 
 No confidence values
 : The interface shows no model confidence, no aggregate reliability score and no model-written explanation. This follows the vault's verification vocabulary and the SZD-HTR decision not to compute an aggregate value that would hide who checked a result.
@@ -88,13 +91,16 @@ S2.2 Notice a page-level value that belongs to another publication
 : As a Zweig researcher I want to be warned when a value of the page-level record occurs only in the passage of a publication other than the one that supplies the record's year, so that I recognise values mixed between the publications of one page. Acceptance: the check runs on pages that have a publication breakdown, is deterministic and names the publication whose passage holds the value; where several publications share the record's year, a value found in any of them passes; where no publication has the record's year, the check does not run and the record says that its year matches no publication; on pages without a breakdown that carry more than one year, the record states that its values may come from different publications. Grounding: material (the flat record of a page combines publications, documented in [Data](data.md); reference cases are selected by the preparation script from the regenerated data).
 
 S2.3 See the state of a place link and who produced it
-: As a Zweig researcher I want each place link to show its state and its producer, so that I can tell a person's confirmation from a rule's or an agent's, and a fixture's proposal from a confirmation. Acceptance: labels follow the provisional mapping below and name the object, "Wikidata link Q1085"; the state of each publication's edition assignment appears at the publication heading; no state relies on colour. Grounding: material and [Data](data.md).
+: As a Zweig researcher I want each place link to show its state and its producer, so that I can tell a person's confirmation from a rule's or an agent's, and a fixture's proposal from a confirmation. Acceptance: labels follow the provisional mapping below and name the object, "Wikidata link Q1085"; every agent producer names LLM agents and "no person"; the scope sentence "for the name '<place>', not for this publication" stands in the visible state line; the state of each publication's edition assignment appears at the publication heading; no state relies on colour. Grounding: material and [Data](data.md).
 
 S2.4 See where the automatic verification disagrees
 : As a Zweig researcher I want to see when the pipeline's verification stage could not find a page-level value in the raw text, so that I treat that value with care. Acceptance: a value of publisher, place, translator or page count whose verification status is a false positive carries the note "the automatic check did not find this value in the raw text"; the note states that the check covers page-level values only; the status name is not shown. Grounding: material.
 
 S2.5 See competing readings of a contested statement
 : As a Zweig researcher I want a contested place to show all recorded readings with their evidence, so that I can decide myself which one my work relies on. Acceptance: readings appear side by side with their evidence lines and review history; none is shown as the value; evidence from other pages names its page. Grounding: [Data](data.md) (contested claims stay visible), literature (Panagiotidou et al. 2023; Windhager et al. 2019).
+
+S2.6 Follow the provenance chain of one value
+: As a Zweig researcher I want to open, for any value, the chain of steps it passed, so that I can see whether it comes from the wiki, from the print volumes or from an LLM, and who checked what. Acceptance: a "Provenance" control beside each value opens one ordered list with the steps the data hold, each with its producer: source (wiki page, text id, restored revision where applicable), extraction (rule, LLM gap fill or editor), checks (exact occurrence in the own passage, the boundary check, the pipeline's verification note), decision (for place links: state, LLM or person, scope sentence), print correspondence (S6.2). A step the data do not hold is named as missing, for example "no per-record prompt stored". An exact occurrence is stated as evidence that the value exists in the source, not that it is relevant or complete. Grounding: the operator's requirement of 2026-10-23 that every data point shows whether it comes from the wiki, the print volumes or an LLM.
 
 ### E3 Cite and reuse
 
@@ -120,7 +126,10 @@ S5.2 Know what the bibliography holds
 ### E6 Print volumes
 
 S6.1 See whether the print volumes have been compared
-: As a Zweig researcher I want to know whether a record rests on the wiki alone, so that I do not assume a comparison that has not happened. Acceptance: the scope panel states once that the published lab shows wiki data only. In a local run with the optional file `docs/lab/local/print-links.json`, which the research coordinator's print strand produces and which Git ignores, a page with matches lists them at page level and says that matching is by page and not yet by edition. Each match gives volume, address or PDF page and route. Alignment matches with at least 0.9 of the print entry's distinctive word 5-grams in some revision read "near-verbatim in a wiki revision of <first seen>", those between 0.8 and 0.9 read "largely the same wording in a wiki revision of <first seen>", and no score is shown. The raw print text stands in its own pane beside the wiki text, a persistent notice states that the print data is local and unpublished because the rights are unresolved, and matches by title and year alone stay behind a collapsed count marked as noisy. The labels for alignment matches are read from the file when it provides them, so that thresholds stay with the print strand, and a test in `pipeline/lab/` fails if any file under `docs/lab/local/` is tracked by Git. Grounding: [Merged bibliography](print-wiki-merge.md) and the operator's wish of 2026-10-23 to see print data in the lab.
+: As a Zweig researcher I want to know whether a record rests on the wiki alone, so that I do not assume a comparison that has not happened. Acceptance: the scope panel states once that the published lab shows wiki data only. In a local run, `pipeline/lab/split_print_links.py` splits the print strand's matches into one ignored file per page under `docs/lab/local/print/` with an index. Where the index exists and a page has no file, the page reads "compared locally, no match found"; only without the index does it read "not compared". Every match reads "proposed" with its route as producer and never "confirmed". Field matches that name candidate publications appear under each of them as "candidate for this edition", with "one of N candidate editions" where they name several. Remaining field matches stay expanded up to five per page and are otherwise collapsed behind their count with "not reviewed, often unrelated on work and collection pages", a provisional threshold set by the research coordinator until a human sample measures one. The pane says that the print text is shown as extracted, with its encoding not corrected. Each match gives volume, address or PDF page and route. Alignment matches with at least 0.9 of the print entry's distinctive word 5-grams in some revision read "near-verbatim in a wiki revision of <first seen>", those between 0.8 and 0.9 read "largely the same wording in a wiki revision of <first seen>", and no score is shown. The raw print text stands in its own pane beside the wiki text, a persistent notice states that the print data is local and unpublished because the rights are unresolved, and matches by title and year alone stay behind a collapsed count marked as noisy. The labels for alignment matches are read from the file when it provides them, so that thresholds stay with the print strand, and a test in `pipeline/lab/` fails if any file under `docs/lab/local/` is tracked by Git. Grounding: [Merged bibliography](print-wiki-merge.md) and the operator's wish of 2026-10-23 to see print data in the lab.
+
+S6.2 See where wiki and print agree on a value
+: As a Zweig researcher I want to see when a wiki value also stands in the print entry matched to its edition, so that I know which values two sources support and which rest on the wiki alone. Acceptance: for each value of a publication with at least one candidate print entry, the preparation script checks deterministically whether the value occurs in that entry's text, with the occurrence rules of S2.1. A hit reads "also in print, Volume <v>, <address> (proposed, field match)"; a value absent from every candidate entry reads "not in the matched print entry"; a value without a candidate entry shows nothing. With several candidate editions the line names that the print entry is one of N candidates. No agreement raises a state, merges a value or reads "confirmed", because the print data are matches, not parsed fields, and no person has reviewed them; the scope panel says so. Wiki and print are states of one compiler's work, and the supplementary volume was aligned with early wiki revisions, so an agreement shows consistency between them, not independent support; the line says so. A value not found in the print text reads as not found, which can be an extraction error in the print text, and never as a disagreement. Alignment matches are attached to the publication whose passage they cover, so that they take part in the comparison. No agreement line appears on a Wikidata link, because print never supports an identity. Grounding: the operator's requirement of 2026-10-23 that a data point supported by both wiki and print shows this along its provenance chain, and [Merged bibliography](print-wiki-merge.md), where merging is a later step.
 
 ### Cross-cutting acceptance
 
@@ -132,28 +141,29 @@ The mapping derives producer labels from the decider strings until the shared cl
 
 | Stored decision | Decider and basis | State shown | Producer shown |
 |---|---|---|---|
-| `confirm` or `correct` | `independent-verification-agent`, agent review file with source occurrence | confirmed | independent agents against source and Wikidata, adjudicated by the main agent under operator delegation |
-| `confirm` or `correct` | `independent-verification-agent`, low-score review without source occurrence | confirmed | agent review, no source occurrence |
-| `confirm` | `repository-ground-truth-fixture` | proposed | test fixture of twenty places, no source occurrence |
-| `confirm` | `main-instance` | confirmed | main agent under operator delegation |
+| `confirm` or `correct` | `independent-verification-agent`, agent review file with source occurrence | confirmed | independent LLM agents against source and Wikidata, adjudicated by the main LLM agent under operator delegation, no person |
+| `confirm` or `correct` | `independent-verification-agent`, low-score review without source occurrence | confirmed, with the warning "no source occurrence" | LLM agent review, no source occurrence, no person |
+| `confirm` | `main-instance` | confirmed | main LLM agent under operator delegation, no person |
 | `reject` | any | no link | candidate rejected, with the decider's label |
 | `unresolved` | any | contested | open, readings listed |
 
-The operator decided on 2026-10-23 that the twenty fixture-based place decisions are demoted to `proposed` until a source occurrence supports them, so they produce no `sameAs` link. The regeneration announced by the research coordinator implements this, and the lab reads the stored state after it. The labels state that a decision applies to the Wikidata identity of the place name on every page that carries it, not to the place's assignment to a publication.
+Every place decision stored today was made by LLM agents. Whether such decisions may carry the state word `confirmed` is an open operator decision about the operator's delegation. Until it is taken, the research coordinator's ruling of 2026-10-23 applies: every agent producer names LLM agents and "no person", "no source occurrence" never appears beside `confirmed` without a visible warning, and the scope sentence "for the name '<place>', not for this publication" stands in the visible state line. A data contract test in `pipeline/lab/` fails if an agent producer lacks "LLM" or a confirmed state carries a non-person decider without saying so.
+
+Until 2026-10-23 a test fixture of twenty places produced decisions labelled `agent_verified` without a source occurrence. The operator demoted them that day, and since then these places carry no decision. The record history shows the earlier link with this producer.
 
 ## Prototypes
 
 Three prototypes cover the epics with different emphasis, so that the evaluation can compare them on the same tasks. The production frontend serves as the baseline on the same tasks, because it already shows publication blocks, marked source passages, contested readings and per-publication citations.
 
-1. Judge a value covers E2 and S3.2. It is the record view rebuilt around the source passage, the page-level boundary check and state with producer.
-2. Find and cite a work covers E1, E3, E5 and S6.1. It is a work-centred entry with a language facet, the indented list and the scope panel.
+1. Judge a value covers E2, S3.2 and E6. It is the record view rebuilt around the source passage, the page-level boundary check, state with producer, the provenance chain of each value and the print correspondence.
+2. Find and cite a work covers E1, E3 and E5. It is a work-centred entry with a language facet, the indented list and the scope panel.
 3. Record history covers E4 and serves the blog explainer. A static snapshot for the blog is generated from the same data with a text equivalent.
 
 A comparison of context depth is deferred until the three prototypes have passed their review, at the operator's priority of 2026-10-23. If it runs, prototype 1 is built twice under each of two context conditions. Under the first, the building agent receives the epics and stories only. Under the second, it also receives this document, the vault's interface knowledge and the house frontend rules. Two runs per condition reduce the chance of reading run-to-run variation as an effect. The comparison remains a documented observation on one case and supports no general claim about context depth.
 
 ## Interface specification
 
-The specification describes each prototype on real records, so that a reviewer can check it against the stories before anything is built. Values shown in angle brackets are filled from the data by the preparation script and are never typed into the interface. Reference records are selected from the regenerated data after the research coordinator's commit. Wireframes show the wide layout. Below 48rem every layout becomes one column in the order given under each wireframe.
+The specification describes each prototype on real records, so that a reviewer can check it against the stories before anything is built. Values shown in angle brackets are filled from the data by the preparation script and are never typed into the interface. Wireframes show the wide layout. Below 48rem every layout becomes one column in the order given under each wireframe.
 
 ### What a work is in this data
 
@@ -185,10 +195,10 @@ The record view of one wiki page. The left column shows the page's publications,
 |   edition assignment: proposed      |                                    |
 |   Publisher  Svoboda        rule    | [1968]: Svoboda, Praha [Prague]    |
 |   Place      Praha          rule    | Netrpělivost srdce [Ungeduld des   |
-|     Wikidata link Q1085: proposed   | Herzens]. Translated by Božena     |
-|     by test fixture of twenty       | Koseková. ‖326/(2)p.‖              |
-|     places, no source occurrence    |                                    |
-|     [Decision record]               | [1976]: Práce, Praha [Prague] ...  |
+|     Wikidata link: <state> by       | Herzens]. Translated by Božena     |
+|     <producer>, for the name        | Koseková. ‖326/(2)p.‖              |
+|     'Praha', not this publication   |                                    |
+|     [Provenance]                    | [1976]: Práce, Praha [Prague] ...  |
 |   Translator <value or "no value    |                                    |
 |              recorded ...">         |  ‖ ‖ marks the selected value with  |
 |   Extent     ▸326/(2)p.◂    rule    |  an outline and the label           |
@@ -222,7 +232,7 @@ Behaviour
 - Cite offers the page or a publication with identifier, data commit, input hash and access date. Export offers BibTeX, RIS and JSON, each carrying state, producer and origin.
 - In a local run with print matches, a third pane "Print volumes, local only" lists the page's matches below the source text.
 
-Reference records are selected after regeneration by the preparation script from three classes: a page with a breakdown where the boundary check fires, a page without a breakdown carrying several years, and a page with a contested place whose value is rule-extracted.
+Reference records are selected by the preparation script from three classes: a page with a breakdown where the boundary check fires, a page without a breakdown carrying several years, and a page with a contested place whose value is rule-extracted.
 
 ### Prototype 2, Find and cite a work
 
@@ -338,6 +348,8 @@ The evaluation separates three levels of claim, what the code demonstrably does,
 
 Each task carries its type, which decides who checks it. A deterministic task is checked by a rule without a person. A simple task needs care but no domain knowledge and can be checked by any careful person. A complex task needs Zweig expertise, and specialist time goes to these alone, on few cases and partly blind. Of the six tasks, the lookup of a work, the gap decision and obtaining a citation are simple, explaining a contested link and characterising a work's reception are complex, and deciding whether a value is documented in the source is simple where an exact occurrence exists and complex where it does not. This sorting follows the operator's guidance of 2026-10-23.
 
+An exact occurrence in the source proves that a value exists there, not that it is the relevant value or complete. The first prototype review found occurrences for fragments such as "I wish to express" as a publisher, so the evaluation reports occurrence as evidence of existence only.
+
 The process level asks how long a prototype took to reach its stories, which defects the project knowledge prevented or failed to prevent, which corrections needed a person, and, if the deferred comparison runs, how the two context conditions differed.
 
 ## Plan
@@ -348,7 +360,7 @@ The lab is complete when its three prototypes run on real data, keep origin and 
 |---|---|---|
 | L1 Concept | assignment, principles, epics and stories in this document | operator review of the stories |
 | L2 Interface specification | wireframes and behaviour per prototype, independent critical review against stories and data, revision | L1 |
-| L3 Data preparation | `pipeline/lab/` script writing `docs/lab/data/` | the research coordinator's regeneration commit after the pipeline fixes |
+| L3 Data preparation | `pipeline/lab/` script writing `docs/lab/data/`, print split into the ignored local folder | the research coordinator's stable data state after the pipeline fixes |
 | L4 Prototypes | three prototypes under `docs/lab/` | L2, L3 |
 | L5 Prototype review | independent review of the running prototypes against the stories in a browser, fixes | L4 |
 | L6 Evaluation | tasks, heuristics, triaged simulated inspection, accessibility, optional expert session, report | L5, availability of Zweig specialists |
@@ -379,6 +391,7 @@ The record lists the human decisions, the agent briefs with their guardrails, th
 - A second independent review of the revised specification found further defects, among them example values in the wireframes that the AI operator session had invented rather than read from the data, and a claim that a reference work had no linked pages, which came from measuring the German page of the same title instead of its VIST page. Wireframes now carry placeholders, and every figure in this document was re-read from the data.
 - Measuring the work model against the data showed that the compiler encodes it in the pages themselves (VIST page, see-also list, "Translations" section, bracketed original title), and that the published `translations` field keeps only the first language of that section. The lab therefore keeps the three relations apart by their evidence, and the truncation went to the research coordinator as a production defect.
 - The working rule that emerged for prompting interfaces is to measure each user story against the real data before writing any interface code, and to have the specification reviewed independently against stories and data. Both reviews of 2026-10-23 found blocking defects at a point where fixing them cost a text edit.
+- The first running build passed two independent reviews on real data without invented values, and both found the same central gap. Agent decisions read "confirmed" without naming LLM agents, and the interface repeated default states so often that the warnings disappeared. The research coordinator ruled on the agent labels pending the operator's decision on delegation, and the operator required on 2026-10-23 that every data point shows whether it comes from the wiki, the print volumes or an LLM, and where wiki and print agree. Stories S2.6 and S6.2 and the principle of exceptions before defaults were added the same day.
 
 ## Sources
 
