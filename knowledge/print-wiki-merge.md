@@ -84,7 +84,7 @@ The next milestone, concordance measured, carries steps 5 to 7 far enough to jud
 - Fields that the concordance depends on are read better, first year and title (an author name before the title, a year inside the title, imprints in brackets), each change measured on the silver pairs before it is kept.
 - A report states what exists only in print, only in the wiki or in both, per volume and kind of publication.
 - The field comparison on silver pairs reports the agreement of wiki and print fields per field and volume; done 2026-10-23 for Addendum II, where it carries.
-- A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document.
+- A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document. The sample was drawn and frozen on 2026-10-23 (`p09_human_sample`): per volume, entries with a field match, with only a title-year block and with no candidate, so that it also measures what both routes miss. The sheet holds only the print entry; the key with the proposals stays closed until the sheet is complete. It waits for the person who carries the subject checks.
 
 The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically. Because the field route matches against wiki fields, it depends on the parallel milestone below.
 
