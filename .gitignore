@@ -31,3 +31,6 @@ test-results/
 # Obsidian (user-specific workspace state)
 knowledge/.obsidian/
 .claude/settings.local.json
+
+# Lab: local-only inputs (print matches, rights unresolved); never committed or published
+docs/lab/local/
