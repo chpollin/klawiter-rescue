@@ -346,7 +346,8 @@ def main() -> int:
             stats[volume]["alignable"] += 1
             alignment_scores[volume].append(aligned["score"] if aligned else 0.0)
         field_pages: dict[int, str] = {}
-        field_publications: dict[int, set[str]] = defaultdict(set)
+        # Per page: publication -> most second-field tokens agreeing in a match.
+        field_publications: dict[int, dict[str, int]] = defaultdict(dict)
         for obj in entry["objects"]:
             stats[volume]["objects"] += 1
             matches = _field_matches(
@@ -366,7 +367,10 @@ def main() -> int:
                     stats[volume]["field_matches"] += 1
                     stats[volume]["field_matches_on_publication"] += bool(publication)
                     if publication:
-                        field_publications[m["page"]].add(publication)
+                        held = field_publications[m["page"]]
+                        held[publication] = max(
+                            held.get(publication, 0), len(m["second_field"])
+                        )
                 claims.append(
                     {
                         "id": _claim_id(obj["id"], str(m["page"]), str(m["line"])),
@@ -419,7 +423,14 @@ def main() -> int:
         for page, kind in field_pages.items():
             routes.setdefault(page, {"route": kind})
         for page, publications in field_publications.items():
-            routes[page]["publicationIds"] = sorted(publications)
+            # Ranked by agreeing second-field tokens; the best are candidates
+            # first, the rest stay listed. A rank is no confirmation.
+            ranked = sorted(publications, key=lambda p: (-publications[p], p))
+            top = publications[ranked[0]]
+            routes[page]["publicationIds"] = ranked
+            routes[page]["bestPublicationIds"] = [
+                p for p in ranked if publications[p] == top
+            ]
         for page, route in routes.items():
             links[page].append(
                 {
