@@ -44,13 +44,14 @@ import sys
 import unicodedata
 from collections import Counter, defaultdict
 
-from _common import DERIVED_DIR, VOLUMES, write_report
+from _common import DERIVED_DIR, PROJECT_ROOT, VOLUMES, write_report
 from _lines import START_NUMBER
 
 RECORDS = DERIVED_DIR / "records"
 REVISIONS = DERIVED_DIR / "wiki" / "revisions.jsonl"
 CLAIMS = DERIVED_DIR / "claims"
 LAB = DERIVED_DIR / "lab"
+PUBLICATIONS = PROJECT_ROOT / "docs" / "data" / "publications"
 SHINGLE = 5
 MAX_SHINGLE_UNITS = 20
 MIN_SHINGLES = 8
@@ -127,6 +128,8 @@ def _align(
     first_seen: dict[tuple[int, int], str] = {}
     latest_lines: dict[int, list[list[str]]] = {}
     latest_raw: dict[int, list[str]] = {}
+    latest_offsets: dict[int, list[int]] = {}
+    latest_text: dict[int, str] = {}
     titles: dict[int, str] = {}
     with REVISIONS.open(encoding="utf-8") as source:
         for row in map(json.loads, source):
@@ -142,8 +145,15 @@ def _align(
                         matched[key].add(shingle)
                         first_seen.setdefault(key, row["timestamp"])
             if row["latest"]:
-                raw = [ln for ln in row["text"].splitlines() if ln.strip()]
+                raw, offsets, pos = [], [], 0
+                for ln in row["text"].splitlines(keepends=True):
+                    if ln.strip():
+                        raw.append(ln.rstrip("\r\n"))
+                        offsets.append(pos)
+                    pos += len(ln)
                 latest_raw[page] = raw
+                latest_offsets[page] = offsets
+                latest_text[page] = row["text"]
                 latest_lines[page] = [_tokens(ln) for ln in raw]
     best: dict[int, dict] = {}
     for (n, page), shingles in matched.items():
@@ -154,7 +164,49 @@ def _align(
                 "score": round(score, 3),
                 "first_seen": first_seen[(n, page)],
             }
-    return best, latest_lines, {"titles": titles, "raw": latest_raw}
+    return (
+        best,
+        latest_lines,
+        {
+            "titles": titles,
+            "raw": latest_raw,
+            "offsets": latest_offsets,
+            "text": latest_text,
+        },
+    )
+
+
+def _publication_slices(pages: set[int], texts: dict[int, str]) -> tuple[dict, Counter]:
+    """Publication slices per page from the published frontend layer, kept only
+    where the slice of the latest revision hashes to the published slice. A
+    mismatch means the two readings of the page differ, so no line is mapped."""
+    slices: dict[int, list[tuple[int, int, str]]] = {}
+    checked: Counter = Counter()
+    for page in sorted(pages):
+        path = PUBLICATIONS / f"{page}.json"
+        if not path.exists():
+            continue
+        text = texts[page]
+        kept = []
+        for pub in json.loads(path.read_text(encoding="utf-8"))["publications"]:
+            cut = pub["sourceSlice"]
+            digest = hashlib.sha256(
+                text[cut["start"] : cut["end"]].encode("utf-8")
+            ).hexdigest()
+            ok = digest == cut["sha256"]
+            checked["verified" if ok else "mismatch"] += 1
+            if ok:
+                kept.append((cut["start"], cut["end"], pub["id"]))
+        slices[page] = kept
+    return slices, checked
+
+
+def _publication_at(slices: dict, offsets: dict, page: int, line: int) -> str | None:
+    offset = offsets[page][line]
+    for start, end, pub_id in slices.get(page, ()):
+        if start <= offset < end:
+            return pub_id
+    return None
 
 
 def _title_key(title: str) -> list[str]:
@@ -271,6 +323,7 @@ def main() -> int:
     print(f"OK {len(entries)} print entries, {len(sizes)} with enough distinctive text")
     best, latest_lines, wiki = _align(index, sizes)
     line_index = _line_index(latest_lines)
+    slices, slice_check = _publication_slices(set(latest_lines), wiki["text"])
     page_titles = {
         page: " ".join(_tokens(title)) for page, title in wiki["titles"].items()
     }
@@ -292,6 +345,7 @@ def main() -> int:
             stats[volume]["alignable"] += 1
             alignment_scores[volume].append(aligned["score"] if aligned else 0.0)
         field_pages: dict[int, str] = {}
+        field_publications: dict[int, set[str]] = defaultdict(set)
         for obj in entry["objects"]:
             stats[volume]["objects"] += 1
             matches = _field_matches(
@@ -304,6 +358,14 @@ def main() -> int:
             for m in matches:
                 if field_pages.get(m["page"]) != "field":
                     field_pages[m["page"]] = m["kind"]
+                publication = _publication_at(
+                    slices, wiki["offsets"], m["page"], m["line"]
+                )
+                if m["kind"] == "field":
+                    stats[volume]["field_matches"] += 1
+                    stats[volume]["field_matches_on_publication"] += bool(publication)
+                    if publication:
+                        field_publications[m["page"]].add(publication)
                 claims.append(
                     {
                         "id": _claim_id(obj["id"], str(m["page"]), str(m["line"])),
@@ -311,9 +373,12 @@ def main() -> int:
                         "predicate": "samePublicationAs"
                         if m["kind"] == "field"
                         else "candidateFor",
-                        "object": f"klawiter:entry/{m['page']}",
+                        # A line inside a verified publication slice names that
+                        # publication; otherwise only the page is known.
+                        "object": publication or f"klawiter:entry/{m['page']}",
                         "evidence": {
                             "print": {"record": entry["id"], "sha256": entry["sha256"]},
+                            "wiki_page": m["page"],
                             "wiki_line": wiki["raw"][m["page"]][m["line"]],
                             "second_field": m["second_field"],
                         },
@@ -352,6 +417,8 @@ def main() -> int:
             }
         for page, kind in field_pages.items():
             routes.setdefault(page, {"route": kind})
+        for page, publications in field_publications.items():
+            routes[page]["publicationIds"] = sorted(publications)
         for page, route in routes.items():
             links[page].append(
                 {
@@ -419,6 +486,7 @@ def main() -> int:
             for v in VOLUMES
         },
         "wiki_pages_with_print": len(links),
+        "publication_slices": dict(slice_check),
         "claims": dict(Counter(c["predicate"] for c in claims)),
     }
     path = write_report("p07_concordance", report)
