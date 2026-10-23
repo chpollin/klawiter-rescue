@@ -26,7 +26,7 @@ From these the project reconstructs a static research interface, complete JSON-L
 
 - Randolph J. Klawiter is the author of the bibliography.
 - Christopher Pollin is responsible for the data rescue, data model, software and documentation.
-- The Literaturarchiv Salzburg is the institution the edition is published with (operator decision of 2026-09-23). Its Stefan Zweig Digital initiative supplies the scholarly context as well as the frozen SZD work index for reconciliation candidates.
+- The Literaturarchiv Salzburg is the institution the bibliography is published with (operator decision of 2026-09-23). Its Stefan Zweig Digital initiative supplies the scholarly context as well as the frozen SZD work index for reconciliation candidates.
 - Digital Humanities Craft, with Christopher Pollin as responsible editor, publishes the bibliography as open data (operator decision of 2026-09-08). The publication is titled "Stefan Zweig Bibliography", after the wiki, and cited as "Stefan Zweig Bibliography (Klawiter)" (operator decision of 2026-09-23). It is a data publication of the rescued bibliography, and the term digital edition is not used for it.
 - Automated and agentic checks supply evidence. Institutionally content-changing work decisions remain with the responsible domain staff.
 
@@ -40,7 +40,7 @@ Uncertainty is a data state of its own. Contested statements have a stable ident
 
 The methodological contribution consists in a lossless data rescue with two coupled control loops, systematic pipeline improvement through aggregated checks and object-level expert curation through versioned patches. This preservation claim concerns current page identity, not complete extraction of every bibliographic fact. [Current status](status.md) records that distinction and the remaining acceptance work. [[production-readiness]] describes the ratified contract, [[testing]] the reach of the evidence.
 
-The deliverable subject comprises data, vocabulary, software, static interface, provenance and validation artifacts. A separate Klawiter blog post and a new Klawiter publication are not part of the repository mandate. The wiki/print merge, external live write-backs and institutional work decisions remain later options.
+The deliverable subject comprises data, vocabulary, software, static interface, provenance and validation artifacts. A separate Klawiter blog post and a new Klawiter publication are not part of the repository mandate. External live write-backs and institutional work decisions remain later options. The wiki/print merge is worked on since October 2026 as a strand outside the production run ([Merged bibliography](print-wiki-merge.md)); what of it is delivered depends on open decisions on rights in the print volumes and on admitting print as a source of values.
 
 ## Consortium and Design
 

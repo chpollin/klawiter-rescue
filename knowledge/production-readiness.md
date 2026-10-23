@@ -19,6 +19,8 @@ The July 2026 decisions, ratified on 19 July, remain in force:
 3. Treat the wiki/print merge as a later stage.
 4. Use versioned patch export as the canonical write-back route.
 
+The third point binds the production run. Since October 2026 the print strand works toward the merge outside it ([Merged bibliography](print-wiki-merge.md)), and its frame questions (rights, print as a source of values, delivery shape) wait for the operator.
+
 On 21 August, independent agentic source review and reconciliation became the initial evidence; external scholarly review adds validation. Contested cases were explicitly retained as final-data objects, distinguishable from confirmed relations. The exact decisions and their chronology remain in [Journal](journal.md).
 
 The 27 August publication frame described version 0.9 as the release candidate and reserved 1.0 acceptance and its tag for the operator. Do not infer a new release from document frontmatter, a filename, a passing test count or this refactor. A separate Klawiter paper and blog post are outside the repository mandate. Live external write-backs, the wiki/print merge and institutional work-identity decisions remain separate work.
@@ -63,7 +65,7 @@ On 23 September the operator approved the recommended course after four read-onl
 - Systematic false review flags are removed by rule for version 1.0. Genuine source conflicts stay open claims, and version 1.0 does not require their resolution.
 - Editing per publication stays outside version 1.0.
 
-The operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the edition is published with. The archival dump stays in the public Git history by the operator's decision of the same day. Release archives carry its page and text tables and leave out its account tables. The operator also set the title "Stefan Zweig Bibliography", after the wiki, cited as "Stefan Zweig Bibliography (Klawiter)", and ruled that the publication is not called a digital edition. The operator also withdrew the partner acceptance and the Zenodo deposit with its DOI, which the decision of 8 September had tied to version 1.0. A Git tag remains the operator's decision.
+The operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the bibliography is published with. The archival dump stays in the public Git history by the operator's decision of the same day. Release archives carry its page and text tables and leave out its account tables. The operator also set the title "Stefan Zweig Bibliography", after the wiki, cited as "Stefan Zweig Bibliography (Klawiter)", and ruled that the publication is not called a digital edition. The operator also withdrew the partner acceptance and the Zenodo deposit with its DOI, which the decision of 8 September had tied to version 1.0. A Git tag remains the operator's decision.
 
 The release declaration and the publication form after acceptance remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
 
