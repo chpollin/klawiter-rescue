@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-23 — Production defects fixed, fixture demoted, concordance widened, reviews of blog and proposal
+
+**Round.** Fix round on the published wiki data, implementation round on the print concordance, and three fresh-context reviews commissioned for the AI operator's blog and proposal drafts.
+
+**Changed.** Commit 7994ccb fixes the five confirmed pipeline defects with regression tests and removes the twenty fixture place decisions; [Status](status.md) carries the new snapshot. The print strand gained the wiki revision export, the errata of Addendum I as correction claims and a field route that finds the year near the title, accepts short titles equal to the page title and counts extent and page ranges as a second field, which raised the recall on silver pairs markedly in Addendum II and moderately in the main volume. [Coordination](coordination.md) records the project tracks. The reviews found the proposal's research questions crossing different axes and its fourth level an outcome rather than a level, and found a blog claim on `confirmed` contradicted by the data.
+
+**Decided.** The operator: a test fixture confirms nothing; checks are assigned by kind of task; print rights may wait until delivery, with only addresses and claims published until then.
+
+**Open.** Whether agent decisions under delegation count as `confirmed`; the meaning of "merged" as the end product; the person who carries domain checks; the germanistic research question of the proposal; the truncated `translations` field.
+
+---
+
 ## 2026-10-23 — Overlap experiments, refactoring and production defects
 
 **Round.** Three agent experiments on print-wiki overlap; refactoring of the print strand; knowledge curation; verification of production defects reported by the AI operator session.

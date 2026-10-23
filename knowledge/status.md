@@ -2,7 +2,7 @@
 title: Current Project Status
 status: maintained
 language: en
-updated: 2026-09-28
+updated: 2026-10-23
 ---
 
 # Current project status
@@ -11,23 +11,25 @@ updated: 2026-09-28
 
 This is the single current status/work list. [Production readiness](production-readiness.md) owns acceptance criteria; [Technical remediation](technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
 
-## Verified data snapshot — 23 September 2026
+## Verified data snapshot — 23 October 2026
+
+The snapshot follows commit 7994ccb, which fixed five verified pipeline defects and implemented the operator's decision that a test fixture confirms nothing ([Journal](journal.md)).
 
 | Population | Current result | Evidence |
 |---|---:|---|
 | Current source pages / canonical records | 6,725 / 6,725 | [quality](../data/output/quality-report.json), [census](../data/output/census-report.json) |
-| Redirects / frontend records | 1,538 / 5,187 | [frontend dataset](../docs/data/klawiter.json) |
+| Redirects / frontend records | 1,538 / 5,187 | redirects from the [quality report](../data/output/quality-report.json); the frontend's `_meta.redirectCount` reads 1,555 because it also counts 17 title aliases merged into the redirect map |
 | Bibliography entries visible in the interface | 4,758 | namespace 0, excluding redirects |
 | Work / edition / source annotation nodes | 448 / 2,077 / 2,077 | [Gate 1 manifest](../data/output/editions/manifest.json) |
 | Confirmed / proposed / contested editions | 76 / 2,001 / 0 | same manifest and graph |
-| Prioritized edition / reconciliation review cases | 339 / 563 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
-| Publishable location / work / agent links | 354 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json) |
+| Prioritized edition / reconciliation review cases | 339 / 581 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
+| Publishable location / work / agent links | 334 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json); the twenty places decided only by the test fixture are proposed again |
 | Open authority / source-revision / edition claims | 12 / 10 / 0 | same manifest |
 | Decided authority / edition claims | 5 / 1 | same manifest |
 | Pages restored from before a Redirect fixer overwrite | 8 | `data/reconciliation/source-revision-decisions.json` |
 | Unresolved See-references | 2 (pages 679, 7232) | [frontend dataset](../docs/data/klawiter.json) |
-| Pages / publications / contributions in the publication layer | 1,665 / 3,273 / 13,904 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
-| Publication review flags (missing place / unresolved imprint / pagination) | 160 (69 / 65 / 26) | same field, `reviewFlags` per publication |
+| Pages / publications / contributions in the publication layer | 1,665 / 3,273 / 13,884 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
+| Publication review flags (missing place / unresolved imprint / pagination) | 159 (68 / 65 / 26) | same field, `reviewFlags` per publication |
 
 Four current pages lack text; only page 2979 is bibliographic. Earlier revisions, absent archived titles and uploaded image bytes are outside the current extracted content scope. The titles that the wiki recorded as deleted and that are absent from the current page table are excluded from version 1.0 ([Production readiness](production-readiness.md#release-scope)). See [Data](data.md).
 
@@ -35,11 +37,11 @@ Four current pages lack text; only page 2979 is bibliographic. Earlier revisions
 |---|---:|---:|
 | Year | 4,435 | 93.2% |
 | Language code | 4,314 | 90.7% |
-| Publisher | 2,640 | 55.5% |
-| Numbered extent | 2,440 | 51.3% |
-| Translator | 1,921 | 40.4% |
+| Publisher | 2,614 | 54.9% |
+| Numbered extent | 2,445 | 51.4% |
+| Translator | 2,002 | 42.1% |
 
-Population is not extraction recall or accuracy. The extent count fell because 95 citation locators were removed from the volume-extent field. Publisher rose because the flat field now follows the publication imprint of the source header. Translator lost one value whose encoding could not be restored. These flat values still describe one publication per page; the publication layer says which publication each fact belongs to, and 237 entries with an empty flat translator document a translation credit there. No flat publisher, place or translator value carries mojibake any more.
+Population is not extraction recall or accuracy. On 23 October translator rose because credit names with Latin Extended letters are read by rule, publisher fell because prose fragments are no longer read as labels and LLM values without a source occurrence are rejected, and extent changed on 119 pages because the earliest extent in the text wins over a later edition's. These flat values still describe one publication per page; the publication layer says which publication each fact belongs to, and 237 entries with an empty flat translator document a translation credit there. No flat publisher, place or translator value carries mojibake any more.
 
 ## Implemented and checked
 
@@ -66,13 +68,15 @@ On 23 September four read-only reviews (the Maria Stuart redirect, the separatio
 
 A second round on the same day reviewed every undecided place subject. Three independent agents checked each candidate against its source occurrences and Wikidata (label, instance of, country), and the main instance adjudicated one rule set: the principal Wikidata item carrying the English Wikipedia sitelink, no identity for a place the source marks with a question mark, and no decision without a source occurrence. Published place links rose from 29 to 352, twelve further places stay open, and the reviews are versioned in `data/reconciliation/location-agent-review-2026-09-23.json`. Occurrence evidence now counts whole words only. The record title of an entry whose first line is a citation, cross-reference, credit, extent or imprint statement is now the page title, which changes the title of about two thousand entries, among them every author page formerly titled "[1]", and the imprint of a date-only header is read from its header line. The semantic diagnostics dropped from 23 to 21 retained failures.
 
+On 23 October an AI operator session working on frontend prototypes reported defects that an independent agent confirmed, partly by reproduction, and that were fixed with regression tests in commit 7994ccb: a UI reject of an open claim aborted Gate 2, credit names with Latin Extended letters were dropped and then filled by the LLM, stage 03b kept LLM values that do not occur in the source although the pipeline documentation claimed a check, a later edition's extent won over the first, and prose such as "publishing venture" was read as a publisher label. In the same commit the twenty place decisions that rested only on the test fixture `tests/wikidata_ground_truth.json` were removed by operator decision, so their places are proposed again. Afterwards the full production run with both gates, Ruff and the default suite passed with one known failure (the redirect-map count), and the semantic diagnostics kept the same 21 failures. The published place links still rest on LLM-agent decisions adjudicated by the main instance under the operator's delegation; whether that counts as `confirmed` is an open operator question ([Data](data.md)). The `translations` field holding only the first language of a page's translation section awaits verification.
+
 Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](evaluations/2026-09-05/validation.json) and [dashboard QA](evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
 
 ## Prioritized completion work
 
 | Priority | Concrete next step | Completion evidence |
 |---|---|---|
-| P0 release | Release metadata settled: title "Stefan Zweig Bibliography", cited as "Stefan Zweig Bibliography (Klawiter)", no longer called a digital edition (operator decision of 23 September) | done; the operator decided on 23 September that `data/raw` stays in the public Git history as the documented research source, although `zweig_part_03.sql` holds the wiki's user table with password hashes and `zweig_part_01.sql` two IP addresses in its recent-changes table; the operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the edition is published with; `CITATION.cff`, licence texts and third-party notices are in place since 23 September |
+| P0 release | Release metadata settled: title "Stefan Zweig Bibliography", cited as "Stefan Zweig Bibliography (Klawiter)", no longer called a digital edition (operator decision of 23 September) | done; the operator decided on 23 September that `data/raw` stays in the public Git history as the documented research source, although `zweig_part_03.sql` holds the wiki's user table with password hashes and `zweig_part_01.sql` two IP addresses in its recent-changes table; the operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the bibliography is published with; `CITATION.cff`, licence texts and third-party notices are in place since 23 September |
 | P0 acceptance | None outstanding. On 23 September the operator withdrew worksheet case 5, the partner acceptance and the Zenodo deposit; a Git tag remains the operator's decision | operator decision |
 | P1 provenance | Apply one released field correction consistently to canonical graphs, frontend, exports, history and reports | end-to-end replay and repeatability with a real source-bound fixture |
 | P1 editing | Editing per publication stays outside version 1.0 (decided by the main instance after delegation by the operator on 2026-09-23, revisable), because no released correction exists yet and the acceptance contract asks for propagation of a page-level correction | a patch contract that binds a publication id to its source-slice hash, when a correction needs it |
