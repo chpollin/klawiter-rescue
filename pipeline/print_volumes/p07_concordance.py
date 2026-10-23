@@ -58,6 +58,12 @@ ALIGNED = 0.8
 SILVER = 0.9
 TITLE_WORDS = 4
 MIN_SINGLE_WORD = 8
+YEAR_WINDOW = 2
+# Extent ("396p.", "xvi/368p.") and page ranges ("pp. (1)-3", "p. 79").
+EXTENT = re.compile(
+    r"\b(\d+(?:/\(?\d+\)?)?)\s?p\.|\bpp?\.\s?(\(?\d+\)?(?:\s?-\s?\(?\d+\)?)?)"
+)
+MIN_PAGE_DIGITS = 2
 MIN_FIELD_TOKEN = 4
 # Publisher words that carry no identity of their own.
 GENERIC = frozenset(
@@ -158,18 +164,24 @@ def _title_key(title: str) -> list[str]:
     return words
 
 
-def _field_tokens(fields: dict, inherited: dict | None) -> set[str]:
+def _field_tokens(fields: dict, inherited: dict | None, text: str) -> set[str]:
+    """Second-field tokens: imprint and translator words, and the numbers of
+    extent and page ranges ("396p.", "pp. 300-324"), which periodical and
+    contribution entries carry instead of an imprint."""
     texts = [fields.get("publisher", ""), fields.get("place", "")]
     surname = _tokens(fields.get("translator") or "")[-1:]
     texts.extend(surname)
     if inherited:
         texts.append(inherited["imprint"])
     found = set()
-    for text in texts:
-        for token in _tokens(text or ""):
+    for value in texts:
+        for token in _tokens(value or ""):
             if len(token) >= MIN_FIELD_TOKEN and token not in GENERIC:
                 if not token.isdigit():
                     found.add(token)
+    for groups in EXTENT.findall(text):
+        numbers = re.findall(r"\d+", " ".join(groups))
+        found.update(n for n in numbers if len(n) >= MIN_PAGE_DIGITS)
     return found
 
 
@@ -189,34 +201,56 @@ def _field_matches(
     title_pages: dict[str, set],
     page_titles: dict[int, str],
 ) -> list[dict]:
-    """Lines holding the title words and year; on a page whose own title holds
-    the title words (one page per publication), any line holding the year."""
+    """Lines holding the title words with the year within YEAR_WINDOW lines; on a
+    page whose own title is or holds the title words, any line holding the year.
+
+    A short single-word title ("Angst") is too common for lines but specific
+    enough when the page title is exactly that word.
+    """
     fields = obj["fields"]
-    words = _title_key(fields.get("title") or "")
+    title = fields.get("title") or ""
+    words = _title_key(title)
     year = fields.get("year")
-    if not words or not year:
+    if not year:
         return []
-    phrase = " " + " ".join(words) + " "
-    year_lines = index.get(str(year), set())
-    candidates = set(year_lines)
-    for word in words:
-        candidates &= index.get(word, set())
-    in_lines = {
-        (page, i)
-        for page, i in candidates
-        if phrase in " " + " ".join(latest_lines[page][i]) + " "
-    }
-    pages = set.intersection(*(title_pages.get(w, set()) for w in words))
+    year_token = str(year)
+    year_lines = index.get(year_token, set())
+    in_lines: set = set()
+    if words:
+        phrase = " " + " ".join(words) + " "
+        candidates = set.intersection(*(index.get(w, set()) for w in words))
+        for page, i in candidates:
+            lines = latest_lines[page]
+            if phrase not in " " + " ".join(lines[i]) + " ":
+                continue
+            window = range(
+                max(0, i - YEAR_WINDOW), min(len(lines), i + YEAR_WINDOW + 1)
+            )
+            near = [j for j in window if year_token in lines[j]]
+            if near:
+                in_lines.add((page, min(near, key=lambda j: abs(j - i))))
+    else:
+        words = _tokens(title)[:1]
+        if not words:
+            return []
+        phrase = " " + words[0] + " "
+    if len(words) == 1 and len(words[0]) < MIN_SINGLE_WORD:
+        pages = {
+            p for p in title_pages.get(words[0], set()) if page_titles[p] == words[0]
+        }
+    else:
+        pages = set.intersection(*(title_pages.get(w, set()) for w in words))
     in_title = {
         (page, i)
         for page, i in year_lines
         if page in pages and phrase in " " + page_titles[page] + " "
     }
-    extra = _field_tokens(fields, obj.get("inherited"))
+    extra = _field_tokens(fields, obj.get("inherited"), obj["text"])
     found = []
     for page, i in sorted(in_lines | in_title):
-        tokens = latest_lines[page][i]
-        agreeing = sorted(extra & set(tokens))
+        lines = latest_lines[page]
+        window = lines[max(0, i - YEAR_WINDOW) : i + YEAR_WINDOW + 1]
+        agreeing = sorted(extra & {t for line in window for t in line})
         found.append(
             {
                 "page": page,

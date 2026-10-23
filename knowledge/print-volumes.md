@@ -276,7 +276,7 @@ The informant lists name private persons and institutions who supplied informati
 
 ### Addendum I
 
-- The errata to the main volume (PDF pp. 6–11) form a two-column list addressed by page and siglum of the main volume, including renumberings ("Renumber as H 152a") and corrections of its index pages. They need their own parser.
+- The errata to the main volume (PDF pp. 6–11) form a single list. Each erratum opens with the printed page of the 1991 book ("Page 21") and names its target by address with an optional locator (`A 5, line 4`, `K 38[2]`), by a label (an index heading, "Obras completas") or not at all. The printed pagination of 1991 drifts against the main-volume file, so targets resolve by address only. The errata replace readings, add, omit, move and renumber entries ("Renumber as H 152a"), reorder two entries and add prose notes, and some correct the front matter and index pages of 1991. `p05_errata.py` reads them as compiler claims.
 - Seven entry numbers are missing without a gap in the text. At least one is a numbering slip of the compiler, since KA1 cites "Einige Grundlagen …" as `[HA1 54]` while the text is printed as HA1 55. References to such numbers have to be checked against neighbouring entries before they count as broken.
 - The running heads of the indexes name the wrong index and carry frozen page numbers, so index boundaries come from the bold index headings.
 - Some entry numbers are split across fonts or glued to the first word ("1040aPinto,"), and bold years at the left margin inside long letter entries look like entry numbers.
@@ -346,7 +346,10 @@ The analysis proceeds in stages, each with an inspectable output.
 | `p02 view` | lines to Markdown per volume and section | reading view, derived and regenerable |
 | `p03 records` | lines to entry and object records with stable identifiers, unaltered text and hash, heading context, rule-read fields and imprints inherited from collection headers, kept apart from the object's own fields | the records every later claim points back to |
 | `bench_sample`, `bench_compare` | frozen page samples and blind annotations to scores and a disagreement list | measured agreement of boundaries, objects and references |
-| `p06 claims` | records to typed compiler reference claims (See, Rep:, Contents:, Correction to, Cont., work references) with resolved targets, and to print-wiki concordance candidates by title and year, all `proposed` | reference graph, a self-check of the segmentation and a first measure of overlap |
+| `p04 wiki revisions` | the dump's main-namespace revisions to one line each, through the readers of the production extraction | the only place where verbatim print text survives in the wiki |
+| `p05 errata` | the errata pages of Addendum I to correction claims against main-volume records, with the printed wrong and right readings verbatim | the compiler's own corrections |
+| `p06 claims` | records to typed compiler reference claims (See, Rep:, Contents:, Correction to, Cont., work references) with resolved targets, all `proposed` | reference graph and a self-check of the segmentation |
+| `p07 concordance` | records and revisions to print-wiki claims on two routes, alignment by distinctive word 5-grams over all revisions and title, year and a second field (imprint, translator, extent or page range) in the latest text or page title, plus a local file of matches per wiki page for the lab view | concordance, with silver pairs from near-verbatim alignment measuring what the field route loses |
 
 `p01` exists as `pipeline/print_volumes/p01_extract.py` and runs in the optional uv group `print` (`python -m uv run --group print python pipeline/print_volumes/p01_extract.py`). Its lines and all reports go to `data/print/derived/`, which stays local with the PDFs. The section map with page ranges, hash prefixes and the compiler's contents ranges is `pipeline/print_volumes/sections.json`. `p01` uses `pdfplumber` under an MIT licence. PyMuPDF would be faster but is licensed under the AGPL, which does not fit an MIT repository. Docling is a candidate for the reading view only, because it drops the x-positions and partly the font runs that mark boundaries and can change its output with the version of its layout models. A comparison on the same pages decides whether it enters `p02`.
 
@@ -359,7 +362,7 @@ After segmentation follow a concordance of print and wiki at entry level, first 
 - The missing abbreviations, the broken Index A and the question which state of the main volume the file represents cannot be settled from the files, because the project has no access to a printed copy. The open-access edition of the first bibliography of 1965 may share part of the abbreviation system.
 - How the post-1991 insertions in the main volume relate to Addendum I and to the wiki.
 - What the starred references (`G 379*`) mean.
-- Why section D of the main volume ends at 223 while the transcribed contents of 1991 give 227.
+- Why section D of the main volume ends at 223 while the transcribed contents of 1991 give 227. An erratum of Addendum I corrects `D 224`, so the edition the errata address had entries beyond 223, and the file lacks them.
 - Whether the unnumbered units of the main volume, such as collection headers and commentary paragraphs in E, become entities of their own or attach to the following entries.
 
 ## Decisions outside this strand
