@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Record history, Klawiter Bibliography Lab</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="lab.css">
+  <script src="../js/constants.js"></script>
+  <script type="module" src="js/history.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="lab-header">
+    <div class="lab-header-inner">
+      <a class="lab-brand" href="index.html">Klawiter Bibliography Lab</a>
+      <nav class="lab-nav" aria-label="Lab views">
+        <ul>
+          <li><a href="judge.html">Judge a value</a></li>
+          <li><a href="find.html">Find and cite a work</a></li>
+          <li><a href="history.html" aria-current="page">Record history</a></li>
+          <li><a href="find.html#scope">Scope</a></li>
+        </ul>
+      </nav>
+      <form class="lab-search" role="search" action="find.html" method="get">
+        <label class="visually-hidden" for="lab-q">Search titles</label>
+        <input id="lab-q" name="q" type="search" placeholder="Search titles" autocomplete="off">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="status" role="status">Loading.</p>
+  </main>
+  <footer class="lab-footer">
+    <p>Lab prototypes on the rescued wiki data of the Klawiter bibliography. The lab shows wiki data only; no value here has been compared with the print volumes. The production application is <a href="../index.html">the Klawiter Bibliography</a>.</p>
+  </footer>
+</body>
+</html>
