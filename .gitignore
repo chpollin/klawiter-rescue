@@ -15,6 +15,9 @@ data/output/corrections-report.json
 data/output/reconciliation/candidates.json
 data/output/reconciliation/review-queue.json
 
+# Klawiter print volumes (~155 MB, rights unresolved); source and hashes in knowledge/print-volumes.md
+data/print/
+
 # Environment / secrets
 .env
 pipeline/.env

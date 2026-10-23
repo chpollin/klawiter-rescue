@@ -12,12 +12,24 @@ language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-10-21
+updated: 2026-10-23
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
+
+---
+
+## 2026-10-23 — Print volumes surveyed
+
+**Round.** Analysis only, no pipeline code or data touched.
+
+**Changed.** The three PDFs of the print volumes (main volume 1991, Addendum I 1999, unpublished Addendum II) were copied from `chpollin/SZD` into `data/print/`, which `.gitignore` keeps out of version control. Three agents surveyed one file each with coordinate extraction, a second round checked the chapter schema independently, and the main agent spot-checked central claims against the PDFs. [Print volumes](print-volumes.md) records structure, conventions, reference system, hazards and the parsing approach.
+
+**Decided.** The PDFs stay local because of size and unresolved rights. Parsing will start from coordinates (`pdfplumber`), with Docling at most for a reading view. The project has no access to a printed copy of the main volume.
+
+**Open.** Independent checks of the Addendum I and Addendum II schemas; the stages `p01` to `p06`; whether the print becomes a second admitted source.
 
 ---
 
