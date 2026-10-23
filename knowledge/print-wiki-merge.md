@@ -71,17 +71,21 @@ The steps are ordered by dependency. Step 0 runs alongside the others and blocks
 | 9 Adjudication | the existing curation interface and patch store extended to claims between records, with the chain from claim to print line or wiki revision | a person can follow a claim from evidence to decision and decide it | 1, 7 |
 | 10 Projection and delivery | sample object agreed, TEI profile with ODD, projection, staging ingest, trial on research tasks | deterministic rebuild, every statement traceable to claims, staging ingest succeeds | 0, 8, 9 |
 
-## Next milestone: segmentation measured
+## Milestones
 
-The milestone closes step 2.
+The first milestone, segmentation measured, closed step 2 on 2026-10-23: boundary and object scores on the frozen second sample are reported per volume against two blind agent annotators, with the scorer faults found by an independent review corrected, and the disagreement list exists. Its human decision is open and waits for the person who carries the subject checks (Frame).
 
-- Rules for numbered sub-items and volume lines, for gap-based boundaries and page tops in Addendum II, and for wrapped continuations, built on development pages, which include the first benchmark pages.
-- Objects read from numbered items by the scope of their label instead of counted by citation patterns.
-- A second benchmark sample, frozen before the rules were evaluated, stratified by volume and section with hard sections oversampled and weights recorded, larger in Addendum II, disjoint from the development pages.
-- Two blind annotations of that sample and a list of disagreements for a human decision.
-- An independent review of rules, scores and this document.
+The next milestone, concordance measured, carries steps 5 to 7 far enough to judge the merge on all data.
 
-The milestone is reached when boundary and object scores on the second sample are reported per volume against both annotators, the annotators' agreement is reported beside them, and the disagreement list is ready for a human decision. The scores are reported as measured; no threshold is set in advance.
+- Fields that the concordance depends on are read better, first year and title (an author name before the title, a year inside the title, imprints in brackets), and inherited imprints count as a second field.
+- The two routes of step 7 run over all records: alignment with every wiki revision, and title, year and a second field against the latest text and page titles, with field matches mapped to the wiki publication whose source slice holds them.
+- Silver pairs, print entries that stood near-verbatim in some revision, measure the loss of the field route per volume; each field change is measured on them before it is kept.
+- A report states what exists only in print, only in the wiki or in both, per volume and kind of publication.
+- The errata of Addendum I are read as compiler claims.
+- The matches are visible in the lab view of the AI operator from a local file that is never published ([Coordination](coordination.md)).
+- A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document.
+
+The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically.
 
 ## Open questions
 
