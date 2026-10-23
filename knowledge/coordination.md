@@ -36,6 +36,21 @@ Each session stages its own files by explicit path and commits only its own unit
 
 The sessions exchange messages directly (Claude Code cross-session messages). A message is transport, never state: what holds lives in commits and in the knowledge documents. A finding reported by one session counts as unverified for the other until it is checked against code or data. At the end of an assignment the AI operator returns a compact report with the fields state, result, evidence (paths, commits), verification, deviation, next action, at most one question for the operator, and blocker.
 
+## Tracks
+
+The operator set on 2026-10-23 that the whole project advances together: the merged bibliography, the correctness of the published wiki data, the lab, the blog post, the DIA-XAI follow-up proposal and the vault knowledge, each tested, verified and reviewed critically before it counts, with milestones planned and reported. Each track has one owner and one plan.
+
+| Track | Owner | Plan and milestones | Review before a milestone closes |
+|---|---|---|---|
+| Merged bibliography (print strand) | research coordinator | [Merged bibliography](print-wiki-merge.md), Milestones | independent agent review of method, code and document |
+| Published wiki data | research coordinator | defects verified, fixed with tests and a full pipeline run; [Status](status.md) | full gate of CLAUDE.md, spot checks of changed records |
+| Lab frontend | AI operator | [Lab frontend](lab-frontend.md), L1 to L7 | independent reviews in the lab plan; coordinator's model check |
+| Blog post | AI operator | [Lab frontend](lab-frontend.md), B1 to B4 | claim check against the artefacts; fresh-context review of the text commissioned by the coordinator |
+| DIA-XAI proposal | AI operator drafts, operator decides | [Lab frontend](lab-frontend.md), A1 to A4 | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
+| Vault knowledge | a session started in the vault | handoff list prepared by the coordinator; repository sessions read the vault, never write it | vault conventions and audit |
+
+The coordinator reports to the operator as a short presentation per milestone reached and on request, with result, meaning, risks and the decisions needed.
+
 ## Orchestration
 
 The research coordinator holds the overall plan ([Merged bibliography](print-wiki-merge.md), Plan and Milestones) and orchestrates the AI operator's work through the table below. The table holds only the dependencies between the two sessions. The milestones of the lab stay in [Lab frontend](lab-frontend.md) (Plan) and the steps of the merge in the plan. When a dependency is met, the session that delivers it messages the other; when the coordinator needs the operator's next result, it asks to be notified when the operator session goes idle instead of polling.
