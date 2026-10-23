@@ -850,7 +850,7 @@ const App = {
 
     // Update search placeholder
     const input = document.getElementById('search-input');
-    input.placeholder = `Search ${this.entries.length.toLocaleString('en')} entries…`;
+    input.placeholder = `Full-text search, ${this.entries.length.toLocaleString('en')} entries…`;
 
     // Dynamic page title
     this._updateTitle(view);
@@ -946,15 +946,7 @@ const App = {
 
     const list = document.getElementById('results-list');
     if (total === 0) {
-      const q = this.state.query ? ` for “${esc(this.state.query)}”` : '';
-      const active = Object.keys(this.state.filters).length > 0 || !!this.state.query;
-      const clear = active
-        ? '<p><button class="link-btn" data-act="clear-all">Clear all filters</button></p>'
-        : '';
-      list.innerHTML = `<div class="empty-state">
-        <p>No results${q}.</p>
-        ${clear}
-      </div>`;
+      list.innerHTML = this._emptyStateHtml();
       document.getElementById('load-more').classList.add('hidden');
       return;
     }
@@ -963,6 +955,30 @@ const App = {
     this._scheduleReconciliation();
 
     document.getElementById('load-more').classList.toggle('hidden', end >= total);
+  },
+
+  // A letter of any script but Latin. The source romanises every title, so
+  // such a query cannot match and the empty list has to say why.
+  _NON_LATIN_RE: /(?!\p{Script=Latin})\p{L}/u,
+
+  /** The empty result list: what found nothing, why, and the way back. */
+  _emptyStateHtml() {
+    const query = this.state.query || '';
+    const q = query ? ` for “${esc(query)}”` : '';
+    const active = Object.keys(this.state.filters).length > 0 || !!query;
+    const clear = active
+      ? '<p><button class="link-btn" data-act="clear-all">Clear all filters</button></p>'
+      : '';
+    const script = this._NON_LATIN_RE.test(query)
+      ? `<p class="empty-state-hint">The search covers the full text of every entry,
+        and the source records titles in romanised form: search for
+        “Shakhmatnaia novella”, not “Шахматная новелла”.</p>`
+      : '';
+    return `<div class="empty-state">
+        <p>No results${q}.</p>
+        ${script}
+        ${clear}
+      </div>`;
   },
 
   /**

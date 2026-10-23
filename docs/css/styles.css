@@ -2515,19 +2515,31 @@ body.edit-mode .meta-label {
   color: var(--sz-text-light);
 }
 
-/* Review decision on a single field. Monochrome: colour on a card stays with
-   the states that need attention, and the word carries the meaning. */
-.field-review {
+/* Review decision on a single field, with its producer beside it. The same
+   subdued weight as an edition proposal (.publication-status): a decision by
+   agents must not look stronger than a proposal, and the words carry the
+   meaning. */
+.field-review,
+.decision-producer {
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  background: var(--sz-border-light);
-  color: var(--sz-text);
-  border-radius: 3px;
-  padding: 0.05rem 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--sz-text-light);
+}
+.field-review {
   margin-inline-start: 0.35rem;
-  vertical-align: middle;
+}
+
+/* Text for assistive technology that the visible mark already shows. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .detail-contents li {

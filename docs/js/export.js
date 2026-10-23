@@ -110,6 +110,26 @@ const Export = {
     return claims.length ? 'Place authority assignment contested' : '';
   },
 
+  /**
+   * The translator a flat citation may name, or '' where it would misattribute.
+   *
+   * The flat field holds one translator across every publication of the page,
+   * so it often belongs to a translation the page lists beside the original
+   * (page 279, the German Schachnovelle, carries a Danish translator; page 172
+   * an English one). A page with a publication file binds credits per
+   * publication, and its flat fallback cannot say which one the translator
+   * belongs to. A page of Zweig's own texts in German is in the original
+   * language, which nobody translated. Leaving the credit out misleads less
+   * than attaching it to the wrong publication.
+   */
+  _flatTranslator(e) {
+    if (!e.translator) return '';
+    if (Number(e.publicationCount) > 0) return '';
+    const original = ZWEIG_AUTHOR_TYPES.includes(e.entryType) ? 'German' : '';
+    if (original && e.language === original) return '';
+    return e.translator;
+  },
+
   _bibtexFields(e) {
     const fields = [];
     const isAboutZweig = ABOUT_ZWEIG_TYPES.includes(e.entryType);
@@ -124,8 +144,9 @@ const Export = {
     if (e.pageCount) fields.push(`  pagetotal = {${e.pageCount}}`);
     if (e.language) fields.push(`  language = {${escapeBibtex(e.language)}}`);
     const note = [];
-    if (e.translator) note.push(`Translated by ${e.translator}`);
-    const zweig = this._zweigContributionNote(e, [e.translator]);
+    const translator = this._flatTranslator(e);
+    if (translator) note.push(`Translated by ${translator}`);
+    const zweig = this._zweigContributionNote(e, [translator]);
     if (zweig) note.push(zweig);
     const contested = this._contestedPlaceNote(e, e.location ? [e.location] : []);
     if (contested) note.push(contested);
@@ -253,7 +274,7 @@ const Export = {
 
   _toBibtexPublication(entry, pub, index) {
     const isAboutZweig = ABOUT_ZWEIG_TYPES.includes(entry.entryType);
-    const type = pub.container ? 'article' : this._bibtexType(entry.entryType);
+    const type = pub.container ? 'article' : 'book';   // the RIS rule, see _toRisPublication
     const fields = [];
     const author = this._publicationAuthor(entry, pub);
     if (author) fields.push(`  author = {${escapeBibtex(author)}}`);
@@ -333,9 +354,10 @@ const Export = {
     if (e.publisher) lines.push(`PB  - ${e.publisher}`);
     if (e.location) lines.push(`CY  - ${e.location}`);
     if (e.language) lines.push(`LA  - ${e.language}`);
-    if (e.translator) lines.push(`${this.RIS_ROLES.translator}  - ${e.translator}`);
+    const translator = this._flatTranslator(e);
+    if (translator) lines.push(`${this.RIS_ROLES.translator}  - ${translator}`);
     if (e.pageCount) lines.push(`N1  - ${e.pageCount} pages`);
-    const zweig = this._zweigContributionNote(e, [e.translator]);
+    const zweig = this._zweigContributionNote(e, [translator]);
     if (zweig) lines.push(`N1  - ${zweig}`);
     const contested = this._contestedPlaceNote(e, e.location ? [e.location] : []);
     if (contested) lines.push(`N1  - ${contested}`);
@@ -357,9 +379,10 @@ const Export = {
 
   _toRisPublication(entry, pub, index) {
     const isAboutZweig = ABOUT_ZWEIG_TYPES.includes(entry.entryType);
-    const type = pub.container || this._bibtexType(entry.entryType) === 'article'
-      ? 'JOUR'
-      : 'BOOK';
+    // A publication is an article only where the record names its container.
+    // The page type cannot say it: an essay page lists separate editions as
+    // well, and an article without a journal reads as a broken record.
+    const type = pub.container ? 'JOUR' : 'BOOK';
     const lines = [`TY  - ${type}`];
     const title = pub.title || entry.title;
     if (title) lines.push(`TI  - ${title}`);

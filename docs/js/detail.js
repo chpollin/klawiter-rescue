@@ -99,7 +99,12 @@ const Detail = {
     const titles = { regex: 'Regex extracted', llm: 'LLM enriched', missing: 'Missing',
                      editor: 'Expert curated', expert: 'Expert curated' };
     const cls = source === 'expert' ? 'editor' : source;   // unify legacy "expert" onto "editor"
-    return `<span class="prov-badge prov-${cls}" title="${titles[source] || source}">${labels[source] || source[0].toUpperCase()}</span>`;
+    // The badge classes the wording of the value. A place authority link is a
+    // separate decision with its own producer, named at the link.
+    const what = fieldName === 'location' || fieldName === 'places' ? 'Place wording' : 'Value';
+    const text = `${what} ${(titles[source] || source).toLowerCase()}`;
+    return `<span class="prov-badge prov-${cls}" title="${esc(text)}"><span aria-hidden="true">${
+      labels[source] || source[0].toUpperCase()}</span><span class="visually-hidden">${esc(text)}</span></span>`;
   },
 
   // One place for the help text of a named thing, so a label, a flag line and
@@ -153,6 +158,35 @@ const Detail = {
   REVIEW_ACTION_LABELS: { confirm: 'confirmed', correct: 'corrected', unresolved: 'unresolved',
                           reject: 'rejected' },
 
+  // Who produced a decision, named beside its state word. The display names
+  // the producer (rule, LLM agent, person) and leaves the state vocabulary as
+  // it is; whether a delegated agent decision counts as confirmation is an
+  // open operator question (knowledge/data.md). The agent roles are the
+  // deciders the dataset carries. A person reaches the review object only
+  // through a released human patch, which apply_patches marks `approved`
+  // under the editor role.
+  DECIDER_PRODUCERS: { 'independent-verification-agent': 'LLM agent, delegated',
+                       'main-instance': 'LLM agent, delegated',
+                       'repository-ground-truth-fixture': 'test fixture' },
+
+  /** "LLM agent, delegated", "person", or the unclassified decider string. */
+  decisionProducer(review) {
+    if (!review) return '';
+    const by = review.reviewed_by;
+    const editorRole = typeof Edit !== 'undefined' && Edit.EDITOR_ROLE;
+    if (review.status === 'approved' || (by && by === editorRole)) return 'person';
+    if (this.DECIDER_PRODUCERS[by]) return this.DECIDER_PRODUCERS[by];
+    return by ? `unclassified decider ${by}` : 'decider not recorded';
+  },
+
+  /** The producer as visible text after a state word, read in one phrase. */
+  _producerNote(review) {
+    const producer = this.decisionProducer(review);
+    if (!producer) return '';
+    return ` <span class="decision-producer"><span aria-hidden="true">· </span>`
+      + `<span class="visually-hidden">decided by </span>${esc(producer)}</span>`;
+  },
+
   // Review decision on one field, from the dataset review object. Its scope
   // is that field alone: a decided place says nothing about year or translator.
   // A place decision is about the authority record of one place value, so it
@@ -162,8 +196,9 @@ const Detail = {
     const fields = entry && entry.review && entry.review.fields;
     const action = fields && fields[fieldName];
     if (!action) return '';
-    return `<span class="field-review field-review-${esc(action)}"
-      title="Reviewed decision on this field alone">${esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>`;
+    return `<span class="field-review field-review-${esc(action)}">`
+      + `<span class="visually-hidden">Decision on this field alone: </span>${
+      esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>${this._producerNote(entry.review)}`;
   },
 
   /** The place decision of the review object, at the value it was made on. */
@@ -171,9 +206,9 @@ const Detail = {
     const fields = entry && entry.review && entry.review.fields;
     const action = fields && fields.location;
     if (!action) return '';
-    return ` <span class="field-review field-review-${esc(action)}"
-      title="Reviewed decision on the authority record of this place alone">${
-      esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>`;
+    return ` <span class="field-review field-review-${esc(action)}">`
+      + `<span class="visually-hidden">Place authority link </span>${
+      esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>${this._producerNote(entry.review)}`;
   },
 
   /** What a field decision of the review object is about, in a reader's words. */
@@ -228,13 +263,14 @@ const Detail = {
       ? `Decided by ${entry.review.reviewed_by}.`
       : '';
     const note = st.pending ? ' <span class="review-pending">unsaved</span>' : '';
+    const producer = !st.pending && dataset ? this._producerNote(entry.review) : '';
     const open = status === 'contested' ? [] : this._openAuthorityClaims(entry);
     const nouns = [...new Set(open.map(claim => this.CLAIM_NOUNS[claim.entityType] || 'authority'))];
     const claims = nouns.length
       ? `, <span class="review-claim-note">open ${esc(nouns.join(' and '))} claim</span>`
       : '';
     return `<span class="review-chip ${classes[status] || 'review-other'}"${
-      this.help('Review status', by)}>${esc(label)}${note}${claims}</span>`;
+      this.help('Review status', by)}>${esc(label)}${producer}${note}${claims}</span>`;
   },
 
   // Editable cell for a provenance-tracked field (edit mode only). A pending

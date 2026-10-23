@@ -292,3 +292,18 @@ test('the clear-all chip appears only from the second active filter on', () => {
   App.state.filters = { decade: '1930', years: '1900-1910' };
   assert.strictEqual(JSON.stringify(App._activeFilters().map(f => f.key)), '["decade"]');
 });
+
+test('an empty list for a non-Latin query says that titles are romanised', () => {
+  const App = loadApp();
+  App.state.filters = {};
+  App.state.query = 'Шахматная';
+  const html = App._emptyStateHtml();
+  assert.match(html, /No results for “Шахматная”/);
+  assert.match(html, /romanised form/);
+  assert.match(html, /Shakhmatnaia novella/);
+  assert.match(html, /full text of every entry/);
+
+  // A Latin query with diacritics finds nothing for other reasons.
+  App.state.query = 'Zoščenkoxyz';
+  assert.doesNotMatch(App._emptyStateHtml(), /romanised/);
+});

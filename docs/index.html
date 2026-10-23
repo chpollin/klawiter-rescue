@@ -66,7 +66,7 @@
         <a href="#about" id="nav-about">About</a>
       </nav>
       <div class="header-search">
-        <input type="search" id="search-input" placeholder="Search..." aria-label="Search bibliography">
+        <input type="search" id="search-input" placeholder="Full-text search&hellip;" aria-label="Search the full text of every entry">
         <svg class="header-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
@@ -145,11 +145,12 @@
         </div>
         <!-- The provenance classes are the same everywhere, so the legend
              stands once above the list instead of inside every card. -->
-        <p id="prov-legend" class="prov-legend">Provenance
-          <span class="prov-badge prov-regex" title="Regex extracted">R</span> regex-extracted
-          <span class="prov-badge prov-llm" title="LLM enriched">L</span> LLM-enriched
-          <span class="prov-badge prov-editor" title="Expert curated">E</span> expert-curated
-          <span class="prov-badge prov-missing" title="Missing">&mdash;</span> missing
+        <p id="prov-legend" class="prov-legend">Provenance of a value&rsquo;s wording
+          <span class="prov-badge prov-regex" aria-hidden="true">R</span> regex-extracted
+          <span class="prov-badge prov-llm" aria-hidden="true">L</span> LLM-enriched
+          <span class="prov-badge prov-editor" aria-hidden="true">E</span> expert-curated
+          <span class="prov-badge prov-missing" aria-hidden="true">&mdash;</span> missing.
+          An authority link names its own producer beside its state.
         </p>
         <div id="results-list" class="results-list"></div>
         <div id="load-more" class="load-more hidden">

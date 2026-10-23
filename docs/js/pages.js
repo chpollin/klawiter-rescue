@@ -42,6 +42,17 @@ const Pages = {
     return r ? `${r.min}–${r.max}` : '';
   },
 
+  /** Pages published from a restored earlier revision instead of the latest. */
+  _restoredRevisionCount() {
+    const entries = (App.data && App.data.entries) || [];
+    return entries.filter(entry => entry.sourceRevision).length;
+  },
+
+  // One sentence for both pages that describe authority links, so the About
+  // and the Data page cannot say different things about who decided them.
+  AUTHORITY_DECISION_NOTE: 'Place and work authority links were decided by LLM agents under '
+    + 'delegation by the operator and are revisable; no human review of them has been released yet.',
+
   /** In-page anchor navigation; hrefs are real routes ('#about/help'). */
   _anchorNav(slug, items) {
     const links = items.map(([id, label]) =>
@@ -113,13 +124,17 @@ const Pages = {
           database stores content in a four-layer chain
           (page &rarr; revision &rarr; slot &rarr; content &rarr; text ID in a
           BLOB file); the pipeline resolves that chain per page and takes the
-          latest revision. It is written in Python and needs no database server.
+          latest revision. ${this._num(this._restoredRevisionCount())} pages use
+          a restored earlier revision instead, because the wiki&rsquo;s automatic
+          Redirect fixer overwrote the compiler&rsquo;s text after his last edit;
+          the entry card of each names it under Source revision. The pipeline is
+          written in Python and needs no database server.
         </p>
         <ol>
           <li>
             <strong>Extract</strong> &mdash; parse the SQL INSERT statements and
             the BLOB files directly and retrieve the latest text of every
-            main-namespace page.
+            main-namespace page, or the restored revision named above.
           </li>
           <li>
             <strong>Fix encoding</strong> &mdash; detect and repair Mojibake
@@ -162,6 +177,11 @@ const Pages = {
           wiki text for every entry, a source census proves that every wiki page
           reaches the published data, and an LLM-as-a-judge evaluation assesses
           extraction quality on a stratified sample.
+        </p>
+        <p>
+          Authority links connect place names to Wikidata and work titles to
+          the work index of Stefan Zweig Digital.
+          ${this.AUTHORITY_DECISION_NOTE}
         </p>
         <h3>Known limitations</h3>
         <p>
@@ -335,7 +355,8 @@ const Pages = {
           value, the competing interpretations, the review history and the open
           status side by side, and it is exported as such. A candidate that has
           not been decided never becomes a confirmed authority link in the
-          interface.
+          interface. ${this.AUTHORITY_DECISION_NOTE} The entry card names the
+          producer of each decision beside its state.
         </p>
         <p>
           Every asserted field carries its <strong>provenance</strong>: whether

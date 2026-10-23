@@ -621,3 +621,49 @@ test('a publication that names its own author is cited under that author', () =>
   assert.match(captured[0].content, /^AU {2}- Thomas Humeau$/m);
   assert.match(captured[0].content, /^A4 {2}- Anja Kootz$/m);
 });
+
+test('the flat fallback leaves out a translator it cannot bind to the cited publication', () => {
+  // Page 279: the German original of Schachnovelle, whose flat translator
+  // belongs to a Danish translation the page lists among 143 publications.
+  const original = {
+    sourcePageId: 279, entryType: 'fiction', title: 'Schachnovelle', year: 1942,
+    language: 'German', translator: 'Harald Engberg', publicationCount: 143,
+  };
+  const page = exportCtx(original, null);
+  page.Export.bibtex(279);
+  assert.doesNotMatch(page.captured[0].content, /Harald Engberg|Translated by/);
+  page.Export.ris(279);
+  assert.doesNotMatch(page.captured[1].content, /^A4 /m);
+
+  // Page 172: no publication file, Zweig's German essay; the English
+  // translator of the page is not a credit of the original.
+  const essay = exportCtx({
+    sourcePageId: 172, entryType: 'essay', title: 'Der Turm zu Babel', year: 1916,
+    language: 'German', translator: 'Harry Zohn',
+  }, null);
+  essay.Export.bibtex(172);
+  assert.doesNotMatch(essay.captured[0].content, /Harry Zohn/);
+
+  // A translation page without a publication file keeps its one credit.
+  const danish = exportCtx({
+    sourcePageId: 9001, entryType: 'fiction', title: 'Skaknovelle', year: 1948,
+    language: 'Danish', translator: 'Harald Engberg',
+  }, null);
+  danish.Export.bibtex(9001);
+  assert.match(danish.captured[0].content, /note = \{Translated by Harald Engberg\}/);
+  danish.Export.ris(9001);
+  assert.match(danish.captured[1].content, /^A4 {2}- Harald Engberg$/m);
+});
+
+test('a publication without a container is a book in both formats, whatever the page type', () => {
+  // An essay page lists separate editions too; an article needs its journal.
+  const entry = { ...editionEntry(), entryType: 'essay' };
+  const pub = { ...editions()[0], note: 'With an afterword.' };
+  delete pub.container;
+  const { Export, captured } = exportCtx(entry, [pub]);
+  Export.ris(1800, 0);
+  assert.match(captured[0].content, /^TY {2}- BOOK$/m);
+  assert.match(captured[0].content, /^N1 {2}- .*With an afterword\./m);
+  Export.bibtex(1800, 0);
+  assert.match(captured[1].content, /^@book\{/);
+});

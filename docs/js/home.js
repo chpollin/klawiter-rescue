@@ -9,12 +9,6 @@ const Home = {
     // Count entries per type
     const counts = countByField(entries, 'entryType');
 
-    // Stats
-    const languages = new Set(entries.map(e => e.language).filter(Boolean));
-    const locations = new Set(entries.map(e => e.location).filter(Boolean));
-    const years = entries.map(e => e.year).filter(Boolean);
-    const minYear = years.length ? Math.min(...years) : '?';
-    const maxYear = years.length ? Math.max(...years) : '?';
 
     // Build groups HTML
     const groupsHtml = CATEGORY_GROUPS.map(group => {
@@ -55,19 +49,13 @@ const Home = {
       <div class="home-intro home-compact">
         <h1 class="home-title">Stefan Zweig Bibliography</h1>
         <p class="home-subtitle">Compiled by Randolph J. Klawiter, as open data</p>
-        <p class="home-text">
-          ${entries.length.toLocaleString('en')} publications by and about Stefan Zweig,
-          from first editions and translations to secondary literature, films and
-          correspondence, in ${languages.size} languages and ${locations.size.toLocaleString('en')}
-          publication places (${minYear}&ndash;${maxYear}), searchable and
-          downloadable as a structured dataset.
-        </p>
+        <p class="home-text">${this.introText(this.stats(entries))}</p>
         <div class="home-search-row">
           <div class="home-search">
             <input type="search" id="home-search-input"
-                   aria-label="Search bibliography"
+                   aria-label="Search the full text of every entry"
                    value="${esc(App.state.query || '')}"
-                   placeholder="Search ${entries.length.toLocaleString('en')} entries\u2026">
+                   placeholder="Search the full text of ${entries.length.toLocaleString('en')} entries\u2026">
             <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
@@ -95,6 +83,38 @@ const Home = {
         }
       });
     }
+  },
+
+  /**
+   * The figures of the intro sentence, all read from the loaded records.
+   *
+   * An entry is one wiki page, which can list many publications. A place
+   * spelling is a value as the source writes it, mis-parses included, so the
+   * places are counted as distinct published authority links (locationSameAs),
+   * the reconciled subjects the records carry. The year range is computed
+   * here rather than written down, so a repaired year extraction moves it.
+   */
+  stats(entries) {
+    const years = entries.map(e => e.year).filter(Number.isFinite);
+    return {
+      entries: entries.length,
+      languages: new Set(entries.map(e => e.language).filter(Boolean)).size,
+      placeSpellings: new Set(entries.map(e => e.location).filter(Boolean)).size,
+      linkedPlaces: new Set(entries.map(e => e.locationSameAs).filter(Boolean)).size,
+      minYear: years.length ? Math.min(...years) : null,
+      maxYear: years.length ? Math.max(...years) : null,
+    };
+  },
+
+  introText(s) {
+    const n = value => value.toLocaleString('en');
+    const range = s.minYear != null ? `, ${s.minYear}&ndash;${s.maxYear}` : '';
+    return `${n(s.entries)} entries (wiki pages) on publications by and about
+          Stefan Zweig, from first editions and translations to secondary
+          literature, films and correspondence, in ${n(s.languages)} languages,
+          with ${n(s.linkedPlaces)} places of publication linked to Wikidata
+          among ${n(s.placeSpellings)} place spellings${range}, searchable and
+          downloadable as a structured dataset.`;
   },
 
   // A category is one plain row: name, count, and a click that opens the
