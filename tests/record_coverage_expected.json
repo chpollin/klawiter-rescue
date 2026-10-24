@@ -41,12 +41,8 @@
   }
  },
  "renderedGarbage": {
-  "fields": {
-   "wikiPageKindEvidence": 4716
-  },
-  "records": 4716,
-  "tokens": {
-   "[object Object]": 5619
-  }
+  "fields": {},
+  "records": 0,
+  "tokens": {}
  }
 }

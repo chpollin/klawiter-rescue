@@ -1319,8 +1319,12 @@ const Detail = {
       const rule = fields.wikiPageKindRule
         ? ` <span class="field-sub" data-key="wikiPageKindRule">(${esc(fields.wikiPageKindRule)})</span>`
         : '';
-      const ev = fields.wikiPageKindEvidence
-        ? ` <span class="field-sub" data-key="wikiPageKindEvidence">${esc(fields.wikiPageKindEvidence)}</span>`
+      // Each piece of evidence names the source field it was read from and its value.
+      const evidenceSource = { categories: 'category', sourceText: 'source text', pageTitle: 'page title' };
+      const evidence = Array.isArray(fields.wikiPageKindEvidence) ? fields.wikiPageKindEvidence : [];
+      const ev = evidence.length
+        ? ` <span class="field-sub" data-key="wikiPageKindEvidence">from ${evidence.map(x =>
+          `${esc(evidenceSource[x.sourceField] || x.sourceField)} “${esc(x.sourceValue)}”`).join(', ')}</span>`
         : '';
       put('Page classification', `<span data-key="wikiPageKind">${esc(fields.wikiPageKind)}</span>${rule}${ev}`);
     }
