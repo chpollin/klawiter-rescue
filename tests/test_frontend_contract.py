@@ -22,8 +22,10 @@ from pathlib import Path
 # the co-imprint pairs and series gloss, the release license and version, and
 # the review scope and reviewed status that main added while 1.3 still stood,
 # 1.5 the source revision a restored page is published from, 1.6 the
-# "uncertain" mark of a credit the source qualifies with "(?)".
-FRONTEND_SCHEMA_VERSION = "1.6"
+# "uncertain" mark of a credit the source qualifies with "(?)", 1.7 the wiki
+# page kind with its rule and evidence, and the print addresses the page's text
+# cites, with their counts in _meta.
+FRONTEND_SCHEMA_VERSION = "1.7"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -45,8 +47,10 @@ META_KEYS = {
     "ns0Count",
     "publicationCoverage",
     "redirectCount",
+    "printAddressCitations",
     "totalCount",
     "version",
+    "wikiPageKinds",
     "yearRange",
 }
 
@@ -75,6 +79,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "originalTitle": (False, (str,)),
     "pageCount": (False, (int,)),
     "pageKind": (False, (str,)),
+    "printAddressCitations": (False, (list,)),
     "publicationCount": (False, (int,)),
     "publicationLanguages": (False, (list,)),
     "publicationPlaces": (False, (list,)),
@@ -90,6 +95,9 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "timePeriod": (False, (str,)),
     "translations": (False, (list,)),
     "translator": (False, (str,)),
+    "wikiPageKind": (False, (str,)),
+    "wikiPageKindEvidence": (False, (list,)),
+    "wikiPageKindRule": (False, (str,)),
     "year": (False, (int,)),
 }
 
@@ -521,3 +529,69 @@ def test_restored_pages_state_their_source_revision(frontend_data) -> None:
     assert restored["humanRevision"]["textId"] == by_page[35]["sourceTextId"]
     assert [rev["revisionId"] for rev in restored["fixerRevisions"]] == [33773]
     assert "sourceRevision" not in by_page[4113]
+
+
+# Wiki page kind and cited print addresses (lib/page_kinds.py,
+# lib/print_addresses.py).
+WIKI_PAGE_KIND_VALUES = {
+    "work-hub",
+    "edition-page",
+    "author-page",
+    "other",
+    "undetermined",
+}
+KIND_EVIDENCE_FIELDS = {"pageTitle", "categories", "sourceText"}
+CITATION_KEYS = {
+    "printAddress",
+    "printVolume",
+    "printSection",
+    "printEntryNumber",
+    "printEntryNumberEnd",
+    "citationState",
+    "citationNotation",
+    "sourceValue",
+    "sourceStart",
+    "sourceEnd",
+    "passageText",
+    "passageStart",
+    "passageEnd",
+}
+CITATION_REQUIRED_KEYS = CITATION_KEYS - {"printEntryNumber", "printEntryNumberEnd"}
+PRINT_VOLUMES = {"main-volume", "addendum-1", "addendum-2"}
+CITATION_NOTATIONS = {"see", "bracket", "parenthesis", "plain"}
+
+
+def test_every_content_page_declares_its_wiki_page_kind(all_entries) -> None:
+    for entry in all_entries:
+        keys = {"wikiPageKind", "wikiPageKindRule", "wikiPageKindEvidence"}
+        if entry["pageNamespace"] != 0:
+            assert not keys & set(entry)
+            continue
+        assert keys <= set(entry)
+        assert entry["wikiPageKind"] in WIKI_PAGE_KIND_VALUES
+        for evidence in entry["wikiPageKindEvidence"]:
+            assert evidence["sourceField"] in KIND_EVIDENCE_FIELDS
+            assert isinstance(evidence["sourceValue"], str) and evidence["sourceValue"]
+            if evidence["sourceField"] == "sourceText":
+                assert set(evidence) == {
+                    "sourceField",
+                    "sourceValue",
+                    "sourceStart",
+                    "sourceEnd",
+                }
+                assert 0 <= evidence["sourceStart"] < evidence["sourceEnd"]
+            else:
+                assert set(evidence) == {"sourceField", "sourceValue"}
+
+
+def test_cited_print_addresses_match_the_declared_contract(all_entries) -> None:
+    cited = [e for e in all_entries if "printAddressCitations" in e]
+    assert cited, "no entry cites a print address"
+    for entry in cited:
+        assert entry["printAddressCitations"], "an empty list is omitted"
+        for citation in entry["printAddressCitations"]:
+            assert CITATION_REQUIRED_KEYS <= set(citation) <= CITATION_KEYS
+            assert citation["citationState"] == "cites"
+            assert citation["printVolume"] in PRINT_VOLUMES
+            assert citation["citationNotation"] in CITATION_NOTATIONS
+            assert citation["printAddress"].startswith(citation["printSection"])

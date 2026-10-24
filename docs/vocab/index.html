@@ -51,7 +51,7 @@
 <div class="namespace">
   <strong>Namespace URI:</strong> https://chpollin.github.io/klawiter-rescue/vocab/<br>
   <strong>Preferred prefix:</strong> klawiter:<br>
-  <strong>Version:</strong> 3.2 (resolved claims and review notes; 3.1 gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)
+  <strong>Version:</strong> 3.3 (wiki page kinds and cited print addresses; 3.2 resolved claims and review notes; 3.1 gate evidence terms, RDF resource modeling, claim properties renamed to hasContestedClaim and hasReviewAction)
 </div>
 
 <p>Domain vocabulary for the Stefan Zweig Bibliography (Klawiter) Linked Data project. It extends Schema.org and Dublin Core with domain-specific entry types, classifications, MediaWiki source metadata, and the evidence terms of the Work/Edition and reconciliation gates. Standard bibliographic properties use Schema.org, provenance and citation use Dublin Core and PROV, terms without an equivalent in existing vocabularies are defined here. The namespace also hosts instance identifier sub-spaces (entry/, work/, edition/, annotation/, carrier/, claim/, review/, agent/, plan/, dataset/, person/, publisher/, organization/, place/, location/, sourceText/, evidence/); instance identifiers always contain a slash and are disjoint from term names, which never do. Every term is dereferenceable as vocab/&lt;TermName&gt;/.</p>
@@ -237,6 +237,31 @@
     <tr><td><code><a href="sourcePath/">klawiter:sourcePath</a></code></td><td class="kind">Property</td><td>Repository-relative path of the file an occurrence was found in.</td></tr>
     <tr><td><code><a href="sourceTitle/">klawiter:sourceTitle</a></code></td><td class="kind">Property</td><td>Title of the source page an occurrence belongs to.</td></tr>
     <tr><td><code><a href="sourceField/">klawiter:sourceField</a></code></td><td class="kind">Property</td><td>The extracted field an occurrence was observed in.</td></tr>
+    <tr><td><code><a href="sourceStart/">klawiter:sourceStart</a></code></td><td class="kind">Property</td><td>Character offset where a passage begins in the page&#x27;s source text in dump form, the text a publication&#x27;s source slice and the Gate-1 selectors address.</td></tr>
+    <tr><td><code><a href="sourceEnd/">klawiter:sourceEnd</a></code></td><td class="kind">Property</td><td>Character offset where a passage ends, exclusive, in the page&#x27;s source text in dump form.</td></tr>
+  </tbody>
+</table>
+
+<h2>Wiki page kind and cited print address properties</h2>
+<table>
+  <thead>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code><a href="wikiPageKind/">klawiter:wikiPageKind</a></code></td><td class="kind">Property</td><td>Kind of the source wiki page, read by rule: work-hub (the compiler&#x27;s page of a work with its editions and translations), edition-page (a page the compiler files as one item in one language, with its publications), author-page (a page indexed under a person, holding items by or about that person), other (adaptation, event, periodical, cross-reference or index page) or undetermined (no rule decides). It describes the page, not a work identity.</td></tr>
+    <tr><td><code><a href="wikiPageKindRule/">klawiter:wikiPageKindRule</a></code></td><td class="kind">Property</td><td>Identifier of the rule that decided the wiki page kind, such as vist-title, translations-section, authors-category, translated-author, item-category, cross-reference-page or several-category-languages.</td></tr>
+    <tr><td><code><a href="wikiPageKindEvidence/">klawiter:wikiPageKindEvidence</a></code></td><td class="kind">Property</td><td>Source value the page kind rule read: a category, the page title, or a passage of the source text with its offsets.</td></tr>
+    <tr><td><code><a href="printAddressCitations/">klawiter:printAddressCitations</a></code></td><td class="kind">Property</td><td>Addresses of the compiler&#x27;s printed bibliography that the page&#x27;s text cites, each with its passage. The state is cites: an address is resolved only syntactically and asserts no identity with a print record.</td></tr>
+    <tr><td><code><a href="printAddress/">klawiter:printAddress</a></code></td><td class="kind">Property</td><td>Normalized print address: section letter, A1 or A2 for an addendum, and entry number with an optional letter suffix or range, such as F 47, HA1 34, FA1 24a or G 796-798; an unnumbered Addendum II address is its code alone, such as LA2.</td></tr>
+    <tr><td><code><a href="printVolume/">klawiter:printVolume</a></code></td><td class="kind">Property</td><td>Print volume an address belongs to by its notation: main-volume, addendum-1 or addendum-2.</td></tr>
+    <tr><td><code><a href="printSection/">klawiter:printSection</a></code></td><td class="kind">Property</td><td>Section letter of a print address, A to R.</td></tr>
+    <tr><td><code><a href="printEntryNumber/">klawiter:printEntryNumber</a></code></td><td class="kind">Property</td><td>Entry number of a print address, or the first number of a range.</td></tr>
+    <tr><td><code><a href="printEntryNumberEnd/">klawiter:printEntryNumberEnd</a></code></td><td class="kind">Property</td><td>Last entry number of a print address range such as G 796-798.</td></tr>
+    <tr><td><code><a href="citationState/">klawiter:citationState</a></code></td><td class="kind">Property</td><td>State of a cited print address: cites. A typed relation to a print record, or an identity, needs review evidence.</td></tr>
+    <tr><td><code><a href="citationNotation/">klawiter:citationNotation</a></code></td><td class="kind">Property</td><td>Notation the source cites an address in: see (after See, Rep, Cont. or Correction to), bracket, parenthesis, or plain for an addendum address standing on its own.</td></tr>
+    <tr><td><code><a href="passageText/">klawiter:passageText</a></code></td><td class="kind">Property</td><td>The citation passage an address stands in, with the dump&#x27;s quote escape resolved.</td></tr>
+    <tr><td><code><a href="passageStart/">klawiter:passageStart</a></code></td><td class="kind">Property</td><td>Character offset where the citation passage begins in the page&#x27;s source text in dump form.</td></tr>
+    <tr><td><code><a href="passageEnd/">klawiter:passageEnd</a></code></td><td class="kind">Property</td><td>Character offset where the citation passage ends, exclusive, in the page&#x27;s source text in dump form.</td></tr>
   </tbody>
 </table>
 

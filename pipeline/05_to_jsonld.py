@@ -39,6 +39,8 @@ from lib.config import (
     write_json,
 )
 from lib.encoding import unescape_dump_quotes
+from lib.page_kinds import WIKI_PAGE_KINDS, classify_wiki_page
+from lib.print_addresses import cited_print_addresses
 from lib.publications import (
     attach_edition_state,
     build_page_publications,
@@ -411,6 +413,19 @@ def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=No
     main_category = row.get("main_category", "")
     if main_category:
         entry["mainCategory"] = main_category
+
+    # The kind of wiki page and the print addresses its text cites, both read
+    # by rule from the source page (lib/page_kinds.py, lib/print_addresses.py).
+    # Category and other structural pages keep their own handling.
+    if namespace == 0:
+        entry.update(
+            classify_wiki_page(
+                row.get("page_title", ""), row.get("raw_content", ""), categories or []
+            )
+        )
+        citations = cited_print_addresses(row.get("raw_content", ""))
+        if citations:
+            entry["printAddressCitations"] = citations
 
     # Cross-references: resolved See-references become dcterms:relation
     # with entry IRIs; genuinely dead references (red links in the source
@@ -899,6 +914,15 @@ def main():
         "pathTemplate": FRONTEND_PUBLICATIONS_PATH_TEMPLATE,
     }
 
+    wiki_page_kinds = {kind: 0 for kind in WIKI_PAGE_KINDS}
+    for e in ns0:
+        wiki_page_kinds[e["wikiPageKind"]] += 1
+    cited = [e for e in ns0 if e.get("printAddressCitations")]
+    print_citation_coverage = {
+        "pages": len(cited),
+        "citations": sum(len(e["printAddressCitations"]) for e in cited),
+    }
+
     _meta = {
         # Declared shape of this file; tests/test_frontend_contract.py holds
         # the matching declaration. 1.1 added the per-entry review projection,
@@ -907,8 +931,9 @@ def main():
         # per publication, the page's publication flag codes, the imprint
         # pairs and series gloss, the release license and version, and the
         # review scope and reviewed status, 1.5 the source revision of a
-        # restored page, 1.6 the "uncertain" mark of a credit.
-        "frontendSchemaVersion": "1.6",
+        # restored page, 1.6 the "uncertain" mark of a credit, 1.7 the wiki
+        # page kind with its rule and evidence and the cited print addresses.
+        "frontendSchemaVersion": "1.7",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,
@@ -923,6 +948,8 @@ def main():
         "languageCount": len(languages),
         "locationCount": len(locations),
         "publicationCoverage": publication_coverage,
+        "wikiPageKinds": wiki_page_kinds,
+        "printAddressCitations": print_citation_coverage,
     }
 
     frontend_data = {

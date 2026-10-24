@@ -1,10 +1,10 @@
 {
   "algorithmVersion": "1.3",
   "artifacts": {
-    "earl.jsonld": "e7a79154f8c23ac5c2f1dae3a5a171fe8ae973984c31fc336045c0ab189c46b9",
-    "provenance.jsonld": "b7c905e08d9462bd3ad14f53b8822458512674cf4853121829e45661f154052e",
+    "earl.jsonld": "7ea9aba21e28c52a0b8b207847d68445f7ecfb4d480c04a0b478509ec539da7f",
+    "provenance.jsonld": "e3cec526b94cfc8c555a957befc8e7430d7abda0c07d9549c62fc1de5d699627",
     "review-queue.json": "706fdabcbd73222db78258d6192b58ce416aec5e4f8678a04384f76966876d39",
-    "validation-report.json": "ff923861104483e99deb476a8cb4ce922515ac263b69244ce56eb9ede8c253ad",
+    "validation-report.json": "92318e7c3fcda79f4335525feb5fb42899f92ef252fdfa6fd2135cac14464d86",
     "work-editions.jsonld": "686f8a96774f0c11e31ca65b6717d324c3d012fd79f8a9228da9d7d9d5647d70"
   },
   "authorityEvidence": {
@@ -30,7 +30,7 @@
     "reviewCases": 339,
     "works": 448
   },
-  "generatedAt": "2026-10-23T21:25:59.186884+00:00",
+  "generatedAt": "2026-10-24T15:28:42.567701+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

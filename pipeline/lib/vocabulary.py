@@ -58,6 +58,38 @@ CONTEXT = {
         "pageNamespace": "klawiter:pageNamespace",
         "isRedirect": "klawiter:isRedirect",
         "redirectTarget": "klawiter:redirectTarget",
+        # Wiki page kind and cited print addresses (lib/page_kinds.py,
+        # lib/print_addresses.py), with their source evidence.
+        "wikiPageKind": "klawiter:wikiPageKind",
+        "wikiPageKindRule": "klawiter:wikiPageKindRule",
+        "wikiPageKindEvidence": {
+            "@id": "klawiter:wikiPageKindEvidence",
+            "@container": "@set",
+        },
+        "sourceField": "klawiter:sourceField",
+        "sourceValue": "klawiter:sourceValue",
+        "sourceStart": {"@id": "klawiter:sourceStart", "@type": "xsd:integer"},
+        "sourceEnd": {"@id": "klawiter:sourceEnd", "@type": "xsd:integer"},
+        "printAddressCitations": {
+            "@id": "klawiter:printAddressCitations",
+            "@container": "@set",
+        },
+        "printAddress": "klawiter:printAddress",
+        "printVolume": "klawiter:printVolume",
+        "printSection": "klawiter:printSection",
+        "printEntryNumber": {
+            "@id": "klawiter:printEntryNumber",
+            "@type": "xsd:integer",
+        },
+        "printEntryNumberEnd": {
+            "@id": "klawiter:printEntryNumberEnd",
+            "@type": "xsd:integer",
+        },
+        "citationState": "klawiter:citationState",
+        "citationNotation": "klawiter:citationNotation",
+        "passageText": "klawiter:passageText",
+        "passageStart": {"@id": "klawiter:passageStart", "@type": "xsd:integer"},
+        "passageEnd": {"@id": "klawiter:passageEnd", "@type": "xsd:integer"},
     }
 }
 

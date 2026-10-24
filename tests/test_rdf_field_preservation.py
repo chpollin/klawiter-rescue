@@ -257,3 +257,68 @@ def test_every_open_location_claim_marks_its_flat_value(canonical_entries) -> No
         if references:
             assert "sameAs" not in place
     assert marked, "no flat place carries an open location claim"
+
+
+@pytest.mark.parametrize(
+    ("term", "datatype"),
+    [
+        ("wikiPageKind", XSD.string),
+        ("wikiPageKindRule", XSD.string),
+        ("sourceStart", XSD.integer),
+        ("sourceEnd", XSD.integer),
+        ("printAddress", XSD.string),
+        ("printVolume", XSD.string),
+        ("printSection", XSD.string),
+        ("printEntryNumber", XSD.integer),
+        ("printEntryNumberEnd", XSD.integer),
+        ("citationState", XSD.string),
+        ("citationNotation", XSD.string),
+        ("passageText", XSD.string),
+        ("passageStart", XSD.integer),
+        ("passageEnd", XSD.integer),
+    ],
+)
+def test_page_kind_and_citation_properties_are_registered(
+    term: str, datatype: URIRef
+) -> None:
+    test_restored_rdf_properties_are_registered(term, datatype)
+
+
+def test_page_kind_and_cited_addresses_survive_rdf_conversion() -> None:
+    """The evidence and citation nodes are nested objects; their literals must
+    reach the graph, not only the top-level kind."""
+    from lib.page_kinds import classify_wiki_page
+    from lib.print_addresses import cited_print_addresses
+    from lib.vocabulary import CONTEXT, to_rdf_entry
+
+    # Page 531, verbatim.
+    text = "[Der Amokläufer. F 1] in [[Novelle]] [4], pp. 126-176"
+    entry = {
+        "@id": "klawiter:entry/531",
+        **classify_wiki_page(
+            "Amokijooksja", text, ["Fiction / Individual Stories (Estonian)"]
+        ),
+        "printAddressCitations": cited_print_addresses(text),
+    }
+    graph = _rdf({**CONTEXT, **to_rdf_entry(entry)})
+    subject = _iri("klawiter:entry/531")
+    assert (subject, KLAWITER.wikiPageKind, Literal("edition-page")) in graph
+    assert (subject, KLAWITER.wikiPageKindRule, Literal("item-category")) in graph
+    (evidence,) = graph.objects(subject, KLAWITER.wikiPageKindEvidence)
+    assert (evidence, KLAWITER.sourceField, Literal("categories")) in graph
+    (citation,) = graph.objects(subject, KLAWITER.printAddressCitations)
+    expected = {
+        KLAWITER.printAddress: Literal("F 1"),
+        KLAWITER.printVolume: Literal("main-volume"),
+        KLAWITER.printSection: Literal("F"),
+        KLAWITER.printEntryNumber: Literal(1),
+        KLAWITER.citationState: Literal("cites"),
+        KLAWITER.citationNotation: Literal("bracket"),
+        KLAWITER.sourceValue: Literal("F 1"),
+        KLAWITER.sourceStart: Literal(17),
+        KLAWITER.sourceEnd: Literal(20),
+        KLAWITER.passageText: Literal("[Der Amokläufer. F 1]"),
+        KLAWITER.passageStart: Literal(0),
+        KLAWITER.passageEnd: Literal(21),
+    }
+    assert dict(graph.predicate_objects(citation)) == expected
