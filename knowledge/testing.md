@@ -111,7 +111,7 @@ The review round of 2026-10-23 is the reason for this layer: eight defects found
 
 ## Agentic Review
 
-The edition sample comprises 76 segments from three complex pages. Two independent initial reviews worked against schema, source excerpt and hash. An independent stronger verification agent reconciled the deviations. The result confirms 75 segments and preserves one work binding as an open claim.
+The edition sample comprises 76 segments from three complex pages. Two independent initial reviews worked against schema, source excerpt and hash. An independent stronger verification agent reconciled the deviations. The result confirmed 75 segments and kept one work binding as an open claim, which was decided on 2026-09-22 ([Data](data.md), work binding of `klawiter:edition/4916-2016-b`).
 
 The location review examined the remaining low-scored cases independently. Confirmations and corrections were adopted as decisions. Five cases stayed open in domain terms and were materialized as contested claims.
 
@@ -119,7 +119,7 @@ Agentic decisions are traceable through reviewer, input hash, result and evidenc
 
 ## Semantic Sample
 
-The semantic suite has two distinct targets: seventy frontend field assertions from the ten records in `tests/wiki_ground_truth.json`, and one hundred rule-extraction assertions from the twenty complete texts in `tests/test_sample_20.json`. The former retains fourteen known deviations; the latter retains seven rule/expectation mismatches after the reviewed repairs. The resulting twenty-one failing assertions are not thirty-one demonstrated product data errors: they span different layers and include unresolved field-selection contracts. Neither selected sample estimates a corpus-wide error rate.
+The semantic suite has two distinct targets: seventy frontend field assertions from the ten records in `tests/wiki_ground_truth.json`, and one hundred rule-extraction assertions from the twenty complete texts in `tests/test_sample_20.json`. Both retain known deviations after the reviewed repairs, listed under `knownMismatches` in `.github/semantic-baseline.json` and `.github/extraction-baseline.json`. These failing assertions are no count of demonstrated product data errors, because they span different layers and include unresolved field-selection contracts. Neither selected sample estimates a corpus-wide error rate.
 
 The per-field tests stay deliberately marked separately. `.github/semantic-baseline.json` names the exact known cases and records the input hash, ten page IDs, seven fields and the commit at which failures were observed. Collection rejects a changed fixture hash, a removed/replaced/duplicate page or a missing field; the default guard also checks its comparison inventory. Isolated mutation tests demonstrate that changing only the hash cannot conceal lost coverage. Its mismatch count must agree with `.github/baseline-metrics.json`. A replacement on another page/field or a changed mismatching value fails the default gate.
 
@@ -133,7 +133,7 @@ The ten legacy skips have been removed. The source disproved the old range-only 
 
 The optional live LLM judge now selects stable page IDs and receives complete texts rather than 500-character fragments. Its historical model-judgment inventory has not been recalibrated; no live API call was made during this refactor. Deterministic source expectations provide the test oracle, subject to the explicit scope limitations and unresolved interpretations documented in [[independent-evaluation-2026-09-05]].
 
-Browser checks now exercise missing-language and multiple-value handover, reload/back state, visible navigation and absence of horizontal overflow at 320, 390 and 1280 pixels. Queue lifecycle is covered by repeated-render Node tests. Dashboard acceptance and its exact evidence are recorded in [Status](status.md). Broader browser validation of exports and correction persistence remains open. A broader stratified semantic sample and measured accessibility/performance budgets are still needed before claiming product acceptance. Passing the refactored suite does not close those gaps.
+Browser checks now exercise missing-language and multiple-value handover, reload/back state, visible navigation and absence of horizontal overflow at 320, 390 and 1440 pixels. Queue lifecycle is covered by repeated-render Node tests. Dashboard acceptance and its exact evidence are recorded in [Status](status.md). Broader browser validation of exports and correction persistence remains open. A broader stratified semantic sample and measured accessibility/performance budgets are still needed before claiming product acceptance. Passing the refactored suite does not close those gaps.
 
 ## CI reproduction boundary
 

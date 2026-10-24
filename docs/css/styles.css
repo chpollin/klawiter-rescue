@@ -431,113 +431,6 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-/* Category list. One row is one button opening the filtered list; rows
-   separate through spacing and hover, not through rules. */
-.category-section {
-  margin-bottom: 2rem;
-}
-
-.category-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.category-row {
-  display: flex;
-  align-items: baseline;
-  width: 100%;
-  gap: 0.75rem;
-  padding: 0.4rem 0.25rem;
-  text-align: left;
-  background: none;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-.category-row:hover {
-  background: var(--sz-white);
-}
-.category-row:hover .category-row-name {
-  color: var(--sz-burgundy);
-}
-
-.category-row-name {
-  font-family: var(--font-serif);
-  font-size: 0.9375rem;
-  color: var(--sz-text);
-  transition: color 0.15s;
-}
-
-.category-row-count {
-  font-family: var(--font-serif);
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--sz-burgundy);
-  margin-left: auto;
-}
-
-
-/* Compact one-screen home layout */
-.home-compact .home-title {
-  margin-bottom: 0.25rem;
-}
-/* Subtitle on its own line: readable serif italic in the dark gold token,
-   no letterspaced uppercase, so the phrase never wraps apart from the title. */
-.home-subtitle {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--sz-gold-dark);
-  margin: 0 0 0.75rem;
-}
-.home-compact .home-text {
-  max-width: 46rem;
-  margin-bottom: 0.85rem;
-}
-.home-search-row {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-.home-search-row .home-search {
-  flex: 1 1 320px;
-  margin: 0;
-}
-/* The field beside it opens the same view, so browsing is a link, not a
-   second call to action. */
-.home-browse-link {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--sz-burgundy);
-  white-space: nowrap;
-}
-/* The groups are one flat block on the page ground: two columns of rows,
-   held apart by whitespace rather than by a card each. */
-.home-groups {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.75rem 3rem;
-  align-items: start;
-}
-.home-groups .category-section {
-  margin-bottom: 0;
-}
-.home-groups .category-list {
-  max-width: 26rem;
-}
-.home-groups .section-heading {
-  font-size: 0.9375rem;
-  color: var(--sz-gold-dark);
-  margin: 0 0 0.35rem;
-}
-.home-groups .category-row {
-  padding: 0.3rem 0.25rem;
-}
 /* --- Results --- */
 .results-header {
   display: flex;
@@ -2577,10 +2470,6 @@ body.edit-mode .meta-label {
   .home-title {
     font-size: 1.375rem;
   }
-  .home-groups {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
-  }
   .footer-links {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -3349,20 +3238,6 @@ td.matrix-low { background: #F5E3E3; }
 /* The editable table is one section like the publications above it. */
 .page-record .meta-table {
   margin-bottom: 0;
-}
-
-/* The groups balance over three columns from the width at which the second
-   column of the pair runs out before the first. */
-@media (min-width: 900px) {
-  .home-groups {
-    display: block;
-    columns: 3;
-    column-gap: 3rem;
-  }
-  .home-groups .category-section {
-    break-inside: avoid;
-    margin-bottom: 1.5rem;
-  }
 }
 
 
