@@ -31,7 +31,7 @@ Endpoints:
   record links to its page as /print/I.pdf#page=790. Local like every print
   file; the volume names come from sections.json, never from the request path.
 
-Usage: python -m uv run python pipeline/print_volumes/review_server.py [--port 8765]
+Usage: python -m uv run python pipeline/print_volumes/review_server.py [--port 8767]
 """
 
 import argparse
@@ -272,7 +272,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--port", type=int, default=8767)
     parser.add_argument(
         "--log",
         type=Path,

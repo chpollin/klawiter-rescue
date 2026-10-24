@@ -20,10 +20,10 @@ in knowledge/print-volumes.md (Entry anatomy):
   the list that follows; "Trl. not indicated" is a role without a name.
 - imprint: "Place: Publisher, Year", several imprints split at " / ", a year
   printed once belonging only to the imprint it follows.
-- periodical: the siglum form of the main volume ("MERKER, 2:20 (10 July
-  1911), 55-56") and the spelled form of the addenda ("in Der Tag (Berlin), 16
-  July 1908 (No. 256), pp. (1)-3"); a story printed in several issues has
-  several citations.
+- periodical: the siglum form of the main volume (invented: "BOTE, 4:12 (1 May
+  1913), 20-21") and the spelled form of the addenda (invented: "in Die Zeitung
+  (Wien), 3 May 1912 (No. 41), pp. (2)-4"); a story printed in several issues
+  has several citations.
 - types: derive_types() decides them from the fields, so p10 can recompute them.
 """
 

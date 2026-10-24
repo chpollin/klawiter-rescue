@@ -164,7 +164,7 @@ def test_collection_heading_skipped_stale_claim_marked_and_lists_capped():
 
 
 TEXT = (
-    "2 Der Amokläufer. Erzählungen. Ed./Aftw. Knut Beck. (1.-3. Tsd.). 202/(2)p. 1984."
+    "2 Der Waldläufer. Erzählungen. Ed./Aftw. Anna Holm. (1.-3. Tsd.). 202/(2)p. 1984."
 )
 
 
@@ -193,7 +193,7 @@ def edition(**over):
 
 def test_snippet_quotes_the_disambiguating_values_in_printed_order():
     assert (
-        snippet(edition(), True) == "Erzählungen. Ed./Aftw. Knut Beck · 202/(2)p. 1984"
+        snippet(edition(), True) == "Erzählungen. Ed./Aftw. Anna Holm · 202/(2)p. 1984"
     )
 
 
@@ -207,7 +207,7 @@ def test_snippet_without_values_is_the_text_after_the_title():
     obj = edition(subtitle=None, persons=[], extent={}, imprints=[])
     assert (
         snippet(obj, True)
-        == "Erzählungen. Ed./Aftw. Knut Beck. (1.-3. Tsd.). 202/(2)p. 1984."
+        == "Erzählungen. Ed./Aftw. Anna Holm. (1.-3. Tsd.). 202/(2)p. 1984."
     )
 
 

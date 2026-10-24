@@ -6,6 +6,9 @@ the rest and still fails):
 1. inputs: each PDF's SHA-256 starts with its prefix in sections.json, and each
    p01 lines file is p01's output of that PDF: the p01 report names the same
    full hash and its text hash is the hash of the lines file's text.
+   leaks: no tracked file under LEAK_SCOPE (knowledge, code, frontend code,
+   README, CLAUDE.md) repeats LEAK_WORDS consecutive words of the print, so a
+   quotation of print text in a versioned file fails whoever wrote it.
 2. rebuild: p03 writes the entry and apparatus records twice from the same
    inputs, under different hash seeds, into gate/run-a and gate/run-b; every
    records file is byte-identical between the two. The live records are never
@@ -48,6 +51,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -274,6 +278,100 @@ def blind_row_failures(
             f"sheet and key differ in {len(sheet_ids ^ set(key))} sample identifiers"
         )
     return failures
+
+
+# Twelve consecutive words are far longer than an address, a title or an
+# imprint that knowledge and tests may name, and short enough to catch a
+# quoted sentence.
+LEAK_WORDS = 12
+# Versioned paths that must never carry print text. Wiki-derived data and its
+# fixtures are left out: the early wiki carried Addendum II text verbatim, so
+# overlap there is the source, not a leak.
+LEAK_SCOPE = (
+    "knowledge/",
+    "pipeline/",
+    "docs/js/",
+    "docs/css/",
+    "docs/index.html",
+    "README.md",
+    "CLAUDE.md",
+)
+# The evaluations of September predate the print strand and quote wiki
+# source excerpts, some of which the wiki took from the print.
+LEAK_EXEMPT = ("knowledge/evaluations/2026-09-05/",)
+# Structural labels that are long enough to match, such as a section title of
+# the 1991 contents, are admitted one by one as the sha256 of the matched
+# words, so the list itself holds no print text.
+LEAK_ALLOWED = HERE / "leak_allowed.json"
+WORD = re.compile(r"\w+")
+
+
+def shingle_hash(words: tuple[str, ...]) -> str:
+    return hashlib.sha256(" ".join(words).encode("utf-8")).hexdigest()
+
+
+def allowed_shingles() -> set[str]:
+    if not LEAK_ALLOWED.exists():
+        return set()
+    data = json.loads(LEAK_ALLOWED.read_text("utf-8"))
+    return {key for key in data if not key.startswith("_")}
+
+
+def shingles(words: list[str], size: int = LEAK_WORDS) -> set[tuple[str, ...]]:
+    return {tuple(words[i : i + size]) for i in range(len(words) - size + 1)}
+
+
+def print_shingles(line_texts: list[list[str]]) -> set[tuple[str, ...]]:
+    """Word shingles of the print, each volume read as one stream of its lines,
+    so that a sentence across a line break is caught too."""
+    out = set()
+    for texts in line_texts:
+        out |= shingles(WORD.findall(" ".join(texts).lower()))
+    return out
+
+
+def leak_failures(
+    files: dict[str, str],
+    print_set: set[tuple[str, ...]],
+    allowed: frozenset[str] = frozenset(),
+) -> list[str]:
+    """Files whose text repeats LEAK_WORDS consecutive words of the print that
+    are no admitted label; the report names file and line, never the words."""
+    failures = []
+    for name, text in sorted(files.items()):
+        words, starts = [], []
+        for number, line in enumerate(text.splitlines(), 1):
+            found = WORD.findall(line.lower())
+            words += found
+            starts += [number] * len(found)
+        for i in range(len(words) - LEAK_WORDS + 1):
+            run = tuple(words[i : i + LEAK_WORDS])
+            if run in print_set and shingle_hash(run) not in allowed:
+                failures.append(
+                    f"{name}:{starts[i]} repeats {LEAK_WORDS} consecutive words of the print"
+                )
+                break
+    return failures
+
+
+def versioned_texts() -> dict[str, str]:
+    """The tracked files in LEAK_SCOPE that decode as text."""
+    listed = subprocess.run(
+        ["git", "ls-files", "-z", *LEAK_SCOPE],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        check=True,
+    ).stdout.decode("utf-8")
+    out = {}
+    for name in filter(None, listed.split("\0")):
+        if name.startswith(LEAK_EXEMPT):
+            continue
+        path = PROJECT_ROOT / name
+        try:
+            out[name] = path.read_text("utf-8")
+        except (UnicodeDecodeError, FileNotFoundError):
+            continue
+    return out
 
 
 def load_identifiers(records_dir: Path) -> tuple[set[str], set[str], dict[str, list]]:
@@ -561,9 +659,25 @@ class Gate:
         files = sum(1 for p in outs[0].rglob("*") if p.is_file())
         return dir_differences(*outs), {"files": files}
 
+    def check_leaks(self) -> tuple[list[str], dict]:
+        streams = []
+        for volume in VOLUMES:
+            with lines_path(volume).open(encoding="utf-8") as source:
+                streams.append([json.loads(line)["text"] for line in source])
+        files = versioned_texts()
+        allowed = frozenset(allowed_shingles())
+        return leak_failures(files, print_shingles(streams), allowed), {
+            "files": len(files),
+            "words": LEAK_WORDS,
+            "scope": list(LEAK_SCOPE),
+            "exempt": list(LEAK_EXEMPT),
+            "allowed": len(allowed),
+        }
+
     def checks(self) -> list[tuple[str, Callable]]:
         out = [
             ("inputs", self.check_inputs),
+            ("leaks", self.check_leaks),
             ("rebuild", self.check_rebuild),
             ("validate", self.check_validate),
             ("samples", self.check_samples),

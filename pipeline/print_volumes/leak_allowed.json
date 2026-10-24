@@ -1,0 +1,4 @@
+{
+ "_about": "Structural labels of the print that the leak check of p14_gate.py admits in versioned files, each as the sha256 of its twelve lowercased words joined by a space, so this list holds no print text. Add one only for a label (a section or part title), never for a sentence.",
+ "3fe3313be3b633feff96ce0a452b104149dc8c39d899f57163ba4d112998619f": "knowledge/print-volumes.md, section scheme: the title of section H as the 1991 contents name it"
+}

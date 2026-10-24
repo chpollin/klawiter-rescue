@@ -12,9 +12,11 @@ from p14_gate import (
     blind_row_failures,
     dir_differences,
     input_failures,
+    leak_failures,
     lines_text_hash,
     p10_failures,
     pin_of,
+    print_shingles,
     run_checks,
     sample_failures,
     undo_remaps,
@@ -222,7 +224,7 @@ def test_the_blind_sheet_must_hold_the_key_rows():
 
 def test_the_gate_runs_every_named_check():
     names = [n for n, _ in p14_gate.Gate(export=False).checks()]
-    assert names == ["inputs", "rebuild", "validate", "samples"]
+    assert names == ["inputs", "leaks", "rebuild", "validate", "samples"]
     assert [n for n, _ in p14_gate.Gate(export=True).checks()][-1] == "export"
 
 
@@ -245,3 +247,39 @@ def test_the_first_failure_stops_the_run_and_a_raise_fails():
     assert results["b"]["ok"] is False and results["c"]["ok"] is None
     results = run_checks([("a", boom), ("b", ok)], keep_going=True)
     assert results["a"]["ok"] is False and results["b"]["ok"] is True
+
+
+# An invented print page: a sentence runs over a line break.
+INVENTED_PRINT = [
+    [
+        "12 Muster, Max. Ein erfundener Satz, der quer",
+        "über zwei Zeilen läuft und genau so nur hier gedruckt steht. 1950.",
+    ]
+]
+
+
+def test_a_versioned_file_quoting_the_print_fails_with_its_line():
+    quoted = (
+        "Intro.\n> Ein erfundener Satz, der quer über zwei Zeilen läuft und "
+        "genau so nur hier gedruckt steht.\n"
+    )
+    failures = leak_failures({"knowledge/x.md": quoted}, print_shingles(INVENTED_PRINT))
+    assert failures == ["knowledge/x.md:2 repeats 12 consecutive words of the print"]
+
+
+def test_an_address_title_or_paraphrase_does_not_count_as_a_leak():
+    clean = "See F 61, Muster, Max (1950). A sentence about the entry, in other words."
+    assert (
+        leak_failures({"knowledge/x.md": clean}, print_shingles(INVENTED_PRINT)) == []
+    )
+
+
+def test_an_admitted_label_passes_only_by_its_own_hash():
+    from p14_gate import WORD, shingle_hash
+
+    sentence = "Ein erfundener Satz, der quer über zwei Zeilen läuft und genau so"
+    words = tuple(WORD.findall(sentence.lower()))
+    print_set = print_shingles(INVENTED_PRINT)
+    files = {"knowledge/x.md": sentence}
+    assert leak_failures(files, print_set, frozenset({shingle_hash(words)})) == []
+    assert leak_failures(files, print_set, frozenset({"0" * 64})) != []
