@@ -9,7 +9,11 @@ holds a value for the same field (regression: cache presence used to win).
 import json
 import os
 
-from inject_provenance import field_provenance, load_provenance_cache
+from inject_provenance import (
+    field_provenance,
+    llm_enrichment_meta,
+    load_provenance_cache,
+)
 from lib.config import write_json
 
 # --- field_provenance ---
@@ -48,6 +52,19 @@ def test_frozen_provenance_cache_is_tracked_and_nonempty():
 
 def test_off_mode_has_no_llm_provenance():
     assert load_provenance_cache("off") == {}
+
+
+def test_llm_run_is_named_from_the_frozen_cache():
+    meta = llm_enrichment_meta("frozen")
+    assert meta["mode"] == "frozen"
+    assert meta["cache"] == "data/provenance/llm-enrichment-cache.json"
+    assert meta["model"] and meta["frozenAt"] and len(meta["promptSha256"]) == 64
+    # The cache's own statement of what it does not hold travels with the run.
+    assert meta["originLimit"]
+
+
+def test_off_mode_names_no_llm_run():
+    assert llm_enrichment_meta("off") == {"mode": "off"}
 
 
 # --- write_json ---

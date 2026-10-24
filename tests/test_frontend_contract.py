@@ -24,8 +24,9 @@ from pathlib import Path
 # 1.5 the source revision a restored page is published from, 1.6 the
 # "uncertain" mark of a credit the source qualifies with "(?)", 1.7 the wiki
 # page kind with its rule and evidence, and the print addresses the page's text
-# cites, with their counts in _meta.
-FRONTEND_SCHEMA_VERSION = "1.7"
+# cites, with their counts in _meta, 1.8 the producers a value's provenance
+# chain names, the edition review and the LLM enrichment run.
+FRONTEND_SCHEMA_VERSION = "1.8"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -38,11 +39,13 @@ TOP_LEVEL_KEYS = {
 }
 
 META_KEYS = {
+    "editionReview",
     "entryTypes",
     "fieldCoverage",
     "frontendSchemaVersion",
     "languageCount",
     "license",
+    "llmEnrichment",
     "locationCount",
     "ns0Count",
     "publicationCoverage",
@@ -437,6 +440,22 @@ def test_entry_names_the_flag_codes_of_its_publications(all_entries) -> None:
     for entry in all_entries:
         if not entry.get("publicationCount"):
             assert "publicationReviewFlags" not in entry
+
+
+def test_meta_names_the_producers_of_the_provenance_chain(
+    frontend_data, all_entries
+) -> None:
+    """A confirmed edition and an `llm` value name who produced them."""
+    review = frontend_data["_meta"]["editionReview"]
+    assert (
+        review["artifact"] == "data/output/edition-samples/reviews/reconciliation.json"
+    )
+    assert review["reviewers"] == ["reviewer_a", "reviewer_b"]
+    assert review["reviewedAt"] and review["verifierAgent"] and review["cases"] > 0
+    llm = frontend_data["_meta"]["llmEnrichment"]
+    assert llm["mode"] in {"frozen", "live", "off"}
+    if any("llm" in (e.get("_provenance") or {}).values() for e in all_entries):
+        assert llm["model"] and llm["frozenAt"] and llm["promptSha256"]
 
 
 def test_meta_states_license_and_release_version(frontend_data) -> None:

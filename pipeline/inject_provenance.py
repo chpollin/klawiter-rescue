@@ -6,7 +6,8 @@ Diffs the regex output (03_parsed.csv) against the final values to decide
 which fields were LLM-filled vs regex-extracted. Cache presence alone is not
 enough: the 03b merge fills gaps only, so the cache can hold a value for a
 field the regex had already filled — that value was never used.
-Adds a `_provenance` object to each entry: { field: "regex"|"llm"|"missing" }
+Adds a `_provenance` object to each entry: { field: "regex"|"llm"|"missing" },
+and `_meta.llmEnrichment`, the run those `llm` labels point to.
 
 Input:  docs/data/klawiter.json + data/intermediate/03_parsed.csv
         + data/provenance/llm-enrichment-cache.json
@@ -23,6 +24,7 @@ from lib.config import (
     FROZEN_LLM_CACHE,
     OUTPUT_FRONTEND_JSON,
     OUTPUT_LLM_REPORT,
+    PROJECT_ROOT,
     STEP_03_OUTPUT,
     WORKING_LLM_CACHE,
     load_csv,
@@ -114,6 +116,30 @@ def load_provenance_cache(mode: str) -> dict:
     return cache
 
 
+# The run facts a value labelled `llm` points to; the frozen cache keeps no
+# per-record prompt or response, which originLimit states in its own words.
+LLM_RUN_FIELDS = ("model", "promptSha256", "frozenAt", "origin", "originLimit")
+
+
+def llm_enrichment_meta(mode: str) -> dict:
+    """The enrichment run behind every `llm` label, for `_meta.llmEnrichment`.
+
+    Live answers beyond the frozen cache have no frozen run record, so the
+    mode is stated beside the frozen block rather than replacing it.
+    """
+    meta = {"mode": mode}
+    if mode == "off":
+        return meta
+    with open(FROZEN_LLM_CACHE, encoding="utf-8") as handle:
+        provenance = json.load(handle).get("provenance") or {}
+    missing = [key for key in LLM_RUN_FIELDS if key not in provenance]
+    if missing:
+        raise ValueError(f"Frozen LLM cache lacks provenance fields {missing}")
+    meta["cache"] = os.path.relpath(FROZEN_LLM_CACHE, PROJECT_ROOT).replace(os.sep, "/")
+    meta.update({key: provenance[key] for key in LLM_RUN_FIELDS})
+    return meta
+
+
 def main():
     args = _parse_args()
     cache = load_provenance_cache(args.llm_mode)
@@ -196,6 +222,8 @@ def main():
     log.info(
         f"  missing: {stats['missing']} ({100 * stats['missing'] / sum(stats.values()):.1f}%)"
     )
+
+    data["_meta"]["llmEnrichment"] = llm_enrichment_meta(args.llm_mode)
 
     # Write back
     write_json(OUTPUT_FRONTEND_JSON, data, separators=(",", ":"))

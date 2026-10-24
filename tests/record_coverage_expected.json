@@ -1,0 +1,123 @@
+{
+ "note": "Known gaps of the rendered card against docs/data/klawiter.json, measured by tests/record_coverage.test.js. absent: records whose non-empty field stands nowhere in the card outside the quoted source; tooltipOnly: it stands in a title or link attribute alone. chains: values found in the source text (a publication value in its own passage) and how many of them carry no provenance disclosure (data-provenance-for). Lower a figure in the change that closes the gap.",
+ "gaps": {
+  "recordFieldGaps": {
+   "_provenance": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "@id": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "@type": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "allLocations": {
+    "absent": 291,
+    "tooltipOnly": 0
+   },
+   "allYears": {
+    "absent": 1868,
+    "tooltipOnly": 1
+   },
+   "contentItems": {
+    "absent": 761,
+    "tooltipOnly": 0
+   },
+   "languageCode": {
+    "absent": 12,
+    "tooltipOnly": 758
+   },
+   "location": {
+    "absent": 40,
+    "tooltipOnly": 0
+   },
+   "locationSameAs": {
+    "absent": 49,
+    "tooltipOnly": 0
+   },
+   "originalTitle": {
+    "absent": 680,
+    "tooltipOnly": 0
+   },
+   "pageKind": {
+    "absent": 1096,
+    "tooltipOnly": 0
+   },
+   "printAddressCitations": {
+    "absent": 26,
+    "tooltipOnly": 0
+   },
+   "publicationCount": {
+    "absent": 0,
+    "tooltipOnly": 41
+   },
+   "sourceBlobId": {
+    "absent": 505,
+    "tooltipOnly": 0
+   },
+   "sourcePageId": {
+    "absent": 32,
+    "tooltipOnly": 0
+   },
+   "sourceTextId": {
+    "absent": 32,
+    "tooltipOnly": 0
+   },
+   "timePeriod": {
+    "absent": 4425,
+    "tooltipOnly": 0
+   },
+   "translator": {
+    "absent": 64,
+    "tooltipOnly": 0
+   },
+   "wikiPageKind": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "wikiPageKindEvidence": {
+    "absent": 4716,
+    "tooltipOnly": 0
+   },
+   "wikiPageKindRule": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   }
+  },
+  "publicationFieldGaps": {
+   "editionId": {
+    "absent": 0,
+    "tooltipOnly": 2055
+   },
+   "id": {
+    "absent": 3273,
+    "tooltipOnly": 0
+   },
+   "imprint": {
+    "absent": 3039,
+    "tooltipOnly": 0
+   },
+   "languageCode": {
+    "absent": 0,
+    "tooltipOnly": 758
+   },
+   "provenance": {
+    "absent": 3273,
+    "tooltipOnly": 0
+   },
+   "sourceSlice": {
+    "absent": 3273,
+    "tooltipOnly": 0
+   }
+  },
+  "chains": {
+   "recordValues": 19484,
+   "recordWithoutChain": 19484,
+   "publicationValues": 16854,
+   "publicationWithoutChain": 16854
+  }
+ }
+}

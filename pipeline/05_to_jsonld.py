@@ -20,6 +20,7 @@ import tomllib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
+    EDITION_SAMPLE_RECONCILIATION,
     FRONTEND_PUBLICATIONS_PATH_TEMPLATE,
     OUTPUT_EDITIONS_DIR,
     OUTPUT_ENTRIES_DIR,
@@ -259,6 +260,29 @@ def load_edition_states():
     return {
         edition["@id"]: edition["klawiter:reviewStatus"]
         for edition in _load_edition_graph()["editions"]
+    }
+
+
+def edition_review_source(path: str = EDITION_SAMPLE_RECONCILIATION) -> dict:
+    """Who reviewed the editions the sample reconciliation confirms, and when.
+
+    A publication reports its edition state without its producer; this is the
+    one review artifact behind the confirmed states, so the interface can name
+    the producer beside the state instead of reading the artifact itself.
+    """
+    with open(path, encoding="utf-8") as handle:
+        document = json.load(handle)
+    verifier = document["verifier_provenance"]
+    return {
+        "artifact": os.path.relpath(path, PROJECT_ROOT).replace(os.sep, "/"),
+        "artifactType": document["artifact_type"],
+        "reviewedAt": verifier["verified_at"][:10],
+        "reviewers": sorted(
+            key for key in document["review_integrity"] if key.startswith("reviewer_")
+        ),
+        "verifierRole": verifier["role"],
+        "verifierAgent": verifier["agent"],
+        "cases": document["summary"]["total_cases"],
     }
 
 
@@ -932,8 +956,10 @@ def main():
         # pairs and series gloss, the release license and version, and the
         # review scope and reviewed status, 1.5 the source revision of a
         # restored page, 1.6 the "uncertain" mark of a credit, 1.7 the wiki
-        # page kind with its rule and evidence and the cited print addresses.
-        "frontendSchemaVersion": "1.7",
+        # page kind with its rule and evidence and the cited print addresses,
+        # 1.8 the producers behind the provenance chain of a value: the edition
+        # review here, the LLM enrichment run from inject_provenance.py.
+        "frontendSchemaVersion": "1.8",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,
@@ -950,6 +976,7 @@ def main():
         "publicationCoverage": publication_coverage,
         "wikiPageKinds": wiki_page_kinds,
         "printAddressCitations": print_citation_coverage,
+        "editionReview": edition_review_source(),
     }
 
     frontend_data = {
