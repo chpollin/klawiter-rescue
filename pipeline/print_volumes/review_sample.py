@@ -29,11 +29,27 @@ large one. Three supplements, drawn after it and before any decision:
   in proportion and drawn with a fixed seed, which the second reviewer
   decides; agreement is measured on them only.
 
+--protocol, after the three supplements and before any decision: the order in
+which the review phase presents its objects, and the hidden repeat set.
+- The first reviewer's queue is the review sample and the hard stratum mixed,
+  in an order shuffled with PROTOCOL_SEED, so that neither the part nor the
+  stratum shows from the position and fatigue does not fall on one part.
+- The second reviewer's queue is the marked subset, shuffled on its own.
+- REPEAT_SIZE objects of the review sample, drawn among those shown at least
+  REPEAT_GAP places before the end, form the repeat set. Each comes back once
+  in the first reviewer's queue, at a seeded position more than REPEAT_GAP
+  places after its first showing, without its earlier decisions in
+  view; the second judgement of its values is logged as a repeat (_review.py)
+  and measures intra-rater consistency in p13. The queue does not mark which
+  showing is a repeat; the viewer must not either.
+The file holds identifiers, the seed and the hashes of the samples it orders.
+
 Output (local): data/print/derived/samples/review-sample.json,
-review-sample-pools.json, review-hard-sample.json, review-second-subset.json.
+review-sample-pools.json, review-hard-sample.json, review-second-subset.json,
+review-protocol.json.
 
 Usage: python -m uv run python pipeline/print_volumes/review_sample.py
-       [--pools | --hard | --second]
+       [--pools | --hard | --second | --protocol]
 """
 
 import argparse
@@ -54,7 +70,7 @@ from _heldout import (
     is_held_out,
     review_objects,
 )
-from p14_gate import fingerprint
+from p14_gate import fingerprint, sha256_file
 
 HERE = Path(__file__).resolve().parent
 RECORDS = DERIVED_DIR / "records"
@@ -66,6 +82,13 @@ HARD_SEED = 20261027
 HARD_PER_VOLUME = 20
 SECOND_SEED = 20261028
 SECOND_SIZE = 40
+REVIEW_PROTOCOL = REVIEW_SAMPLE.parent / "review-protocol.json"
+PROTOCOL_SEED = 20261031
+# The repeat set costs ten objects of extra work; a gap of thirty objects puts
+# other work between the two judgements, and p13 reports the actual interval
+# from the log times.
+REPEAT_SIZE = 10
+REPEAT_GAP = 30
 
 
 def _development() -> set[str]:
@@ -279,12 +302,79 @@ def draw_second() -> int:
     return 0
 
 
+def protocol(
+    review: list[str],
+    hard: list[str],
+    second: list[str],
+    seed: int = PROTOCOL_SEED,
+    repeats: int = REPEAT_SIZE,
+    gap: int = REPEAT_GAP,
+) -> dict:
+    """The queues of the review phase and the repeat set, from sorted inputs
+    and one seed, so that the same samples always give the same protocol."""
+    rng = random.Random(seed)
+    first = sorted({*review, *hard})
+    rng.shuffle(first)
+    # Only an object shown early enough leaves room for its repeat behind the gap.
+    room = sorted(set(review) & set(first[: max(0, len(first) - gap)]))
+    repeat = sorted(rng.sample(room, min(repeats, len(room))))
+    queue = [{"object": o, "repeat": False} for o in first]
+    for o in rng.sample(repeat, len(repeat)):
+        at = next(i for i, q in enumerate(queue) if q["object"] == o) + gap + 1
+        queue.insert(rng.randint(at, len(queue)), {"object": o, "repeat": True})
+    other = sorted(second)
+    rng.shuffle(other)
+    return {
+        "seed": seed,
+        "repeatSize": len(repeat),
+        "repeatGap": gap,
+        "queues": {
+            "first": [q["object"] for q in queue],
+            "second": other,
+        },
+        "repeatPositions": [i for i, q in enumerate(queue) if q["repeat"]],
+        "repeat": repeat,
+    }
+
+
+def draw_protocol() -> int:
+    sources = (REVIEW_SAMPLE, REVIEW_HARD, REVIEW_SECOND)
+    if not all(p.exists() for p in sources):
+        sys.exit("FEHLER: the review sample and its supplements come first")
+    hard = json.loads(REVIEW_HARD.read_text("utf-8"))["objects"]
+    second = json.loads(REVIEW_SECOND.read_text("utf-8"))["objects"]
+    plan = protocol(
+        list(review_objects()), [o for ids in hard.values() for o in ids], second
+    )
+    print(
+        f"OK first queue {len(plan['queues']['first'])} showings with "
+        f"{plan['repeatSize']} repeats, second queue {len(plan['queues']['second'])}"
+    )
+    _freeze(
+        REVIEW_PROTOCOL,
+        {
+            "about": "Order of the review phase: the first reviewer's queue (review "
+            "sample and hard stratum mixed, each repeat object shown a second time "
+            "at repeatPositions, unmarked to the reviewer) and the second "
+            "reviewer's queue (the marked subset), shuffled with the seed; the "
+            "repeat set measures intra-rater consistency. Identifiers and hashes "
+            "only.",
+            **plan,
+            "sources": {p.name: sha256_file(p) for p in sources},
+        },
+    )
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--pools", action="store_true", help="freeze the pool sizes")
     group.add_argument("--hard", action="store_true", help="draw the hard stratum")
     group.add_argument("--second", action="store_true", help="mark the second subset")
+    group.add_argument(
+        "--protocol", action="store_true", help="freeze the order and repeat set"
+    )
     args = parser.parse_args()
     if args.pools:
         return draw_pools()
@@ -292,6 +382,8 @@ def main() -> int:
         return draw_hard()
     if args.second:
         return draw_second()
+    if args.protocol:
+        return draw_protocol()
     return draw_review()
 
 

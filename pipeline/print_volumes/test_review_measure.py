@@ -18,16 +18,25 @@ from _review import (
 )
 from p13_review import (
     ABOUT,
+    UNDER_PROPOSALS,
+    anchoring,
+    binomial_tail,
     blind_units,
     bootstrap,
     concordance,
     decide,
+    exact_lower_bound,
     holm,
     kappa,
+    krippendorff_alpha,
     load_rule,
     measure,
+    minimum_values,
     positive_agreement,
+    protocol_check,
+    reporting,
     stratified_draws,
+    two_raters,
     weighted,
     wilson,
 )
@@ -368,12 +377,14 @@ def test_pool_sizes_give_the_weights(tmp_path, monkeypatch):
     monkeypatch.setattr(p13_review, "REVIEW_POOLS", pools)
     monkeypatch.setattr(p13_review, "REVIEW_HARD", tmp_path / "absent.json")
     monkeypatch.setattr(p13_review, "REVIEW_SECOND", tmp_path / "absent.json")
+    monkeypatch.setattr(p13_review, "REVIEW_PROTOCOL", tmp_path / "absent.json")
     design = p13_review.load_design()
     assert design["review"]["I/F/1#1"] == {
         "volume": "I",
         "stratum": "I/F",
         "weight": 23.0,
     }
+    assert design["protocol"] is None
 
 
 # Finding 4: hard entries.
@@ -436,12 +447,16 @@ def test_agreement_counts_only_the_subset_marked_in_advance():
     a = report["agreement"]
     assert (a["subset_objects"], a["objects_both_reviewed"]) == (1, 1)
     assert a["values"]["n"] == 3 and a["values"]["observed"] == round(2 / 3, 3)
-    assert a["values_positive_agreement"] == {
-        "category": "correct",
-        "both": 0,
-        "one_only": 1,
-        "value": 0.0,
+    # Positive on correct: neither agreed on it; negative: 2 * 2 / (2 * 2 + 1).
+    assert a["values"]["specific_agreement"]["correct"] == {
+        "positive": 0.0,
+        "negative": 0.8,
     }
+    assert a["values"]["table"] == {"confirm|confirm": 2, "confirm|correct": 1}
+    # Both saw the rule values: the report names it agreement under proposals.
+    assert a["conditions"] == UNDER_PROPOSALS
+    assert "agreement under proposals" in UNDER_PROPOSALS.lower()
+    assert "operator wrote the reading rules" in UNDER_PROPOSALS
     assert report["second_reviewer_outside_subset"]["objects"] == ["I/F/2#1"]
     assert report["figures"]["reviewer2"]["complete"] == 1
 
@@ -455,6 +470,27 @@ def test_cohen_kappa_and_positive_agreement_on_known_tables():
     assert kappa([])["n"] == 0
     # 2 * 20 / (2 * 20 + 15)
     assert positive_agreement(pairs, "y")["value"] == round(40 / 55, 3)
+    # Negative specific agreement on y is the positive one on n: 2 * 15 / (30 + 15).
+    both = two_raters(pairs)
+    assert both["specific_agreement"]["y"] == {
+        "positive": round(40 / 55, 3),
+        "negative": round(30 / 45, 3),
+    }
+    # n = 100 values, 70 in agreeing pairs, margins 55 and 45:
+    # 1 - 99 * 30 / (100 ** 2 - 55 ** 2 - 45 ** 2).
+    assert both["alpha"] == 0.4
+
+
+def test_krippendorff_alpha_on_a_worked_table():
+    first = "0100000010"
+    second = "1110010000"
+    pairs = list(zip(first, second, strict=True))
+    # Coincidences o00 = 10, o11 = 2, o01 = o10 = 4 over n = 20 values with
+    # margins 14 and 6: 1 - 19 * 8 / (400 - 196 - 36).
+    assert round(krippendorff_alpha(pairs), 3) == 0.095
+    assert krippendorff_alpha([("a", "a")] * 4) is None
+    interval = two_raters(pairs, [pairs[:5], pairs[5:]])["alpha_objects_resampled"]
+    assert interval["defined_draws"] > 0
 
 
 def test_missing_agreement_on_objects_both_completed():
@@ -538,6 +574,48 @@ def test_blind_answers_meet_the_current_proposals():
     claims = result["phase2"]["I"]["field"]
     assert claims["claim_precision"]["estimate"] == 0.5
     assert claims["claim_precision_unsure_as_wrong"]["estimate"] == round(2 / 5, 3)
+    # The decision rule's exact test counts decided claims, not their weights.
+    assert result["_counts"]["field@I"] == {"right": 1, "judged": 2, "objects": 1}
+
+
+def test_anchoring_compares_phase_two_with_the_same_persons_blind_answer():
+    units = {
+        s: {"entry": f"I/A/{i}", "volume": "I", "stratum": "x", "weight": 1.0}
+        for i, s in enumerate("abcd")
+    }
+    answers = {"a": ("page", 7), "b": ("none",), "c": ("page", 9), "d": ("unsure",)}
+
+    def row(sid, page, decision):
+        return {
+            "sample_id": sid,
+            "route": "title-year",
+            "wiki_page": str(page),
+            "decision": decision,
+        }
+
+    rows = [
+        row("a", 7, "right"),  # the blind page, accepted
+        row("a", 8, "right"),  # another page, accepted: against the blind answer
+        row("b", 5, "right"),  # blind none, accepted: against the blind answer
+        row("b", 6, "wrong"),  # blind none, rejected
+        row("c", 9, "wrong"),  # the blind page, rejected
+        row("c", 4, "unsure"),
+        row("d", 3, "right"),  # no blind answer
+    ]
+    result = anchoring(units, answers, rows)
+    figures = result["all"]
+    assert figures["table"] == {
+        "right_blind_right_seen": 1,
+        "wrong_blind_right_seen": 2,
+        "right_blind_wrong_seen": 1,
+        "wrong_blind_wrong_seen": 1,
+    }
+    assert (figures["accepted_blind"], figures["accepted_seen"]) == (0.4, 0.6)
+    assert figures["effect"] == 0.2
+    assert figures["accepted_against_blind"] == round(2 / 3, 3)
+    # Two discordant claims one way, one the other: 2 * P(X <= 1 | 3, 0.5) = 1.
+    assert figures["mcnemar_exact_p"] == 1.0
+    assert result["left_out"] == {"no_blind_answer": 1, "unsure_in_phase_2": 1}
 
 
 def test_blind_sheet_answers_follow_the_convention(tmp_path):
@@ -609,6 +687,54 @@ def test_the_rule_file_has_two_rules_with_null_thresholds(tmp_path):
     path.write_text(json.dumps({"fields": UNSET}), encoding="utf-8")
     with pytest.raises(ValueError):
         load_rule(path)
+    assert rule["fields"]["minJudgedObjects"] >= 1
+    floorless = {"threshold": None, "admissible": []}
+    path.write_text(json.dumps({"fields": floorless, "routes": floorless}))
+    with pytest.raises(ValueError, match="minJudgedObjects"):
+        load_rule(path)
+
+
+def test_zero_observed_errors_confirm_only_with_enough_objects_and_values():
+    rule = {
+        "threshold": 0.9,
+        "alpha": 0.025,
+        "minJudgedObjects": 10,
+        "admissible": ["r@I"],
+        "fixed": {"code": {"sha256": "h"}},
+    }
+    # Two objects without an error: the bootstrap alone sees no variance.
+    few = [(f"I/{i}", 1.0, 3, 3) for i in range(2)]
+    assert decide(rule, {"r@I": few}, "h")["may_confirm"] == []
+    # 0.9 ** 35 > 0.025 >= 0.9 ** 36: thirty-six error-free values are the least.
+    short = [(f"I/{i % 5}", 1.0, 1, 1) for i in range(35)]
+    enough = [(f"I/{i % 5}", 1.0, 1, 1) for i in range(36)]
+    result = decide(rule, {"r@I": short}, "h")
+    assert result["derivation"]["min_judged_values"] == 36
+    assert result["may_confirm"] == []
+    assert result["classes"]["r@I"]["below_minimum"] == ["fewer than 36 judged values"]
+    assert decide(rule, {"r@I": enough}, "h")["may_confirm"] == ["r@I"]
+    # Holm over two classes halves the level: ceil(ln 0.0125 / ln 0.9) = 42.
+    two = decide({**rule, "admissible": ["r@I", "s@I"]}, {"r@I": enough}, "h")
+    assert two["derivation"]["min_judged_values"] == 42
+    assert two["may_confirm"] == []
+    # Many values on fewer objects than the floor do not confirm.
+    clustered = [(f"I/{i}", 1.0, 40, 40) for i in range(9)]
+    assert decide(rule, {"r@I": clustered}, "h")["may_confirm"] == []
+    floorless = {k: v for k, v in rule.items() if k != "minJudgedObjects"}
+    unset = decide(floorless, {"r@I": enough}, "h")
+    assert unset["state"].startswith("incomplete") and unset["may_confirm"] == []
+
+
+def test_the_exact_bounds_on_known_values():
+    assert binomial_tail(8, 10, 0.5) == pytest.approx(56 / 1024)
+    assert binomial_tail(0, 10, 0.3) == 1.0
+    # One-sided 97.5 % Clopper-Pearson bounds: 10 of 10 and 8 of 10.
+    assert exact_lower_bound(10, 10, 0.025) == pytest.approx(0.025**0.1)
+    assert exact_lower_bound(8, 10, 0.025) == pytest.approx(0.4439, abs=1e-4)
+    assert exact_lower_bound(0, 10, 0.025) == 0.0
+    assert minimum_values(0.9, 0.025) == 36
+    assert minimum_values(1.0, 0.025) is None
+    assert minimum_values(None, 0.025) is None
 
 
 GOOD = [(f"I/{i % 5}", 1.0, 10, 10) for i in range(30)]
@@ -630,6 +756,7 @@ def test_a_set_threshold_admits_only_fixed_classes_on_unchanged_code():
     rule = {
         "threshold": 0.8,
         "alpha": 0.025,
+        "minJudgedObjects": 10,
         "admissible": ["good@I", "poor@I"],
         "fixed": {"code": {"sha256": "h"}},
     }
@@ -668,3 +795,85 @@ def test_the_report_rule_is_unset_and_bound_to_the_volume():
 # Finding 11: silver pairs.
 def test_the_report_says_silver_pairs_are_a_development_metric():
     assert "development metric" in ABOUT
+
+
+# Second correction: repeats, order and reporting.
+def _plan(first, repeat=(), second=()):
+    return {
+        "seed": 1,
+        "repeatGap": 0,
+        "queues": {"first": list(first), "second": list(second)},
+        "repeat": list(repeat),
+    }
+
+
+def test_a_hidden_repeat_measures_consistency_and_never_supersedes():
+    records = _records()
+    first = _review_all(records, "I/F/1#1", "A")
+    repeats = [
+        _decide(records, "I/F/1#1", "correct", "title", "A", Correction(), repeat=True),
+        _decide(records, "I/F/1#1", "confirm", "types[0]", "A", repeat=True),
+    ]
+    log = first + repeats
+    design = _design(["I/F/1#1"])
+    design["protocol"] = _plan(["I/F/1#1", "I/F/1#1"], repeat=["I/F/1#1"])
+    report = measure(records, log, design, RULE)
+    # The first judgement stands, in the figures and in the published state.
+    assert report["figures"]["reviewer1"]["overall"]["all"]["corrected"] == 0
+    assert effective(log)[("I/F/1#1", "value", "title")] is first[0]
+    assert layers(log)["order"] == {"I/F/1#1": ["A"]}
+    k = report["consistency"]
+    assert (k["objects"], k["values"]["n"], k["values"]["observed"]) == (1, 2, 0.5)
+    assert k["values"]["table"] == {"confirm|confirm": 1, "confirm|correct": 1}
+    assert report["protocol"]["state"] == "ok"
+    with pytest.raises(ValueError):
+        _decide(records, "I/F/1#1", "complete", reviewer="A", repeat=True)
+
+
+def test_the_report_says_how_far_a_reviewer_followed_the_queue():
+    records = _records()
+    sample = ["I/F/1#1", "I/F/2#1", "I/F/3#1"]
+    log = [
+        d for o in ("I/F/2#1", "I/F/1#1", "I/F/3#1") for d in _review_all(records, o)
+    ]
+    design = _design(sample)
+    design["protocol"] = _plan(sample)
+    order = measure(records, log, design, RULE)["protocol"]["order_followed"]
+    # Queue ranks in decision order 1, 0, 2: two of three pairs in order.
+    assert order == {"A": {"first": {"objects": 3, "pairs_in_queue_order": 0.667}}}
+
+
+def test_the_protocol_shuffles_with_its_seed_and_hides_repeats_behind_a_gap():
+    from review_sample import protocol
+
+    review = [f"I/F/{i}#1" for i in range(1, 61)]
+    hard, second = ["I/H/1#1", "I/H/2#1"], review[:8]
+    plan = protocol(review, hard, second, seed=7, repeats=5, gap=10)
+    assert plan == protocol(review[::-1], hard, second, seed=7, repeats=5, gap=10)
+    assert plan != protocol(review, hard, second, seed=8, repeats=5, gap=10)
+    first = plan["queues"]["first"]
+    assert len(first) == 62 + 5 and set(first) == {*review, *hard}
+    assert first[:62] != sorted(first[:62])
+    for o in plan["repeat"]:
+        shown = [i for i, x in enumerate(first) if x == o]
+        assert len(shown) == 2 and shown[1] - shown[0] > 10
+    assert sorted(plan["queues"]["second"]) == sorted(second)
+    design = {
+        "review": dict.fromkeys(review, {}),
+        "hard": dict.fromkeys(hard, {}),
+        "second": set(second),
+    }
+    assert protocol_check(plan, design)["state"] == "ok"
+    assert protocol_check({**plan, "repeat": ["I/H/1#1"]}, design)["state"] == "failed"
+
+
+def test_the_report_carries_the_reporting_fields():
+    records = _records()
+    report = {
+        **_measure(records, _review_all(records, "I/F/1#1"), ["I/F/1#1"]),
+        "concordance": {},
+    }
+    fields = reporting(report)
+    assert fields["grras"]["4 raters"] == UNDER_PROPOSALS
+    assert fields["grras"]["11 actual numbers"]["objects_complete_reviewer1"] == 1
+    assert "blind answers" in fields["guild"]["2d(ii) how estimated"]

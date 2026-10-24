@@ -48,6 +48,7 @@ Print data ready for review
 Measurement design, second correction
 - Done when the points of [Merged bibliography](print-wiki-merge.md), Measurement, that the literature review of 2026-10-24 found missing are implemented: a decision rule that holds at zero observed errors with a minimum number of objects per class and a minimum sample derived from threshold and Holm level; Krippendorff's alpha with specific agreement; the second-reviewer subset blind to the proposals or reported as agreement under proposals, with the operator's double role named; the anchoring effect measured; the order inside each phase randomised; a hidden repeat set; reporting along GRRAS and GUILD.
 - Entry: the print data are frozen again, because both change `pipeline/print_volumes/`.
+- Still open: the review mode of the desk presents each reviewer's queue in the order of `review-protocol.json`, hides a reviewer's earlier decision on a repeat showing, posts it as a repeat and never marks it as one; `p14_gate.py` pins the protocol among the frozen samples; the disagreements of the segmentation benchmark are shown in a seeded order.
 
 Reviewable workbench
 - Reached on 2026-10-24 (fffcb29), see the status tracker.
@@ -106,7 +107,7 @@ Snapshot of 2026-10-24.
 | Wiki data true to their source passage | in progress | proposals, gaps and translation statements committed (71a0fe0); section mentions typed and the coverage test made honest (217acef); revision dates, damaged letters and the root causes of the data reach audit in progress |
 | Print data ready for review | completed | 7147b94: reading gaps closed, containment predicate, named second field, overlap report `p07b_overlap.py`, p12 writes data only; admissible classes refixed without rehash, remap or redrawn sample |
 | Measurement design corrected | completed | 5db70c1 |
-| Measurement design, second correction | in progress | entry met by 7147b94 |
+| Measurement design, second correction | in progress | decision rule at zero errors, agreement coefficients, anchoring, seeded order, hidden repeats and reporting fields implemented; protocol in the review mode, its pin in the gate and the benchmark order open |
 | Reviewable workbench | completed | fffcb29 with the reviewer filter of the review server |
 | Record desk and sitemap | in progress | increment 1 in progress; decision recorded in bc5e8af7; the card's zero coverage gaps of fffcb29 rested on hidden markers, the test is being corrected |
 | Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; [Print volumes](print-volumes.md) split into the volumes as domain and [Print pipeline](print-pipeline.md) |

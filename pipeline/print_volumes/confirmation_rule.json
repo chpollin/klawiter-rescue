@@ -1,5 +1,5 @@
 {
- "_about": "Decision rules for automatic confirmation (knowledge/print-wiki-merge.md, Measurement), read by p13_review.py. Two rules: rule classes of the fields, measured on the complete objects of the frozen review sample, and routes of the concordance, measured on the claim sheet of the blind samples. A class is a rule or route bound to one volume (name@volume) and may confirm only there. Only the classes listed as admissible may confirm; p13_review.py --fix-rule fixes them before any decision or answer, as the classes with at least minExpectedJudged values (claims) expected in the sample, and records the code they were fixed on; when that code changes, the rule is invalidated until the classes are fixed again. A class confirms when its weighted precision exceeds the threshold, tested on the bootstrap that resamples objects (entries) within strata, one-sided at level alpha with Holm's correction over the admissible classes of its rule; this is the lower bound of the object-resampled interval at the corrected level. While a threshold is null nothing confirms.",
+ "_about": "Decision rules for automatic confirmation (knowledge/print-wiki-merge.md, Measurement), read by p13_review.py. Two rules: rule classes of the fields, measured on the complete objects of the frozen review sample, and routes of the concordance, measured on the claim sheet of the blind samples. A class is a rule or route bound to one volume (name@volume) and may confirm only there. Only the classes listed as admissible may confirm; p13_review.py --fix-rule fixes them before any decision or answer, as the classes with at least minExpectedJudged values (claims) expected in the sample, and records the code they were fixed on; when that code changes, the rule is invalidated until the classes are fixed again. A class confirms only with at least minJudgedObjects judged objects (entries) and at least ceil(ln(alpha / m) / ln(threshold)) judged values, m the admissible classes of its rule: with fewer, even zero observed errors cannot carry the exact one-sided Clopper-Pearson lower bound above the threshold at the strictest Holm level. Its p-value is the larger of the exact binomial tail at the threshold and the bootstrap that resamples objects (entries) within strata, one-sided, with Holm's correction at level alpha over the admissible classes of its rule. While a threshold is null nothing confirms.",
  "fields": {
   "threshold": null,
   "thresholdReason": "operator decision: no automatic confirmation in this phase; every confirmation is a person's",
@@ -7,6 +7,8 @@
   "alpha": 0.025,
   "correction": "holm",
   "minExpectedJudged": 40,
+  "minJudgedObjects": 10,
+  "minJudgedObjectsReason": "a floor of independent objects under the minimum sample of values, because values of one object are not independent and an error-free class gives the bootstrap no variance to see; a floor, not a power calculation, which the operator may raise",
   "admissible": [
    "p03.contents-pages@A2",
    "p03.contents-title@A1",
@@ -37,7 +39,7 @@
      "p03_records.py",
      "sections.json"
     ],
-    "sha256": "8ff60ea717b9050a0e9943929dd6eb33cd271ed212388950b608d66768f00d17"
+    "sha256": "c7a2f9146262d066ae4f21abcbeb95c271de3410adf41d1e2a1bf1904ee3f535"
    }
   }
  },
@@ -48,6 +50,8 @@
   "alpha": 0.025,
   "correction": "holm",
   "minExpectedJudged": 40,
+  "minJudgedObjects": 10,
+  "minJudgedObjectsReason": "a floor of independent objects under the minimum sample of values, because values of one object are not independent and an error-free class gives the bootstrap no variance to see; a floor, not a power calculation, which the operator may raise",
   "admissible": [
    "title-year@A1",
    "title-year@A2",
@@ -66,7 +70,7 @@
      "_schema.py",
      "p07_concordance.py"
     ],
-    "sha256": "0aee7185e3a69e0f5b5b6baca982a5dc3c745a5668543cefa0240346bb42e453"
+    "sha256": "de6e643c6346134e9e2e6050f6f64279b2bc21839f4f072d6376dbdcff261e80"
    }
   }
  }

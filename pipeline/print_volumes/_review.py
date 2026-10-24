@@ -25,6 +25,12 @@ Decisions on an object:
   as its target), or one reviewer's "missing" or "boundary" against the
   other's "complete" on the object.
 
+A value decision marked "repeat" is the reviewer's second, hidden judgement of
+a value of the repeat set (review_sample.py --protocol), made without the
+first in view. It forms a layer of its own for intra-rater consistency: it
+never supersedes the reviewer's first decision, never makes a reviewer, is
+never settled by an adjudication and never enters the published state.
+
 Every reviewer's decisions stand on their own: a value decision supersedes the
 same reviewer's earlier one on the same object and path, "boundary" and
 "complete" the same reviewer's earlier one of their kind, and a second
@@ -150,11 +156,16 @@ class DecisionIn(_Strict):
         Annotated[list[Annotated[str, Field(pattern=DECISION_ID)]], Len(2, 2)] | None
     ) = None
     adopts: str | None = Field(default=None, pattern=DECISION_ID)
+    # None rather than False, so that an ordinary decision's stored line keeps
+    # its form (append drops None).
+    repeat: Literal[True] | None = None
     note: str = Field(default="", max_length=2000)
 
     @model_validator(mode="after")
     def _shape(self):
         d = self.decision
+        if self.repeat and d not in VALUE_DECISIONS:
+            raise ValueError("only a value decision can be a repeat")
         if d == "adjudicate":
             if not self.settles or len(set(self.settles)) != 2:
                 raise ValueError("an adjudication settles two distinct decisions")
@@ -296,6 +307,8 @@ def key_of(d: Decision) -> tuple:
     if d.decision == "adjudicate":
         about = d.target.path if d.target else "/".join(sorted(d.settles))
         return (d.object, "adjudicate", about)
+    if d.repeat:
+        return (d.object, "repeat", d.target.path)
     if d.target:
         return (d.object, "value", d.target.path)
     if d.decision == "missing":
@@ -328,16 +341,16 @@ def in_force(decisions: list[Decision]) -> dict[tuple, Decision]:
 
 def reviewers(decisions: list[Decision]) -> dict[str, list[str]]:
     """Per object its reviewers in the order of their first decision on it,
-    counting only reviewers with a decision in force there; adjudicators and
-    withdrawals do not make a reviewer."""
+    counting only reviewers with a decision in force there; adjudicators,
+    withdrawals and repeats do not make a reviewer."""
     holding = {
         (k[0], k[1])
         for k, d in in_force(decisions).items()
-        if d.decision != "adjudicate"
+        if d.decision != "adjudicate" and not d.repeat
     }
     order: dict[str, list[str]] = {}
     for d in decisions:
-        if d.decision in ("withdraw", "adjudicate"):
+        if d.decision in ("withdraw", "adjudicate") or d.repeat:
             continue
         seen = order.setdefault(d.object, [])
         if d.reviewer not in seen and (d.reviewer, d.object) in holding:
@@ -364,6 +377,8 @@ def adjudication_problem(
     if None in settled:
         return "settles an unknown decision"
     a, b = settled
+    if a.repeat or b.repeat:
+        return "a repeat measures consistency and is never settled"
     if a.object != d.object or b.object != d.object:
         return "settles decisions on its own object only"
     if a.reviewer == b.reviewer:
@@ -394,7 +409,8 @@ def adjudication_problem(
 def layers(decisions: list[Decision]) -> dict:
     """The decisions in force, keyed by key_of, as the first reviewer, the
     second reviewer and the adjudicated state hold them, with the valid
-    adjudications and the invalid ones with their reasons.
+    adjudications and the invalid ones with their reasons, and the repeats in
+    force keyed (reviewer, object, path).
 
     The adjudicated state is the first reviewer's with each valid adjudication
     applied: an adopted value decision stands for the value, an adopted missing
@@ -404,7 +420,11 @@ def layers(decisions: list[Decision]) -> dict:
     force = in_force(decisions)
     order = reviewers(decisions)
     by_role: list[dict[tuple, Decision]] = [{}, {}]
+    repeats: dict[tuple, Decision] = {}
     for (reviewer, *key), d in force.items():
+        if d.repeat:
+            repeats[(reviewer, d.object, d.target.path)] = d
+            continue
         if d.decision == "adjudicate":
             continue
         roles = order.get(d.object, [])
@@ -438,6 +458,7 @@ def layers(decisions: list[Decision]) -> dict:
         "adjudications": valid,
         "invalid_adjudications": invalid,
         "order": order,
+        "repeats": repeats,
     }
 
 

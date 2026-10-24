@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Measurement design, second correction
+
+**Round.** Implementation by an agent on the measurement code, checked by the coordinator with the gate and a refix of the admissible classes on the final code.
+
+**Changed.** A class confirms only with a minimum of judged objects, a minimum of judged values derived from threshold and the strictest Holm level, and an exact binomial test, so a class without an observed error no longer confirms on any sample size. Agreement of the second reviewer is reported with Krippendorff's alpha and specific agreement, as agreement under proposals with the operator's double role named. The anchoring effect of the proposals is measured on the concordance, the review queue is frozen in a seeded order with a hidden repeat set for consistency, and the report fills the items of the reporting guidelines its sources support ([Merged bibliography](print-wiki-merge.md), Measurement). The admissible classes were fixed again and are unchanged, and no sample was redrawn.
+
+**Decided.** The fields keep no blind phase, so their review measures acceptance under proposals; a blind field sheet would add work for the reviewers without the operator asking for it. The object floor and the repeat parameters are design choices of this round and revisable before the first decision.
+
+**Open.** The review mode of the desk must follow the frozen queue and its repeats, and the gate must pin it ([Plan](plan.md)).
+
+---
+
 ## 2026-10-24 — Data reach audit verified
 
 **Round.** Handoff point "Data reach audit of 2026-10-24" (workflow run wf_236f71c6-273), each finding remeasured by a read-only agent at 8f86822.

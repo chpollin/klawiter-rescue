@@ -32,30 +32,46 @@ The measurement contract (knowledge/print-wiki-merge.md, Measurement):
 - Hard entries. The entries the sample excluded (p10 violation or listed
   exception) are a stratum of their own (review-hard-sample.json), reported
   apart, and with the sample in one population estimate.
-- Agreement on the subset: raw agreement, Cohen's kappa per kind of decision,
-  and the positive specific agreement on "correct"; on objects both marked
-  complete, whether a missing value was added; on objects both reviewed,
-  whether a boundary was marked.
+- Agreement on the subset: raw agreement, Cohen's kappa and Krippendorff's
+  alpha (nominal, with an object-resampled interval), positive and negative
+  specific agreement per category and the full table, per kind of decision;
+  on objects both marked complete, whether a missing value was added; on
+  objects both reviewed, whether a boundary was marked. Both reviewers decide
+  with the rule values in view, so this is agreement under proposals, and the
+  operator, who wrote the rules, is one of the reviewers (UNDER_PROPOSALS).
+- Intra-rater consistency: the hidden repeats of the repeat set
+  (review_sample.py --protocol) against the same reviewer's first decision on
+  the value, with the same figures and the interval between the two.
+- Order: the protocol's queues, shuffled with a recorded seed, are checked
+  against the samples, and the report says per reviewer how far the order of
+  their first decisions followed their queue.
 - The decision rule (confirmation_rule.json) has two rules, rule classes of
   the fields and routes of the concordance, each bound to the volume. Only
   the classes fixed in advance (--fix-rule, before any decision) may confirm:
   those with at least minExpectedJudged values (claims) expected in the
-  sample. A class confirms when the weighted precision exceeds the threshold
-  under the object-resampled bootstrap, with Holm's correction over the
-  admissible classes of its rule, and only while the code the classes were
-  fixed on is unchanged. While a threshold is null nothing confirms; the
-  operator has decided that in this phase every confirmation is a person's.
+  sample, and only while the code they were fixed on is unchanged. A class
+  confirms only with at least minJudgedObjects judged objects (entries) and
+  at least ceil(ln(alpha / m) / ln(threshold)) judged values, m the
+  admissible classes: below that, zero observed errors cannot carry the exact
+  lower bound above the threshold at the strictest Holm level. Its p-value is
+  the larger of the exact binomial tail and the object-resampled bootstrap
+  (which alone confirms any error-free class), under Holm's step-down at
+  level alpha. While a threshold is null nothing confirms; the operator has
+  decided that in this phase every confirmation is a person's.
 
 The concordance part reads the blind sheets of p09, compares each answer
 with the proposals the current claims make for that entry (p07 changed after
 the first drawing), and weighs each entry by the inverse of its inclusion
 probability in the union of both blind samples. The claim sheet of phase 2
-gives claim precision per route and volume.
+gives claim precision per route and volume. The anchoring effect compares,
+claim by claim, phase 2 with what the same person's blind answer on the same
+entry implies (anchoring).
 
 The field figures measure what persons accepted while seeing the rule values;
 the blind phase of the concordance alone measures from the print entry
 without proposals. Silver pairs (p07, p08) are a development metric and enter
-no figure here. Every report names the commit and the gate result it ran on.
+no figure here. Every report names the commit and the gate result it ran on,
+and its "reporting" part states the design along GRRAS and GUILD.
 
 Output: data/print/derived/reports/p13_review.json.
 
@@ -91,6 +107,7 @@ from _heldout import (
     REVIEW_SECOND,
 )
 from _review import (
+    OBJECT_DECISIONS,
     VALUE_DECISIONS,
     check,
     in_force,
@@ -99,6 +116,7 @@ from _review import (
     load_records,
     value_paths,
 )
+from review_sample import REVIEW_PROTOCOL
 
 RECORDS = DERIVED_DIR / "records"
 RULE_FILE = HERE / "confirmation_rule.json"
@@ -110,6 +128,7 @@ RULE_ROUNDS = 10000
 VALUE_KINDS = VALUE_DECISIONS
 ROUTES = ("field", "title-year", "alignment")
 MEASURED_ROUTES = ("field", "title-year")
+RULE_KEYS = ("confirmation_rule_fields", "confirmation_rule_routes")
 ABOUT = (
     "Field correctness on the frozen review samples as judged by persons in the "
     "viewer, and the concordance on the blind samples of p09. Precision = confirmed / "
@@ -123,6 +142,30 @@ ABOUT = (
     "one reviewer after inspection, not a blind annotation; until a second person "
     "decides the subset they are one person's. Silver pairs of p07 and p08 are a "
     "development metric and enter no figure here."
+)
+UNDER_PROPOSALS = (
+    "Agreement under proposals, not blind agreement: both reviewers decide with "
+    "the rule values in view, and the second does not see the first reviewer's "
+    "decisions. The operator wrote the reading rules whose values are judged and "
+    "the decision rule, and reviews as a person; where the operator is one of the "
+    "two reviewers, the figure is the agreement of the rules' author with a second "
+    "person on the output of the author's own rules."
+)
+RULE_DERIVATION = (
+    "A class may confirm only when it was fixed admissible, the code it was fixed "
+    "on is unchanged, at least min_judged_objects objects (entries) carry a judged "
+    "value (claim) of it, and its judged values reach min_judged_values = "
+    "ceil(ln(holm_floor) / ln(threshold)), holm_floor = alpha / m over the m "
+    "admissible classes: the smallest n at which n values without an error give an "
+    "exact one-sided Clopper-Pearson lower bound above the threshold at the "
+    "strictest Holm level, since threshold ** n is then the exact p-value. Its "
+    "p-value is the larger of the exact binomial tail P(X >= right | n, threshold), "
+    "which treats values as independent, and the bootstrap over objects within "
+    "strata, which carries clustering and weights but cannot see an error-free "
+    "class; Holm's step-down at level alpha decides over all m. "
+    "lower_bound_if_all_right is the exact bound at holm_floor a class with its "
+    "judged values would reach without an error, the highest threshold it could "
+    "pass."
 )
 
 
@@ -240,6 +283,108 @@ def positive_agreement(pairs: list[tuple[str, str]], category: str) -> dict:
         "one_only": one,
         "value": ratio(2 * both, 2 * both + one),
     }
+
+
+def krippendorff_alpha(pairs: list[tuple]) -> float | None:
+    """Krippendorff's alpha of two coders on nominal data, every unit coded by
+    both: 1 - (n - 1)(n - sum o_cc) / (n^2 - sum n_c^2) over the n = 2N
+    pairable values, o_cc the coincidences within a category and n_c its
+    marginal; None when every value falls in one category."""
+    n = 2 * len(pairs)
+    margins = Counter(a for a, _ in pairs) + Counter(b for _, b in pairs)
+    expected = n * n - sum(v * v for v in margins.values())
+    if not expected:
+        return None
+    same = 2 * sum(a == b for a, b in pairs)
+    return 1 - (n - 1) * (n - same) / expected
+
+
+def alpha_interval(clusters: list[list[tuple]]) -> dict | None:
+    """95 % percentile interval of alpha, resampling whole objects (clusters of
+    pairs); draws in which alpha is undefined are left out and counted."""
+    clusters = [c for c in clusters if c]
+    if not clusters:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED)
+    stats = []
+    for _ in range(BOOTSTRAP_ROUNDS):
+        value = krippendorff_alpha(
+            [p for c in rng.choices(clusters, k=len(clusters)) for p in c]
+        )
+        if value is not None:
+            stats.append(value)
+    return {"interval95": percentile(sorted(stats)), "defined_draws": len(stats)}
+
+
+def two_raters(pairs: list[tuple], clusters: list[list[tuple]] | None = None) -> dict:
+    """Agreement of two ratings of the same items: raw agreement, Cohen's
+    kappa, Krippendorff's alpha with an interval over objects (clusters; each
+    pair its own without them), positive and negative specific agreement per
+    category, and the table of pairs."""
+    out = kappa(pairs)
+    alpha = krippendorff_alpha(pairs)
+    out["alpha"] = None if alpha is None else round(alpha, 3)
+    out["alpha_objects_resampled"] = alpha_interval(
+        clusters if clusters is not None else [[p] for p in pairs]
+    )
+    out["specific_agreement"] = {
+        str(c): {
+            "positive": positive_agreement(pairs, c)["value"],
+            "negative": positive_agreement([(a == c, b == c) for a, b in pairs], False)[
+                "value"
+            ],
+        }
+        for c in sorted({x for p in pairs for x in p}, key=str)
+    }
+    out["table"] = {f"{a}|{b}": k for (a, b), k in sorted(Counter(pairs).items())}
+    return out
+
+
+def binomial_tail(hits: int, n: int, p: float) -> float:
+    """P(X >= hits) for X ~ Binomial(n, p), summed in log space."""
+    if hits <= 0 or p >= 1:
+        return 1.0
+    if p <= 0 or hits > n:
+        return 0.0
+    lp, lq = math.log(p), math.log1p(-p)
+    terms = [
+        math.lgamma(n + 1)
+        - math.lgamma(k + 1)
+        - math.lgamma(n - k + 1)
+        + k * lp
+        + (n - k) * lq
+        for k in range(hits, n + 1)
+    ]
+    top = max(terms)
+    return min(1.0, math.exp(top) * sum(math.exp(t - top) for t in terms))
+
+
+def exact_lower_bound(hits: int, n: int, level: float) -> float | None:
+    """The one-sided Clopper-Pearson lower bound at level: the p at which
+    P(X >= hits | n, p) = level; for hits = n it is level ** (1 / n)."""
+    if n == 0:
+        return None
+    if hits == 0:
+        return 0.0
+    if hits == n:
+        return level ** (1 / n)
+    low, high = 0.0, 1.0
+    for _ in range(60):
+        mid = (low + high) / 2
+        if binomial_tail(hits, n, mid) < level:
+            low = mid
+        else:
+            high = mid
+    return low
+
+
+def minimum_values(threshold: float | None, level: float) -> int | None:
+    """The smallest n at which n values without an error pass the exact test at
+    level: threshold ** n <= level. None without a threshold or at 1, which
+    nothing can exceed."""
+    if threshold is None or threshold >= 1:
+        return None
+    return math.ceil(math.log(level) / math.log(threshold))
 
 
 def family(path: str) -> str:
@@ -418,7 +563,7 @@ def agreement(first: dict, second: dict, objects: dict, subset: set[str]) -> dic
     def on(layer, oid):
         return {k: d for k, d in layer.items() if d.object == oid}
 
-    values, one_only, missing, boundary, both_reviewed = [], 0, [], [], 0
+    values, clusters, one_only, missing, boundary, both_reviewed = [], [], 0, [], [], 0
     for oid in sorted(subset):
         a, b = on(first, oid), on(second, oid)
         if not a or not b or oid not in objects:
@@ -426,7 +571,9 @@ def agreement(first: dict, second: dict, objects: dict, subset: set[str]) -> dic
         both_reviewed += 1
         va = {k: d for k, d in a.items() if k[1] == "value"}
         vb = {k: d for k, d in b.items() if k[1] == "value"}
-        values += [(va[k].decision, vb[k].decision) for k in sorted(set(va) & set(vb))]
+        pairs = [(va[k].decision, vb[k].decision) for k in sorted(set(va) & set(vb))]
+        values += pairs
+        clusters.append(pairs)
         one_only += len(set(va) ^ set(vb))
         boundary.append(
             tuple(
@@ -447,22 +594,133 @@ def agreement(first: dict, second: dict, objects: dict, subset: set[str]) -> dic
             )
     return {
         "about": "First against second reviewer on the subset marked in advance, only "
-        "on what both decided: raw agreement and Cohen's kappa on value decisions (all "
-        "three kinds and each kind against the others), the positive specific "
-        "agreement on correct, on objects both marked complete whether a missing value "
-        "was added, and on objects both reviewed whether a boundary was marked.",
+        "on what both decided: on value decisions (all three kinds, and each kind "
+        "against the others) raw agreement, Cohen's kappa, Krippendorff's alpha with "
+        "an interval from resampling objects, positive and negative specific agreement "
+        "per category and the table of pairs (first|second); the same on objects both "
+        "marked complete for whether a missing value was added, and on objects both "
+        "reviewed for whether a boundary was marked.",
+        "conditions": UNDER_PROPOSALS,
         "subset_objects": len(subset),
         "objects_both_reviewed": both_reviewed,
-        "values": kappa(values),
-        "values_positive_agreement": positive_agreement(values, "correct"),
+        "values": two_raters(values, clusters),
         "values_by_kind": {
             kind: kappa([(x == kind, y == kind) for x, y in values])
             for kind in VALUE_KINDS
         },
         "values_decided_by_one_only": one_only,
-        "missing": kappa(missing),
-        "boundary": kappa(boundary),
+        "missing": two_raters(missing),
+        "boundary": two_raters(boundary),
     }
+
+
+def consistency(log: list, layer: dict, status: dict, repeat_set) -> dict:
+    """Each hidden repeat against the same reviewer's first decision in force on
+    the value: intra-rater consistency under the same proposals. A repeat
+    outside the protocol's repeat set, or one whose first decision stands
+    after it in the log (made or revised later), enters no figure."""
+    force = in_force(log)
+    position = {d.id: i for i, d in enumerate(log)}
+    clusters: dict[tuple, list] = defaultdict(list)
+    hours, outside, first_later = [], set(), 0
+    for (reviewer, oid, path), rep in sorted(layer["repeats"].items()):
+        if status.get(rep.id):
+            continue
+        if repeat_set is not None and oid not in repeat_set:
+            outside.add(oid)
+            continue
+        first = force.get((reviewer, oid, "value", path))
+        if first is None or status.get(first.id):
+            continue
+        if position[first.id] > position[rep.id]:
+            first_later += 1
+            continue
+        clusters[(reviewer, oid)].append((first.decision, rep.decision))
+        span = datetime.fromisoformat(rep.at) - datetime.fromisoformat(first.at)
+        hours.append(span.total_seconds() / 3600)
+    pairs = [p for c in clusters.values() for p in c]
+    hours.sort()
+    return {
+        "about": "The repeat set's second, hidden judgements against the same "
+        "reviewer's first, value by value, both under the rule values: intra-rater "
+        "consistency (raw agreement, kappa, alpha over objects, specific agreement, "
+        "table first|repeat) and the hours between the two.",
+        "repeat_set": None if repeat_set is None else len(repeat_set),
+        "reviewers": sorted({r for r, _ in clusters}),
+        "objects": len(clusters),
+        "values": two_raters(pairs, list(clusters.values())),
+        "interval_hours": {
+            "min": round(hours[0], 2),
+            "median": round(hours[len(hours) // 2], 2),
+            "max": round(hours[-1], 2),
+        }
+        if hours
+        else None,
+        "outside_repeat_set": sorted(outside),
+        "first_decision_after_repeat": first_later,
+    }
+
+
+def protocol_check(plan: dict | None, design: dict) -> dict:
+    """Whether the protocol orders exactly the frozen samples."""
+    if plan is None:
+        return {"state": "missing: review_sample.py --protocol", "problems": []}
+    first, second = plan["queues"]["first"], plan["queues"]["second"]
+    problems = []
+    shown = set(design["review"]) | set(design.get("hard", {}))
+    if set(first) != shown or len(first) != len(shown) + len(plan["repeat"]):
+        problems.append(
+            "the first queue does not show the review sample and the hard stratum "
+            "once each and each repeat object twice"
+        )
+    if sorted(second) != sorted(design.get("second", ())):
+        problems.append("the second queue is not the marked subset")
+    if not set(plan["repeat"]) <= set(design["review"]):
+        problems.append("the repeat set lies outside the review sample")
+    return {
+        "state": "failed" if problems else "ok",
+        "problems": problems,
+        "seed": plan["seed"],
+        "repeat_set": len(plan["repeat"]),
+        "repeat_gap": plan["repeatGap"],
+    }
+
+
+def order_followed(log: list, layer: dict, plan: dict | None) -> dict:
+    """Per reviewer and queue, the share of pairs of objects whose first
+    decisions came in the order of the queue (1.0 in order, 0.5 unrelated)."""
+    if plan is None:
+        return {}
+    rank = {
+        name: {o: i for i, o in reversed(list(enumerate(queue)))}
+        for name, queue in plan["queues"].items()
+    }
+    seen: dict[tuple, list] = defaultdict(list)
+    met = set()
+    for d in log:
+        if d.repeat or d.decision in ("withdraw", "adjudicate"):
+            continue
+        roles = layer["order"].get(d.object, [])[:2]
+        if d.reviewer not in roles or (d.reviewer, d.object) in met:
+            continue
+        met.add((d.reviewer, d.object))
+        queue = ("first", "second")[roles.index(d.reviewer)]
+        if d.object in rank[queue]:
+            seen[(d.reviewer, queue)].append(rank[queue][d.object])
+    out: dict[str, dict] = defaultdict(dict)
+    for (reviewer, queue), ranks in sorted(seen.items()):
+        pairs = len(ranks) * (len(ranks) - 1) // 2
+        ordered = sum(
+            1
+            for i in range(len(ranks))
+            for j in range(i + 1, len(ranks))
+            if ranks[i] < ranks[j]
+        )
+        out[reviewer][queue] = {
+            "objects": len(ranks),
+            "pairs_in_queue_order": ratio(ordered, pairs),
+        }
+    return dict(out)
 
 
 def disagreements(first: dict, second: dict, adjudications: dict) -> list[dict]:
@@ -538,6 +796,9 @@ def load_rule(path: Path = RULE_FILE) -> dict:
             raise ValueError(
                 f"{path}: {name}.admissible must be a list fixed in advance"
             )
+        least = rule.get("minJudgedObjects")
+        if type(least) is not int or least < 1:
+            raise ValueError(f"{path}: {name}.minJudgedObjects must be an integer >= 1")
     return data
 
 
@@ -552,12 +813,32 @@ def holm(pvalues: dict[str, float], alpha: float) -> set[str]:
     return out
 
 
-def decide(rule: dict, classes: dict[str, list[tuple]], code_now: str | None) -> dict:
-    """The decision rule over measured classes (class -> units). Only admissible
-    classes may confirm, only with a threshold set and the code unchanged."""
+def class_counts(units: list[tuple]) -> dict:
+    """Right and judged values and the objects with a judged value, for units
+    that hold whole counts."""
+    return {
+        "right": sum(h for _, _, h, _ in units),
+        "judged": sum(n for _, _, _, n in units),
+        "objects": sum(1 for u in units if u[3]),
+    }
+
+
+def decide(
+    rule: dict,
+    classes: dict[str, list[tuple]],
+    code_now: str | None,
+    counts: dict[str, dict] | None = None,
+) -> dict:
+    """The decision rule over measured classes (class -> units; counts gives
+    the whole counts where the units hold weighted ones). Only admissible
+    classes may confirm, only with a threshold set, the code unchanged and the
+    minimum objects and values reached (RULE_DERIVATION)."""
     threshold = rule.get("threshold")
     alpha = rule.get("alpha", 0.025)
     admissible = list(rule.get("admissible", []))
+    least_objects = rule.get("minJudgedObjects")
+    holm_floor = alpha / max(1, len(admissible))
+    least_values = minimum_values(threshold, holm_floor)
     fixed = (rule.get("fixed") or {}).get("code", {}).get("sha256")
     if code_now is not None and fixed is None:
         state = "not fixed: no admissible classes yet (p13_review.py --fix-rule)"
@@ -571,22 +852,49 @@ def decide(rule: dict, classes: dict[str, list[tuple]], code_now: str | None) ->
             "unset: nothing may confirm without a person while the threshold is null"
             + (f" ({rule['thresholdReason']})" if rule.get("thresholdReason") else "")
         )
+    elif type(least_objects) is not int or least_objects < 1:
+        state = "incomplete: minJudgedObjects is not set; nothing may confirm"
     else:
         state = f"set to {threshold}"
-    report = {}
+    counts = counts or {}
+    report, whole = {}, {}
     for name in sorted(set(classes) | set(admissible)):
         units = classes.get(name, [])
+        c = whole[name] = counts.get(name) or class_counts(units)
         entry = weighted(units)
-        entry["admissible"] = name in admissible
+        bound = exact_lower_bound(c["right"], c["judged"], holm_floor)
+        entry.update(
+            right=c["right"],
+            judged_values=c["judged"],
+            judged_objects=c["objects"],
+            exact_lower_bound_at_holm_floor=None if bound is None else round(bound, 4),
+            lower_bound_if_all_right=round(holm_floor ** (1 / c["judged"]), 4)
+            if c["judged"]
+            else None,
+            admissible=name in admissible,
+        )
         report[name] = entry
     may = []
     if state.startswith("set"):
         pvalues = {}
         for name in admissible:
+            entry, c = report[name], whole[name]
+            short = []
+            if c["objects"] < least_objects:
+                short.append(f"fewer than {least_objects} judged objects")
+            if least_values is None or c["judged"] < least_values:
+                short.append(f"fewer than {least_values} judged values")
+            exact = binomial_tail(c["right"], c["judged"], threshold)
             draws = stratified_draws(classes.get(name, []), RULE_ROUNDS)
             below = sum(1 for s in draws if s <= threshold)
-            pvalues[name] = (1 + below) / (1 + len(draws)) if draws else 1.0
-            report[name]["p_value"] = round(pvalues[name], 5)
+            boot = (1 + below) / (1 + len(draws)) if draws else 1.0
+            pvalues[name] = 1.0 if short else max(exact, boot)
+            entry.update(
+                below_minimum=short,
+                p_exact=round(exact, 6),
+                p_bootstrap=round(boot, 6),
+                p_value=round(pvalues[name], 6),
+            )
         may = sorted(holm(pvalues, alpha))
         for name in admissible:
             report[name]["may_confirm"] = name in may
@@ -596,6 +904,13 @@ def decide(rule: dict, classes: dict[str, list[tuple]], code_now: str | None) ->
         "correction": "holm",
         "state": state,
         "admissible": len(admissible),
+        "derivation": {
+            "about": RULE_DERIVATION,
+            "m": len(admissible),
+            "holm_floor": round(holm_floor, 6),
+            "min_judged_objects": least_objects,
+            "min_judged_values": least_values,
+        },
         "may_confirm": may,
         "classes": report,
     }
@@ -633,11 +948,13 @@ def measure(
     code_now: dict | None = None,
 ) -> dict:
     """The field part of the report. design holds "review" and "hard" (object
-    -> volume, stratum, weight) and "second" (the subset)."""
-    review, hard, second_subset = (
+    -> volume, stratum, weight), "second" (the subset) and "protocol" (the
+    queues and the repeat set, or None)."""
+    review, hard, second_subset, plan = (
         design["review"],
         design.get("hard", {}),
         design.get("second", set()),
+        design.get("protocol"),
     )
     measured = set(review) | set(hard)
     force = in_force(log)
@@ -706,6 +1023,13 @@ def measure(
             "weighted": population,
         },
         "agreement": agreement(first, second, objects, second_subset),
+        "consistency": consistency(
+            log, layer, status, set(plan["repeat"]) if plan else None
+        ),
+        "protocol": {
+            **protocol_check(plan, design),
+            "order_followed": order_followed(log, layer, plan),
+        },
         "second_reviewer_outside_subset": {
             "about": "objects a second reviewer decided outside the subset marked in "
             "advance; they enter no figure",
@@ -817,6 +1141,7 @@ def concordance(
         }
     phase2: dict[str, dict] = defaultdict(dict)
     grouped: dict[tuple, dict] = defaultdict(lambda: defaultdict(Counter))
+    decided: dict[tuple, dict] = defaultdict(lambda: defaultdict(Counter))
     for row in claim_rows:
         u = units.get(row["sample_id"])
         if u is None or not row.get("decision"):
@@ -825,7 +1150,8 @@ def concordance(
         grouped[(u["volume"], row["route"])][row["sample_id"]][row["decision"]] += (
             factor
         )
-    classes = {}
+        decided[(u["volume"], row["route"])][row["sample_id"]][row["decision"]] += 1
+    classes, counts = {}, {}
     for (volume, route), per_entry in sorted(grouped.items()):
         plain = sum(per_entry.values(), Counter())
         strict, lenient = [], []
@@ -855,7 +1181,101 @@ def concordance(
             else None,
         }
         classes[f"{route}@{volume}"] = lenient
-    return {"phase1": phase1, "phase2": dict(phase2), "_classes": classes}
+        # The exact test counts the claims a person decided, not their weights.
+        raw = decided[(volume, route)]
+        counts[f"{route}@{volume}"] = {
+            "right": sum(c["right"] for c in raw.values()),
+            "judged": sum(c["right"] + c["wrong"] for c in raw.values()),
+            "objects": sum(1 for c in raw.values() if c["right"] + c["wrong"]),
+        }
+    return {
+        "phase1": phase1,
+        "phase2": dict(phase2),
+        "anchoring": anchoring(units, answers, claim_rows),
+        "_classes": classes,
+        "_counts": counts,
+    }
+
+
+def mcnemar_exact(b: int, c: int) -> float | None:
+    """Two-sided exact McNemar p-value over the b + c discordant pairs."""
+    if b + c == 0:
+        return None
+    return min(1.0, 2 * (1 - binomial_tail(min(b, c) + 1, b + c, 0.5)))
+
+
+def anchoring(units: dict, answers: dict, claim_rows: list[dict]) -> dict:
+    """Phase 2 claim by claim against what the same person's blind answer on
+    the same entry implies: a claim is right blind when the answer named its
+    wiki page, wrong when it named another page or none. Claims whose entry
+    was answered unsure or not at all, or which phase 2 marked unsure, leave
+    the table and are counted."""
+    by_route: dict[str, list] = defaultdict(list)
+    left = Counter()
+    for row in claim_rows:
+        sid, decision = row["sample_id"], row.get("decision")
+        if sid not in units or not decision:
+            continue
+        answer = answers.get(sid)
+        if answer is None or answer[0] == "unsure":
+            left["no_blind_answer"] += 1
+            continue
+        if decision == "unsure":
+            left["unsure_in_phase_2"] += 1
+            continue
+        page = str(row.get("wiki_page") or "")
+        blind = "right" if answer[0] == "page" and page == str(answer[1]) else "wrong"
+        by_route[row["route"]].append((sid, blind, decision))
+
+    def table(rows: list[tuple]) -> dict:
+        cells = Counter((blind, seen) for _, blind, seen in rows)
+        a, b = cells[("right", "right")], cells[("wrong", "right")]
+        c, d = cells[("right", "wrong")], cells[("wrong", "wrong")]
+        n = a + b + c + d
+        entries: dict[str, list] = defaultdict(list)
+        for sid, blind, seen in rows:
+            entries[sid].append((blind, seen))
+        clusters = list(entries.values())
+        rng = random.Random(BOOTSTRAP_SEED)
+        draws = []
+        for _ in range(BOOTSTRAP_ROUNDS) if clusters else ():
+            pairs = [p for x in rng.choices(clusters, k=len(clusters)) for p in x]
+            gained = sum(1 for p in pairs if p == ("wrong", "right"))
+            lost = sum(1 for p in pairs if p == ("right", "wrong"))
+            draws.append((gained - lost) / len(pairs))
+        exact = mcnemar_exact(b, c)
+        return {
+            "claims": n,
+            "entries": len(clusters),
+            "table": {
+                "right_blind_right_seen": a,
+                "wrong_blind_right_seen": b,
+                "right_blind_wrong_seen": c,
+                "wrong_blind_wrong_seen": d,
+            },
+            "accepted_blind": ratio(a + c, n),
+            "accepted_seen": ratio(a + b, n),
+            "effect": ratio(b - c, n),
+            "effect_interval95_entries_resampled": percentile(sorted(draws)),
+            "accepted_against_blind": ratio(b, b + d),
+            "mcnemar_exact_p": None if exact is None else round(exact, 4),
+        }
+
+    identity = [r for route in ROUTES for r in by_route.get(route, [])]
+    return {
+        "about": "Anchoring: the same person's decisions on the same claims without "
+        "and with the proposal in view. effect = accepted_seen - accepted_blind, the "
+        "share of claims the proposal phase accepts beyond what the person's own blind "
+        "answer implies, with an interval from resampling entries and the exact "
+        "McNemar test on the discordant claims; accepted_against_blind is the share "
+        "of claims the blind answer rejects that phase 2 accepts. Unweighted, since it "
+        "describes the person's behaviour on these items. The identity routes form "
+        "'all'; containment is shown apart, because its page may rightly differ from "
+        "the blind answer's.",
+        "all": table(identity),
+        "by_route": {route: table(rows) for route, rows in sorted(by_route.items())},
+        "left_out": dict(sorted(left.items())),
+    }
 
 
 def load_concordance(rule: dict, code_now: dict | None) -> dict:
@@ -881,7 +1301,7 @@ def load_concordance(rule: dict, code_now: dict | None) -> dict:
         p09.proposals(wanted={u["entry"] for u in units.values()}) if answered else {}
     )
     result = concordance(units, answers, proposed, claim_rows)
-    classes = result.pop("_classes")
+    classes, counts = result.pop("_classes"), result.pop("_counts")
     return {
         "about": "Phase 1: the person's blind answers (wiki page, none or unsure) "
         "against the pages the current claims propose for the entry, per route and "
@@ -902,7 +1322,121 @@ def load_concordance(rule: dict, code_now: dict | None) -> dict:
             rule["routes"],
             classes,
             None if code_now is None else code_now.get("routes"),
+            counts,
         ),
+    }
+
+
+def reporting(report: dict) -> dict:
+    """The design and the actual numbers along GRRAS (Kottner et al. 2011) for
+    the reviews, and along GUILD (Gilbert et al. 2018) for the concordance as a
+    linkage of records; only the items a local measurement report can fill,
+    keyed by item number."""
+    import p09_human_sample as p09
+    import review_sample as rs
+
+    figures, agree, again = (
+        report["figures"],
+        report["agreement"],
+        report["consistency"],
+    )
+    conc, plan = report["concordance"], report["protocol"]
+    rules = {k: report.get(k) or conc.get(k) or {} for k in RULE_KEYS}
+    return {
+        "about": "Reporting fields along the Guidelines for Reporting Reliability and "
+        "Agreement Studies (Kottner et al. 2011, J Clin Epidemiol 64: 96-106) and, for "
+        "the concordance, the GUidance for Information about Linking Data sets "
+        "(Gilbert et al. 2018, J Public Health 40: 191-198), by item number. Items "
+        "that belong to a publication (GRRAS 1, 5 and 14; GUILD steps 1, 3 and 4 and "
+        "disclosure control) are left to it.",
+        "grras": {
+            "2 device": {
+                "value_decisions": list(VALUE_DECISIONS),
+                "object_decisions": list(OBJECT_DECISIONS),
+                "definitions": "pipeline/print_volumes/_review.py",
+            },
+            "3 subjects": "print objects of volumes I, A1 and A2 as the reading rules "
+            "read them: the review sample (entries rule development has not seen), its "
+            "stratum of hard entries (a p10 violation or a listed exception), and for "
+            "the concordance the entries of both blind samples",
+            "4 raters": UNDER_PROPOSALS,
+            "6 sample size": {
+                "review_objects_per_part": rs.PER_PART,
+                "hard_entries_per_volume": rs.HARD_PER_VOLUME,
+                "second_subset": rs.SECOND_SIZE,
+                "repeat_set": rs.REPEAT_SIZE,
+                "blind_entries_per_stratum": p09.PER_STRATUM,
+                "claims_per_route_and_volume": p09.TARGET_CLAIMS,
+                "raters_planned": "two reviewers and an adjudicator",
+                "basis": "fixed by the measurement design, not by a power "
+                "calculation; the decision rule states the sample a class needs",
+                "decision_rule": {
+                    k: rules[k].get("derivation") for k in RULE_KEYS if rules[k]
+                },
+            },
+            "7 sampling": "random with recorded seeds: the review sample stratified "
+            f"by volume and part (seed {rs.SEED}), the hard stratum by volume "
+            f"(seed {rs.HARD_SEED}), the second subset allocated to the volumes in "
+            f"proportion (seed {rs.SECOND_SEED}), the repeat set from the review "
+            f"sample (seed {rs.PROTOCOL_SEED}); the blind samples stratified by volume "
+            f"and proposal (seeds {p09.SEED} and {p09.SUPPLEMENT_SEED})",
+            "8 rating process": {
+                "proposals_in_view": "fields: yes, the rule values; concordance: "
+                "no in phase 1, yes in phase 2",
+                "order": "the review queues shuffled with seed "
+                f"{rs.PROTOCOL_SEED} (protocol); the blind sheets with their drawing "
+                f"seeds, the claim sheet with seed {p09.CLAIMS_SEED}",
+                "order_followed": plan.get("order_followed"),
+                "repeat": f"each repeat object shown again at least {rs.REPEAT_GAP} "
+                "places later, unmarked and without its earlier decisions",
+                "repeat_interval_hours": again["interval_hours"],
+                "aware_of_comparison": "yes: the viewer names the review sample",
+                "anchoring": "concordance.anchoring: phase 2 against the same "
+                "person's blind answers on the same entries",
+            },
+            "9 independence": "the second reviewer reads only their own decisions "
+            "(the reviewer filter of the review server); both read the rule values; "
+            "a third person or the operator adjudicates after both",
+            "10 statistics": "precision with Wilson and object-resampled intervals and "
+            "Horvitz-Thompson weights by part; agreement and consistency as raw "
+            "agreement, Cohen's kappa, Krippendorff's alpha (nominal) with an "
+            "object-resampled interval, and positive and negative specific agreement; "
+            "anchoring as a paired difference with an entry-resampled interval and "
+            f"the exact McNemar test; bootstrap seed {BOOTSTRAP_SEED}, "
+            f"{BOOTSTRAP_ROUNDS} rounds; Python standard library",
+            "11 actual numbers": {
+                "reviewers": len(report["reviewers"]),
+                "objects_complete_reviewer1": figures["reviewer1"]["complete"],
+                "objects_complete_hard": figures["hard"]["complete"],
+                "objects_both_reviewed": agree["objects_both_reviewed"],
+                "repeat_objects_judged": again["objects"],
+                "blind_rows_answered": conc.get("answered"),
+                "claims_decided": conc.get("claims_decided"),
+            },
+            "12 rater characteristics": "not recorded by the code; the operator's "
+            "double role is item 4, and the training and experience of every further "
+            "reviewer are to be recorded with the round",
+            "13 estimates": "every rate carries a 95 % interval, and the decision rule "
+            "tests the exact lower bound against the threshold",
+            "15 detailed results": "the tables of pairs (agreement, consistency, "
+            "anchoring) and the counts per class stand in this report",
+        },
+        "guild": {
+            "2a(iii) algorithm": "rule-based routes of p07 (field, title-year, "
+            "alignment, containment); several candidates per entry stay proposed "
+            "claims, and the claim sheet lists at most "
+            f"{p09.CLAIMS_PER_ENTRY} per entry and route",
+            "2b record-level indicators": "every claim carries its route, evidence "
+            "and state in the claims of p07",
+            "2c(i) linked and unlinked": "data/print/derived/reports/p07b_overlap.json, "
+            "per volume and part",
+            "2d(i) error rates": "false matches as claim precision (phase 2), missed "
+            "matches as recall and found_by_neither_route (phase 1), per route and "
+            "volume",
+            "2d(ii) how estimated": "against a person's blind answers on frozen "
+            "samples, weighted by the inverse inclusion probability; silver pairs are a "
+            "development metric only",
+        },
     }
 
 
@@ -939,7 +1473,12 @@ def load_design() -> dict:
                 }
     if REVIEW_SECOND.exists():
         second = set(json.loads(REVIEW_SECOND.read_text("utf-8"))["objects"])
-    return {"review": review, "hard": hard, "second": second}
+    plan = (
+        json.loads(REVIEW_PROTOCOL.read_text("utf-8"))
+        if REVIEW_PROTOCOL.exists()
+        else None
+    )
+    return {"review": review, "hard": hard, "second": second, "protocol": plan}
 
 
 def _git(*args: str) -> str | None:
@@ -1062,6 +1601,7 @@ def main() -> int:
             **measure(records, log, design, rule, code_now),
             "concordance": load_concordance(rule, code_now),
         }
+        report["reporting"] = reporting(report)
     except ValueError as e:
         print(f"FEHLER {e}")
         return 1
@@ -1086,15 +1626,24 @@ def main() -> int:
                 f"wrong {r['precision_unresolved_as_wrong']}, recall {r['recall']}"
             )
     a = report["agreement"]
+    on_correct = a["values"]["specific_agreement"].get("correct", {})
     print(
-        f"OK agreement on {a['objects_both_reviewed']} of {a['subset_objects']} subset objects: "
-        f"values kappa {a['values']['kappa']} (n {a['values']['n']}), positive agreement "
-        f"on correct {a['values_positive_agreement']['value']}"
+        f"OK agreement under proposals on {a['objects_both_reviewed']} of "
+        f"{a['subset_objects']} subset objects: values kappa {a['values']['kappa']}, "
+        f"alpha {a['values']['alpha']} (n {a['values']['n']}), specific agreement on "
+        f"correct {on_correct.get('positive')} / {on_correct.get('negative')}"
+    )
+    k, plan = report["consistency"], report["protocol"]
+    print(
+        f"OK protocol {plan['state']}; consistency on {k['objects']} repeat objects: "
+        f"alpha {k['values']['alpha']} (n {k['values']['n']})"
     )
     c = report["concordance"]
+    anchor = (c.get("anchoring") or {}).get("all") or {}
     print(
         f"OK concordance: {c.get('answered')} of {c.get('rows')} blind rows answered, "
-        f"{c.get('claims_decided')} claims decided"
+        f"{c.get('claims_decided')} claims decided; anchoring effect "
+        f"{anchor.get('effect')} on {anchor.get('claims')} claims"
     )
     for key in ("confirmation_rule_fields",):
         r = report[key]
