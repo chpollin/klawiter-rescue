@@ -3,7 +3,9 @@
 Reads data/print/<file>.pdf, verifies its SHA-256 prefix against sections.json
 and writes data/print/derived/lines-<volume>.jsonl, one record per line:
 volume, page, line index, top, bottom, x0, x1, text, font runs and a defect
-flag for WordPerfect substitute glyphs. Running heads and page numbers stay in
+flag for WordPerfect substitute glyphs. A run is [font, size, x0, text, x1],
+x1 the right edge of its last inked glyph; a new run opens at a change of
+font or size and after a gap wider than COLUMN_GAP. Running heads and page numbers stay in
 the output; later stages mark them instead of losing them.
 
 Lines are built from pdfplumber's character objects rather than from
@@ -26,6 +28,7 @@ import sys
 import time
 
 from _common import (
+    COLUMN_GAP,
     DEFECT_CHARS,
     DEFECT_FONT,
     PRINT_DIR,
@@ -55,9 +58,14 @@ def _group(chars: list[dict], y_tol: float) -> list[list[dict]]:
 def _line_record(volume: str, page: int, index: int, row: list[dict]) -> dict:
     text_parts: list[str] = []
     runs: list[list] = []
-    previous = None
+    previous = ink = None
     for char in row:
         glyph = char["text"]
+        column = (
+            ink is not None
+            and not glyph.isspace()
+            and char["x0"] - ink["x1"] > COLUMN_GAP
+        )
         if (
             previous is not None
             and char["x0"] - previous["x1"] > SPACE_GAP
@@ -69,11 +77,14 @@ def _line_record(volume: str, page: int, index: int, row: list[dict]) -> dict:
                 runs[-1][3] += " "
         font = char["fontname"].split("+")[-1]
         size = round(char["size"], 1)
-        if not runs or runs[-1][0] != font or runs[-1][1] != size:
-            runs.append([font, size, round(char["x0"], 1), ""])
+        if not runs or runs[-1][0] != font or runs[-1][1] != size or column:
+            runs.append([font, size, round(char["x0"], 1), "", round(char["x1"], 1)])
         runs[-1][3] += glyph
         text_parts.append(glyph)
         previous = char
+        if not glyph.isspace():
+            ink = char
+            runs[-1][4] = round(char["x1"], 1)
     text = "".join(text_parts)
     return {
         "volume": volume,

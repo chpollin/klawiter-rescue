@@ -22,8 +22,13 @@ Addresses resolve to entry identifiers through one index over all three
 volumes. Empty means not found, never inferred; field accuracy is measured
 separately (p07, p08, p09) and the schema and invariants are checked by p10.
 
-Output: records per volume, pipeline/print_volumes/schema/print-object.schema.json
-(versioned, no print text) and data/print/derived/reports/p03_records.json.
+The indexes, front matter and tail of each volume become apparatus records
+beside the entries (_apparatus.py), so that every line of the files is held.
+
+Output: entry and apparatus records per volume, the schemas
+pipeline/print_volumes/schema/print-object.schema.json and
+print-apparatus.schema.json (versioned, no print text) and
+data/print/derived/reports/p03_records.json.
 
 Usage: python -m uv run python pipeline/print_volumes/p03_records.py [--out DIR]
 """
@@ -37,6 +42,7 @@ from collections import Counter
 from pathlib import Path
 
 from _addresses import REFERENCE
+from _apparatus import apparatus_records
 from _common import DERIVED_DIR, HERE, SECTIONS, VOLUMES, load_lines, write_report
 from _fields import (
     EDITION_LINE,
@@ -53,11 +59,12 @@ from _fields import (
 from _lines import annotate
 from _llm import apply_cache, load_cache
 from _objects import SPLIT_LABEL, object_parts, unit_kind, unit_text
-from _schema import json_schema
+from _schema import apparatus_json_schema, json_schema
 from _segment import body_by_part, units, votes
 
 RECORDS = DERIVED_DIR / "records"
 SCHEMA_FILE = HERE / "schema" / "print-object.schema.json"
+APPARATUS_SCHEMA_FILE = HERE / "schema" / "print-apparatus.schema.json"
 # Collected works are the only part documented to group volumes under a header.
 COLLECTION_PARTS = ("A",)
 REFERENCE_HEADING = re.compile(r"\bSee\b")
@@ -442,6 +449,14 @@ def structure(
             record.pop(key)
 
 
+def _write(out: Path, records: list[dict]) -> None:
+    tmp = out.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8") as sink:
+        for record in records:
+            sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+    tmp.replace(out)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
@@ -460,6 +475,10 @@ def main() -> int:
             json.dumps(json_schema(), ensure_ascii=False, indent=1) + "\n",
             encoding="utf-8",
         )
+        APPARATUS_SCHEMA_FILE.write_text(
+            json.dumps(apparatus_json_schema(), ensure_ascii=False, indent=1) + "\n",
+            encoding="utf-8",
+        )
     by_volume = {volume: segment(volume) for volume in VOLUMES}
     index: dict[str, str] = {}
     for records in by_volume.values():
@@ -472,12 +491,7 @@ def main() -> int:
     stats_llm: Counter = Counter()
     for volume, records in by_volume.items():
         structure(records, index, llm_cache, stats_llm, places)
-        out = args.out / f"entries-{volume}.jsonl"
-        tmp = out.with_suffix(".tmp")
-        with tmp.open("w", encoding="utf-8") as sink:
-            for record in records:
-                sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-        tmp.replace(out)
+        _write(args.out / f"entries-{volume}.jsonl", records)
         kinds = Counter(r["kind"] for r in records)
         objects = [o for r in records for o in r["objects"]]
         report[volume] = {
@@ -492,6 +506,19 @@ def main() -> int:
             f"OK {volume}: {len(records)} units, {kinds['entry']} entries, "
             f"{kinds['reference']} references, {kinds['heading']} headings, "
             f"{len(objects)} objects"
+        )
+        apparatus, lines = apparatus_records(
+            annotate(load_lines(volume), volume), volume, index
+        )
+        _write(args.out / f"apparatus-{volume}.jsonl", apparatus)
+        report[volume]["apparatus"] = {
+            **dict(Counter(r["kind"] for r in apparatus)),
+            "lines": lines["lines"],
+            "furniture": lines["furniture"],
+        }
+        print(
+            f"OK {volume}: {len(apparatus)} apparatus records from "
+            f"{lines['lines']} lines, {lines['furniture']} of them furniture"
         )
     if trial:
         print(f"OK trial records in {args.out}")

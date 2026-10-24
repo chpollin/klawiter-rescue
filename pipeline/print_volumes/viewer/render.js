@@ -65,7 +65,8 @@ export function indexGraph(doc) {
   const objects = [];
   for (const node of doc["@graph"]) {
     if (node.id) byId.set(node.id, node);
-    if (node.type === "kp:PrintObject") objects.push(node);
+    // Index entries, front matter and tail passages are listed like objects.
+    if (node.type === "kp:PrintObject" || node.type === "kp:ApparatusItem") objects.push(node);
   }
   return { byId, objects };
 }

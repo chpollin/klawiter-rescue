@@ -220,9 +220,100 @@ def test_a_hyphenated_reprint_label_still_splits():
         assert SPLIT_LABEL.search(label).group("reprint")
 
 
+def _index_line(page, line, top, *runs, volume="I", part="Index A"):
+    """An invented index line from (x0, text, x1) runs, as p01 writes it."""
+    return {
+        "volume": volume,
+        "part": part,
+        "kind": "index",
+        "page": page,
+        "line": line,
+        "top": top,
+        "x0": runs[0][0],
+        "text": "".join(r[1] for r in runs),
+        "runs": [["Times", 12.0, x0, text, x1] for x0, text, x1 in runs],
+    }
+
+
+def _apparatus(lines, volume="I"):
+    from _apparatus import apparatus_records
+
+    index = {"G 12": "I/G/12", "K 7": "I/K/7", "L 30": "I/L/30"}
+    records, _ = apparatus_records(lines, volume, index)
+    return records
+
+
+def test_two_index_columns_on_one_baseline_split_at_the_gutter():
+    records = _apparatus(
+        [
+            _index_line(
+                800,
+                1,
+                100,
+                (72, "Nachname, Erika, G 12 ", 170),
+                (291, "Zweiter, Max, K 7", 380),
+            ),
+            _index_line(800, 2, 114, (72, "Dritte, Anna, L 30", 160)),
+        ]
+    )
+    assert [r["text"] for r in records] == [
+        "Nachname, Erika, G 12",
+        "Dritte, Anna, L 30",
+        "Zweiter, Max, K 7",
+    ]
+    assert records[2]["id"] == "I/index-a/p800l1c2"
+    item = records[0]["objects"][0]
+    assert item["term"]["value"] == "Nachname, Erika"
+    assert [t["record"] for t in item["references"][0]["targets"]] == ["I/G/12"]
+
+
+def test_a_continuation_at_the_margin_and_a_vertical_strip_stay_in_their_entry():
+    records = _apparatus(
+        [
+            _index_line(800, 1, 100, (72, "Nachname, Erika, G 12 / K", 190)),
+            _index_line(800, 2, 114, (72, "7 / L", 100), (250, "3", 256)),
+            _index_line(800, 3, 128, (250, "0", 256)),
+            _index_line(800, 4, 142, (72, "Dritte, Anna, G 12", 160)),
+        ]
+    )
+    assert [r["text"] for r in records] == [
+        "Nachname, Erika, G 12 / K 7 / L 30",
+        "Dritte, Anna, G 12",
+    ]
+
+
+def test_a_title_after_a_siglum_opens_no_entry():
+    records = _apparatus(
+        [
+            _index_line(
+                940,
+                1,
+                100,
+                (72, "ABCDE ", 110),
+                (191, "ABC Blatt (Ort) - G 12", 300),
+                part="Index E",
+            ),
+            _index_line(
+                940,
+                2,
+                114,
+                (72, "FGHIJ ", 110),
+                (191, "Zeitung (Ort) - K 7", 300),
+                part="Index E",
+            ),
+        ]
+    )
+    assert [r["objects"][0]["term"]["value"] for r in records] == [
+        "ABCDE ABC Blatt (Ort)",
+        "FGHIJ Zeitung (Ort)",
+    ]
+
+
 def test_rule_patterns_hold_no_control_character():
+    import _apparatus
     import _fields
 
-    for name, pattern in vars(_fields).items():
-        if isinstance(pattern, re.Pattern):
-            assert "\x08" not in pattern.pattern, name
+    for module in (_fields, _apparatus):
+        for name, pattern in vars(module).items():
+            if isinstance(pattern, re.Pattern):
+                assert "\x08" not in pattern.pattern, name

@@ -1,0 +1,433 @@
+{
+ "$defs": {
+  "Reference": {
+   "additionalProperties": false,
+   "properties": {
+    "address": {
+     "$ref": "#/$defs/Text"
+    },
+    "targets": {
+     "items": {
+      "$ref": "#/$defs/Target"
+     },
+     "minItems": 1,
+     "title": "Targets",
+     "type": "array"
+    },
+    "locator": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "kind": {
+     "$ref": "#/$defs/ReferenceKind"
+    }
+   },
+   "required": [
+    "address",
+    "targets",
+    "kind"
+   ],
+   "title": "Reference",
+   "type": "object"
+  },
+  "ReferenceKind": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "enum": [
+      "see",
+      "reprint",
+      "contents",
+      "correction",
+      "continuation",
+      "excerpt",
+      "translation",
+      "review",
+      "concerning",
+      "based_on",
+      "index",
+      "related"
+     ],
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "ReferenceKind",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Target": {
+   "additionalProperties": false,
+   "properties": {
+    "normalized": {
+     "pattern": "^[A-R](A[12])? \\d{1,4}[a-z]?$",
+     "title": "Normalized",
+     "type": "string"
+    },
+    "record": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Record"
+    }
+   },
+   "required": [
+    "normalized"
+   ],
+   "title": "Target",
+   "type": "object"
+  },
+  "Text": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "minLength": 1,
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "Text",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ },
+ "$id": "https://github.com/chpollin/klawiter-rescue/pipeline/print_volumes/schema/print-apparatus.schema.json",
+ "additionalProperties": false,
+ "description": "The one item of an index, front matter or tail record (_apparatus.py):\nan index entry's term and address groups, or a passage held verbatim.",
+ "properties": {
+  "id": {
+   "pattern": "^(I|A1|A2)/[a-z][a-z0-9-]*/p\\d+l\\d+(?:c2)?#1$",
+   "title": "Id",
+   "type": "string"
+  },
+  "entry": {
+   "pattern": "^(I|A1|A2)/[a-z][a-z0-9-]*/p\\d+l\\d+(?:c2)?$",
+   "title": "Entry",
+   "type": "string"
+  },
+  "entry_sha256": {
+   "pattern": "^[0-9a-f]{64}$",
+   "title": "Entry Sha256",
+   "type": "string"
+  },
+  "volume": {
+   "enum": [
+    "I",
+    "A1",
+    "A2"
+   ],
+   "title": "Volume",
+   "type": "string"
+  },
+  "part": {
+   "minLength": 1,
+   "title": "Part",
+   "type": "string"
+  },
+  "address": {
+   "const": "",
+   "title": "Address",
+   "type": "string"
+  },
+  "kind": {
+   "enum": [
+    "index",
+    "front",
+    "tail"
+   ],
+   "title": "Kind",
+   "type": "string"
+  },
+  "span": {
+   "items": {
+    "minimum": 0,
+    "type": "integer"
+   },
+   "maxItems": 2,
+   "minItems": 2,
+   "title": "Span",
+   "type": "array"
+  },
+  "text": {
+   "minLength": 1,
+   "title": "Text",
+   "type": "string"
+  },
+  "term": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Text"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "references": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Reference"
+   },
+   "title": "References",
+   "type": "array"
+  },
+  "passage": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Text"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  }
+ },
+ "required": [
+  "id",
+  "entry",
+  "entry_sha256",
+  "volume",
+  "part",
+  "address",
+  "kind",
+  "span",
+  "text"
+ ],
+ "title": "Klawiter print apparatus item",
+ "type": "object",
+ "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

@@ -41,6 +41,11 @@ REPRINTED = r"Re-?\s?prin-?\s?ted(?:\s\[[^\[\]]{1,40}\])?(?: in| as)?"
 # WordPerfect substitute fonts and the stand-ins they leave in the text layer.
 DEFECT_CHARS = re.compile("[￿\x00─-╿]")
 DEFECT_FONT = re.compile(r"^WP-")
+# A gap this wide after the last inked glyph of a line opens a run in p01, so
+# that a run's x marks where a column starts: the two index columns of the
+# main volume and Addendum I share baselines and join into one line (gutters
+# measured from 18 pt up).
+COLUMN_GAP = 15.0
 
 
 def lines_path(volume: str) -> Path:

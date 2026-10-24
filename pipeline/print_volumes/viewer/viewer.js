@@ -353,6 +353,13 @@ function nextOpen(currentId) {
 
 function renderReview(object, all, state, inSample) {
   const controls = el("review-controls");
+  if (object.type === "kp:ApparatusItem") {
+    // The review layer covers print objects only (_review.py checks them).
+    controls.hidden = true;
+    el("review-status").textContent = "Index entries, front matter and tail passages are shown with their provenance; review decisions cover the print objects only.";
+    el("next-sample").hidden = true;
+    return;
+  }
   controls.hidden = !review.recording;
   const parts = [
     inSample ? "This object belongs to the frozen review sample, whose complete objects measure field correctness." : "This object is outside the review sample; decisions on it are development reviews and enter no measurement.",
@@ -410,7 +417,7 @@ async function renderObject(id, selected, focus = null) {
     ...all.map((r) => {
       const d = state.byIndex.get(r.index);
       const cell = make("td", { class: "review" }, make("span", { class: `state${d?.decision === "correct" || d?.decision === "unresolved" ? " attention" : ""}`, text: d ? REVIEW_STATE[d.decision] : "no decision" }));
-      if (review.recording) {
+      if (review.recording && object.type !== "kp:ApparatusItem") {
         for (const [action, label] of [["confirm", "Right"], ["correct", "Wrong"], ["unresolved", "Unsure"]]) {
           cell.append(
             " ",

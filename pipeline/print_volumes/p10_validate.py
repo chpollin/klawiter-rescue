@@ -25,6 +25,13 @@ How results are checked):
   place holds no digit and is no siglum; a name holds no digit; a publisher
   holds no credit.
 
+- lines: every p01 line outside the page furniture is held by an entry or an
+  apparatus record, so that no text of the three files is left out.
+- apparatus: every index, front matter and tail item (_apparatus.py) holds
+  the model, its record's text and hash, verbatim values in its record, index
+  reference kinds on their address, a term before the first address, and
+  address targets that are the records of their addresses.
+
 The checks above verify consistency and provenance; they cannot show that a
 value is the right one, which only a person's sample measures (p09). The shape
 checks catch classes of wrong values, not every wrong value.
@@ -46,7 +53,9 @@ import re
 import sys
 from collections import Counter, defaultdict
 
-from _common import DERIVED_DIR, HERE, REPORT_DIR, VOLUMES, write_report
+from _apparatus import is_furniture as apparatus_furniture
+from _apparatus import segments
+from _common import DERIVED_DIR, HERE, REPORT_DIR, VOLUMES, load_lines, write_report
 from _fields import (
     LANGUAGE_BY_FOLD,
     MARKER,
@@ -54,9 +63,10 @@ from _fields import (
     derive_types,
     marker_kind,
 )
+from _lines import annotate
 from _llm import PROMPT_ID
 from _objects import ITEM, SPLIT_LABEL, _label_kind
-from _schema import PrintObject, iter_values, object_values
+from _schema import ApparatusItem, PrintObject, iter_values, object_values
 from pydantic import ValidationError
 
 RECORDS = DERIVED_DIR / "records"
@@ -103,7 +113,7 @@ PAGES_SHAPE = re.compile(r"[\dIVXLCivxlc]")
 CREDIT_WORD = re.compile(
     r"\b(?:Trl?s?|Eds?|Intro|Frw|Aftw|Illus)\.|\b(?:Translated|Edited) by\b"
 )
-RULE_SOURCES = ("_fields.py", "p03_records.py")
+RULE_SOURCES = ("_fields.py", "p03_records.py", "_apparatus.py")
 
 
 def _known_rules() -> tuple[set[str], tuple[str, ...]]:
@@ -442,6 +452,113 @@ def _coverage_row(objects: list[dict]) -> dict:
     return row
 
 
+def check_item(item: dict, record: dict, records: dict, rules) -> list[tuple[str, str]]:
+    """Violations of one apparatus item (_apparatus.py): model, hash, spans,
+    rules, verbatim values, index reference kinds and address targets."""
+    try:
+        ApparatusItem.model_validate(item)
+    except ValidationError as error:
+        return [
+            ("schema", str(error.errors()[0]["loc"]) + " " + error.errors()[0]["msg"])
+        ]
+    out = []
+    text = record["text"]
+    if item["entry_sha256"] != record["sha256"] or item["text"] != text:
+        out.append(("span", "item text or hash"))
+    literal, prefixes = rules
+    for path, v in object_values(item):
+        a, b = v["span"]
+        if v.get("from") or v["by"] not in ("rule", "compiler"):
+            out.append(
+                ("scope", f"{path}: apparatus values are read from their record")
+            )
+        if not (0 <= a < b <= len(text)):
+            out.append(("span", f"{path}: outside its record"))
+            continue
+        if not (v["rule"] in literal or v["rule"].startswith(prefixes)):
+            out.append(("rule", f"{path}: {v['rule']}"))
+        out.extend(_verbatim(path, v, text[a:b]))
+    for i, ref in enumerate(item.get("references", [])):
+        kind = ref["kind"]
+        if kind["value"] != "index" or kind["span"] != ref["address"]["span"]:
+            out.append(("kind", f"references[{i}] index"))
+    term = item.get("term")
+    if term and item.get("references"):
+        if term["span"][1] > item["references"][0]["address"]["span"][0]:
+            out.append(("scope", "term runs into its first address"))
+    for path, address in _addresses(item):
+        for target in address["targets"]:
+            rec = records.get(target.get("record")) if target.get("record") else None
+            if target.get("record") and (
+                not rec or rec["address"] != target["normalized"]
+            ):
+                out.append(("address", f"{path}: target {target['record']}"))
+    return out
+
+
+def lines_outside(records: dict, apparatus: dict) -> tuple[list[str], Counter]:
+    """p01 lines no record holds, apart from page furniture, and a line count.
+
+    A record's text is its lines joined, furniture dropped, so each record
+    consumes the lines from its first one whose text continues its own
+    (whitespace ignored, at most a few foreign lines skipped). An apparatus
+    record of a two-column index holds pieces of lines, so its lines count
+    as held when all of their text lies in apparatus records of the page.
+    """
+    squash = re.compile(r"\s+")
+    outside, count = [], Counter()
+    for volume in VOLUMES:
+        lines = annotate(load_lines(volume), volume)
+        at = {(ln["page"], ln["line"]): i for i, ln in enumerate(lines)}
+        text = [squash.sub("", ln["text"]) for ln in lines]
+        held = [False] * len(lines)
+        for record in records.values():
+            if record["volume"] != volume:
+                continue
+            i, skipped = at[(record["page"], record["line"])], 0
+            rest = squash.sub("", record["text"])
+            while rest and i < len(lines) and skipped <= 4:
+                if text[i] and rest.startswith(text[i]):
+                    held[i], rest, skipped = True, rest[len(text[i]) :], 0
+                elif text[i] and text[i].startswith(rest):
+                    held[i], rest = True, ""
+                elif text[i]:
+                    skipped += 1
+                i += 1
+        pages: dict[int, str] = {}
+        for record in apparatus.values():
+            if record["volume"] == volume:
+                for page in range(record["page"], record["page_end"] + 1):
+                    pages[page] = pages.get(page, "") + squash.sub("", record["text"])
+        for i, ln in enumerate(lines):
+            if not text[i]:
+                continue
+            count["lines"] += 1
+            if ln["kind"] in ("index", "front", "tail"):
+                if apparatus_furniture(ln):
+                    count["furniture"] += 1
+                    continue
+                # The pieces of a line stand in reading order of their column.
+                pieces = [squash.sub("", p["text"]) for p in segments(ln, None)]
+                held[i] = all(p in pages.get(ln["page"], "") for p in pieces)
+            elif ln["furniture"]:
+                count["furniture"] += 1
+                continue
+            if not held[i]:
+                outside.append(f"{volume}/p{ln['page']}l{ln['line']}")
+    return outside, count
+
+
+def load_apparatus() -> dict:
+    found = {}
+    for volume in VOLUMES:
+        path = RECORDS / f"apparatus-{volume}.jsonl"
+        with path.open(encoding="utf-8") as source:
+            for record in map(json.loads, source):
+                found[record["id"]] = record
+    return found
+
+
 def load_all() -> tuple[dict, dict, dict]:
     records, order, texts = {}, {}, {}
     for volume in VOLUMES:
@@ -475,6 +592,20 @@ def validate() -> tuple[dict, list[dict]]:
             by_type[(record["volume"], "_all")].append(obj)
             for t in types:
                 by_type[(record["volume"], t)].append(obj)
+    apparatus = load_apparatus()
+    items: Counter = Counter()
+    for record in apparatus.values():
+        for item in record["objects"]:
+            items[(record["volume"], record["kind"])] += 1
+            for invariant, detail in check_item(item, record, records, rules):
+                violations.append(
+                    {"object": item["id"], "invariant": invariant, "detail": detail}
+                )
+    outside, line_count = lines_outside(records, apparatus)
+    violations.extend(
+        {"object": line, "invariant": "lines", "detail": "held by no record"}
+        for line in outside
+    )
     listed = {
         (inv, oid)
         for inv, cases in known.items()
@@ -491,6 +622,9 @@ def validate() -> tuple[dict, list[dict]]:
         "about": "Schema validation and invariants over all print objects; coverage is "
         "the share of objects holding a field, a reading rate, not correctness.",
         "objects": sum(len(r["objects"]) for r in records.values()),
+        "apparatus_items": {f"{v}/{k}": n for (v, k), n in sorted(items.items())},
+        "lines": dict(line_count),
+        "lines_outside_records": len(outside),
         "violations": dict(Counter(v["invariant"] for v in violations)),
         "violations_listed": len(found & listed),
         "violations_new": len(new),
@@ -506,7 +640,12 @@ def main() -> int:
     with (REPORT_DIR / "p10_violations.jsonl").open("w", encoding="utf-8") as sink:
         for v in violations:
             sink.write(json.dumps(v, ensure_ascii=False) + "\n")
-    print(f"OK {report['objects']} objects; violations {report['violations']}")
+    print(
+        f"OK {report['objects']} objects, "
+        f"{sum(report['apparatus_items'].values())} apparatus items, "
+        f"{report['lines']['lines']} lines of which {report['lines_outside_records']} "
+        f"outside every record; violations {report['violations']}"
+    )
     for invariant, oid in new[:20]:
         print(f"NEW {invariant} {oid}")
     for invariant, oid in stale[:20]:

@@ -14,7 +14,7 @@ from _common import HERE
 from _fields import Reader, derive_types
 from _llm import merge, verify
 from _review import Correction, DecisionIn, ValueRef, check, effective, load_log, stamp
-from _schema import json_schema, object_values
+from _schema import apparatus_json_schema, json_schema, object_values
 from p10_validate import RECORDS, _known_rules, check_object, validate
 from p12_jsonld import (
     CONTEXT_FILE,
@@ -151,6 +151,8 @@ def test_llm_offsets_are_checked_verbatim_and_fill_gaps_only():
 def test_exported_schema_is_current():
     path = HERE / "schema" / "print-object.schema.json"
     assert json.loads(path.read_text(encoding="utf-8")) == json_schema()
+    path = HERE / "schema" / "print-apparatus.schema.json"
+    assert json.loads(path.read_text(encoding="utf-8")) == apparatus_json_schema()
 
 
 @pytest.mark.skipif(
@@ -188,6 +190,33 @@ def test_jsonld_export_validates_and_catches_a_broken_chain(tmp_path):
     assert any("SHACL" in p for p in _validated(doc, values, tmp_path))
     doc["@graph"][-1]["undefined_term"] = 1
     assert any("undefined terms" in p for p in _validated(doc, values, tmp_path))
+
+
+def test_an_index_entry_exports_and_validates_with_its_chain(tmp_path):
+    from _apparatus import apparatus_records
+    from _schema import ApparatusItem
+
+    text = "Nachname, Erika, F 12"
+    line = {
+        "volume": "I",
+        "part": "Index A",
+        "kind": "index",
+        "page": 800,
+        "line": 1,
+        "top": 100,
+        "x0": 72,
+        "text": text,
+        "runs": [["Times", 12.0, 72, text, 170]],
+    }
+    (record,), _ = apparatus_records([line], "I", {"F 12": "I/F/12"})
+    item = record["objects"][0]
+    ApparatusItem.model_validate(item)
+    doc, values = _jsonld(item, record)
+    assert values == 3  # term, address, reference kind
+    assert _validated(doc, values, tmp_path) == []
+    node = next(n for n in doc["@graph"] if n.get("type") == "kp:ApparatusItem")
+    node["term"]["selector"]["exact"] = "Nachnahme, Erika"
+    assert any("SHACL" in p for p in _validated(doc, values, tmp_path))
 
 
 def test_export_fields_are_the_paths_review_decisions_use():

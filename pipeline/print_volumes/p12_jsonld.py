@@ -13,12 +13,16 @@ schema/print-context.jsonld, the shapes schema/print-shapes.ttl.
 
 The documents are written in chunks of at most CHUNK records per volume and
 part, each self-contained (context inline, the records its values quote and
-the plans they name). Every chunk is validated on four levels:
+the plans they name). The apparatus records of _apparatus.py (index entries,
+front matter and tail passages) are exported the same way, each with one
+kp:ApparatusItem in place of the print objects. Every chunk is validated on
+four levels:
 
 1. terms: every key used is defined in the context, so no statement is dropped
    silently on expansion;
 2. RDF: the document parses as JSON-LD into a graph, and the graph holds one
-   kp:PrintObject per object and one kp:Value per value of the records;
+   kp:PrintObject or kp:ApparatusItem per object and one kp:Value per value of
+   the records;
 3. SHACL: the shapes hold, including the SPARQL constraint that every selector
    quotes its source record exactly and every text value equals its passage;
 4. exits non-zero on any failure.
@@ -43,6 +47,7 @@ import unicodedata
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
+from _apparatus import slug
 from _common import DERIVED_DIR, HERE, SECTIONS, VOLUMES, write_report
 from _fields import summary
 from _heldout import review_objects
@@ -81,7 +86,11 @@ RECORD_CLASS = {
     "entry": "kp:Entry",
     "heading": "kp:Heading",
     "reference": "kp:CrossReference",
+    "index": "kp:IndexEntry",
+    "front": "kp:FrontMatterPassage",
+    "tail": "kp:TailPassage",
 }
+OBJECT_CLASSES = ("PrintObject", "ApparatusItem")
 
 
 def _plan_producer(rule: str) -> str:
@@ -165,12 +174,13 @@ class Exporter:
         s, e = obj["span"]
         out = {
             "id": obj["id"],
-            "type": "kp:PrintObject",
+            "type": "kp:ApparatusItem" if "kind" in obj else "kp:PrintObject",
             "entry": obj["entry"],
             "volume": obj["volume"],
             "part": obj["part"],
             "address": obj["address"],
             "objectText": obj["text"],
+            **({"kind": obj["kind"]} if "kind" in obj else {}),
             "selector": {
                 "type": "oa:TextPositionSelector",
                 "start": s,
@@ -238,7 +248,7 @@ class Exporter:
 
 
 def record_node(r: dict) -> dict:
-    return {
+    node = {
         "id": r["id"],
         "type": ["kp:Record", RECORD_CLASS[r["kind"]]],
         "volume": r["volume"],
@@ -253,6 +263,9 @@ def record_node(r: dict) -> dict:
         "context": r["context"],
         "derivedFrom": f"file/{r['volume']}",
     }
+    if "column" in r:
+        node["column"] = r["column"]
+    return node
 
 
 def file_nodes() -> list[dict]:
@@ -323,8 +336,11 @@ def build() -> tuple[list[dict], list[dict]]:
     records: dict[str, dict] = {}
     by_volume: dict[str, list[dict]] = {}
     for volume in VOLUMES:
-        with (RECORDS / f"entries-{volume}.jsonl").open(encoding="utf-8") as source:
-            by_volume[volume] = [json.loads(line) for line in source]
+        by_volume[volume] = []
+        # The apparatus records (indexes, front matter, tail) follow the entries.
+        for name in ("entries", "apparatus"):
+            with (RECORDS / f"{name}-{volume}.jsonl").open(encoding="utf-8") as source:
+                by_volume[volume].extend(json.loads(line) for line in source)
         records.update({r["id"]: r for r in by_volume[volume]})
     reviews: dict[str, list] = {}
     stale = 0
@@ -340,7 +356,9 @@ def build() -> tuple[list[dict], list[dict]]:
     for volume, recs in by_volume.items():
         parts: dict[str, list[dict]] = {}
         for r in recs:
-            parts.setdefault(r["part"], []).append(r)
+            parts.setdefault(
+                slug(r["part"]) if "column" in r else r["part"], []
+            ).append(r)
         for part, items in parts.items():
             for n in range(0, len(items), CHUNK):
                 batch = items[n : n + CHUNK]
@@ -374,7 +392,11 @@ def build() -> tuple[list[dict], list[dict]]:
                 for r in batch:
                     for o in r["objects"]:
                         s = summary(o)
-                        label = s["title"] or o["text"][:90]
+                        label = (
+                            o["term"]["value"]
+                            if o.get("term")
+                            else s["title"] or o["text"][:90]
+                        )
                         index.append(
                             {
                                 "id": o["id"],
@@ -384,7 +406,9 @@ def build() -> tuple[list[dict], list[dict]]:
                                 "address": r["address"],
                                 "page": r["page"],
                                 "title": label,
-                                "types": [t["value"] for t in o.get("types", [])],
+                                "types": [o["kind"]]
+                                if "kind" in o
+                                else [t["value"] for t in o.get("types", [])],
                                 "producers": sorted(
                                     {v["by"] for _, v in object_values(o)}
                                 ),
@@ -414,7 +438,9 @@ def validate_chunk(args: tuple[str, int, int, bool]) -> dict:
     graph = rdflib.Graph()
     graph.parse(data=text, format="json-ld")
     kp = rdflib.Namespace("https://chpollin.github.io/klawiter-rescue/vocab/print/")
-    objects = len(set(graph.subjects(RDF.type, kp.PrintObject)))
+    objects = sum(
+        len(set(graph.subjects(RDF.type, kp[name]))) for name in OBJECT_CLASSES
+    )
     values = len(set(graph.subjects(RDF.type, kp.Value)))
     result["triples"] = len(graph)
     if objects != n_objects or values != n_values:

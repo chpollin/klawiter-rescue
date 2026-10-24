@@ -370,8 +370,60 @@ class PrintObject(_Strict):
         return self
 
 
+APPARATUS_ID = r"(I|A1|A2)/[a-z][a-z0-9-]*/p\d+l\d+(?:c2)?"
+
+
+class ApparatusItem(_Strict):
+    """The one item of an index, front matter or tail record (_apparatus.py):
+    an index entry's term and address groups, or a passage held verbatim."""
+
+    model_config = ConfigDict(
+        strict=True,
+        extra="forbid",
+        populate_by_name=True,
+        json_schema_extra={"$id": SCHEMA_ID.replace("object", "apparatus")},
+    )
+
+    id: str = Field(pattern=rf"^{APPARATUS_ID}#1$")
+    entry: str = Field(pattern=rf"^{APPARATUS_ID}$")
+    entry_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    volume: Literal["I", "A1", "A2"]
+    part: str = Field(min_length=1)
+    address: Literal[""]
+    kind: Literal["index", "front", "tail"]
+    span: Span
+    text: str = Field(min_length=1)
+    term: Text | None = None
+    references: list[Reference] = []
+    passage: Text | None = None
+
+    @model_validator(mode="after")
+    def _identity(self):
+        if self.id != self.entry + "#1":
+            raise ValueError("item id must be its record id with #1")
+        if not self.entry.startswith(f"{self.volume}/"):
+            raise ValueError("record id must start with the volume")
+        if self.span != [0, len(self.text)]:
+            raise ValueError("an item spans its whole record")
+        if (self.kind == "index") == (self.passage is not None):
+            raise ValueError(
+                "an index item reads term and addresses, any other a passage"
+            )
+        return self
+
+
 # The keys of an object that are no values of its own.
-BASE_KEYS = ("id", "entry", "entry_sha256", "volume", "part", "address", "span", "text")
+BASE_KEYS = (
+    "id",
+    "entry",
+    "entry_sha256",
+    "volume",
+    "part",
+    "address",
+    "span",
+    "text",
+    "kind",
+)
 
 
 def iter_values(node, path: str = ""):
@@ -409,9 +461,9 @@ NON_EMPTY = {
 }
 
 
-def json_schema() -> dict:
+def json_schema(model=None, title: str = "Klawiter print object") -> dict:
     """The exported schema, with the conditions JSON Schema can express added."""
-    schema = PrintObject.model_json_schema(by_alias=True)
+    schema = (model or PrintObject).model_json_schema(by_alias=True)
     for name, definition in schema.get("$defs", {}).items():
         props = definition.get("properties", {})
         if "by" in props and "span" in props:
@@ -443,5 +495,9 @@ def json_schema() -> dict:
                 for field in NON_EMPTY[name]
             ]
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    schema["title"] = "Klawiter print object"
+    schema["title"] = title
     return schema
+
+
+def apparatus_json_schema() -> dict:
+    return json_schema(ApparatusItem, "Klawiter print apparatus item")

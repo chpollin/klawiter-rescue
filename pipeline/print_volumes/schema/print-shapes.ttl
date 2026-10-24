@@ -63,6 +63,14 @@ kp:ObjectShape a sh:NodeShape ;
   sh:property [ sh:path oa:hasSelector ; sh:minCount 1 ; sh:maxCount 1 ; sh:node kp:SelectorShape ] ;
   sh:property [ sh:path kp:volume ; sh:minCount 1 ; sh:in ( "I" "A1" "A2" ) ] .
 
+kp:ApparatusItemShape a sh:NodeShape ;
+  sh:targetClass kp:ApparatusItem ;
+  sh:property [ sh:path kp:entry ; sh:minCount 1 ; sh:maxCount 1 ; sh:class kp:Record ] ;
+  sh:property [ sh:path kp:objectText ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path oa:hasSelector ; sh:minCount 1 ; sh:maxCount 1 ; sh:node kp:SelectorShape ] ;
+  sh:property [ sh:path kp:volume ; sh:minCount 1 ; sh:in ( "I" "A1" "A2" ) ] ;
+  sh:property [ sh:path kp:kind ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "index" "front" "tail" ) ] .
+
 kp:RecordShape a sh:NodeShape ;
   sh:targetClass kp:Record ;
   sh:property [ sh:path kp:text ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
