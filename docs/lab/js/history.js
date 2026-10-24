@@ -101,7 +101,7 @@ function buildHistory(page, m) {
         editorFields: Object.keys(rec).filter(f => rec[f].origin === 'editor'),
         changesSinceBaseline: changes,
         baseline: { commit: base.commit, commitDate: base.commitDate, changedIn: base.changedIn, changedInDate: base.changedInDate,
-          note: base.commit ? 'baseline is the published data before the last commit that changed the published records' : 'no baseline available' } },
+          note: base.commit ? 'baseline is the published data before the October pipeline fixes, compared with the data after the last of them' : 'no baseline available' } },
     ],
   };
 }

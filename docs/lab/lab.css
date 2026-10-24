@@ -118,12 +118,14 @@
   .judge-grid { display: grid; gap: 1.5rem; margin-block-start: 1.25rem; }
   @media (min-width: 48rem) {
     .judge-grid.has-breakdown { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .source-pane {
+    /* Sticky only beside the publications; above the record in one column it would cover the values. */
+    .judge-grid.has-breakdown .source-pane {
       position: sticky;
       inset-block-start: 0.75rem;
       max-block-size: calc(100vh - 1.5rem);
       overflow: auto;
     }
+    .judge-grid.no-breakdown .source-pane { max-block-size: 70vh; overflow: auto; }
     .inline-passage { display: none; }
   }
   .judge-grid.no-breakdown .source-pane { order: -1; }
@@ -210,6 +212,11 @@
   .publication-head h3 { font-size: 1.0625rem; }
   .publication.is-current { box-shadow: inset 3px 0 0 var(--sz-gold); padding-inline-start: 0.75rem; }
 
+  /* Claim ids, decider strings and evidence references carry no break points. */
+  .contested-block, .decision-record, .provenance, .agreement { overflow-wrap: anywhere; }
+  .provenance { font-family: var(--font-sans); font-size: 0.875rem; margin-block: 0.35rem 0.5rem; padding-inline-start: 0.75rem; border-inline-start: 2px solid var(--sz-border); max-inline-size: var(--measure); }
+  .prov-steps { padding-inline-start: 1.1rem; list-style: decimal; }
+  .prov-steps > li { padding-block: 0.15rem; }
   .decision-record { font-family: var(--font-sans); font-size: 0.875rem; margin-block: 0.35rem 0.5rem; padding-inline-start: 0.75rem; border-inline-start: 2px solid var(--sz-border); }
   .decision-record dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.1rem 0.75rem; }
   .decision-record dt { color: var(--sz-text-light); }
@@ -294,6 +301,20 @@
   table.coverage th, table.coverage td { text-align: start; padding: 0.35rem 0.75rem 0.35rem 0; border-block-end: 1px solid var(--sz-border-light); vertical-align: top; }
   table.coverage thead th { border-block-end: 1px solid var(--sz-text-light); font-weight: 600; }
   .table-wrap { overflow-x: auto; }
+  table.editions { max-inline-size: none; }
+  table.editions caption { text-align: start; font-family: var(--font-sans); font-size: 0.875rem; color: var(--sz-text-light); padding-block-end: 0.5rem; }
+  table.editions td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.editions details > summary { cursor: pointer; }
+  table.editions details ul { padding-inline-start: 1rem; margin-block: 0.25rem; }
+  /* Narrow screens: each language becomes a block with labelled lines, so no column leaves the view. */
+  @media (max-width: 40rem) {
+    table.editions, table.editions tbody, table.editions tr, table.editions th, table.editions td { display: block; }
+    table.editions thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+    table.editions tr { padding-block: 0.5rem; border-block-end: 1px solid var(--sz-border-light); }
+    table.editions th, table.editions td { border: 0; padding: 0.1rem 0; }
+    table.editions td[data-label]::before { content: attr(data-label) ': '; color: var(--sz-text-light); }
+    table.editions td.num { white-space: normal; }
+  }
 
   /* Prototype 3 */
   .stage-tabs { display: flex; flex-wrap: wrap; gap: 0.25rem 0.5rem; margin-block: 1rem; font-family: var(--font-sans); }

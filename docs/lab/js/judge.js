@@ -10,7 +10,9 @@ import {
   loadJSON, h, fill, add, readHash, writeHash, typeLabel, dataStateBlock, citation, citeUrl,
   download, copyText, initHeader, errorBlock, yearsSpan, plural,
 } from './lab.js';
-import { ORIGIN, editionStateText, placeStateParts, placeStateText, printPaneState } from './labels.js';
+import {
+  ORIGIN, editionStateText, placeStateParts, placeStateText, printPaneState, provenanceSteps,
+} from './labels.js';
 
 const main = document.getElementById('main');
 const NO_VALUE = 'no value recorded';
@@ -30,6 +32,8 @@ let page = null;
 let meta = null;
 let valueIndex = new Map();
 let shownClaims = new Map();
+// Resolves to the local print files of the page ({ index, data, agreement }), all null in a published run.
+let printFiles = null;
 
 initHeader();
 window.addEventListener('hashchange', route);
@@ -149,23 +153,24 @@ function headerBlock() {
 function publicationBlock(pub, i) {
   const f = pub.fields;
   const dl = h('dl', { class: 'fields' });
-  row(dl, 'Publisher', valueCell(f.publisher, `p${i}-publisher-0`, pub.id));
+  const ctx = (label, agree, pd = null) => ({ kind: 'publication', label, pub, agree, pd });
+  row(dl, 'Publisher', valueCell(f.publisher, `p${i}-publisher-0`, pub.id, ctx('Publisher', ['publisher', 0])));
   row(dl, f.places.length > 1 ? 'Places' : 'Place', f.places.length
     ? f.places.map((place, j) => h('div', {},
-      valueCell(place, `p${i}-place-${j}`, pub.id),
+      valueCell(place, `p${i}-place-${j}`, pub.id, ctx('Place', ['place', j], pub.placeDecisions[j])),
       placeState(pub.placeDecisions[j], `p${i}-pd-${j}`)))
     : gapCell());
   row(dl, f.translators.length > 1 ? 'Translators' : 'Translator', f.translators.length
-    ? f.translators.map((t, j) => valueCell(t, `p${i}-translator-${j}`, pub.id))
+    ? f.translators.map((t, j) => valueCell(t, `p${i}-translator-${j}`, pub.id, ctx('Translator', ['translator', j])))
     : gapCell());
-  row(dl, 'Extent', valueCell(f.extent, `p${i}-extent-0`, pub.id));
-  row(dl, 'Language', plainCell(f.language));
-  if (f.series.value) row(dl, 'Series', plainCell(f.series));
+  row(dl, 'Extent', valueCell(f.extent, `p${i}-extent-0`, pub.id, ctx('Extent', ['extent', 0])));
+  row(dl, 'Language', plainCell(f.language, `p${i}-language-0`, ctx('Language', null)));
+  if (f.series.value) row(dl, 'Series', plainCell(f.series, `p${i}-series-0`, ctx('Series', null)));
   return h('article', { class: 'publication', id: `pub-${i}`, dataset: { pub: pub.id } },
     h('div', { class: 'publication-head' },
       h('h3', {}, `${pub.year ?? 'no year recorded'}${pub.imprint ? `, ${pub.imprint}` : ''}`),
       f.editionStatement.value ? h('span', { class: 'muted sans' }, f.editionStatement.value) : null),
-    h('p', { class: 'state' }, editionState(pub.editionAssignment)),
+    sharedEdition(page.publications) ? null : h('p', { class: 'state' }, editionState(pub.editionAssignment)),
     h('div', { class: 'pub-print', dataset: { pub: pub.id }, hidden: true }),
     pub.passageLocated ? null : h('p', { class: 'note' }, 'The passage of this publication is not located in the source text.'),
     dl,
@@ -196,7 +201,18 @@ function defaultsNote(pubs) {
     undecided ? `${plural(undecided, 'place has', 'places have')} no Wikidata decision and no link; only decided places show a state.` : null,
     `"${NO_VALUE}" means a gap in the source and a value not extracted are not yet distinguished.`,
   ];
-  return h('p', { class: 'note' }, lines.filter(Boolean).join(' '));
+  const shared = sharedEdition(pubs);
+  return [
+    h('p', { class: 'note' }, lines.filter(Boolean).join(' ')),
+    shared ? h('p', { class: 'state' }, 'Every publication on this page: ', editionState(shared)) : null,
+  ];
+}
+
+/** The edition assignment all publications of a page share, stated once; null where they differ. */
+function sharedEdition(pubs) {
+  if (pubs.length < 2) return null;
+  const first = editionStateText(pubs[0].editionAssignment);
+  return pubs.every(p => editionStateText(p.editionAssignment) === first) ? pubs[0].editionAssignment : null;
 }
 
 function row(dl, label, cell) {
@@ -207,11 +223,15 @@ function gapCell() {
   return h('span', { class: 'gap' }, NO_VALUE);
 }
 
-function plainCell(field) {
+function plainCell(field, key, ctx) {
   if (field.value === null || field.value === '') return gapCell();
-  return h('span', { class: 'value-line' },
+  const line = h('span', { class: 'value-line' },
     h('span', { class: 'value-plain' }, String(field.value)),
     originWord(field.origin));
+  if (!ctx) return line;
+  const panel = provenancePanel(field, key, ctx);
+  line.append(panel.button);
+  return h('div', { class: 'value-cell' }, line, panel.body);
 }
 
 /** Only an origin other than the page default "rule" is shown beside a value. */
@@ -219,17 +239,20 @@ function originWord(origin) {
   return origin && origin !== 'regex' && ORIGIN[origin] ? h('span', { class: 'origin' }, ORIGIN[origin]) : null;
 }
 
-/** A value as a button that marks its occurrences, with origin and occurrence notes. */
-function valueCell(field, key, ownPubId) {
-  if (field.value === null || field.value === '') return gapCell();
+/** A value as a button that marks its occurrences, with origin, occurrence notes and its provenance chain. */
+function valueCell(field, key, ownPubId, ctx) {
+  if (field.value === null || field.value === '') {
+    return ctx?.kind === 'record' && field.verificationCandidate ? candidateCell(field, key, ctx) : gapCell();
+  }
   const occ = field.occurrences;
   const btn = h('button', {
     type: 'button', class: 'value-btn', 'aria-pressed': 'false', dataset: { key },
     onclick: () => select(btn.getAttribute('aria-pressed') === 'true' ? null : key),
   }, String(field.value));
   valueIndex.set(key, { field, ownPubId, button: btn });
+  const panel = ctx ? provenancePanel(field, key, ctx) : null;
   const wrap = h('div', { class: 'value-cell' },
-    h('span', { class: 'value-line' }, occ ? btn : h('span', { class: 'value-plain' }, String(field.value)), originWord(field.origin)));
+    h('span', { class: 'value-line' }, occ ? btn : h('span', { class: 'value-plain' }, String(field.value)), originWord(field.origin), panel?.button));
   if (occ) {
     const multi = occ.parts.length > 1;
     if (occ.noExactOccurrence) wrap.append(h('p', { class: 'part-results' }, NO_EXACT));
@@ -238,8 +261,70 @@ function valueCell(field, key, ownPubId) {
         `"${p.part}": `, p.noExactOccurrence ? NO_EXACT : plural(p.occurrences.length, 'occurrence', 'occurrences')))));
     }
   }
-  wrap.append(h('div', { class: 'inline-passage', 'data-for': key, hidden: true }));
+  wrap.append(h('div', { class: 'inline-passage', 'data-for': key, hidden: true }), panel?.body);
   return wrap;
+}
+
+/**
+ * A page-level gap for which the verification stage reported a string in the
+ * raw text (S5.1): the gap stays the value, the candidate is shown with where
+ * it stands and can be marked in the source.
+ */
+function candidateCell(field, key, ctx) {
+  const cand = field.verificationCandidate;
+  const candKey = `${key}-cand`;
+  const occ = cand.occurrences.parts.flatMap(p => p.occurrences);
+  const where = [...new Set(occ.map(o => (o.publicationId
+    ? `in the passage of the ${page.publications.find(p => p.id === o.publicationId)?.year ?? 'undated'} publication`
+    : o.section ? `in the section "${o.section}"${o.lineLabel ? `, line "${o.lineLabel}"` : ''}` : 'outside the publication passages')))];
+  const btn = h('button', {
+    type: 'button', class: 'value-btn', 'aria-pressed': 'false', dataset: { key: candKey },
+    onclick: () => select(btn.getAttribute('aria-pressed') === 'true' ? null : candKey),
+  }, cand.value);
+  valueIndex.set(candKey, { field: { value: cand.value, occurrences: cand.occurrences }, ownPubId: null, button: btn });
+  const panel = provenancePanel(field, key, ctx);
+  const quoted = occ.length ? btn : `"${cand.value}"`;
+  const place = where.length ? `, ${where.join('; ')}` : ', with no exact occurrence in the plain text';
+  return h('div', { class: 'value-cell' },
+    h('span', { class: 'value-line' }, gapCell(), panel.button),
+    h('p', { class: 'note' }, 'The automatic check reported ', quoted,
+      ` in the raw text${place}. No rule and no person adopted it, so it is no value of this record. Whether the source documents a ${ctx.label.toLowerCase()} for the record's publication is for the reader to judge from the marked passage.`),
+    h('div', { class: 'inline-passage', 'data-for': candKey, hidden: true }),
+    panel.body);
+}
+
+/** The "Provenance" control of one value and its panel, filled on first opening (S2.6). */
+function provenancePanel(field, key, ctx) {
+  const id = `prov-${key}`;
+  const body = h('div', { class: 'provenance', id, hidden: true });
+  const button = h('button', {
+    type: 'button', class: 'linklike prov-btn', 'aria-expanded': 'false', 'aria-controls': id,
+    'aria-label': `Provenance of the ${ctx.label.toLowerCase()} ${field.value ?? '(no value recorded)'}`,
+    onclick: async () => {
+      const open = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!open));
+      body.hidden = open;
+      if (open || body.childElementCount) return;
+      body.append(h('p', { class: 'status' }, 'Collecting the steps.'));
+      const steps = provenanceSteps({ ...ctx, field, page, meta, print: printFor(ctx, await printFiles) });
+      fill(body, h('ol', { class: 'prov-steps' }, steps.map(s => h('li', {}, h('b', {}, `${s.step}: `), s.text))));
+    },
+  }, 'Provenance');
+  return { button, body };
+}
+
+const PUB_FIELD_KEYS = { publisher: 'publisher', location: 'places', translator: 'translators' };
+
+/** The print state of one value from the local files; a record value only learns whether they exist. */
+function printFor(ctx, files) {
+  if (!files || !files.index) return { kind: 'not-compared' };
+  if (ctx.kind === 'record' || !ctx.agree) return { kind: 'compared', value: null, entries: [] };
+  const pubAgreement = files.agreement?.publications?.[ctx.pub.id];
+  if (!pubAgreement) return { kind: 'no-candidate' };
+  const [name, index] = ctx.agree;
+  const value = pubAgreement.values.find(v => v.field === name && v.index === index) || null;
+  const byId = new Map((files.data?.print || []).map(m => [m.printId, m]));
+  return { kind: 'compared', value, entries: value ? value.foundIn.map(pid => agreementHit(pid, pubAgreement, byId)) : [] };
 }
 
 // Place states
@@ -334,7 +419,10 @@ function recordBlock() {
   const dl = h('dl', { class: 'fields' });
   for (const [name, label] of Object.entries(RECORD_LABELS)) {
     const field = rec.fields[name];
-    const cell = field.occurrences ? valueCell(field, `r-${name}`, null) : plainCell(field);
+    const ctx = { kind: 'record', label, pd: name === 'location' ? page.placeDecision : null, pubFieldKey: PUB_FIELD_KEYS[name] };
+    const cell = field.occurrences || field.verificationCandidate
+      ? valueCell(field, `r-${name}`, null, ctx)
+      : plainCell(field, `r-${name}`, ctx);
     const extra = [];
     if (field.boundary) {
       for (const part of field.boundary.parts) {
@@ -487,8 +575,7 @@ function select(key, { fromHash = false } = {}) {
     if (marks.length) {
       const first = marks[0];
       const pub = page.publications.find(p => p.id === first.publicationId);
-      const from = pub ? pub.textStart : Math.max(0, first.start - 120);
-      const to = pub ? pub.textEnd : Math.min(page.source.text.length, first.end + 120);
+      const [from, to] = pub ? [pub.textStart, pub.textEnd] : excerptBounds(page.source.text, first);
       inline.append(
         h('p', { class: 'source-head' }, `Source passage of the first occurrence${marks.length > 1 ? `; ${marks.length - 1} more in the source text` : ''}`),
         h('div', { class: 'source-text' }, renderText(page.source.text, [first], { from, to })));
@@ -502,6 +589,16 @@ function select(key, { fromHash = false } = {}) {
     const top = target.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop;
     pane.scrollTop = Math.max(0, top - 48);
   }
+}
+
+/** The source line around an occurrence outside every passage, cut at word boundaries where the line is long. */
+function excerptBounds(text, mark) {
+  let from = text.lastIndexOf('\n', mark.start - 1) + 1;
+  let to = text.indexOf('\n', mark.end);
+  if (to === -1) to = text.length;
+  if (mark.start - from > 240) from = Math.min(mark.start, text.indexOf(' ', mark.start - 200) + 1);
+  if (to - mark.end > 240) to = Math.max(mark.end, text.lastIndexOf(' ', mark.end + 200));
+  return [from, to];
 }
 
 // Citation and export
@@ -576,7 +673,9 @@ function exportModel(target) {
     return {
       id: `klawiter page ${page.pageId}`,
       title: f.title.value, year: f.year.value, publisher: f.publisher.value,
-      places: f.location.value ? [f.location.value] : [], translators: f.translator.value ? [f.translator.value] : [],
+      // Several names stand comma-separated in one page-level value; the export splits them as S2.1 does.
+      places: f.location.value ? [f.location.value] : [],
+      translators: f.translator.value ? (f.translator.occurrences?.parts.map(p => p.part) || [f.translator.value]) : [],
       extent: f.pageCount.value, language: f.language.value,
       origins: Object.fromEntries(Object.keys(RECORD_LABELS).map(k => [RECORD_LABELS[k], originText(f[k])])),
       states: [placeStateText(page.placeDecision, 'this record'), ...page.publications.map(p => `edition assignment of ${p.year ?? 'undated'}: ${editionStateText(p.editionAssignment)}`)].filter(Boolean),
@@ -605,11 +704,13 @@ function exportModel(target) {
   };
 }
 
-function provenanceNote(m) {
+/** `allExtents`: RIS has no field for the extent of a volume, so every extent goes into its note. */
+function provenanceNote(m, { allExtents = false } = {}) {
   const origins = Object.entries(m.origins).map(([k, v]) => `${k}: ${v}`).join('; ');
   const s = page.dataState;
   return [
-    m.extent && !/^\d+$/.test(String(m.extent)) ? `Extent as in the source: ${m.extent}.` : null,
+    m.extent && (allExtents || !/^\d+$/.test(String(m.extent))) ? `Extent as in the source: ${m.extent}.` : null,
+    zweigAuthored() ? 'Author Zweig, Stefan: derived from the entry type by a lab rule.' : null,
     `Origin: ${origins}.`,
     `State and producer: ${m.states.join('; ') || 'none recorded'}.`,
     m.warnings.length ? `Warnings: ${m.warnings.join('; ')}.` : null,
@@ -653,9 +754,8 @@ function ris(target) {
   for (const place of m.places) lines.push(['CY', place]);
   for (const t of m.translators) lines.push(['A4', t]);
   if (m.language) lines.push(['LA', m.language]);
-  if (m.extent) lines.push(['SP', m.extent]);
   lines.push(['UR', citeUrl('judge.html', targetHash(target))]);
-  lines.push(['N1', provenanceNote(m)]);
+  lines.push(['N1', provenanceNote(m, { allExtents: true })]);
   lines.push(['ER', '']);
   return lines.map(([k, v]) => `${k}  - ${v}`).join('\r\n') + '\r\n';
 }
@@ -765,16 +865,18 @@ function agreementLines(pubAgreement, byId) {
   return h('ul', { class: 'agreement' }, pubAgreement.values.map(v => {
     const label = `${VALUE_FIELDS[v.field]} "${v.value}": `;
     if (!v.foundIn.length) {
-      return h('li', {}, label, `not in the matched print ${pubAgreement.entries.length > 1 ? 'entries' : 'entry'}; not found, which may be an extraction error in the print text`);
+      return h('li', {}, label, `not found in exactly this form in the matched print ${pubAgreement.entries.length > 1 ? 'entries' : 'entry'}; the print may spell it differently or its extracted text may be faulty, so this is no disagreement`);
     }
-    const hits = v.foundIn.map(id => {
-      const entry = pubAgreement.entries.find(e => e.printId === id);
-      const route = entry.route === 'field' ? 'field match' : 'text alignment';
-      const several = entry.candidates > 1 ? `, one of ${entry.candidates} candidate editions` : '';
-      return `${volumeWords(byId.get(id))} (proposed, ${route}${several})`;
-    });
-    return h('li', {}, label, `also in print, ${hits.join('; ')}; consistency within the compiler's work, not independent support`);
+    const hits = v.foundIn.map(id => agreementHit(id, pubAgreement, byId));
+    return h('li', {}, label, `also in print, ${hits.join('; ')}; the value stands in that entry, which does not show that it describes this publication there; consistency within the compiler's work, not independent support`);
   }));
+}
+
+function agreementHit(id, pubAgreement, byId) {
+  const entry = pubAgreement.entries.find(e => e.printId === id);
+  const route = entry.route === 'field' ? 'field match' : 'text alignment';
+  const several = entry.candidates > 1 ? `, one of ${entry.candidates} candidate editions` : '';
+  return `${volumeWords(byId.get(id))} (proposed, ${route}${several})`;
 }
 
 /**
@@ -786,11 +888,16 @@ function agreementLines(pubAgreement, byId) {
 async function loadPrint() {
   const pane = document.getElementById('print-pane');
   const status = pane.querySelector('.status');
-  const [index, data, agreement] = await Promise.all([
-    loadLocal('local/print/index.json'),
-    loadLocal(`local/print/${page.pageId}.json`),
-    loadLocal(`local/agreement/${page.pageId}.json`),
-  ]);
+  // The index names the pages that have a print file, so absent files are not requested.
+  printFiles = loadLocal('local/print/index.json').then(async index => {
+    if (!index || !index.perPage?.[page.pageId]) return { index, data: null, agreement: null };
+    const [data, agreement] = await Promise.all([
+      loadLocal(`local/print/${page.pageId}.json`),
+      loadLocal(`local/agreement/${page.pageId}.json`),
+    ]);
+    return { index, data, agreement };
+  });
+  const { index, data, agreement } = await printFiles;
   const state = printPaneState(!!index, data);
   if (state.kind !== 'matches') {
     status.textContent = state.sentence;

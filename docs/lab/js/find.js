@@ -16,6 +16,7 @@ import {
   loadJSON, h, fill, add, readHash, writeHash, fold, typeLabel, dataStateBlock, citation, citeUrl,
   download, copyText, initHeader, errorBlock, yearsSpan, plural,
 } from './lab.js';
+import { editionsByLanguage, pageRank, rankWorks } from './editions.js';
 
 const main = document.getElementById('main');
 const NONE = 'none';
@@ -234,17 +235,17 @@ function searchResults(q, f, content, status) {
     status.textContent = 'Type at least two letters.';
     return;
   }
-  const works = index.works.filter(w => w.k.includes(key) || w.m.some(([, k]) => k.includes(key)));
+  const works = rankWorks(index.works, key);
   const pages = [];
   for (const row of index.pages) {
-    const why = row.kt.includes(key) ? null
-      : row.kp && row.kp.includes(key) ? 'matched a publication title'
-        : row.kb && row.kb.includes(key) ? `matched the bracketed original title [${row.b}]` : undefined;
-    if (why === undefined) continue;
+    const rank = pageRank(row, key);
+    if (rank === null) continue;
+    const why = rank <= 2 ? null : rank === 3 ? 'matched a publication title' : `matched the bracketed original title [${row.b}]`;
     if (filtersActive(f) && !unitsOfIndexRow(row).some(u => unitOk(u, f))) continue;
-    pages.push([row, why]);
+    pages.push([row, why, rank]);
   }
-  status.textContent = `${plural(works.length, 'work', 'works')} and ${plural(pages.length, 'page', 'pages')} match "${q}"${filtersActive(f) ? ' within the filters' : ''}. Diacritics and umlauts are folded.`;
+  pages.sort((a, b) => a[2] - b[2] || a[0].id - b[0].id);
+  status.textContent = `${plural(works.length, 'work', 'works')} and ${plural(pages.length, 'page', 'pages')} match "${q}"${filtersActive(f) ? ' within the filters' : ''}. Diacritics and umlauts are folded. Titles equal to the query come first, then titles starting with it, then other matches.`;
   add(content, 
     h('h2', {}, `Works (${works.length})`),
     works.length
@@ -309,6 +310,7 @@ async function renderWork(params) {
     filterBar(params, { search: false }),
     status,
     anchorBlock(work, ctx),
+    editionsSection(work, ctx),
     h('p', { class: 'sans' }, `${plural(union.count, 'page', 'pages')} in parts 1 and 3 (union, each page counted once); ${plural(union.inBothParts.length, 'page stands', 'pages stand')} in both parts and ${union.inBothParts.length === 1 ? 'is' : 'are'} marked in each. Anchor pages are counted apart.`),
     part1(work, ctx),
     part2(work, ctx),
@@ -323,6 +325,7 @@ async function renderWork(params) {
     if (ids.size) next.set('open', [...ids].join(',')); else next.delete('open');
     writeHash(next, { replace: true });
     if (d.open && d.dataset.lazy) d.dispatchEvent(new Event('lazyopen'));
+    refreshWorkCitation(work, data.dataState);
   }));
   main.querySelectorAll('details.group[open][data-lazy]').forEach(d => d.dispatchEvent(new Event('lazyopen')));
   status.textContent = filtersActive(f)
@@ -410,6 +413,60 @@ async function loadAnchorPublications(anchor, body, ctx) {
   } catch (error) {
     fill(body, errorBlock(error));
   }
+}
+
+const BASIS_WORDS = { anchor: 'anchor pages', linked: 'linked by the compiler', brackets: 'cites the title in brackets, lab rule' };
+
+/**
+ * Editions and translations of the work by language (S1.2): one row per
+ * language with first and last year, and every count opens exactly its
+ * publications. The parts below keep the evidence of each relation apart.
+ */
+function editionsSection(work, ctx) {
+  const zweig = new Set(typeof ZWEIG_AUTHOR_TYPES !== 'undefined' ? ZWEIG_AUTHOR_TYPES : []);
+  const ed = editionsByLanguage(work, zweig, ctx.f);
+  const unitLine = u => {
+    const when = u.publicationId ? (u.year ?? 'year not recorded') : `${yearsSpan(u.years)}, page without breakdown`;
+    const href = `judge.html#page=${u.pageId}${u.publicationId ? `&pub=${encodeURIComponent(u.publicationId)}` : ''}`;
+    return h('li', {},
+      h('a', { href }, `${when}${u.imprint ? `, ${u.imprint}` : ''}`),
+      h('span', { class: 'row-meta' }, ` ${u.title}, page ${u.pageId}${u.basis === 'brackets' ? ', cites the title in brackets (lab rule, not reviewed)' : u.reason ? `, anchor page: ${u.reason}` : ''}${u.languageFromPage ? ', language recorded for the page only' : ''}`));
+  };
+  const groupId = lang => `ed-${lang.replace(/[^\p{L}\p{N}]+/gu, '-')}`;
+  const rows = ed.rows.map(r => h('tr', {},
+    h('th', { scope: 'row' }, r.language === 'language not recorded' ? 'Language not recorded' : r.language),
+    h('td', { class: 'num', 'data-label': 'First year' }, r.first ?? 'no publication year'),
+    h('td', { class: 'num', 'data-label': 'Last year' }, r.last ?? 'no publication year'),
+    h('td', { 'data-label': 'Publications' }, group(ctx, groupId(r.language),
+      [`${plural(r.publications, 'publication', 'publications')}${r.withoutBreakdown ? ` and ${plural(r.withoutBreakdown, 'page', 'pages')} without breakdown` : ''} `,
+        h('span', { class: 'count' }, `on ${plural(r.pages, 'page', 'pages')}${r.undated ? `, ${r.undated} without a year` : ''}`)],
+      h('ul', {}, r.units.map(unitLine)))),
+    h('td', { 'data-label': 'Basis' }, Object.entries(r.basis).filter(([, n]) => n).map(([b, n]) => `${BASIS_WORDS[b]} ${n}`).join('; ')),
+    h('td', { 'data-label': 'Translations section' }, r.textLines.length
+      ? group(ctx, `${groupId(r.language)}-text`, 'listed', h('ul', {}, r.textLines.map(l => h('li', { class: 'compiler-text' }, `${l.language}: ${l.text}`))))
+      : 'not listed')));
+  const left = ed.leftOut;
+  return h('section', { class: 'part', 'aria-labelledby': 'ed-h' },
+    h('h2', { id: 'ed-h' }, 'Editions and translations by language',
+      h('span', { class: 'count' }, `${plural(ed.rows.reduce((n, r) => n + r.publications, 0), 'publication', 'publications')} and ${plural(ed.rows.reduce((n, r) => n + r.withoutBreakdown, 0), 'page', 'pages')} without breakdown in ${plural(ed.rows.length, 'language group', 'language groups')}${filtersActive(ctx.f) ? `, within the filter; ${ed.total} in all` : ''}`)),
+    h('p', { class: 'part-note' }, 'Publications of the anchor pages, of the translations the compiler linked, and of pages citing the title in brackets (a lab rule, not reviewed). Language and year are those recorded for each publication; where a publication has no language, the language recorded for its page stands in and the line says so. A page without a publication breakdown is listed with the years its page records, which may belong to any publication it mentions, so first and last year count publications only. Rows run German first, then by first year.'),
+    ed.rows.length
+      ? h('div', { class: 'table-wrap' }, h('table', { class: 'coverage editions' },
+        h('caption', {}, 'Editions and translations of the work by language'),
+        h('thead', {}, h('tr', {},
+          h('th', { scope: 'col' }, 'Language'), h('th', { scope: 'col' }, 'First year'), h('th', { scope: 'col' }, 'Last year'),
+          h('th', { scope: 'col' }, 'Publications'), h('th', { scope: 'col' }, 'Basis, in publications'),
+          h('th', { scope: 'col' }, 'Compiler\'s Translations section'))),
+        h('tbody', {}, rows)))
+      : h('p', { class: 'gap' }, 'No publication matches the filter.'),
+    ed.textOnly.length ? group(ctx, 'ed-text-only',
+      ['Translations section lines without a table row ', h('span', { class: 'count' }, `${plural(new Set(ed.textOnly.map(l => l.language)).size, 'language name', 'language names')}; the year filter does not apply`)],
+      [h('p', { class: 'part-note' }, 'No row of the table carries exactly the language name of these lines. The compiler\'s names can differ from the languages recorded for the pages, and the lab does not equate them, so a line here can still have pages in the table under another name.'),
+        h('ul', { class: 'rows' }, ed.textOnly.map(l => h('li', {},
+          h('span', { class: 'compiler-text' }, `${l.language}: ${l.text}`),
+          l.variantPages ? h('span', { class: 'row-meta' }, ` ${plural(l.variantPages, 'page', 'pages')} in this language ${l.variantPages === 1 ? 'cites' : 'cite'} a variant of the title, see "Possibly the same title" in part 3.`) : null)))]) : null,
+    left.anchorsWithoutBreakdown.length ? h('p', { class: 'part-note' }, `Not counted as editions: ${left.anchorsWithoutBreakdown.map(a => `"${a.title}" (page ${a.pageId})`).join(', ')}, ${left.anchorsWithoutBreakdown.length === 1 ? 'an anchor page without a publication breakdown, which lists' : 'anchor pages without a publication breakdown, which list'} the whole work.`) : null,
+    h('p', { class: 'part-note' }, `Left out: ${plural(left.adaptations, 'page', 'pages')} of adaptations and readings and ${plural(left.secondary, 'page', 'pages')} of secondary literature and other kinds linked by the compiler, ${plural(left.otherTypesInBrackets, 'page', 'pages')} citing the title in brackets whose entry type is not one of Zweig's own works, and ${plural(left.germanPagesNamingTheWorkPage, 'German page', 'German pages')} that only name the work page in their see-also list, mostly other works and volumes (listed in part 1). ${left.possiblySameTitle.pages ? `${plural(left.possiblySameTitle.pages, 'page', 'pages')} with ${plural(left.possiblySameTitle.publications, 'publication', 'publications')} cite a variant form of the title and stay a separate list, "Possibly the same title" in part 3, because the lab does not merge name forms. ` : ''}Appearances inside anthologies and collected volumes are covered only where the work page links the volume, marked "anchor page: linked by the VIST page".`));
 }
 
 function part1(work, ctx) {
@@ -533,17 +590,22 @@ function part3(work, ctx) {
     body);
 }
 
-function workTools(work, state) {
-  const field = h('textarea', { id: 'cite-work', readonly: true, rows: 4 });
-  const status = h('p', { class: 'status', role: 'status' });
-  const hash = readHash();
-  hash.delete('open');
+/** The work citation addresses the current hash: work, filters and opened groups. */
+function refreshWorkCitation(work, state) {
+  const field = document.getElementById('cite-work');
+  if (!field) return;
   field.value = citation({
     what: `"${work.title}", lab work group anchored on wiki page ${work.anchor.pageId} (lab-derived, not a bibliographic identifier)`,
     identifier: work.workId,
-    url: citeUrl('find.html', hash.toString()),
+    url: citeUrl('find.html', readHash().toString()),
     state,
   });
+}
+
+function workTools(work, state) {
+  const field = h('textarea', { id: 'cite-work', readonly: true, rows: 4 });
+  const status = h('p', { class: 'status', role: 'status' });
+  queueMicrotask(() => refreshWorkCitation(work, state));
   const exportJson = () => {
     const payload = {
       dataState: state,
@@ -572,7 +634,7 @@ function workTools(work, state) {
       h('div', { class: 'actions' },
         h('button', { type: 'button', class: 'btn', onclick: () => copyText(field.value, field, status) }, 'Copy citation'),
         h('button', { type: 'button', class: 'btn', onclick: exportJson }, 'JSON')),
-      h('p', { class: 'note' }, 'The citation addresses this view with its filters and opened groups. BibTeX and RIS of a single record, with origin, state and producer, are in the record view.'),
+      h('p', { class: 'note' }, 'The citation addresses this view with its filters and opened groups and follows them as they change. BibTeX and RIS of a single record, with origin, state and producer, are in the record view.'),
       status),
     h('section', { 'aria-label': 'Data state' }, dataStateBlock(state)));
 }
@@ -599,7 +661,7 @@ async function renderScope() {
     h('section', { class: 'prose', 'aria-labelledby': 'held-h' },
       h('h2', { id: 'held-h' }, 'What the bibliography holds'),
       h('p', {}, 'The compiler\'s bibliography exists in several states. The 1965 bibliography is not available to the project. The main volume of 1991 and Addendum I of 1999 were printed; Addendum II was never published and survives as the compiler\'s working file. The wiki continued the work online.'),
-      h('p', {}, h('strong', {}, 'The published lab shows wiki data only. '), 'No published record has been compared with the print volumes; a local run can list proposed print matches at page level from a file the print strand produces, and that file is not published.'),
+      h('p', {}, h('strong', {}, 'The published lab shows wiki data only. '), 'No published record has been compared with the print volumes. A local run lists proposed print matches from a file the print strand produces, as candidates for a publication where the match names one, and checks whether each value of that publication stands in the candidate entry; that file is not published. No agreement raises a state, merges a value or reads "confirmed", because the matches are not reviewed and wiki and print are states of one compiler\'s work.'),
       h('p', {}, 'The wiki\'s editing period is not recorded in the lab data. ', latest.length ? `The latest publication years the wiki records are ${latest.map(y => `${y} (${plural(years.get(y), 'page', 'pages')})`).join(', ')}.` : ''),
       h('p', {}, `The lab reads ${plural(c.pages, 'page', 'pages')} of the main namespace. ${plural(c.pagesWithBreakdown, 'page has', 'pages have')} a breakdown into ${plural(c.publications, 'publication', 'publications')}; on the other pages one page-level record stands for everything the page lists.`)),
     h('section', { class: 'prose', 'aria-labelledby': 'rules-h' },
@@ -626,9 +688,9 @@ async function renderScope() {
         h('thead', {}, h('tr', {}, h('th', { scope: 'col' }, 'Field'), h('th', { scope: 'col' }, 'Value recorded'), h('th', { scope: 'col' }, 'No value recorded*'), h('th', { scope: 'col' }, 'LLM gap fills among the recorded values'))),
         h('tbody', {}, Object.entries(cov.fields).map(([name, v]) => h('tr', {},
           h('th', { scope: 'row' }, FIELD_LABELS[name] || name),
-          h('td', {}, listLink(`cov.${name}.valueRecorded`, `${v.valueRecorded.count} pages`), ` (${pct(v.valueRecorded.count)})`),
-          h('td', {}, listLink(`cov.${name}.noValueRecorded`, `${v.noValueRecorded.count} pages`)),
-          h('td', {}, v.llmGapFills.count ? listLink(`cov.${name}.llmGapFills`, `${v.llmGapFills.count} pages`) : '0 pages')))))),
+          h('td', {}, listLink(`cov.${name}.valueRecorded`, plural(v.valueRecorded.count, 'page', 'pages')), ` (${pct(v.valueRecorded.count)})`),
+          h('td', {}, listLink(`cov.${name}.noValueRecorded`, plural(v.noValueRecorded.count, 'page', 'pages'))),
+          h('td', {}, v.llmGapFills.count ? listLink(`cov.${name}.llmGapFills`, plural(v.llmGapFills.count, 'page', 'pages')) : '0 pages')))))),
       h('p', { class: 'note' }, `* ${cov.fields.publisher.noValueRecorded.note[0].toUpperCase()}${cov.fields.publisher.noValueRecorded.note.slice(1)}.`),
       h('p', { class: 'note' }, 'Shown separately: the verification stage found ',
         Object.entries(cov.verificationFalseNegatives).map(([name, v], n) => [n ? ' and ' : '',
