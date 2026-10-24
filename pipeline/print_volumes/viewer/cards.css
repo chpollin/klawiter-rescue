@@ -91,10 +91,11 @@
     border-color: var(--burgundy);
     color: var(--burgundy);
   }
+  /* Disabled stays readable (5:1); the dashed edge, not fading, marks it. */
   button:disabled {
-    color: var(--text-light);
-    border-color: var(--border);
-    opacity: 0.65;
+    color: var(--text-faint);
+    border-color: var(--border-strong);
+    border-style: dashed;
     cursor: default;
   }
   button.primary {
@@ -323,8 +324,27 @@
     font-weight: 600;
     color: var(--burgundy-dark);
   }
-  .status-msg:empty {
-    display: none;
+  /* The live region keeps its box when empty, so that no message moves the desk. */
+  .status-msg {
+    min-block-size: 1.25em;
+  }
+  .review-error {
+    margin-block: 0 var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-inline-start: 3px solid var(--bad);
+    background: var(--paper);
+    color: var(--bad);
+    font-weight: 600;
+  }
+  .skip-link {
+    position: absolute;
+    inset-inline-start: var(--space-2);
+    inset-block-start: var(--space-2);
+    z-index: 10;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus-visible {
+    transform: none;
   }
   .pager {
     display: flex;
@@ -462,7 +482,7 @@
     border-inline-start: 2px solid transparent;
   }
   .slip.is-active {
-    border-inline-start-color: var(--burgundy);
+    border-inline-start: 4px solid var(--burgundy);
     background: color-mix(in oklch, var(--gold) 15%, var(--paper));
   }
   .slip.dragging {
@@ -507,16 +527,19 @@
     font-weight: 600;
     line-height: 1.28;
     color: var(--burgundy);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .slip-meta {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
+    line-height: 1.3;
     color: var(--text-light);
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
   .untitled,
   .untitled-title {
@@ -663,6 +686,14 @@
   .card-progress.is-complete {
     color: var(--ok);
   }
+  .card-flagged {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--bad);
+  }
   .card-title {
     margin: 0;
     font-family: var(--font-serif);
@@ -763,9 +794,17 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .card.is-active .card-entry {
-    max-block-size: 10rem;
+  .desk.view-board .card:not(.is-active) .card-values {
+    max-block-size: 5.5rem;
+    overflow: hidden;
+    display: block;
+  }
+  .desk.view-board .card.is-active .card-entry {
+    max-block-size: 16rem;
     overflow-y: auto;
+  }
+  .detail-col .card.is-active .card-entry {
+    max-block-size: none;
   }
   .card-entry .outside {
     color: var(--text-faint);
@@ -801,8 +840,6 @@
   }
   .card-values th.field {
     padding-block-start: 0.18rem;
-  }
-  .card-values th.field {
     inline-size: 5rem;
     font-weight: 600;
     font-size: 0.74rem;
@@ -915,9 +952,8 @@
 
   .card-chain {
     font-size: 0.78rem;
-    background: var(--cream);
-    padding: 0.35rem 0.5rem;
-    border-radius: var(--radius);
+    background: var(--paper);
+    padding-block: 0.35rem;
   }
   .chain,
   .history {
@@ -939,8 +975,7 @@
     font-family: var(--font-serif);
     max-block-size: 6.5rem;
     overflow-y: auto;
-    background: var(--paper);
-    padding: var(--space-1) var(--space-2);
+    padding-block: var(--space-1);
     margin-block: 0.15rem 0;
   }
   .record-text mark.current {
@@ -976,12 +1011,17 @@
     font-size: 0.78rem;
     padding: 0.1rem 0.3rem;
     min-block-size: 1.5rem;
-    border: none;
+    border: 1px solid transparent;
     background: none;
-    color: var(--text-light);
+    color: var(--text);
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+  }
+  .card-foot button:disabled {
+    color: var(--text-faint);
+    border-color: var(--border-strong);
+    border-style: dashed;
   }
   .card-foot a {
     color: var(--burgundy);
@@ -995,6 +1035,7 @@
   .card-foot button.primary:disabled {
     background: none;
     color: var(--text-faint);
+    font-weight: 400;
   }
   .card-foot button.act-confirm[aria-pressed="true"] {
     background: var(--ok-soft);
@@ -1025,11 +1066,13 @@
     font-weight: 600;
     color: var(--burgundy-dark);
   }
+  /* The gap exceeds the focus ring (3px plus 2px offset), so that the ring never covers the label. */
   .decision-form label {
     display: flex;
     flex-direction: column;
+    gap: 0.45rem;
     font-weight: 600;
-    margin-block: 0.25rem;
+    margin-block: 0.25rem 0.5rem;
   }
   .decision-form label.inline {
     flex-direction: row;

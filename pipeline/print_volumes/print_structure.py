@@ -30,7 +30,7 @@ SECTIONS = Path(__file__).with_name("sections.json")
 RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "lab" / "print-structure.json"
 LOCAL = ROOT / "docs" / "local" / "print-structure.json"
-VIEWER = "http://127.0.0.1:8767/viewer/index.html"
+VIEWER = "/viewer/cards.html"
 # Object types that make an object a publication, the level the sources share;
 # holdings, events, series, references and untyped objects are counted apart.
 PUBLICATION_TYPES = {

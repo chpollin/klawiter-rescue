@@ -3294,12 +3294,12 @@ td.matrix-low { background: #F5E3E3; }
 
 .home-data {
   background: var(--sz-white); border: 1px solid var(--sz-border-light); border-radius: 4px;
-  padding: 1rem 1.5rem 1.25rem; box-sizing: border-box;
+  padding: 1.15rem 1.5rem 1.35rem; box-sizing: border-box;
 }
-.home-data-head { white-space: nowrap; }
-.home-data-head h2, .home-data-head .home-info { display: inline-block; vertical-align: middle; }
-.home-data-head .home-info { margin-left: 0.4rem; }
+.home-data-head { margin: 0 0 0.75rem; }
+.home-data-title { display: flex; align-items: center; gap: 0.4rem; }
 .home-data-head h2 { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 600; color: var(--sz-gold-dark); margin: 0; }
+.home-data-lead { margin: 0.2rem 0 0; font-family: var(--font-serif); font-size: 0.92rem; color: var(--sz-text-light); }
 .home-info { position: relative; }
 .home-info summary { list-style: none; cursor: pointer; color: var(--sz-gold-dark); display: inline-flex; padding: 0.2rem; border-radius: 50%; }
 .home-info summary::-webkit-details-marker { display: none; }
@@ -3313,23 +3313,25 @@ td.matrix-low { background: #F5E3E3; }
 .home-info-body ul { margin: 0; padding-left: 1.1rem; }
 .home-info-body li + li { margin-top: 0.35rem; }
 
-/* The model: five levels, each a column, joined by a chevron. */
+/* The model: source row header plus the three shared levels. */
 .home-model { border-collapse: collapse; width: 100%; margin: 0 0 1.5rem; font-size: 0.92rem; }
-.home-model th, .home-model td { text-align: left; vertical-align: bottom; padding: 0.3rem 1.1rem 0.3rem 0; white-space: nowrap; }
+.home-model th, .home-model td { text-align: left; vertical-align: bottom; padding: 0.35rem 1.25rem 0.35rem 0; white-space: nowrap; }
+.home-model-source { width: 6.5rem; }
 .home-model thead th {
   font-family: var(--font-sans); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.02em; color: var(--sz-gold-dark);
   border-bottom: 1px solid var(--sz-border-light); position: relative;
 }
-.home-model thead th + th::before { content: "\203A"; margin-right: 0.45rem; color: var(--sz-gold); }
-.home-model tbody th { font-family: var(--font-sans); font-weight: 600; font-size: 0.8rem; color: var(--sz-text-light); padding-top: 0.45rem; }
+.home-model tbody th { font-family: var(--font-sans); font-weight: 600; font-size: 0.82rem; color: var(--sz-text-light); padding-top: 0.45rem; }
 .home-model tbody td { color: var(--sz-text-light); vertical-align: top; }
+.home-model tbody td a { color: inherit; text-decoration: none; }
+.home-model tbody td a:hover b { color: var(--sz-burgundy); text-decoration: underline; }
 .home-model tbody th { vertical-align: top; }
 .home-model tbody tr:first-child > * { padding-top: 0.55rem; }
 .home-model b { font-family: var(--font-sans); font-weight: 600; color: var(--sz-text); }
 .home-model tbody th svg { width: 0.9rem; height: 0.9rem; vertical-align: -0.12rem; margin-right: 0.35rem; color: var(--sz-gold-dark); }
 
 .home-sections { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
-.home-sections th, .home-sections td { padding: 0.3rem 1.25rem 0.3rem 0; text-align: left; vertical-align: top; }
+.home-sections th, .home-sections td { padding: 0.32rem 1.25rem 0.32rem 0; text-align: left; vertical-align: top; border-bottom: 1px solid rgb(237 232 223 / 0.55); }
 .home-sections thead th {
   border-bottom: 1px solid var(--sz-border-light); vertical-align: bottom;
   font-family: var(--font-sans); font-size: 0.85rem; font-weight: 600; color: var(--sz-text-light);
@@ -3343,25 +3345,32 @@ td.matrix-low { background: #F5E3E3; }
    instead of one wide gap after the names. */
 .home-sections thead th:first-child { width: 1%; white-space: nowrap; }
 .home-sections tbody th { white-space: nowrap; padding-right: 2.5rem; }
-.home-sections tbody tr:first-child > * { padding-top: 0.6rem; }
+.home-sections tbody tr:first-child > * { padding-top: 0.55rem; }
 .home-sections tbody th { font-family: var(--font-serif); font-weight: 400; color: var(--sz-text); }
-.home-sections .section-code { display: inline-block; min-width: 1.5rem; color: var(--sz-text-light); }
+.home-sections .section-code { display: inline-block; min-width: 1.5rem; color: var(--sz-text-light); font-family: var(--font-sans); font-weight: 500; }
 .home-sections td.num { text-align: right; white-space: nowrap; min-width: 4.5rem; }
 .home-sections td.num a, .home-sections .wiki-count {
   font-family: var(--font-sans); font-weight: 500; color: var(--sz-burgundy); text-decoration: none;
 }
 .home-sections .wiki-count { font-size: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 .home-sections td.num a:hover, .home-sections .wiki-count:hover { text-decoration: underline; }
-.home-sections .absent, .home-sections .see { color: var(--sz-text-light); }
-.home-sections .see { font-size: 0.85rem; }
+.home-sections .absent { color: var(--sz-text-light); }
+.home-sections .see { font-size: 0.85rem; color: var(--sz-gold-dark); }
+.home-sections .count-bar {
+  display: block; width: 3.2rem; height: 2px; margin: 0.16rem 0 0 auto;
+  background: rgb(194 163 96 / 0.18); border-radius: 1px; overflow: hidden;
+}
+.home-sections .count-bar > span {
+  display: block; height: 100%; margin-left: auto; background: var(--sz-gold);
+}
 /* One wiki type over two adjacent sections: a bracket along both rows. */
-.home-sections td.spans { position: relative; }
+.home-sections td.spans { position: relative; vertical-align: middle; }
 .home-sections td.spans::before {
-  content: ""; position: absolute; left: 0.4rem; top: 0.55rem; bottom: 0.55rem;
-  border: 1px solid var(--sz-gold-light); border-right: 0; width: 0.3rem;
+  content: ""; position: absolute; right: 3.8rem; top: 0.35rem; bottom: 0.35rem;
+  border: 1px solid var(--sz-gold); border-right: 0; width: 0.35rem;
 }
 .home-sections .wiki-name { font-family: var(--font-serif); font-weight: 400; color: var(--sz-text-light); }
-.home-sections tr.aside > * { padding-top: 0.9rem; }
+.home-sections tr.aside > * { padding-top: 0.75rem; border-bottom: 0; }
 .home-sections tr.aside th { color: var(--sz-text-light); }
 .home-sections td.only { text-align: right; }
 .home-sections td.only .wiki-count { margin-left: 1.25rem; }
@@ -3372,19 +3381,21 @@ td.matrix-low { background: #F5E3E3; }
 @media (max-width: 40rem) {
   .home-data { padding: 0.75rem 0.9rem; }
   .home-model th, .home-model td { white-space: normal; }
-  .home-model thead tr { display: block; }
-  .home-model thead th { display: none; }
+  .home-model thead { display: none; }
   .home-model, .home-model tbody, .home-model tr { display: block; }
-  .home-model tr { padding: 0.35rem 0; }
-  .home-model th, .home-model td { display: block; padding: 0.1rem 0; max-width: none; }
+  .home-model tr { padding: 0.35rem 0; border-top: 1px solid var(--sz-border-light); }
+  .home-model th, .home-model td { display: block; padding: 0.15rem 0; max-width: none; }
+  .home-model td[data-label]::before { content: attr(data-label) ": "; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600; color: var(--sz-gold-dark); }
   .home-sections { width: 100%; }
   .home-sections thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .home-sections, .home-sections tbody { display: block; }
-  .home-sections tr { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1rem 0.5rem; padding: 0.45rem 0; }
-  .home-sections th, .home-sections td, .home-sections tbody tr:first-child > *, .home-sections tr.aside > * { padding: 0; min-width: 0; }
+  .home-sections tr { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1rem 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--sz-border-light); }
+  .home-sections th, .home-sections td, .home-sections tbody tr:first-child > *, .home-sections tr.aside > * { padding: 0; min-width: 0; border-bottom: 0; }
   .home-sections tbody th, .home-sections td.only { grid-column: 1 / -1; text-align: left; }
   .home-sections td.only .wiki-count { margin: 0 1rem 0 0; }
   .home-sections td.num { text-align: left; }
+  .home-sections .count-bar { margin: 0.14rem 0 0; }
+  .home-sections .count-bar > span { margin-left: 0; }
   .home-sections td.spans::before { display: none; }
   .home-sections tr.aside td:empty { display: none; }
   .home-sections td[data-label]::before { content: attr(data-label); display: block; font-size: 0.78rem; font-weight: 400; color: var(--sz-text-light); }

@@ -142,6 +142,7 @@ const RECORD_PLACES = {
   seeAlso: (e, r) => placeOfAll(e.seeAlso, r.fields),
   reprints: (e, r) => placeOfAll(e.reprints, r.fields),
   translations: (e, r) => placeOfAll(e.translations, r.fields),
+  translationStatements: (e, r) => (marked(r.card.html, 'translationStatements') ? 'visible' : null),
   locationSameAs: (e, r) => (r.fields.html.includes(`href="${e.locationSameAs}"`) ? 'visible' : null),
   review: (e, r) => (/class="(review-chip|field-review)/.test(r.card.html) || marked(r.card.html, 'review')
     ? 'visible' : null),
@@ -195,6 +196,8 @@ const PUBLICATION_PLACES = {
   reviewFlags: (p, b) => placeOfAll(p.reviewFlags.map(f => f.detail || f.code), b),
   editionId: (p, b) => placeOf(p.editionId, b),
   reviewStatus: (p, b) => placeOf(`edition ${p.reviewStatus}`, b),
+  reviewDecision: (p, b) => placeOf(p.reviewDecision, b),
+  reviewProducer: (p, b) => (p.reviewProducer === 'llm-agent' ? placeOf('LLM agent review', b) : placeOf(p.reviewProducer, b)),
   sourceSlice: (p, b) => (marked(b.html, 'sourceSlice') ? 'visible' : null),
   provenance: (p, b) => (Object.keys(p.provenance).every(key => chained(b.html, key)) ? 'visible' : null),
 };

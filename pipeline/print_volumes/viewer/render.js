@@ -72,6 +72,14 @@ export function indexGraph(doc) {
 
 export const isApparatus = (object) => object.type === "kp:ApparatusItem";
 
+// What names an object on its card and in a message about it: the address,
+// else the header or apparatus part, else the given fallback.
+export function objectName(object, record, unnumbered = `unnumbered object ${object.id}`) {
+  if (object.address) return object.address;
+  if (record?.kind === "header") return `Header ${object.part}`;
+  return isApparatus(object) ? object.part : unnumbered;
+}
+
 // One row per value: what the page lists for an object.
 export function rows(object) {
   return valueNodes(object).map((v, index) => ({
@@ -89,6 +97,10 @@ export function rows(object) {
     node: v,
   }));
 }
+
+// A status line about a decision names the object it concerns, so that a
+// message standing beside the next card never reads as one about it.
+export const about = (name, verdict, detail) => `${verdict} on ${name}${detail ? `, ${detail}` : ""}.`;
 
 // The provenance chain of one value, from its literal to the source file.
 export function chain(object, row, byId) {
@@ -196,14 +208,17 @@ const PRODUCER_LABEL = {
   llm: "Proposed by an LLM",
 };
 
-// Review decisions (pipeline/print_volumes/_review.py). The functions below
-// mirror its effective() and check(), so that the page shows the state p13
-// will count.
+// Review decisions (pipeline/print_volumes/_review.py). The page holds one
+// reviewer's log (ownDecisions), over which effective() below equals
+// _review.in_force() for that reviewer, so that the page shows the state p13
+// will count for them.
 // The exported state of a value (p12) as the decision that produced it.
 export const STATE_DECISION = { confirmed: "confirm", corrected: "correct", contested: "unresolved" };
 export const DECISION_WORD = { confirm: "right", correct: "wrong", unresolved: "unsure" };
 
 export function decisionKey(d) {
+  // An adjudication settles two reviewers' decisions; it never stands in for one (_review.key_of).
+  if (d.decision === "adjudicate") return `${d.object}|adjudicate|${d.target ? d.target.path : [...(d.settles ?? [])].sort().join("/")}`;
   if (d.target) return `${d.object}|value|${d.target.path}`;
   if (d.decision === "missing") return `${d.object}|missing|${d.id}`;
   return `${d.object}|${d.decision}`;
@@ -246,7 +261,7 @@ export function objectReview(object, all, active, sha256) {
   const stale = [];
   const own = [];
   for (const d of active.values()) {
-    if (d.object !== object.id) continue;
+    if (d.object !== object.id || d.decision === "adjudicate") continue;
     if (d.entry_sha256 !== sha256) {
       stale.push(d);
     } else if (d.target) {
@@ -261,9 +276,16 @@ export function objectReview(object, all, active, sha256) {
   return { byIndex, stale, own, complete, decided: byIndex.size };
 }
 
+// A reviewer sees only their own decisions, so that a second reviewer stays
+// blind to the first. The server filters by ?reviewer=; this filter holds the
+// same rule where a server returns the whole log.
+export function ownDecisions(log, name) {
+  return name ? log.filter((d) => d.reviewer === name) : [];
+}
+
 // Every logged decision on one value, oldest first: its review history.
 export function history(decisions, objectId, path) {
-  return decisions.filter((d) => d.object === objectId && d.target && d.target.path === path);
+  return decisions.filter((d) => d.object === objectId && d.target && d.target.path === path && d.decision !== "adjudicate");
 }
 
 export function decisionLine(d) {
@@ -332,6 +354,16 @@ export function findPassage(text, typed, near, objectSpan) {
 // in the viewport, never while a card loads or a decision is being saved.
 export function acceptsKeys({ loading, busy, connected, focusWithin, inView }) {
   return !loading && !busy && connected && focusWithin && inView;
+}
+
+// A value is displayed when its box lies inside every clip around it: each
+// scrolling ancestor and the viewport. checkVisibility() alone ignores
+// scrolling, so a value scrolled out of its column would count as shown.
+export function inSight(box, clips, tolerance = 1) {
+  if (!(box.width > 0 && box.height > 0)) return false;
+  return clips.every(
+    (c) => box.top >= c.top - tolerance && box.bottom <= c.bottom + tolerance && box.left >= c.left - tolerance && box.right <= c.right + tolerance
+  );
 }
 
 // The rows "all right" may confirm: the undecided values the card displays.
@@ -674,11 +706,37 @@ export const WIKI_STATUS_ORDER = ["conflict", "text", "fields", "title-year", "n
 export const LANE_OF = { none: "print", "wiki-only": "wiki" };
 export const laneOf = (status) => LANE_OF[status] ?? "shared";
 
+// Route and method names the drawer prints; a candidate is never called a match.
 export const ROUTE_LABEL = {
   alignment: "text alignment",
-  "field-match": "field match",
+  "field-match": "field agreement",
   "title-year": "title and year",
 };
+export const METHOD_LABEL = {
+  "title-year-field": "title, year and a second field",
+  "subtitle-year-field": "title, subtitle, year and a second field",
+  "short-title-year-field": "short title, year and a second field",
+  "structured-pub-field": "a structured publication",
+  "shingle-alignment": "shared runs of five words",
+  "title-year": "title and year",
+};
+// The keys of the concordance projection by route.
+const KEY_ROUTE = { align: "alignment", same: "field-match", cand: "title-year" };
+
+// How the concordance proposes one candidate, in words.
+export function candidateRoute(c) {
+  const route = ROUTE_LABEL[c.route] ?? "an unnamed route";
+  if (c.route === "alignment") return `${route}, score ${Number(c.score ?? 0).toFixed(2)}`;
+  const second = c.secondField?.length ? `, agreeing on ${c.secondField.join(", ")}` : "";
+  const method = METHOD_LABEL[c.method] ?? "an unnamed method";
+  // A method that only repeats its route is said once.
+  return `${route}${method === route ? "" : `, by ${method}`}${second}`;
+}
+
+// The note under a route whose claims the projection cut short.
+export function claimsShown(key, shown, total) {
+  return `${shown.toLocaleString("en-US")} of ${total.toLocaleString("en-US")} claims by ${ROUTE_LABEL[KEY_ROUTE[key]] ?? "another route"} shown.`;
+}
 
 // The candidates of a state in route order, one per wiki target, with the
 // claims that propose it.

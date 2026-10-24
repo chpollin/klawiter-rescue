@@ -20,10 +20,13 @@ import {
   VOLUME_SHORT,
   WIKI_STATUS,
   WIKI_STATUS_ORDER,
+  about,
   acceptsKeys,
+  candidateRoute,
   candidates,
   cardLines,
   chain,
+  claimsShown,
   confirmable,
   correctionValue,
   decisionLine,
@@ -32,15 +35,17 @@ import {
   findPassage,
   fold,
   history as decisionHistory,
+  inSight,
   indexGraph,
   isApparatus,
   isInherited,
   laneOf,
   missingLabel,
   naturalAddressKey,
+  objectName,
   objectReview,
+  ownDecisions,
   pdfHref,
-  ROUTE_LABEL,
   rows,
   sectionCode,
   segments,
@@ -91,7 +96,8 @@ const data = {
   wiki: { links: {}, pages: {}, pubs: {}, wikiOnlyPages: [] },
   chunks: new Map(),
 };
-const review = { recording: false, log: [], active: new Map() };
+// The log holds only the decisions of the reviewer it was loaded for.
+const review = { recording: false, log: [], active: new Map(), loadedFor: "" };
 const ui = { section: "", sectionSort: "default", laneSorts: { print: "book", shared: "wiki", wiki: "address" }, order: new Map(), dragged: null };
 
 // The cards on screen by id, the active one, and the guards of the review.
@@ -371,9 +377,9 @@ function sortSelect(attr, value, options, label, target = "") {
 
 // Slips: one line per record on an axis, opened with a click or Enter
 
-function wikiSign(status, tag = "span", attrs = {}) {
+function wikiSign(status) {
   const [name, label, long] = WIKI_STATUS[status];
-  return make(tag, { class: `wiki-sign status-${status}`, title: long, ...attrs }, icon(name), label);
+  return make("span", { class: `wiki-sign status-${status}`, title: long }, icon(name), label);
 }
 
 function titleNode(entry, cls) {
@@ -402,13 +408,15 @@ function buildSlip(entry, listKey, done) {
     make("span", { class: "slip-meta", text: where })
   );
   const move = (delta, label, arrow) =>
-    make("button", { type: "button", class: "slip-move", "data-move": String(delta), "aria-label": label, title: label, text: arrow });
-  return make(
+    make("button", { type: "button", class: "slip-move", "data-move": String(delta), "aria-label": label, title: label, tabindex: "-1", text: arrow });
+  const slip = make(
     "li",
-    { class: `slip${activeId === entry.id ? " is-active" : ""}`, "data-id": entry.id, "data-list": listKey, draggable: "true" },
+    { class: "slip", "data-id": entry.id, "data-list": listKey, draggable: "true" },
     open,
     make("span", { class: "slip-moves" }, move(-1, "Move up in this list", "↑"), move(1, "Move down in this list", "↓"))
   );
+  if (activeId === entry.id) setActive(slip, true);
+  return slip;
 }
 
 function slipList(key, entries, done, label) {
@@ -425,7 +433,7 @@ function column(cls, title, control, ...body) {
 }
 
 function inspectorColumn() {
-  return column("detail-col", "Card", null, make("div", { id: "inspector", class: "inspector" }));
+  return column("detail-col", "Card", null, make("div", { id: "inspector" }));
 }
 
 // Views
@@ -525,6 +533,10 @@ async function renderDesk() {
   const f = readFilters();
   if (document.activeElement !== el("q")) el("q").value = f.raw;
   for (const [id, value] of [["volume", f.volume], ["kind", f.kind], ["review-filter", f.review], ["view", f.view]]) el(id).value = value;
+  if (el("board-sort-wrap")) {
+    el("board-sort-wrap").hidden = f.view !== "board";
+    el("board-sort").value = f.sort;
+  }
   const desk = el("desk");
   desk.className = `desk view-${f.view}`;
   // Nothing on screen takes a key until the new cards are there.
@@ -552,10 +564,21 @@ async function renderDesk() {
 
 // The active card
 
+// The active slip and card carry aria-current beside their colour, and only
+// the active slip's move buttons are tab stops.
 function markActive(id) {
-  for (const node of document.querySelectorAll(".slip.is-active, .card.is-active")) node.classList.remove("is-active");
-  for (const node of document.querySelectorAll(`.slip[data-id="${CSS.escape(id)}"]`)) node.classList.add("is-active");
-  cards.get(id)?.dom.article.classList.add("is-active");
+  for (const node of document.querySelectorAll(".slip.is-active, .card.is-active")) setActive(node, false);
+  for (const node of document.querySelectorAll(`.slip[data-id="${CSS.escape(id)}"]`)) setActive(node, true);
+  const article = cards.get(id)?.dom.article;
+  if (article) setActive(article, true);
+}
+
+function setActive(node, on) {
+  node.classList.toggle("is-active", on);
+  const target = node.matches(".slip") ? node.querySelector(".slip-open") : node;
+  if (on) target.setAttribute("aria-current", "true");
+  else target.removeAttribute("aria-current");
+  for (const b of node.querySelectorAll(".slip-move")) b.tabIndex = on ? 0 : -1;
 }
 
 // Makes a card the one active card. Beside the slips the card is mounted
@@ -593,6 +616,9 @@ async function activate(id, { focus = false } = {}) {
     markActive(id);
     if (model.dom.drawer && model.wiki.status === "conflict") toggleDrawer(model, true);
     if (focus) focusSelected(model);
+    if (window.matchMedia?.("(max-width: 60rem)").matches && focus) {
+      holder.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   } catch (e) {
     if (token === loadToken) showError(e.message);
   } finally {
@@ -652,7 +678,7 @@ function valueToken(model, row, sub = false) {
   const token = make(
     "span",
     { class: `token${sub ? " sub" : ""}` },
-    make("button", { type: "button", class: `pick${decision ? ` decided-${decision}` : ""}`, "data-index": String(row.index), "aria-label": `${row.name}, ${row.text}${decision ? `, ${DECISION_WORD[decision]}` : ""}`, text: row.text }),
+    make("button", { type: "button", class: `pick${decision ? ` decided-${decision}` : ""}`, "data-index": String(row.index), "aria-label": `${row.name}, ${row.text}`, text: row.text }),
     signOf(decision)
   );
   if (row.producer === "llm") token.append(make("span", { class: "tag", text: "LLM proposal" }));
@@ -669,7 +695,7 @@ function valueToken(model, row, sub = false) {
     for (const t of targets.slice(0, 6)) {
       list.append(t.record ? make("a", { href: objectUrl(t.record), text: t.normalized }) : make("span", { class: "unresolved", text: `${t.normalized} unresolved` }));
     }
-    if (targets.length > 6) list.append(make("span", { class: "more", text: `${targets.length - 6} more in the chain` }));
+    if (targets.length > 6) list.append(make("span", { text: `${targets.length - 6} more in the chain` }));
     token.append(list);
   }
   return token;
@@ -687,8 +713,9 @@ function valueTable(model) {
   }
   for (const d of model.state.own) {
     if (d.decision !== "missing" && d.decision !== "boundary") continue;
-    const remove = canDecide(model) ? make("button", { type: "button", class: "withdraw", "data-withdraw": d.id, text: "Remove" }) : null;
     const text = d.decision === "missing" ? `${missingLabel(d.correction.field)}, "${valueText({ field: d.correction.field, value: d.correction.value })}"` : d.note;
+    const label = d.decision === "missing" ? `Remove the added value ${text}` : "Remove the boundary flag";
+    const remove = canDecide(model) ? make("button", { type: "button", class: "withdraw", "data-withdraw": d.id, "aria-label": label, title: label, text: "Remove" }) : null;
     body.append(make("tr", { class: "added" }, make("th", { scope: "row", class: "field", text: d.decision === "missing" ? "Added" : "Boundary" }), make("td", { class: "value" }, text, remove)));
   }
   return make("table", { class: "card-values" }, make("thead", { class: "visually-hidden" }, make("tr", {}, make("th", { scope: "col", text: "Field" }), make("th", { scope: "col", text: "Values" }))), body);
@@ -725,15 +752,6 @@ function definitionList(pairs, cls = "compare-dl") {
   return dl;
 }
 
-const METHOD_LABEL = {
-  "title-year-field": "title, year and a second field",
-  "subtitle-year-field": "title, subtitle, year and a second field",
-  "short-title-year-field": "short title, year and a second field",
-  "structured-pub-field": "a structured publication",
-  "shingle-alignment": "shared runs of five words",
-  "title-year": "title and year",
-};
-
 // The wiki side of a card: every candidate the concordance proposes, each a
 // claim in the state p07 gave it, with its route and the wiki page's permalink.
 function wikiDrawer(model) {
@@ -753,13 +771,14 @@ function wikiDrawer(model) {
     }
     table.append(body);
     drawer.append(
-      make("p", { class: "conflict-head" }, `Field conflict with `, make("a", { href: wikiHref(d.page, d.wiki), target: "_blank", rel: "noopener", text: `wiki page ${d.page}` }), d.agree?.length ? `, agreeing in ${d.agree.join(", ")}` : ""),
+      make("p", {}, `Field conflict with `, make("a", { href: wikiHref(d.page, d.wiki), target: "_blank", rel: "noopener", text: `wiki page ${d.page}` }), d.agree?.length ? `, agreeing in ${d.agree.join(", ")}` : ""),
       table
     );
   }
   const list = make("ol", { class: "candidates" });
   for (const c of candidates(w)) {
-    const how = c.route === "alignment" ? `${ROUTE_LABEL[c.route]}, score ${Number(c.score ?? 0).toFixed(2)}` : `${ROUTE_LABEL[c.route] ?? c.route}, by ${METHOD_LABEL[c.method] ?? c.method}${c.secondField.length ? `, agreeing on ${c.secondField.join(", ")}` : ""}`;
+    // Claim identifiers are for tracing, not reading: they stand in the title.
+    const claims = c.claims.length === 1 ? "1 claim" : `${c.claims.length} claims`;
     list.append(
       make(
         "li",
@@ -768,8 +787,8 @@ function wikiDrawer(model) {
           "p",
           { class: "cand-head" },
           make("a", { href: wikiHref(c.page, c.target.startsWith("klawiter:publication/") ? c.target : null), target: "_blank", rel: "noopener" }, icon("wiki"), `Wiki page ${c.page}`),
-          make("span", { class: "cand-route", text: how }),
-          make("span", { class: "cand-claim", text: `${c.state}, ${c.claims.join(", ")}` }),
+          make("span", { class: "cand-route", text: candidateRoute(c) }),
+          make("span", { class: "cand-claim", title: c.claims.join(", "), text: `${c.state}, ${claims}` }),
           c.stale ? make("span", { class: "tag", text: "record text changed since" }) : null
         ),
         definitionList(wikiFields(c.target, c.page))
@@ -779,7 +798,7 @@ function wikiDrawer(model) {
   drawer.append(list);
   // The projection keeps the first claims of a long route; totals give the full count.
   for (const [key, n] of Object.entries(w.totals ?? {})) {
-    drawer.append(make("p", { class: "quiet", text: `${count(w[key]?.length ?? 0)} of ${count(n)} ${key === "cand" ? "title-year" : "field-match"} claims shown.` }));
+    drawer.append(make("p", { class: "quiet", text: claimsShown(key, w[key]?.length ?? 0, n) }));
   }
   return drawer;
 }
@@ -808,12 +827,19 @@ function cardHead(model) {
     make(
       "p",
       { class: "card-id" },
-      make("span", { class: "card-address", text: object.address || (record.kind === "header" ? `Header ${object.part}` : isApparatus(object) ? object.part : "Unnumbered") }),
+      make("span", { class: "card-address", text: objectName(object, record, "Unnumbered") }),
       make("a", { class: "pdf-link", href: pdfHref(object.volume, record.pdfPage), target: "_blank", rel: "noopener", title: `${VOLUME_LABEL[object.volume]}, PDF page ${record.pdfPage}` }, icon("pdf"), `${VOLUME_SHORT[object.volume]} p. ${record.pdfPage}`),
       lines.types.length ? types : make("span", { class: "card-types quiet", text: TYPE_LABEL[entry.types[0]] ?? "no type read" }),
       siblings.length > 1 ? make("span", { class: "card-sibling quiet", text: `object ${siblings.indexOf(object.id) + 1} of ${siblings.length} in the entry` }) : null
     ),
-    make("p", { class: "card-status" }, model.dom.wikiButton, progress)
+    make(
+      "p",
+      { class: "card-status" },
+      model.dom.wikiButton,
+      // The red border of a contested card has this word beside it.
+      model.flagged ? make("span", { class: "card-flagged", title: "A value is marked wrong or unsure, or a missing value or a boundary is flagged" }, icon("alert"), "flagged") : null,
+      progress
+    )
   );
 }
 
@@ -876,11 +902,11 @@ function buildCard(entry, object, record, byId) {
     selected: null,
     dom: {},
   };
-  const contested = [...model.state.byIndex.values()].some((d) => d.decision !== "confirm") || model.state.own.some((d) => d.decision === "boundary" || d.decision === "missing");
+  model.flagged = !model.state.complete && ([...model.state.byIndex.values()].some((d) => d.decision !== "confirm") || model.state.own.some((d) => d.decision === "boundary" || d.decision === "missing"));
   const classes = ["card"];
   if (record.kind === "header" || entry.types.includes("collection")) classes.push("is-guide");
   if (model.state.complete) classes.push("is-complete");
-  else if (contested) classes.push("is-contested");
+  else if (model.flagged) classes.push("is-contested");
   if (isApparatus(object)) classes.push("is-apparatus");
   const head = cardHead(model);
   const title = cardTitle(model);
@@ -945,12 +971,14 @@ function selectValue(model, index, { focus = false } = {}) {
   const d = model.state.byIndex.get(index);
   foot.querySelector(".active-field").textContent = row.name;
   for (const b of foot.querySelectorAll("button.act")) b.setAttribute("aria-pressed", String(d?.decision === b.dataset.act));
-  // A value leads to the page of the record its passage stands in.
+  // A value leads to the page of the record its passage stands in; where that
+  // is the page the head already links, the foot does not repeat it.
   const source = model.byId.get(row.source) ?? model.record;
   const pdf = foot.querySelector(".value-pdf");
+  pdf.hidden = source.volume === model.record.volume && source.pdfPage === model.record.pdfPage;
   pdf.href = pdfHref(source.volume, source.pdfPage);
   pdf.title = `The passage of ${row.name} on PDF page ${source.pdfPage}`;
-  pdf.lastChild.textContent = `p. ${source.pdfPage}`;
+  pdf.lastChild.textContent = `${VOLUME_SHORT[source.volume]} p. ${source.pdfPage}`;
   if (!model.dom.chain.hidden) renderChain(model, row);
   const button = article.querySelector(`button.pick[data-index="${index}"]`);
   if (focus) button?.focus();
@@ -984,7 +1012,9 @@ function renderChain(model, row) {
   if (past.length) {
     const current = state.byIndex.get(row.index);
     li.append(make("ol", { class: "history" }, ...past.map((d) => make("li", { text: `${decisionLine(d)}, ${d === current ? "in force" : state.stale.includes(d) ? "no longer applies, the value changed since" : "replaced or withdrawn"}` }))));
-  } else if (row.node.reviewState) {
+  } else if (row.node.reviewState && !review.recording) {
+    // The export carries every reviewer's decisions; while recording, a
+    // reviewer sees only their own.
     li.append(`${row.node.reviewState} at the last export`);
   } else {
     li.append(isApparatus(object) ? "not part of the review" : "no decision yet");
@@ -1008,19 +1038,21 @@ async function send(model, name, body) {
   try {
     response = await fetch("/review/decisions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
   } catch (e) {
-    say(`Not saved, the review server did not answer (${e.message}).`);
+    say(about(nameOf(model), "Not saved", `the review server did not answer (${e.message})`));
     return null;
   }
   const answer = await response.json().catch(() => ({}));
   if (response.status !== 201) {
     const details = (answer.details || []).map((d) => `${d.loc.join(".")} ${d.msg}`).join("; ");
-    say(`Not saved, ${answer.error || response.status}${details ? ` (${details})` : ""}.`);
+    say(about(nameOf(model), "Not saved", `${answer.error || response.status}${details ? ` (${details})` : ""}`));
     return null;
   }
   review.log.push(answer);
   review.active = effective(review.log);
   return answer;
 }
+
+const nameOf = (model) => objectName(model.object, model.record);
 
 // Runs one review action on a card: never twice at once, only while the card
 // is the one on screen, and with the reviewer known. Keys wait meanwhile.
@@ -1030,11 +1062,18 @@ async function act(model, task) {
   try {
     const name = await reviewer();
     if (!name) {
-      say("Not saved, a reviewer name or role is needed.");
+      say(about(nameOf(model), "Not saved", "a reviewer name or role is needed"));
+      return false;
+    }
+    // A reviewer named only now may have decisions on record; the card is
+    // then rebuilt with them before anything is posted.
+    if (await useReviewer(name)) {
+      say(about(nameOf(model), "Not saved", `the decisions of ${name} are loaded now, decide again on the card as it shows them`));
+      renderDesk().catch((e) => showError(e.message));
       return false;
     }
     if (!isShown(model)) {
-      say("Not saved, another card is on screen now.");
+      say(about(nameOf(model), "Not saved", "another card is on screen now"));
       return false;
     }
     return await task(name);
@@ -1043,13 +1082,19 @@ async function act(model, task) {
   }
 }
 
-// Rebuilds a card after a decision, keeping what the reviewer had open.
+// Rebuilds a card after a decision, keeping what the reviewer had open. An
+// open form goes with the old card, so that no key waits on it. A card that
+// left the screen while its decision was posted is not rebuilt; the message
+// names it all the same. Null in that case.
 function refresh(model, selected, message) {
+  closeForm();
+  if (message) say(message);
+  if (!isShown(model)) return null;
   const next = buildCard(model.entry, model.object, model.record, model.byId);
   const scroll = window.scrollY;
   model.dom.article.replaceWith(next.dom.article);
   cards.set(model.entry.id, next);
-  next.dom.article.classList.add("is-active");
+  setActive(next.dom.article, true);
   if (!model.dom.drawer.hidden) toggleDrawer(next, true);
   if (!model.dom.chain.hidden) toggleChain(next, next.dom.foot.querySelector(".chain-toggle"));
   selectValue(next, next.byIndex.has(selected) ? selected : firstOpen(next), { focus: true });
@@ -1058,7 +1103,6 @@ function refresh(model, selected, message) {
   for (const node of document.querySelectorAll(`.slip[data-id="${CSS.escape(model.entry.id)}"] .slip-line`)) {
     if (next.state.complete && !node.querySelector(".done-sign")) node.append(make("span", { class: "done-sign", title: "Review complete" }, icon("check"), hidden("review complete")));
   }
-  if (message) say(message);
   return next;
 }
 
@@ -1072,33 +1116,49 @@ function decide(model, action, row) {
   }
   act(model, async (name) => {
     if (!(await send(model, name, { decision: action, target: targetOf(row) }))) return false;
-    const next = refresh(model, row.index, `Saved, ${row.name} ${DECISION_WORD[action]}.`);
-    selectValue(next, nextUndecided(next, row.index) ?? row.index, { focus: true });
+    const next = refresh(model, row.index, about(nameOf(model), "Saved", `${row.name} ${DECISION_WORD[action]}`));
+    if (next) selectValue(next, nextUndecided(next, row.index) ?? row.index, { focus: true });
     return true;
   });
 }
 
-// "All right" confirms the undecided values the card displays, one decision each.
+// The box of a node is displayed when it lies inside the viewport and every
+// scrolling ancestor up to the page, and nothing hides it.
+function displayed(node) {
+  if (!node.checkVisibility({ visibilityProperty: true, opacityProperty: true })) return false;
+  const clips = [{ top: 0, left: 0, bottom: window.innerHeight, right: window.innerWidth }];
+  for (let up = node.parentElement; up && up !== document.body; up = up.parentElement) {
+    const style = getComputedStyle(up);
+    if (style.overflowX !== "visible" || style.overflowY !== "visible") clips.push(up.getBoundingClientRect());
+  }
+  return inSight(node.getBoundingClientRect(), clips);
+}
+
+// "All right" confirms the undecided values the card displays, one decision
+// each, and stops as soon as the card leaves the screen.
 function allRight(model) {
   act(model, async (name) => {
-    const shown = new Set([...model.dom.article.querySelectorAll("button.pick[data-index]")].filter((b) => b.checkVisibility()).map((b) => Number(b.dataset.index)));
+    const shown = new Set([...model.dom.article.querySelectorAll("button.pick[data-index]")].filter(displayed).map((b) => Number(b.dataset.index)));
     const open = confirmable(model.all, model.state.byIndex, shown);
     const unseen = model.all.filter((r) => !model.state.byIndex.has(r.index) && !shown.has(r.index));
     if (unseen.length) {
-      say(`Not saved, ${unseen.length} undecided value${unseen.length > 1 ? "s are" : " is"} not displayed on this card.`);
+      say(about(nameOf(model), "Not saved", `${unseen.length} undecided value${unseen.length > 1 ? "s are" : " is"} not in view; scroll them into view or decide them one by one`));
       return false;
     }
     if (!open.length) {
-      say("Every value on this card carries a decision.");
+      say(about(nameOf(model), "Nothing saved", "every value carries a decision"));
       return false;
     }
     let saved = 0;
     for (const row of open) {
+      if (!isShown(model)) break;
       if (!(await send(model, name, { decision: "confirm", target: targetOf(row) }))) break;
       saved += 1;
     }
-    const next = refresh(model, model.selected, `Saved, ${saved} value${saved === 1 ? "" : "s"} right.`);
-    next.dom.foot.querySelector('[data-card-act="complete"]')?.focus();
+    const left = open.length - saved;
+    const detail = `${saved} value${saved === 1 ? "" : "s"} right${left ? `, ${left} not, the card left the screen or the server refused` : ""}`;
+    const next = refresh(model, model.selected, about(nameOf(model), "Saved", detail));
+    next?.dom.foot.querySelector('[data-card-act="complete"]')?.focus();
     return true;
   });
 }
@@ -1107,14 +1167,13 @@ async function complete(model) {
   if (!canDecide(model)) return;
   const left = model.all.length - model.state.decided;
   if (!model.state.complete && left > 0) {
-    say(`Not complete, ${left} value${left > 1 ? "s are" : " is"} still undecided.`);
+    say(about(nameOf(model), "Not complete", `${left} value${left > 1 ? "s are" : " is"} still undecided`));
     return;
   }
   if (!model.state.complete) {
     const ok = await act(model, async (name) => {
       if (!(await send(model, name, { decision: "complete" }))) return false;
-      refresh(model, model.selected, `Saved, ${model.object.address || model.object.id} complete.`);
-      return true;
+      return refresh(model, model.selected, about(nameOf(model), "Saved", "the card is complete")) !== null;
     });
     if (!ok) return;
   }
@@ -1150,9 +1209,10 @@ function openNextSample(currentId = activeId) {
 }
 
 function withdraw(model, id) {
+  const what = model.state.own.find((d) => d.id === id)?.decision === "boundary" ? "the boundary flag removed" : "the added value removed";
   act(model, async (name) => {
     if (!(await send(model, name, { decision: "withdraw", supersedes: id }))) return false;
-    refresh(model, model.selected, "Removed.");
+    refresh(model, model.selected, about(nameOf(model), "Saved", what));
     return true;
   });
 }
@@ -1164,12 +1224,18 @@ function closeForm() {
   pending = null;
 }
 
+// The open form, or null; a form that left the page holds nothing open.
+function openFormNow() {
+  if (pending && !pending.form.isConnected) pending = null;
+  return pending;
+}
+
 function openForm(model, kind, row = null) {
   if (!canDecide(model) || !isShown(model) || busy) return;
   closeForm();
   const inherited = kind === "correct" && isInherited(row, model.object);
-  const field = make("select", { class: "field-select" }, ...data.vocab.missingFields.map((f) => make("option", { value: f, text: missingLabel(f) })));
-  const vocab = make("select", { class: "vocab-select" });
+  const field = make("select", {}, ...data.vocab.missingFields.map((f) => make("option", { value: f, text: missingLabel(f) })));
+  const vocab = make("select");
   const passage = make("input", { type: "text", autocomplete: "off", spellcheck: "false" });
   const found = make("span", { class: "found", "aria-live": "polite" });
   const remove = make("input", { type: "checkbox" });
@@ -1205,10 +1271,10 @@ function openForm(model, kind, row = null) {
     make("label", {}, kind === "boundary" ? "Note" : "Note, optional", note),
     make("p", { class: "form-actions" }, save, cancel)
   );
-  pending = { model, kind, row, inherited, span: null, form, passage, found };
-  const path = () => (kind === "missing" ? field.value : row.field);
+  // A boundary flag names no field; it carries only its note.
+  const path = () => (kind === "missing" ? field.value : kind === "correct" ? row.field : null);
   const sync = () => {
-    const options = vocabFor(data.vocab, path());
+    const options = path() ? vocabFor(data.vocab, path()) : null;
     const off = kind === "boundary" || remove.checked;
     vocabRow.hidden = off || !options;
     passageRow.hidden = off;
@@ -1226,6 +1292,8 @@ function openForm(model, kind, row = null) {
     submitForm(path(), vocab.value, remove.checked, note.value.trim());
   });
   model.dom.foot.before(form);
+  // Only a mounted form is pending, so that a failure above leaves no key blocked.
+  pending = { model, kind, row, inherited, span: null, form, passage, found };
   const selection = selectedSpan(model);
   if (selection && !passageRow.hidden) setPassage(selection, true);
   (kind === "boundary" || inherited ? note : kind === "missing" ? field : passage).focus({ preventScroll: true });
@@ -1245,7 +1313,7 @@ function submitForm(path, choice, removing, note) {
   let body;
   if (kind === "boundary") {
     if (!note) {
-      say("Not saved, a boundary flag says in its note what is wrong.");
+      say(about(nameOf(model), "Not saved", "a boundary flag says in its note what is wrong"));
       return;
     }
     body = { decision: "boundary", note };
@@ -1253,17 +1321,17 @@ function submitForm(path, choice, removing, note) {
     body = { decision: "correct", target: targetOf(row), correction: {}, note };
   } else {
     if (!span) {
-      say("Not saved, type or select the passage in the entry text first.");
+      say(about(nameOf(model), "Not saved", "type or select the passage in the entry text first"));
       pending.passage.focus();
       return;
     }
     const value = correctionValue(path, model.record.text.slice(span[0], span[1]), choice);
     if (value === null) {
-      say(`Not saved, the passage gives no ${missingLabel(path.replace(/\[\d+\]/g, "")).toLowerCase()}.`);
+      say(about(nameOf(model), "Not saved", `the passage gives no ${missingLabel(path.replace(/\[\d+\]/g, "")).toLowerCase()}`));
       return;
     }
     if (kind === "correct" && span[0] === row.start && span[1] === row.end && value === row.value) {
-      say("Not saved, that is the value as read. Choose Right, or another passage.");
+      say(about(nameOf(model), "Not saved", "that is the value as read; choose Right, or another passage"));
       return;
     }
     const correction = { value, span };
@@ -1273,10 +1341,9 @@ function submitForm(path, choice, removing, note) {
   }
   act(model, async (name) => {
     if (!(await send(model, name, body))) return false;
-    closeForm();
-    const message = kind === "boundary" ? "Saved, boundary flagged." : kind === "missing" ? "Saved, missing value added." : `Saved, ${row.name} wrong.`;
-    const next = refresh(model, row ? row.index : model.selected, message);
-    if (row) selectValue(next, nextUndecided(next, row.index) ?? row.index, { focus: true });
+    const detail = kind === "boundary" ? "boundary flagged" : kind === "missing" ? "missing value added" : `${row.name} wrong`;
+    const next = refresh(model, row ? row.index : model.selected, about(nameOf(model), "Saved", detail));
+    if (next && row) selectValue(next, nextUndecided(next, row.index) ?? row.index, { focus: true });
     return true;
   });
 }
@@ -1321,9 +1388,12 @@ const DECISION_KEYS = new Set(["r", "w", "u", "a", "c", "m", "b"]);
 
 function onKey(e) {
   if (e.ctrlKey || e.metaKey || e.altKey || document.querySelector("dialog[open]")) return;
-  if (e.key === "Escape" && pending) {
+  const form = openFormNow();
+  // Escape cancels a form only from inside its card; in the search field it
+  // keeps its own meaning.
+  if (e.key === "Escape" && form && form.model.dom.article.contains(e.target)) {
     e.preventDefault();
-    const { model, row } = pending;
+    const { model, row } = form;
     closeForm();
     if (row) selectValue(model, row.index, { focus: true });
     else focusSelected(model);
@@ -1331,17 +1401,17 @@ function onKey(e) {
   }
   if (e.target.closest("input, textarea, select")) return;
   const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  if (key === "n") {
+    e.preventDefault();
+    if (!loading && !busy) openNextSample();
+    return;
+  }
   const slip = e.target.closest?.(".slip");
   if (slip) {
     if (key === "ArrowDown" || key === "j" || key === "ArrowUp" || key === "k") {
       e.preventDefault();
       moveSlip(slip, key === "ArrowDown" || key === "j" ? 1 : -1);
     }
-    return;
-  }
-  if (key === "n") {
-    e.preventDefault();
-    if (!loading && !busy) openNextSample();
     return;
   }
   const model = keyCard();
@@ -1353,7 +1423,7 @@ function onKey(e) {
     document.querySelector(`.slip[data-id="${CSS.escape(model.entry.id)}"] .slip-open`)?.focus();
     return;
   }
-  if (pending) return;
+  if (openFormNow()) return;
   const row = model.byIndex.get(model.selected);
   const acts = {
     ArrowDown: () => moveValue(model, 1),
@@ -1396,6 +1466,9 @@ function wire() {
   el("filters").addEventListener("submit", (e) => e.preventDefault());
   el("q").addEventListener("input", () => go({ replace: true }));
   for (const id of ["volume", "kind", "review-filter", "view"]) el(id).addEventListener("change", () => go());
+  el("board-sort")?.addEventListener("change", (e) => {
+    location.hash = hashWith({ sort: e.target.value === "book" ? "" : e.target.value, page: "", o: "" });
+  });
   el("reset-filters").addEventListener("click", () => {
     ui.section = "";
     const view = el("view").value;
@@ -1431,8 +1504,10 @@ function wire() {
     }
     const section = e.target.closest("button[data-section]");
     if (section) {
-      ui.section = section.dataset.section;
-      history.replaceState(null, "", hashWith({ page: "", o: "" }));
+      const val = section.dataset.section;
+      ui.section = val;
+      const partVal = val.startsWith("wiki:") ? "" : val;
+      history.replaceState(null, "", hashWith({ part: partVal, page: "", o: "" }));
       renderDesk();
     }
   });
@@ -1454,8 +1529,8 @@ function wire() {
     }
     const open = e.target.closest("button[data-open]");
     if (open) {
-      // Pointer and Enter alike open the card and move into it.
-      activate(open.dataset.open, { focus: e.detail === 0 });
+      // Pointer and Enter alike open the card; on keyboard or narrow screens focus moves into it.
+      activate(open.dataset.open, { focus: e.detail === 0 || window.matchMedia?.("(max-width: 60rem)").matches });
       return;
     }
     const article = e.target.closest("article.card");
@@ -1532,7 +1607,14 @@ function wire() {
     if (span) setPassage(span, true);
   });
 
-  el("reviewer-change").addEventListener("click", () => askReviewer());
+  el("reviewer-change").addEventListener("click", async () => {
+    if (await useReviewer(await askReviewer())) renderDesk().catch((e) => showError(e.message));
+  });
+  el("skip-card").addEventListener("click", () => {
+    const model = cards.get(activeId);
+    if (model?.dom.article.isConnected) focusSelected(model);
+    else say("No card is open yet.");
+  });
   el("reviewer-cancel").addEventListener("click", () => el("reviewer-dialog").close(""));
   el("nav-help").addEventListener("click", () => el("help-dialog").showModal());
   el("help-close").addEventListener("click", () => el("help-dialog").close());
@@ -1543,17 +1625,59 @@ function wire() {
   });
 }
 
+// Loads the decisions of one reviewer. A server without the reviewer filter
+// answers 404 to it and is asked for the whole log, which ownDecisions cuts to
+// the same reviewer. True when the reviewer has decisions on record.
+async function loadDecisions(name) {
+  let log = [];
+  if (name) {
+    let response = await fetch(`/review/decisions?${new URLSearchParams({ reviewer: name })}`);
+    if (response.status === 404) response = await fetch("/review/decisions");
+    if (!response.ok) throw new Error(`the decision log answered ${response.status}`);
+    log = ownDecisions(await response.json(), name);
+  }
+  review.log = log;
+  review.active = effective(log);
+  review.loadedFor = name;
+  return log.length > 0;
+}
+
+function showReviewError(reason) {
+  el("review-error").textContent = `Decisions are not being recorded: ${reason}. The cards are read only until review_server.py can read its decision log; reload the page then.`;
+  el("review-error").hidden = false;
+}
+
+// Read only without a review server (a static copy); a server that cannot
+// read its log says why, and the page shows it instead of going quiet.
 async function startReview() {
+  let status;
   try {
-    const status = await fetch("/review/status");
-    review.recording = status.ok && (await status.json()).recording === true;
-    if (review.recording) {
-      const log = await fetch("/review/decisions");
-      if (log.ok) review.log = await log.json();
-      review.active = effective(review.log);
-    }
+    const response = await fetch("/review/status");
+    if (!response.ok) return;
+    status = await response.json();
   } catch {
+    return;
+  }
+  if (status.error) showReviewError(status.error);
+  if (status.recording !== true) return;
+  try {
+    await loadDecisions(reviewerName() || sessionName);
+    review.recording = true;
+  } catch (e) {
+    showReviewError(e.message);
+  }
+}
+
+// Switches to another reviewer's decisions; true when the cards change.
+async function useReviewer(name) {
+  if (!review.recording || name === review.loadedFor) return false;
+  const had = review.log.length > 0;
+  try {
+    return (await loadDecisions(name)) || had;
+  } catch (e) {
     review.recording = false;
+    showReviewError(e.message);
+    return true;
   }
 }
 

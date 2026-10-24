@@ -150,9 +150,16 @@ function load(file, context, exported) {
     'no claim takes evidence from a page that does not carry its subject');
   assert.ok(reconciliation.contestedClaims.every(item => item.decisionStatus === 'open'),
     'the contested list holds open claims only');
-  assert.ok((reconciliation.decidedClaims || []).some(item =>
-    item.subject.name === 'Sofija, Varna' && item.decisionStatus === 'decided'),
-    'a decided compound claim keeps its record');
+  // The main instance decided the compound places; an LLM agent closes no
+  // claim, so the claim stays open with that reading among the competing ones.
+  assert.deepStrictEqual(reconciliation.decidedClaims, []);
+  const sofijaVarna = reconciliation.contestedClaims.find(item =>
+    item.subject.name === 'Sofija, Varna');
+  assert.ok(sofijaVarna, 'the compound claim stays open');
+  assert.ok(sofijaVarna.interpretations.some(item =>
+    item.interpretationId.endsWith('/two-places') && item.status === 'contested'
+    && item.candidateSource === 'llm-agent-proposal'),
+    'the reading the agent chose stands as a proposal');
 
   const editContext = { App: { state: {} } };
   const Edit = load('edit.js', editContext, 'Edit');

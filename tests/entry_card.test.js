@@ -110,8 +110,10 @@ function sampleEntry() {
     categories: ['Historical Studies / Volumes (Bulgarian)'],
     fullBibliographicEntry: '[1947]: Pechat Far, Sofija\n\nTranslated by Dimitŭr Stoevski. '
       + '1st edition. 500p. Illustrated.',
-    review: { status: 'agent_verified', reviewed_by: 'independent-verification-agent',
-      fields: { location: 'confirm' } },
+    review: { status: 'proposed', reviewed_by: 'independent-verification-agent',
+      producer: 'llm-agent',
+      basis: 'proposed by LLM agents, source occurrence checked, no person',
+      fields: { location: 'confirm' }, fieldStates: { location: 'proposed' } },
     _provenance: { publisher: 'regex', location: 'regex', translator: 'regex', pageCount: 'regex' },
   };
 }
@@ -161,7 +163,7 @@ test('the single-entry head carries type and title, the list head the facet tria
   // The review state belongs to the record, and it stands in the head line
   // naming what the decision covers: the place authority, nothing else.
   assert.match(single, /review-chip/);
-  assert.match(single, />Place authority agent-verified<span class="decision-producer">, /);
+  assert.match(single, />Place authority proposed<span class="decision-producer">, /);
 
   App.state.singleEntry = false;
   const listed = App.renderCard(entry);
@@ -219,7 +221,7 @@ test('a field the provenance layer calls missing is shown as such, never as a pl
 test('the per-field review mark follows the review object and nothing else', () => {
   const entry = sampleEntry();
   const html = detailCtx(entry)._buildReadContent(entry);
-  assert.match(html, /Place of publication[\s\S]*?field-review-confirm">[^]*?<\/span>confirmed</);
+  assert.match(html, /Place of publication[\s\S]*?field-review-confirm">[^]*?<\/span>link proposed</);
   // Only the location is decided in this record, so no other field claims one.
   assert.strictEqual((html.match(/field-review-/g) || []).length, 1);
 });
@@ -464,7 +466,7 @@ test('the place decision and its authority link stand at the decided value alone
   entry.locationSameAs = 'http://www.wikidata.org/entity/Q1741';
   entry.allLocations = ['Wien', 'Basel', 'Tokyo'];
   const html = detailCtx(entry)._buildReadContent(entry);
-  assert.match(html, /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm">[^]*?confirmed<\/span><span class="decision-producer">, [^]*?LLM agent, delegated<\/span>, Basel, Tokyo/);
+  assert.match(html, /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm">[^]*?link proposed<\/span><span class="decision-producer">, [^]*?LLM agents, source occurrence checked, no person<\/span>, Basel, Tokyo/);
   assert.doesNotMatch(html, /Place of publication<span class="field-review/);
 
   // A publication row reads the same decision (its field is `places`, the
@@ -502,6 +504,11 @@ test('a publication names whether its edition is confirmed or proposed', () => {
   const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
   assert.match(html, /1947, 1st edition <span class="publication-status publication-status-confirmed"[^>]*>edition confirmed</);
   assert.match(html, /1960, 2nd revised edition <span class="publication-status publication-status-proposed"[^>]*>edition proposed</);
+  // An edition the agentic sample reviewed names that review beside its state.
+  entry.publications[1].reviewDecision = 'confirm';
+  entry.publications[1].reviewProducer = 'llm-agent';
+  const reviewed = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
+  assert.match(reviewed, /publication-status-proposed"[^>]*no person has checked it\.[^>]*>edition proposed[\s\S]*?LLM agent review[^<]*no person</);
   // Records built before the graph carried the state say nothing.
   assert.doesNotMatch(detailCtx(editionPage())._buildReadContent(editionPage()), /publication-status/);
 });
@@ -598,9 +605,9 @@ test('a rejection reads as a rejection, and the chip names the scope the record 
   assert.match(chip, />Place authority candidate rejected<span class="decision-producer">, /);
   assert.doesNotMatch(chip, /Unreviewed|verified/);
   // The stated scope wins over the keys of the decisions.
-  entry.review = { status: 'agent_verified', reviewed_by: 'x',
+  entry.review = { status: 'confirmed', reviewed_by: 'Editor (SZD)', producer: 'person',
     fields: { location: 'confirm', publisher: 'reject' }, scope: ['location', 'publisher'] };
-  assert.match(detailCtx(entry)._reviewChip(entry), />Place authority and publisher agent-verified<span class="decision-producer">, /);
+  assert.match(detailCtx(entry)._reviewChip(entry), />Place authority and publisher confirmed<span class="decision-producer">, <span class="visually-hidden">decided by <\/span>person/);
 });
 
 test('a contested edition says so in its heading', () => {
@@ -656,7 +663,7 @@ test('a reference leads to its page, or to the claim that withholds its redirect
   assert.match(block, /zweig_revision 1 by Redirect fixer/);
   assert.doesNotMatch(block, /source-revision-decisions\.json/);
   // The history names the producer the card head names, not the raw role.
-  assert.match(block, /<li title="main-instance">LLM agent, delegated: left unresolved <span class="field-sub">\(revisable\)/);
+  assert.match(block, /<li title="main-instance">LLM agent: left unresolved <span class="field-sub">\(revisable\)/);
 });
 
 test('an authority claim history reads in plain words, the role in its tooltip', () => {
@@ -668,7 +675,7 @@ test('an authority claim history reads in plain words, the role in its tooltip',
   const Detail = detailCtx(entry, {}, { Edit: editStub({ authorityClaimsFor: () => [claim] }) });
   const history = Detail._authorityHistory(claim);
   assert.strictEqual(history, '<li title="independent-verification-agent, location/Wien/unresolved">'
-    + 'LLM agent, delegated: left unresolved</li>');
+    + 'LLM agent: left unresolved</li>');
   assert.doesNotMatch(history, />independent-verification-agent/);
 });
 
@@ -728,7 +735,7 @@ test('a filtered list names the publication of a page that matched', () => {
 test('the review facet names the fields its decisions cover', () => {
   const { App } = appCtx();
   App.entries = [sampleEntry()];
-  assert.strictEqual(App.reviewLabel('agent_verified'), 'Place authority agent-verified');
+  assert.strictEqual(App.reviewLabel('proposed'), 'Place authority proposed');
   assert.strictEqual(App.reviewLabel('unreviewed'), 'Unreviewed');
 });
 
@@ -854,25 +861,29 @@ test('per-publication citation buttons appear only where there are several', () 
 
 test('a decision names its producer as visible text, and an agent is never a person', () => {
   // Page 468, København: decided by the independent verification agent. Every
-  // published place decision is by LLM agents under the operator's delegation.
+  // place decision is by LLM agents, so each stands as a proposal.
   const entry = sampleEntry();
   const Detail = detailCtx(entry);
   for (const by of ['independent-verification-agent', 'main-instance']) {
-    assert.strictEqual(Detail.decisionProducer({ status: 'agent_verified', reviewed_by: by }),
-      'LLM agent, delegated', by);
+    assert.strictEqual(Detail.decisionProducer({ status: 'proposed', reviewed_by: by }),
+      'LLM agent', by);
   }
+  assert.strictEqual(Detail.decisionProducer(entry.review),
+    'LLM agents, source occurrence checked, no person');
   // A person reaches the review object only through a released human patch.
   assert.strictEqual(Detail.decisionProducer({ status: 'approved', reviewed_by: 'Editor (SZD)' }),
     'person');
-  assert.strictEqual(Detail.decisionProducer({ status: 'agent_verified', reviewed_by: 'someone' }),
+  assert.strictEqual(Detail.decisionProducer({ status: 'proposed', reviewed_by: 'someone' }),
     'unclassified decider someone');
 
   const html = Detail._buildReadContent(entry);
   const place = html.slice(html.indexOf('>Place of publication'), html.indexOf('>Publisher'));
   // The state word stays; the producer stands beside it outside any title.
-  assert.match(place, />confirmed<\/span><span class="decision-producer">, /);
-  assert.match(place.replace(/<[^>]*>/g, ''), /confirmed, decided by LLM agent, delegated/);
-  assert.doesNotMatch(place, /person/);
+  assert.match(place, />link proposed<\/span><span class="decision-producer">, /);
+  assert.match(place.replace(/<[^>]*>/g, ''),
+    /link proposed, by LLM agents, source occurrence checked, no person/);
+  assert.doesNotMatch(place, />confirmed</);
+  assert.doesNotMatch(place, /by <\/span>person/);
   // Rule extraction is the default and carries no mark; a deviating mark
   // classes the place wording, not the authority link.
   assert.doesNotMatch(place, /prov-badge/);
@@ -884,7 +895,7 @@ test('a decision names its producer as visible text, and an agent is never a per
 
   // The review chip names the producer visibly too, not only in its tooltip.
   assert.match(Detail._reviewChip(entry).replace(/<[^>]*>/g, ''),
-    /Place authority agent-verified, decided by LLM agent, delegated/);
+    /Place authority proposed, by LLM agents, source occurrence checked, no person/);
 });
 
 test('a place decision carries the same subdued weight as an edition proposal', () => {
@@ -925,7 +936,7 @@ test('a result line carries data, and only a contested state as one marker word'
   // The head of the full card keeps the decision and its producer.
   ctx.Edit = editStub();
   App.state.singleEntry = true;
-  assert.match(App.cardMeta(sampleEntry()), />Place authority agent-verified<span class="decision-producer">, /);
+  assert.match(App.cardMeta(sampleEntry()), />Place authority proposed<span class="decision-producer">, /);
 });
 
 test('beside the reading pane the first result stands as a full card on arrival', () => {
@@ -948,7 +959,7 @@ test('beside the reading pane the first result stands as a full card on arrival'
   assert.match(pane.innerHTML, /id="card-detail-1800"/);
   assert.match(pane.innerHTML, /<h2 class="card-title pane-title" id="pane-title-1800"/);
   assert.match(pane.innerHTML, /Year of publication/);
-  assert.match(pane.innerHTML, />Place authority agent-verified<span class="decision-producer">/);
+  assert.match(pane.innerHTML, />Place authority proposed<span class="decision-producer">/);
   // The list holds a title and a value line per result, and no card.
   assert.strictEqual((list.match(/aria-controls="reading-pane"/g) || []).length, 2);
   assert.doesNotMatch(list, /card-detail|id="card-|review-chip/);

@@ -8,7 +8,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { WIKI_STATUS, cardLines, chain, chainComplete, fieldLabel, indexGraph, pdfHref, rows, shownIndices, valueName, valueText, wikiState } from "./render.js";
+import { WIKI_STATUS, candidateRoute, candidates as candidatesOf, cardLines, chain, chainComplete, fieldLabel, indexGraph, pdfHref, rows, shownIndices, valueName, valueText, wikiState } from "./render.js";
 
 const CODE = /[[\]._]/;
 
@@ -66,6 +66,7 @@ if (concordance) {
       candidates += 1;
       if (c.state !== "proposed") fail(`${o.id}: wiki claim ${c.claim} in state ${c.state}`);
     }
+    for (const c of candidatesOf(w)) if (/match|claim:/i.test(candidateRoute(c))) fail(`${o.id}: route of wiki page ${c.page} reads "${candidateRoute(c)}"`);
   }
 }
 console.log(

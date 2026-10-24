@@ -20,13 +20,19 @@ outside both viewer folders, accepts JSON bodies up to MAX_BODY bytes, and
 never takes identifier, time or a value's current state from the request.
 
 Endpoints:
-- GET /review/status: {"recording": true}; the viewer offers decisions only
-  when this answers.
+- GET /review/status: {"recording": true} when the log can be read, else
+  {"recording": false, "error": reason}; the viewer offers decisions only on
+  the first.
 - GET /review/decisions: every logged decision, in order.
+  ?reviewer=<name> returns only that reviewer's decisions, so that a second
+  reviewer decides without seeing the first's; any other parameter is a 400.
+  An unreadable log is a 503 with its reason.
 - POST /review/decisions: one decision; 201 with the stored decision, 400 for a
   malformed one, 409 when it does not apply to the current records (a changed
-  value, a correction that does not follow from its passage), 403 for a
-  foreign Host or Origin.
+  value, a correction that does not follow from its passage) or to the log (a
+  withdrawal of another reviewer's decision, an adjudication that settles no
+  disagreement in force between an object's first and second reviewer), 403
+  for a foreign Host or Origin.
 - GET /print/<volume>.pdf: the print volume itself (I, A1, A2), so that a
   record links to its page as /print/I.pdf#page=790. Local like every print
   file; the volume names come from sections.json, never from the request path.
@@ -41,11 +47,19 @@ import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import unquote
+from urllib.parse import parse_qs, unquote, urlsplit
 
 import _review
-from _common import DERIVED_DIR, PRINT_DIR
-from _review import DecisionIn, append, check, load_log, load_records, stamp
+from _common import DERIVED_DIR, PRINT_DIR, PROJECT_ROOT
+from _review import (
+    DecisionIn,
+    adjudication_problem,
+    append,
+    check,
+    load_log,
+    load_records,
+    stamp,
+)
 from _viewer_data import VIEWER_DATA_FILES
 from pydantic import ValidationError
 
@@ -54,6 +68,8 @@ MAX_BODY = 64 * 1024
 SECTIONS = Path(__file__).with_name("sections.json")
 VIEWER_CODE = Path(__file__).resolve().with_name("viewer")
 VIEWER_DATA = DERIVED_DIR / "viewer"
+DOCS_DIR = PROJECT_ROOT / "docs"
+LAB_STRUCTURE = DERIVED_DIR / "lab" / "print-structure.json"
 PDFS = {
     volume: PRINT_DIR / spec["file"]
     for volume, spec in json.loads(SECTIONS.read_text(encoding="utf-8"))[
@@ -86,6 +102,23 @@ def viewer_file(name: str) -> Path | None:
     return None
 
 
+def docs_file(clean_path: str) -> Path | None:
+    """Serve docs/ at root and local/print-structure.json from derived/lab/ if present."""
+    if clean_path == "/local/print-structure.json" and LAB_STRUCTURE.is_file():
+        return LAB_STRUCTURE.resolve()
+    rel = clean_path.lstrip("/") or "index.html"
+    base = DOCS_DIR.resolve()
+    candidate = (base / rel).resolve()
+    if candidate.is_relative_to(base):
+        if candidate.is_dir():
+            idx = (candidate / "index.html").resolve()
+            if idx.is_relative_to(base) and idx.is_file():
+                return idx
+        elif candidate.is_file():
+            return candidate
+    return None
+
+
 def byte_range(header: str, size: int) -> tuple[int, int] | None:
     """The inclusive span of a single "bytes=a-b", "bytes=a-" or "bytes=-n" range; None if unsatisfiable."""
     unit, _, spec = header.partition("=")
@@ -105,6 +138,20 @@ def byte_range(header: str, size: int) -> tuple[int, int] | None:
     if start > end or start >= size:
         return None
     return start, min(end, size - 1)
+
+
+def log_problem(submitted: DecisionIn, log: list) -> str | None:
+    """None when the decision fits the log: a withdrawal names a logged
+    decision of the same reviewer, an adjudication a disagreement in force."""
+    if submitted.supersedes:
+        withdrawn = next((d for d in log if d.id == submitted.supersedes), None)
+        if withdrawn is None:
+            return "supersedes an unknown decision"
+        if withdrawn.reviewer != submitted.reviewer:
+            return "a reviewer withdraws only their own decisions"
+    if submitted.decision == "adjudicate":
+        return adjudication_problem(submitted, log)
+    return None
 
 
 class Store:
@@ -147,10 +194,15 @@ class Handler(SimpleHTTPRequestHandler):
 
     def translate_path(self, path: str) -> str:
         clean = route(path)
-        if clean is not None and clean.startswith("/viewer/"):
-            found = viewer_file(clean.removeprefix("/viewer/"))
-            if found is not None:
-                return str(found)
+        if clean is not None:
+            if clean.startswith("/viewer/"):
+                found = viewer_file(clean.removeprefix("/viewer/"))
+                if found is not None:
+                    return str(found)
+            elif not clean.startswith("/jsonld/"):
+                found = docs_file(clean)
+                if found is not None:
+                    return str(found)
         return super().translate_path(path)
 
     def end_headers(self) -> None:
@@ -177,15 +229,37 @@ class Handler(SimpleHTTPRequestHandler):
             return self._pdf(body=False)
         return self._static(super().do_HEAD)
 
+    def _log(self):
+        """The log, or the reason it cannot be read."""
+        try:
+            with self.store.lock:
+                return load_log(), None
+        except (OSError, ValueError) as e:
+            return None, str(e)
+
     def do_GET(self):
         if self.path.startswith("/review/"):
             if not self._own():
                 return self._json(403, {"error": "foreign host or origin"})
-            if self.path == "/review/status":
+            url = urlsplit(self.path)
+            if url.path == "/review/status" and not url.query:
+                _, error = self._log()
+                if error:
+                    return self._json(200, {"recording": False, "error": error})
                 return self._json(200, {"recording": True})
-            if self.path == "/review/decisions":
-                with self.store.lock:
-                    log = load_log()
+            if url.path == "/review/decisions":
+                query = parse_qs(url.query, keep_blank_values=True)
+                if set(query) - {"reviewer"} or any(
+                    len(v) != 1 or not v[0].strip() for v in query.values()
+                ):
+                    return self._json(
+                        400, {"error": "the only parameter is one non-empty reviewer"}
+                    )
+                log, error = self._log()
+                if error:
+                    return self._json(503, {"error": error})
+                if query:
+                    log = [d for d in log if d.reviewer == query["reviewer"][0]]
                 return self._json(
                     200, [d.model_dump(by_alias=True, exclude_none=True) for d in log]
                 )
@@ -261,10 +335,13 @@ class Handler(SimpleHTTPRequestHandler):
             problem = check(submitted, self.store.current())
             if problem:
                 return self._json(409, {"error": problem})
-            if submitted.supersedes and submitted.supersedes not in {
-                d.id for d in load_log()
-            }:
-                return self._json(409, {"error": "supersedes an unknown decision"})
+            try:
+                log = load_log()
+            except (OSError, ValueError) as e:
+                return self._json(503, {"error": str(e)})
+            problem = log_problem(submitted, log)
+            if problem:
+                return self._json(409, {"error": problem})
             stored = stamp(submitted)
             append(stored)
         return self._json(201, stored.model_dump(by_alias=True, exclude_none=True))

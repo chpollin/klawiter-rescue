@@ -235,7 +235,7 @@ const JsonldPlayground = {
     // Stats
     const statsEl = document.getElementById('jsonld-stats');
     if (statsEl) {
-      statsEl.textContent = `${Object.keys(compact).length - 1} properties | ${triples.length} triples | @id: ${compact['@id']}`;
+      statsEl.innerHTML = `${Object.keys(compact).length - 1} properties | ${triples.length} triples | @id: ${esc(compact['@id'])} | <a href="#entry=${entry.sourcePageId}">Open entry card (#${entry.sourcePageId})</a>`;
     }
   },
 

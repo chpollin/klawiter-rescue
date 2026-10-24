@@ -8,8 +8,9 @@
   <link rel="stylesheet" href="cards.css">
 </head>
 <body>
+  <button type="button" id="skip-card" class="skip-link">Skip to the card</button>
   <header class="site">
-    <a class="brand" href="#/">
+    <a class="brand" href="/">
       <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <path d="M12 2C8 2 4 6 4 10c0 3 2 5.5 4 7l4 5 4-5c2-1.5 4-4 4-7 0-4-4-8-8-8z"/>
         <path d="M9 9c0-1.5 1.5-3 3-3s3 1.5 3 3-1.5 3-3 3"/>
@@ -17,8 +18,13 @@
       <span>Stefan Zweig Bibliography</span>
     </a>
     <nav aria-label="Views">
-      <a href="#/" id="nav-desk">All records</a>
+      <a href="/">Overview</a>
+      <a href="#/" id="nav-desk">Print &amp; Wiki cards</a>
       <a href="#/?r=open" id="nav-review">Review sample</a>
+      <a href="/#browse">Wiki catalogue</a>
+      <a href="/#stats">Explore</a>
+      <a href="/#data">Data</a>
+      <a href="/#about">About</a>
       <button type="button" id="nav-help" class="nav-btn">Help &amp; Keys</button>
     </nav>
     <div class="header-search">
@@ -70,6 +76,18 @@
             <option value="board">Card grid</option>
           </select>
         </label>
+        <label class="quiet-select" id="board-sort-wrap" hidden>
+          <span>Sort</span>
+          <select id="board-sort">
+            <option value="book">Printed order</option>
+            <option value="wiki">Wiki candidates first</option>
+            <option value="address">Address</option>
+            <option value="title">Title</option>
+            <option value="year-asc">Oldest year</option>
+            <option value="year-desc">Newest year</option>
+            <option value="review">Open sample first</option>
+          </select>
+        </label>
         <button type="button" id="reset-filters" class="text-btn" hidden>Reset</button>
         <nav class="pager" aria-label="Trays">
           <button type="button" id="prev" class="text-btn" aria-label="Previous tray">‹ Prev</button>
@@ -80,6 +98,7 @@
       <p id="message" class="status-msg" role="status" aria-live="polite"></p>
     </form>
 
+    <p id="review-error" class="review-error" role="alert" hidden></p>
     <div id="error" role="alert" hidden></div>
 
     <section id="desk" class="desk" aria-labelledby="scope-heading"></section>
@@ -96,7 +115,7 @@
       <h2 id="help-dialog-heading">Help and keys</h2>
       <button type="button" id="help-close" class="text-btn">Close</button>
     </div>
-    <p>Every value on a card was read from the print volumes by a rule and is bound to its passage in the entry text. Select a value and mark it right, wrong or unsure. Wrong asks for the right passage, typed or selected in the entry text, or for the mark that the value should not exist. A card is complete when every value it shows carries a decision.</p>
+    <p>Every value on a card was read from the print volumes by a rule, or proposed by a language model where it is tagged "LLM proposal", and is bound to its passage in the entry text. Select a value and mark it right, wrong or unsure. Wrong asks for the right passage, typed or selected in the entry text, or for the mark that the value should not exist. A card is complete when every value it shows carries a decision.</p>
     <p>The review sample holds <span id="help-sample">a frozen set of objects</span>, drawn by volume and part from entries that rule development has not seen. Only its complete cards enter the measurement. Decisions on other cards are kept as development reviews.</p>
     <p>Wiki candidates come from the concordance and are proposals that nobody has confirmed. Every card leads to its page in the print volume, every wiki page to its permalink. The view is local, because the rights to the print volumes are unresolved.</p>
     <table class="keys">

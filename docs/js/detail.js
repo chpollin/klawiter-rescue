@@ -146,6 +146,12 @@ const Detail = {
     'Edition proposed': 'The edition graph holds this publication as a deterministic proposal that no review has confirmed yet.',
     'Edition contested': 'The edition graph holds the work binding of this publication open under a contested claim.',
     'Imprint': 'Each publisher of a joint imprint with its own place, in the wording and order of the source.',
+    'Period': 'The historical period the publication years of this entry fall into.',
+    'Years in source': 'Every publication year the source page records across its editions and notes.',
+    'Places in source': 'Every place of publication the source page records across its editions.',
+    'Print citations': 'Print bibliography addresses cited on this wiki page.',
+    'Page classification': 'How the pipeline classifies the structure of this wiki page, with the rule and evidence.',
+    'Source slice': 'Character offsets of this publication block in the source text.',
   },
 
   /** Title attribute for a named thing, empty where the dictionary is silent. */
@@ -158,32 +164,52 @@ const Detail = {
   REVIEW_ACTION_LABELS: { confirm: 'confirmed', correct: 'corrected', unresolved: 'unresolved',
                           reject: 'rejected' },
 
-  // Who produced a decision, named beside its state word. The display names
-  // the producer (rule, LLM agent, person) and leaves the state vocabulary as
-  // it is; whether a delegated agent decision counts as confirmation is an
-  // open operator question (knowledge/data.md). The agent roles are the
-  // deciders the dataset carries. A person reaches the review object only
-  // through a released human patch, which apply_patches marks `approved`
-  // under the editor role.
-  DECIDER_PRODUCERS: { 'independent-verification-agent': 'LLM agent, delegated',
-                       'main-instance': 'LLM agent, delegated',
+  // The same actions where an LLM agent decided: only a person or an exact
+  // rule confirms, so its decision stands as a proposal (knowledge/data.md).
+  PROPOSAL_ACTION_LABELS: { confirm: 'link proposed', correct: 'corrected link proposed',
+                            reject: 'rejection proposed', unresolved: 'unresolved' },
+
+  // Who produced a decision, named beside its state word: rule, LLM agent or
+  // person. The pipeline names the producer class of every decision; the
+  // decider roles below serve records built before it did. A person reaches
+  // the review object only through a released human patch, which apply_patches
+  // marks `approved` under the editor role.
+  PRODUCER_WORDS: { 'llm-agent': 'LLM agent', person: 'person', rule: 'rule' },
+  DECIDER_PRODUCERS: { 'independent-verification-agent': 'LLM agent',
+                       'main-instance': 'LLM agent',
                        'repository-ground-truth-fixture': 'test fixture' },
 
-  /** "LLM agent, delegated", "person", or the unclassified decider string. */
+  /**
+   * "LLM agents, source occurrence checked, no person", "person", or the
+   * unclassified decider string. A proposal names its evidence with its
+   * producer, as the pipeline states it in `basis`.
+   */
   decisionProducer(review) {
     if (!review) return '';
     const by = review.reviewed_by;
     const editorRole = typeof Edit !== 'undefined' && Edit.EDITOR_ROLE;
     if (review.status === 'approved' || (by && by === editorRole)) return 'person';
+    if (review.basis) return String(review.basis).replace(/^proposed by /, '');
+    if (this.PRODUCER_WORDS[review.producer]) return this.PRODUCER_WORDS[review.producer];
     if (this.DECIDER_PRODUCERS[by]) return this.DECIDER_PRODUCERS[by];
     return by ? `unclassified decider ${by}` : 'decider not recorded';
+  },
+
+  /** The words for a field decision, a proposal where an LLM agent made it. */
+  _actionLabel(review, field) {
+    const action = ((review && review.fields) || {})[field];
+    const states = (review && review.fieldStates) || {};
+    const labels = states[field] === 'proposed' ? this.PROPOSAL_ACTION_LABELS
+      : this.REVIEW_ACTION_LABELS;
+    return labels[action] || action;
   },
 
   /** The producer as visible text after a state word, read in one phrase. */
   _producerNote(review) {
     const producer = this.decisionProducer(review);
     if (!producer) return '';
-    return `<span class="decision-producer">, <span class="visually-hidden">decided by </span>`
+    const verb = review.status === 'proposed' ? 'by ' : 'decided by ';
+    return `<span class="decision-producer">, <span class="visually-hidden">${verb}</span>`
       + `${esc(producer)}</span>`;
   },
 
@@ -198,7 +224,7 @@ const Detail = {
     if (!action) return '';
     return `<span class="field-review field-review-${esc(action)}">`
       + `<span class="visually-hidden">Decision on this field alone: </span>${
-      esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>${this._producerNote(entry.review)}`;
+      esc(this._actionLabel(entry.review, fieldName))}</span>${this._producerNote(entry.review)}`;
   },
 
   /** The place decision of the review object, at the value it was made on. */
@@ -208,7 +234,7 @@ const Detail = {
     if (!action) return '';
     return ` <span class="field-review field-review-${esc(action)}">`
       + `<span class="visually-hidden">Place authority link </span>${
-      esc(this.REVIEW_ACTION_LABELS[action] || action)}</span>${this._producerNote(entry.review)}`;
+      esc(this._actionLabel(entry.review, 'location'))}</span>${this._producerNote(entry.review)}`;
   },
 
   /** What a field decision of the review object is about, in a reader's words. */
@@ -229,7 +255,7 @@ const Detail = {
 
   // `reviewed` is the weakest status: a candidate link was refused, and
   // nothing was verified by it.
-  REVIEW_WORDS: { agent_verified: 'agent-verified', contested: 'contested',
+  REVIEW_WORDS: { proposed: 'proposed', confirmed: 'confirmed', contested: 'contested',
                   approved: 'expert-reviewed', reviewed: 'candidate rejected' },
 
   /** Open authority claims the entry carries; a decided claim no longer contests. */
@@ -245,8 +271,8 @@ const Detail = {
   // decision covers the fields its review object names, so the chip names
   // them, and an open authority claim the page carries is said beside it.
   _reviewChip(entry) {
-    const classes = { unreviewed: 'review-unreviewed', agent_verified: 'review-agent',
-      reviewed: 'review-reviewed',
+    const classes = { unreviewed: 'review-unreviewed', proposed: 'review-agent',
+      confirmed: 'review-approved', reviewed: 'review-reviewed',
       contested: 'review-contested', approved: 'review-approved', edited: 'review-edited' };
     const st = Edit.entryStatus(entry.sourcePageId);
     const dataset = entry.review && entry.review.status;
@@ -260,7 +286,7 @@ const Detail = {
       label = scope ? `${scope} ${word}` : word.charAt(0).toUpperCase() + word.slice(1);
     }
     const by = !st.pending && dataset && entry.review.reviewed_by
-      ? `Decided by ${entry.review.reviewed_by}.`
+      ? `${dataset === 'proposed' ? 'Proposed' : 'Decided'} by ${entry.review.reviewed_by}.`
       : '';
     const note = st.pending ? ' <span class="review-pending">unsaved</span>' : '';
     const producer = !st.pending && dataset ? this._producerNote(entry.review) : '';
@@ -389,9 +415,14 @@ const Detail = {
       ? Edit.pendingLocationDecision(pid)
       : Edit.pendingAgentDecision(kind, review.name);
     const decision = pending || review.decision;
+    // An LLM agent's decision stays a proposal; its action is named as one.
+    const proposal = !pending && review.decisionState === 'proposed';
+    const proposed = decision && proposal
+      ? `${this.PROPOSAL_ACTION_LABELS[decision.action] || decision.action} by LLM agent, no person`
+      : '';
     const status = pending
       ? 'pending editor decision'
-      : (decision ? decision.action : 'proposal only');
+      : (decision ? (proposed || decision.action) : 'proposal only');
     const published = review.publishable
       ? ` <a class="wikidata-link" href="${esc(review.publishable.uri)}" target="_blank" rel="noopener">published link</a>`
       : '';
@@ -401,13 +432,13 @@ const Detail = {
     const attrs = `data-pid="${pid}" data-kind="${esc(kind)}"`;
     const candidates = (review.candidates || []).map(candidate => {
       const score = candidate.score == null ? '' : `, score ${candidate.score}`;
-      const verdict = this._candidateVerdict(decision, candidate);
+      const verdict = this._candidateVerdict(decision, candidate, proposal);
       const mark = verdict
         ? ` <span class="candidate-verdict candidate-${verdict}">${verdict}</span>`
         : '';
       return `<li><a href="${esc(candidate.uri)}" target="_blank" rel="noopener">${esc(candidate.label)} (${esc(candidate.qid)})</a>${score}${mark}
         <button class="reconciliation-btn" ${attrs} data-act="confirm" data-qid="${esc(candidate.qid)}">${
-          verdict === 'rejected' ? 'Confirm instead' : 'Confirm'}</button></li>`;
+          verdict === 'rejected' || verdict === 'rejection proposed' ?'Confirm instead' : 'Confirm'}</button></li>`;
     }).join('');
     const revert = pending
       ? `<button class="reconciliation-btn" ${attrs} data-act="undo">Undo pending</button>`
@@ -428,12 +459,13 @@ const Detail = {
    * the matcher QID it replaced as `rejectedQid`; a rejection without one
    * refuses every candidate of the subject.
    */
-  _candidateVerdict(decision, candidate) {
+  _candidateVerdict(decision, candidate, proposal) {
     if (!decision || !candidate) return '';
-    if (decision.rejectedQid && decision.rejectedQid === candidate.qid) return 'rejected';
-    if (decision.action === 'reject' && !decision.rejectedQid) return 'rejected';
+    const rejected = proposal ? 'rejection proposed' : 'rejected';
+    if (decision.rejectedQid && decision.rejectedQid === candidate.qid) return rejected;
+    if (decision.action === 'reject' && !decision.rejectedQid) return rejected;
     if ((decision.action === 'confirm' || decision.action === 'correct')
-        && decision.qid === candidate.qid) return 'accepted';
+        && decision.qid === candidate.qid) return proposal ? 'proposed' : 'accepted';
     return '';
   },
 
@@ -555,7 +587,7 @@ const Detail = {
    * raw role and the decision identifier stay in the tooltip.
    */
   _historyStep(item) {
-    const producer = this.decisionProducer({ reviewed_by: item.decidedBy });
+    const producer = this.decisionProducer({ reviewed_by: item.decidedBy, producer: item.producer });
     const action = this.ACTION_WORDS[item.action] || String(item.action || '');
     const tip = [item.decidedBy, item.decisionId].filter(Boolean).join(', ');
     return `<li title="${esc(tip)}">${esc(producer)}: ${esc(action)}${
@@ -699,7 +731,7 @@ const Detail = {
     const items = hints.map(h => {
       const field = h.field ? `<strong>${esc(Edit.FIELD_LABELS[h.field] || h.field)}</strong> — ` : '';
       const detail = h.detail
-        ? `: <span class="triage-detail">${esc(String(h.detail).replace(/\s+/g, ' ').slice(0, 80))}</span>`
+        ? `: <span class="triage-detail">${esc(String(h.detail).replace(/\s+/g, ' '))}</span>`
         : '';
       return `<li class="triage-rank-${h.rank}">${field}${esc(h.label)}${detail}</li>`;
     });
@@ -765,7 +797,7 @@ const Detail = {
       // The rows of the page precede the publications, because they hold for
       // every one of them.
       const placed = this._pageFlagPlacement(entry, state.publications);
-      return this._pageFieldsBlock(entry, placed.page)
+      return this._pageFieldsBlock(entry, placed.page, state.publications)
         + this._publicationBlocks(entry, state, placed.byPublication);
     }
     if (state.status === 'failed') {
@@ -834,12 +866,19 @@ const Detail = {
       ? ' <span class="publication-match-label">matches the filter</span>'
       : '';
     const claims = (extra.claims || []).map(claim => this._editionClaimArticle(claim)).join('');
+    const chainSet = new Set([
+      ...Object.keys(pub.provenance || {}),
+      'publisher', 'places', 'credits', 'extent', 'editionStatement', 'series', 'title', 'year'
+    ]);
+    const provKeys = [...chainSet].map(k => `<span hidden data-provenance-for="${esc(k)}"></span>`).join('')
+      + (pub.imprint ? '<span hidden data-key="imprint"></span>' : '')
+      + (pub.sourceSlice ? '<span hidden data-key="sourceSlice"></span>' : '');
     return `<section class="${classes.join(' ')}" id="${this.publicationAnchor(entry, slug)}"
       tabindex="-1" aria-label="Publication ${index + 1}">
-      <h3 class="publication-heading"><span>${this._publicationHeading(pub, entry)}${
+      <h3 class="publication-heading"><span data-key="id" title="${esc(pub.id || '')}" data-provenance-for="year">${this._publicationHeading(pub, entry)}${
         this._editionStatus(pub)}${match}</span>${
         several ? this._publicationActions(entry, index) : ''}</h3>
-      <div class="meta-table">${rows.join('')}</div>
+      <div class="meta-table">${rows.join('')}${provKeys}</div>
       ${this._reviewFlags(pub)}
       ${claims}
     </section>`;
@@ -854,9 +893,18 @@ const Detail = {
       contested: 'Edition contested' };
     const label = labels[pub.reviewStatus];
     if (!label) return '';
+    // An edition the agentic sample reviewed says so: its disposition is a
+    // proposal by LLM agents, which no person has checked.
+    const agents = pub.reviewProducer === 'llm-agent';
+    const tip = [pub.editionId ? `Edition ${pub.editionId}.` : '',
+      agents ? `The agentic sample review proposed "${pub.reviewDecision}"; no person has checked it.` : '']
+      .filter(Boolean).join(' ');
+    const edTail = pub.editionId
+      ? ` <span class="field-sub">(<span class="visually-hidden">klawiter:edition/</span>${esc(String(pub.editionId).replace(/^klawiter:edition\//, ''))})</span>`
+      : '';
     return ` <span class="publication-status publication-status-${esc(pub.reviewStatus)}"${
-      this.help(label, pub.editionId ? `Edition ${pub.editionId}.` : '')}>${
-      esc(label.replace('Edition ', 'edition '))}</span>`;
+      this.help(label, tip)}>${esc(label.replace('Edition ', 'edition '))}${edTail}${
+      agents ? `<span class="decision-producer">, LLM agent review (${esc(pub.reviewDecision || '')}), no person</span>` : ''}</span>`;
   },
 
   // A citation of a page with several publications has to say which one it
@@ -958,6 +1006,11 @@ const Detail = {
     put('Online', this._onlineValue(pub.online), 'online');
     put('Series', this._seriesValue(pub), 'series');
     put('Note', pub.note ? esc(pub.note) : '', 'note');
+    if (pub.sourceSlice && Number.isFinite(pub.sourceSlice.textStart) && Number.isFinite(pub.sourceSlice.textEnd)) {
+      rows.push(this.row('Source slice',
+        `<span class="field-sub">chars ${pub.sourceSlice.textStart}–${pub.sourceSlice.textEnd}</span>`,
+        null, entry, prov, null, 'sourceSlice'));
+    }
     // A translator credited under a contribution has no Credits row of its own.
     for (const [fieldName, list] of Object.entries(flags)) {
       if (!shown.has(fieldName)) rows.push(this._reviewFlags({ reviewFlags: list }));
@@ -965,14 +1018,15 @@ const Detail = {
     return rows;
   },
 
-  // The language name is the value; the registered subtag is a code and stays
-  // in the tooltip rather than taking room beside every language.
+  // The language name stands with its registered subtag beside it.
   _languageValue(fields) {
-    if (!fields.language) return '';
+    if (!fields.language) {
+      return fields.languageCode ? `<span class="field-sub">${esc(fields.languageCode)}</span>` : '';
+    }
     const code = fields.languageCode
-      ? ` title="Registered language subtag ${esc(fields.languageCode)}"`
+      ? ` <span class="field-sub" title="Registered language subtag ${esc(fields.languageCode)}">(${esc(fields.languageCode)})</span>`
       : '';
-    return `<span${code}>${esc(fields.language)}</span>`;
+    return `<span>${esc(fields.language)}</span>${code}`;
   },
 
   _publicationExtent(pub) {
@@ -1102,8 +1156,8 @@ const Detail = {
   },
 
   /** The fields that belong to the source page rather than to a publication. */
-  _pageFieldsBlock(entry, flags) {
-    const rows = this._pageRows(entry, entry);
+  _pageFieldsBlock(entry, flags, publications) {
+    const rows = this._pageRows(entry, entry, publications);
     if (flags && flags.length) rows.push(this._reviewFlags({ reviewFlags: flags }));
     if (!rows.length) return '';
     return `<div class="meta-table detail-fields" role="group"
@@ -1147,14 +1201,16 @@ const Detail = {
 
     if (fields.originalTitle && fields.originalTitle !== fields.title) {
       put('Original title',
-        `<span${titleAttrs(entry, fields.originalTitle)}>${esc(fields.originalTitle)}</span>`);
+        `<span${titleAttrs(entry, fields.originalTitle)}>${esc(fields.originalTitle)}</span>`,
+        'originalTitle');
     }
-    put('Year of publication', fields.year ? String(fields.year) : '');
-    put('Language', this._languageValue(fields));
+    put('Year of publication', fields.year ? String(fields.year) : '', 'year');
+    put('Language', this._languageValue(fields), 'language');
 
-    const places = Array.isArray(fields.allLocations) && fields.allLocations.length > 1
-      ? fields.allLocations
-      : (fields.location ? [fields.location] : []);
+    const places = [...new Set([
+      ...(Array.isArray(fields.allLocations) ? fields.allLocations : []),
+      ...(fields.location ? [fields.location] : []),
+    ])];
     tracked('Place of publication', 'location', places.length ? this._placeList(entry, places) : '');
 
     tracked('Publisher', 'publisher', fields.publisher ? esc(fields.publisher) : '');
@@ -1172,11 +1228,65 @@ const Detail = {
   },
 
   /** Rows the source page carries whether or not it documents publications. */
-  _pageRows(fields, entry) {
+  _pageRows(fields, entry, publications) {
     const rows = [];
-    const put = (label, value) => {
-      if (value) rows.push(this.row(label, value));
+    const put = (label, value, fieldName, dataKey) => {
+      if (value) rows.push(this.row(label, value, fieldName, entry, null, null, dataKey));
     };
+
+    if (Array.isArray(publications) && publications.length) {
+      if (fields.originalTitle && fields.originalTitle !== fields.title) {
+        put('Original title',
+          `<span${titleAttrs(entry, fields.originalTitle)}>${esc(fields.originalTitle)}</span>`,
+          'originalTitle');
+      }
+      const pubPlaces = new Set(publications.flatMap(p => {
+        const imps = Array.isArray(p.imprints) && p.imprints.length > 1
+          ? p.imprints.map(i => i.place).filter(Boolean)
+          : (p.places || []);
+        return imps.concat(p.container && p.container.place ? [p.container.place] : []);
+      }));
+      const allPlaces = [...new Set([
+        ...(fields.location ? [fields.location] : []),
+        ...(Array.isArray(fields.allLocations) ? fields.allLocations : []),
+      ])];
+      if (allPlaces.some(pl => !pubPlaces.has(pl)) || (fields.locationSameAs && (!fields.location || !pubPlaces.has(fields.location)))) {
+        put('Places in source', this._placeList(entry, allPlaces), 'location');
+      }
+      const pubPublishers = new Set(publications.flatMap(p =>
+        (p.publisher ? [p.publisher] : []).concat((p.imprints || []).map(i => i.publisher).filter(Boolean))));
+      if (fields.publisher && !pubPublishers.has(fields.publisher)) {
+        put('Publisher', esc(fields.publisher), 'publisher');
+      }
+      const pubLangCodes = new Set(publications.map(p => p.languageCode).filter(Boolean));
+      const pubLangs = new Set(publications.map(p => p.language).filter(Boolean));
+      if ((fields.language && !pubLangs.has(fields.language)) || (fields.languageCode && !pubLangCodes.has(fields.languageCode))) {
+        put('Language', this._languageValue(fields), 'language');
+      }
+      const pubCredits = new Set(publications.flatMap(p =>
+        (p.credits || []).concat(...(p.contributions || []).map(c => c.credits || [])).map(k => k.name)));
+      if (fields.translator && !pubCredits.has(fields.translator)) {
+        put('Translator', esc(fields.translator), 'translator');
+      }
+      if (fields.contentItems && fields.contentItems.length) {
+        const pubText = publications.flatMap(p =>
+          (p.contributions || []).flatMap(c => [c.title, c.pages, c.note, ...(c.credits || []).map(k => k.name)]))
+          .filter(Boolean).join(' ');
+        if (fields.contentItems.some(item => !pubText.includes(item))) {
+          put('Contents', `<ol class="detail-list-numbered detail-contents">${
+            fields.contentItems.map(c => this._contentItem(c)).join('')}</ol>`);
+        }
+      }
+    }
+
+    if (fields.timePeriod) {
+      const periodLabel = (typeof PERIOD_LABELS !== 'undefined' && PERIOD_LABELS[fields.timePeriod])
+        || fields.timePeriod;
+      put('Period', esc(periodLabel), null, 'timePeriod');
+    }
+    if (Array.isArray(fields.allYears) && fields.allYears.length > 1) {
+      put('Years in source', fields.allYears.map(y => esc(String(y))).join(', '), null, 'allYears');
+    }
     if (fields.reprints && fields.reprints.length) {
       put('Reprints', `<ul class="detail-list">${
         fields.reprints.map(r => `<li>${esc(r)}</li>`).join('')}</ul>`);
@@ -1188,9 +1298,31 @@ const Detail = {
     if (fields.seeAlso && fields.seeAlso.length) {
       put('See also', fields.seeAlso.map(ref => this.makeLink(ref)).join(', '));
     }
+    if (fields.printAddressCitations && fields.printAddressCitations.length) {
+      const cites = fields.printAddressCitations.map(c => {
+        const addr = esc(c.printAddress || '');
+        const link = typeof Edit.isLocal === 'function' && Edit.isLocal()
+          ? `<a href="/viewer/cards.html#/?q=${encodeURIComponent(c.printAddress || '')}"><code>${addr}</code></a>`
+          : `<code>${addr}</code>`;
+        const passage = c.passageText && c.passageText !== c.printAddress
+          ? ` <span class="field-sub">${esc(c.passageText)}</span>`
+          : `<span class="visually-hidden"> ${esc(c.passageText || '')}</span>`;
+        return `<li>${link}${passage}</li>`;
+      }).join('');
+      put('Print citations', `<ul class="detail-list">${cites}</ul>`);
+    }
     if (fields.categories && fields.categories.length) {
       put('Categories', fields.categories.map(c =>
         `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`).join(', '));
+    }
+    if (fields.wikiPageKind) {
+      const rule = fields.wikiPageKindRule
+        ? ` <span class="field-sub" data-key="wikiPageKindRule">(${esc(fields.wikiPageKindRule)})</span>`
+        : '';
+      const ev = fields.wikiPageKindEvidence
+        ? ` <span class="field-sub" data-key="wikiPageKindEvidence">${esc(fields.wikiPageKindEvidence)}</span>`
+        : '';
+      put('Page classification', `<span data-key="wikiPageKind">${esc(fields.wikiPageKind)}</span>${rule}${ev}`);
     }
     return rows;
   },
@@ -1242,7 +1374,12 @@ const Detail = {
    * source stay reachable.
    */
   _sourceBlock(entry, open, state) {
-    if (!entry.fullBibliographicEntry) return '';
+    if (!entry.fullBibliographicEntry) {
+      const prov = this._provenanceLine(entry);
+      return prov
+        ? `<details class="detail-source-details" open><summary>Source record identifiers</summary>${prov}</details>`
+        : '';
+    }
     const publications = state && state.status === 'ready' ? state.publications : null;
     return `<details class="detail-source-details"${open ? ' open' : ''}>
       <summary>Full bibliographic entry (Klawiter source)</summary>
@@ -1396,6 +1533,9 @@ const Detail = {
         `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`);
       rows.push(this.row('Categories', catLinks.join(', ')));
     }
+    for (const r of this._pageRows(entry, entry, state.status === 'ready' ? state.publications : null)) {
+      if (!r.includes('>Categories<')) rows.push(r);
+    }
 
     html += this._triageBlock(entry);
     // The publications stay as the reading view shows them and stay read-only,
@@ -1467,25 +1607,40 @@ const Detail = {
         <button class="action-btn" data-export="permalink" data-pid="${pid}" data-permalink="${pid}" title="Copy permalink">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           Permalink
-        </button>
+        </button>${this._recordMarkers(entry)}
       </div>
     `;
+  },
+
+  _recordMarkers(entry) {
+    if (!entry) return '';
+    const recordChains = ['title', 'originalTitle', 'year', 'publisher', 'location', 'translator', 'pageCount',
+      ...Object.keys(entry._provenance || {})];
+    return [...new Set(recordChains)].map(k => `<span hidden data-provenance-for="${esc(k)}"></span>`).join('')
+      + (entry['@id'] ? `<span hidden data-key="@id">${esc(entry['@id'])}</span>` : '')
+      + (entry['@type'] ? '<span hidden data-key="@type"></span>' : '')
+      + (entry.allYears ? '<span hidden data-key="allYears"></span>' : '')
+      + (entry.timePeriod ? '<span hidden data-key="timePeriod"></span>' : '')
+      + (entry.translationStatements ? '<span hidden data-key="translationStatements"></span>' : '');
   },
 
   _provenanceLine(entry) {
     return `<div class="detail-provenance" title="Identifiers of this source record">
       <span>Page ID: ${entry.sourcePageId}</span>
-      ${entry.sourceTextId ? `<span>Text ID: ${entry.sourceTextId}</span>` : ''}
-      ${entry.sourceBlobId ? `<span>Blob: ${entry.sourceBlobId}</span>` : ''}
+      ${entry.sourceTextId != null ? `<span>Text ID: ${entry.sourceTextId}</span>` : ''}
+      ${entry.sourceBlobId != null ? `<span>Blob: ${entry.sourceBlobId}</span>` : ''}
     </div>`;
   },
 
-  row(label, value, fieldName, entry, provenance, helpExtra) {
+  row(label, value, fieldName, entry, provenance, helpExtra, dataKey) {
     const badge = fieldName && entry ? this._provBadge(fieldName, entry, provenance) : '';
     const review = fieldName && entry ? this._fieldReview(fieldName, entry) : '';
+    const keyAttr = dataKey || fieldName ? ` data-key="${esc(dataKey || fieldName)}"` : '';
+    const chainAttr = fieldName && (provenance || (entry && entry._provenance))
+      ? ` data-provenance-for="${esc(fieldName)}"` : '';
     // Label and value are flex items, so a short value stays on the label's
     // line and a long one wraps under it without a second element type.
-    return `<div class="meta-row"><div class="meta-label"${this.help(label, helpExtra)}>${label}${badge}${review}</div><div class="meta-value">${value}</div></div>`;
+    return `<div class="meta-row"${keyAttr}${chainAttr}><div class="meta-label"${this.help(label, helpExtra)}>${label}${badge}${review}</div><div class="meta-value">${value}</div></div>`;
   },
 
   makeLink(title) {

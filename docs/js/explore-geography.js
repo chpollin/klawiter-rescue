@@ -642,6 +642,10 @@ const ExploreGeography = {
         + (missing.length > 25 ? ` <span>and ${fmt(missing.length - 25)} more names</span>` : '')
         + `</details>`;
     }
+    // The coordinates are the matcher's; only a person or an exact rule
+    // confirms a place's authority record, so the map says what it plots.
+    html = '<span class="geo-proposal-note">Map positions come from the automatic place '
+      + 'matcher and are proposals unless a person has confirmed the place.</span> ' + html;
     const note = Explore.setViewNote(html);
     if (!note) return;
 

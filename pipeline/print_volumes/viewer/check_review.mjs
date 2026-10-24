@@ -1,11 +1,35 @@
 // The review rules of the card workbench on invented values, no print text:
-// on which card a key may act, which values "all right" may confirm, the typed
-// value a correction carries, and that a candidate is never called a match.
+// on which card a key may act, which values "all right" may confirm and when
+// a value counts as displayed, the typed value a correction carries, that a
+// reviewer sees only their own decisions, that a message names its object,
+// and that a candidate is never called a match.
 // The server side of the same rules is _review.check (test_print_objects.py).
 // Usage: node pipeline/print_volumes/viewer/check_review.mjs; exits 1 on a failure.
 
 import assert from "node:assert/strict";
-import { WIKI_STATUS, acceptsKeys, candidates, cardLines, confirmable, correctionValue, findPassage, isInherited, shownIndices, valueName, wikiState } from "./render.js";
+import {
+  METHOD_LABEL,
+  ROUTE_LABEL,
+  WIKI_STATUS,
+  about,
+  acceptsKeys,
+  candidateRoute,
+  candidates,
+  cardLines,
+  claimsShown,
+  confirmable,
+  correctionValue,
+  effective,
+  findPassage,
+  inSight,
+  isInherited,
+  objectName,
+  objectReview,
+  ownDecisions,
+  shownIndices,
+  valueName,
+  wikiState,
+} from "./render.js";
 
 const checks = [];
 const check = (name, fn) => checks.push([name, fn]);
@@ -77,6 +101,56 @@ check("the wiki projection names candidates, never matches", () => {
   assert.equal(wikiState(concordance, "I/F/13#1", "I/F/13").status, "title-year");
   assert.equal(wikiState(concordance, "I/F/14#1", "I/F/14").status, "none");
   for (const [, short, long] of Object.values(WIKI_STATUS)) assert.doesNotMatch(`${short} ${long}`, /match(?!es)|linked|in wiki/i);
+  // Route and method names, and every line the drawer builds from them.
+  for (const label of [...Object.values(ROUTE_LABEL), ...Object.values(METHOD_LABEL)]) assert.doesNotMatch(label, /match/i);
+  for (const c of candidates(own)) assert.doesNotMatch(candidateRoute(c), /match|claim:/i);
+  assert.equal(candidateRoute({ route: "alignment", score: 0.5 }), "text alignment, score 0.50");
+  assert.equal(candidateRoute({ route: "title-year", method: "title-year" }), "title and year", "a route is said once");
+  assert.doesNotMatch(candidateRoute({ route: "unknown-route", method: "unknown-method" }), /unknown/);
+  for (const key of ["align", "same", "cand"]) assert.doesNotMatch(claimsShown(key, 5, 12), /match|-/i);
+});
+
+check("a value counts as displayed only inside every clip around it", () => {
+  const viewport = { top: 0, left: 0, bottom: 500, right: 1440 };
+  const column = { top: 100, left: 900, bottom: 450, right: 1440 };
+  const box = (top, height = 20) => ({ top, bottom: top + height, left: 950, right: 1000, width: 50, height });
+  assert.equal(inSight(box(200), [viewport, column]), true);
+  assert.equal(inSight(box(460), [viewport, column]), false, "scrolled below its column");
+  assert.equal(inSight(box(90), [viewport, column]), false, "cut by the column top");
+  assert.equal(inSight(box(520), [viewport]), false, "below the viewport");
+  assert.equal(inSight(box(200, 0), [viewport]), false, "no box");
+});
+
+check("a reviewer sees only their own decisions", () => {
+  const log = [
+    { id: "d1", reviewer: "first", object: "I/F/12#1" },
+    { id: "d2", reviewer: "second", object: "I/F/12#1" },
+    { id: "d3", reviewer: "first second", object: "I/F/12#1" },
+  ];
+  assert.deepEqual(ownDecisions(log, "second").map((d) => d.id), ["d2"]);
+  assert.deepEqual(ownDecisions(log, ""), [], "no name, no decisions");
+});
+
+check("an adjudication never stands in for a reviewer's value decision", () => {
+  const target = { path: "title", value: "Der Weg", span: [0, 7], source: "I/F/12" };
+  const sha = "0".repeat(64);
+  const log = [
+    { id: "d1", reviewer: "third", object: "I/F/12#1", decision: "confirm", target, entry_sha256: sha },
+    { id: "d2", reviewer: "third", object: "I/F/12#1", decision: "adjudicate", target, settles: ["x1", "x2"], adopts: "x1", entry_sha256: sha },
+  ];
+  const active = effective(log);
+  assert.equal(active.size, 2, "both stay in force under their own keys");
+  const rowsShown = [{ index: 0, field: "title", value: "Der Weg", start: 0, end: 7, source: "I/F/12" }];
+  const state = objectReview({ id: "I/F/12#1" }, rowsShown, active, sha);
+  assert.equal(state.byIndex.get(0)?.id, "d1");
+  assert.equal(state.own.length + state.stale.length, 0);
+});
+
+check("a message names the object it concerns", () => {
+  assert.equal(objectName({ address: "F 61", id: "I/F/61#1" }, { kind: "entry" }), "F 61");
+  assert.equal(objectName({ address: "", id: "I/F/61#2", part: "F" }, { kind: "entry" }), "unnumbered object I/F/61#2");
+  assert.equal(objectName({ address: "", id: "I/F/h1#1", part: "F" }, { kind: "header" }), "Header F");
+  assert.equal(about("F 61", "Saved", "title right"), "Saved on F 61, title right.");
 });
 
 let failed = 0;

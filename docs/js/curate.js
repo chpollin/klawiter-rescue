@@ -35,6 +35,7 @@ const Curate = {
   _build(container) {
     container.innerHTML = `
       <div class="page-content page-content-full curate-page">
+        <p class="curate-back"><a href="#data">&larr; Back to Data</a></p>
         <h1 class="page-title">Data Quality</h1>
         <div id="curate-status">${this._statusPanel()}</div>
         <h2 class="curate-section-heading">Field completeness by entry type</h2>

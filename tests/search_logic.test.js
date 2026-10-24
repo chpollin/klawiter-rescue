@@ -245,22 +245,22 @@ test('the result label resolves the same labels the chips do', () => {
 
 test('the review facet reads the review state of an entry, absence included', () => {
   const App = loadApp();
-  const verified = { review: { status: 'agent_verified' } };
+  const verified = { review: { status: 'proposed' } };
   const contested = { review: { status: 'contested' } };
   const undecided = {};
-  const flagged = { review: { status: 'agent_verified' }, reviewFlags: [{ code: 'encoding-repaired' }] };
+  const flagged = { review: { status: 'proposed' }, reviewFlags: [{ code: 'encoding-repaired' }] };
 
   // The arrays come out of the script context, so they are compared as text.
-  assert.strictEqual(JSON.stringify(App.reviewValues(verified)), '["agent_verified"]');
+  assert.strictEqual(JSON.stringify(App.reviewValues(verified)), '["proposed"]');
   assert.strictEqual(JSON.stringify(App.reviewValues(undecided)), '["unreviewed"]');
   // An open flag is an axis of its own, so a flagged entry counts twice.
   assert.strictEqual(JSON.stringify(App.reviewValues(flagged)),
-    '["agent_verified","open-flags"]');
+    '["proposed","open-flags"]');
   // A flag raised on a publication of the page counts as well.
   assert.strictEqual(JSON.stringify(App.reviewValues({
     publicationReviewFlags: ['missing-location'] })), '["unreviewed","open-flags"]');
 
-  assert.strictEqual(App.reviewLabel('agent_verified'), 'Agent verified');
+  assert.strictEqual(App.reviewLabel('proposed'), 'Proposed');
   assert.strictEqual(App.reviewLabel('unreviewed'), 'Unreviewed');
   assert.strictEqual(App.reviewLabel('open-flags'), 'Open review flags');
 

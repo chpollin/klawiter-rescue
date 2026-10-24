@@ -373,11 +373,8 @@ const App = {
       this.renderChips();
       if (entry) {
         this.renderResults();
-        // Auto-expand after render
-        setTimeout(() => {
-          this.toggleCard(pid);
-          this.revealPublication();
-        }, 50);
+        this.openCard(pid);
+        this.revealPublication();
       } else {
         this._renderMissingPage('This page ID does not exist (it may have been a redirect).',
           { pageId: pid });
@@ -1064,6 +1061,11 @@ const App = {
   _paneCardHtml(e) {
     const pid = e.sourcePageId;
     const label = e.pageKind === 'author-page' ? '<div class="card-title-label">Author</div>' : '';
+    const [prev, next] = this._cardNeighbours(pid);
+    const nav = prev != null || next != null ? `<div class="card-nav">
+      <button type="button" class="card-nav-btn" data-act="card-prev"${prev == null ? ' hidden' : ''}>Previous</button>
+      <button type="button" class="card-nav-btn" data-act="card-next"${next == null ? ' hidden' : ''}>Next</button>
+    </div>` : '';
     return `<article class="pane-card" id="card-${pid}" data-pid="${pid}"
         aria-labelledby="pane-title-${pid}">
       <div class="pane-head">
@@ -1072,6 +1074,7 @@ const App = {
           hlEsc(e.title || 'Untitled', this.state.query)}</h2>
         <div class="card-meta">${this.cardMeta(e)}</div>
       </div>
+      ${nav}
       <div class="pane-detail" id="card-detail-${pid}">${Detail.renderInline(e)}</div>
     </article>`;
   },
@@ -1178,7 +1181,7 @@ const App = {
       <div class="card-header" tabindex="-1" role="button" aria-expanded="false"
            aria-controls="card-detail-${e.sourcePageId}">
         ${titleLabel}
-        <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
+        <div class="card-title" data-provenance-for="title"${titleAttrs(e, e.title)}>${title}</div>
         <div class="card-meta">${this.cardMeta(e)}</div>
       </div>
       <div class="card-nav" hidden>
@@ -1386,19 +1389,23 @@ const App = {
   },
 
   /** How a source page names what it documents. */
-  PAGE_KIND_LABELS: { 'author-page': 'Author page', 'edition-page': 'Edition page' },
+  PAGE_KIND_LABELS: {
+    'author-page': 'Author page',
+    'edition-page': 'Edition page',
+    'single-publication': 'Single publication',
+  },
 
   _publicationCountLabel(e) {
     const n = Number(e.publicationCount);
-    if (!Number.isFinite(n) || n < 1) return '';
+    if (!Number.isFinite(n) || n < 0) return '';
     const noun = e.pageKind === 'edition-page' ? 'edition' : 'publication';
     return `${n} ${noun}${n === 1 ? '' : 's'}`;
   },
 
   _pageKindLine(e) {
     const kind = this.PAGE_KIND_LABELS[e.pageKind];
-    if (!kind) return '';
     const count = this._publicationCountLabel(e);
+    if (!kind) return count;
     return count ? `${kind}, ${count}` : kind;
   },
 
@@ -1892,6 +1899,19 @@ const App = {
       }
     });
 
+    const readingPane = document.getElementById('reading-pane');
+    if (readingPane) {
+      readingPane.addEventListener('click', (ev) => {
+        const action = ev.target.closest('[data-act="card-prev"], [data-act="card-next"]');
+        if (!action) return;
+        const card = action.closest('.pane-card');
+        if (card) {
+          this.goToNeighbour(parseInt(card.dataset.pid, 10),
+            action.dataset.act === 'card-next' ? 1 : -1);
+        }
+      });
+    }
+
     // Way back out of a session list, and the retry of the Explore libraries.
     document.addEventListener('click', (ev) => {
       const el = ev.target.closest('#results-context [data-act="back"], [data-act="retry-explore"]');
@@ -2039,6 +2059,14 @@ const App = {
     // like the four pages, so it sits in the navigation as its last item.
     if (this.state.isLocal) {
       const nav = document.querySelector('.site-nav');
+      if (!document.getElementById('nav-print-cards')) {
+        const printLink = document.createElement('a');
+        printLink.id = 'nav-print-cards';
+        printLink.href = '/viewer/cards.html#/';
+        printLink.title = 'Print & Wiki card workbench (available on localhost only)';
+        printLink.textContent = 'Print cards';
+        nav.appendChild(printLink);
+      }
       const toggle = document.createElement('button');
       toggle.id = 'edit-toggle';
       toggle.className = 'nav-item-btn';

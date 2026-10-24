@@ -121,31 +121,42 @@ const Home = {
   model(entries, counts, print) {
     const info = this.info(print);
     const levels = ['Unit of the source', 'Publication', 'Value'];
-    const row = (cells) => cells.map(c => `<td>${c}</td>`).join('');
+    const row = (cells) => cells.map((c, i) => `<td data-label="${esc(levels[i])}">${c}</td>`).join('');
     const pubs = App.data?._meta?.publicationCoverage;
+    const cov = App.data?._meta?.fieldCoverage;
+    const wikiVals = cov
+      ? Object.values(cov).reduce((sum, f) => sum + (f.count || 0), 0)
+      : entries.reduce((sum, e) => sum + ['title', 'year', 'publisher', 'location', 'language', 'translator', 'pageCount']
+          .filter(k => e[k] != null && e[k] !== '').length, 0);
     const wiki = row([
-      `<b>${homeCount(entries.length)}</b> pages`,
-      pubs ? `<b>${homeCount(pubs.publications)}</b> publications on ${homeCount(pubs.pages)} pages` : '',
-      'fields with passage',
+      `<a href="#browse"><b>${homeCount(entries.length)}</b> pages</a>`,
+      pubs ? `<a href="#browse"><b>${homeCount(pubs.publications)}</b> publications</a> on ${homeCount(pubs.pages)} pages` : '',
+      `<a href="#browse"><b>${homeCount(wikiVals)}</b> fields with passage</a>`,
     ]);
     let printRow = '';
     if (print) {
       const t = Object.values(print.totals);
       const sum = (key) => t.reduce((n, v) => n + v[key], 0);
+      const vHref = print.viewer ? `${print.viewer}#/` : '#browse';
       printRow = `<tr><th scope="row">${ICONS.book}Print</th>${row([
-        `<b>${homeCount(sum('numbered'))}</b> numbered, <b>${homeCount(sum('unnumbered'))}</b> unnumbered entries`,
-        `<b>${homeCount(sum('publications'))}</b> publications, <b>${homeCount(sum('other'))}</b> other objects`,
-        `<b>${homeCount(sum('values'))}</b> values with passage`,
+        `<a href="${esc(vHref)}"><b>${homeCount(sum('numbered'))}</b> numbered, <b>${homeCount(sum('unnumbered'))}</b> unnumbered entries</a>`,
+        `<a href="${esc(vHref)}"><b>${homeCount(sum('publications'))}</b> publications, <b>${homeCount(sum('other'))}</b> other objects</a>`,
+        `<a href="${esc(vHref)}"><b>${homeCount(sum('values'))}</b> values with passage</a>`,
       ])}</tr>`;
     }
     return `
-      <table class="home-model">
-        <thead><tr><td class="home-data-head">
+      <div class="home-data-head">
+        <div class="home-data-title">
           <h2 id="home-data-heading">How the data is built</h2>
           <details class="home-info">
             <summary aria-label="What this shows" title="What this shows">${ICONS.info}</summary>
             <div class="home-info-body">${info}</div>
-          </details></td>${levels.map(l => `<th scope="col">${l}</th>`).join('')}</tr></thead>
+          </details>
+        </div>
+        <p class="home-data-lead">Print entries and wiki pages meet at the publication, and every extracted value is bound to its passage in the source.</p>
+      </div>
+      <table class="home-model">
+        <thead><tr><th scope="col" class="home-model-source"><span class="visually-hidden">Source</span></th>${levels.map(l => `<th scope="col">${l}</th>`).join('')}</tr></thead>
         <tbody>${printRow}<tr><th scope="row">${ICONS.wiki}Wiki</th>${wiki}</tr></tbody>
       </table>`;
   },
@@ -166,6 +177,12 @@ const Home = {
   // its tooltip says what it counts.
   table(counts, wikiOnly, print) {
     const volumes = print ? PRINT_VOLUMES.filter(v => print.volumes[v.key]) : [];
+    const maxPrint = {};
+    for (const v of volumes) {
+      const vals = SECTION_ROWS.map(r => print.volumes[v.key]?.[r.code]?.entries || 0);
+      maxPrint[v.key] = Math.max(1, ...vals);
+    }
+    const maxWiki = Math.max(1, ...SECTION_ROWS.map(r => (r.wiki && counts[r.wiki]) || 0));
     const source = (icon, name, year, address) => `<th scope="col" class="num">
       <span class="source">${ICONS[icon]}${esc(name)}</span>
       <span class="source-year">${esc(year)}</span>
@@ -175,14 +192,14 @@ const Home = {
     const rows = SECTION_ROWS.map(r => `
       <tr>
         <th scope="row" title="${esc(r.range ? `Numbered ${r.code} 1 to ${r.range} in the contents of 1991` : 'Only in Addendum I')}"><span class="section-code">${r.code}</span>${esc(r.name)}</th>
-        ${print ? volumes.map(v => this.printCell(print, v, r)).join('') : `<td class="num" data-label="1991">${r.range ? `${r.code} 1&ndash;${homeCount(r.range)}` : '<span class="absent" title="Not in the contents of 1991">&ndash;</span>'}</td>`}
-        ${this.wikiCell(r, counts)}
+        ${print ? volumes.map(v => this.printCell(print, v, r, maxPrint[v.key])).join('') : `<td class="num" data-label="1991">${r.range ? `${r.code} 1&ndash;${homeCount(r.range)}` : '<span class="absent" title="Not in the contents of 1991">&ndash;</span>'}</td>`}
+        ${this.wikiCell(r, counts, maxWiki)}
       </tr>`).join('');
     const indexRow = volumes.length ? `
       <tr class="aside">
         <th scope="row">Indexes</th>
         ${volumes.map(v => this.indexCell(print, v)).join('')}
-        <td></td>
+        <td class="num" data-label="Wiki"><span class="absent" title="No separate index pages in the wiki">&ndash;</span></td>
       </tr>` : '';
     const onlyRow = wikiOnly.length ? `
       <tr class="aside">
@@ -197,12 +214,18 @@ const Home = {
       </table>`;
   },
 
-  printCell(print, volume, row) {
+  _bar(value, max) {
+    if (!value || !max) return '';
+    const pct = Math.max(2, Math.round((value / max) * 100));
+    return `<span class="count-bar" aria-hidden="true"><span style="width:${pct}%"></span></span>`;
+  },
+
+  printCell(print, volume, row, max = 0) {
     const part = print.volumes[volume.key][row.code];
     if (!part || !part.entries) return `<td class="num" data-label="${esc(volume.year)}"><span class="absent" title="No section ${row.code} in ${esc(volume.name)}">&ndash;</span></td>`;
     const href = `${print.viewer}#/?v=${volume.key}&part=${encodeURIComponent(row.code)}`;
     const what = `${homeCount(part.entries)} ${part.entries === 1 ? 'entry' : 'entries'} in section ${row.code} of ${volume.name}${part.highest ? `, numbered up to ${part.highest}` : ''}`;
-    return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(href)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(part.entries)}</a></td>`;
+    return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(href)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(part.entries)}</a>${this._bar(part.entries, max)}</td>`;
   },
 
   indexCell(print, volume) {
@@ -213,13 +236,20 @@ const Home = {
     return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(`${print.viewer}#/?v=${volume.key}&k=index`)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(total)}</a></td>`;
   },
 
-  wikiCell(row, counts) {
+  wikiCell(row, counts, max = 0) {
     if (row.coveredBy) return '';
-    if (row.seeAlso) return `<td class="num" data-label="Wiki"><span class="see" title="Essays are counted at ${row.seeAlso}">&uarr; ${row.seeAlso}</span></td>`;
-    if (!row.wiki || !counts[row.wiki]) return '<td class="num" data-label="Wiki"></td>';
+    if (row.seeAlso) {
+      const target = SECTION_ROWS.find(r => r.code === row.seeAlso);
+      const type = target ? target.wiki : 'essay';
+      const what = `Essays cover sections ${row.seeAlso} and ${row.code} and are counted at ${row.seeAlso}`;
+      return `<td class="num" data-label="Wiki"><button type="button" class="wiki-count see" data-act="filter-type" data-type="${esc(type)}" title="${esc(what)}" aria-label="${esc(what)}">&uarr; ${row.seeAlso}</button></td>`;
+    }
+    if (!row.wiki || !counts[row.wiki]) {
+      return `<td class="num" data-label="Wiki"><span class="absent" title="No wiki entry type for section ${row.code}">&ndash;</span></td>`;
+    }
     const span = row.covers ? ' rowspan="2"' : '';
     const cls = row.covers ? 'num spans' : 'num';
-    return `<td class="${cls}"${span} data-label="Wiki">${this.wikiLink(row.wiki, counts[row.wiki], false, row)}</td>`;
+    return `<td class="${cls}"${span} data-label="Wiki">${this.wikiLink(row.wiki, counts[row.wiki], false, row)}${this._bar(counts[row.wiki], max)}</td>`;
   },
 
   wikiLink(type, count, named, row = null) {
