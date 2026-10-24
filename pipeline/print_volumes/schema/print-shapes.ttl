@@ -105,7 +105,9 @@ kp:ReviewedValueShape a sh:NodeShape ;
   sh:targetSubjectsOf kp:review ;
   sh:property [ sh:path kp:review ; sh:maxCount 1 ; sh:class kp:ReviewDecision ] ;
   sh:property [ sh:path kp:reviewState ; sh:minCount 1 ; sh:maxCount 1 ;
-                sh:in ( "confirmed" "corrected" "contested" ) ] .
+                sh:in ( "confirmed" "contested" ) ] ;
+  sh:property [ sh:path kp:reviewAction ; sh:minCount 1 ; sh:maxCount 1 ;
+                sh:in ( "confirm" "correct" "unresolved" ) ] .
 
 kp:CorrectionShape a sh:NodeShape ;
   sh:property [ sh:path kp:field ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;

@@ -43,6 +43,11 @@ CAND_SHOWN = 3
 ROUTES = {
     "textAlignedWith": ("align", "alignment", "shingle-alignment"),
     "samePublicationAs": ("same", "field-match", "title-year-field"),
+    # A field match on a contents or reprint line states containment, never
+    # identity (p07 _relation); it is listed with the field matches and keeps
+    # its predicate as "relation".
+    "containedIn": ("same", "field-match", "title-year-field"),
+    "contains": ("same", "field-match", "title-year-field"),
     "candidateFor": ("cand", "title-year", "title-year"),
 }
 URI_PAGE = re.compile(r"klawiter:(?:entry/(\d+)|publication/(\d+)-)")
@@ -182,7 +187,10 @@ def project(
         else:
             item["target"] = target
             if key == "same":
+                item["relation"] = c["predicate"]
+                # The fields that agreed ("publisher"), their tokens apart.
                 item["secondField"] = evidence.get("second_field", [])
+                item["secondFieldValues"] = evidence.get("second_field_values", [])
         item["method"] = method
         # A claim read from a record text that has changed since stays listed,
         # marked, until p07 runs again.
@@ -197,15 +205,18 @@ def project(
         totals = {}
         if "same" in info:
             year = (meta.get(subject) or {}).get("year")
-            # Same year first, then more agreeing second fields; stable on the
-            # claim order of p07 beyond that.
+            # Identity before containment, then same year, then more agreeing
+            # second-field tokens; stable on the claim order of p07 beyond that.
             info["same"].sort(
                 key=lambda x: (
+                    0
+                    if x.get("relation", "samePublicationAs") == "samePublicationAs"
+                    else 1,
                     0
                     if x["target"] in pubs
                     and str(pubs[x["target"]].get("year")) == year
                     else 1,
-                    -len(x.get("secondField") or []),
+                    -len(x.get("secondFieldValues") or x.get("secondField") or []),
                 )
             )
             if len(info["same"]) > SAME_SHOWN:
@@ -307,8 +318,9 @@ def concordance() -> dict:
     out = {
         "about": "Wiki concordance of the print objects for the local card workbench; "
         "holds print values, local only (rights unresolved). links: per print object "
-        "or record id the p07 claims (align: alignment, same: field-match, cand: "
-        "title-year) with claim id and state, which p07 sets to proposed and this "
+        "or record id the p07 claims (align: alignment, same: field-match with its "
+        "relation samePublicationAs, containedIn or contains and the second fields "
+        "that agreed, cand: title-year) with claim id and state, which p07 sets to proposed and this "
         "projection never raises, and the p08 field conflict (diff, state conflict). "
         f"same shows the best {SAME_SHOWN} by same year and agreeing second fields, "
         f"cand the first {CAND_SHOWN}; totals gives the full count where cut. stale "

@@ -94,6 +94,7 @@
   "inherited": "kp:inherited",
   "llm_model": "kp:llmModel",
   "reviewState": "kp:reviewState",
+  "reviewAction": "kp:reviewAction",
   "review": {"@id": "kp:review", "@type": "@id"},
   "reviews": {"@id": "kp:reviewDecision", "@type": "@id", "@container": "@set"},
   "decision": "kp:decision",

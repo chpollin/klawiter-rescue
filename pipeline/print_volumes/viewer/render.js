@@ -213,7 +213,7 @@ const PRODUCER_LABEL = {
 // _review.in_force() for that reviewer, so that the page shows the state p13
 // will count for them.
 // The exported state of a value (p12) as the decision that produced it.
-export const STATE_DECISION = { confirmed: "confirm", corrected: "correct", contested: "unresolved" };
+export const STATE_DECISION = { confirmed: "confirm", contested: "unresolved" };
 export const DECISION_WORD = { confirm: "right", correct: "wrong", unresolved: "unsure" };
 
 export function decisionKey(d) {
@@ -723,14 +723,19 @@ export const METHOD_LABEL = {
 // The keys of the concordance projection by route.
 const KEY_ROUTE = { align: "alignment", same: "field-match", cand: "title-year" };
 
+const FIELD_LABEL = { place: "the place", publisher: "the publisher", translator: "the translator", extent: "the extent" };
+// Identity needs no words; the two containment predicates of p07 do.
+const RELATION_LABEL = { containedIn: "listed as an item of it", contains: "naming it as the host of the item" };
+
 // How the concordance proposes one candidate, in words.
 export function candidateRoute(c) {
   const route = ROUTE_LABEL[c.route] ?? "an unnamed route";
   if (c.route === "alignment") return `${route}, score ${Number(c.score ?? 0).toFixed(2)}`;
-  const second = c.secondField?.length ? `, agreeing on ${c.secondField.join(", ")}` : "";
+  const second = c.secondField?.length ? `, agreeing on ${c.secondField.map((f) => FIELD_LABEL[f] ?? f).join(" and ")}` : "";
+  const relation = RELATION_LABEL[c.relation] ? `, ${RELATION_LABEL[c.relation]}` : "";
   const method = METHOD_LABEL[c.method] ?? "an unnamed method";
   // A method that only repeats its route is said once.
-  return `${route}${method === route ? "" : `, by ${method}`}${second}`;
+  return `${route}${method === route ? "" : `, by ${method}`}${relation}${second}`;
 }
 
 // The note under a route whose claims the projection cut short.
@@ -751,7 +756,7 @@ export function candidates(state) {
         seen.get(id).claims.push(c.claim);
         continue;
       }
-      const item = { key, target, page: c.page, route: c.route, method: c.method, score: c.score, secondField: c.secondField ?? [], stale: Boolean(c.stale), state: c.state ?? "proposed", claims: [c.claim].filter(Boolean) };
+      const item = { key, target, page: c.page, route: c.route, method: c.method, score: c.score, relation: c.relation ?? "samePublicationAs", secondField: c.secondField ?? [], stale: Boolean(c.stale), state: c.state ?? "proposed", claims: [c.claim].filter(Boolean) };
       seen.set(id, item);
       out.push(item);
     }

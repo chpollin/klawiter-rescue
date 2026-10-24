@@ -560,6 +560,11 @@ CONTENTS_LABEL = re.compile(
 )
 CONTENTS_END = re.compile(r"\bSee\b|\bFIE\s?:|Editions/Reprints\s?:")
 CONTENT_ITEM = re.compile(r"\[(?:\d{1,3}[a-z]?|X|[a-z])\]\s?\.\s*")
+VOLUME_LABEL = re.compile(r"(?:Vols?|Bd|Tome|Tom)\.\s?[\dIVXL]")
+# A sentence end inside a titled contents item; "pp. 353" and "Vol. 2" go on.
+CONTENT_SENTENCE_END = re.compile(
+    r"(?<!\bpp)(?<!\bp)(?<!\bVol)(?<!\bNo)\.\s+(?=[A-ZÀ-Þ])|\.$"
+)
 # An edition line opens with its publisher ("Publisher: 383p. Place,
 # 1952", "Publisher: Ed. Forename Surname. viii/82p. Place, 1962").
 EDITION_LINE = re.compile(
@@ -607,6 +612,23 @@ def quoted_span(m: re.Match) -> tuple[int, int]:
     """Span of the quoted text inside a QUOTED match."""
     name = next(g for g in "abcde" if m.group(g) is not None)
     return m.start(name), m.end(name)
+
+
+def _strip_span(text: str, start: int, end: int) -> tuple[int, int]:
+    while start < end and text[start] in " ,;":
+        start += 1
+    while end > start and text[end - 1] in " ,;":
+        end -= 1
+    return start, end
+
+
+def _item_start(item: dict | None) -> int:
+    """Where a contents item begins in the entry, for printed order."""
+    if not item:
+        return -1
+    if item.get("title"):
+        return item["title"]["span"][0]
+    return item["address"]["address"]["span"][0]
 
 
 def marker_kind(marker: str) -> str:
@@ -760,8 +782,10 @@ class Reader:
         self._informants(self.start, self.end)
         self._holdings(pos, self.end)
         self._reviewed()
-        self._contents()
-        self._references(self.start, self.end)
+        tail = self._contents()
+        refs = self._references(self.start, self.end) + tail
+        if refs:
+            self.out["references"] = refs
         self._notes(self.start, self.end)
         self._item_as_host()
         self._host_codes()
@@ -2376,8 +2400,13 @@ class Reader:
             out["extent"] = extent
         return out if out.get("title") else None
 
-    def _contents(self) -> None:
-        """A Contents list after the head object belongs to the object it follows."""
+    def _contents(self) -> list[dict]:
+        """A Contents list after the head object belongs to the object it follows.
+
+        Returns the cross-references that stand outside the object's span: in
+        a bracket of the list ("(See G 449)") and after it ("... / L 68. See
+        A 48"), so that the review can decide them as the object's values.
+        """
         text = self.text
         m = None
         if self.start == 0:
@@ -2387,11 +2416,19 @@ class Reader:
         if not m:
             m = CONTENTS_LABEL.search(text, self.start, self.end)
         if not m:
-            return
+            return []
         inside = m.start() < self.end
         stop = self.end if inside else self.ctx.get("next_object_start", len(text))
-        end = CONTENTS_END.search(text, m.end(), stop)
-        end = end.start() if end else stop
+        # A "See" inside a bracket of the list refers from one item; only one
+        # at the list's own level ends it.
+        end = next(
+            (
+                e.start()
+                for e in CONTENTS_END.finditer(text, m.end(), stop)
+                if self._depth(m.end(), e.start()) == 0
+            ),
+            stop,
+        )
         source = None if inside else self.entry["id"]
         items = []
         marks = list(CONTENT_ITEM.finditer(text, m.end(), end))
@@ -2406,10 +2443,84 @@ class Reader:
                 items.append(self._content_item(mark.end(), item_end, source))
         else:
             for ref in self.addresses(m.end(), end, source=source):
-                items.append({"address": ref})
+                if not self._see_bracket(m.end(), ref["address"]["span"][0]):
+                    items.append({"address": ref})
+            items += self._titled_items(m.end(), end, source)
+            items.sort(key=_item_start)
         items = [i for i in items if i]
         if items:
             self.out["contents"] = items
+        if inside:
+            return []
+        own = self.entry["id"]
+        # In an address list every address outside a See bracket is an item.
+        refs = [] if marks else self._references(m.end(), end, source=own)
+        if text.startswith("See", end):
+            # The See sentence after the list, up to its end or a new list.
+            cut = [stop]
+            for pattern in (CONTENT_SENTENCE_END, CONTENTS_LABEL, VOLUME_BREAK):
+                found = pattern.search(text, end, stop)
+                if found:
+                    cut.append(found.start() + 1)
+            refs += self._references(end, min(cut), source=own)
+        return refs
+
+    def _depth(self, start: int, pos: int) -> int:
+        """Bracket depth at pos, counted from start."""
+        depth = 0
+        for ch in self.text[start:pos]:
+            if ch in "[(":
+                depth += 1
+            elif ch in "])" and depth:
+                depth -= 1
+        return depth
+
+    def _see_bracket(self, start: int, pos: int) -> bool:
+        """pos stands in a bracket of the list that opens with "See"."""
+        opened: list[int] = []
+        for i in range(start, pos):
+            ch = self.text[i]
+            if ch in "[(":
+                opened.append(i)
+            elif ch in "])" and opened:
+                opened.pop()
+        return bool(opened) and self.text[opened[-1] + 1 :].lstrip().startswith("See")
+
+    def _titled_items(self, start: int, end: int, source) -> list[dict]:
+        """Items named by title in an address list ("D 141 / Commentaries, pp.
+        353-364", "Vorwort / H 45"): a slash at the list's level separates
+        them, and a titled item holds no address. The last one ends with its
+        sentence, so that what follows the list is no item."""
+        text = self.text
+        cuts = [
+            s.start()
+            for s in re.finditer(r"\s/\s", text[start:end])
+            if self._depth(start, start + s.start()) == 0
+        ]
+        if not cuts:
+            return []
+        bounds = [start, *(start + c for c in cuts), end]
+        items = []
+        for n in range(len(bounds) - 1):
+            a = bounds[n] + (0 if n == 0 else 3)
+            b = bounds[n + 1]
+            if REFERENCE.search(text, a, b):
+                continue
+            sentence = CONTENT_SENTENCE_END.search(text, a, b)
+            if sentence:
+                b = sentence.start() + 1
+            a, b = _strip_span(text, a, b)
+            segment = text[a:b]
+            if (
+                not re.search(r"[^\W\d_]{2}", segment)
+                or segment.startswith("See")
+                or VOLUME_LABEL.match(segment)
+            ):
+                continue
+            item = self._content_item(a, b, source)
+            if item:
+                items.append(item)
+        return items
 
     def _content_item(self, start: int, end: int, source) -> dict | None:
         text = self.text
@@ -2526,7 +2637,10 @@ class Reader:
             self.used.append((a, b))
         return out
 
-    def _references(self, s: int, e: int) -> None:
+    def _references(self, s: int, e: int, source=None) -> list[dict]:
+        """The cross-references in text[s:e] that no other field holds. With a
+        source (the own entry), they stand outside the object's span: the
+        references after its Contents list (_contents)."""
         taken = set()
         for ref in self.out.get("work_refs", []):
             taken.add(tuple(ref["address"]["span"]))
@@ -2537,7 +2651,7 @@ class Reader:
             if item.get("address"):
                 taken.add(tuple(item["address"]["address"]["span"]))
         refs, previous = [], None
-        for ref in self.addresses(s, e):
+        for ref in self.addresses(s, e, source=source):
             a, b = ref["address"]["span"]
             if (a, b) in taken:
                 previous = None
@@ -2550,6 +2664,7 @@ class Reader:
                     marker.start("marker"),
                     marker.end("marker"),
                     "p03.reference-marker",
+                    source=source,
                 )
             elif (
                 previous
@@ -2560,15 +2675,19 @@ class Reader:
                 ref["kind"] = dict(previous[1])
             else:
                 ref["kind"] = value(
-                    "related", a, b, "p03.reference-inline", by="compiler"
+                    "related",
+                    a,
+                    b,
+                    "p03.reference-inline",
+                    by="compiler",
+                    source=source,
                 )
             if ref["kind"]["value"] == "contents":
                 previous = (b, ref["kind"])
                 continue
             refs.append(ref)
             previous = (b, ref["kind"])
-        if refs:
-            self.out["references"] = refs
+        return refs
 
     def _notes(self, s: int, e: int) -> None:
         notes = []
@@ -2908,8 +3027,18 @@ def summary(obj: dict) -> dict:
     """
     inherited = obj.get("inherited") or {}
     host = (obj.get("hosts") or [{}])[0]
+    # A volume that gives only its year reads place and publisher from its
+    # collection header (p03 _period_imprint).
+    placed = [
+        i for i in obj.get("imprints") or [] if i.get("place") or i.get("publisher")
+    ]
     imprints = (
-        obj.get("imprints") or host.get("imprints") or inherited.get("imprints") or []
+        placed
+        or (obj.get("imprints") and inherited.get("imprints"))
+        or obj.get("imprints")
+        or host.get("imprints")
+        or inherited.get("imprints")
+        or []
     )
 
     def first(values, key):

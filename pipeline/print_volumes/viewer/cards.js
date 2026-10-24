@@ -674,7 +674,7 @@ function signOf(decision) {
 function valueToken(model, row, sub = false) {
   const d = model.state.byIndex.get(row.index);
   // Read only, the state the last export recorded stands for the decision.
-  const decision = d?.decision ?? (review.recording ? null : STATE_DECISION[row.node.reviewState]);
+  const decision = d?.decision ?? (review.recording ? null : (row.node.reviewAction ?? STATE_DECISION[row.node.reviewState]));
   const token = make(
     "span",
     { class: `token${sub ? " sub" : ""}` },
@@ -1015,7 +1015,7 @@ function renderChain(model, row) {
   } else if (row.node.reviewState && !review.recording) {
     // The export carries every reviewer's decisions; while recording, a
     // reviewer sees only their own.
-    li.append(`${row.node.reviewState} at the last export`);
+    li.append(`${row.node.reviewAction === "correct" ? "corrected and confirmed" : row.node.reviewState} at the last export`);
   } else {
     li.append(isApparatus(object) ? "not part of the review" : "no decision yet");
   }

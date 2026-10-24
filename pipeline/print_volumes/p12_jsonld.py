@@ -30,15 +30,14 @@ four levels:
 The viewer data stay local under data/print/derived/viewer/ (rights
 unresolved): an index of all objects, the vocabulary, and the wiki
 concordance that _viewer_data.py projects from the p07 claims and p08 cases.
-The review server serves the viewer code from its versioned folder (viewer/
-beside this module, no print text) and these data from derived. The code is
-still copied beside the data because check_render.mjs runs there: it imports
-./render.js and reads index.json and the chunks relative to its own folder.
+p12 writes only these data there; the review server serves the viewer code
+from its versioned folder (viewer/ beside this module, no print text) and
+the data from derived, and check_render.mjs reads the data from derived.
 
 Output: data/print/derived/jsonld/<volume>/<part>-<n>.jsonld,
 data/print/derived/lab/wiki_concordance.json,
-data/print/derived/viewer/ (index.json, vocab.json, wiki_concordance.json and
-a copy of the viewer code), data/print/derived/reports/p12_jsonld.json.
+data/print/derived/viewer/ (index.json, vocab.json, wiki_concordance.json),
+data/print/derived/reports/p12_jsonld.json.
 
 Usage: python -m uv run python pipeline/print_volumes/p12_jsonld.py [--no-shacl]
 """
@@ -58,11 +57,10 @@ from _fields import summary
 from _heldout import review_objects
 from _review import MISSING_FIELDS, check, effective, load_log
 from _schema import BASE_KEYS, LANGUAGES, OBJECT_TYPES, ROLES, object_values
-from _viewer_data import CONCORDANCE, VIEWER_DATA_FILES, concordance, snippet
+from _viewer_data import CONCORDANCE, concordance, snippet
 
 RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "jsonld"
-VIEWER_SRC = HERE / "viewer"
 VIEWER = DERIVED_DIR / "viewer"
 LOCAL_VIEWER_FILES = (CONCORDANCE,)
 CONTEXT_FILE = HERE / "schema" / "print-context.jsonld"
@@ -106,7 +104,11 @@ def _plan_producer(rule: str) -> str:
     return "compiler" if rule.startswith("p06.") else "rule"
 
 
-STATE = {"confirm": "confirmed", "correct": "corrected", "unresolved": "contested"}
+# The statement states are proposed, confirmed and contested. A corrected
+# value is confirmed: the confirmed value is the correction on the decision,
+# and the value node, the rule's reading, stays in the chain as its
+# predecessor; reviewAction tells a correction from a confirmation.
+STATE = {"confirm": "confirmed", "correct": "confirmed", "unresolved": "contested"}
 
 
 class Exporter:
@@ -150,6 +152,7 @@ class Exporter:
         decision = self.by_path.get(path)
         if decision is not None:
             node["reviewState"] = STATE[decision.decision]
+            node["reviewAction"] = decision.decision
             node["review"] = f"review/{decision.id}"
         return node
 
@@ -483,23 +486,17 @@ def main() -> int:
         results = list(pool.map(validate_chunk, jobs))
     failed = [r for r in results if r["problems"]]
     # Empty the folder rather than remove it: on Windows a shell or editor
-    # standing in it locks the folder itself, not its files.
+    # standing in it locks the folder itself, not its files. It holds data
+    # only; the code is served from the versioned folder, so an earlier copy
+    # of it must not linger here.
     VIEWER.mkdir(parents=True, exist_ok=True)
     for child in VIEWER.iterdir():
         if child.is_dir():
             shutil.rmtree(child)
         else:
             child.unlink()
-    # A stray data file in the versioned folder must not stand in for the
-    # data written here.
-    shutil.copytree(
-        VIEWER_SRC,
-        VIEWER,
-        dirs_exist_ok=True,
-        ignore=shutil.ignore_patterns(*VIEWER_DATA_FILES),
-    )
     # Print-derived files the viewer reads live under data/print/, never in the
-    # versioned viewer folder; they are copied in beside the page.
+    # versioned viewer folder.
     for local in LOCAL_VIEWER_FILES:
         if local.exists():
             shutil.copyfile(local, VIEWER / local.name)

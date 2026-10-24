@@ -186,9 +186,22 @@ def segment(volume: str) -> list[dict]:
                     lead = key
             if kind == "heading":
                 lead = None
-                headings.append(text)
                 heading = {"id": key, "text": text}
                 label = text.strip("* .")
+                reference = bool(REFERENCE_HEADING.search(label))
+                address_list = (
+                    len(re.sub(r"[^A-Za-z]", "", REFERENCE.sub(" ", label))) < 4
+                )
+                if not reference:
+                    # A cross-reference set as heading ("**** TITLE. See A 167.")
+                    # heads nothing, so a run of them must not push the section
+                    # heading out of the context.
+                    headings.append(text)
+                if not (reference or address_list):
+                    # A collection header heads the volumes up to the next
+                    # heading; the volumes of another language or form group
+                    # are not its volumes.
+                    collection = None
                 if SECTION_HEADING.match(label) or LETTERS_HEADING.match(label):
                     # A section or a division of the letters (collected,
                     # individual, repositories) ends every language group.
@@ -197,11 +210,11 @@ def segment(volume: str) -> list[dict]:
                     # "ADAM LUX [E 5 / EA1 1 / NA1 1]" names the reviewed or
                     # translated work by its addresses.
                     work, scope = heading, [heading]
-                elif REFERENCE_HEADING.search(label):
+                elif reference:
                     # A cross-reference set as heading points to another
                     # work; it heads no editions but stays in its group.
                     work = None
-                elif len(re.sub(r"[^A-Za-z]", "", REFERENCE.sub(" ", label))) < 4:
+                elif address_list:
                     # An address list under the work heading ("D 29 / H 37,
                     # 113") keeps the work it follows.
                     pass
@@ -233,6 +246,26 @@ def segment(volume: str) -> list[dict]:
 def _heading_reader(heading: dict, index: dict) -> Reader:
     entry = {"id": heading["id"], "text": heading["text"], "address": "", "part": ""}
     return Reader(entry, (0, len(heading["text"])), {"index": index})
+
+
+def _period_imprint(imprints: list[dict], own: list[dict]) -> dict | None:
+    """Place and publisher of the one header imprint whose period holds the
+    volume's year ("Stockholm: ..., 1939-1950 / Frankfurt am Main: ...,
+    1950-1990"). A year in two periods or in none chooses nothing."""
+    year = next((i["year"]["value"] for i in own if i.get("year")), None)
+    if year is None:
+        return None
+    holding = [
+        i
+        for i in imprints
+        if i.get("year")
+        and i.get("year_end")
+        and (i.get("place") or i.get("publisher"))
+        and i["year"]["value"] <= year <= i["year_end"]["value"]
+    ]
+    if len(holding) != 1:
+        return None
+    return {k: holding[0][k] for k in ("place", "publisher") if holding[0].get(k)}
 
 
 def _inherited(
@@ -289,18 +322,27 @@ def _inherited(
         if refs:
             inherited["work_refs"] = inherit(refs, work["id"])
     collection = record["_collection"]
+    own = obj.get("imprints") or []
+    # A volume that gives only its year after the extent ("757/(3)p. 1983")
+    # has its place and publisher in the header.
+    year_only = bool(own) and not any(i.get("place") or i.get("publisher") for i in own)
     # Only the volume itself inherits from its header, not its later printings.
     if (
         collection
         and not obj.get("relation")
-        and not obj.get("imprints")
+        and (not own or year_only)
         and not OWN_IMPRINT.search(record["text"][span[0] : span[1]])
     ):
         header = heads.get(collection["id"])
         if header:
-            for key in ("imprints", "persons"):
-                if header.get(key):
-                    inherited[key] = inherit(header[key], collection["id"])
+            if year_only:
+                chosen = _period_imprint(header.get("imprints", []), own)
+                if chosen:
+                    inherited["imprints"] = [inherit(chosen, collection["id"])]
+            elif header.get("imprints"):
+                inherited["imprints"] = inherit(header["imprints"], collection["id"])
+            if header.get("persons"):
+                inherited["persons"] = inherit(header["persons"], collection["id"])
             if header.get("title"):
                 inherited["series"] = [
                     {"title": inherit(header["title"], collection["id"])}

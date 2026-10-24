@@ -94,6 +94,10 @@ TARGET_CLAIMS = 40
 NO_YEAR_PER_VOLUME = 10
 ROUTES = {
     "samePublicationAs": "field",
+    # Containment is no identity a blind answer could confirm; it is counted
+    # apart and enters no measured route.
+    "containedIn": "containment",
+    "contains": "containment",
     "candidateFor": "title-year",
     "textAlignedWith": "alignment",
 }

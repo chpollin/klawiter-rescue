@@ -387,7 +387,10 @@ def test_reviewed_value_exports_with_its_decision(tmp_path):
         {record["id"]: full}, {obj["id"]: [((obj["id"], "value", "title"), decision)]}
     )
     node = exporter.obj(obj)
-    assert node["title"]["reviewState"] == "corrected"
+    # A correction confirms the corrected value; the rule's value stays as
+    # its predecessor and the action tells the two apart.
+    assert node["title"]["reviewState"] == "confirmed"
+    assert node["title"]["reviewAction"] == "correct"
     context = json.loads(CONTEXT_FILE.read_text(encoding="utf-8"))["@context"]
     graph = (
         file_nodes()
@@ -397,6 +400,10 @@ def test_reviewed_value_exports_with_its_decision(tmp_path):
     )
     doc = {"@context": context, "@graph": graph}
     assert _validated(doc, exporter.values, tmp_path) == []
+    # No fourth state: "corrected" is no statement state.
+    node["title"]["reviewState"] = "corrected"
+    assert any("SHACL" in p for p in _validated(doc, exporter.values, tmp_path))
+    node["title"]["reviewState"] = "confirmed"
     review = next(n for n in graph if n.get("id") == f"review/{decision.id}")
     review["correction"]["selector"]["exact"] = "Ein Versuh"
     assert any("SHACL" in p for p in _validated(doc, exporter.values, tmp_path))

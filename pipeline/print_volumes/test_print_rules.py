@@ -755,6 +755,96 @@ def test_a_four_digit_address_stands_where_the_section_runs_that_high():
     assert [val(r, "address") for r in out["references"]] == ["G 1101"]
 
 
+def _head(text):
+    """The head object of an entry whose Contents list follows its span."""
+    return read(text, part="A", span=(0, text.index(" Contents")))
+
+
+def test_cross_references_after_a_contents_list_are_the_objects_values():
+    text = "12 DER BAND. 251p. 1981. Contents: D 19 / H 45, 167. See A 48 / G 755."
+    out = _head(text)
+    assert [val(i, "address", "address") for i in out["contents"]] == [
+        "D 19",
+        "H 45, 167",
+    ]
+    refs = out["references"]
+    assert [val(r, "address") for r in refs] == ["A 48", "G 755"]
+    assert {val(r, "kind") for r in refs} == {"see"}
+    # Outside the object's span, each value names its own entry.
+    assert {r["address"]["from"] for r in refs} == {"I/A/12"}
+    assert {r["kind"]["from"] for r in refs} == {"I/A/12"}
+
+
+def test_a_see_in_a_bracket_of_the_list_neither_ends_it_nor_is_an_item():
+    text = "12 DER BAND. 787p. 1985. Contents: G 131 (See G 449) / H 464 / Nachwort."
+    out = _head(text)
+    items = out["contents"]
+    assert [
+        val(i, "title") if i.get("title") else val(i, "address", "address")
+        for i in items
+    ] == ["G 131", "H 464", "Nachwort"]
+    assert [val(r, "address") for r in out["references"]] == ["G 449"]
+
+
+def test_a_titled_item_after_a_slash_keeps_its_pages_and_ends_the_list():
+    text = (
+        "12 DER BAND. 364p. 1974. Contents: F 2, 7 / Kommentare, pp. 353-364. "
+        "ZWEITER BAND. 1990."
+    )
+    out = _head(text)
+    titled = [i for i in out["contents"] if i.get("title")]
+    assert [(val(i, "title"), val(i, "pages")) for i in titled] == [
+        ("Kommentare", "353-364")
+    ]
+
+
+def test_a_see_inside_a_numbered_items_bracket_does_not_end_the_list():
+    text = (
+        "Der Band. Ort: Verlag, 1987. Contents: [1]. Episode [Episode am See], "
+        "pp. 1-9. [2]. Zweite Geschichte, pp. 10-20."
+    )
+    out = _head(text)
+    assert [val(i, "title") for i in out["contents"]] == [
+        "Episode",
+        "Zweite Geschichte",
+    ]
+
+
+def test_a_volume_of_a_collection_takes_the_imprint_of_its_period():
+    from p03_records import _period_imprint
+
+    def imprint(place, year, end=None):
+        out = {"place": {"value": place}, "year": {"value": year}}
+        if end:
+            out["year_end"] = {"value": end}
+        return out
+
+    header = [imprint("Erstort", 1939, 1950), imprint("Zweitort", 1950, 1990)]
+    own = [{"year": {"value": 1981}}]
+    assert _period_imprint(header, own) == {"place": {"value": "Zweitort"}}
+    # A year in two periods, in none, or a header without periods: no choice.
+    assert _period_imprint(header, [{"year": {"value": 1950}}]) is None
+    assert _period_imprint(header, [{"year": {"value": 1997}}]) is None
+    assert _period_imprint([imprint("Ort", 1960)], own) is None
+
+
+def test_a_year_only_volume_reads_place_and_publisher_from_its_header():
+    from _fields import summary
+
+    obj = {
+        "imprints": [{"year": {"value": 1981}}],
+        "inherited": {
+            "imprints": [{"place": {"value": "Ort"}, "publisher": {"value": "Verlag"}}]
+        },
+    }
+    fields = summary(obj)
+    assert (fields["year"], fields["place"], fields["publisher"]) == (
+        1981,
+        "Ort",
+        "Verlag",
+    )
+
+
 def test_rule_patterns_hold_no_control_character():
     import _apparatus
     import _fields

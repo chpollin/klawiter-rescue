@@ -37,7 +37,7 @@
      "p03_records.py",
      "sections.json"
     ],
-    "sha256": "37e6e2fff56923281def2a9659b4271ed788f5400bd994dfe373470d42bb7962"
+    "sha256": "8ff60ea717b9050a0e9943929dd6eb33cd271ed212388950b608d66768f00d17"
    }
   }
  },
@@ -66,7 +66,7 @@
      "_schema.py",
      "p07_concordance.py"
     ],
-    "sha256": "20615a4d0dcd9d030ecc456c3d29cbe559de5e3e09bf35b2983d0ceba7dee40b"
+    "sha256": "0aee7185e3a69e0f5b5b6baca982a5dc3c745a5668543cefa0240346bb42e453"
    }
   }
  }

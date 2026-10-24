@@ -12,14 +12,20 @@ the wiki text is re-keyed. The concordance therefore takes two routes:
 - field: a print object's title words (up to TITLE_WORDS; a single word
   shorter than MIN_SINGLE_WORD letters reads on into its subtitle, or else
   reaches only a page titled exactly that word) and year occur in one line of
-  a page's latest revision; a second field (publisher, place, translator
-  surname, own or inherited, or extent) agreeing in the window around that
-  line makes it a field match, otherwise it stays a title-year block. The
-  second field needs two agreeing tokens or one rare in the wiki lines
-  (_rare_limit), so a frequent place or publisher alone does not carry it.
-  Lines include contents lines, which the wiki publication layer does not
-  hold as publications. A collection header without address is not matched:
-  it stands for its volumes, which carry their own matches.
+  a page's latest revision, the year within YEAR_WINDOW lines of the title; a
+  second field (publisher, place, translator surname, own or inherited, or
+  extent) agreeing in the wiki item of the match (the lines from title to
+  year, and the head of the verified publication slice they stand in) makes
+  it a field match, otherwise it stays a title-year block. The second field
+  needs two agreeing tokens or one rare in the wiki lines (_rare_limit), so a
+  frequent place or publisher alone does not carry it; the claim names the
+  fields that agreed and keeps their tokens apart. Lines include contents and
+  reprint lines, which the wiki publication layer does not hold as
+  publications, so a field match states a relation (_relation): containedIn
+  or contains where the line lists the print object as an item or names it
+  as the host of its item, samePublicationAs otherwise. A collection header
+  without address is not matched: it stands for its volumes, which carry
+  their own matches.
 
 The deterministic test: entries aligned with score >= SILVER at some revision
 form silver pairs (print entry, wiki page) whose identity rests on near-verbatim
@@ -83,6 +89,8 @@ GENERIC = frozenset(
     "publisher books book company librairie libreria livraria buchhandlung "
     "gesellschaft wydawnictwo kiadas nakladatelstvi izdatelstvo".split()
 )
+# Where a wiki line names a host: a link, or an italic title after "in".
+HOST_SEGMENT = re.compile(r"\[\[[^\]]*\]\]|\bin:?\s+''(?:[^']|'(?!'))*''")
 ALIGN = {"class": "editorial", "method": "rule", "rule": "p07.shingle-alignment"}
 FIELD = {"class": "editorial", "method": "rule", "rule": "p07.title-year-field"}
 
@@ -186,10 +194,14 @@ def _align(
     )
 
 
-def _publication_slices(pages: set[int], texts: dict[int, str]) -> tuple[dict, Counter]:
+def _publication_slices(
+    pages: set[int], texts: dict[int, str], contents: dict | None = None
+) -> tuple[dict, Counter]:
     """Publication slices per page from the published frontend layer, kept only
     where the slice of the latest revision hashes to the published slice. A
-    mismatch means the two readings of the page differ, so no line is mapped."""
+    mismatch means the two readings of the page differ, so no line is mapped.
+    contents, if given, receives per kept publication the title tokens of its
+    contributions (its contents lines)."""
     slices: dict[int, list[tuple[int, int, str]]] = {}
     checked: Counter = Counter()
     for page in sorted(pages):
@@ -207,8 +219,50 @@ def _publication_slices(pages: set[int], texts: dict[int, str]) -> tuple[dict, C
             checked["verified" if ok else "mismatch"] += 1
             if ok:
                 kept.append((cut["start"], cut["end"], pub["id"]))
+                if contents is not None:
+                    contents[pub["id"]] = [
+                        " " + " ".join(_tokens(c["title"])) + " "
+                        for c in pub.get("contributions") or []
+                        if c.get("title")
+                    ]
         slices[page] = kept
     return slices, checked
+
+
+def _slice_lines(slices: dict, offsets: dict) -> dict[int, list[tuple[int, int, str]]]:
+    """Each verified slice as the range of latest-revision lines it holds."""
+    out: dict[int, list[tuple[int, int, str]]] = {}
+    for page, kept in slices.items():
+        starts = offsets.get(page, [])
+        out[page] = [
+            (
+                next((n for n, o in enumerate(starts) if o >= start), len(starts)),
+                next((n for n, o in enumerate(starts) if o >= end), len(starts)),
+                pub_id,
+            )
+            for start, end, pub_id in kept
+        ]
+    return out
+
+
+def _relation(obj: dict, match: dict, contents_line: bool) -> str:
+    """What a field match states about the print object and the wiki item.
+
+    A print object read by its host's title (a contribution, a reprint item)
+    is an item the wiki line lists: containedIn. A print volume that the line
+    names as the host of its item ("[[Title]] [Place, 1966], No. 12" on the
+    page of one work) contains that item: contains. A volume matched on a
+    contents line of a verified publication is one of its items: containedIn.
+    Only otherwise does the match propose the same publication.
+    """
+    own = obj.get("title") or (obj.get("inherited") or {}).get("title")
+    if not own:
+        return "containedIn"
+    if match["role"] == "host":
+        return "contains"
+    if contents_line:
+        return "containedIn"
+    return "samePublicationAs"
 
 
 def _publication_at(slices: dict, offsets: dict, page: int, line: int) -> str | None:
@@ -255,24 +309,57 @@ def _stands_for_items(obj: dict) -> bool:
     return not obj.get("address") and "collection" in types
 
 
-def _field_tokens(fields: dict, text: str) -> set[str]:
-    """Second-field tokens: imprint and translator words, and the numbers of
-    extent and page ranges ("396p.", "pp. 300-324"), which periodical and
-    contribution entries carry instead of an imprint."""
-    texts = [fields.get("publisher", ""), fields.get("place", "")]
-    surname = _tokens(fields.get("translator") or "")[-1:]
-    texts.extend(surname)
-    texts.append(fields.get("inherited_imprint", ""))
-    found = set()
-    for value in texts:
+def _field_tokens(fields: dict, text: str, obj: dict | None = None) -> dict[str, str]:
+    """Second-field tokens and the field each stands for: place and
+    publisher words, own or inherited from a collection header, the
+    translator's surname, and the numbers of extent and page ranges ("396p.",
+    "pp. 300-324"), which periodical and contribution entries carry instead
+    of an imprint. A token read for two fields keeps the first in this order."""
+    texts = [
+        ("place", fields.get("place", "")),
+        ("publisher", fields.get("publisher", "")),
+        ("translator", " ".join(_tokens(fields.get("translator") or "")[-1:])),
+    ]
+    for imprint in ((obj or {}).get("inherited") or {}).get("imprints", []):
+        for key in ("place", "publisher"):
+            texts.append((key, (imprint.get(key) or {}).get("value", "")))
+    found: dict[str, str] = {}
+    for field, value in texts:
         for token in _tokens(value or ""):
             if len(token) >= MIN_FIELD_TOKEN and token not in GENERIC:
                 if not token.isdigit():
-                    found.add(token)
+                    found.setdefault(token, field)
     for groups in EXTENT.findall(text):
         numbers = re.findall(r"\d+", " ".join(groups))
-        found.update(n for n in numbers if len(n) >= MIN_PAGE_DIGITS)
+        for n in numbers:
+            if len(n) >= MIN_PAGE_DIGITS:
+                found.setdefault(n, "extent")
     return found
+
+
+def _host_position(raw: str, words: list[str]) -> bool:
+    """The title words stand first in the line inside a wiki link or after
+    "in", where a reprint or contents line names the host of its item
+    ("[[Title]] [Place, 1966], No. 12", "\\"Item\\" in [[Title]]")."""
+    n = len(words)
+    if not n:
+        return False
+    tokens = [(t, m.start()) for m in re.finditer(r"\S+", raw) for t in _tokens(m[0])]
+    # Where the phrase first ends: the start of the word that completes it.
+    first = next(
+        (
+            tokens[k + n - 1][1]
+            for k in range(len(tokens) - n + 1)
+            if [t for t, _ in tokens[k : k + n]] == words
+        ),
+        None,
+    )
+    if first is None:
+        return False
+    for m in HOST_SEGMENT.finditer(raw):
+        if m.start() <= first < m.end():
+            return True
+    return False
 
 
 def _line_index(latest_lines: dict[int, list[list[str]]]) -> dict[str, set]:
@@ -291,6 +378,8 @@ def _field_matches(
     title_pages: dict[str, set],
     page_titles: dict[int, str],
     rare_limit: int,
+    raw: dict[int, list[str]] | None = None,
+    slice_lines: dict[int, list[tuple[int, int, str]]] | None = None,
 ) -> list[dict]:
     """Lines holding the title words with the year within YEAR_WINDOW lines; on a
     page whose own title is or holds the title words, any line holding the year.
@@ -298,6 +387,13 @@ def _field_matches(
     A short single-word title ("Angst") is too common for lines on its own; it
     blocks lines together with its subtitle, and pages whose title is exactly
     that word.
+
+    The second field is sought in the wiki item the match stands in, never in
+    a neighbouring one: the lines from the title line to the year line, and
+    where these lie in a verified publication slice, the slice's lines from
+    its start (the header with its imprint) to the match. raw (the line
+    texts) gives the title line's role: "host" where the line names the title
+    as the host of its item (_host_position), else "item".
     """
     fields = summary(obj)
     # An edition line has no title of its own; it reads the work heading's.
@@ -309,11 +405,12 @@ def _field_matches(
         return []
     year_token = str(year)
     year_lines = index.get(year_token, set())
-    in_lines: set = set()
+    # (page, year line) -> the title line nearest to it, None for a page title.
+    in_lines: dict[tuple[int, int], int | None] = {}
     if words:
         phrase = " " + " ".join(words) + " "
         candidates = set.intersection(*(index.get(w, set()) for w in words))
-        for page, i in candidates:
+        for page, i in sorted(candidates):
             lines = latest_lines[page]
             if phrase not in " " + " ".join(lines[i]) + " ":
                 continue
@@ -322,7 +419,10 @@ def _field_matches(
             )
             near = [j for j in window if year_token in lines[j]]
             if near:
-                in_lines.add((page, min(near, key=lambda j: abs(j - i))))
+                j = min(near, key=lambda j: abs(j - i))
+                held = in_lines.get((page, j))
+                if held is None or abs(i - j) < abs(held - j):
+                    in_lines[(page, j)] = i
     if short:
         pages = {p for p in title_pages.get(short, set()) if page_titles[p] == short}
         page_phrase = " " + short + " "
@@ -336,17 +436,28 @@ def _field_matches(
         for page, i in year_lines
         if page in pages and page_phrase in " " + page_titles[page] + " "
     }
-    extra = _field_tokens(fields, obj["text"])
+    extra = _field_tokens(fields, obj["text"], obj)
     found = []
-    for page, i in sorted(in_lines | in_title):
+    for page, i in sorted(set(in_lines) | in_title):
         lines = latest_lines[page]
-        window = lines[max(0, i - YEAR_WINDOW) : i + YEAR_WINDOW + 1]
-        agreeing = sorted(extra & {t for line in window for t in line})
+        t = in_lines.get((page, i))
+        a, b = (i, i) if t is None else (min(i, t), max(i, t))
+        for start, end, _ in (slice_lines or {}).get(page, ()):
+            if start <= a and b < end:
+                a = start
+        block = {tok for line in lines[a : b + 1] for tok in line}
+        agreeing = sorted(tok for tok in extra if tok in block)
+        role = "item"
+        if t is not None and raw and _host_position(raw[page][t], words):
+            role = "host"
         found.append(
             {
                 "page": page,
                 "line": i,
-                "second_field": agreeing,
+                "title_line": t,
+                "role": role,
+                "second_field": sorted({extra[tok] for tok in agreeing}),
+                "second_field_values": agreeing,
                 "kind": "field"
                 if _second_field_agrees(agreeing, index, rare_limit)
                 else "title-year",
@@ -383,7 +494,9 @@ def main() -> int:
     best, latest_lines, wiki = _align(index, sizes)
     line_index = _line_index(latest_lines)
     rare_limit = _rare_limit(latest_lines)
-    slices, slice_check = _publication_slices(set(latest_lines), wiki["text"])
+    contents: dict[str, list[str]] = {}
+    slices, slice_check = _publication_slices(set(latest_lines), wiki["text"], contents)
+    slice_lines = _slice_lines(slices, wiki["offsets"])
     page_titles = {
         page: " ".join(_tokens(title)) for page, title in wiki["titles"].items()
     }
@@ -405,6 +518,7 @@ def main() -> int:
             stats[volume]["alignable"] += 1
             alignment_scores[volume].append(aligned["score"] if aligned else 0.0)
         field_pages: dict[int, str] = {}
+        identity_pages: set[int] = set()
         # Per page: publication -> most second-field tokens agreeing in a match.
         field_publications: dict[int, dict[str, int]] = defaultdict(dict)
         for obj in entry["objects"]:
@@ -413,42 +527,65 @@ def main() -> int:
                 stats[volume]["collection_headers_not_matched"] += 1
                 continue
             matches = _field_matches(
-                obj, latest_lines, line_index, title_pages, page_titles, rare_limit
+                obj,
+                latest_lines,
+                line_index,
+                title_pages,
+                page_titles,
+                rare_limit,
+                wiki["raw"],
+                slice_lines,
             )
             if matches:
                 stats[volume]["objects_with_title_year_block"] += 1
             if any(m["kind"] == "field" for m in matches):
                 stats[volume]["objects_with_field_match"] += 1
+            words = _title_key(summary(obj)["title"], _subtitle(obj))
             for m in matches:
-                if field_pages.get(m["page"]) != "field":
-                    field_pages[m["page"]] = m["kind"]
-                publication = _publication_at(
-                    slices, wiki["offsets"], m["page"], m["line"]
+                at = m["line"] if m["title_line"] is None else m["title_line"]
+                # A line inside a verified publication slice names that
+                # publication; otherwise only the page is known.
+                publication = _publication_at(slices, wiki["offsets"], m["page"], at)
+                phrase = " " + " ".join(words) + " "
+                contents_line = bool(publication) and any(
+                    phrase in c for c in contents.get(publication, ())
                 )
+                predicate = "candidateFor"
                 if m["kind"] == "field":
+                    predicate = _relation(obj, m, contents_line)
                     stats[volume]["field_matches"] += 1
                     stats[volume]["field_matches_on_publication"] += bool(publication)
-                    if publication:
+                    stats[volume][f"field_matches_{predicate}"] += 1
+                    if publication and predicate == "samePublicationAs":
                         held = field_publications[m["page"]]
                         held[publication] = max(
-                            held.get(publication, 0), len(m["second_field"])
+                            held.get(publication, 0), len(m["second_field_values"])
                         )
+                # The silver test asks whether the route reaches the page;
+                # which relation it states is counted beside it.
+                if field_pages.get(m["page"]) != "field":
+                    field_pages[m["page"]] = m["kind"]
+                if predicate == "samePublicationAs":
+                    identity_pages.add(m["page"])
+                evidence = {
+                    "print": {"record": entry["id"], "sha256": entry["sha256"]},
+                    "wiki_page": m["page"],
+                    "wiki_line": wiki["raw"][m["page"]][m["line"]],
+                    "line_role": "contents" if contents_line else m["role"],
+                    "second_field": m["second_field"],
+                    "second_field_values": m["second_field_values"],
+                }
+                if m["title_line"] is not None and m["title_line"] != m["line"]:
+                    evidence["wiki_title_line"] = wiki["raw"][m["page"]][
+                        m["title_line"]
+                    ]
                 claims.append(
                     {
                         "id": _claim_id(obj["id"], str(m["page"]), str(m["line"])),
                         "subject": obj["id"],
-                        "predicate": "samePublicationAs"
-                        if m["kind"] == "field"
-                        else "candidateFor",
-                        # A line inside a verified publication slice names that
-                        # publication; otherwise only the page is known.
+                        "predicate": predicate,
                         "object": publication or f"klawiter:entry/{m['page']}",
-                        "evidence": {
-                            "print": {"record": entry["id"], "sha256": entry["sha256"]},
-                            "wiki_page": m["page"],
-                            "wiki_line": wiki["raw"][m["page"]][m["line"]],
-                            "second_field": m["second_field"],
-                        },
+                        "evidence": evidence,
                         "producer": FIELD,
                         "state": "proposed",
                     }
@@ -477,6 +614,9 @@ def main() -> int:
             kind = field_pages.get(aligned["page"])
             silver[volume]["found_by_title_year"] += kind is not None
             silver[volume]["found_by_field"] += kind == "field"
+            silver[volume]["found_by_field_identity"] += (
+                aligned["page"] in identity_pages
+            )
         routes = {}
         if aligned and aligned["score"] >= ALIGNED:
             routes[aligned["page"]] = {
@@ -558,6 +698,11 @@ def main() -> int:
                     ),
                     "recall_field": round(
                         silver[v]["found_by_field"] / max(1, silver[v]["pairs"]), 3
+                    ),
+                    "recall_field_identity": round(
+                        silver[v]["found_by_field_identity"]
+                        / max(1, silver[v]["pairs"]),
+                        3,
                     ),
                 },
             }

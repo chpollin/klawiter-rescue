@@ -123,6 +123,40 @@ def test_proposed_claims_stay_proposed_with_route_and_claim_id():
     assert out["wikiOnlyPages"] == []
 
 
+def test_containment_keeps_its_relation_and_follows_identity():
+    out = build(
+        [
+            claim(
+                "inside",
+                "X/A/1#1",
+                "containedIn",
+                "klawiter:entry/8",
+                wiki_page=8,
+                second_field=["place", "publisher"],
+                second_field_values=["fischer", "frankfurt", "main"],
+            ),
+            claim(
+                "same",
+                "X/A/1#1",
+                "samePublicationAs",
+                "klawiter:publication/7-1950-a",
+                wiki_page=7,
+                second_field=["publisher"],
+                second_field_values=["fischer"],
+            ),
+        ]
+    )
+    same = out["links"]["X/A/1#1"]["same"]
+    assert [(s["claim"], s["relation"]) for s in same] == [
+        ("same", "samePublicationAs"),
+        ("inside", "containedIn"),
+    ]
+    # The route line names the fields that agreed; their tokens stand apart.
+    assert same[1]["secondField"] == ["place", "publisher"]
+    assert same[1]["secondFieldValues"] == ["fischer", "frankfurt", "main"]
+    assert {s["state"] for s in same} == {"proposed"}
+
+
 def test_field_conflict_stays_a_conflict_with_its_fields():
     case = {
         "print": "X/A/1#1",
