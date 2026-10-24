@@ -9,12 +9,17 @@ the wiki text is re-keyed. The concordance therefore takes two routes:
   any revision of one wiki page (p04 revisions). Shingles that occur in more
   than MAX_SHINGLE_UNITS print entries are not distinctive and are dropped.
   An entry with score >= ALIGNED is aligned with that page.
-- field: a print object's title words (up to TITLE_WORDS, a single word needs
-  MIN_SINGLE_WORD letters) and year occur in one line of a page's latest
-  revision; a second field (publisher, place, translator surname, own or
-  inherited) occurring in the same line makes it a field match, otherwise it
-  stays a title-year block. Lines include contents lines, which the wiki
-  publication layer does not hold as publications.
+- field: a print object's title words (up to TITLE_WORDS; a single word
+  shorter than MIN_SINGLE_WORD letters reads on into its subtitle, or else
+  reaches only a page titled exactly that word) and year occur in one line of
+  a page's latest revision; a second field (publisher, place, translator
+  surname, own or inherited, or extent) agreeing in the window around that
+  line makes it a field match, otherwise it stays a title-year block. The
+  second field needs two agreeing tokens or one rare in the wiki lines
+  (_rare_limit), so a frequent place or publisher alone does not carry it.
+  Lines include contents lines, which the wiki publication layer does not
+  hold as publications. A collection header without address is not matched:
+  it stands for its volumes, which carry their own matches.
 
 The deterministic test: entries aligned with score >= SILVER at some revision
 form silver pairs (print entry, wiki page) whose identity rests on near-verbatim
@@ -68,6 +73,9 @@ EXTENT = re.compile(
 )
 MIN_PAGE_DIGITS = 2
 MIN_FIELD_TOKEN = 4
+# Upper bound on the chance that a lone second-field token stands in the
+# window by accident (_rare_limit); fixed before measuring, not tuned.
+CHANCE = 0.01
 # Publisher words that carry no identity of their own.
 GENERIC = frozenset(
     "verlag verlags verlagsanstalt edition editions editeur editions editorial "
@@ -211,11 +219,40 @@ def _publication_at(slices: dict, offsets: dict, page: int, line: int) -> str | 
     return None
 
 
-def _title_key(title: str) -> list[str]:
+def _short_title(title: str) -> str | None:
+    """The single word of a title too short to block lines on its own."""
     words = _tokens(title)[:TITLE_WORDS]
     if len(words) == 1 and len(words[0]) < MIN_SINGLE_WORD:
-        return []
-    return words
+        return words[0]
+    return None
+
+
+def _title_key(title: str, subtitle: str = "") -> list[str]:
+    """Title words for the line route; a short single word reads on into the
+    subtitle ("Angst. Novelle"), and without one it has no line key."""
+    if _short_title(title):
+        extra = _tokens(subtitle)
+        return (_tokens(title) + extra)[:TITLE_WORDS] if extra else []
+    return _tokens(title)[:TITLE_WORDS]
+
+
+def _subtitle(obj: dict) -> str:
+    """The subtitle of whichever title summary() reads; an inherited work
+    heading carries none."""
+    if obj.get("title"):
+        return (obj.get("subtitle") or {}).get("value", "")
+    if (obj.get("inherited") or {}).get("title"):
+        return ""
+    host = (obj.get("hosts") or [{}])[0]
+    return (host.get("subtitle") or {}).get("value", "") if host.get("title") else ""
+
+
+def _stands_for_items(obj: dict) -> bool:
+    """A collection header without address names the series of the volumes
+    after it, which carry their own matches; a wiki line naming the series
+    states no identity with the header."""
+    types = {t.get("value") for t in obj.get("types", [])}
+    return not obj.get("address") and "collection" in types
 
 
 def _field_tokens(fields: dict, text: str) -> set[str]:
@@ -253,17 +290,20 @@ def _field_matches(
     index: dict[str, set],
     title_pages: dict[str, set],
     page_titles: dict[int, str],
+    rare_limit: int,
 ) -> list[dict]:
     """Lines holding the title words with the year within YEAR_WINDOW lines; on a
     page whose own title is or holds the title words, any line holding the year.
 
-    A short single-word title ("Angst") is too common for lines but specific
-    enough when the page title is exactly that word.
+    A short single-word title ("Angst") is too common for lines on its own; it
+    blocks lines together with its subtitle, and pages whose title is exactly
+    that word.
     """
     fields = summary(obj)
     # An edition line has no title of its own; it reads the work heading's.
     title = fields["title"]
-    words = _title_key(title)
+    words = _title_key(title, _subtitle(obj))
+    short = _short_title(title)
     year = fields.get("year")
     if not year:
         return []
@@ -283,21 +323,18 @@ def _field_matches(
             near = [j for j in window if year_token in lines[j]]
             if near:
                 in_lines.add((page, min(near, key=lambda j: abs(j - i))))
-    else:
-        words = _tokens(title)[:1]
-        if not words:
-            return []
-        phrase = " " + words[0] + " "
-    if len(words) == 1 and len(words[0]) < MIN_SINGLE_WORD:
-        pages = {
-            p for p in title_pages.get(words[0], set()) if page_titles[p] == words[0]
-        }
-    else:
+    if short:
+        pages = {p for p in title_pages.get(short, set()) if page_titles[p] == short}
+        page_phrase = " " + short + " "
+    elif words:
         pages = set.intersection(*(title_pages.get(w, set()) for w in words))
+        page_phrase = phrase
+    else:
+        return []
     in_title = {
         (page, i)
         for page, i in year_lines
-        if page in pages and phrase in " " + page_titles[page] + " "
+        if page in pages and page_phrase in " " + page_titles[page] + " "
     }
     extra = _field_tokens(fields, obj["text"])
     found = []
@@ -310,10 +347,30 @@ def _field_matches(
                 "page": page,
                 "line": i,
                 "second_field": agreeing,
-                "kind": "field" if agreeing else "title-year",
+                "kind": "field"
+                if _second_field_agrees(agreeing, index, rare_limit)
+                else "title-year",
             }
         )
     return found
+
+
+def _rare_limit(latest_lines: dict[int, list[list[str]]]) -> int:
+    """Most wiki lines a token may stand in and still count alone as a second
+    field: its chance presence in a window of 2 * YEAR_WINDOW + 1 lines stays
+    below CHANCE, if lines held it at random."""
+    lines = sum(len(page) for page in latest_lines.values())
+    return int(lines * CHANCE / (2 * YEAR_WINDOW + 1))
+
+
+def _second_field_agrees(
+    agreeing: list[str], index: dict[str, set], rare_limit: int
+) -> bool:
+    """Two agreeing tokens, or one that is rare in the wiki lines. A frequent
+    place or publisher ("Leipzig", "Moskva") alone stays a title-year block."""
+    if len(agreeing) >= 2:
+        return True
+    return len(agreeing) == 1 and len(index.get(agreeing[0], ())) <= rare_limit
 
 
 def main() -> int:
@@ -325,6 +382,7 @@ def main() -> int:
     print(f"OK {len(entries)} print entries, {len(sizes)} with enough distinctive text")
     best, latest_lines, wiki = _align(index, sizes)
     line_index = _line_index(latest_lines)
+    rare_limit = _rare_limit(latest_lines)
     slices, slice_check = _publication_slices(set(latest_lines), wiki["text"])
     page_titles = {
         page: " ".join(_tokens(title)) for page, title in wiki["titles"].items()
@@ -351,8 +409,11 @@ def main() -> int:
         field_publications: dict[int, dict[str, int]] = defaultdict(dict)
         for obj in entry["objects"]:
             stats[volume]["objects"] += 1
+            if _stands_for_items(obj):
+                stats[volume]["collection_headers_not_matched"] += 1
+                continue
             matches = _field_matches(
-                obj, latest_lines, line_index, title_pages, page_titles
+                obj, latest_lines, line_index, title_pages, page_titles, rare_limit
             )
             if matches:
                 stats[volume]["objects_with_title_year_block"] += 1
@@ -483,6 +544,8 @@ def main() -> int:
             "max_shingle_units": MAX_SHINGLE_UNITS,
             "aligned": ALIGNED,
             "silver": SILVER,
+            "chance": CHANCE,
+            "rare_limit_lines": rare_limit,
         },
         "volumes": {
             v: {
