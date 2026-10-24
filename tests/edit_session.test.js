@@ -247,16 +247,20 @@ test('the playground resolves an entry from the playground route', () => {
   const entry = { sourcePageId: 42, title: 'Schachnovelle' };
   const ctx = load(['constants.js', 'jsonld-playground.js'], {
     App: { entryMap: new Map([[42, entry]]), entries: [entry] },
-    location: { hash: '#data/playground/42' },
+    location: { hash: '#docs/playground/42' },
     document: { getElementById: () => null, addEventListener() {}, querySelectorAll: () => [] },
   });
   const P = vm.runInContext('JsonldPlayground', ctx);
   assert.strictEqual(P._entryFromHash(), entry);
-  ctx.location.hash = '#data/playground';
+  ctx.location.hash = '#docs/playground';
   assert.strictEqual(P._entryFromHash(), null);
-  ctx.location.hash = '#data';
+  ctx.location.hash = '#docs';
   assert.strictEqual(P._entryFromHash(), null);
-  ctx.location.hash = '#data/playground/999';
+  ctx.location.hash = '#docs/playground/999';
+  assert.strictEqual(P._entryFromHash(), null);
+  // The card's former address reaches the playground through the router's
+  // redirect (tests/routing_guard.test.js), not by being read here.
+  ctx.location.hash = '#data/playground/42';
   assert.strictEqual(P._entryFromHash(), null);
 });
 

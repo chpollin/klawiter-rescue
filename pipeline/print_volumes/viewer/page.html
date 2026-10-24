@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Page check, Klawiter bibliography</title>
+  <link rel="stylesheet" href="cards.css">
+  <link rel="stylesheet" href="page.css">
+</head>
+<body class="pc-body">
+  <button type="button" class="skip-link" data-skip="pc-extract-heading">Skip to what was read</button>
+  <button type="button" class="skip-link" data-skip="pc-page-heading">Skip to the page</button>
+  <header class="site">
+    <a class="brand" href="/">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M12 2C8 2 4 6 4 10c0 3 2 5.5 4 7l4 5 4-5c2-1.5 4-4 4-7 0-4-4-8-8-8z"/>
+        <path d="M9 9c0-1.5 1.5-3 3-3s3 1.5 3 3-1.5 3-3 3"/>
+      </svg>
+      <span>Stefan Zweig Bibliography</span>
+    </a>
+    <nav aria-label="Views">
+      <a href="/">Overview</a>
+      <a href="cards.html#/">Print &amp; Wiki cards</a>
+      <a href="cards.html#/?r=open">Review sample</a>
+      <a href="page.html" aria-current="page">Page check</a>
+      <a href="/#browse">Wiki catalogue</a>
+      <a href="/#stats">Explore</a>
+      <a href="/#data">Data</a>
+      <a href="/#about">About</a>
+    </nav>
+  </header>
+
+  <main id="main" class="pc-main">
+    <div class="pc-toolbar">
+      <h1 id="pc-title" class="pc-title">Page check</h1>
+      <form id="pc-goto" class="pc-goto">
+        <label>
+          <span>Volume</span>
+          <select id="pc-volume">
+            <option value="I">Main volume (1991)</option>
+            <option value="A1">Addendum I (1999)</option>
+            <option value="A2">Addendum II (2009)</option>
+          </select>
+        </label>
+        <label class="pc-page-field">
+          <span>PDF page</span>
+          <input id="pc-page" type="number" inputmode="numeric" min="1" step="1" required>
+          <span id="pc-of" class="quiet"></span>
+        </label>
+        <button type="submit">Show</button>
+        <button type="button" id="pc-prev" aria-keyshortcuts="[">Previous page</button>
+        <button type="button" id="pc-next" aria-keyshortcuts="]">Next page</button>
+      </form>
+      <form id="pc-find" class="pc-goto" role="search">
+        <label>
+          <span>Record or address</span>
+          <input id="pc-query" type="search" autocomplete="off" maxlength="64" placeholder="F 61 or I/F/61">
+        </label>
+        <button type="submit">Go to its page</button>
+      </form>
+      <a id="pc-pdf" class="pc-pdf-link" href="/print/I.pdf" target="_blank" rel="noopener">Open in the PDF viewer</a>
+    </div>
+    <ul id="pc-matches" class="pc-matches" aria-label="Records found" hidden></ul>
+    <p id="pc-status" class="status-msg" role="status" aria-live="polite"></p>
+
+    <div class="pc-panes">
+      <section class="pc-extract" aria-labelledby="pc-extract-heading">
+        <h2 id="pc-extract-heading" class="pc-pane-heading" tabindex="-1">Read from this page</h2>
+        <div id="pc-selected" class="pc-selected" hidden></div>
+        <div id="pc-records"></div>
+      </section>
+      <section class="pc-page" aria-labelledby="pc-page-heading">
+        <div class="pc-page-head">
+          <h2 id="pc-page-heading" class="pc-pane-heading" tabindex="-1">PDF page</h2>
+          <ul id="pc-legend" class="pc-legend" aria-label="Line boxes">
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-value" x="1" y="1" width="22" height="10"/></svg>In a value</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-record" x="1" y="1" width="22" height="10"/></svg>In a record, outside every value</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-heading" x="1" y="1" width="22" height="10"/></svg>Heading or reference</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-apparatus" x="1" y="1" width="22" height="10"/></svg>Apparatus (index, front, tail)</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-outside" x="1" y="1" width="22" height="10"/></svg>Held by no record</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-furniture" x="1" y="1" width="22" height="10"/></svg>Page furniture</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-defect-tab" x="1" y="1" width="5" height="10"/><rect class="pc-box role-record" x="9" y="1" width="14" height="10"/></svg>Defect characters (hatched tab before the line)</li>
+            <li><svg class="pc-swatch" viewBox="0 0 24 12" aria-hidden="true"><rect class="pc-box role-value" x="3" y="3" width="18" height="6"/><rect class="pc-selection" x="0.75" y="0.75" width="22.5" height="10.5"/></svg>Selected line (outer frame)</li>
+          </ul>
+        </div>
+        <div id="pc-figure" class="pc-figure"></div>
+      </section>
+    </div>
+  </main>
+
+  <svg class="pc-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="pc-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="1.4" height="4" class="pc-hatch-line"/>
+      </pattern>
+    </defs>
+  </svg>
+
+  <script type="module" src="page.js"></script>
+</body>
+</html>

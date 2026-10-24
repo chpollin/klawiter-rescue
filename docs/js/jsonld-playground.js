@@ -72,7 +72,7 @@ const JsonldPlayground = {
   _activeSuggestion: -1,  // keyboard cursor into the suggestion list
 
   /**
-   * The Data page renders the playground on every visit, so init() runs
+   * The Documentation page renders the playground on every visit, so init() runs
    * repeatedly. Element-bound listeners go on the freshly rendered nodes;
    * the document-level dismissal listener is registered once and resolves
    * its element at event time.
@@ -104,7 +104,7 @@ const JsonldPlayground = {
       tab.addEventListener('click', () => this._switchTab(tab.dataset.tab));
     });
 
-    // '#data/playground/<pageId>' addresses one entry; without it, a random one.
+    // '#docs/playground/<pageId>' addresses one entry; without it, a random one.
     const entry = this._entryFromHash();
     if (entry) {
       searchInput.value = entry.title || '';
@@ -114,10 +114,14 @@ const JsonldPlayground = {
     }
   },
 
-  /** The page id of a '#data/playground/<pageId>' route, resolved to an entry. */
+  /**
+   * The page id of a '#docs/playground/<pageId>' route, resolved to an entry.
+   * The former '#data/playground/<pageId>' reaches it through the router's
+   * redirect, so it is not read here.
+   */
   _entryFromHash() {
     const parts = (location.hash || '').replace(/^#/, '').split('/');
-    if (parts[0] !== 'data' || parts[1] !== 'playground' || !parts[2]) return null;
+    if (parts[0] !== 'docs' || parts[1] !== 'playground' || !parts[2]) return null;
     const pid = parseInt(parts[2], 10);
     return Number.isFinite(pid) && App.entryMap ? (App.entryMap.get(pid) || null) : null;
   },

@@ -36,12 +36,26 @@ Endpoints:
 - GET /print/<volume>.pdf: the print volume itself (I, A1, A2), so that a
   record links to its page as /print/I.pdf#page=790. Local like every print
   file; the volume names come from sections.json, never from the request path.
+- GET /check/page/<volume>/<n>.json: one PDF page for the page check view
+  (viewer/page.html), its p01 lines with their role and the records, objects
+  and values p03 read from them (page_render.Source.assemble). Volume one of
+  sections.json, n an integer within the volume's pages, no query; 400 for a
+  malformed path, 404 for a page out of range.
+- GET /check/page/<volume>/<n>.png: the page rendered, cached in
+  data/print/derived/check/; 503 when pypdfium2 is missing (the print
+  dependency group), and the view falls back to the PDF itself.
+- GET /check/find.json?q=<identifier or address>: the records it names, with
+  volume and page, for the view's jump.
+Everything /check/ answers is read from data/print/ and holds print text, so
+it is served like the PDF, to this machine only, and never written to a
+versioned file.
 
-Usage: python -m uv run python pipeline/print_volumes/review_server.py [--port 8767]
+Usage: python -m uv run --group print python pipeline/print_volumes/review_server.py [--port 8767]
 """
 
 import argparse
 import json
+import re
 import sys
 import threading
 from functools import partial
@@ -50,6 +64,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import _review
+import page_render
 from _common import DERIVED_DIR, PRINT_DIR, PROJECT_ROOT
 from _review import (
     DecisionIn,
@@ -61,6 +76,7 @@ from _review import (
     stamp,
 )
 from _viewer_data import VIEWER_DATA_FILES
+from page_render import Source as PageSource
 from pydantic import ValidationError
 
 RECORDS = DERIVED_DIR / "records"
@@ -76,6 +92,9 @@ PDFS = {
         "volumes"
     ].items()
 }
+# Matched against the raw request path, so that no decoding can widen it.
+CHECK_PAGE = re.compile(r"/check/page/([A-Z0-9]{1,4})/([1-9][0-9]{0,4})\.(json|png)")
+FIND_MAX = 64
 
 
 def route(path: str) -> str | None:
@@ -174,6 +193,7 @@ class Store:
 
 class Handler(SimpleHTTPRequestHandler):
     store: Store
+    pages: PageSource
     port: int
 
     def _own(self) -> bool:
@@ -227,6 +247,12 @@ class Handler(SimpleHTTPRequestHandler):
     def do_HEAD(self):
         if self.path.startswith("/print/"):
             return self._pdf(body=False)
+        if self.path.startswith("/check/"):
+            self.send_response(405 if self._own() else 403)
+            self.send_header("Allow", "GET")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return None
         return self._static(super().do_HEAD)
 
     def _log(self):
@@ -266,7 +292,52 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(404, {"error": "unknown endpoint"})
         if self.path.startswith("/print/"):
             return self._pdf()
+        if self.path.startswith("/check/"):
+            return self._check()
         return self._static(super().do_GET)
+
+    def _check(self):
+        """The page check data: a page's lines and records, its image, or a record jump."""
+        if not self._own():
+            return self._json(403, {"error": "foreign host or origin"})
+        path, _, query = self.path.partition("?")
+        try:
+            if path == "/check/find.json":
+                params = parse_qs(query, keep_blank_values=True)
+                wanted = params.get("q", [""])
+                if set(params) != {"q"} or len(wanted) != 1:
+                    return self._json(400, {"error": "the only parameter is one q"})
+                if not 0 < len(wanted[0].strip()) <= FIND_MAX:
+                    return self._json(
+                        400, {"error": f"q of 1 to {FIND_MAX} characters"}
+                    )
+                return self._json(200, self.pages.find(wanted[0]))
+            match = CHECK_PAGE.fullmatch(path)
+            if match is None or query or "#" in path:
+                return self._json(
+                    400, {"error": "expected /check/page/<volume>/<n>.json or .png"}
+                )
+            volume, page, ext = match[1], int(match[2]), match[3]
+            if volume not in PDFS:
+                return self._json(404, {"error": "no such volume"})
+            if not 1 <= page <= self.pages.pages(volume):
+                return self._json(404, {"error": "no such page"})
+            if ext == "json":
+                return self._json(200, self.pages.assemble(volume, page))
+            try:
+                data = self.pages.render(volume, page)
+            except RuntimeError as e:
+                return self._json(503, {"error": str(e)})
+        except (OSError, ValueError) as e:
+            return self._json(503, {"error": f"print data unreadable: {e}"})
+        self.send_response(200)
+        self.send_header("Content-Type", "image/png")
+        self.send_header("Content-Length", str(len(data)))
+        # Like the volume itself, the image never leaves this machine.
+        self.send_header("Cache-Control", "private, max-age=3600")
+        self.end_headers()
+        self.wfile.write(data)
+        return None
 
     def _pdf(self, body=True):
         """One print volume, whole or as the single byte range a PDF viewer asks for."""
@@ -360,8 +431,12 @@ def main() -> int:
     _review.LOG = args.log.resolve()
     _review.REVIEW_DIR = _review.LOG.parent
     Handler.store = Store()
+    Handler.pages = PageSource()
     Handler.port = args.port
     Handler.store.current()
+    # The page check joins all lines and records once, which takes seconds;
+    # start it now, so that it is done or under way when a page is asked for.
+    threading.Thread(target=Handler.pages.current, daemon=True).start()
     server = ThreadingHTTPServer(
         ("127.0.0.1", args.port), partial(Handler, directory=str(DERIVED_DIR))
     )
@@ -370,6 +445,13 @@ def main() -> int:
         f"http://127.0.0.1:{args.port}/viewer/cards.html, decisions to {_review.LOG}",
         flush=True,
     )
+    if page_render.pdfium is None:
+        # The page check falls back to the PDF; the person sees no command.
+        print(
+            "WARN page check without page images: pypdfium2 is missing; start with "
+            "python -m uv run --group print python pipeline/print_volumes/review_server.py",
+            flush=True,
+        )
     try:
         server.serve_forever()
     except KeyboardInterrupt:

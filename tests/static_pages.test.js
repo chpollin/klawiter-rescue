@@ -1,6 +1,6 @@
 /**
- * Pins what the Overview and the text pages say about the data (docs/js/home.js,
- * docs/js/pages.js).
+ * Pins what the Overview, the Documentation page and the help say about the
+ * data (docs/js/home.js, docs/js/pages.js).
  *
  * An entry is a wiki page, not a publication; a place spelling is not a place;
  * the year range follows the records. The authority links rest on decisions by
@@ -50,49 +50,118 @@ test('the Overview places the wiki types in the sections and shows print counts 
   assert.match(published, /Contents/);
   assert.doesNotMatch(published, /Main volume|source-year">1999/);
   assert.match(published, /F 1&ndash;723/);
-  // A type over two adjacent sections spans both rows; essays stand at C, H points up.
-  assert.match(published, /rowspan="2" data-label="Wiki"><button[^>]*data-type="collected-works"/);
-  assert.match(published, /&uarr; C/);
+  // A head names the unit of its column; the address form is its tooltip.
+  assert.match(published, /<span class="source-unit">numbers<\/span>/);
+  assert.match(published, /title="Wiki pages of the entry type [^"]*page 448"/);
+  // What a column's counts open is said once, in its head.
+  assert.match(published, /<span class="source-unit">pages · open in catalogue<\/span>/);
+  assert.doesNotMatch(published, /class="target"/);
+  assert.doesNotMatch(published, /source-address/);
+  // A type over two adjacent sections spans both rows; the bracket has words.
+  assert.match(published, /rowspan="2" title="One wiki type, Collected Works, covers sections A and B" data-label="Wiki \(A and B\)"><button[^>]*data-type="collected-works"/);
+  // Every wiki count names the list it opens.
+  assert.match(published, /aria-label="Open the 7 wiki pages of type Fiction \(section F\) in the catalogue"/);
+  assert.match(published, /aria-label="Open the 2 wiki pages of type Collected Works \(sections A and B\) in the catalogue"/);
+  assert.match(published, /aria-label="Open the 3 wiki pages of type Essays \(sections C and H\) in the catalogue"/);
+  // Essays stand at C; H points up and says so.
+  assert.match(published, /title="Essays belong to sections C and H and are counted at C\. Open the 3 wiki pages of type Essays in the catalogue"[^>]*>&uarr; C</);
   assert.match(published, /Only in the wiki/);
   assert.match(published, /data-type="newspaper"/);
+  // One legend line for the bracket and the pointer, which no head explains;
+  // no bars.
+  // Where the table stacks and its heads are hidden, one item names the targets.
+  assert.match(published, /<ul class="home-legend"[^>]*><li class="legend-targets">wiki counts open the catalogue<\/li><li class="legend-covers">.*one wiki type covers two sections.*&uarr; C<\/span> counted at section C/);
+  assert.doesNotMatch(published, /opens print cards|opens the wiki catalogue|count-bar/);
 
   const print = {
     viewer: 'http://127.0.0.1:8767/viewer/index.html',
-    volumes: { I: { F: { kind: 'body', entries: 720, highest: 723 }, 'Index A': { kind: 'index', entries: 9 } } },
+    volumes: {
+      I: { F: { kind: 'body', entries: 720, highest: 723 }, 'Index A': { kind: 'index', entries: 9 } },
+      A2: { F: { kind: 'body', entries: 40 } },
+    },
     totals: { I: { entries: 720, objects: 900, values: 5000 } },
   };
+  // On a server without the card viewer a print count is text, not a dead link.
+  Home.viewerReady = false;
+  const plain = flat(Home.table(counts, [], print));
+  assert.doesNotMatch(plain, /viewer\/index\.html/);
+  assert.match(plain, /<span class="print-count" title="720 entries of section F of the main volume, numbered up to 723">720<\/span>/);
+  assert.match(plain, /<span class="source-unit">entries<\/span>/);
+  assert.doesNotMatch(plain, /open as cards/);
+  // The working file says what it is in its head.
+  assert.match(plain, /<span class="source-year">working file to 2009<\/span>/);
+  assert.match(plain, /title="Entries of the Addendum II working file, cited by addresses such as FA2 3"/);
+
+  Home.viewerReady = true;
   const local = flat(Home.table(counts, [], print));
   assert.match(local, /href="http:\/\/127\.0\.0\.1:8767\/viewer\/index\.html#\/\?v=I&amp;part=F"[^>]*>720</);
-  assert.match(local, /720 entries in section F of Main volume, numbered up to 723/);
+  assert.match(local, /aria-label="Open the 720 entries of section F of the main volume as print cards \(numbered up to 723\)"/);
+  assert.match(local, /aria-label="Open the 9 index entries of the main volume \(Index A\) as print cards"/);
+  assert.match(local, /<span class="source-unit">entries · open as cards<\/span>/);
+  assert.match(local, /<li class="legend-targets">print counts open the cards, wiki counts the catalogue<\/li>/);
   // A section the volume lacks is a dash, not an empty cell.
-  assert.match(local, /No section A in Main volume/);
+  assert.match(local, /No section A in the main volume/);
   // No figure is written into the page code.
   assert.doesNotMatch(read('home.js'), /1815|2020|4,758/);
 });
 
-test('About and Data say who decided the authority links and which pages are restored', () => {
+test('the Documentation page says once who decided the authority links and which pages are restored', () => {
   const ctx = ctxWith(['pages.js'], { entries: records, _meta: { ns0Count: 4, languageCount: 2 } });
   const Pages = vm.runInContext('Pages', ctx);
   const flat = html => html.replace(/\s+/g, ' ');
-  const about = flat(Pages.about());
+  const docs = flat(Pages.docs());
   const note = 'Place and work authority links were decided by LLM agents under delegation '
     + 'by the operator and are revisable; no human review of them has been released yet.';
-  assert.ok(about.includes(note), 'About names the producer of the authority links');
-  assert.ok(flat(Pages.data()).includes(note), 'Data names it in the data model');
+  // About and Data each said it; on one page it stands once, with the states.
+  assert.strictEqual(docs.split(note).length - 1, 1, 'the producer of the authority links, said once');
+  assert.match(docs, /<section id="sec-states">.*Place and work authority links were decided/);
   // The methodology no longer says every page is its latest revision.
-  assert.match(about, /takes the latest revision\. 1 pages use a restored earlier revision instead/);
-  assert.match(about, /Source revision/);
+  assert.match(docs, /takes the latest revision\. 1 pages use a restored earlier revision instead/);
+  assert.match(docs, /Source revision/);
+  // The compiler's life dates and the licence stand once each.
+  assert.strictEqual(docs.split('(1930&ndash;2021)').length - 1, 1);
+  assert.strictEqual(docs.split('licenses/by/4.0/').length - 1, 1);
 });
 
-test('About reads the redirect map size from the data, and Data names its quality link for its target', () => {
+test('the Documentation page holds three parts with a section navigation', () => {
   const ctx = ctxWith(['pages.js'], { entries: records, _meta: { ns0Count: 4, redirectCount: 1523 } });
   const Pages = vm.runInContext('Pages', ctx);
-  const about = Pages.about().replace(/\s+/g, ' ');
-  assert.match(about, /a map of 1,523 alternative titles/);
+  const docs = Pages.docs().replace(/\s+/g, ' ');
+  assert.match(docs, /a map of 1,523 alternative titles/);
   assert.doesNotMatch(read('pages.js'), /1,546/);
-  // The Help names the Explore views by their tabs and the Review facet.
-  assert.match(about, /three views: Overview, .*; Map, .*; and Connections/);
-  assert.match(about, /period, location and review state/);
-  // The anchor leaves the page for the workbench, so it says so.
-  assert.match(Pages.data(), /<a href="#data\/quality">Data Quality workbench<\/a>/);
+  // Every section the navigation names exists, in the order of its part.
+  const ids = [...docs.matchAll(/<section id="sec-([a-z]+)"/g)].map(m => m[1]);
+  assert.deepStrictEqual(ids, ['project', 'origin', 'imprint', 'citation', 'licence',
+    'method', 'pipeline', 'model', 'states', 'limitations',
+    'data', 'downloads', 'spec', 'playground', 'quality']);
+  for (const part of Pages.DOCS_PARTS) {
+    assert.match(docs, new RegExp(`<a class="docs-toc-part" href="#docs/${part.id}">`));
+    for (const [id] of part.sections) {
+      assert.match(docs, new RegExp(`<a href="#docs/${id}">`), id);
+    }
+  }
+  // A list of links claims no current section; a select did and went stale.
+  assert.doesNotMatch(docs, /<select/);
+  // Help is no section of the page any more.
+  assert.doesNotMatch(docs, /sec-help|Reporting an error/);
+  // Links point at the new addresses; the workbench keeps its own.
+  assert.doesNotMatch(docs, /href="#about|href="#data"/);
+  assert.match(docs, /<a href="#data\/quality">Data Quality workbench<\/a>/);
+});
+
+test('the help names the Explore views and the Review facet, and links to the new addresses', () => {
+  const ctx = ctxWith(['pages.js'], { entries: records, _meta: {} });
+  const Pages = vm.runInContext('Pages', ctx);
+  const help = Pages.help().replace(/\s+/g, ' ');
+  for (const heading of ['Search, browse, filter', 'Entry details and export', 'Explore and data quality', 'Reporting an error']) {
+    assert.ok(help.includes(`<h3>${heading}</h3>`), heading);
+  }
+  assert.match(help, /three views: Overview, .*; Map, .*; and Connections/);
+  assert.match(help, /period, location and review state/);
+  assert.match(help, /<a href="#docs\/downloads">Downloads<\/a> in the Documentation/);
+  // The workbench and the issue tracker are described once, in the Documentation.
+  assert.match(help, /<a href="#docs\/quality">its section in the Documentation<\/a>/);
+  assert.match(help, /<a href="#docs\/licence">Licence and contact<\/a>/);
+  assert.doesNotMatch(help, /field completeness|github\.com/);
+  assert.doesNotMatch(help, /href="#data"|href="#about/);
 });

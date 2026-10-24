@@ -26,6 +26,8 @@ const App = {
   },
 
   async init() {
+    // Help needs no data, so it works while the dataset loads or has failed.
+    this._bindHelp();
     try {
       const resp = await fetch('data/klawiter.json');
       if (!resp.ok) throw new Error(`data/klawiter.json: HTTP ${resp.status}`);
@@ -244,25 +246,75 @@ const App = {
 
   // --- Routing ---
   /** Hashes that render into #view-page through Pages.render. */
-  STATIC_PAGES: ['about', 'data'],
+  STATIC_PAGES: ['docs'],
 
-  /** Old hashes of the pre-merge layout, mapped to their new section. */
+  /**
+   * Published hashes of earlier layouts, mapped to their place in the
+   * Documentation page: the four single pages, then the About and Data pages
+   * with their section anchors. #data/quality is the workbench and stays.
+   */
   LEGACY_ROUTES: {
-    methodology: 'about/methodology',
-    help: 'about/help',
-    imprint: 'about/imprint',
-    jsonld: 'data/playground',
-    // The workbench became a sub-page of Data; the published hash stays valid.
+    methodology: 'docs/method',
+    imprint: 'docs/imprint',
+    jsonld: 'docs/playground',
+    // The workbench is a sub-page of its own; its published hash stays valid.
     quality: 'data/quality',
+    about: 'docs',
+    'about/methodology': 'docs/method',
+    'about/imprint': 'docs/imprint',
+    data: 'docs/data',
+    'data/model': 'docs/model',
+    'data/spec': 'docs/spec',
+    'data/downloads': 'docs/downloads',
+    'data/playground': 'docs/playground',
   },
 
-  /** The data-quality workbench, a sub-page of Data rather than a page of its own. */
+  /** Hashes that open the help dialog; help is no longer a section of a page. */
+  HELP_ROUTES: ['help', 'about/help'],
+
+  /** The data-quality workbench, a sub-page of its own under the former Data address. */
   QUALITY_ROUTE: 'data/quality',
 
-  /** Scroll a rendered page section into view; the id is set by Pages. */
+  /** Where a published hash of an earlier layout lands now, or null. */
+  _legacyTarget(hash) {
+    if (this.LEGACY_ROUTES[hash]) return this.LEGACY_ROUTES[hash];
+    const [slug, section, ...rest] = hash.split('/');
+    // The card's playground link carries a page id after the section.
+    if (slug === 'data' && section === 'playground') return ['docs', 'playground', ...rest].join('/');
+    if (slug === 'about') return 'docs';
+    if (slug === 'data' && hash !== this.QUALITY_ROUTE) return 'docs/data';
+    return null;
+  },
+
+  /**
+   * Scroll a rendered page section into view; the id is set by Pages. A route
+   * to a section moves the focus to its heading the way an anchor would.
+   *
+   * On Back and Forward the browser restores its saved scroll position after
+   * popstate, where the router runs, and that position can be the top of the
+   * page. The section is therefore scrolled to once more in the next frame,
+   * before it is painted. The browser's own restoration stays on, because the
+   * result list lives from it.
+   */
   _scrollToSection(section) {
     const el = document.getElementById(`sec-${section}`);
-    if (el) el.scrollIntoView({ block: 'start' });
+    if (!el) return;
+    el.scrollIntoView({ block: 'start' });
+    const hash = location.hash;
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        if (location.hash === hash && el.isConnected) el.scrollIntoView({ block: 'start' });
+      });
+    }
+    const heading = el.querySelector('h2, h3');
+    if (!heading) return;
+    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+    heading.focus({ preventScroll: true });
+  },
+
+  /** Load a redirect target in place of the old address, so Back skips it. */
+  _redirect(target) {
+    location.replace(`#${target}`);
   },
 
   /** Fragments that address an element on the page rather than a route. */
@@ -291,15 +343,21 @@ const App = {
     this.state.customLabel = null;
     this._setResultsContext('');
 
-    // Legacy deep links from the four-page layout. The pages were merged into
-    // #about and #data; the old hashes stay valid and land on their section.
-    const legacy = this.LEGACY_ROUTES[hash];
-    if (legacy) {
-      location.hash = legacy;
+    // Help is a dialog over the Documentation page, which held it before.
+    if (this.HELP_ROUTES.includes(hash)) {
+      this._helpPending = true;
+      this._redirect('docs');
       return;
     }
 
-    // Data-quality workbench (curation view), rendered in the Data page frame
+    // Deep links of earlier layouts stay valid and land on their section.
+    const legacy = this._legacyTarget(hash);
+    if (legacy) {
+      this._redirect(legacy);
+      return;
+    }
+
+    // Data-quality workbench (curation view), rendered in the page frame
     if (hash === this.QUALITY_ROUTE) {
       this._resetSearchState();
       this.showView('page');
@@ -307,13 +365,26 @@ const App = {
       return;
     }
 
-    // Static content pages, optionally with a section anchor: '#about/help'.
-    const [slug, section] = hash.split('/');
+    // Static content pages, optionally with a section anchor: '#docs/method'.
+    // A move between sections of the page already shown only scrolls, so the
+    // playground keeps its entry; a playground address with a page id renders.
+    const [slug, section, ...rest] = hash.split('/');
     if (this.STATIC_PAGES.includes(slug)) {
+      const shown = this.state.view === 'page' && Pages.isShown(slug);
       this._resetSearchState();
+      // Rendered before the view switch, so the view focus finds its heading.
+      if (!shown || rest.length) Pages.render(slug);
       this.showView('page');
-      Pages.render(slug);
-      if (section) this._scrollToSection(section);
+      if (section) {
+        this._scrollToSection(section);
+      } else if (shown) {
+        window.scrollTo(0, 0);
+        this._focusViewStart();
+      }
+      if (this._helpPending) {
+        this._helpPending = false;
+        this.openHelp();
+      }
       return;
     }
 
@@ -846,10 +917,8 @@ const App = {
     document.getElementById('nav-home').classList.toggle('active', view === 'home');
     document.getElementById('nav-browse').classList.toggle('active', view === 'results');
     document.getElementById('nav-stats').classList.toggle('active', view === 'stats');
-    document.getElementById('nav-data').classList.toggle('active',
-      view === 'page' && slug === 'data');
-    document.getElementById('nav-about').classList.toggle('active',
-      view === 'page' && slug === 'about');
+    document.getElementById('nav-docs').classList.toggle('active',
+      view === 'page' && slug === 'docs');
 
     this._updateEditToggleVisibility();
 
@@ -906,7 +975,7 @@ const App = {
     if (view === 'page') {
       const hash = location.hash.slice(1);
       if (hash === this.QUALITY_ROUTE) { document.title = `Data Quality \u2014 ${base}`; return; }
-      const labels = { about: 'About', data: 'Data' };
+      const labels = { docs: 'Documentation' };
       const page = hash.split('/')[0];
       document.title = labels[page] ? `${labels[page]} \u2014 ${base}` : base;
       return;
@@ -925,7 +994,8 @@ const App = {
       }
       if (f.type) { document.title = `${this._filterDisplay('type', f.type)} \u2014 ${base}`; return; }
       if (this.state.query) { document.title = `\u201c${this.state.query}\u201d \u2014 ${base}`; return; }
-      document.title = `Browse \u2014 ${base}`;
+      // Named as its navigation item, so the tab and the header say one thing.
+      document.title = `Wiki catalogue \u2014 ${base}`;
       return;
     }
     document.title = base;
@@ -2059,14 +2129,17 @@ const App = {
     // like the four pages, so it sits in the navigation as its last item.
     if (this.state.isLocal) {
       const nav = document.querySelector('.site-nav');
-      if (!document.getElementById('nav-print-cards')) {
+      // Only the review server serves the card workbench; a plain static
+      // server over docs/ would turn the item into a dead link.
+      this.localFileAnswers(this.PRINT_VIEWER).then((ok) => {
+        if (!ok || document.getElementById('nav-print-cards')) return;
         const printLink = document.createElement('a');
         printLink.id = 'nav-print-cards';
-        printLink.href = '/viewer/cards.html#/';
+        printLink.href = `${this.PRINT_VIEWER}#/`;
         printLink.title = 'Print & Wiki card workbench (available on localhost only)';
         printLink.textContent = 'Print cards';
-        nav.appendChild(printLink);
-      }
+        nav.insertBefore(printLink, document.getElementById('edit-toggle'));
+      });
       const toggle = document.createElement('button');
       toggle.id = 'edit-toggle';
       toggle.className = 'nav-item-btn';
@@ -2076,6 +2149,74 @@ const App = {
       nav.appendChild(toggle);
       this._updateEditToggleVisibility();
     }
+  },
+
+  /** The local card workbench, which only the review server serves. */
+  PRINT_VIEWER: '/viewer/cards.html',
+
+  /**
+   * Whether a local-only file answers on this server, asked once per path.
+   * The published site never asks, so nothing hints at local data there. On a
+   * plain local server the answer is a 404, which the browser logs in the
+   * console; no link or control is built from it.
+   */
+  localFileAnswers(path) {
+    if (!this.state.isLocal) return Promise.resolve(false);
+    this._localProbes = this._localProbes || new Map();
+    if (!this._localProbes.has(path)) {
+      this._localProbes.set(path, fetch(path, { method: 'HEAD' })
+        .then(resp => resp.ok, () => false));
+    }
+    return this._localProbes.get(path);
+  },
+
+  // --- Help dialog ---
+  // The header's "?" opens it; #help and #about/help open it over the
+  // Documentation page. Escape is the native cancel of a modal dialog.
+  _bindHelp() {
+    const btn = document.getElementById('help-btn');
+    const dialog = document.getElementById('help-dialog');
+    if (!btn || !dialog || this._helpBound) return;
+    this._helpBound = true;
+    btn.addEventListener('click', () => this.openHelp());
+    // A text selection that starts in the box and ends over the backdrop also
+    // clicks the dialog element, so the press has to start there as well.
+    let pressedOnBackdrop = false;
+    dialog.addEventListener('pointerdown', (ev) => { pressedOnBackdrop = ev.target === dialog; });
+    dialog.addEventListener('click', (ev) => {
+      // The dialog box has no padding of its own, so a click on the dialog
+      // element itself is a click on the backdrop.
+      const onBackdrop = ev.target === dialog && pressedOnBackdrop;
+      pressedOnBackdrop = false;
+      if (onBackdrop || ev.target.closest('[data-help-close]')) {
+        dialog.close();
+        return;
+      }
+      const link = ev.target.closest('a[href^="#"]');
+      if (link) {
+        // The link leads to a view that takes the focus itself.
+        this._helpLeaving = true;
+        dialog.close();
+        // A link to the address already shown fires no hashchange; route it
+        // here so it still scrolls to its section and focuses it.
+        if (link.hash === location.hash) {
+          this._lastHash = null;
+          this.handleRoute();
+        }
+      }
+    });
+    dialog.addEventListener('close', () => {
+      if (!this._helpLeaving) btn.focus();
+      this._helpLeaving = false;
+    });
+  },
+
+  openHelp() {
+    const dialog = document.getElementById('help-dialog');
+    if (!dialog || dialog.open) return;
+    const body = document.getElementById('help-dialog-body');
+    if (body && !body.childElementCount) body.innerHTML = Pages.help();
+    dialog.showModal();
   },
 
   toggleEditMode() {

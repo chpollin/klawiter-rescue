@@ -18,6 +18,8 @@ const vm = require('node:vm');
 
 function loadAppCtx() {
   const location = { hash: '', pathname: '/', hostname: 'localhost' };
+  // A redirect replaces the history entry; the stub records where it lands.
+  location.replace = (url) => { location.hash = url; };
   const calls = [];
   const ctx = {
     window: { location, addEventListener() {} },
@@ -167,54 +169,221 @@ test('only a hash-addressable result list writes the sort back to the URL', () =
   assert.strictEqual(App.isAddressableResults(), false);
 });
 
-test('the old deep links still resolve to their merged section', () => {
+test('the old deep links resolve to their place in the Documentation page', () => {
   const App = loadApp();
-  // The four static pages were merged into #about and #data; the hashes that
-  // were published before must keep working.
-  assert.strictEqual(App.LEGACY_ROUTES.methodology, 'about/methodology');
-  assert.strictEqual(App.LEGACY_ROUTES.help, 'about/help');
-  assert.strictEqual(App.LEGACY_ROUTES.imprint, 'about/imprint');
-  assert.strictEqual(App.LEGACY_ROUTES.jsonld, 'data/playground');
-  // #data itself is a page of its own and must not redirect.
-  assert.strictEqual(App.LEGACY_ROUTES.data, undefined);
-  // The workbench became a sub-page of Data, so its published hash redirects
-  // like the others rather than addressing a page of its own.
-  assert.strictEqual(App.LEGACY_ROUTES.quality, App.QUALITY_ROUTE);
+  // The single pages of the first layout, then the About and Data pages and
+  // their section anchors: every published hash keeps working.
+  for (const [old, target] of [
+    ['methodology', 'docs/method'],
+    ['imprint', 'docs/imprint'],
+    ['jsonld', 'docs/playground'],
+    ['about', 'docs'],
+    ['about/methodology', 'docs/method'],
+    ['about/imprint', 'docs/imprint'],
+    ['about/unknown', 'docs'],
+    ['data', 'docs/data'],
+    ['data/model', 'docs/model'],
+    ['data/spec', 'docs/spec'],
+    ['data/downloads', 'docs/downloads'],
+    ['data/playground', 'docs/playground'],
+    // The card's playground link carries the page id along.
+    ['data/playground/42', 'docs/playground/42'],
+    ['data/unknown', 'docs/data'],
+    ['quality', 'data/quality'],
+  ]) {
+    assert.strictEqual(App._legacyTarget(old), target, old);
+  }
+  // The workbench keeps its address, and the new page is no legacy route.
   assert.strictEqual(App.QUALITY_ROUTE, 'data/quality');
+  assert.strictEqual(App._legacyTarget('data/quality'), null);
+  assert.strictEqual(App._legacyTarget('docs'), null);
+  assert.strictEqual(App._legacyTarget('docs/method'), null);
+  // Help is a dialog now, not a section a hash could land on.
+  assert.deepStrictEqual([...App.HELP_ROUTES], ['help', 'about/help']);
 });
 
-test('a legacy hash is rewritten rather than rendered', () => {
+test('a legacy hash replaces its history entry rather than rendering', () => {
   const { App, ctx } = loadAppCtx();
+  let rendered = false;
+  ctx.Pages = { render() { rendered = true; }, isShown: () => false };
   App._lastHash = null;
   ctx.location.hash = '#methodology';
   App.handleRoute();
-  assert.strictEqual(ctx.location.hash, 'about/methodology');
+  assert.strictEqual(ctx.location.hash, '#docs/method');
+  assert.strictEqual(rendered, false);
+
+  App._lastHash = null;
+  ctx.location.hash = '#about/imprint';
+  App.handleRoute();
+  assert.strictEqual(ctx.location.hash, '#docs/imprint');
+
+  App._lastHash = null;
+  ctx.location.hash = '#data/playground/42';
+  App.handleRoute();
+  assert.strictEqual(ctx.location.hash, '#docs/playground/42');
 
   // The workbench hash takes the same path, so it never reaches the branch
   // that would render it under its old address.
   App._lastHash = null;
   ctx.location.hash = '#quality';
   App.handleRoute();
-  assert.strictEqual(ctx.location.hash, 'data/quality');
+  assert.strictEqual(ctx.location.hash, '#data/quality');
 });
 
-test('a page hash carries an optional section suffix', () => {
+test('the workbench route renders the workbench, not the Documentation page', () => {
   const { App, ctx } = loadAppCtx();
   const seen = [];
   App.showView = (v) => { App.state.view = v; };
+  App._resetSearchState = () => {};
+  ctx.Curate = { render() { seen.push('curate'); } };
+  ctx.Pages = { render(slug) { seen.push(slug); }, isShown: () => false };
+  App._lastHash = null;
+  ctx.location.hash = '#data/quality';
+  App.handleRoute();
+  assert.deepStrictEqual(seen, ['curate']);
+  assert.strictEqual(ctx.location.hash, '#data/quality');
+});
+
+test('a Documentation hash carries an optional section suffix', () => {
+  const { App, ctx } = loadAppCtx();
+  const seen = [];
+  let shown = false;
+  App.showView = (v) => { App.state.view = v; };
   App._scrollToSection = (s) => seen.push(`scroll:${s}`);
-  ctx.Pages = { render(slug) { seen.push(slug); } };
+  App._focusViewStart = () => seen.push('focus');
+  ctx.window.scrollTo = () => seen.push('top');
+  ctx.Pages = { render(slug) { seen.push(slug); shown = true; }, isShown: () => shown };
 
   App._lastHash = null;
-  ctx.location.hash = '#about/help';
+  ctx.location.hash = '#docs/method';
   App.handleRoute();
-  assert.deepStrictEqual(seen, ['about', 'scroll:help']);
+  assert.deepStrictEqual(seen, ['docs', 'scroll:method']);
+
+  // A move to another section of the page already shown scrolls only, so the
+  // page is not drawn again under the reader.
+  seen.length = 0;
+  ctx.location.hash = '#docs/downloads';
+  App.handleRoute();
+  assert.deepStrictEqual(seen, ['scroll:downloads']);
 
   seen.length = 0;
-  App._lastHash = null;
-  ctx.location.hash = '#data';
+  ctx.location.hash = '#docs';
   App.handleRoute();
-  assert.deepStrictEqual(seen, ['data']);
+  assert.deepStrictEqual(seen, ['top', 'focus']);
+
+  // A playground address with a page id loads that entry, so it renders.
+  seen.length = 0;
+  ctx.location.hash = '#docs/playground/42';
+  App.handleRoute();
+  assert.deepStrictEqual(seen, ['docs', 'scroll:playground']);
+});
+
+test('the help hashes open the help dialog over the Documentation page', () => {
+  const { App, ctx } = loadAppCtx();
+  const seen = [];
+  App.showView = (v) => { App.state.view = v; };
+  App._scrollToSection = () => {};
+  App.openHelp = () => seen.push('help');
+  ctx.Pages = { render(slug) { seen.push(slug); }, isShown: () => false };
+
+  for (const hash of ['#about/help', '#help']) {
+    seen.length = 0;
+    App._lastHash = null;
+    ctx.location.hash = hash;
+    App.handleRoute();
+    // The old address gives way to the page, and the dialog opens once there.
+    assert.strictEqual(ctx.location.hash, '#docs', hash);
+    assert.deepStrictEqual(seen, [], hash);
+    App.handleRoute();
+    assert.deepStrictEqual(seen, ['docs', 'help'], hash);
+    App._lastHash = null;
+    App.handleRoute();
+    assert.deepStrictEqual(seen, ['docs', 'help', 'docs'], `${hash}: opens once`);
+  }
+});
+
+test('the help dialog fills on first open, and closing it returns focus to its button', () => {
+  const { App, ctx } = loadAppCtx();
+  const listeners = {};
+  const btn = {
+    focused: 0,
+    addEventListener(type, fn) { listeners[`btn:${type}`] = fn; },
+    focus() { this.focused += 1; },
+  };
+  const dialog = {
+    open: false,
+    addEventListener(type, fn) { listeners[`dialog:${type}`] = fn; },
+    showModal() { this.open = true; },
+    close() { this.open = false; listeners['dialog:close'](); },
+    closest: () => null,
+  };
+  const body = { childElementCount: 0, innerHTML: '' };
+  const elements = { 'help-btn': btn, 'help-dialog': dialog, 'help-dialog-body': body };
+  ctx.document.getElementById = (id) => elements[id] || null;
+  ctx.Pages = { help: () => '<h3>Search, browse, filter</h3>' };
+
+  App._bindHelp();
+  App._bindHelp();   // bound once, whatever calls it again
+  listeners['btn:click']();
+  assert.strictEqual(dialog.open, true);
+  assert.match(body.innerHTML, /Search, browse, filter/);
+
+  // Escape is the native cancel of a modal dialog and ends in its close event.
+  dialog.close();
+  assert.strictEqual(btn.focused, 1);
+
+  // A click on the backdrop lands on the dialog element itself.
+  App.openHelp();
+  listeners['dialog:pointerdown']({ target: dialog });
+  listeners['dialog:click']({ target: dialog });
+  assert.strictEqual(dialog.open, false);
+  assert.strictEqual(btn.focused, 2);
+
+  // A text selection that starts in the box and ends over the backdrop clicks
+  // the dialog element too, and must not close it.
+  App.openHelp();
+  const text = { closest: () => null };
+  listeners['dialog:pointerdown']({ target: text });
+  listeners['dialog:click']({ target: dialog });
+  assert.strictEqual(dialog.open, true);
+  dialog.close();
+  assert.strictEqual(btn.focused, 3);
+
+  // A link inside the help leads to a view that takes the focus itself.
+  App.openHelp();
+  const routed = [];
+  App.handleRoute = () => routed.push(ctx.location.hash);
+  const link = { hash: '#docs/method', closest: (sel) => (sel.startsWith('a[') ? link : null) };
+  listeners['dialog:click']({ target: link });
+  assert.strictEqual(dialog.open, false);
+  assert.strictEqual(btn.focused, 3);
+  assert.deepStrictEqual(routed, [], 'a new address routes through hashchange');
+
+  // A link to the address already shown fires no hashchange, so it is routed.
+  ctx.location.hash = '#docs/method';
+  App._lastHash = 'docs/method';
+  App.openHelp();
+  listeners['dialog:click']({ target: link });
+  assert.strictEqual(dialog.open, false);
+  assert.strictEqual(btn.focused, 3);
+  assert.deepStrictEqual(routed, ['#docs/method']);
+  assert.strictEqual(App._lastHash, null);
+});
+
+test('the navigation names Documentation and the catalogue as the tab title does', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'index.html'), 'utf8');
+  const nav = html.match(/<nav class="site-nav"[^>]*>([\s\S]*?)<\/nav>/)[1];
+  const labels = [...nav.matchAll(/<a [^>]*>([^<]*)<\/a>/g)].map(m => m[1]);
+  assert.deepStrictEqual(labels, ['Overview', 'Wiki catalogue', 'Explore', 'Documentation']);
+  assert.match(nav, /href="#docs" id="nav-docs"/);
+  // The imprint and the citation stand in the footer, not in the navigation.
+  const footer = html.match(/<footer[\s\S]*<\/footer>/)[0];
+  assert.match(footer, /<a href="#docs\/imprint">Imprint<\/a>/);
+  assert.match(footer, /<a href="#docs\/citation">How to cite<\/a>/);
+  assert.doesNotMatch(html, /#about|href="#data"/);
+  // Help is a native dialog opened from the header.
+  assert.match(html, /<button type="button" id="help-btn"[^>]*aria-controls="help-dialog"/);
+  assert.match(html, /<dialog id="help-dialog"[^>]*aria-labelledby="help-dialog-title"/);
 });
 
 test('the edit toggle shows only where entry cards can be edited', () => {
@@ -226,11 +395,11 @@ test('the edit toggle shows only where entry cards can be edited', () => {
     ['', 'home', true],
     ['#q=zweig', 'results', true],
     ['#data/quality', 'page', true],
-    ['#about/help', 'page', false],
-    ['#data', 'page', false],
-    // The workbench sits under Data, so the Data page itself with a section
-    // suffix must stay a plain text page as far as the toggle is concerned.
-    ['#data/playground', 'page', false],
+    ['#docs', 'page', false],
+    ['#docs/method', 'page', false],
+    // The workbench keeps the former Data address; the playground section of
+    // the Documentation page stays a plain text page for the toggle.
+    ['#docs/playground', 'page', false],
     ['#stats', 'stats', false],
   ]) {
     ctx.location.hash = hash;
@@ -335,5 +504,9 @@ test('a permalink tab names its entry, and the base title matches index.html', (
 
   App.state.singleEntry = false;
   App._updateTitle('results');
-  assert.strictEqual(ctx.document.title, `Browse — ${App.BASE_TITLE}`);
+  assert.strictEqual(ctx.document.title, `Wiki catalogue — ${App.BASE_TITLE}`);
+
+  ctx.location.hash = '#docs/method';
+  App._updateTitle('page');
+  assert.strictEqual(ctx.document.title, `Documentation — ${App.BASE_TITLE}`);
 });

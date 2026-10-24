@@ -10,7 +10,9 @@
  * the count stands at C and H points to it (seeAlso). The print columns
  * appear only on localhost when the print strand has written
  * local/print-structure.json (pipeline/print_volumes/print_structure.py),
- * because the rights to the print volumes are unresolved.
+ * because the rights to the print volumes are unresolved, and their counts
+ * link into the card viewer only where the server answers for it: the review
+ * server does, a plain static server over docs/ does not.
  */
 const SECTION_ROWS = [
   { code: 'A', name: 'Collected Works', range: 170, wiki: 'collected-works', covers: 'B' },
@@ -33,11 +35,12 @@ const SECTION_ROWS = [
   { code: 'R', name: 'Handwritten Dedications' },
 ];
 
-// The address form is how the compiler cites an entry of each volume.
+// The address form is how the compiler cites an entry of each volume; the
+// phrase is how a count names the volume it opens.
 const PRINT_VOLUMES = [
-  { key: 'I', name: 'Main volume', year: '1991', icon: 'book', what: 'printed 1991', address: 'F 61' },
-  { key: 'A1', name: 'Addendum I', year: '1999', icon: 'book', what: 'printed 1999', address: 'FA1 3' },
-  { key: 'A2', name: 'Addendum II', year: '2009', icon: 'file', what: 'unpublished working file, 2009', address: 'FA2 3' },
+  { key: 'I', name: 'Main volume', year: '1991', icon: 'book', phrase: 'the main volume', address: 'F 61' },
+  { key: 'A1', name: 'Addendum I', year: '1999', icon: 'book', phrase: 'Addendum I', address: 'FA1 3' },
+  { key: 'A2', name: 'Addendum II', year: 'working file to 2009', icon: 'file', phrase: 'the Addendum II working file', address: 'FA2 3' },
 ];
 
 // Inline marks for the sources and the info control; no icon font.
@@ -53,6 +56,7 @@ const homeCount = (n) => n.toLocaleString('en');
 const Home = {
   print: null,
   printRequested: false,
+  viewerReady: false,   // the card viewer answers on this server
 
   render(entries) {
     // The print structure loads once; the page is drawn again when it arrives.
@@ -104,7 +108,8 @@ const Home = {
   },
 
   // The local print structure; absent on the published site, so no request is
-  // made there and the page keeps its wiki side only.
+  // made there and the page keeps its wiki side only. The viewer it names is
+  // asked for as well, because only the review server serves it.
   async loadPrint() {
     if (!App.state.isLocal) return;
     try {
@@ -113,6 +118,8 @@ const Home = {
     } catch {
       this.print = null;
     }
+    this.viewerReady = !!(this.print && this.print.viewer)
+      && await App.localFileAnswers(this.print.viewer);
   },
 
   // The levels below the sections, each counted in its own unit: the unit of
@@ -137,11 +144,13 @@ const Home = {
     if (print) {
       const t = Object.values(print.totals);
       const sum = (key) => t.reduce((n, v) => n + v[key], 0);
-      const vHref = print.viewer ? `${print.viewer}#/` : '#browse';
+      // Without the viewer the figures stand as text rather than dead links.
+      const open = (html) => (this.viewerReady
+        ? `<a href="${esc(`${print.viewer}#/`)}">${html}</a>` : html);
       printRow = `<tr><th scope="row">${ICONS.book}Print</th>${row([
-        `<a href="${esc(vHref)}"><b>${homeCount(sum('numbered'))}</b> numbered, <b>${homeCount(sum('unnumbered'))}</b> unnumbered entries</a>`,
-        `<a href="${esc(vHref)}"><b>${homeCount(sum('publications'))}</b> publications, <b>${homeCount(sum('other'))}</b> other objects</a>`,
-        `<a href="${esc(vHref)}"><b>${homeCount(sum('values'))}</b> values with passage</a>`,
+        open(`<b>${homeCount(sum('numbered'))}</b> numbered, <b>${homeCount(sum('unnumbered'))}</b> unnumbered entries`),
+        open(`<b>${homeCount(sum('publications'))}</b> publications, <b>${homeCount(sum('other'))}</b> other objects`),
+        open(`<b>${homeCount(sum('values'))}</b> values with passage`),
       ])}</tr>`;
     }
     return `
@@ -168,32 +177,32 @@ const Home = {
       <li>The wiki cites print addresses; a cited address is a reference, not proof that two records are the same publication.</li>
       <li>Rows of the table are the sections in the printed order, named as the contents of 1991 name them. R exists only in Addendum I.</li>
       <li>A print count is the number of entries of that section in the volume, numbered and unnumbered, as read from the file. A wiki count is the number of wiki pages of the entry type. The units differ and the sources overlap, so the counts do not add up.</li>
-      <li>A dash means the section does not exist in that volume. A bracket means one wiki type covers two sections; essays belong to C and H and are counted at C. The wiki types are placed in the sections by this project, not by the compiler.</li>
+      <li>A dash means the section does not exist in that volume. The wiki types are placed in the sections by this project, not by the compiler.</li>
       ${print ? '<li>The print side appears only on this computer, because the rights to the print volumes are unresolved.</li>' : ''}
     </ul>`;
   },
 
-  // Labels left, counts right, one column per source; a count is a link and
-  // its tooltip says what it counts.
+  // Labels left, counts right, one column per source. The head names the unit
+  // of a column and what its counts open, once for the column, and keeps the
+  // address form in its tooltip; a count names its target in its label.
   table(counts, wikiOnly, print) {
     const volumes = print ? PRINT_VOLUMES.filter(v => print.volumes[v.key]) : [];
-    const maxPrint = {};
-    for (const v of volumes) {
-      const vals = SECTION_ROWS.map(r => print.volumes[v.key]?.[r.code]?.entries || 0);
-      maxPrint[v.key] = Math.max(1, ...vals);
-    }
-    const maxWiki = Math.max(1, ...SECTION_ROWS.map(r => (r.wiki && counts[r.wiki]) || 0));
-    const source = (icon, name, year, address) => `<th scope="col" class="num">
+    const source = (icon, name, year, unit, tip) => `<th scope="col" class="num" title="${esc(tip)}">
       <span class="source">${ICONS[icon]}${esc(name)}</span>
-      <span class="source-year">${esc(year)}</span>
-      ${address ? `<span class="source-address" title="Address form">${esc(address)}</span>` : ''}</th>`;
-    const head = (print ? volumes.map(v => source(v.icon, v.name, v.year, v.address)).join('') : source('book', 'Contents', '1991', 'F 1–723'))
-      + source('wiki', 'Wiki', 'pages', 'page 448');
+      ${year ? `<span class="source-year">${esc(year)}</span>` : ''}
+      <span class="source-unit">${esc(unit)}</span></th>`;
+    const head = (print
+      ? volumes.map(v => source(v.icon, v.name, v.year, this.viewerReady ? 'entries · open as cards' : 'entries',
+        `Entries of ${v.phrase}, cited by addresses such as ${v.address}`)).join('')
+      : source('book', 'Contents', '1991', 'numbers',
+        'The number range of each section in the contents of 1991, such as F 1–723'))
+      + source('wiki', 'Wiki', '', 'pages · open in catalogue',
+        'Wiki pages of the entry type placed at the section, addressed by page ID such as page 448');
     const rows = SECTION_ROWS.map(r => `
       <tr>
         <th scope="row" title="${esc(r.range ? `Numbered ${r.code} 1 to ${r.range} in the contents of 1991` : 'Only in Addendum I')}"><span class="section-code">${r.code}</span>${esc(r.name)}</th>
-        ${print ? volumes.map(v => this.printCell(print, v, r, maxPrint[v.key])).join('') : `<td class="num" data-label="1991">${r.range ? `${r.code} 1&ndash;${homeCount(r.range)}` : '<span class="absent" title="Not in the contents of 1991">&ndash;</span>'}</td>`}
-        ${this.wikiCell(r, counts, maxWiki)}
+        ${print ? volumes.map(v => this.printCell(print, v, r)).join('') : `<td class="num" data-label="Contents 1991">${r.range ? `${r.code} 1&ndash;${homeCount(r.range)}` : '<span class="absent" title="Not in the contents of 1991">&ndash;</span>'}</td>`}
+        ${this.wikiCell(r, counts)}
       </tr>`).join('');
     const indexRow = volumes.length ? `
       <tr class="aside">
@@ -211,51 +220,77 @@ const Home = {
         <caption class="visually-hidden">Sections of the bibliography by source</caption>
         <thead><tr><th scope="col">Section</th>${head}</tr></thead>
         <tbody>${rows}${indexRow}${onlyRow}</tbody>
-      </table>`;
+      </table>
+      ${this.legend(volumes.length > 0 && this.viewerReady)}`;
   },
 
-  _bar(value, max) {
-    if (!value || !max) return '';
-    const pct = Math.max(2, Math.round((value / max) * 100));
-    return `<span class="count-bar" aria-hidden="true"><span style="width:${pct}%"></span></span>`;
+  // One line for the two marks of the table that no head explains. Where the
+  // table stacks, the bracket gives way to a label and its item is hidden,
+  // while the heads are hidden and the item on the targets takes their place.
+  legend(printLinks) {
+    const targets = printLinks ? 'print counts open the cards, wiki counts the catalogue' : 'wiki counts open the catalogue';
+    const items = [
+      `<li class="legend-targets">${targets}</li>`,
+      '<li class="legend-covers"><span class="legend-bracket" aria-hidden="true"></span>one wiki type covers two sections</li>',
+    ];
+    for (const r of SECTION_ROWS.filter(row => row.seeAlso)) {
+      items.push(`<li><span class="legend-see">&uarr; ${r.seeAlso}</span> counted at section ${r.seeAlso}</li>`);
+    }
+    return `<ul class="home-legend" aria-label="Marks in the table">${items.join('')}</ul>`;
   },
 
-  printCell(print, volume, row, max = 0) {
+  // A print count opens its cards where the viewer answers and is plain text
+  // otherwise; its tooltip says what it counts in either case.
+  printTarget(href, what, text, note = '') {
+    if (!this.viewerReady) return `<span class="print-count" title="${esc(note ? `${what}, ${note}` : what)}">${text}</span>`;
+    const label = `Open the ${what} as print cards${note ? ` (${note})` : ''}`;
+    return `<a class="print-count" href="${esc(href)}" title="${esc(label)}" aria-label="${esc(label)}">${text}</a>`;
+  },
+
+  printCell(print, volume, row) {
     const part = print.volumes[volume.key][row.code];
-    if (!part || !part.entries) return `<td class="num" data-label="${esc(volume.year)}"><span class="absent" title="No section ${row.code} in ${esc(volume.name)}">&ndash;</span></td>`;
+    if (!part || !part.entries) return `<td class="num" data-label="${esc(volume.name)}"><span class="absent" title="No section ${row.code} in ${esc(volume.phrase)}">&ndash;</span></td>`;
     const href = `${print.viewer}#/?v=${volume.key}&part=${encodeURIComponent(row.code)}`;
-    const what = `${homeCount(part.entries)} ${part.entries === 1 ? 'entry' : 'entries'} in section ${row.code} of ${volume.name}${part.highest ? `, numbered up to ${part.highest}` : ''}`;
-    return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(href)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(part.entries)}</a>${this._bar(part.entries, max)}</td>`;
+    const what = `${homeCount(part.entries)} ${part.entries === 1 ? 'entry' : 'entries'} of section ${row.code} of ${volume.phrase}`;
+    const note = part.highest ? `numbered up to ${part.highest}` : '';
+    return `<td class="num" data-label="${esc(volume.name)}">${this.printTarget(href, what, homeCount(part.entries), note)}</td>`;
   },
 
   indexCell(print, volume) {
     const parts = Object.entries(print.volumes[volume.key]).filter(([, p]) => p.kind === 'index');
-    if (!parts.length) return `<td class="num" data-label="${esc(volume.year)}"><span class="absent" title="No index in ${esc(volume.name)}">&ndash;</span></td>`;
+    if (!parts.length) return `<td class="num" data-label="${esc(volume.name)}"><span class="absent" title="No index in ${esc(volume.phrase)}">&ndash;</span></td>`;
     const total = parts.reduce((sum, [, p]) => sum + p.entries, 0);
-    const what = `${homeCount(total)} index entries in ${parts.map(([name]) => name).join(', ')} of ${volume.name}`;
-    return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(`${print.viewer}#/?v=${volume.key}&k=index`)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(total)}</a></td>`;
+    const what = `${homeCount(total)} index entries of ${volume.phrase} (${parts.map(([name]) => name).join(', ')})`;
+    return `<td class="num" data-label="${esc(volume.name)}">${this.printTarget(`${print.viewer}#/?v=${volume.key}&k=index`, what, homeCount(total))}</td>`;
   },
 
-  wikiCell(row, counts, max = 0) {
+  wikiCell(row, counts) {
     if (row.coveredBy) return '';
     if (row.seeAlso) {
       const target = SECTION_ROWS.find(r => r.code === row.seeAlso);
       const type = target ? target.wiki : 'essay';
-      const what = `Essays cover sections ${row.seeAlso} and ${row.code} and are counted at ${row.seeAlso}`;
+      const n = counts[type] || 0;
+      const what = `Essays belong to sections ${row.seeAlso} and ${row.code} and are counted at ${row.seeAlso}. `
+        + `Open the ${homeCount(n)} wiki ${n === 1 ? 'page' : 'pages'} of type ${ENTRY_TYPE_LABELS[type] || type} in the catalogue`;
       return `<td class="num" data-label="Wiki"><button type="button" class="wiki-count see" data-act="filter-type" data-type="${esc(type)}" title="${esc(what)}" aria-label="${esc(what)}">&uarr; ${row.seeAlso}</button></td>`;
     }
     if (!row.wiki || !counts[row.wiki]) {
       return `<td class="num" data-label="Wiki"><span class="absent" title="No wiki entry type for section ${row.code}">&ndash;</span></td>`;
     }
-    const span = row.covers ? ' rowspan="2"' : '';
-    const cls = row.covers ? 'num spans' : 'num';
-    return `<td class="${cls}"${span} data-label="Wiki">${this.wikiLink(row.wiki, counts[row.wiki], false, row)}${this._bar(counts[row.wiki], max)}</td>`;
+    if (row.covers) {
+      // The bracket drawn along both rows takes this cell's tooltip as its words.
+      const label = ENTRY_TYPE_LABELS[row.wiki] || row.wiki;
+      const tip = `One wiki type, ${label}, covers sections ${row.code} and ${row.covers}`;
+      return `<td class="num spans" rowspan="2" title="${esc(tip)}" data-label="Wiki (${row.code} and ${row.covers})">${this.wikiLink(row.wiki, counts[row.wiki], false, row)}</td>`;
+    }
+    return `<td class="num" data-label="Wiki">${this.wikiLink(row.wiki, counts[row.wiki], false, row)}</td>`;
   },
 
   wikiLink(type, count, named, row = null) {
     const label = ENTRY_TYPE_LABELS[type] || type;
-    const scope = row && (row.covers || row.alsoIn) ? `, sections ${row.code} and ${row.covers || row.alsoIn}` : '';
-    const what = `${homeCount(count)} wiki ${count === 1 ? 'page' : 'pages'} of type ${label}${scope}`;
+    const other = row && (row.covers || row.alsoIn);
+    const scope = row ? ` (${other ? `sections ${row.code} and ${other}` : `section ${row.code}`})` : '';
+    const what = `Open the ${homeCount(count)} wiki ${count === 1 ? 'page' : 'pages'} of type ${label}${scope} in the catalogue`;
     return `<button type="button" class="wiki-count" data-act="filter-type" data-type="${esc(type)}" title="${esc(what)}" aria-label="${esc(what)}">${named ? `<span class="wiki-name">${esc(label)}</span> ` : ''}${homeCount(count)}</button>`;
   },
 

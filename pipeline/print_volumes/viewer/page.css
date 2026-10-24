@@ -1,0 +1,543 @@
+/* Page check (page.html). Tokens, base and the site header come from
+   cards.css; the layer order is declared there. A line box tells its role by
+   its stroke pattern as well as its colour, and the legend names each. */
+
+@layer tokens {
+  :root {
+    --pc-value: var(--burgundy);
+    --pc-record: var(--gold-dark);
+    --pc-heading: var(--wiki);
+    --pc-apparatus: var(--wiki-only);
+    --pc-outside: var(--bad);
+    --pc-furniture: var(--text-faint);
+    --pc-lit: color-mix(in oklch, var(--gold) 38%, transparent);
+  }
+}
+
+@layer layout {
+  /* Wide: the two panes fill the window below the header and scroll apart. */
+  body.pc-body {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    block-size: 100dvh;
+  }
+  /* A column of flex items, so that the hidden match list leaves no empty track. */
+  .pc-main {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 0;
+    padding-inline: var(--space-4);
+  }
+  /* cards.css sets the status line to a full-width flex basis, which in this column is its height. */
+  .pc-main > * {
+    flex: none;
+  }
+  .pc-main > .pc-panes {
+    flex: 1 1 0;
+  }
+  .pc-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-3) var(--space-2);
+  }
+  .pc-title {
+    flex: 1 0 100%;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .pc-goto {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-2);
+  }
+  .pc-goto label {
+    display: grid;
+    gap: 0.1rem;
+    font-size: 0.8125rem;
+    color: var(--text-light);
+  }
+  .pc-page-field {
+    grid-template-columns: auto auto;
+    align-items: center;
+  }
+  .pc-page-field > span:first-child {
+    grid-column: 1 / -1;
+  }
+  .pc-goto input,
+  .pc-goto select {
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    min-block-size: 1.9rem;
+    padding-inline: 0.4rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+  #pc-page {
+    inline-size: 5.5rem;
+  }
+  #pc-query {
+    inline-size: 13rem;
+  }
+  .pc-pdf-link {
+    align-self: center;
+  }
+  .pc-matches {
+    margin: 0;
+    padding-inline-start: var(--space-5);
+  }
+  .pc-panes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--space-4);
+    min-block-size: 0;
+    padding-block-end: var(--space-2);
+  }
+  /* Positioned, so that the visually hidden captions stay inside the scrolling pane. */
+  .pc-extract,
+  .pc-page {
+    position: relative;
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .pc-extract {
+    padding-inline-end: var(--space-2);
+  }
+  /* Narrow and zoomed: the page comes first as a strip that stays at the top
+     of the window and scrolls inside itself, and the readings scroll with the
+     window below it, so that a selection on either side shows its other side. */
+  @media (max-width: 60rem) {
+    body.pc-body {
+      display: block;
+      block-size: auto;
+    }
+    .pc-main {
+      display: block;
+    }
+    .pc-panes {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
+    }
+    .pc-page {
+      order: -1;
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 2;
+      max-block-size: 55dvh;
+      /* Over the side gutters too, so that list markers scrolling under it stay hidden. */
+      margin-inline: calc(-1 * var(--space-4));
+      padding-inline: var(--space-4);
+      background: var(--cream);
+      border-block-end: 1px solid var(--border);
+    }
+    .pc-extract {
+      overflow: visible;
+    }
+    /* Scrolled to, a heading, record or value clears the page strip above it. */
+    .pc-extract > .pc-pane-heading,
+    .pc-record,
+    .pc-values tr {
+      scroll-margin-block-start: calc(55dvh + var(--space-2));
+    }
+  }
+}
+
+@layer components {
+  .pc-pane-heading {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    margin: 0;
+    padding-block: var(--space-1);
+    background: var(--cream);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gold-dark);
+  }
+  /* The page pane's heading and legend stay in view while the page scrolls. */
+  .pc-page-head {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    background: var(--cream);
+  }
+  .pc-page-head > .pc-pane-heading {
+    position: static;
+  }
+  .pc-record {
+    padding-block: var(--space-3);
+    border-block-end: 1px solid var(--hairline);
+  }
+  .pc-record.is-target > h3 {
+    color: var(--burgundy);
+  }
+  .pc-record > h3,
+  .pc-outside > h3,
+  .pc-selected > h3 {
+    margin: 0 0 var(--space-1);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .pc-ident {
+    font-family: var(--font-serif);
+  }
+  .pc-id {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--text-light);
+  }
+  .pc-details,
+  .pc-type {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-light);
+  }
+  .pc-object {
+    margin-block-start: var(--space-3);
+  }
+  .pc-object-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-3);
+  }
+  .pc-object-head h4 {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .pc-card-link {
+    margin-inline-start: auto;
+    font-size: 0.875rem;
+  }
+  .pc-values {
+    inline-size: 100%;
+    margin-block-start: var(--space-1);
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .pc-values th {
+    padding-block: 0.15rem;
+    padding-inline: 0.35rem;
+    text-align: start;
+    font-weight: 600;
+    color: var(--text-light);
+    border-block-end: 1px solid var(--border);
+  }
+  .pc-values td,
+  .pc-values tbody th {
+    padding-block: 0.2rem;
+    padding-inline: 0.35rem;
+    vertical-align: top;
+    border-block-end: 1px solid var(--hairline);
+  }
+  .pc-values tbody th {
+    text-align: start;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .pc-values tr[data-value] {
+    cursor: pointer;
+  }
+  /* The value is the row's one control; it reads as the value, not as a button. */
+  .pc-pick {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+  .pc-pick:focus-visible {
+    outline-offset: 2px;
+  }
+  .pc-values tr.is-lit {
+    background: var(--mark);
+  }
+  /* The selected value: a start bar besides the ground, so not by colour alone. */
+  .pc-values tr.is-current {
+    background: var(--mark-strong);
+    box-shadow: inset 3px 0 0 var(--burgundy);
+  }
+  .pc-value {
+    inline-size: 22%;
+    font-family: var(--font-serif);
+    overflow-wrap: break-word;
+  }
+  .pc-inherited,
+  .pc-state,
+  .pc-defect {
+    display: inline-block;
+    margin-inline-start: 0.35rem;
+    font-size: 0.8125rem;
+    font-style: italic;
+    color: var(--text-light);
+  }
+  .pc-state {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--unsure);
+  }
+  .pc-defect {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--bad);
+  }
+  .pc-values code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
+  }
+  .pc-passage {
+    inline-size: 42%;
+  }
+  .pc-piece {
+    display: block;
+  }
+  .pc-print {
+    font-family: var(--font-serif);
+    overflow-wrap: break-word;
+  }
+  .pc-print mark {
+    background: var(--mark-strong);
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .pc-line-no {
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    color: var(--text-light);
+  }
+  button.pc-line-no {
+    color: var(--burgundy);
+  }
+  .pc-missing {
+    color: var(--bad);
+    font-weight: 600;
+  }
+  .pc-cands {
+    margin-block: var(--space-2) 0;
+    font-size: 0.875rem;
+  }
+  .pc-cands h5 {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-light);
+  }
+  .pc-cands ul,
+  .pc-outside ul {
+    margin: 0;
+    padding-inline-start: var(--space-4);
+  }
+  .pc-cands p {
+    margin: 0;
+  }
+  .pc-outside {
+    padding-block: var(--space-3);
+    border-block-end: 1px solid var(--hairline);
+  }
+  .pc-outside > h3 {
+    color: var(--bad);
+  }
+  .pc-withheld {
+    margin-block: var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: 3px solid var(--gold-dark);
+    font-weight: 600;
+  }
+  /* The selected line stays in view while the list scrolls to its values. */
+  .pc-selected {
+    position: sticky;
+    inset-block-start: 1.9rem;
+    z-index: 1;
+    padding-block: var(--space-2);
+    padding-inline: var(--space-3);
+    background: var(--paper);
+    border-inline-start: 3px solid var(--burgundy);
+  }
+  .pc-selected p {
+    margin-block: 0.2rem;
+  }
+
+  .pc-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem var(--space-4);
+    margin: 0;
+    padding-block-end: var(--space-2);
+    padding: 0;
+    list-style: none;
+    font-size: 0.8125rem;
+    color: var(--text-light);
+  }
+  .pc-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .pc-swatch {
+    inline-size: 1.6rem;
+    block-size: 0.8rem;
+  }
+  /* At swatch size the hairline patterns of the page would vanish. */
+  .pc-swatch .pc-box {
+    stroke-width: 1.2;
+  }
+  .pc-swatch .pc-box.role-furniture {
+    stroke-dasharray: 1.2 1.8;
+  }
+  .pc-defs {
+    position: absolute;
+    inline-size: 0;
+    block-size: 0;
+    overflow: hidden;
+  }
+  .pc-hatch-line {
+    fill: var(--bad);
+  }
+  .pc-sheet {
+    position: relative;
+    background: var(--paper);
+    box-shadow: var(--shadow-card);
+  }
+  .pc-sheet img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+  }
+  .pc-overlay {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* Line boxes: a stroke pattern per role, so that the role reads without colour. */
+  .pc-box {
+    fill: transparent;
+    stroke-width: 0.6;
+    vector-effect: non-scaling-stroke;
+    cursor: pointer;
+  }
+  .pc-box.role-value {
+    stroke: var(--pc-value);
+  }
+  .pc-box.role-record {
+    stroke: var(--pc-record);
+    stroke-dasharray: 5 2;
+  }
+  .pc-box.role-heading {
+    stroke: var(--pc-heading);
+    stroke-dasharray: 8 2 2 2;
+  }
+  .pc-box.role-apparatus {
+    stroke: var(--pc-apparatus);
+    stroke-dasharray: 1.5 1.5;
+  }
+  .pc-box.role-outside {
+    stroke: var(--pc-outside);
+    stroke-width: 2;
+  }
+  .pc-box.role-furniture {
+    stroke: var(--pc-furniture);
+    stroke-dasharray: 0.5 3;
+  }
+  /* A defect is a hatched tab in the margin before its line, off the characters. */
+  .pc-defect-tab {
+    fill: url(#pc-hatch);
+    stroke: var(--bad);
+    stroke-width: 0.6;
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
+  }
+  .pc-box.is-lit {
+    fill: var(--pc-lit);
+    stroke-width: 1.6;
+  }
+  /* The selection is a second frame around the box, so the role's pattern stays visible inside it. */
+  .pc-selection {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
+  }
+  .pc-box:focus-visible {
+    outline: none;
+    stroke: var(--text);
+    stroke-width: 3;
+  }
+  .pc-fallback {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .pc-note {
+    margin: 0;
+    color: var(--bad);
+    font-weight: 600;
+  }
+  .pc-frame {
+    inline-size: 100%;
+    block-size: 80vh;
+    border: 1px solid var(--border);
+  }
+
+  /* Below the two-pane width only the page strip stays in view; the pane
+     heading, the legend and the selected line scroll with their content. */
+  @media (max-width: 60rem) {
+    .pc-extract > .pc-pane-heading,
+    .pc-selected,
+    .pc-page-head {
+      position: static;
+    }
+  }
+  /* Phone width: four columns do not fit, so a value row reads field and value
+     on its first line and producer and passage below; the row header names the field. */
+  @media (max-width: 30rem) {
+    .pc-values,
+    .pc-values tbody {
+      display: block;
+    }
+    .pc-values thead {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .pc-values tbody tr {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      border-block-end: 1px solid var(--hairline);
+    }
+    .pc-values tbody th,
+    .pc-values tbody td,
+    .pc-values tbody .pc-value,
+    .pc-values tbody .pc-passage {
+      display: block;
+      inline-size: auto;
+      border: 0;
+    }
+    .pc-values tbody td:nth-child(3),
+    .pc-values tbody .pc-passage {
+      grid-column: 1 / -1;
+      padding-block: 0;
+    }
+  }
+}
