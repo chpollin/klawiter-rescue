@@ -91,9 +91,11 @@ const Pages = {
           (1930&ndash;2021), who was Professor Emeritus of German at the
           University of Notre Dame (Indiana, USA), and published online as a
           MediaWiki instance. That wiki held
-          6,725 pages: the bibliography entries republished here, 1,546 redirect
+          6,725 pages: the bibliography entries republished here, redirect
           pages for cross-references and title variants, and a few hundred
-          category descriptions.
+          category descriptions. The redirects survive as a map of
+          ${this._num(m.redirectCount)} alternative titles that lead a search or a
+          cross-reference to its entry.
         </p>
         <p>
           When the hosting infrastructure was discontinued, the wiki went
@@ -227,8 +229,8 @@ const Pages = {
           bibliographic text through a client-side index with prefix matching,
           so <em>Schach</em> matches <em>Schachnovelle</em>. The start page
           lists the entry types as groups; a click opens all entries of a type.
-          In the result view the sidebar filters by type, language, period and
-          location; filters combine with each other and with a query, appear as
+          In the result view the sidebar filters by type, language, period,
+          location and review state; filters combine with each other and with a query, appear as
           chips above the results and are removed individually. On small screens
           the filter button in the lower right opens the same panel. Results
           sort by relevance, year or title.
@@ -248,9 +250,11 @@ const Pages = {
         </p>
         <h3>Explore and data quality</h3>
         <p>
-          <a href="#stats">Explore</a> offers a timeline, a geographic view and a
-          Connections view with a ranked list of the most-referenced entries and
-          a translator flow diagram. <a href="#data/quality">Data Quality</a> shows
+          <a href="#stats">Explore</a> has three views: Overview, with the
+          entries per decade and the language and type rankings as linked
+          filters; Map, with the places of publication; and Connections, with a
+          ranked list of the most-referenced entries and a translator flow
+          diagram. <a href="#data/quality">Data Quality</a> shows
           the processing state: field completeness per entry type, open review
           queues, unresolvable cross-references and the authority candidate
           queue for translators and publishers. Every list opens the affected
@@ -330,7 +334,7 @@ const Pages = {
         ['spec', 'Specification & vocabulary'],
         ['downloads', 'Downloads'],
         ['playground', 'JSON-LD Playground'],
-        ['quality', 'Data quality'],
+        ['quality', 'Data Quality workbench'],
       ])}
 
       <section id="sec-model">
@@ -361,8 +365,9 @@ const Pages = {
         <p>
           Every asserted field carries its <strong>provenance</strong>: whether
           it was read from the markup by a regular expression, derived by the
-          language model, or set by an editor. The interface shows this as an
-          R/L/E badge, and the <a href="#data/quality">Data Quality</a> workbench
+          language model, or set by an editor. Reading by rule is the default,
+          so the entry card marks only a value that is LLM-enriched or
+          expert-curated, and the <a href="#data/quality">Data Quality</a> workbench
           lists the model-derived values as their own work queue.
         </p>
       </section>
@@ -398,7 +403,7 @@ const Pages = {
         <p>
           These files are served by this site and can be fetched directly:
         </p>
-        <table class="page-table">
+        <table class="page-table page-table-stack">
           <thead><tr><th>File</th><th>Role</th></tr></thead>
           <tbody>
             <tr>
@@ -435,12 +440,13 @@ const Pages = {
             </svg>
             Download dataset (JSON)
           </button>
+          <span class="page-action-status" role="status"></span>
         </div>
         <p>
-          The download delivers the loaded flat dataset together with the
-          contested edition and authority claims of the current session. It is
-          the frontend projection in frontend key names, not the JSON-LD
-          serialization.
+          The download delivers the flat dataset together with every edition
+          and authority claim the site publishes, the contested and the decided
+          ones. It is the frontend projection in frontend key names, not the
+          JSON-LD serialization.
         </p>
         <p>
           The canonical graphs are <strong>not</strong> served by this site;
@@ -527,5 +533,12 @@ const Pages = {
 document.addEventListener('click', (ev) => {
   const el = ev.target.closest('#view-page [data-page-act]');
   if (!el) return;
-  if (el.dataset.pageAct === 'download-dataset') Export.fullDataset();
+  if (el.dataset.pageAct !== 'download-dataset') return;
+  const status = el.parentNode.querySelector('.page-action-status');
+  el.disabled = true;
+  if (status) status.textContent = 'Preparing…';
+  Export.fullDataset()
+    .then(() => { if (status) status.textContent = ''; })
+    .catch(err => { if (status) status.textContent = `Not downloaded: ${err.message}.`; })
+    .finally(() => { el.disabled = false; });
 });

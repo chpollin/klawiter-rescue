@@ -99,8 +99,9 @@ const ExploreNetwork = {
     info.innerHTML = `
       <span class="ov-title" style="margin-bottom:0">Most referenced pages</span>
       <span style="font-size:0.75rem;color:var(--sz-text-light)">
-        ${fmt(connectedInView)} of ${fmt(entries.length)} entries in view are connected (${coveragePct}%) ·
-        ${fmt(this.links.length)} resolved reference links${external ? ` · ${fmt(external)} targets outside the current filter` : ''}
+        ${fmt(connectedInView)} of ${fmt(entries.length)} entries in view are connected (${coveragePct}%):
+        ${fmt(referencing.size)} refer to ${fmt(ranked.length)} pages over ${fmt(this.links.length)} resolved links${
+          external ? `, ${fmt(external)} targets outside the current filter` : ''}
       </span>
     `;
     container.appendChild(info);
@@ -144,8 +145,6 @@ const ExploreNetwork = {
       more.textContent = `and ${fmt(ranked.length - 50)} more referenced pages with fewer links`;
       container.appendChild(more);
     }
-
-    this._renderReferenceStats(ranked, referencing);
   },
 
   // Rank reference targets by how many distinct entries point at them.
@@ -159,26 +158,6 @@ const ExploreNetwork = {
       .map(([id, set]) => ({ id, sources: [...set] }))
       .sort((a, b) => b.sources.length - a.sources.length
         || (App.entryMap.get(a.id)?.title || '').localeCompare(App.entryMap.get(b.id)?.title || ''));
-  },
-
-  _renderReferenceStats(ranked, referencing) {
-    const panel = document.getElementById('explore-detail');
-    const detail = document.getElementById('explore-detail-content');
-    if (!panel || !detail) return;
-    if (Explore.selection.length > 0) return;
-
-    panel.classList.remove('hidden');
-    detail.innerHTML = `
-      <div class="detail-summary">
-        <h3 class="detail-summary-title">Reference Network</h3>
-        <div class="network-stats-grid">
-          <div class="network-stat"><strong>${fmt(this.links.length)}</strong><span>Resolved links</span></div>
-          <div class="network-stat"><strong>${fmt(ranked.length)}</strong><span>Referenced pages</span></div>
-          <div class="network-stat"><strong>${fmt(referencing.size)}</strong><span>Referencing entries</span></div>
-          <div class="network-stat"><strong>${fmt(ranked.length ? ranked[0].sources.length : 0)}</strong><span>Top in-degree</span></div>
-        </div>
-      </div>
-    `;
   },
 
   // =========================================================================
@@ -667,10 +646,8 @@ const ExploreNetwork = {
 
     panel.classList.remove('hidden');
 
-    const totalEntries = this._lastEntries ? this._lastEntries.length : 0;
-    const coveragePct = totalEntries > 0
-      ? (entries.length / totalEntries * 100).toFixed(1) : '0.0';
-
+    // The figures of the flow stand in the info line above the diagram; the
+    // panel holds the rankings, which are filters.
     // Language ranking
     const langCounts = new Map();
     for (const e of entries) {
@@ -682,19 +659,13 @@ const ExploreNetwork = {
     detail.innerHTML = `
       <div class="detail-summary">
         <h3 class="detail-summary-title">Translation Flows</h3>
-        <div class="network-stats-grid">
-          <div class="network-stat"><strong>${fmt(entries.length)}</strong><span>Translations</span></div>
-          <div class="network-stat"><strong>${fmt(sankeyData.translatorCount)}</strong><span>Translators</span></div>
-          <div class="network-stat"><strong>${fmt(sankeyData.langCount)}</strong><span>Languages</span></div>
-          <div class="network-stat"><strong>${coveragePct}%</strong><span>Coverage</span></div>
-        </div>
-        <div class="detail-group-section" style="margin-top:0.75rem">
+        <div class="detail-group-section">
           <h4>Top languages</h4>
           <ul class="detail-entry-list">
             ${topLangs.map(([lang, count]) => `
               <li class="detail-entry-item">
                 <button type="button" class="rank-filter-btn" data-kind="language" data-value="${esc(lang)}">
-                  <span class="count-badge" style="background:${Explore.colors.languages[lang] || '#9E9585'}">${fmt(count)}</span>
+                  <span class="count-badge count-badge-lang" style="--lang-color:${Explore.colors.languages[lang] || '#9E9585'}">${fmt(count)}</span>
                   ${esc(lang)}
                 </button>
               </li>

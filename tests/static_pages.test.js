@@ -40,25 +40,34 @@ const records = [
   { sourcePageId: 38, language: 'Danish' },
 ];
 
-test('the Overview counts wiki pages, place spellings and linked places, and years from the records', () => {
+test('the Overview places the wiki types in the sections and shows print counts only from the local structure', () => {
   const ctx = ctxWith(['home.js'], { entries: records, _meta: {} });
   const Home = vm.runInContext('Home', ctx);
-  const stats = Home.stats(records);
-  assert.strictEqual(stats.entries, 4);
-  assert.strictEqual(stats.placeSpellings, 3);
-  // Wien and Vienna are one authority place; the mis-parse links nowhere.
-  assert.strictEqual(stats.linkedPlaces, 1);
-  assert.deepStrictEqual([stats.minYear, stats.maxYear], [1815, 2020]);
+  const counts = { fiction: 7, essay: 3, 'collected-works': 2, film: 1, newspaper: 1 };
+  const flat = html => html.replace(/\s+/g, ' ');
+  const published = flat(Home.table(counts, ['newspaper'], null));
+  // Without the print structure the table holds the 1991 contents and the wiki.
+  assert.match(published, /Contents/);
+  assert.doesNotMatch(published, /Main volume|source-year">1999/);
+  assert.match(published, /F 1&ndash;723/);
+  // A type over two adjacent sections spans both rows; essays stand at C, H points up.
+  assert.match(published, /rowspan="2" data-label="Wiki"><button[^>]*data-type="collected-works"/);
+  assert.match(published, /&uarr; C/);
+  assert.match(published, /Only in the wiki/);
+  assert.match(published, /data-type="newspaper"/);
 
-  const text = Home.introText(stats).replace(/\s+/g, ' ');
-  assert.match(text, /^4 entries \(wiki pages\) on publications/);
-  assert.match(text, /1 places of publication linked to Wikidata among 3 place spellings, 1815&ndash;2020/);
-  assert.doesNotMatch(text, /\d publications by/);
-
-  // A repaired year extraction moves the range; nothing is written down.
-  const repaired = Home.stats(records.filter(row => row.year !== 1815));
-  assert.match(Home.introText(repaired), /1930&ndash;2020/);
-  assert.doesNotMatch(read('home.js'), /1815|2020/);
+  const print = {
+    viewer: 'http://127.0.0.1:8767/viewer/index.html',
+    volumes: { I: { F: { kind: 'body', entries: 720, highest: 723 }, 'Index A': { kind: 'index', entries: 9 } } },
+    totals: { I: { entries: 720, objects: 900, values: 5000 } },
+  };
+  const local = flat(Home.table(counts, [], print));
+  assert.match(local, /href="http:\/\/127\.0\.0\.1:8767\/viewer\/index\.html#\/\?v=I&amp;part=F"[^>]*>720</);
+  assert.match(local, /720 entries in section F of Main volume, numbered up to 723/);
+  // A section the volume lacks is a dash, not an empty cell.
+  assert.match(local, /No section A in Main volume/);
+  // No figure is written into the page code.
+  assert.doesNotMatch(read('home.js'), /1815|2020|4,758/);
 });
 
 test('About and Data say who decided the authority links and which pages are restored', () => {
@@ -73,4 +82,17 @@ test('About and Data say who decided the authority links and which pages are res
   // The methodology no longer says every page is its latest revision.
   assert.match(about, /takes the latest revision\. 1 pages use a restored earlier revision instead/);
   assert.match(about, /Source revision/);
+});
+
+test('About reads the redirect map size from the data, and Data names its quality link for its target', () => {
+  const ctx = ctxWith(['pages.js'], { entries: records, _meta: { ns0Count: 4, redirectCount: 1523 } });
+  const Pages = vm.runInContext('Pages', ctx);
+  const about = Pages.about().replace(/\s+/g, ' ');
+  assert.match(about, /a map of 1,523 alternative titles/);
+  assert.doesNotMatch(read('pages.js'), /1,546/);
+  // The Help names the Explore views by their tabs and the Review facet.
+  assert.match(about, /three views: Overview, .*; Map, .*; and Connections/);
+  assert.match(about, /period, location and review state/);
+  // The anchor leaves the page for the workbench, so it says so.
+  assert.match(Pages.data(), /<a href="#data\/quality">Data Quality workbench<\/a>/);
 });

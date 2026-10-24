@@ -16,7 +16,6 @@ const Explore = {
     publisher: null,
     translator: null,
     period: null,
-    showProvenance: false,
   },
 
   /**
@@ -27,12 +26,7 @@ const Explore = {
    */
   NOT_RECORDED: 'Not recorded',
 
-  // Precomputed indices
-  byLanguage: new Map(),
-  typeCount: 0,
-  topLanguages: [],
   yearExtent: null,   // [min, max]; derived in _preprocess, never hardcoded
-  yearlessCount: 0,   // entries carrying no year at all
 
   // Color palette — base values from shared COLORS constant, language palette local
   colors: {
@@ -51,7 +45,6 @@ const Explore = {
       'symposium': '#4A6B3A', 'dramatic-reading': '#5B6B3A',
       'newspaper': '#6B5B3A', 'other': '#9E9585',
     },
-    provenance: { regex: '#6B7A3A', llm: '#C2A360', missing: '#7A2D45' },
     burgundy: COLORS.burgundy,
     gold: COLORS.gold,
     cream: COLORS.cream,
@@ -86,8 +79,7 @@ const Explore = {
   /**
    * Derive the static structure of the corpus. The result depends on the full
    * record set only, so it is computed once per dataset; filtering changes the
-   * drawn subset, never the language ranking or the year extent that the
-   * scales are built from.
+   * drawn subset, never the year extent that the scales are built from.
    */
   _preprocess() {
     if (this._preprocessedFor === this.entries) return;
@@ -100,25 +92,6 @@ const Explore = {
     this.yearExtent = years.length
       ? [Math.min(...years), Math.max(...years)]
       : (range ? [range.min, range.max] : [0, 0]);
-    this.yearlessCount = e.length - years.length;
-
-    // Index by language; a missing value is its own category
-    this.byLanguage = new Map();
-    for (const entry of e) {
-      const lang = entry.language || this.NOT_RECORDED;
-      if (!this.byLanguage.has(lang)) this.byLanguage.set(lang, []);
-      this.byLanguage.get(lang).push(entry);
-    }
-
-    // Top 10 languages — the palette carries exactly ten named languages, so
-    // every ranked language keeps a distinguishable color.
-    this.topLanguages = [...this.byLanguage.entries()]
-      .filter(([lang]) => lang !== this.NOT_RECORDED)
-      .sort((a, b) => b[1].length - a[1].length)
-      .slice(0, 10)
-      .map(([lang]) => lang);
-
-    this.typeCount = new Set(e.map(x => x.entryType || 'other')).size;
 
     this._preprocessedFor = e;
   },
@@ -154,8 +127,7 @@ const Explore = {
 
     container.innerHTML = `
       <div class="explore-head">
-        <div><h1 class="page-title">Explore the bibliography</h1>
-          <p class="explore-intro">Follow patterns in the catalogue, then read the entries behind them.</p></div>
+        <h1 class="page-title">Explore the bibliography</h1>
         <div class="explore-mode-tabs" role="group" aria-label="Visualization">
           <button type="button" class="mode-tab" data-mode="timeline" aria-pressed="false">Overview</button>
           <button type="button" class="mode-tab" data-mode="geography" aria-pressed="false">Map</button>
@@ -293,8 +265,6 @@ const Explore = {
     if (key === 'decade') {
       // A decade and an entered year range address the same axis.
       this.filters.yearRange = [null, null];
-      const timeline = this._module('timeline');
-      if (timeline) timeline.zoomedDomain = null;
       this.toggleFilter('decade', parseInt(raw, 10));
       return;
     }
@@ -417,7 +387,6 @@ const Explore = {
       languages: [], types: [], yearRange: [null, null],
       decade: null, location: null, country: null,
       publisher: null, translator: null, period: null,
-      showProvenance: false,
     };
     this._onFilterChange();
   },
@@ -563,13 +532,6 @@ const Explore = {
     if (f.publisher) params.set('publisher', f.publisher);
     if (f.translator) params.set('translator', f.translator);
     if (f.period) params.set('period', f.period);
-    if (f.showProvenance) params.set('provenance', 'true');
-    // Timeline-specific state
-    const timeline = this._module('timeline');
-    if (this.mode === 'timeline' && timeline) {
-      if (timeline.layerMode !== 'language') params.set('layers', timeline.layerMode);
-      if (timeline.chartMode !== 'bars') params.set('chart', timeline.chartMode);
-    }
     const paramStr = params.toString();
     const hash = `stats/${this.mode}${paramStr ? '?' + paramStr : ''}`;
     const method = pushState ? 'pushState' : 'replaceState';
@@ -583,7 +545,7 @@ const Explore = {
     this.filters = {
       languages: [], types: [], yearRange: [null, null],
       decade: null, location: null, country: null,
-      publisher: null, translator: null, period: null, showProvenance: false,
+      publisher: null, translator: null, period: null,
     };
     // Restore filter state from URL parameters
     const lang = params.get('language');
@@ -614,15 +576,8 @@ const Explore = {
     if (trans) this.filters.translator = trans;
     const period = params.get('period');
     if (period) this.filters.period = period;
-    if (params.get('provenance') === 'true') this.filters.showProvenance = true;
-    // Timeline-specific state
-    const timeline = this._module('timeline');
-    if (timeline) {
-      const layers = params.get('layers');
-      if (layers) timeline.layerMode = layers;
-      const chart = params.get('chart');
-      if (chart) timeline.chartMode = chart;
-    }
+    // `provenance`, `layers` and `chart` of the former timeline are ignored, so
+    // an old link still opens its selection and the next write drops them.
     // Apply: switch to the requested mode (re-renders with filters)
     // Suppress pushState during restore — use replaceState instead
     this._initializing = true;

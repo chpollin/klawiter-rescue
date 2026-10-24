@@ -1,145 +1,244 @@
 /**
- * Home — Search, browse link and the category list.
+ * Home: search, the build of the data, and the compiler's sections as a table
+ * across the sources of the bibliography (knowledge/frontend.md, Start page).
+ *
+ * The rows are the sections A to R of the printed bibliography, named as its
+ * contents of 1991 name them (transcribed on wiki page 2101). The wiki column
+ * places each entry type in the section it corresponds to; that mapping is the
+ * project's, stated in SECTION_ROWS. A type that covers two adjacent sections
+ * spans their rows (covers); essays cover C and H, which are not adjacent, so
+ * the count stands at C and H points to it (seeAlso). The print columns
+ * appear only on localhost when the print strand has written
+ * lab/local/print-structure.json (pipeline/print_volumes/print_structure.py),
+ * because the rights to the print volumes are unresolved.
  */
+const SECTION_ROWS = [
+  { code: 'A', name: 'Collected Works', range: 170, wiki: 'collected-works', covers: 'B' },
+  { code: 'B', name: 'Selected Works', range: 15, coveredBy: 'A' },
+  { code: 'C', name: 'Essays and Lectures in Book Form', range: 70, wiki: 'essay', alsoIn: 'H' },
+  { code: 'D', name: 'Poetry', range: 227, wiki: 'poetry' },
+  { code: 'E', name: 'Dramas', range: 58, wiki: 'drama' },
+  { code: 'F', name: 'Fiction', range: 723, wiki: 'fiction' },
+  { code: 'G', name: 'Historical and Biographical Studies', range: 1126, wiki: 'historical-study' },
+  { code: 'H', name: 'Essays, Lectures and Reviews', range: 802, seeAlso: 'C' },
+  { code: 'I', name: 'Translations by Zweig', range: 169, wiki: 'translation' },
+  { code: 'J', name: 'Forewords and Afterwords by Zweig', range: 75, wiki: 'foreword' },
+  { code: 'K', name: 'Correspondence', range: 767, wiki: 'correspondence' },
+  { code: 'L', name: 'Secondary Literature', range: 1895, wiki: 'secondary-literature' },
+  { code: 'M', name: "Reviews of Zweig's Works", range: 157 },
+  { code: 'N', name: "Film Versions of Zweig's Works", range: 39, wiki: 'film', covers: 'O' },
+  { code: 'O', name: "Zweig's Works Set to Music", range: 17, coveredBy: 'N' },
+  { code: 'P', name: 'Zweig Symposia', range: 6, wiki: 'symposium' },
+  { code: 'Q', name: 'Works Dedicated to Zweig', range: 25 },
+  { code: 'R', name: 'Handwritten Dedications' },
+];
+
+// The address form is how the compiler cites an entry of each volume.
+const PRINT_VOLUMES = [
+  { key: 'I', name: 'Main volume', year: '1991', icon: 'book', what: 'printed 1991', address: 'F 61' },
+  { key: 'A1', name: 'Addendum I', year: '1999', icon: 'book', what: 'printed 1999', address: 'FA1 3' },
+  { key: 'A2', name: 'Addendum II', year: '2009', icon: 'file', what: 'unpublished working file, 2009', address: 'FA2 3' },
+];
+
+// Inline marks for the sources and the info control; no icon font.
+const ICONS = {
+  book: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5h4.5A1.5 1.5 0 0 1 8 4v9.5A1.5 1.5 0 0 0 6.5 12H2zM14 2.5H9.5A1.5 1.5 0 0 0 8 4v9.5A1.5 1.5 0 0 1 9.5 12H14z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',
+  file: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9zM9.5 1.5v3h3M5.5 8h5M5.5 10.5h5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',
+  wiki: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 8h13M8 1.5c-2 2-2 11 0 13M8 1.5c2 2 2 11 0 13" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>',
+  info: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+};
+
+const homeCount = (n) => n.toLocaleString('en');
+
 const Home = {
+  print: null,
+  printRequested: false,
 
   render(entries) {
-    const container = document.getElementById('view-home');
-
-    // Count entries per type
-    const counts = countByField(entries, 'entryType');
-
-
-    // Build groups HTML
-    const groupsHtml = CATEGORY_GROUPS.map(group => {
-      const rows = group.types
-        .filter(t => counts[t])
-        .map(t => this._renderCategoryRow(t, counts[t]))
-        .join('');
-
-      if (!rows) return '';
-      return `
-        <div class="category-section">
-          <h2 class="section-heading">${esc(group.heading)}</h2>
-          <div class="category-list">${rows}</div>
-        </div>
-      `;
-    }).join('');
-
-    // "Other" types not in any group
-    const groupedTypes = new Set(CATEGORY_GROUPS.flatMap(g => g.types));
-    const otherTypes = Object.keys(counts).filter(t => !groupedTypes.has(t) && counts[t] > 0);
-    let otherHtml = '';
-    if (otherTypes.length) {
-      const otherRows = otherTypes.map(t =>
-        this._renderCategoryRow(t, counts[t])
-      ).join('');
-      otherHtml = `
-        <div class="category-section">
-          <h2 class="section-heading">Other</h2>
-          <div class="category-list">${otherRows}</div>
-        </div>
-      `;
-    }
-
-    // One-screen layout: intro, search and entry points in the top block,
-    // the category groups side by side below. The former stats footer is
-    // folded into the intro sentence.
-    container.innerHTML = `
-      <div class="home-intro home-compact">
-        <h1 class="home-title">Stefan Zweig Bibliography</h1>
-        <p class="home-subtitle">Compiled by Randolph J. Klawiter, as open data</p>
-        <p class="home-text">${this.introText(this.stats(entries))}</p>
-        <div class="home-search-row">
-          <div class="home-search">
-            <input type="search" id="home-search-input"
-                   aria-label="Search the full text of every entry"
-                   value="${esc(App.state.query || '')}"
-                   placeholder="Search the full text of ${entries.length.toLocaleString('en')} entries\u2026">
-            <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-          </div>
-          <a class="home-browse-link" href="#browse">Browse Catalogue</a>
-        </div>
-      </div>
-
-      <div class="home-groups">
-        ${groupsHtml}
-        ${otherHtml}
-      </div>
-    `;
-
-    // The start-page field runs the same search as the header field. Two
-    // fields with two models (Enter here, live there) taught the visitor that
-    // search works differently depending on where they clicked.
-    const homeSearch = document.getElementById('home-search-input');
-    if (homeSearch) {
-      homeSearch.addEventListener('input', (ev) => App.onSearchInput(ev.target.value));
-      homeSearch.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter') {
-          ev.preventDefault();
-          App.commitSearch(ev.target.value);
-        }
+    // The print structure loads once; the page is drawn again when it arrives.
+    if (App.state.isLocal && !this.printRequested) {
+      this.printRequested = true;
+      this.loadPrint().then(() => {
+        const view = document.getElementById('view-home');
+        const typing = document.activeElement?.id === 'home-search-input';
+        if (this.print && view && view.offsetParent !== null && !typing) this.render(entries);
       });
     }
+    const container = document.getElementById('view-home');
+    const counts = countByField(entries, 'entryType');
+    const print = this.print;
+    const mapped = new Set(SECTION_ROWS.map(r => r.wiki).filter(Boolean));
+    const wikiOnly = Object.keys(counts).filter(t => !mapped.has(t) && counts[t]);
+
+    container.innerHTML = `
+      <div class="home-intro">
+        <h1 class="home-title">Stefan Zweig Bibliography</h1>
+        <p class="home-text">Publications by and about Stefan Zweig compiled by
+          Randolph J. Klawiter, ${print ? 'in his three print volumes and his wiki' : 'from his wiki'},
+          ordered by the sections of his printed bibliography.</p>
+        <div class="home-search">
+          <input type="search" id="home-search-input"
+                 aria-label="Search every entry"
+                 value="${esc(App.state.query || '')}"
+                 placeholder="Search titles, persons, places and full text">
+          <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+        <p class="home-browse"><a href="#browse">Browse all ${homeCount(entries.length)} wiki entries</a></p>
+      </div>
+      <section class="home-data" aria-labelledby="home-data-heading">
+        <div class="home-data-head">
+          <h2 id="home-data-heading">How the bibliography is built</h2>
+          <details class="home-info">
+            <summary aria-label="What this shows" title="What this shows">${ICONS.info}</summary>
+            <div class="home-info-body">${this.info(print)}</div>
+          </details>
+        </div>
+        ${this.model(entries, counts, print)}
+        ${this.table(counts, wikiOnly, print)}
+      </section>
+    `;
+
+    const homeSearch = document.getElementById('home-search-input');
+    homeSearch.addEventListener('input', (ev) => App.onSearchInput(ev.target.value));
+    homeSearch.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        App.commitSearch(ev.target.value);
+      }
+    });
   },
 
-  /**
-   * The figures of the intro sentence, all read from the loaded records.
-   *
-   * An entry is one wiki page, which can list many publications. A place
-   * spelling is a value as the source writes it, mis-parses included, so the
-   * places are counted as distinct published authority links (locationSameAs),
-   * the reconciled subjects the records carry. The year range is computed
-   * here rather than written down, so a repaired year extraction moves it.
-   */
-  stats(entries) {
-    const years = entries.map(e => e.year).filter(Number.isFinite);
-    return {
-      entries: entries.length,
-      languages: new Set(entries.map(e => e.language).filter(Boolean)).size,
-      placeSpellings: new Set(entries.map(e => e.location).filter(Boolean)).size,
-      linkedPlaces: new Set(entries.map(e => e.locationSameAs).filter(Boolean)).size,
-      minYear: years.length ? Math.min(...years) : null,
-      maxYear: years.length ? Math.max(...years) : null,
-    };
+  // The local print structure; absent on the published site, so no request is
+  // made there and the page keeps its wiki side only.
+  async loadPrint() {
+    if (!App.state.isLocal) return;
+    try {
+      const response = await fetch('lab/local/print-structure.json');
+      if (response.ok) this.print = await response.json();
+    } catch {
+      this.print = null;
+    }
   },
 
-  introText(s) {
-    const n = value => value.toLocaleString('en');
-    const range = s.minYear != null ? `, ${s.minYear}&ndash;${s.maxYear}` : '';
-    return `${n(s.entries)} entries (wiki pages) on publications by and about
-          Stefan Zweig, from first editions and translations to secondary
-          literature, films and correspondence, in ${n(s.languages)} languages,
-          with ${n(s.linkedPlaces)} places of publication linked to Wikidata
-          among ${n(s.placeSpellings)} place spellings${range}, searchable and
-          downloadable as a structured dataset.`;
+  // The levels every source shares, each with its count: source, section,
+  // entry, described publication, value. One row per kind of source.
+  model(entries, counts, print) {
+    const levels = ['Source', 'Section', 'Entry', 'Publication', 'Value'];
+    const row = (cells) => cells.map(c => `<td>${c}</td>`).join('');
+    const pubs = App.data?._meta?.publicationCoverage;
+    const wiki = row([
+      `${ICONS.wiki}<span>Wiki</span>`,
+      `<b>${homeCount(Object.keys(counts).length)}</b> entry types`,
+      `<b>${homeCount(entries.length)}</b> pages`,
+      pubs ? `<b>${homeCount(pubs.publications)}</b> publications on ${homeCount(pubs.pages)} pages` : '',
+      'each field with its source passage',
+    ]);
+    let printRow = '';
+    if (print) {
+      const t = Object.values(print.totals);
+      const sum = (key) => t.reduce((n, v) => n + v[key], 0);
+      printRow = `<tr><th scope="row">Print</th>${row([
+        `${ICONS.book}<span>3 volumes</span>`,
+        '<b>18</b> sections, A to R, and indexes',
+        `<b>${homeCount(sum('entries'))}</b> entries, each with an address`,
+        `<b>${homeCount(sum('objects'))}</b> described objects`,
+        `<b>${homeCount(sum('values'))}</b> values, each bound to its passage`,
+      ])}</tr>`;
+    }
+    return `
+      <table class="home-model">
+        <thead><tr><td></td>${levels.map(l => `<th scope="col">${l}</th>`).join('')}</tr></thead>
+        <tbody>${printRow}<tr><th scope="row">Wiki</th>${wiki}</tr></tbody>
+      </table>`;
   },
 
-  // A category is one plain row: name, count, and a click that opens the
-  // filtered list. The former expandable subcategories guessed a
-  // "Format (Language)" structure most categories do not have.
-  _renderCategoryRow(type, count) {
+  info(print) {
+    return `<ul>
+      <li>Every source is built alike: a source holds sections, a section holds entries, an entry describes one or more publications, and every value of a publication is bound to the passage it was read from.</li>
+      <li>An address names an entry across the volumes: F 61 is entry 61 of section F in the main volume, FA1 3 entry 3 of F in Addendum I, FA2 3 in Addendum II. The wiki cites these addresses; a cited address is a reference, not proof that two records are the same publication.</li>
+      <li>Rows of the table are the sections in the printed order, named as the contents of 1991 name them. R exists only in Addendum I.</li>
+      <li>A print count is the number of entries of that section in the volume, numbered and unnumbered, as read from the file. A wiki count is the number of wiki pages of the entry type. The units differ and the sources overlap, so the counts do not add up.</li>
+      <li>A dash means the section does not exist in that volume. A bracket means one wiki type covers two sections; essays belong to C and H and are counted at C. The wiki types are placed in the sections by this project, not by the compiler.</li>
+      ${print ? '<li>The print side appears only on this computer, because the rights to the print volumes are unresolved.</li>' : ''}
+    </ul>`;
+  },
+
+  // Labels left, counts right, one column per source; a count is a link and
+  // its tooltip says what it counts.
+  table(counts, wikiOnly, print) {
+    const volumes = print ? PRINT_VOLUMES.filter(v => print.volumes[v.key]) : [];
+    const source = (icon, name, year, address) => `<th scope="col" class="num">
+      <span class="source">${ICONS[icon]}${esc(name)}</span>
+      <span class="source-year">${esc(year)}</span>
+      ${address ? `<span class="source-address" title="Address form">${esc(address)}</span>` : ''}</th>`;
+    const head = (print ? volumes.map(v => source(v.icon, v.name, v.year, v.address)).join('') : source('book', 'Contents', '1991', 'F 1–723'))
+      + source('wiki', 'Wiki', 'pages', '');
+    const rows = SECTION_ROWS.map(r => `
+      <tr>
+        <th scope="row" title="${esc(r.range ? `Numbered ${r.code} 1 to ${r.range} in the contents of 1991` : 'Only in Addendum I')}"><span class="section-code">${r.code}</span>${esc(r.name)}</th>
+        ${print ? volumes.map(v => this.printCell(print, v, r)).join('') : `<td class="num" data-label="1991">${r.range ? `${r.code} 1&ndash;${homeCount(r.range)}` : '<span class="absent" title="Not in the contents of 1991">&ndash;</span>'}</td>`}
+        ${this.wikiCell(r, counts)}
+      </tr>`).join('');
+    const indexRow = volumes.length ? `
+      <tr class="aside">
+        <th scope="row">Indexes</th>
+        ${volumes.map(v => this.indexCell(print, v)).join('')}
+        <td></td>
+      </tr>` : '';
+    const onlyRow = wikiOnly.length ? `
+      <tr class="aside">
+        <th scope="row">Only in the wiki</th>
+        <td class="only" colspan="${(print ? volumes.length : 1) + 1}">${wikiOnly.map(t => this.wikiLink(t, counts[t], true)).join('')}</td>
+      </tr>` : '';
+    return `
+      <table class="home-sections">
+        <caption class="visually-hidden">Sections of the bibliography by source</caption>
+        <thead><tr><th scope="col">Section</th>${head}</tr></thead>
+        <tbody>${rows}${indexRow}${onlyRow}</tbody>
+      </table>`;
+  },
+
+  printCell(print, volume, row) {
+    const part = print.volumes[volume.key][row.code];
+    if (!part || !part.entries) return `<td class="num" data-label="${esc(volume.year)}"><span class="absent" title="No section ${row.code} in ${esc(volume.name)}">&ndash;</span></td>`;
+    const href = `${print.viewer}#/?v=${volume.key}&part=${encodeURIComponent(row.code)}`;
+    const what = `${homeCount(part.entries)} ${part.entries === 1 ? 'entry' : 'entries'} in section ${row.code} of ${volume.name}${part.highest ? `, numbered up to ${part.highest}` : ''}`;
+    return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(href)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(part.entries)}</a></td>`;
+  },
+
+  indexCell(print, volume) {
+    const parts = Object.entries(print.volumes[volume.key]).filter(([, p]) => p.kind === 'index');
+    if (!parts.length) return `<td class="num" data-label="${esc(volume.year)}"><span class="absent" title="No index in ${esc(volume.name)}">&ndash;</span></td>`;
+    const total = parts.reduce((sum, [, p]) => sum + p.entries, 0);
+    const what = `${homeCount(total)} index entries in ${parts.map(([name]) => name).join(', ')} of ${volume.name}`;
+    return `<td class="num" data-label="${esc(volume.year)}"><a href="${esc(`${print.viewer}#/?v=${volume.key}&k=index`)}" title="${esc(what)}" aria-label="${esc(what)}">${homeCount(total)}</a></td>`;
+  },
+
+  wikiCell(row, counts) {
+    if (row.coveredBy) return '';
+    if (row.seeAlso) return `<td class="num" data-label="Wiki"><span class="see" title="Essays are counted at ${row.seeAlso}">&uarr; ${row.seeAlso}</span></td>`;
+    if (!row.wiki || !counts[row.wiki]) return '<td class="num" data-label="Wiki"></td>';
+    const span = row.covers ? ' rowspan="2"' : '';
+    const cls = row.covers ? 'num spans' : 'num';
+    return `<td class="${cls}"${span} data-label="Wiki">${this.wikiLink(row.wiki, counts[row.wiki], false, row)}</td>`;
+  },
+
+  wikiLink(type, count, named, row = null) {
     const label = ENTRY_TYPE_LABELS[type] || type;
-    return `<button type="button" class="category-row"
-        data-act="filter-type" data-type="${esc(type)}">
-        <span class="category-row-name">${esc(label)}</span>
-        <span class="category-row-count">${count.toLocaleString('en')}</span>
-      </button>`;
+    const scope = row && (row.covers || row.alsoIn) ? `, sections ${row.code} and ${row.covers || row.alsoIn}` : '';
+    const what = `${homeCount(count)} wiki ${count === 1 ? 'page' : 'pages'} of type ${label}${scope}`;
+    return `<button type="button" class="wiki-count" data-act="filter-type" data-type="${esc(type)}" title="${esc(what)}" aria-label="${esc(what)}">${named ? `<span class="wiki-name">${esc(label)}</span> ` : ''}${homeCount(count)}</button>`;
   },
 
-  // One delegated dispatcher for the whole home view. Inline handlers carried
-  // the value inside a JS string literal, which broke on category names with
-  // an apostrophe: esc() writes &#39; into the attribute, the parser hands the
-  // decoded ' back to the handler, and the literal ends early.
   _dispatch(el) {
     if (el.dataset.act === 'filter-type') App.setFilter('type', el.dataset.type);
   },
 };
 
-// A category row is a real button, so one click listener is the whole
-// keyboard path as well; browsing is an anchor and needs none.
+// A wiki type is a real button, so one click listener is the whole keyboard
+// path as well; the print cells are links into the local print viewer.
 document.addEventListener('click', (ev) => {
   const el = ev.target.closest('#view-home [data-act]');
   if (!el) return;

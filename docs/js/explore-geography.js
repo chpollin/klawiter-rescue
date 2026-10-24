@@ -760,7 +760,7 @@ const ExploreGeography = {
     const topLangs = topN(d.entries, 'language', 3);
     const langList = topLangs.map(([l, c]) => `${esc(l)}: ${fmt(c)}`).join(', ');
     const name = d.type === 'country'
-      ? `${this._countryNames[d.country] || d.country} · ${d.locations.length} places`
+      ? `${this._countryNames[d.country] || d.country}, ${d.locations.length} places`
       : d.locations[0] + (d.locations.length > 1 ? ` (+${d.locations.length - 1})` : '');
     return `<strong>${esc(name)}</strong><br>${fmt(d.count)} entries<br><small>${langList}</small>`;
   },

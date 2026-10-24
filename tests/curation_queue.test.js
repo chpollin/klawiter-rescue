@@ -93,3 +93,12 @@ test('one queue key event is handled once after repeated render, decision and un
   for (const fn of [...currentList.listeners, ...persistentListeners]) fn(event);
   assert.strictEqual(handled, 1);
 });
+
+test('the status panel counts session decisions only where deciding is possible', () => {
+  const Edit = { summary: { contestedAuthorityClaims: 2 }, agents: {}, pendingReconciliation: {},
+    getPendingCount: () => 0 };
+  const panel = isLocal => loadCurate({ Edit, App: { state: { isLocal, editMode: false } } })._statusPanel();
+  assert.doesNotMatch(panel(false), /Pending decisions/);
+  assert.match(panel(false), /Contested claims/);
+  assert.match(panel(true), /Pending decisions this session/);
+});

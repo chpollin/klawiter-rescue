@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stefan Zweig Bibliography (Klawiter)</title>
+  <title>Klawiter — Stefan Zweig Bibliography</title>
   <meta name="description" content="The Stefan Zweig Bibliography compiled by Randolph J. Klawiter as open data: publications by and about Stefan Zweig, searchable, structured and downloadable.">
   <meta property="og:title" content="Stefan Zweig Bibliography (Klawiter)">
   <meta property="og:description" content="The Stefan Zweig Bibliography as open data: publications by and about Stefan Zweig, compiled by Dr. Randolph J. Klawiter (University of Notre Dame).">
@@ -143,15 +143,10 @@
           </select>
           </div>
         </div>
-        <!-- The provenance classes are the same everywhere, so the legend
-             stands once above the list instead of inside every card. -->
-        <p id="prov-legend" class="prov-legend">Provenance of a value&rsquo;s wording
-          <span class="prov-badge prov-regex" aria-hidden="true">R</span> regex-extracted
-          <span class="prov-badge prov-llm" aria-hidden="true">L</span> LLM-enriched
-          <span class="prov-badge prov-editor" aria-hidden="true">E</span> expert-curated
-          <span class="prov-badge prov-missing" aria-hidden="true">&mdash;</span> missing.
-          An authority link names its own producer beside its state.
-        </p>
+        <!-- The state nearly every value shares, said once; a card marks
+             only what deviates from it. -->
+        <p id="list-defaults" class="list-defaults">Unless a value is marked, it was
+          extracted by rule from the source text and has not been reviewed.</p>
         <div id="results-list" class="results-list"></div>
         <div id="load-more" class="load-more hidden">
           <button id="load-more-btn">Load more&hellip;</button>
@@ -208,7 +203,7 @@
             <span>Digital Humanities Craft</span>
           </a>
         </div>
-        <div class="footer-text">Code MIT &middot; Data CC BY 4.0</div>
+        <div class="footer-text">Code MIT, data CC BY 4.0</div>
       </div>
       <div>
         <div class="footer-heading">Information</div>

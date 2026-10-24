@@ -193,8 +193,8 @@ test('edit mode keeps the publications and scopes the table to the page record',
 
   // Both imprints stay readable, so an accepted page value is never read as
   // a decision about the publication the card no longer shows.
-  assert.match(html, /1947 · 1st edition/);
-  assert.match(html, /1960 · 2nd revised edition/);
+  assert.match(html, /1947, 1st edition/);
+  assert.match(html, /1960, 2nd revised edition/);
   assert.match(html, />Narodna Kultura</);
   assert.match(html, />Page record</);
   assert.match(html, /page with 2 publications/);

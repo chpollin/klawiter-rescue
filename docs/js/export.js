@@ -774,13 +774,24 @@ const Export = {
   // the frontend names and it carries no @context. Attaching one would claim a
   // mapping that does not hold, so the export is named for what it is; the
   // canonical JSON-LD lives in the repository under data/output/.
+  // The claims live in reconciliation.json, which a visit to #data has not
+  // loaded; the export waits for it like batchBibtex does. A failed load
+  // rejects instead of shipping a dataset that looks as if it had no claims.
   fullDataset() {
-    const payload = {
-      ...App.data,
-      contestedEditionClaims: Object.values(Edit.editionClaims).flat(),
-      contestedAuthorityClaims: Edit.contestedAuthorityClaims,
-      decidedAuthorityClaims: Edit.decidedAuthorityClaims || [],
-    };
-    downloadBlob(JSON.stringify(payload, null, 2), 'klawiter-bibliography.json', 'application/json');
+    const claims = typeof App._ensureReconciliation === 'function'
+      ? App._ensureReconciliation()
+      : Promise.resolve();
+    return claims.then(() => {
+      if (Edit.reconciliationFailed) {
+        throw new Error(`claims not available (${Edit.reconciliationError || 'failed to load'})`);
+      }
+      const payload = {
+        ...App.data,
+        contestedEditionClaims: Object.values(Edit.editionClaims).flat(),
+        contestedAuthorityClaims: Edit.contestedAuthorityClaims,
+        decidedAuthorityClaims: Edit.decidedAuthorityClaims || [],
+      };
+      downloadBlob(JSON.stringify(payload, null, 2), 'klawiter-bibliography.json', 'application/json');
+    });
   },
 };

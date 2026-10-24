@@ -468,8 +468,8 @@ const App = {
     if (exportBtn) exportBtn.classList.add('hidden');
     const loadMore = document.getElementById('load-more');
     if (loadMore) loadMore.classList.add('hidden');
-    // No list stands here, so nothing sorts, filters or needs the badge key.
-    for (const id of ['prov-legend', 'sort-select', 'facets', 'mobile-filter-btn']) {
+    // No list stands here, so nothing sorts, filters or has a default state.
+    for (const id of ['list-defaults', 'sort-select', 'facets', 'mobile-filter-btn']) {
       const el = document.getElementById(id);
       if (el) el.classList.add('hidden');
     }
@@ -885,10 +885,14 @@ const App = {
     btn.style.display = usable ? '' : 'none';
   },
 
+  // The <title> of index.html carries the same string; a test holds the two
+  // together.
+  BASE_TITLE: 'Klawiter \u2014 Stefan Zweig Bibliography',
+
   // The single place that sets document.title; Pages must not set it too,
   // or the two sources drift apart.
   _updateTitle(view) {
-    const base = 'Klawiter \u2014 Stefan Zweig Bibliography';
+    const base = this.BASE_TITLE;
     const titles = {
       home: base,
       stats: `Explore \u2014 ${base}`,
@@ -907,6 +911,11 @@ const App = {
       // A workbench list names itself; it has no filter state to derive from.
       if (this.state.customLabel) {
         document.title = `${this.state.customLabel} — ${base}`;
+        return;
+      }
+      // A permalink names its entry, the way the tab of a record page would.
+      if (this.state.singleEntry && this.filtered.length === 1) {
+        document.title = `${this.filtered[0].title || 'Untitled'} \u2014 ${base}`;
         return;
       }
       if (f.type) { document.title = `${this._filterDisplay('type', f.type)} \u2014 ${base}`; return; }
@@ -940,9 +949,9 @@ const App = {
       if (label) label.textContent = `Export ${total.toLocaleString('en')} as BibTeX`;
     }
 
-    // The legend explains badges the cards carry, so it goes with them.
-    const legend = document.getElementById('prov-legend');
-    if (legend) legend.classList.toggle('hidden', total === 0);
+    // The default line describes the cards, so it goes with them.
+    const defaults = document.getElementById('list-defaults');
+    if (defaults) defaults.classList.toggle('hidden', total === 0);
 
     const list = document.getElementById('results-list');
     if (total === 0) {
@@ -1077,16 +1086,15 @@ const App = {
       const parts = [];
       if (e.publisher) parts.push(esc(e.publisher));
       if (e.pageCount) parts.push(e.pageCount + ' pp.');
-      if (parts.length) items.push(`<span class="card-secondary">${parts.join(' · ')}</span>`);
+      if (parts.length) items.push(`<span class="card-secondary">${parts.join(', ')}</span>`);
     }
     items.push(Detail._reviewChip(e));
     if (this.state.editMode) {
       const triage = Edit.cardHint(e.sourcePageId);
       if (triage) items.push(triage);
     }
-    // No separator elements: they wrapped to a line of their own on a phone
-    // and left the line ending in a dangling middle dot. The separator is a
-    // pseudo-element on every item but the first (see styles.css).
+    // The items are separate fields, set apart by the gap of the line (see
+    // styles.css); a drawn separator wrapped into a dangling mark on a phone.
     return items.join('');
   },
 
@@ -1270,7 +1278,9 @@ const App = {
       detailEl.classList.remove('hidden');
       this._setCardExpanded(cardEl, true);
       // Scroll card into view if needed
-      cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // An explicit 'smooth' overrides the CSS reduced-motion rule, so the
+      // preference is read here as well.
+      cardEl.scrollIntoView({ behavior: PREFERS_REDUCED_MOTION ? 'auto' : 'smooth', block: 'nearest' });
       // The expanded card is the first place reconciliation data shows up, so
       // this is where it is fetched rather than on every page load.
       if (Edit.reconciliation === null) {
@@ -1353,9 +1363,9 @@ const App = {
     let label;
     if (this.state.query) {
       label = `${n} result${total !== 1 ? 's' : ''} for \u201c${this.state.query}\u201d`;
-      if (facets.length) label += ` \u00b7 ${facets.join(' \u00b7 ')}`;
+      if (facets.length) label += `: ${facets.join(', ')}`;
     } else if (facets.length) {
-      label = `${n} ${total === 1 ? 'entry' : 'entries'} \u00b7 ${facets.join(' \u00b7 ')}`;
+      label = `${n} ${total === 1 ? 'entry' : 'entries'}: ${facets.join(', ')}`;
     } else {
       label = `All ${n} ${total === 1 ? 'entry' : 'entries'}`;
     }

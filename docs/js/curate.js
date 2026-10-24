@@ -34,15 +34,15 @@ const Curate = {
 
   _build(container) {
     container.innerHTML = `
-      <div class="page-content curate-page">
+      <div class="page-content page-content-full curate-page">
         <h1 class="page-title">Data Quality</h1>
         <div id="curate-status">${this._statusPanel()}</div>
-        <h3 class="curate-section-heading">Field completeness by entry type</h3>
+        <h2 class="curate-section-heading">Field completeness by entry type</h2>
         <p class="curate-hint">Share of entries carrying a value.</p>
         ${this._matrix()}
-        <h3 class="curate-section-heading">Open work queues</h3>
+        <h2 class="curate-section-heading">Open work queues</h2>
         ${this._queues()}
-        <h3 class="curate-section-heading">Authority candidates (translators and publishers)</h3>
+        <h2 class="curate-section-heading">Authority candidates (translators and publishers)</h2>
         <p class="curate-hint" id="agent-queue-hint"></p>
         <div id="agent-queue"></div>
       </div>
@@ -65,6 +65,7 @@ const Curate = {
    * Three figures that direct the work. Everything the panel used to count as
    * well (entries, review hints, LLM-derived fields, unresolved references)
    * stands in the matrix and the queues below, where it is also clickable.
+   * The published site cannot decide, so it shows no session counter.
    */
   _statusPanel() {
     const summary = Edit.summary || {};
@@ -87,7 +88,7 @@ const Curate = {
       ${stat(reconOut || openCandidates.toLocaleString('en'), 'Open authority candidates')}
       ${stat(reconOut || ((summary.contestedAuthorityClaims || 0) + (summary.contestedEditionClaims || 0)
         + (summary.contestedSourceRevisionClaims || 0)), 'Contested claims')}
-      ${stat(pending.toLocaleString('en'), 'Pending decisions this session')}
+      ${App.state.isLocal ? stat(pending.toLocaleString('en'), 'Pending decisions this session') : ''}
     </div>`;
   },
 

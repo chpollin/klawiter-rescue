@@ -6,16 +6,13 @@
 const COLORS = {
   burgundy: '#631a34',
   burgundyDark: '#4A1228',
-  burgundyLight: '#7A2D45',
   gold: '#C2A360',
-  goldLight: '#D4B87A',
   cream: '#FAF8F3',
   gridLine: '#EDE8DF',
   textLight: '#6B6B6B',
 };
 /** Chart dimensions for explore visualizations */
 const CHART_DIMS = {
-  timeline: { height: 440 },
   geography: { height: 560 },
   network: { height: 560 },
 };

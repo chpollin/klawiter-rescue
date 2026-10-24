@@ -219,7 +219,7 @@ test('the result label resolves the same labels the chips do', () => {
   // The label is the heading of the view: the count first, then what was
   // asked for. A filtered set counts entries, a query counts results.
   const label = App._resultsLabel(3);
-  assert.ok(label.startsWith('3 entries · '), label);
+  assert.ok(label.startsWith('3 entries: '), label);
   assert.ok(label.includes('Fiction'), label);
   // The period used to reach the label as its raw key while the chip showed
   // the readable name.
@@ -229,7 +229,7 @@ test('the result label resolves the same labels the chips do', () => {
 
   App.state.query = 'schachnovelle';
   assert.strictEqual(App._resultsLabel(411),
-    '411 results for “schachnovelle” · Fiction · Lifetime (1881–1942) · Fiction / Volumes');
+    '411 results for “schachnovelle”: Fiction, Lifetime (1881–1942), Fiction / Volumes');
 
   // Without query and filters the view is the whole catalogue, not a selection.
   App.state.query = '';

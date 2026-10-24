@@ -95,16 +95,16 @@ const Detail = {
       if (!prov || !prov[fieldName]) return '';
       source = prov[fieldName];
     }
-    const labels = { regex: 'R', llm: 'L', missing: '—', editor: 'E', expert: 'E' };
-    const titles = { regex: 'Regex extracted', llm: 'LLM enriched', missing: 'Missing',
-                     editor: 'Expert curated', expert: 'Expert curated' };
+    // Rule extraction is the default the result list states once, and a
+    // missing value already reads "Not recorded", so only a deviation is marked.
+    if (source === 'regex' || source === 'missing') return '';
+    const words = { llm: 'LLM-enriched', editor: 'expert-curated', expert: 'expert-curated' };
     const cls = source === 'expert' ? 'editor' : source;   // unify legacy "expert" onto "editor"
     // The badge classes the wording of the value. A place authority link is a
     // separate decision with its own producer, named at the link.
     const what = fieldName === 'location' || fieldName === 'places' ? 'Place wording' : 'Value';
-    const text = `${what} ${(titles[source] || source).toLowerCase()}`;
-    return `<span class="prov-badge prov-${cls}" title="${esc(text)}"><span aria-hidden="true">${
-      labels[source] || source[0].toUpperCase()}</span><span class="visually-hidden">${esc(text)}</span></span>`;
+    const word = words[source] || String(source);
+    return `<span class="prov-badge prov-${esc(cls)}" title="${esc(`${what} ${word}`)}">${esc(word)}</span>`;
   },
 
   // One place for the help text of a named thing, so a label, a flag line and
@@ -183,8 +183,8 @@ const Detail = {
   _producerNote(review) {
     const producer = this.decisionProducer(review);
     if (!producer) return '';
-    return ` <span class="decision-producer"><span aria-hidden="true">· </span>`
-      + `<span class="visually-hidden">decided by </span>${esc(producer)}</span>`;
+    return `<span class="decision-producer">, <span class="visually-hidden">decided by </span>`
+      + `${esc(producer)}</span>`;
   },
 
   // Review decision on one field, from the dataset review object. Its scope
@@ -266,9 +266,15 @@ const Detail = {
     const producer = !st.pending && dataset ? this._producerNote(entry.review) : '';
     const open = status === 'contested' ? [] : this._openAuthorityClaims(entry);
     const nouns = [...new Set(open.map(claim => this.CLAIM_NOUNS[claim.entityType] || 'authority'))];
-    const claims = nouns.length
-      ? `, <span class="review-claim-note">open ${esc(nouns.join(' and '))} claim</span>`
-      : '';
+    const claimText = `open ${esc(nouns.join(' and '))} claim`;
+    // "Unreviewed" is the state of nearly every record; the result list states
+    // it once, so the chip appears only where the state deviates from it.
+    if (status === 'unreviewed') {
+      if (!nouns.length) return '';
+      return `<span class="review-chip review-unreviewed"${this.help('Review status', by)}><span
+        class="review-claim-note">${claimText.charAt(0).toUpperCase() + claimText.slice(1)}</span></span>`;
+    }
+    const claims = nouns.length ? `, <span class="review-claim-note">${claimText}</span>` : '';
     return `<span class="review-chip ${classes[status] || 'review-other'}"${
       this.help('Review status', by)}>${esc(label)}${producer}${note}${claims}</span>`;
   },
@@ -511,7 +517,7 @@ const Detail = {
       const interpretations = (claim.interpretations || []).map(item => {
         const proposedObject = item.proposedObject && item.proposedObject['@id'];
         const object = proposedObject
-          ? ` · ${this._authorityLink(proposedObject)}`
+          ? `, ${this._authorityLink(proposedObject)}`
           : '';
         const status = claim.decisionStatus === 'decided' && item.status
           ? ` (${esc(item.status)})` : '';
@@ -540,12 +546,25 @@ const Detail = {
     return `<div class="contested-status" role="status">${rendered}</div>`;
   },
 
+  ACTION_WORDS: { confirm: 'confirmed', reject: 'rejected', correct: 'corrected',
+    unresolved: 'left unresolved' },
+
+  /**
+   * One step of a review history, opened as a list item: the producer the
+   * card head names for the same decider, then the action in plain words. The
+   * raw role and the decision identifier stay in the tooltip.
+   */
+  _historyStep(item) {
+    const producer = this.decisionProducer({ reviewed_by: item.decidedBy });
+    const action = this.ACTION_WORDS[item.action] || String(item.action || '');
+    const tip = [item.decidedBy, item.decisionId].filter(Boolean).join(', ');
+    return `<li title="${esc(tip)}">${esc(producer)}: ${esc(action)}${
+      item.basis ? ` <span class="field-sub">(${esc(item.basis)})</span>` : ''}`;
+  },
+
   /** The decisions of an authority claim in plain words, with their basis. */
   _authorityHistory(claim) {
-    return (claim.reviewHistory || []).map(item =>
-      `<li title="${esc(item.decisionId)}">${esc(item.decidedBy)}: ${esc(item.action)}${
-        item.basis ? ` <span class="field-sub">(${esc(item.basis)})</span>` : ''}</li>`
-    ).join('');
+    return (claim.reviewHistory || []).map(item => `${this._historyStep(item)}</li>`).join('');
   },
 
   /**
@@ -565,8 +584,7 @@ const Detail = {
     const history = (claim.reviewHistory || []).map(item => {
       const trail = (item.evidence || []).filter(line => !/\.json\b/.test(line))
         .map(line => `<li>${esc(line)}</li>`).join('');
-      return `<li title="${esc(item.decisionId)}">${esc(item.decidedBy)}: ${esc(item.action)}${
-        item.basis ? ` <span class="field-sub">(${esc(item.basis)})</span>` : ''}${
+      return `${this._historyStep(item)}${
         trail ? `<ul class="detail-list">${trail}</ul>` : ''}</li>`;
     }).join('');
     return `<article class="contested-claim withheld-redirect" id="withheld-${esc(pid)}" tabindex="-1">
@@ -849,7 +867,7 @@ const Detail = {
     const attrs = `data-pid="${pid}" data-index="${index}"`;
     return `<span class="publication-actions">
       <button class="cite-link" data-export="bibtex" ${attrs}
-        title="Export this publication as BibTeX">BibTeX</button> ·
+        title="Export this publication as BibTeX">BibTeX</button>
       <button class="cite-link" data-export="ris" ${attrs}
         title="Export this publication as RIS">RIS</button>
     </span>`;
@@ -863,8 +881,8 @@ const Detail = {
   publicationLabel(pub, entry) {
     const year = pub.yearRaw || pub.year;
     const label = year == null ? 'Undated' : String(year);
-    if (pub.editionStatement) return `${label} · ${pub.editionStatement}`;
-    if (pub.title && pub.title !== entry.title) return `${label} · ${pub.title}`;
+    if (pub.editionStatement) return `${label}, ${pub.editionStatement}`;
+    if (pub.title && pub.title !== entry.title) return `${label}, ${pub.title}`;
     return label;
   },
 
@@ -983,7 +1001,7 @@ const Detail = {
       const label = credit.creditLabel ? ` title="${esc(credit.creditLabel)}"` : '';
       return `${role}<span class="credit-name"${label}>${esc(credit.name)}</span>`
         + this._creditQualifier(credit);
-    }).join(' · ');
+    }).join('<br>');
   },
 
   // The verb the role name generalizes away, per role of the vocabulary. A
@@ -1456,9 +1474,9 @@ const Detail = {
 
   _provenanceLine(entry) {
     return `<div class="detail-provenance" title="Identifiers of this source record">
-      Page ID: ${entry.sourcePageId}
-      ${entry.sourceTextId ? ' · Text ID: ' + entry.sourceTextId : ''}
-      ${entry.sourceBlobId ? ' · Blob: ' + entry.sourceBlobId : ''}
+      <span>Page ID: ${entry.sourcePageId}</span>
+      ${entry.sourceTextId ? `<span>Text ID: ${entry.sourceTextId}</span>` : ''}
+      ${entry.sourceBlobId ? `<span>Blob: ${entry.sourceBlobId}</span>` : ''}
     </div>`;
   },
 

@@ -1,10 +1,6 @@
 /** Linked overview of the flat catalogue. Each counted item is a source-page entry. */
 const ExploreTimeline = {
   entries: [],
-  // Retained for existing timeline URLs; the overview uses one neutral series.
-  layerMode: 'language',
-  chartMode: 'bars',
-  zoomedDomain: null,
   expanded: {},
 
   // The figures read the publication layer of a page, so a page with a 1947
@@ -29,10 +25,17 @@ const ExploreTimeline = {
     };
   },
 
-  decadeCounts(entries) {
+  /**
+   * Pages per decade. With bounds only the years inside them count, so a page
+   * of the selected 1950s that also has a 1930s edition does not mark the
+   * 1930s as selected.
+   */
+  decadeCounts(entries, [lo, hi] = [null, null]) {
     const counts = new Map();
     for (const entry of entries) {
-      for (const decade of App.decadeValues(entry)) {
+      const years = App.yearValues(entry).filter(year =>
+        (lo == null || year >= lo) && (hi == null || year <= hi));
+      for (const decade of new Set(years.map(year => Math.floor(year / 10) * 10))) {
         counts.set(decade, (counts.get(decade) || 0) + 1);
       }
     }
@@ -58,21 +61,16 @@ const ExploreTimeline = {
     const percent = stats.total ? Math.round(100 * stats.dated / stats.total) : 0;
     const full = Explore.entries.length;
     const missing = stats.missingLanguage;
+    // One line of figures for the selection; the entries without a year are a
+    // gap a reader can open, so their figure is the control.
+    const undated = stats.undated
+      ? `<button type="button" class="link-btn" data-dashboard-undated>${fmt(stats.undated)} without</button>`
+      : '0 without';
     host.innerHTML = `
-      <div class="dashboard-summary" aria-label="Selection summary">
-        <div class="dashboard-metric dashboard-metric-primary">
-          <span class="dashboard-eyebrow">Selected entries</span>
-          <strong>${fmt(stats.total)}</strong><span>of ${fmt(full)} catalogue entries</span>
-        </div>
-        <div class="dashboard-metric"><span class="dashboard-eyebrow">With a recorded year</span>
-          <strong>${fmt(stats.dated)}</strong><span>${percent}% of this selection</span></div>
-        <div class="dashboard-metric"><span class="dashboard-eyebrow">Year not recorded</span>
-          <strong>${fmt(stats.undated)}</strong>
-          <button type="button" class="link-btn" data-dashboard-undated ${stats.undated ? '' : 'disabled'}>Read these entries</button></div>
-        <div class="dashboard-metric"><span class="dashboard-eyebrow">Recorded languages</span>
-          <strong>${fmt(stats.languages)}</strong><span>${fmt(missing)} entries without a language</span></div>
-      </div>
-      <p id="dashboard-status" class="dashboard-scope" role="status" aria-live="polite">${fmt(stats.total)} entries selected</p>
+      <p id="dashboard-status" class="dashboard-scope" role="status" aria-live="polite">
+        <strong>${fmt(stats.total)}</strong> of ${fmt(full)} entries.
+        ${fmt(stats.dated)} with a recorded year (${percent}%), ${undated}.
+        ${fmt(stats.languages)} recorded languages, ${fmt(missing)} entries without a language.</p>
       <section class="dashboard-panel dashboard-time" aria-labelledby="dashboard-time-title">
         <div class="dashboard-panel-head">
           <h2 id="dashboard-time-title">Pages by publication year</h2>
@@ -97,13 +95,15 @@ const ExploreTimeline = {
   timelineHtml(selected) {
     const rows = this.decadeCounts(this.contextForYears());
     if (!rows.length) return '<p class="dashboard-empty">No recorded years in this selection. Broaden the other filters to explore the timeline.</p>';
-    const selectedCounts = new Map(this.decadeCounts(selected));
+    const f = Explore.filters;
+    const bounds = f.decade != null ? [f.decade, f.decade + 9] : f.yearRange;
+    const filtered = bounds.some(value => value != null);
+    const selectedCounts = new Map(filtered ? this.decadeCounts(selected, bounds) : []);
     const max = Math.max(...rows.map(([, count]) => count));
-    const filtered = Explore.filters.decade != null || Explore.filters.yearRange.some(value => value != null);
     const bars = rows.map(([decade, count]) => {
       const chosen = selectedCounts.get(decade) || 0;
-      const pressed = Explore.filters.decade === decade;
-      const label = `${decade}–${decade + 9}: ${fmt(count)} pages${filtered ? `, ${fmt(chosen)} in the selected range` : ''}`;
+      const pressed = f.decade === decade;
+      const label = `${decade}–${decade + 9}: ${fmt(count)} pages${chosen ? `, ${fmt(chosen)} in the selected range` : ''}`;
       return `<button type="button" class="dashboard-decade${filtered && chosen ? ' is-selected' : ''}"
         data-dashboard-decade="${decade}" data-dashboard-focus="decade:${decade}"
         aria-label="${label}" aria-pressed="${pressed}" title="${label}" ${count ? '' : 'disabled'}>
@@ -115,7 +115,7 @@ const ExploreTimeline = {
       <div class="dashboard-y-axis" aria-hidden="true"><span>${fmt(max)}</span><span>${fmt(Math.round(max / 2))}</span><span>0</span></div>
       <div class="dashboard-histogram" role="group" aria-label="Filter by decade" style="--decades:${rows.length}">${bars}</div>
       <div class="dashboard-x-axis" aria-hidden="true"><span>${rows[0][0]}</span><span>${rows[Math.floor((rows.length - 1) / 2)][0]}</span><span>${rows.at(-1)[0] + 9}</span></div>
-    </div><p class="dashboard-chart-reading" id="dashboard-chart-reading">${filtered ? 'Burgundy shows the selected years.' : ''}</p>`;
+    </div><p class="dashboard-chart-reading" id="dashboard-chart-reading"></p>`;
   },
 
   rangeHtml() {
@@ -159,11 +159,11 @@ const ExploreTimeline = {
     const shown = entries.slice(0, 5);
     return `<section class="dashboard-panel dashboard-preview" aria-labelledby="dashboard-preview-title">
       <div class="dashboard-panel-head"><div>
-        <h2 id="dashboard-preview-title">Read the selected entries</h2><p>${entries.length ? `Showing ${shown.length} of ${fmt(entries.length)} entries in source order.` : 'No entries match these filters.'}</p>
+        <h2 id="dashboard-preview-title">Read the selected entries</h2>${entries.length ? '' : '<p>No entries match these filters.</p>'}
       </div><button type="button" class="action-btn" data-dashboard-results ${entries.length ? '' : 'disabled'}>View all ${fmt(entries.length)} entries <span aria-hidden="true">↗</span></button></div>
       <ol class="dashboard-entry-list">${shown.map(entry => `<li>
         <a href="#entry=${entry.sourcePageId}" class="dashboard-entry-link"><span class="dashboard-entry-title">${esc(entry.title || 'Untitled')}</span>
-          <span class="dashboard-entry-meta">${entry.year || 'Year not recorded'} · ${esc(entry.language || Explore.NOT_RECORDED)} · ${esc(ENTRY_TYPE_LABELS[entry.entryType] || entry.entryType || 'Other')}</span>
+          <span class="dashboard-entry-meta">${entry.year || 'Year not recorded'}, ${esc(entry.language || Explore.NOT_RECORDED)}, ${esc(ENTRY_TYPE_LABELS[entry.entryType] || entry.entryType || 'Other')}</span>
         </a><span aria-hidden="true">→</span></li>`).join('')}</ol>
     </section>`;
   },

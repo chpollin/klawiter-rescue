@@ -161,7 +161,7 @@ test('the single-entry head carries type and title, the list head the facet tria
   // The review state belongs to the record, and it stands in the head line
   // naming what the decision covers: the place authority, nothing else.
   assert.match(single, /review-chip/);
-  assert.match(single, />Place authority agent-verified <span class="decision-producer">/);
+  assert.match(single, />Place authority agent-verified<span class="decision-producer">, /);
 
   App.state.singleEntry = false;
   const listed = App.renderCard(entry);
@@ -210,8 +210,9 @@ test('a field the provenance layer calls missing is shown as such, never as a pl
   entry._provenance.translator = 'missing';
   const html = detailCtx(entry)._buildReadContent(entry);
   assert.match(html, /Translator/);
-  assert.match(html, /prov-missing/);
+  // The state says it; a badge beside "Not recorded" repeated it.
   assert.match(html, /Not recorded/);
+  assert.doesNotMatch(html, /prov-missing/);
   assert.doesNotMatch(html, /add value|unknown translator/i);
 });
 
@@ -340,8 +341,8 @@ test('a page with publications renders one named block per publication', () => {
   const entry = editionPage();
   const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
 
-  assert.match(html, /1947 · 1st edition/);
-  assert.match(html, /1960 · 2nd revised edition/);
+  assert.match(html, /1947, 1st edition/);
+  assert.match(html, /1960, 2nd revised edition/);
   assert.match(html, />Pechat Far</);
   assert.match(html, />Narodna Kultura</);
   // Each publication keeps its own extent in the notation of the source.
@@ -450,9 +451,10 @@ test('a page with an open claim does not read as plainly unreviewed', () => {
     subject: { name: 'Bloemfontein, Kaapstad' } };
   const Detail = detailCtx(entry, {}, { Edit: editStub({ authorityClaimsFor: () => [claim] }) });
   assert.match(Detail._reviewChip(entry),
-    />Unreviewed, <span class="review-claim-note">open place claim<\/span></);
+    /class="review-claim-note">Open place claim<\/span><\/span>$/);
   const quiet = detailCtx(entry, {}, { Edit: editStub() });
-  assert.match(quiet._reviewChip(entry), />Unreviewed<\/span>$/);
+  // Unreviewed is the default the result list states once, so it is no chip.
+  assert.strictEqual(quiet._reviewChip(entry), '');
 });
 
 test('the place decision and its authority link stand at the decided value alone', () => {
@@ -462,7 +464,7 @@ test('the place decision and its authority link stand at the decided value alone
   entry.locationSameAs = 'http://www.wikidata.org/entity/Q1741';
   entry.allLocations = ['Wien', 'Basel', 'Tokyo'];
   const html = detailCtx(entry)._buildReadContent(entry);
-  assert.match(html, /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm">[^]*?confirmed<\/span> <span class="decision-producer">[^]*?LLM agent, delegated<\/span>, Basel, Tokyo/);
+  assert.match(html, /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm">[^]*?confirmed<\/span><span class="decision-producer">, [^]*?LLM agent, delegated<\/span>, Basel, Tokyo/);
   assert.doesNotMatch(html, /Place of publication<span class="field-review/);
 
   // A publication row reads the same decision (its field is `places`, the
@@ -498,8 +500,8 @@ test('a publication names whether its edition is confirmed or proposed', () => {
   entry.publications[0].reviewStatus = 'confirmed';
   entry.publications[1].reviewStatus = 'proposed';
   const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
-  assert.match(html, /1947 · 1st edition <span class="publication-status publication-status-confirmed"[^>]*>edition confirmed</);
-  assert.match(html, /1960 · 2nd revised edition <span class="publication-status publication-status-proposed"[^>]*>edition proposed</);
+  assert.match(html, /1947, 1st edition <span class="publication-status publication-status-confirmed"[^>]*>edition confirmed</);
+  assert.match(html, /1960, 2nd revised edition <span class="publication-status publication-status-proposed"[^>]*>edition proposed</);
   // Records built before the graph carried the state say nothing.
   assert.doesNotMatch(detailCtx(editionPage())._buildReadContent(editionPage()), /publication-status/);
 });
@@ -531,8 +533,8 @@ test('the source block of a publication is named and marked as a whole', () => {
   entry.publications[0].sourceSlice = { textStart: 0, textEnd: 26 };
   entry.publications[1].sourceSlice = { textStart: 28, textEnd: text.length };
   const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
-  assert.match(html, /<span class="source-slice"><span class="source-slice-label">1947 · 1st edition<\/span>/);
-  assert.match(html, /<span class="source-slice"><span class="source-slice-label">1960 · 2nd revised edition<\/span>/);
+  assert.match(html, /<span class="source-slice"><span class="source-slice-label">1947, 1st edition<\/span>/);
+  assert.match(html, /<span class="source-slice"><span class="source-slice-label">1960, 2nd revised edition<\/span>/);
 });
 
 test('a publication route marks its block, a filter marks the publications it selects', () => {
@@ -593,12 +595,12 @@ test('a rejection reads as a rejection, and the chip names the scope the record 
     fields: { location: 'reject' }, scope: ['location'] };
   const chip = detailCtx(entry)._reviewChip(entry);
   assert.match(chip, /review-reviewed/);
-  assert.match(chip, />Place authority candidate rejected <span class="decision-producer">/);
+  assert.match(chip, />Place authority candidate rejected<span class="decision-producer">, /);
   assert.doesNotMatch(chip, /Unreviewed|verified/);
   // The stated scope wins over the keys of the decisions.
   entry.review = { status: 'agent_verified', reviewed_by: 'x',
     fields: { location: 'confirm', publisher: 'reject' }, scope: ['location', 'publisher'] };
-  assert.match(detailCtx(entry)._reviewChip(entry), />Place authority and publisher agent-verified </);
+  assert.match(detailCtx(entry)._reviewChip(entry), />Place authority and publisher agent-verified<span class="decision-producer">, /);
 });
 
 test('a contested edition says so in its heading', () => {
@@ -653,6 +655,21 @@ test('a reference leads to its page, or to the claim that withholds its redirect
   assert.match(block, /Le chandelier enterré: redirect\s+withheld, decision open/);
   assert.match(block, /zweig_revision 1 by Redirect fixer/);
   assert.doesNotMatch(block, /source-revision-decisions\.json/);
+  // The history names the producer the card head names, not the raw role.
+  assert.match(block, /<li title="main-instance">LLM agent, delegated: left unresolved <span class="field-sub">\(revisable\)/);
+});
+
+test('an authority claim history reads in plain words, the role in its tooltip', () => {
+  const entry = sampleEntry();
+  const claim = { claimId: 'c', entityType: 'location', decisionStatus: 'open',
+    subject: { name: 'Wien' }, interpretations: [], sourceEvidence: [],
+    reviewHistory: [{ decisionId: 'location/Wien/unresolved', action: 'unresolved',
+      decidedBy: 'independent-verification-agent' }] };
+  const Detail = detailCtx(entry, {}, { Edit: editStub({ authorityClaimsFor: () => [claim] }) });
+  const history = Detail._authorityHistory(claim);
+  assert.strictEqual(history, '<li title="independent-verification-agent, location/Wien/unresolved">'
+    + 'LLM agent, delegated: left unresolved</li>');
+  assert.doesNotMatch(history, />independent-verification-agent/);
 });
 
 test('a publication route keeps the page and names the publication', () => {
@@ -853,16 +870,21 @@ test('a decision names its producer as visible text, and an agent is never a per
   const html = Detail._buildReadContent(entry);
   const place = html.slice(html.indexOf('>Place of publication'), html.indexOf('>Publisher'));
   // The state word stays; the producer stands beside it outside any title.
-  assert.match(place, />confirmed<\/span> <span class="decision-producer">/);
-  assert.match(place.replace(/<[^>]*>/g, ''), /confirmed · decided by LLM agent, delegated/);
+  assert.match(place, />confirmed<\/span><span class="decision-producer">, /);
+  assert.match(place.replace(/<[^>]*>/g, ''), /confirmed, decided by LLM agent, delegated/);
   assert.doesNotMatch(place, /person/);
-  // The R badge classes the place wording, not the authority link.
-  assert.match(place, /class="visually-hidden">Place wording regex extracted</);
+  // Rule extraction is the default and carries no mark; a deviating mark
+  // classes the place wording, not the authority link.
+  assert.doesNotMatch(place, /prov-badge/);
+  entry._provenance.location = 'llm';
+  const llmPlace = Detail._buildReadContent(entry);
+  assert.match(llmPlace.slice(llmPlace.indexOf('>Place of publication'), llmPlace.indexOf('>Publisher')),
+    /<span class="prov-badge prov-llm" title="Place wording LLM-enriched">LLM-enriched<\/span>/);
   assert.doesNotMatch(place, /title="Reviewed decision/);
 
   // The review chip names the producer visibly too, not only in its tooltip.
   assert.match(Detail._reviewChip(entry).replace(/<[^>]*>/g, ''),
-    /Place authority agent-verified · decided by LLM agent, delegated/);
+    /Place authority agent-verified, decided by LLM agent, delegated/);
 });
 
 test('a place decision carries the same subdued weight as an edition proposal', () => {

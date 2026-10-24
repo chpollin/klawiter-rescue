@@ -135,3 +135,21 @@ test('restored malformed or conflicting date filters agree with the range UI and
     assert.deepEqual(plain(App._applyFilterSet(rows, filters).map(row => row.sourcePageId)), ids, query);
   }
 });
+
+test('a selected decade marks only itself, not the other decades of its pages', () => {
+  const { Explore, dashboard } = loadDashboard();
+  // Page 7 carries a 1938 and a 1952 edition, so it stands in both decades.
+  const pages = [...rows, { sourcePageId: 7, title: 'Two editions', publicationYears: [1938, 1952],
+    language: 'German', entryType: 'fiction' }];
+  Explore.entries = pages;
+  Explore.filters.decade = 1950;
+  const selected = Explore.getFiltered();
+  assert.deepEqual(plain(selected.map(row => row.sourcePageId)), [3, 5, 7]);
+  assert.deepEqual(plain(dashboard.decadeCounts(selected, [1950, 1959])), [[1950, 3]]);
+  const html = dashboard.timelineHtml(selected);
+  const bar = decade => html.split('</button>').find(part => part.includes(`data-dashboard-decade="${decade}"`));
+  assert.match(bar(1950), /is-selected/);
+  assert.match(bar(1950), /aria-label="1950–1959: 3 pages, 3 in the selected range"/);
+  assert.doesNotMatch(bar(1930), /is-selected/);
+  assert.match(bar(1930), /aria-label="1930–1939: 3 pages"/);
+});

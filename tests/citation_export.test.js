@@ -268,6 +268,33 @@ test('a citation waits for the claims instead of citing a contested place as set
   assert.match(captured[1].content, /Place authority assignment contested/);
 });
 
+test('the full dataset export waits for the claims and refuses a failed load', async () => {
+  const entry = { sourcePageId: 4819, entryType: 'secondary-literature', title: 'Adam Lux' };
+  const { Export, captured, ctx } = exportCtx(entry, null, []);
+  // A fresh visit to #data: nothing has loaded reconciliation.json yet.
+  Object.assign(ctx.Edit, { editionClaims: {}, contestedAuthorityClaims: [], decidedAuthorityClaims: [] });
+  const open = { claimId: 'open', decisionStatus: 'open' };
+  const decided = { claimId: 'decided', decisionStatus: 'decided' };
+  ctx.App._ensureReconciliation = () => {
+    Object.assign(ctx.Edit, {
+      editionClaims: { 4916: [{ claimId: 'edition' }] },
+      contestedAuthorityClaims: [open], decidedAuthorityClaims: [decided],
+    });
+    return Promise.resolve();
+  };
+  await Export.fullDataset();
+  const payload = JSON.parse(captured[0].content);
+  assert.deepStrictEqual(payload.contestedEditionClaims.map(c => c.claimId), ['edition']);
+  assert.deepStrictEqual(payload.contestedAuthorityClaims.map(c => c.claimId), ['open']);
+  assert.deepStrictEqual(payload.decidedAuthorityClaims.map(c => c.claimId), ['decided']);
+
+  // Without the claims the download would look like a holding that has none.
+  ctx.Edit.reconciliationFailed = true;
+  ctx.Edit.reconciliationError = 'HTTP 404';
+  await assert.rejects(Export.fullDataset(), /claims not available \(HTTP 404\)/);
+  assert.strictEqual(captured.length, 1);
+});
+
 test('the batch export writes one citation per publication', async () => {
   const edition = editionEntry();
   const flatOnly = {

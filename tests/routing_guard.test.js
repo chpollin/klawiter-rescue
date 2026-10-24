@@ -322,3 +322,18 @@ test('edit mode cannot be entered on the published site', () => {
   App.toggleEditMode();
   assert.strictEqual(App.state.editMode, false);
 });
+
+test('a permalink tab names its entry, and the base title matches index.html', () => {
+  const { App, ctx } = loadAppCtx();
+  const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'index.html'), 'utf8');
+  assert.strictEqual(html.match(/<title>([^<]*)<\/title>/)[1], App.BASE_TITLE);
+
+  App.state.singleEntry = true;
+  App.filtered = [{ sourcePageId: 774, title: 'Amok' }];
+  App._updateTitle('results');
+  assert.strictEqual(ctx.document.title, `Amok — ${App.BASE_TITLE}`);
+
+  App.state.singleEntry = false;
+  App._updateTitle('results');
+  assert.strictEqual(ctx.document.title, `Browse — ${App.BASE_TITLE}`);
+});
