@@ -66,6 +66,7 @@ from lab_rules import (
     parse_zweig_author_types,
     plain_wiki_text,
     producer_label,
+    section_of,
     value_occurrences,
 )
 from lab_works import build_works
@@ -81,6 +82,9 @@ LOCATION_DECISIONS = "data/reconciliation/location-decisions.json"
 LLM_CACHE = "data/provenance/llm-enrichment-cache.json"
 EDITION_SAMPLE = "data/output/edition-samples/reviews/reconciliation.json"
 CONSTANTS = "docs/js/constants.js"
+# The record history compares against the published data before the first
+# regeneration on or after this date, the October pipeline fixes.
+HISTORY_SINCE = "2026-10-01"
 FIXED_INPUTS = (
     KLAWITER,
     RECONCILIATION,
@@ -115,6 +119,12 @@ VERIFICATION_FIELDS = {
     "pageCount": "page_count",
 }
 VERIFICATION_STATUS = {"correct": "found", "false_positive": "not-found"}
+# Fields for which the verification stage reports a string it found in the raw
+# text while the record is empty.
+CANDIDATE_FIELDS = {
+    "publisher": "publisher_false_negative",
+    "translator": "translator_false_negative",
+}
 NO_VALUE_NOTE = (
     "no value recorded, a gap in the source and a value not extracted are not "
     "yet distinguished"
@@ -254,21 +264,31 @@ def read_snapshot(ref: str, worktree: bool) -> Snapshot:
 
 
 def read_baseline(snapshot: Snapshot) -> tuple[str | None, str | None, dict | None]:
-    """The published records before the last change of klawiter.json.
+    """The published records before the October pipeline fixes (story S4.1).
 
-    In ref mode the baseline is the parent of the last commit that changed
-    klawiter.json, so the history shows what the latest regeneration changed.
-    In worktree mode it is the committed state at HEAD.
+    In ref mode the baseline is the parent of the first commit since
+    HISTORY_SINCE that changed klawiter.json, and `changed_in` the last such
+    commit, so the history shows everything the October regenerations changed
+    (page 448 changed in the first of them, 7994ccb, not in the last). In
+    worktree mode it is the committed state at HEAD.
     """
     if snapshot.worktree:
         changed_in, base = "WORKTREE", snapshot.commit
     else:
-        log = _git("log", "-n", "1", "--format=%H", snapshot.ref, "--", KLAWITER)
-        changed_in = log.decode().strip()
-        if not changed_in:
+        log = _git(
+            "log",
+            "--format=%H",
+            f"--since={HISTORY_SINCE}",
+            snapshot.ref,
+            "--",
+            KLAWITER,
+        )
+        commits = log.decode().split()
+        if not commits:
             return None, None, None
+        changed_in, first = commits[0], commits[-1]
         try:
-            base = _git("rev-parse", "--verify", f"{changed_in}^").decode().strip()
+            base = _git("rev-parse", "--verify", f"{first}^").decode().strip()
         except RuntimeError:
             return changed_in, None, None
     data = json.loads(_cat_files(base, [KLAWITER])[KLAWITER].decode("utf-8"))
@@ -573,6 +593,10 @@ def page_view(
             row["occurrences"] = value_occurrences(text, value, passages, year_ids)
             status = (verification.get(VERIFICATION_FIELDS[field]) or {}).get("status")
             row["verification"] = VERIFICATION_STATUS.get(status)
+        elif field in CANDIDATE_FIELDS and value in (None, ""):
+            row |= verification_candidate(
+                text, verification.get(CANDIDATE_FIELDS[field]), passages, year_ids
+            )
         record[field] = row
 
     check = boundary_check(
@@ -613,6 +637,27 @@ def page_view(
     if facts:
         view["history"] = facts
     return view
+
+
+def verification_candidate(
+    text: str, report: dict | None, passages: list[Passage], own_ids: set[str]
+) -> dict:
+    """What the verification stage found in the raw text for an empty field (S5.1).
+
+    The candidate is a string an automatic rule reported, not a value: no rule
+    and no person adopted it. Its occurrences carry the compiler's section on
+    every page, so a reader sees whether it stands in the described passage or,
+    for example, in the Translations section of a German work page.
+    """
+    found = (report or {}).get("detected_in_raw")
+    if not found:
+        return {}
+    occ = value_occurrences(text, found, passages, own_ids)
+    for part in occ["parts"]:
+        for row in part["occurrences"]:
+            if row["publicationId"] is None and "section" not in row:
+                row |= section_of(text, row["start"])
+    return {"verificationCandidate": {"value": found, "occurrences": occ}}
 
 
 def _record_values(entry: dict | None) -> dict:

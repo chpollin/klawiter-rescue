@@ -225,16 +225,19 @@ DECIDER_LABELS = {
         "the main LLM agent under operator delegation, no person"
     ),
 }
-# Short producer labels beside the state word, the same as the production
-# frontend shows them (DECIDER_PRODUCERS in docs/js), so both views agree.
+# Short producer label beside the state word, in the wording the operator set
+# for every agent decision on 2026-10-24. It carries "no person", which the
+# production frontend's DECIDER_PRODUCERS does not yet do. The record of the
+# edition sample of 2026-08-21 itself names no delegation (lab-frontend.md).
+AGENT_DELEGATED = "LLM agent, delegated, no person"
 DECIDER_SHORT = {
-    "independent-verification-agent": "LLM agent, delegated",
-    "main-instance": "LLM agent, delegated",
-    "klawiter:agent/main-instance": "LLM agent, delegated",
-    "repository-ground-truth-fixture": "test fixture",
-    "klawiter:agent/sample-reviewer-a": "LLM agent",
-    "klawiter:agent/sample-reviewer-b": "LLM agent",
-    "klawiter:agent/reconciliation-verifier": "LLM agent",
+    "independent-verification-agent": AGENT_DELEGATED,
+    "main-instance": AGENT_DELEGATED,
+    "klawiter:agent/main-instance": AGENT_DELEGATED,
+    "repository-ground-truth-fixture": "test fixture, no person",
+    "klawiter:agent/sample-reviewer-a": AGENT_DELEGATED,
+    "klawiter:agent/sample-reviewer-b": AGENT_DELEGATED,
+    "klawiter:agent/reconciliation-verifier": AGENT_DELEGATED,
 }
 PERSON_DECIDERS: frozenset[str] = frozenset()
 
@@ -359,7 +362,7 @@ def edition_assignment(
     if sample_case:
         return base | {
             "producer": SAMPLE_REVIEW_PRODUCER,
-            "producerShort": "LLM agent",
+            "producerShort": AGENT_DELEGATED,
             "date": sample_date,
             "detail": SAMPLE_DISPOSITIONS.get(
                 sample_case.get("disposition"), sample_case.get("disposition")

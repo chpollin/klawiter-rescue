@@ -212,7 +212,7 @@ def test_producer_labels_name_llm_agents_and_no_person():
     assert label["state"] == "confirmed" and label["warning"] is None
     assert label["producer"].startswith("independent LLM agents")
     assert label["producer"].endswith("no person")
-    assert label["producerShort"] == "LLM agent, delegated"
+    assert label["producerShort"] == "LLM agent, delegated, no person"
     low = {
         "action": "correct",
         "decidedBy": "independent-verification-agent",
@@ -245,6 +245,7 @@ def test_data_contract_agent_producers_say_llm_agent_and_no_person():
             continue
         assert "LLM agent" in label["producer"], decision["decisionId"]
         assert "LLM agent" in label["producerShort"], decision["decisionId"]
+        assert "no person" in label["producerShort"], decision["decisionId"]
         assert "no person" in label["producer"], decision["decisionId"]
         if label["state"] == "confirmed" and not has_source_occurrence(
             decision.get("evidence") or []
@@ -267,12 +268,15 @@ def test_data_contract_on_the_prepared_pages():
                 continue
             assert "LLM agent" in d["producer"], (path.name, d["place"])
             assert "no person" in d["producer"], (path.name, d["place"])
-            assert d["producerShort"] == "LLM agent, delegated", path.name
+            assert d["producerShort"] == "LLM agent, delegated, no person", path.name
         for pub in page["publications"]:
             ea = pub["editionAssignment"]
             if ea["state"] == "confirmed":
                 assert ea["producer"] == "producer not recorded" or (
                     "LLM agent" in ea["producer"] and "no person" in ea["producer"]
+                ), (path.name, pub["id"])
+                assert ea["producerShort"] == "producer not recorded" or (
+                    "no person" in ea["producerShort"]
                 ), (path.name, pub["id"])
 
 
@@ -280,6 +284,7 @@ def test_edition_assignment_names_the_sample_review_or_says_not_recorded():
     case = {"edition_id": "klawiter:edition/54-1939-a", "disposition": "confirm"}
     ea = edition_assignment("confirmed", case["edition_id"], case, "2026-08-21", None)
     assert ea["producer"] == SAMPLE_REVIEW_PRODUCER and ea["date"] == "2026-08-21"
+    assert ea["producerShort"] == "LLM agent, delegated, no person"
     claim = {
         "reviewHistory": [
             {
@@ -294,7 +299,7 @@ def test_edition_assignment_names_the_sample_review_or_says_not_recorded():
         ]
     }
     decided = edition_assignment("confirmed", "e", None, None, claim)
-    assert decided["producerShort"] == "LLM agent, delegated"
+    assert decided["producerShort"] == "LLM agent, delegated, no person"
     assert decided["date"] == "2026-09-22"
     unknown = edition_assignment("confirmed", "e", None, None, None)
     assert unknown["producer"] == "producer not recorded"
@@ -447,3 +452,35 @@ def test_search_index_keeps_title_publication_title_and_bracket_apart():
     ]
     assert by_id[90]["p"] is None and by_id[90]["y"] == [1965, 1966]
     assert index["works"][0]["k"].startswith("ungeduld des herzens")
+
+
+def test_verification_candidate_names_its_section_on_the_record_gap():
+    """Page 54: the verification stage reports a translator for the German work
+    page that stands in the Translations section, so the gap is no lost value."""
+    from prepare_lab_data import verification_candidate
+
+    text = (
+        "[1939]: Gottfried Bermann-Fischer Verlag, New York\n\nUngeduld des Herzens. "
+        "Roman. 443p.\n\nTranslations:\n\nAlbanian: Padurimi i zemrës. Roman "
+        "[Tiranë/Tirana, 1997 / 2014]. Edited by Xhevahir Lleshi. Translated by "
+        "Jorgi Doksani"
+    )
+    passages = [Passage("klawiter:publication/54-1939-a", 1939, 0, 74)]
+    report = {
+        "detected_in_raw": "Jorgi Doksani",
+        "note": "translator found in raw but not in output",
+    }
+    view = verification_candidate(
+        text, report, passages, {"klawiter:publication/54-1939-a"}
+    )
+    cand = view["verificationCandidate"]
+    assert cand["value"] == "Jorgi Doksani"
+    [occ] = cand["occurrences"]["parts"][0]["occurrences"]
+    assert occ["publicationId"] is None and not occ["own"]
+    assert occ["section"] == "Translations" and occ["lineLabel"] == "Albanian"
+    # Without passages the section is still named.
+    bare = verification_candidate(text, report, [], set())["verificationCandidate"]
+    assert (
+        bare["occurrences"]["parts"][0]["occurrences"][0]["section"] == "Translations"
+    )
+    assert verification_candidate(text, None, passages, set()) == {}
