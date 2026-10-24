@@ -215,6 +215,8 @@ python -m http.server 8000 --directory docs
 
 The application is then reachable at `http://localhost:8000/`; the curation surface is active only there.
 
+`tests/record_coverage.test.js` renders the permalink card of every content page with its publication file. It checks that every non-empty field stands visibly, in a tooltip or on a row marked `data-key`, and that every value occurring in its source passage carries a provenance disclosure marked `data-provenance-for`. The known gaps are pinned in `tests/record_coverage_expected.json`. A field with no declared place fails the test, and so does a gap that grows or closes without the expectation changing. Today the card shows no provenance chain per value, no page kind, no cited print addresses and, on pages with publications, not the page-level record, so the pinned gaps are large by design until the card is rebuilt.
+
 ## Deployment and Limits
 
 GitHub Pages publishes the content of `docs/`. The application performs no live write-back. Exports are downloaded locally and then integrated as reviewed repository patches.
