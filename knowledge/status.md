@@ -77,6 +77,9 @@ Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload
 | P1 editing | Editing per publication stays outside version 1.0 (decided by the main instance after delegation by the operator on 2026-09-23, revisable), because no released correction exists yet and the acceptance contract asks for propagation of a page-level correction | a patch contract that binds a publication id to its source-slice hash, when a correction needs it |
 | P2 data | Page 1875 keeps its six volumes in one publication, because splitting sets would move the ratified segmentation of seven Gate 1 pages | source-bound fixture after a Gate 1 segmentation decision |
 | P2 QA | Broaden the stratified semantic sample, complete curation/export browser checks and measure representative performance/accessibility | declared sample protocol and device/task budgets with recorded results |
+| P2 data | The values that keep one damaged letter after the encoding repair, because the byte was lost before the LLM cache was frozen, become gaps (decided by the main instance under the principle "a gap before a wrong value", 2026-10-24, revisable) | the values emptied by rule in the pipeline with a test naming them |
+| P2 model | The PROV-O sidecar, a DQV quality description and the publishable profile of the LLM provenance are planned but not yet represented in the vocabulary | vocabulary terms and a SHACL check |
+| P2 public address | The former wiki addresses redirect to klawiter.stefanzweig.digital, whose main page answered 404 on 2026-10-24; the address needs to lead to the public application or an explanation | a request to the address reaches the application |
 
 The two remaining unresolved See-references name titles no current page carries and stay open. The Maria Stuart case showed that a technically resolved reference can still point to the wrong page, so a resolution rests on the source revision history, never on a guessed target.
 

@@ -134,6 +134,8 @@ The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done.
 
 Version 1.0 covers the current pages of the wiki. The titles that the wiki's deletion archive and log record as deleted and that are absent from the current page table are excluded from the project scope of version 1.0 (decided by the main instance after delegation by the operator on 2026-09-22, revisable). A deletion was an editorial decision of the compiler, a large part of these titles are duplicates, renamed pages or empty pages, and one of them is a private message. The raw originals under `data/raw/` stay unchanged. A later read-only triage list of these titles is possible as a separate work package and is not part of 1.0. Eight current pages are published from the compiler's last revision before an overwrite by the wiki's Redirect fixer, the only departure from the current page state (decided by the main instance after delegation by the operator on 2026-09-23, revisable).
 
+The version stays 0.9 in `pyproject.toml`, the single version source; the 0.9.1 tied to the owner worksheet on 2026-09-08 was never cut, and the next version number belongs to the operator's tag.
+
 Use the [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) to evaluate concrete edition boundaries, contribution roles, conflicting imprints and the research workflow. The questions are not a request to reapprove the work/edition principle.
 
 ## Evidence ownership

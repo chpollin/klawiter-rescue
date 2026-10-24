@@ -115,13 +115,17 @@ The edition sample comprises 76 segments from three complex pages. Two independe
 
 The location review examined the remaining low-scored cases independently. Confirmations and corrections were adopted as decisions. Five cases stayed open in domain terms and were materialized as contested claims.
 
-Agentic decisions are traceable through reviewer, input hash, result and evidence file. A later external expert review is additional validation.
+Agentic decisions are traceable through reviewer, input hash, result and evidence file. They are proposals by agent review and confirm nothing (2026-10-24). A later external expert review is additional validation.
+
+The ratio of corrections to reviewed values is no evidence of success, and the wiki curation is evaluated qualitatively against the source. Correctness figures arise only where persons decide on a frozen sample under rules fixed in advance, as in the print strand ([Merged bibliography](print-wiki-merge.md), Measurement).
 
 ## Semantic Sample
 
 The semantic suite has two distinct targets: seventy frontend field assertions from the ten records in `tests/wiki_ground_truth.json`, and one hundred rule-extraction assertions from the twenty complete texts in `tests/test_sample_20.json`. Both retain known deviations after the reviewed repairs, listed under `knownMismatches` in `.github/semantic-baseline.json` and `.github/extraction-baseline.json`. These failing assertions are no count of demonstrated product data errors, because they span different layers and include unresolved field-selection contracts. Neither selected sample estimates a corpus-wide error rate.
 
 The per-field tests stay deliberately marked separately. `.github/semantic-baseline.json` names the exact known cases and records the input hash, ten page IDs, seven fields and the commit at which failures were observed. Collection rejects a changed fixture hash, a removed/replaced/duplicate page or a missing field; the default guard also checks its comparison inventory. Isolated mutation tests demonstrate that changing only the hash cannot conceal lost coverage. Its mismatch count must agree with `.github/baseline-metrics.json`. A replacement on another page/field or a changed mismatching value fails the default gate.
+
+The deviation on page 6342 stays a documented failure, because correcting the imprint spelling of the delivered source to the oracle's spelling would be a silent identity change.
 
 Titles require exact equality with the expected title or an explicit per-entry `accepted_title_variants` value. Page 285 permits its exact source page title with the `(VIST)` disambiguator; stage-02 metadata verifies that variant. Invented suffixes, extensions of that variant, and transferring its suffix to another page fail both checks. No generic prefix or suffix stripping is used.
 
