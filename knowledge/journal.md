@@ -29,6 +29,8 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 **Found.** The former projection of the concordance had dropped the claim states, called every candidate a match and added matches without a claim. The pipeline step replaces it.
 
+**Changed later the same day.** The card workbench became the print viewer and closed the findings that endangered the measurement: keys act only on the focused card in view and never while the next one loads, every value shows once and only shown values are confirmed, and `_review.check` enforces flag, type and inherited rules ([Print viewer](print-viewer.md)). A local print gate (`p14_gate.py`) checks inputs, a byte-identical rebuild, the validation ledger and the identifiers of every frozen sample against pins and remap lists, and `p13_review.py` reports precision per object with resampling, agreement between reviewers and an unset confirmation threshold. The frontend meta names the producers behind confirmed editions and LLM labels, and a coverage test pins which fields and chains the record card does not yet show. The uncalibrated live LLM judge and two one-off measurement scripts were removed. The operator set principles under which details are decided ([Production readiness](production-readiness.md), Operator principles) and replaced a budget of review hours by an interface people like working in.
+
 ---
 
 ## 2026-10-24 — Print objects structured, validated, exported as JSON-LD and viewable
