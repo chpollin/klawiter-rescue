@@ -34,6 +34,42 @@ Where the revision the fixer overwrote is a delivered human text that is no redi
 
 The current census and coverage are in [Status](status.md). The exact source/canonical ID multisets agree; the frontend contains the canonical non-redirect IDs. Structural namespaces remain in its dataset but outside the bibliography views. This establishes record preservation, not field recall.
 
+## One model across print and wiki
+
+Both sources describe the same bibliography in units of their own, and the word "entry" has stood for several of them. The terms below hold in code, interface and documents; counts compare only like with like.
+
+Source
+: One of the four states of the bibliography: the main volume, Addendum I, the Addendum II working file and the wiki. The main volume file is a revised working state after 2001, not the print of 1991 ([Print volumes](print-volumes.md)); its records cite each other in the file's numbering, while the errata and Addendum I cite the numbering of 1991.
+
+Numbered entry
+: A unit the compiler gave an address, section and number in its volume: F 61 in the main volume, FA1 3 in Addendum I, FA2 3 in Addendum II. Its identifier is the address (`I/F/61`). The main volume and Addendum I are almost fully numbered; the Addendum II working file mostly is not.
+
+Unnumbered entry
+: A unit without an address: a collection header, a commentary paragraph, and most of Addendum II. Its identifier is its position, volume, section, PDF page and line where it begins (`A2/F/p270l3`). A position identifier is the project's, not the compiler's, and holds only as long as the line extraction stays the same.
+
+Heading and reference unit
+: A heading (section, language, work) and a cross-reference unit ("See …") are records of the print, but neither is an entry. A reference unit can name a work that has no edition of its own and say where it is printed (G 3).
+
+Index entry
+: An entry of a print index: a term (person, title, year, language or periodical) and the addresses the index gives for it, each resolved to the record it names. An index entry describes no publication.
+
+Wiki page
+: One page of the wiki, the unit the flat model calls an entry. A content page is usually one work in one language with its publications, a work hub (marked VIST) groups volumes, stories and translations of a work, an author page holds the items by or about one person, and category pages are structure. A wiki page and a print entry are different units and never correspond one to one.
+
+Described object
+: What a print entry or a wiki page describes. Most are publications: a book edition, a contribution to a periodical or a collection. Others are an archival holding (letters in section K), an event (premieres in section E), a series (collection headers) or a reference. An object without a read type is a gap, not a publication.
+
+Publication
+: The level at which the sources meet. A print object of type edition or contribution and a wiki publication can be compared, and the concordance relates them as claims (proposed, confirmed, contested). A cited address is a reference and never evidence that two records are one publication.
+
+Work
+: The level above the publication that connects editions, translations and reprints. Neither source holds it throughout: the wiki has work hubs and the flat graph a work per page of its corpus, the print has reference units and reprint notes ("REP of F 55"). A work layer of its own would rest on such evidence as proposed claims.
+
+Value
+: One field of an object with the passage it was read from, its producer and its rule. Values are compared only at the same level and only where the passage exists.
+
+Every record leads to where it stands. A print record carries its PDF pages and line pieces, and the local review server opens the page (`/print/I.pdf#page=790`). A wiki page has no other home since the wiki went offline: its permalink in the frontend (`#entry=448`) shows its values and the full source text. Identifiers never cross sources; the relation between a print record and a wiki page is a claim with an identifier of its own.
+
 ## Flat compatibility model
 
 The flat record uses Schema.org, Dublin Core and `klawiter:` terms. It retains title, year, publisher, place, language, translator, extent, categories, cross-references and source identifiers. On a page with a publication layer, year, publisher and extent come from its first publication since 2026-10-23, so they belong to one block; on a page without edition headers a populated field can still belong to a different passage from another field on the same page. A first match is a compatibility choice, not a universal scholarly rule. `originalTitle` is the bracket after the first title statement of a translation page ("[Schachnovelle]"), read only for non-German pages of the work categories, and `translations` keeps one item per language heading of the translations section.

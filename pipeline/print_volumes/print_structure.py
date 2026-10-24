@@ -31,6 +31,13 @@ RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "lab" / "print-structure.json"
 LOCAL = ROOT / "docs" / "lab" / "local" / "print-structure.json"
 VIEWER = "http://127.0.0.1:8767/viewer/index.html"
+# Object types that make an object a publication, the level the sources share;
+# holdings, events, series, references and untyped objects are counted apart.
+PUBLICATION_TYPES = {
+    "book_edition",
+    "periodical_contribution",
+    "collection_contribution",
+}
 # The number at the end of an address: "F 61", "FA1 3", "AA2 12".
 NUMBER = re.compile(r"(\d+)\s*$")
 
@@ -43,8 +50,12 @@ def volume_structure(volume: str, parts: list) -> tuple[dict, dict]:
             r = json.loads(line)
             totals["objects"] += len(r["objects"])
             totals["values"] += sum(1 for o in r["objects"] for _ in object_values(o))
+            for o in r["objects"]:
+                types = {t["value"] for t in o.get("types", [])}
+                totals["publications" if types & PUBLICATION_TYPES else "other"] += 1
             if r["kind"] != "entry":
                 continue
+            totals["numbered" if r["address"] else "unnumbered"] += 1
             entries[r["part"]] += 1
             m = NUMBER.search(r["address"])
             if m:

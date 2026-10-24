@@ -73,9 +73,8 @@ const Home = {
     container.innerHTML = `
       <div class="home-intro">
         <h1 class="home-title">Stefan Zweig Bibliography</h1>
-        <p class="home-text">Publications by and about Stefan Zweig compiled by
-          Randolph J. Klawiter, ${print ? 'in his three print volumes and his wiki' : 'from his wiki'},
-          ordered by the sections of his printed bibliography.</p>
+        <div class="home-intro-row">
+        <p class="home-text">Publications by and about Stefan Zweig, compiled by Randolph J. Klawiter.</p>
         <div class="home-search">
           <input type="search" id="home-search-input"
                  aria-label="Search every entry"
@@ -85,16 +84,10 @@ const Home = {
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
         </div>
-        <p class="home-browse"><a href="#browse">Browse all ${homeCount(entries.length)} wiki entries</a></p>
+        <p class="home-browse"><a href="#browse">Browse the wiki pages</a></p>
+        </div>
       </div>
       <section class="home-data" aria-labelledby="home-data-heading">
-        <div class="home-data-head">
-          <h2 id="home-data-heading">How the bibliography is built</h2>
-          <details class="home-info">
-            <summary aria-label="What this shows" title="What this shows">${ICONS.info}</summary>
-            <div class="home-info-body">${this.info(print)}</div>
-          </details>
-        </div>
         ${this.model(entries, counts, print)}
         ${this.table(counts, wikiOnly, print)}
       </section>
@@ -122,42 +115,46 @@ const Home = {
     }
   },
 
-  // The levels every source shares, each with its count: source, section,
-  // entry, described publication, value. One row per kind of source.
+  // The levels below the sections, each counted in its own unit: the unit of
+  // the source (print entry or wiki page), the publication, where the sources
+  // meet, and the value. Sources and sections are the table below.
   model(entries, counts, print) {
-    const levels = ['Source', 'Section', 'Entry', 'Publication', 'Value'];
+    const info = this.info(print);
+    const levels = ['Unit of the source', 'Publication', 'Value'];
     const row = (cells) => cells.map(c => `<td>${c}</td>`).join('');
     const pubs = App.data?._meta?.publicationCoverage;
     const wiki = row([
-      `${ICONS.wiki}<span>Wiki</span>`,
-      `<b>${homeCount(Object.keys(counts).length)}</b> entry types`,
       `<b>${homeCount(entries.length)}</b> pages`,
       pubs ? `<b>${homeCount(pubs.publications)}</b> publications on ${homeCount(pubs.pages)} pages` : '',
-      'each field with its source passage',
+      'fields with passage',
     ]);
     let printRow = '';
     if (print) {
       const t = Object.values(print.totals);
       const sum = (key) => t.reduce((n, v) => n + v[key], 0);
-      printRow = `<tr><th scope="row">Print</th>${row([
-        `${ICONS.book}<span>3 volumes</span>`,
-        '<b>18</b> sections, A to R, and indexes',
-        `<b>${homeCount(sum('entries'))}</b> entries, each with an address`,
-        `<b>${homeCount(sum('objects'))}</b> described objects`,
-        `<b>${homeCount(sum('values'))}</b> values, each bound to its passage`,
+      printRow = `<tr><th scope="row">${ICONS.book}Print</th>${row([
+        `<b>${homeCount(sum('numbered'))}</b> numbered, <b>${homeCount(sum('unnumbered'))}</b> unnumbered entries`,
+        `<b>${homeCount(sum('publications'))}</b> publications, <b>${homeCount(sum('other'))}</b> other objects`,
+        `<b>${homeCount(sum('values'))}</b> values with passage`,
       ])}</tr>`;
     }
     return `
       <table class="home-model">
-        <thead><tr><td></td>${levels.map(l => `<th scope="col">${l}</th>`).join('')}</tr></thead>
-        <tbody>${printRow}<tr><th scope="row">Wiki</th>${wiki}</tr></tbody>
+        <thead><tr><td class="home-data-head">
+          <h2 id="home-data-heading">How the data is built</h2>
+          <details class="home-info">
+            <summary aria-label="What this shows" title="What this shows">${ICONS.info}</summary>
+            <div class="home-info-body">${info}</div>
+          </details></td>${levels.map(l => `<th scope="col">${l}</th>`).join('')}</tr></thead>
+        <tbody>${printRow}<tr><th scope="row">${ICONS.wiki}Wiki</th>${wiki}</tr></tbody>
       </table>`;
   },
 
   info(print) {
     return `<ul>
-      <li>Every source is built alike: a source holds sections, a section holds entries, an entry describes one or more publications, and every value of a publication is bound to the passage it was read from.</li>
-      <li>An address names an entry across the volumes: F 61 is entry 61 of section F in the main volume, FA1 3 entry 3 of F in Addendum I, FA2 3 in Addendum II. The wiki cites these addresses; a cited address is a reference, not proof that two records are the same publication.</li>
+      <li>Each source has a unit of its own: in print an entry, numbered with an address such as F 61 (main volume), FA1 3 (Addendum I) or FA2 3 (Addendum II), or unnumbered, as most of Addendum II; in the wiki a page. Entries and pages do not correspond; the sources meet at the publication.</li>
+      <li>Other objects are archival holdings, events, series, references and objects whose type was not read. Wiki pages outside the publication layer are not yet segmented into publications. Every value is bound to the passage it was read from.</li>
+      <li>The wiki cites print addresses; a cited address is a reference, not proof that two records are the same publication.</li>
       <li>Rows of the table are the sections in the printed order, named as the contents of 1991 name them. R exists only in Addendum I.</li>
       <li>A print count is the number of entries of that section in the volume, numbered and unnumbered, as read from the file. A wiki count is the number of wiki pages of the entry type. The units differ and the sources overlap, so the counts do not add up.</li>
       <li>A dash means the section does not exist in that volume. A bracket means one wiki type covers two sections; essays belong to C and H and are counted at C. The wiki types are placed in the sections by this project, not by the compiler.</li>
