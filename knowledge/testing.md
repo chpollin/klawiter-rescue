@@ -18,17 +18,40 @@ related: [data, pipeline, frontend, production-readiness]
 
 ## Check Commands
 
+This is the one list of check commands. `CLAUDE.md`, Verification Duty, repeats the binding ones verbatim, and the README shows the short form. Before a commit the following run from the repository root, in this order:
+
 ```bash
-python -m uv run pytest -q
-python -m uv run python pipeline/run_pipeline.py --to-stage 04 --no-postprocess
-python -m uv run pytest -q --require-test-inputs --durations=10
-python -m uv run pytest -q -m semantic
-python -m uv run pre-commit run --all-files
-python -m compileall -q pipeline tests
+python -m uv run python pipeline/run_pipeline.py
+python -m uv run pytest -q --require-test-inputs
+python -m uv run pytest -q -m semantic --require-test-inputs
+python -m uv run ruff check pipeline tests
+python -m uv run ruff format --check pipeline tests
 git diff --check
 ```
 
-The static checks (ruff check, ruff format) are defined in `.pre-commit-config.yaml`; CI runs the same hook set.
+The production run comes first, because the suites read the generated outputs and the stage intermediates it writes, and a suite run before it checks the state before the change. `--require-test-inputs`, registered in `tests/conftest.py`, makes a missing Node.js or missing stage CSVs a failure instead of a skip, as `CI=true` does in CI, so a local pass cannot hide unrun frontend or extraction tests behind skips. For a partial run `python -m uv run python pipeline/run_pipeline.py --to-stage 04 --no-postprocess` writes the stage intermediates alone, and `--durations=10` names the slowest tests when a run grows slow. The semantic suite is red by design, and its failures must be exactly the known cases of the baselines described below.
+
+Ruff checks the working tree of `pipeline` and `tests`, which hold every Python file of the repository, under the rules of `pyproject.toml`, and it reports every syntax error of those files. CI runs the same two ruff checks as the hooks of `.pre-commit-config.yaml` through `python -m uv run pre-commit run --all-files`. That form checks only files Git tracks, so a new module stays unchecked until it is staged, and the binding list therefore calls ruff directly.
+
+After a change under `pipeline/print_volumes/` or to the print data, the print strand adds its own checks. The gate and the render check read the local data under `data/print/`, so they run only on a machine that holds it, and CI runs none of them.
+
+```bash
+python -m uv run pytest -q pipeline/print_volumes
+python -m uv run python pipeline/print_volumes/p14_gate.py --export
+node pipeline/print_volumes/viewer/check_render.mjs
+node pipeline/print_volumes/viewer/check_review.mjs
+```
+
+`pipeline/print_volumes` lies outside the `testpaths` of `pytest.ini`, so the default suite never collects it, and a run limited to that folder does not load `tests/conftest.py` and rejects `--require-test-inputs` as unknown. `p14_gate.py --export` checks the inputs against their hashes, rebuilds records and JSON-LD twice for byte identity, validates, checks the frozen samples against their pins and fails on any versioned file in its scope, `README.md` and `CLAUDE.md` included, that repeats twelve consecutive words of the print. `--keep-going` runs every check after a failure.
+
+The browser smoke test `smoke.mjs` drives the card workbench in Chromium and posts decisions under reviewer names of its own. It therefore runs against a trial review server with its own decision log, started in a second terminal, and never against port 8767, where the real review records the decisions of persons and which `smoke.mjs` refuses.
+
+```bash
+python -m uv run --group print python pipeline/print_volumes/review_server.py --port 8773 --log <scratch>/decisions.jsonl
+node pipeline/print_volumes/viewer/smoke.mjs --port 8773
+```
+
+`<scratch>` is any folder outside `data/print/review/`. Playwright is no project dependency, and where `import "playwright"` fails, `PLAYWRIGHT_DIR` names a folder whose `node_modules` hold it. [Print viewer](print-viewer.md), Acceptance, lists what the three viewer checks cover.
 
 The default pytest set excludes the `semantic` marker. It still checks the exact known deviations: page ID, field and observed mismatching value must match `.github/semantic-baseline.json` for the frontend or `.github/extraction-baseline.json` for the rule extractors. A repaired case cannot conceal a new failure elsewhere. The separate semantic suite keeps the individual failures red. Both use the same exact comparison, allowing only explicitly recorded source-backed title variants.
 

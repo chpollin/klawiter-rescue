@@ -7,23 +7,26 @@ This file is the single repository-specific agent instruction. Do not create a p
 Before making changes:
 
 1. Run `git status -sb` and check the current branch and the most recent commits. Preserve unknown changes as foreign or parallel work.
-2. Read `knowledge/index.md` and `knowledge/status.md`, and use the reading path for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
-3. Check the current code and the generated manifests against documentation statements. Take volatile figures exclusively from `data/output/quality-report.json`, `data/output/editions/manifest.json`, `data/output/reconciliation/manifest.json` and `docs/data/klawiter.json`.
+2. Read `knowledge/index.md` and `knowledge/status.md`, then `knowledge/handoff.md` for the results still waiting to be integrated and `knowledge/plan.md` for the accepted work and its order, and use the reading path for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
+3. Before using a handoff point, check its source and current target, integrate its durable content into the responsible document, record the transition in `knowledge/journal.md` and remove the point. Accepted future work goes into `knowledge/plan.md`.
+4. Check the current code and the generated manifests against documentation statements. Take volatile figures exclusively from `data/output/quality-report.json`, `data/output/editions/manifest.json`, `data/output/reconciliation/manifest.json` and `docs/data/klawiter.json`.
 
 ## Data Integrity
 
 Bibliographic values may be adopted only where they are documented in the MediaWiki source. A source-conditioned gap is a valid result. Authority-data IDs and derived geodata are admissible as soon as the underlying entity is documented in the source and the assignment is provenanced as a separate reconciliation decision.
 
-The LLM stage works exclusively as a gap filler. It must not overwrite existing rule-based values. The default run uses `data/provenance/llm-enrichment-cache.json` and executes no model call. `--llm-mode live` is a deliberate, network-dependent recomputation; its result is frozen only after review and updated provenance.
+The LLM stage works exclusively as a gap filler. It must not overwrite existing rule-based values. The default run uses `data/provenance/llm-enrichment-cache.json` and executes no model call. `--llm-mode live` is a deliberate, network-dependent recomputation that runs only with the operator's explicit consent, and its result is frozen only after review and updated provenance.
 
 Candidates, decisions and published relations are separate layers:
 
-- `proposed` denotes a deterministic, unreviewed statement.
+- `proposed` denotes a deterministic, unreviewed statement or the decision of an LLM agent.
 - `confirmed` denotes an exactly source-bound, reviewed statement.
 - `contested` denotes an open statement with a stable claim ID, source reference, competing interpretations and review history.
-- Only `confirm` and `correct` produce `schema:sameAs` or another confirmed relation. `unresolved` produces an open claim.
+- Only `confirm` and `correct` by a person or an exact deterministic rule produce `schema:sameAs` or another confirmed relation. `unresolved` produces an open claim.
 
 Contested statements remain visible in the final data model and in the interface. They must neither be discarded nor emitted as a confirmed relation.
+
+Only a person or an exact deterministic rule confirms, and a test fixture confirms nothing. A decision of an LLM agent, including one taken under the operator's delegation, is a proposal. It stays in its decision file as evidence with its producer named, publishes nothing and closes no claim. `pipeline/lib/producers.py` is the closed register of deciders and their producer classes. A decider absent from it fails the build, and whether a class confirms changes only with the operator principle in `knowledge/production-readiness.md`, never in a decision file.
 
 ## Production Run
 
@@ -46,18 +49,42 @@ Relevant layers:
 
 ## Verification Duty
 
-After substantial changes, run at least the affected tests and validators. Before commit and push the following applies:
+After substantial changes, run at least the affected tests and validators. Before a commit the following run in this order:
 
 ```bash
-python -m uv run pytest -q
-python -m uv run pytest -q -m semantic
+python -m uv run python pipeline/run_pipeline.py
+python -m uv run pytest -q --require-test-inputs
+python -m uv run pytest -q -m semantic --require-test-inputs
 python -m uv run ruff check pipeline tests
 python -m uv run ruff format --check pipeline tests
-python -m uv run python pipeline/run_pipeline.py
 git diff --check
 ```
 
+After a change to the print strand, these follow as well:
+
+```bash
+python -m uv run pytest -q pipeline/print_volumes
+python -m uv run python pipeline/print_volumes/p14_gate.py --export
+node pipeline/print_volumes/viewer/check_render.mjs
+node pipeline/print_volumes/viewer/check_review.mjs
+```
+
+`knowledge/testing.md`, Check Commands, owns this list and explains the order, each flag and the browser smoke test `smoke.mjs` with its trial server.
+
 Gate 1 must pass SHACL, exact selectors and hashes, stable IDs, complete queue, claim contract and deterministic rebuild. Gate 2 must pass decision separation, contested claims, input hashes, JSON-LD and frontend projection as well as deterministic rebuild. Known semantic failures are documented and stay visible through fixed expectations.
+
+## Print Strand
+
+The print strand reads the three print volumes into records and relates them to the wiki through proposed claims. It runs outside the production run under these rules:
+
+- Print PDFs and everything derived from them stay under `data/print/`, which Git ignores because the rights are unresolved. No print text enters a versioned file, a commit or a public artifact, and development stays local until the operator instructs otherwise.
+- The leak check of `pipeline/print_volumes/p14_gate.py` stays green. It fails on any versioned file in its scope, this file included, that repeats twelve consecutive words of the print.
+- The frozen benchmark pages, the frozen review sample with its supplements and the blind samples of `p09_human_sample.py` with their sheets are never used for rule development. Rules are written and inspected on the development sample of `dev_sample.py`, and `_heldout.py` names what stays out.
+- Every change of a reading rule or a proposal comes before the first review decision of the human round, because a later change makes decisions stale.
+- The real review server (`review_server.py`, port 8767, log `data/print/review/decisions.jsonl`) records decisions only from a person. An agent that drives the workbench starts a trial server on another port with its own `--log` outside `data/print/review/`.
+- `p11_llm_spans.py` runs only in its frozen mode unless the operator consents to a live run.
+
+Stages in order are `p01_extract`, `p03_records`, `p04_wiki_revisions`, `p05_errata`, `p06_claims`, `p07_concordance`, `p07b_overlap`, `p08_field_check`, `p10_validate`, `p12_jsonld` and then `p14_gate.py --export`, while `p09`, `p11` and `p13` serve the human round and the frozen LLM trial (`knowledge/print-volumes.md`, Approach and Reproducing the strand).
 
 ## Code and Documentation Conventions
 

@@ -6,7 +6,7 @@
 //
 // The run posts decisions under reviewer names of its own, so it must never
 // meet the real decision log: start a trial server with its own log first,
-//   python -m uv run python pipeline/print_volumes/review_server.py --port 8773 --log <scratch>/decisions.jsonl
+//   python -m uv run --group print python pipeline/print_volumes/review_server.py --port 8773 --log <scratch>/decisions.jsonl
 // then run
 //   node pipeline/print_volumes/viewer/smoke.mjs [--port 8773] [--shots <dir>] [--only <step name part>]
 // Playwright is not a project dependency; where `import "playwright"` fails,
