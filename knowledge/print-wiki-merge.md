@@ -116,10 +116,15 @@ Reviewable workbench
 - A print gate runs locally: PDF hashes, `p10_validate` with the line-coverage ledger, two rebuilds byte-identical, and the identifier rule of the measurement section.
 - Depends on no person.
 
+Measurement design corrected
+- An independent methodology review of 2026-10-24 found that the round as first built would measure acceptance and development rather than correctness: the blind key froze proposals that have since changed, a second reviewer saw the first one's decisions, the review sample excluded the hard entries and carried no weights, and the decision rule could not be decided per class at these sample sizes.
+- Corrected by: decisions kept per reviewer with an adjudication type, weights per part and a weighted estimate, a supplementary stratum of the excluded entries, a pessimistic bound and a field recall, boundary-flagged objects out of the field precision, a second-reviewer subset drawn in advance, a two-phase blind concordance with claims decided one by one, two decision rules with admissible classes fixed in advance, and entry hashes pinned beside the identifiers.
+- No rule class confirms automatically in this phase ([Production readiness](production-readiness.md), Operator principles).
+
 Human round
 - The three checks above, with the decision rule fixed and the second person's subset.
 - Gives field precision and misses (step 5) and the precision of both concordance routes (step 7).
-- Depends on the reviewable workbench, the operator's threshold and the two persons.
+- Depends on the reviewable workbench and the corrected measurement design. A second person makes the agreement measurable, and until then the field figure is acceptance by one reviewer.
 
 Concordance measured
 - The concordance runs as a pipeline stage, migrates into the shared claim schema (step 1) and reports what exists only in print, only in the wiki or in both.

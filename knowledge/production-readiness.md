@@ -98,7 +98,14 @@ An interface people like working in
 Outward steps
 : Push, deploy, tag and the live LLM mode happen only on the operator's explicit instruction (`CLAUDE.md`, the guardrails).
 
-Open at the level of principle are the threshold of the decision rule, whether the merge of print and wiki joins the production run (which `CLAUDE.md` excludes today), whether decisions of LLM agents under the operator's delegation count as `confirmed` in the wiki strand, and whether the goal of [Merged bibliography](print-wiki-merge.md) is the operator's criterion of done.
+Decided under these principles by the main instance on 2026-10-24, revisable, each reported to the operator:
+
+- No rule class confirms automatically in this phase. The frozen samples cannot carry the per-class estimate the decision rule needs, so the thresholds stay unset and every confirmation is a person's.
+- Decisions of LLM agents, including those of the main instance under the operator's delegation, are proposals in both strands. Their records stay as evidence with the producer named, and they produce no `confirmed` state and no `schema:sameAs`.
+- The Git history keeps the print quotations removed on 2026-10-24, because rewriting it would remove nothing from forks or caches and would break cited commits; they belong to the rights clarification.
+- Until a second person reviews, the field figure is reported as acceptance by one reviewer after inspection.
+
+Open at the level of principle are whether the concordance claims and print addresses join the production run as a frozen file without print text (which `CLAUDE.md` excludes today), and whether the goal of [Merged bibliography](print-wiki-merge.md) is the operator's criterion of done.
 
 ## Release scope
 
