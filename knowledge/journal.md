@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Agent decisions as proposals, one record desk, knowledge by function
+
+**Round.** Implementation and consolidation round with parallel agents and research, each result checked against the files before it was committed.
+
+**Changed.** Every decision of an LLM agent is a proposal, so no link is published and no edition or claim is confirmed until a person or an exact rule decides; flat values no rule binds are gaps; translations are one statement per printing (71a0fe0, [Data](data.md)). The measurement design was corrected (5db70c1) and the workbench repaired (fffcb29). Research settled that the 1965 bibliography is an open-access reissue under a no-derivatives licence, carried as an alias of print records; how research and the trade cite the bibliography ([About](about.md)); the delivery routes to Stefan Zweig Digital ([Merged bibliography](print-wiki-merge.md)); and the state of the rights question. The operator decided that development stays local, that the public address redirect and the release tag leave the planning, and that one record desk replaces the wiki catalogue with a sitemap of Overview, Records and Documentation ([Production readiness](production-readiness.md)). The knowledge gained [Plan](plan.md) as the one place of future work and [Handoff](handoff.md) as the inbox, following the Promptotyping convention, and the milestone sections of the merge document and the work list of Status moved into the plan.
+
+**Found.** The card's zero coverage gaps committed in fffcb29 rested on hidden markers the test counted; the claim in [Frontend](frontend.md) was corrected and the test now counts only what a reader sees. A literature review found that the decision rule of `p13_review.py` would confirm any class without an observed error, which the second correction of the measurement design closes before the human round. The print PDFs lie in a public repository of the operator; the operator accepted that.
+
+**Open.** The items of M1 in [Plan](plan.md) and the points in [Handoff](handoff.md).
+
+---
+
 ## 2026-10-24 — Criterion of done, public print claims, interface ownership
 
 **Round.** Decision round. The operator delegated the two questions left open at the level of principle and the ownership of the interface to the main instance.

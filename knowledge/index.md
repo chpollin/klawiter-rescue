@@ -13,7 +13,9 @@ Start with [Current status](status.md): what is verified, what remains open, and
 
 | Document | Responsibility |
 |---|---|
-| [Status](status.md) | current evidence snapshot, honest completion assessment and prioritized work |
+| [Status](status.md) | current evidence snapshot and honest completion assessment |
+| [Plan](plan.md) | the two milestones, their entry and exit conditions and the status tracker of the work ahead |
+| [Handoff](handoff.md) | the inbox of received results that still wait to be checked, integrated or rejected |
 | [About](about.md) | origin, responsibilities, scholarly context, how the bibliography is cited, and publication mandate |
 | [Data](data.md) | source scope, entity levels, field meaning, provenance and uncertainty |
 | [Pipeline](pipeline.md) | transformations, dependencies and reproducibility boundaries |
@@ -47,7 +49,7 @@ These are dated observations, not live task lists. Follow their status links bef
 
 ## Reading paths
 
-- Re-entry: [Status](status.md) → latest [Journal](journal.md) → `git status -sb`.
+- Re-entry: [Status](status.md) → [Handoff](handoff.md) → [Plan](plan.md) → latest [Journal](journal.md) → `git status -sb`.
 - Data work: [Data](data.md) → [Pipeline](pipeline.md) → [Testing](testing.md).
 - Interface work: [Frontend](frontend.md) → [Testing](testing.md).
 - Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Data](data.md) → [Print viewer](print-viewer.md).

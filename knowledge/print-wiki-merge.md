@@ -74,9 +74,9 @@ The merged Klawiter bibliography is reached when all of the following hold, chec
 
 This list is the criterion of done since 2026-10-24, decided by the main instance under the operator's explicit delegation ([Production readiness](production-readiness.md), Operator principles).
 
-## Plan
+## Steps
 
-The steps are ordered by dependency. Step 0 runs alongside the others and blocks only publication. Step 3 decided that the concordance takes two routes.
+The steps of the merge are ordered by dependency, and [Plan](plan.md) sequences them into milestones. Step 0 runs alongside the others and blocks only publication. Step 3 decided that the concordance takes two routes.
 
 | Step | Result | Accepted when | Depends on |
 |---|---|---|---|
@@ -120,69 +120,7 @@ The human round runs in the card workbench in this order, so that the blind part
 
 ## Milestones
 
-Reached
-- Segmentation measured (step 2), 2026-10-23, against two blind agent annotators. Its human decision moves into the human round.
-- Overlap answered (step 3), 2026-10-23.
-- Every object of the three volumes a validated, span-bound record exported as JSON-LD with one provenance chain per value (step 5 without its measurement), 2026-10-24.
-- A print gate runs locally (`p14_gate.py`): PDF hashes, `p10_validate` with the line-coverage ledger, two rebuilds byte-identical, the identifier and fingerprint rules of the measurement section, and no versioned file repeating twelve words of the print, 2026-10-24.
-- Measurement design corrected, 2026-10-24. An independent methodology review found that the round as first built would have measured acceptance and development rather than correctness, because the blind key froze proposals that have since changed, a second reviewer saw the first one's decisions, the review sample excluded the hard entries without weights, and the decision rule could not be decided per class at these sample sizes. The design of the measurement section replaces it.
-
-Reviewable workbench
-- Every finding of the review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) is closed with a check that fails on the code before the repair ([Print viewer](print-viewer.md), Acceptance). The repair is verified and waits to be committed together with the reviewer filter of the review server, because parallel interface work changed the same files.
-- Depends on no person.
-
-Measurement design, second correction
-- A literature review of 2026-10-24 (Berzak et al., 2016; Hripcsak and Wilcox, 2002; Artstein and Poesio, 2008; de Vet et al., 2013; Miller, 2024; Card et al., 2020; Gilbert et al., 2018) supports the blind phase first, resampling by object, the stratum of hard entries, recall over complete objects and Holm's correction, and found what the design still lacks.
-- The decision rule collapses for a class without an observed error, because every resample then equals one and the bootstrap p-value falls to its floor at any threshold below one (`p13_review.py`); it needs a bound that holds at zero errors, a minimum number of objects per class, and a minimum sample derived from threshold and Holm level instead of a fixed forty.
-- Agreement is reported as Krippendorff's alpha with raw agreement and positive and negative specific agreement with intervals, because kappa depends on prevalence and most values are expected right.
-- The second-reviewer subset is decided blind to the proposals, or its agreement is reported as agreement under shared proposals; that the operator develops the rules and reviews is named as a limit.
-- The anchoring effect is measured where the same entries are decided blind and with proposals; the order inside each phase is randomised, and a hidden repeat set measures the reviewer's agreement with themself.
-- Reports follow the reporting items of GRRAS and GUILD, with the match criterion of each field stated.
-- Depends on the print rebuild; it closes before the human round opens.
-
-Human round
-- The three checks above, with the decision rule fixed and the second person's subset.
-- Gives field precision and misses (step 5) and the precision of both concordance routes (step 7).
-- Depends on the reviewable workbench and the corrected measurement design. A second person makes the agreement measurable, and until then the field figure is acceptance by one reviewer.
-
-Concordance measured
-- The concordance runs as a pipeline stage, migrates into the shared claim schema (step 1) and reports what exists only in print, only in the wiki or in both.
-- The fields the concordance depends on are read better first, year and title (an author name before the title, a year inside the title, imprints in brackets), each change measured on the silver pairs before it is kept.
-- Recall on silver pairs and precision from the human round per route and volume.
-
-Reconstructed entry
-- Groups from confirmed identity claims, and one merged reading per group with the source of every field (print, wiki or both), the deviations side by side and the open claims visible (steps 9 and the projection part of 10).
-- Print addresses, the compiler's notation and evidenced claims enter the production run as a frozen file without print text once the containment predicate for contents lines and the shared claim schema stand (operator decision of 2026-10-24, [Production readiness](production-readiness.md)). The merged reading of print values waits for the rights decision of step 0.
-
-Delivery
-- Work and person links (step 8), delivery shape on the sample object, staging ingest, trial on research tasks (step 10).
-- Depends on step 0.
-
-## Interface milestones
-
-One reader
-- The production frontend is the public reader: the start page shows the sections across the four sources, results open beside the list, and every wiki record states its page kind and permalink.
-- On localhost a print record opens its PDF page.
-- The separate `docs/lab/` prototypes and `pipeline/lab/` scripts are retired by operator decision on 2026-10-24; all interface development continues directly on the production frontend and the local card workbench.
-
-Reconstructed entry view
-- One card per group with the source of every field, the deviations side by side, the claim states and the way to each member's PDF page or permalink.
-- Depends on the reconstructed entry milestone.
-
-Interface acceptance
-- Keyboard operation, screen reader, 200 percent zoom and narrow widths checked in a browser with read screenshots.
-- An independent review given the user tasks.
-- A session with Zweig specialists on real research tasks.
-
-## Wiki data true to their source passage
-
-This milestone runs in parallel and makes the published wiki values hold the relation invariant, not only the presence invariant.
-
-- Every verified defect class of the review round of 2026-10-23 is fixed at its root cause with a real-record test and an invariant over all records ([Status](status.md)).
-- Original titles link a translation to its work, and the translations section becomes one structured statement per translation (language, title, place, year, translator), each bound to its source passage.
-- Flat fields on pages without edition headers are shown only where a rule binds them to the described publication and are otherwise a gap (operator principle "a gap before a wrong value", 2026-10-24).
-- Every statement carries a typed producer (rule, LLM agent, person), and displays name the producer next to the state. Decisions of LLM agents, delegated ones included, are proposals and produce no `confirmed` state (2026-10-24).
-- A second fresh-context review round finds no new defect class, and the wiki-print field comparison gives the accuracy of the wiki fields on the silver pairs.
+The milestones of the merge, their entry and exit conditions and their state live in [Plan](plan.md).
 
 ## Open questions
 
