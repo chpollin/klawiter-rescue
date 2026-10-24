@@ -29,7 +29,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 
-RULES_VERSION = "lab-rules-2"
+RULES_VERSION = "lab-rules-3"
 
 # Occurrence matching (S2.1)
 
