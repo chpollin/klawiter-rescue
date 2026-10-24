@@ -26,9 +26,9 @@
         ["Index A", "index", 753, 916],
         ["Index B", "index", 917, 918],
         ["Index C", "index", 919, 924],
-        ["Index D", "index", 925, 929],
-        ["Index E", "index", 930, 970],
-        ["Additional Information 1990", "tail", 971, 971]
+        ["Index D", "index", 924, 929, 673.4],
+        ["Index E", "index", 929, 970, 291.1],
+        ["Additional Information 1990", "tail", 970, 971, 588.2]
       ],
       "toc_max": {
         "_source": "1991 table of contents as transcribed on wiki page 2101 (F 1-723 etc.)",
@@ -64,9 +64,9 @@
         ["Q", "body", 417, 418],
         ["R", "body", 419, 422],
         ["Index A", "index", 423, 440],
-        ["Index B", "index", 441, 443],
-        ["Index C", "index", 444, 456],
-        ["Index D", "index", 457, 481]
+        ["Index B", "index", 441, 444],
+        ["Index C", "index", 444, 457, 247.0],
+        ["Index D", "index", 457, 481, 177.0]
       ],
       "toc_max": {
         "_source": "table of contents of Addendum I, PDF pp. 3-5; RA1 is not listed there",

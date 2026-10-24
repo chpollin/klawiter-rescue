@@ -309,6 +309,208 @@ def test_a_title_after_a_siglum_opens_no_entry():
     ]
 
 
+def _glyph(text, x0, top=100.0):
+    return {
+        "text": text,
+        "x0": x0,
+        "x1": x0 + 5,
+        "top": top,
+        "bottom": top + 10,
+        "fontname": "ABCDEF+Times",
+        "size": 12.0,
+    }
+
+
+def test_a_row_led_by_a_space_still_opens_a_run_at_the_right_column():
+    from _apparatus import segments
+    from p01_extract import _line_record
+
+    text = "Nachname, Erika, G 12"
+    row = [_glyph(" ", 250)] + [_glyph(c, 291 + 5 * i) for i, c in enumerate(text)]
+    line = _line_record("I", 800, 0, row)
+    assert line["text"] == " " + text
+    assert [run[2] for run in line["runs"]] == [250, 291]
+    pieces = segments({**line, "part": "Index A", "kind": "index"}, 280.0)
+    assert [(p["text"], p["column"]) for p in pieces] == [(text, 2)]
+
+
+def test_a_strip_after_a_new_entry_joins_that_entry():
+    records = _apparatus(
+        [
+            _index_line(800, 1, 100, (72, "Erste, Anna, G 12 / K", 190)),
+            _index_line(800, 2, 114, (250, "7", 256)),
+            _index_line(800, 3, 128, (72, "Zweite, Berta, K 7 / L", 190)),
+            _index_line(800, 4, 142, (250, "3", 256)),
+            _index_line(800, 5, 156, (250, "0", 256)),
+        ]
+    )
+    assert [r["text"] for r in records] == [
+        "Erste, Anna, G 12 / K 7",
+        "Zweite, Berta, K 7 / L 30",
+    ]
+
+
+def _a1(page, line, top, *runs, part="Index A"):
+    return _index_line(page, line, top, *runs, volume="A1", part=part)
+
+
+def test_a_full_width_heading_splits_the_page_into_blocks():
+    records = _apparatus(
+        [
+            _a1(
+                430,
+                1,
+                100,
+                (105, "Erstes Werk [F 1]: GA1 1 /", 290),
+                (315, "KA1 7 / LA1 8", 450),
+            ),
+            _a1(430, 2, 110, (125, "HA1 3 /", 200)),
+            _a1(430, 3, 130, (105, "A2 TITLES OF A GROUP", 400)),
+            _a1(
+                430,
+                4,
+                150,
+                (105, "Drittes Werk [F 3]: GA1 3", 290),
+                (315, "Viertes Werk [F 4]: GA1 4", 500),
+            ),
+            _a1(430, 5, 160, (125, "HA1 5", 200)),
+            _a1(430, 6, 170, (125, "HA1 6", 200)),
+        ],
+        volume="A1",
+    )
+    assert [r["text"] for r in records] == [
+        "Erstes Werk [F 1]: GA1 1 / HA1 3 / KA1 7 / LA1 8",
+        "A2 TITLES OF A GROUP",
+        "Drittes Werk [F 3]: GA1 3 HA1 5 HA1 6",
+        "Viertes Werk [F 4]: GA1 4",
+    ]
+
+
+def test_addendum_entries_open_after_a_blank_line_not_at_a_bracket_or_numeral():
+    records = _apparatus(
+        [
+            _a1(441, 1, 100, (105, "Thema: [1]. Erstes: GA1 1.", 290), part="Index B"),
+            _a1(
+                441,
+                2,
+                110,
+                (105, "[2]. Zweites: GA1 2 / BA1 4[Vol.", 290),
+                part="Index B",
+            ),
+            _a1(441, 3, 120, (105, "III] / BA1 5", 200), part="Index B"),
+            _a1(441, 4, 140, (105, "Neues Thema: GA1 7", 290), part="Index B"),
+            _a1(441, 5, 150, (105, "Frau [F 40]: GA1 8", 290), part="Index B"),
+        ],
+        volume="A1",
+    )
+    assert [r["text"] for r in records] == [
+        "Thema: [1]. Erstes: GA1 1. [2]. Zweites: GA1 2 / BA1 4[Vol. III] / BA1 5",
+        "Neues Thema: GA1 7 Frau [F 40]: GA1 8",
+    ]
+
+
+def test_a_cross_reference_waits_for_its_label_and_a_gap_opens_a_name():
+    records = _apparatus(
+        [
+            _a1(460, 1, 100, (105, "Erster, Hans. See Index", 290), part="Index D"),
+            _a1(460, 2, 110, (105, "A5:Anderer Titel", 290), part="Index D"),
+            _a1(460, 3, 120, (105, "Zweiter, Max: LA1 3", 290), part="Index D"),
+            _a1(460, 4, 140, (105, "de Dritte, Eva: LA1 4", 290), part="Index D"),
+        ],
+        volume="A1",
+    )
+    assert [r["text"] for r in records] == [
+        "Erster, Hans. See Index A5:Anderer Titel",
+        "Zweiter, Max: LA1 3",
+        "de Dritte, Eva: LA1 4",
+    ]
+    assert "references" not in records[0]["objects"][0]
+
+
+def test_a_substitute_capital_opens_a_name():
+    records = _apparatus(
+        [
+            _index_line(910, 1, 100, (72, "Zahn, Anna, G 12", 170)),
+            _index_line(910, 2, 114, (72, "åname, Erika, K 7", 170)),
+        ]
+    )
+    assert [r["text"] for r in records] == [
+        "Zahn, Anna, G 12",
+        "åname, Erika, K 7",
+    ]
+
+
+def test_index_labels_and_item_locators_read_as_no_address():
+    from _apparatus import apparatus_records
+
+    text = "Titel [F 1]: HA1 35[No. 17], 38 / PA1 3[B4], 4. See Index A5:Anderes"
+    index = {
+        "F 1": "I/F/1",
+        "HA1 35": "A1/H/35",
+        "HA1 38": "A1/H/38",
+        "PA1 3": "A1/P/3",
+        "PA1 4": "A1/P/4",
+    }
+    (record,), _ = apparatus_records([_a1(430, 1, 100, (105, text, 290))], "A1", index)
+    refs = record["objects"][0]["references"]
+    assert [r["address"]["value"] for r in refs] == [
+        "F 1",
+        "HA1 35[No. 17], 38",
+        "PA1 3[B4], 4",
+    ]
+    assert [[t["normalized"] for t in r["targets"]] for r in refs] == [
+        ["F 1"],
+        ["HA1 35", "HA1 38"],
+        ["PA1 3", "PA1 4"],
+    ]
+    assert record["objects"][0]["term"]["value"] == "Titel"
+    for ref in refs:
+        a, b = ref["address"]["span"]
+        assert text[a:b] == ref["address"]["value"]
+    # The entries' shared grammar is unchanged: it still ends the group there.
+    assert [m.group(3) for m in REFERENCE.finditer("HA1 35[No. 17], 38")] == ["35"]
+
+
+def test_letter_spaced_digits_read_as_one_address_list():
+    from _apparatus import apparatus_records
+
+    text = "Nachname, Erika, G 1 2 , 1 4 , 3 0 - 3 2 / K 7[1],  9"
+    (record,), _ = apparatus_records(
+        [_index_line(800, 1, 100, (72, text, 250))], "I", {}
+    )
+    refs = record["objects"][0]["references"]
+    assert [r["address"]["value"] for r in refs] == [
+        "G 1 2 , 1 4 , 3 0 - 3 2",
+        "K 7[1],  9",
+    ]
+    assert [[t["normalized"] for t in r["targets"]] for r in refs] == [
+        ["G 12", "G 14", "G 30", "G 31", "G 32"],
+        ["K 7", "K 9"],
+    ]
+
+
+def test_a_joined_index_line_under_the_running_head_is_no_furniture():
+    records = _apparatus(
+        [
+            _a1(461, 0, 44.2, (105, "Index D: Running Title 900", 300), part="Index D"),
+            _a1(
+                461,
+                1,
+                57.0,
+                (105, "Erster, Hans: LA1 9", 200),
+                (315, "Zweiter, Max: LA1 10", 420),
+                part="Index D",
+            ),
+        ],
+        volume="A1",
+    )
+    assert [r["text"] for r in records] == [
+        "Erster, Hans: LA1 9",
+        "Zweiter, Max: LA1 10",
+    ]
+    assert records[1]["lines"] == [[461, 1, 2, 19, 39]]
+
+
 def test_rule_patterns_hold_no_control_character():
     import _apparatus
     import _fields

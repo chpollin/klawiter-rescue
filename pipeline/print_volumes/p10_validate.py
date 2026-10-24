@@ -26,7 +26,11 @@ How results are checked):
   holds no credit.
 
 - lines: every p01 line outside the page furniture is held by an entry or an
-  apparatus record, so that no text of the three files is left out.
+  apparatus record, so that no text of the three files is left out. An
+  apparatus record names its pieces of lines; they rebuild its text, and
+  every character of an apparatus line lies in exactly one piece, unless the
+  line is furniture by a definition of place and pattern kept apart from the
+  reader's, and then in none.
 - apparatus: every index, front matter and tail item (_apparatus.py) holds
   the model, its record's text and hash, verbatim values in its record, index
   reference kinds on their address, a term before the first address, and
@@ -53,8 +57,6 @@ import re
 import sys
 from collections import Counter, defaultdict
 
-from _apparatus import is_furniture as apparatus_furniture
-from _apparatus import segments
 from _common import DERIVED_DIR, HERE, REPORT_DIR, VOLUMES, load_lines, write_report
 from _fields import (
     LANGUAGE_BY_FOLD,
@@ -114,6 +116,16 @@ CREDIT_WORD = re.compile(
     r"\b(?:Trl?s?|Eds?|Intro|Frw|Aftw|Illus)\.|\b(?:Translated|Edited) by\b"
 )
 RULE_SOURCES = ("_fields.py", "p03_records.py", "_apparatus.py")
+# Page furniture of the apparatus, defined apart from _apparatus.py by place
+# and pattern only: a running head is the first line of its page, in the top
+# margin, holding a page number at one end; a page number line is the last,
+# in the bottom margin, holding only the number. Either is set off from the
+# text by its size or by a gap wider than SET_OFF times the next line pitch.
+APPARATUS = ("index", "front", "tail")
+FURNITURE_HEAD = re.compile(r"^\d{1,4} ?[A-Z]|[^\d\s] ?\d{1,4}$")
+FURNITURE_NUMBER = re.compile(r"^(?:\d{1,4}|[ivxlc]{1,7})$")
+TOP_MARGIN, BOTTOM_MARGIN, PAGE_FOOT = 90.0, 700.0, 720.0
+SET_OFF = 1.2
 
 
 def _known_rules() -> tuple[set[str], tuple[str, ...]]:
@@ -496,17 +508,112 @@ def check_item(item: dict, record: dict, records: dict, rules) -> list[tuple[str
     return out
 
 
-def lines_outside(records: dict, apparatus: dict) -> tuple[list[str], Counter]:
-    """p01 lines no record holds, apart from page furniture, and a line count.
+def _set_off(line: dict, neighbour: dict, beyond: dict | None) -> bool:
+    """Whether line stands apart from its neighbour line: in another size, or
+    further from it than SET_OFF times the pitch from the neighbour on."""
+    if line["runs"][0][1] != neighbour["runs"][0][1] or beyond is None:
+        return True
+    pitch = abs(beyond["top"] - neighbour["top"])
+    return abs(neighbour["top"] - line["top"]) > SET_OFF * pitch
 
-    A record's text is its lines joined, furniture dropped, so each record
-    consumes the lines from its first one whose text continues its own
+
+def apparatus_furniture(lines: list[dict]) -> set[int]:
+    """Positions of the furniture among a volume's apparatus lines (APPARATUS)."""
+    pages: dict[int, list[int]] = defaultdict(list)
+    for i, ln in enumerate(lines):
+        if ln["kind"] in APPARATUS and ln["text"].strip():
+            pages[ln["page"]].append(i)
+    out = set()
+    for found in pages.values():
+        found.sort(key=lambda i: lines[i]["top"])
+        page = [lines[i] for i in found]
+        text = [ln["text"].strip() for ln in page]
+        if len(page) == 1:
+            if FURNITURE_HEAD.search(text[0]) or FURNITURE_NUMBER.match(text[0]):
+                out.add(found[0])
+            continue
+        third = page[2] if len(page) > 2 else None
+        if (
+            FURNITURE_HEAD.search(text[0])
+            and page[0]["top"] < TOP_MARGIN
+            and _set_off(page[0], page[1], third)
+        ):
+            out.add(found[0])
+        third = page[-3] if len(page) > 2 else None
+        if FURNITURE_NUMBER.match(text[-1]) and (
+            page[-1]["top"] > PAGE_FOOT
+            or (page[-1]["top"] > BOTTOM_MARGIN and _set_off(page[-1], page[-2], third))
+        ):
+            out.add(found[-1])
+    return out
+
+
+def _ledger(
+    volume: str, lines: list[dict], apparatus: dict
+) -> tuple[list[tuple[str, str]], dict[int, list[int]]]:
+    """Violations of the apparatus pieces of one volume, and per line how
+    often each character is held.
+
+    A record lists its pieces as [page, line, column, start, end]; they must
+    lie in apparatus lines, be cut without edge spaces, and rebuild the
+    record's text in order, each joined to the one before by one space or
+    none.
+    """
+    at = {(ln["page"], ln["line"]): i for i, ln in enumerate(lines)}
+    held: dict[int, list[int]] = {}
+    problems = []
+    for record in apparatus.values():
+        if record["volume"] != volume:
+            continue
+        text, pos = record["text"], 0
+        for page, line, _column, a, b in record.get("lines", []):
+            i = at.get((page, line))
+            source = lines[i]["text"] if i is not None else ""
+            piece = source[a:b]
+            if (
+                i is None
+                or lines[i]["kind"] not in APPARATUS
+                or not 0 <= a < b <= len(source)
+                or piece != piece.strip()
+            ):
+                problems.append(
+                    (record["id"], f"piece p{page}l{line} is no cut of a line")
+                )
+                pos = None
+                break
+            if pos == 0 and text.startswith(piece):
+                pos = len(piece)
+            elif pos and text.startswith(piece, pos):
+                pos += len(piece)
+            elif pos and text.startswith(" " + piece, pos):
+                pos += 1 + len(piece)
+            else:
+                problems.append((record["id"], f"piece p{page}l{line} breaks the text"))
+                pos = None
+                break
+            cover = held.setdefault(i, [0] * len(source))
+            for k in range(a, b):
+                cover[k] += 1
+        if pos is not None and pos != len(text):
+            problems.append((record["id"], "pieces do not rebuild the text"))
+    return problems, held
+
+
+def lines_outside(
+    records: dict, apparatus: dict
+) -> tuple[list[str], list[tuple[str, str]], Counter]:
+    """p01 lines no record holds, apart from page furniture, the violations
+    of the apparatus pieces, and a line count.
+
+    A record's text is its lines joined, furniture dropped, so each entry
+    record consumes the lines from its first one whose text continues its own
     (whitespace ignored, at most a few foreign lines skipped). An apparatus
-    record of a two-column index holds pieces of lines, so its lines count
-    as held when all of their text lies in apparatus records of the page.
+    record names its pieces (_ledger), so every character of an apparatus
+    line outside the furniture (apparatus_furniture) must lie in exactly one
+    piece of one record, and no furniture in any.
     """
     squash = re.compile(r"\s+")
-    outside, count = [], Counter()
+    outside, problems, count = [], [], Counter()
     for volume in VOLUMES:
         lines = annotate(load_lines(volume), volume)
         at = {(ln["page"], ln["line"]): i for i, ln in enumerate(lines)}
@@ -525,28 +632,31 @@ def lines_outside(records: dict, apparatus: dict) -> tuple[list[str], Counter]:
                 elif text[i]:
                     skipped += 1
                 i += 1
-        pages: dict[int, str] = {}
-        for record in apparatus.values():
-            if record["volume"] == volume:
-                for page in range(record["page"], record["page_end"] + 1):
-                    pages[page] = pages.get(page, "") + squash.sub("", record["text"])
+        found, cover = _ledger(volume, lines, apparatus)
+        problems.extend(found)
+        furniture = apparatus_furniture(lines)
         for i, ln in enumerate(lines):
             if not text[i]:
                 continue
             count["lines"] += 1
-            if ln["kind"] in ("index", "front", "tail"):
-                if apparatus_furniture(ln):
+            name = f"{volume}/p{ln['page']}l{ln['line']}"
+            if ln["kind"] in APPARATUS:
+                chars = cover.get(i, [0] * len(ln["text"]))
+                if i in furniture:
                     count["furniture"] += 1
+                    if any(chars):
+                        problems.append((name, "furniture held by a record"))
                     continue
-                # The pieces of a line stand in reading order of their column.
-                pieces = [squash.sub("", p["text"]) for p in segments(ln, None)]
-                held[i] = all(p in pages.get(ln["page"], "") for p in pieces)
+                inked = [k for k, ch in enumerate(ln["text"]) if not ch.isspace()]
+                if any(chars[k] > 1 for k in inked):
+                    problems.append((name, "characters held twice"))
+                held[i] = all(chars[k] for k in inked)
             elif ln["furniture"]:
                 count["furniture"] += 1
                 continue
             if not held[i]:
-                outside.append(f"{volume}/p{ln['page']}l{ln['line']}")
-    return outside, count
+                outside.append(name)
+    return outside, problems, count
 
 
 def load_apparatus() -> dict:
@@ -601,10 +711,14 @@ def validate() -> tuple[dict, list[dict]]:
                 violations.append(
                     {"object": item["id"], "invariant": invariant, "detail": detail}
                 )
-    outside, line_count = lines_outside(records, apparatus)
+    outside, problems, line_count = lines_outside(records, apparatus)
     violations.extend(
         {"object": line, "invariant": "lines", "detail": "held by no record"}
         for line in outside
+    )
+    violations.extend(
+        {"object": oid, "invariant": "lines", "detail": detail}
+        for oid, detail in problems
     )
     listed = {
         (inv, oid)

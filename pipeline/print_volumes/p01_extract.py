@@ -61,10 +61,13 @@ def _line_record(volume: str, page: int, index: int, row: list[dict]) -> dict:
     previous = ink = None
     for char in row:
         glyph = char["text"]
+        # Before the first inked glyph the gap counts from the space glyphs, so
+        # that a row led by a space in one column still opens a run at the next.
+        edge = ink or previous
         column = (
-            ink is not None
+            edge is not None
             and not glyph.isspace()
-            and char["x0"] - ink["x1"] > COLUMN_GAP
+            and char["x0"] - edge["x1"] > COLUMN_GAP
         )
         if (
             previous is not None

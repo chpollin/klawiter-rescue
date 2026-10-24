@@ -21,6 +21,7 @@ Start with [Current status](status.md): what is verified, what remains open, and
 | [Testing](testing.md) | test contracts, oracle maintenance, browser validation and evidence limits |
 | [Production readiness](production-readiness.md) | ratified decisions and measurable acceptance criteria |
 | [Print volumes](print-volumes.md) | structure, conventions and reference system of the three print-volume PDFs, and the approach for parsing them |
+| [Print viewer](print-viewer.md) | views, content hierarchy and interaction of the local viewer in which persons review the print readings |
 | [Merged bibliography](print-wiki-merge.md) | record and claim model relating print and wiki, how results are checked, plan and next milestone toward the merged Klawiter bibliography |
 | [Lab frontend](lab-frontend.md) | concept, interface specification, evaluation protocol and plan of the scholar-centred frontend prototypes (owned by the AI operator session) |
 | [Coordination](coordination.md) | roles, path ownership and result reporting of the parallel sessions on this repository |

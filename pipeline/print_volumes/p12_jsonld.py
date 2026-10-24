@@ -392,10 +392,10 @@ def build() -> tuple[list[dict], list[dict]]:
                 for r in batch:
                     for o in r["objects"]:
                         s = summary(o)
+                        # Only a read title or term is a title; otherwise the
+                        # viewer shows the start of the text, marked as such.
                         label = (
-                            o["term"]["value"]
-                            if o.get("term")
-                            else s["title"] or o["text"][:90]
+                            o["term"]["value"] if o.get("term") else s["title"] or ""
                         )
                         index.append(
                             {
@@ -406,6 +406,7 @@ def build() -> tuple[list[dict], list[dict]]:
                                 "address": r["address"],
                                 "page": r["page"],
                                 "title": label,
+                                "snippet": "" if label else o["text"][:120],
                                 "types": [o["kind"]]
                                 if "kind" in o
                                 else [t["value"] for t in o.get("types", [])],
