@@ -2,12 +2,12 @@
 title: Stefan Zweig Bibliography (Klawiter) — Project Knowledge
 status: maintained
 language: en
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Project knowledge
 
-Start with [Current status](status.md): what is verified, what remains open, and the next acceptance steps. The latest [Journal](journal.md) entry records the terminal working state. This index assigns one responsibility to each maintained document.
+Start with [Current status](status.md): what is verified, what remains open, and the next acceptance steps. The latest [Journal](journal.md) entry records the terminal working state.
 
 ## Maintained documents
 
@@ -21,8 +21,8 @@ Start with [Current status](status.md): what is verified, what remains open, and
 | [Testing](testing.md) | test contracts, oracle maintenance, browser validation and evidence limits |
 | [Production readiness](production-readiness.md) | ratified decisions and measurable acceptance criteria |
 | [Print volumes](print-volumes.md) | structure, conventions and reference system of the three print-volume PDFs, and the approach for parsing them |
-| [Print viewer](print-viewer.md) | views, content hierarchy and interaction of the local viewer in which persons review the print readings |
-| [Merged bibliography](print-wiki-merge.md) | record and claim model relating print and wiki, how results are checked, plan and next milestone toward the merged Klawiter bibliography |
+| [Print viewer](print-viewer.md) | the local card workbench in which persons review the print readings and the claims between records |
+| [Merged bibliography](print-wiki-merge.md) | record and claim model relating print and wiki, how results are checked, goal, measurement rules, plan and milestones toward the merged Klawiter bibliography |
 | [Lab frontend](lab-frontend.md) | concept, interface specification, evaluation protocol and plan of the scholar-centred frontend prototypes (owned by the AI operator session) |
 | [Coordination](coordination.md) | roles, path ownership and result reporting of the parallel sessions on this repository |
 | [Documentation](documentation.md) | Markdown ownership, maintenance rules and historical/generated evidence |
@@ -44,13 +44,14 @@ These are dated observations, not live task lists. Follow their status links bef
 | [Evaluation artifacts](evaluations/2026-09-05/manifest.json) | hashed source excerpts and machine-readable review results |
 | [Owner worksheet](evaluations/2026-09-05/owner-evaluation.md) | five concrete domain and usability acceptance cases |
 | [Blog claim check](evaluations/2026-10-23/blog-v4-claims.md) | every statement of the blog post v4 against the repository at b0c63ea, German, with operator slots |
+| [Print viewer review](evaluations/2026-10-24/print-viewer-review.md) | independent review of the print viewer and card board, with the findings that endanger the measurement |
 
 ## Reading paths
 
 - Re-entry: [Status](status.md) → latest [Journal](journal.md) → `git status -sb`.
 - Data work: [Data](data.md) → [Pipeline](pipeline.md) → [Testing](testing.md).
 - Interface work: [Frontend](frontend.md) → [Testing](testing.md).
-- Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Data](data.md).
+- Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Data](data.md) → [Print viewer](print-viewer.md).
 - Acceptance: [Production readiness](production-readiness.md) → [Status](status.md) → [owner worksheet](evaluations/2026-09-05/owner-evaluation.md).
 
 Code, versioned decisions and generated validation reports take precedence over descriptive documentation. Volatile counts come from the quality report, gate manifests and frontend dataset; the current prose snapshot lives only in Status. A green technical gate does not establish complete extraction or scholarly accuracy.

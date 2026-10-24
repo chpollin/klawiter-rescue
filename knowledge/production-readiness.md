@@ -67,6 +67,13 @@ On 23 September the operator approved the recommended course after four read-onl
 
 The operator confirmed on 23 September that permission to publish the compiled content under CC BY 4.0 exists and named the Literaturarchiv Salzburg as the institution the bibliography is published with. The archival dump stays in the public Git history by the operator's decision of the same day. Release archives carry its page and text tables and leave out its account tables. The operator also set the title "Stefan Zweig Bibliography", after the wiki, cited as "Stefan Zweig Bibliography (Klawiter)", and ruled that the publication is not called a digital edition. The operator also withdrew the partner acceptance and the Zenodo deposit with its DOI, which the decision of 8 September had tied to version 1.0. A Git tag remains the operator's decision.
 
+In October the operator decided the following for the merged bibliography, recorded in the [Journal](journal.md) on the day.
+
+- A test fixture confirms nothing (2026-10-23). The place decisions that rested only on a fixture were demoted to proposals.
+- Checks are assigned by the kind of task (2026-10-23). A deterministic check needs no person, a simple check needs care but no domain knowledge, and only complex checks go to Zweig specialists ([Merged bibliography](print-wiki-merge.md), How results are checked).
+- The rights in the print volumes may wait until delivery (2026-10-23). Until then only wiki values, print addresses and claims are published, and every print-derived file stays under `data/print/`.
+- Schema validity is no correctness (2026-10-24). Whether a valid, span-bound value is right in its context is decided by a person in the interface, and only those decisions measure field correctness.
+
 The release declaration and the publication form after acceptance remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
 
 ## Release scope
