@@ -76,6 +76,30 @@ In October the operator decided the following for the merged bibliography, recor
 
 The release declaration and the publication form after acceptance remain with the responsible people. These decisions do not prevent bounded technical repairs or source transcription checks.
 
+## Operator principles
+
+The operator supervises and sets principles. The main instance decides details under them, names the principle each decision rests on, keeps every such decision revisable, and reports the decisions that change something as a list the operator may object to. A question goes to the operator only where no principle carries or two of them conflict. Each principle below is already stated in a binding source, which it names.
+
+Purpose
+: The product is the bibliography as research data for Zweig research and Stefan Zweig Digital. The DIA-XAI follow-up uses only documented review episodes and quality evidence and takes over neither the data nor the release state ([About](about.md), and the project overview in the operator's vault).
+
+A gap before a wrong value
+: A value stands only where its source passage documents it for the publication it describes, and a gap is a valid result. A proposal may be shown with its passage and producer, never as confirmed, and it never overwrites a rule value (`CLAUDE.md`, Data Integrity, and the commission's guardrails). Flat wiki fields that no rule binds to the described publication therefore stay empty, and a page the kind rules cannot decide stays undetermined.
+
+Who confirms
+: Only an exact deterministic rule or a person confirms. An LLM proposes and never confirms, a test fixture confirms nothing, and only `confirm` and `correct` produce a confirmed relation (`CLAUDE.md`, the guardrails, the decision of 2026-10-23, [Merged bibliography](print-wiki-merge.md), Principles). A rule class confirms automatically only once its precision is measured on a human sample under the decision rule of [Merged bibliography](print-wiki-merge.md), Measurement.
+
+Print stays local
+: Print PDFs and everything derived from them stay under `data/print/`; until the rights are settled only wiki values, print addresses and claims are published (the guardrails, the decision of 2026-10-23).
+
+An interface people like working in
+: The review happens through work in the interface, not through a planned budget of hours, so the interface is judged by the cost of a decision and by whether the evidence stands beside each value (operator, 2026-10-24).
+
+Outward steps
+: Push, deploy, tag and the live LLM mode happen only on the operator's explicit instruction (`CLAUDE.md`, the guardrails).
+
+Open at the level of principle are the threshold of the decision rule, whether the merge of print and wiki joins the production run (which `CLAUDE.md` excludes today), whether decisions of LLM agents under the operator's delegation count as `confirmed` in the wiki strand, and whether the goal of [Merged bibliography](print-wiki-merge.md) is the operator's criterion of done.
+
 ## Release scope
 
 Version 1.0 covers the current pages of the wiki. The titles that the wiki's deletion archive and log record as deleted and that are absent from the current page table are excluded from the project scope of version 1.0 (decided by the main instance after delegation by the operator on 2026-09-22, revisable). A deletion was an editorial decision of the compiler, a large part of these titles are duplicates, renamed pages or empty pages, and one of them is a private message. The raw originals under `data/raw/` stay unchanged. A later read-only triage list of these titles is possible as a separate work package and is not part of 1.0. Eight current pages are published from the compiler's last revision before an overwrite by the wiki's Redirect fixer, the only departure from the current page state (decided by the main instance after delegation by the operator on 2026-09-23, revisable).
