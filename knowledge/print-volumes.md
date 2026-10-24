@@ -251,12 +251,12 @@ The abbreviation lists survive only in the addenda. Addendum I (PDF pp. 12–15)
 | Kind | Where resolved | Gaps |
 |---|---|---|
 | General abbreviations (Aftw., EXC, FAC, FIE, Trl., Tsd. …) | Addendum I, PDF p. 12 | `IB` stands both for Insel-Bücherei and for an informant |
-| Informant sigla, main volume | mostly through the Addendum I list | `MMW` and `HZ` in none of the files |
+| Informant sigla, main volume | Index A of the main volume (headings of the form "[= X]") and the Addendum I list | none observed |
 | Informant sigla, Addendum I | own list | several sigla used but not listed, e.g. `BVC`, `AMC` |
 | Informant sigla, Addendum II | own list | `PF`, `DAP`, `GK` used but not listed, several listed but unused |
 | Periodical sigla, main volume | Index E | none observed |
 | Repository sigla, letters | table in section K of the main volume | none observed |
-| Source abbreviations `Zh.`, `Bild`, `Ol.` | none | defined in the lost front matter of the main volume |
+| Source abbreviations `Zh.`, `Bild`, `Ol.` | `Zh.` is L 1757, `Bild` is L 571, `Ol.` an Index A heading of the main volume | none |
 | Section codes | Addendum I, PDF p. 12 | Addendum II undocumented, read by analogy |
 
 The informant lists name private persons and institutions who supplied information. They stay in the source files and in derived research data. This document does not reproduce them.
@@ -314,7 +314,7 @@ Three deterministic probes in `pipeline/print_volumes/` test the files on the `p
 
 `p01_extract.py` writes every glyph of a page into exactly one line, and a second extraction is byte-identical. The first property holds by construction and guards the code rather than the data. Line grouping depends little on the vertical tolerance: between 2 and 3 pt the line count differs on two pages of the main volume and nine of Addendum I, while at 1 pt lines of the main volume split on about a third of its pages, presumably where substitute glyphs sit on a shifted baseline.
 
-`probe_addresses.py` builds the address census. An entry start is a number, optionally preceded by its code (`L 464`), left of the part's hanging indent and on the longest chain of such numbers rising by at most ten per step. It finds 6,329 entry starts in the main volume, the figure of the earlier survey, with 15 gaps in G and L, and 2,319 in Addendum I, where the apparent duplicates of the first run are insertions with a letter suffix (`NA1 20a`). The highest number per section equals the transcribed contents of 1991 in every section except D, where the contents give 227 and the file ends at 223, and J, where the file runs to 79 against 75; the J entries above 75 stand on the last page of the section, which suggests later additions. MA1 appears to run past its contents only because a line beginning "110 = G 336" joins the chain, and the probe now lists such jumps for review. In Addendum II only AA2, DA2 and the symposia list carry running numbers.
+`probe_addresses.py` builds the address census. An entry start is a number, optionally preceded by its code (`L 464`), left of the part's hanging indent and on the longest chain of such numbers rising by at most ten per step. It finds 6,329 entry starts in the main volume, the figure of the earlier survey, with 15 gaps in G and L, and 2,319 in Addendum I, where the apparent duplicates of the first run are insertions with a letter suffix (`NA1 20a`). The highest number per section equals the transcribed contents of 1991 in every section except D, where the contents give 227 and the file ends at 223, and J, where the file runs to 79 against 75. The unrevised indexes of the file cite J 76 to 79 with years up to 1989, so these entries stood in the 1991 print and the transcribed contents, or the contents of 1991 themselves, leave out the end of J. D 224 to 227 of 1991 are still in the file under other numbers: the indexes and Addendum I cite them, and their index terms and contents point to D 88a (the only suffixed number of the main volume) for D 224 and to merges into D 98, D 154 and D 159 for D 225 to 227 (an inference from the research of 2026-10-24). MA1 appears to run past its contents only because a line beginning "110 = G 336" joins the chain, and the probe now lists such jumps for review. In Addendum II only AA2, DA2 and the symposia list carry running numbers.
 
 References resolve against these starts to 99.7 percent within the main volume, 99.6 percent within Addendum I and 99.4 percent from Addendum I into the main volume. Almost every unresolved target lies above a section maximum or in a known gap, such as the reference to G 75, which the print replaces by a stub. Resolution therefore confirms the numbering and finds references into gaps, but it cannot detect a wrong boundary between two existing numbers. A content check, comparing the title cited before an address with the opening of the target entry, would test the segmentation itself and is not built yet.
 
@@ -401,10 +401,11 @@ After segmentation follow a concordance of print and wiki at entry level, first 
 
 ## Open questions
 
-- The missing abbreviations, the broken Index A and the question which state of the main volume the file represents cannot be settled from the files, because the project has no access to a printed copy. The open-access edition of the first bibliography of 1965 may share part of the abbreviation system.
-- How the post-1991 insertions in the main volume relate to Addendum I and to the wiki.
-- What the starred references (`G 379*`) mean.
-- Why section D of the main volume ends at 223 while the transcribed contents of 1991 give 227. An erratum of Addendum I corrects `D 224`, so the edition the errata address had entries beyond 223, and the file lacks them.
+- Whether the joins of the vertical strips of Index A match the printed book, the exact wording of D 224 to 227 in 1991 and whether they stood under an addendum heading. These need a printed copy.
+- Periodical sigla of the main volume that Index E does not resolve: most are spelling variants of its heads, about eight remain. The open-access bibliography of 1965 (Carolina Digital Repository, DOI 10.17615/1m9z-gc38) uses a different and shorter siglum system and resolves none of them.
+- What the starred references (`G 379*`) mean. No file defines the star; the cases suggest a work present only in part (an excerpt, a partial reprint, a quotation), since whole books are starred inside small selections and letters are starred only in printed sources. This is an inference from 58 starred addresses, all in the main volume.
+
+The state of the main volume file is answered from the files: it is a revised working state after 2001, not the print of 1991. Insertions dated up to 2001 stand in C 3, C 6, C 12, C 21 and F 50, an erratum of Addendum I is pasted into F 110 word for word, several errata are applied and others are not, and the indexes were not revised (Index C ends with 1990). The insertions follow Addendum I and in a few cases go beyond it toward Addendum II.
 - Whether the unnumbered units of the main volume, such as collection headers and commentary paragraphs in E, become entities of their own or attach to the following entries.
 
 ## Decisions outside this strand
