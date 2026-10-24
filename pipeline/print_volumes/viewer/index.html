@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Print objects, Klawiter bibliography (local)</title>
+  <link rel="stylesheet" href="viewer.css">
+</head>
+<body>
+  <header class="site">
+    <h1><a href="#/">Print objects</a></h1>
+    <p class="scope">Klawiter bibliography, main volume 1991, Addendum I 1999, Addendum II working file. Local view, print rights unresolved.</p>
+  </header>
+  <main id="main">
+    <section id="list-view" aria-labelledby="list-heading">
+      <h2 id="list-heading" class="visually-hidden">All objects</h2>
+      <form id="filters" role="search">
+        <label>Search <input id="q" type="search" autocomplete="off" placeholder="title, address, text"></label>
+        <label>Volume
+          <select id="volume"><option value="">all</option><option>I</option><option>A1</option><option>A2</option></select>
+        </label>
+        <label>Type <select id="type"><option value="">all</option></select></label>
+        <label>Producer
+          <select id="producer"><option value="">all</option><option>rule</option><option>compiler</option><option>inherited</option><option>llm</option></select>
+        </label>
+        <label>Review
+          <select id="review-filter">
+            <option value="">all objects</option>
+            <option value="sample">review sample</option>
+            <option value="open">review sample, not complete</option>
+            <option value="done">review sample, complete</option>
+          </select>
+        </label>
+      </form>
+      <p id="progress"></p>
+      <p id="count" aria-live="polite"></p>
+      <ol id="results" class="results"></ol>
+      <nav class="pager" aria-label="Result pages">
+        <button type="button" id="prev">Previous page</button>
+        <span id="page"></span>
+        <button type="button" id="next">Next page</button>
+      </nav>
+    </section>
+    <section id="object-view" hidden aria-labelledby="object-heading">
+      <p><a href="#/" id="back">Back to the list</a></p>
+      <h2 id="object-heading"></h2>
+      <p id="object-meta" class="meta"></p>
+      <h3>Entry text</h3>
+      <p id="entry-text" class="entry-text"></p>
+      <section id="review" aria-labelledby="review-heading">
+        <h3 id="review-heading">Review</h3>
+        <p id="review-status"></p>
+        <div id="review-controls" hidden>
+          <label class="reviewer">Reviewer <input id="reviewer" autocomplete="off" maxlength="80"></label>
+          <div class="object-actions">
+            <button type="button" id="add-missing">Add a missing value</button>
+            <button type="button" id="boundary">Object split or joined wrongly</button>
+            <button type="button" id="complete">Mark object complete</button>
+            <a id="next-sample" href="#/">Next open sample object</a>
+          </div>
+          <form id="decision-form" hidden>
+            <p id="decision-what"></p>
+            <p class="hint" id="decision-hint"></p>
+            <label id="field-label" hidden>Field <select id="missing-field"></select></label>
+            <label id="vocab-label" hidden>Value <select id="vocab"></select></label>
+            <p><button type="button" id="use-selection">Use the text selected in the entry</button>
+              <span id="selection-preview" class="exact"></span></p>
+            <p id="remove-row"><label><input type="checkbox" id="remove"> The value should not exist</label></p>
+            <label class="note">Note <textarea id="note" rows="2" maxlength="2000"></textarea></label>
+            <p><button type="submit" id="save">Save decision</button> <button type="button" id="cancel">Cancel</button></p>
+          </form>
+        </div>
+        <p id="review-message" role="status"></p>
+      </section>
+      <div class="columns">
+        <div>
+          <h3 id="values-heading">Values</h3>
+          <table id="values" aria-labelledby="values-heading">
+            <thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Producer</th><th scope="col">Review</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <aside id="chain" aria-labelledby="chain-heading">
+          <h3 id="chain-heading">Provenance</h3>
+          <p class="hint">Select a value to follow it to its passage, record, PDF file, rule and review.</p>
+          <ol id="chain-steps" class="chain"></ol>
+        </aside>
+      </div>
+    </section>
+    <p id="error" role="alert" hidden></p>
+  </main>
+  <script type="module" src="viewer.js"></script>
+</body>
+</html>

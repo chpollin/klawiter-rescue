@@ -1,0 +1,36 @@
+{
+ "_about": "Known violations of the p10 invariants, by invariant and object identifier, each with its reason: the source is printed so, a substitute-font defect, a genuine value of that shape, or a named rule gap left open. A case that no longer fails must leave this list (p10 reports it as stale). Identifiers and reasons only, no print text beyond a few identifying words.",
+ "year": {
+  "A2/F/p363l10#2": "The Addendum II working file holds a review dated 2020, later than the letter of 2009 that otherwise bounds the file; the date is printed so.",
+  "A2/L/p1264l18#2": "The same review of 2020 printed a second time in the secondary literature of Addendum II."
+ },
+ "shape": {
+  "A1/K/228#1": "an archive named as the item's source, read as title (rule gap)",
+  "A1/N/p401l17#1": "a cross-reference whose address list is read as event place (rule gap)",
+  "A2/A/p32l0#4": "a contents title that names a diary page by its date",
+  "A2/C/p147l36#1": "a genuine title that contains a comma",
+  "A2/D/164#4": "a library department named as the item's source, read as title (rule gap)",
+  "A2/D/186#20": "a title reference whose author follows the section code without a reading (rule gap)",
+  "A2/D/51#5": "a genuine title that contains a comma",
+  "A2/E/p260l33#23": "a contribution in an anthology misread as event place (rule gap)",
+  "A2/F/p277l24#1": "a contents list closing with the printing statement",
+  "A2/F/p356l9#1": "a host cited by two section codes without a number; the codes stand as its title (rule gap)",
+  "A2/G/p506l8#1": "a contents list closing with the edition statement",
+  "A2/G/p564l2#1": "a genuine title that contains a comma",
+  "A2/H/p726l22#1": "the print leaves the bracket of the life dates unclosed",
+  "A2/L/p1112l36#1": "the reviewed work cited by section code, read as author name (rule gap)",
+  "A2/L/p1148l3#1": "a genuine subtitle naming Zweig's life dates",
+  "A2/L/p1215l12#3": "the print doubles the dot after the head name",
+  "A2/L/p966l30#1": "a periodical issue named without a date in the date's position",
+  "A2/L/p992l1#1": "a periodical issue named without a date in the date's position",
+  "I/D/214#5": "two editors named forename first before the host title are read as the title (rule gap)",
+  "I/E/5#1": "the unit is a lone date line of the drama commentary, read as an entry by the segmentation",
+  "I/F/670#1": "a genuine title in capitals that contains a comma",
+  "I/G/200#1": "a genuine title in capitals that contains a comma",
+  "I/G/250#1": "the host's second imprint place carries a substitute-font defect read as a digit",
+  "I/I/164#3": "an address list read as a name (rule gap)",
+  "I/L/1264#1": "a quoted title that is a date",
+  "I/L/1400#1": "the name carries a substitute-font defect read as a digit",
+  "I/L/1790#1": "the name carries a substitute-font defect read as a digit"
+ }
+}

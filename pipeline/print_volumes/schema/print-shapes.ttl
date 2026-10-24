@@ -1,0 +1,123 @@
+# SHACL shapes for the JSON-LD export of the print objects (p12_jsonld.py).
+# Every value carries one literal, one text selector into one source record,
+# one producer from the closed set and one rule; a model's value is a
+# proposal; every selector quotes its source record exactly; every record
+# derives from a source file.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix kp: <https://chpollin.github.io/klawiter-rescue/vocab/print/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kp:ValueShape a sh:NodeShape ;
+  sh:targetClass kp:Value ;
+  sh:property [ sh:path rdf:value ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:Literal ] ;
+  sh:property [ sh:path kp:field ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path oa:hasSelector ; sh:minCount 1 ; sh:maxCount 1 ; sh:node kp:SelectorShape ] ;
+  sh:property [ sh:path oa:hasSource ; sh:minCount 1 ; sh:maxCount 1 ; sh:class kp:Record ] ;
+  sh:property [ sh:path kp:producer ; sh:minCount 1 ; sh:maxCount 1 ;
+                sh:in ( "rule" "llm" "compiler" "inherited" ) ] ;
+  sh:property [ sh:path kp:rule ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Plan ] ;
+  sh:or (
+    [ sh:not [ sh:property [ sh:path kp:producer ; sh:hasValue "llm" ] ] ]
+    [ sh:property [ sh:path kp:state ; sh:hasValue "proposed" ; sh:minCount 1 ] ]
+  ) ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "the selector does not quote its source record exactly, or a text value differs from its passage" ;
+    sh:prefixes kp:prefixes ;
+    sh:select """
+      SELECT $this WHERE {
+        $this oa:hasSelector ?s ; oa:hasSource ?r ; rdf:value ?v .
+        ?s oa:start ?a ; oa:end ?b ; oa:exact ?x .
+        ?r kp:text ?t .
+        OPTIONAL { $this a ?verbatim . FILTER (?verbatim = kp:VerbatimValue) }
+        FILTER (
+          SUBSTR(?t, ?a + 1, ?b - ?a) != ?x
+          || (BOUND(?verbatim) && STR(?v) != ?x)
+        )
+      }
+    """ ;
+  ] .
+
+kp:KindShape a sh:NodeShape ;
+  sh:targetClass kp:Value ;
+  sh:xone (
+    [ sh:class kp:VerbatimValue ]
+    [ sh:class kp:DerivedValue ]
+  ) .
+
+kp:SelectorShape a sh:NodeShape ;
+  sh:property [ sh:path rdf:type ; sh:hasValue oa:TextPositionSelector ] ;
+  sh:property [ sh:path oa:start ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ;
+                sh:minInclusive 0 ; sh:lessThan oa:end ] ;
+  sh:property [ sh:path oa:end ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ;
+  sh:property [ sh:path oa:exact ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+kp:ObjectShape a sh:NodeShape ;
+  sh:targetClass kp:PrintObject ;
+  sh:property [ sh:path kp:entry ; sh:minCount 1 ; sh:maxCount 1 ; sh:class kp:Record ] ;
+  sh:property [ sh:path kp:objectText ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path oa:hasSelector ; sh:minCount 1 ; sh:maxCount 1 ; sh:node kp:SelectorShape ] ;
+  sh:property [ sh:path kp:volume ; sh:minCount 1 ; sh:in ( "I" "A1" "A2" ) ] .
+
+kp:RecordShape a sh:NodeShape ;
+  sh:targetClass kp:Record ;
+  sh:property [ sh:path kp:text ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path kp:sha256 ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9a-f]{64}$" ] ;
+  sh:property [ sh:path kp:pdfPage ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ;
+  sh:property [ sh:path kp:line ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:maxCount 1 ; sh:class kp:SourceFile ] .
+
+kp:SourceFileShape a sh:NodeShape ;
+  sh:targetClass kp:SourceFile ;
+  sh:property [ sh:path kp:fileName ; sh:minCount 1 ; sh:maxCount 1 ] ;
+  sh:property [ sh:path kp:sha256Prefix ; sh:minCount 1 ; sh:maxCount 1 ] .
+
+kp:PlanShape a sh:NodeShape ;
+  sh:targetClass prov:Plan ;
+  sh:property [ sh:path kp:producer ; sh:minCount 1 ] .
+
+# A person's decision on a value or an object: one of the closed set, by one
+# reviewer, at one time; a decision on a value names its field, and the value
+# carries the state that follows from it. A correction quotes its passage in
+# the object's own entry exactly.
+kp:ReviewDecisionShape a sh:NodeShape ;
+  sh:targetClass kp:ReviewDecision ;
+  sh:property [ sh:path kp:decision ; sh:minCount 1 ; sh:maxCount 1 ;
+                sh:in ( "confirm" "correct" "unresolved" "missing" "boundary" "complete" ) ] ;
+  sh:property [ sh:path kp:about ; sh:minCount 1 ; sh:maxCount 1 ; sh:class kp:PrintObject ] ;
+  sh:property [ sh:path prov:wasAssociatedWith ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Agent ] ;
+  sh:property [ sh:path prov:endedAtTime ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path kp:correction ; sh:maxCount 1 ; sh:node kp:CorrectionShape ] .
+
+kp:ReviewedValueShape a sh:NodeShape ;
+  sh:targetSubjectsOf kp:review ;
+  sh:property [ sh:path kp:review ; sh:maxCount 1 ; sh:class kp:ReviewDecision ] ;
+  sh:property [ sh:path kp:reviewState ; sh:minCount 1 ; sh:maxCount 1 ;
+                sh:in ( "confirmed" "corrected" "contested" ) ] .
+
+kp:CorrectionShape a sh:NodeShape ;
+  sh:property [ sh:path kp:field ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path oa:hasSelector ; sh:maxCount 1 ; sh:node kp:SelectorShape ] ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "a correction's selector does not quote the object's entry exactly" ;
+    sh:prefixes kp:prefixes ;
+    sh:select """
+      SELECT $this WHERE {
+        $this oa:hasSelector ?s ; oa:hasSource ?r .
+        ?s oa:start ?a ; oa:end ?b ; oa:exact ?x .
+        ?r kp:text ?t .
+        FILTER (SUBSTR(?t, ?a + 1, ?b - ?a) != ?x)
+      }
+    """ ;
+  ] .
+
+kp:prefixes sh:declare
+  [ sh:prefix "kp" ; sh:namespace "https://chpollin.github.io/klawiter-rescue/vocab/print/"^^xsd:anyURI ] ,
+  [ sh:prefix "oa" ; sh:namespace "http://www.w3.org/ns/oa#"^^xsd:anyURI ] ,
+  [ sh:prefix "rdf" ; sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ] ,
+  [ sh:prefix "xsd" ; sh:namespace "http://www.w3.org/2001/XMLSchema#"^^xsd:anyURI ] .

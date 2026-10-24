@@ -1,0 +1,172 @@
+/* Tokens follow the production frontend (docs/css); the project has no
+   knowledge/design.md, so its palette and type stacks are reused. */
+:root {
+  --burgundy: #631a34;
+  --burgundy-dark: #4a1228;
+  --gold: #c2a360;
+  --gold-dark: #7a5e18;
+  --cream: #faf8f3;
+  --white: #ffffff;
+  --text: #2d2d2d;
+  --text-light: #595959;
+  --border: #e0d8cc;
+  --mark: #f3e6c4;
+  --mark-strong: #e2c88a;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "Source Sans 3", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --space: 1rem;
+  --reading: 72ch;
+}
+
+* { box-sizing: border-box; }
+/* Display rules below must not undo the hidden attribute. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+a { color: var(--burgundy); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--gold-dark);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+header.site {
+  background: var(--burgundy);
+  color: var(--white);
+  padding: calc(var(--space) * 0.75) var(--space);
+}
+header.site h1 { margin: 0; font-family: var(--font-serif); font-size: 1.4rem; }
+header.site h1 a { color: var(--white); text-decoration: none; }
+header.site .scope { margin: 0.25rem 0 0; font-size: 0.9rem; }
+
+main { padding: var(--space); max-width: 90rem; margin: 0 auto; }
+
+#filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space);
+  align-items: end;
+}
+#filters label { display: flex; flex-direction: column; font-size: 0.9rem; font-weight: 600; }
+#filters input, #filters select { font: inherit; padding: 0.35rem 0.5rem; border: 1px solid var(--border); background: var(--white); }
+#filters input { min-width: min(28rem, 80vw); }
+
+.results { list-style: none; padding: 0; margin: 0; }
+.results li { border-bottom: 1px solid var(--border); }
+.results a {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 0.25rem var(--space);
+  padding: 0.5rem 0;
+  text-decoration: none;
+  color: var(--text);
+}
+.results a:hover .title { text-decoration: underline; }
+.results .where { color: var(--text-light); font-variant-numeric: tabular-nums; }
+.results .title { font-family: var(--font-serif); }
+.results .types { grid-column: 2; font-size: 0.85rem; color: var(--text-light); }
+
+.pager { display: flex; gap: var(--space); align-items: center; margin: var(--space) 0; }
+button {
+  font: inherit;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--burgundy);
+  background: var(--white);
+  color: var(--burgundy);
+  cursor: pointer;
+}
+button:disabled { color: var(--text-light); border-color: var(--border); cursor: default; }
+
+.meta { color: var(--text-light); }
+h2 { font-family: var(--font-serif); color: var(--burgundy-dark); }
+h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; }
+
+.entry-text {
+  font-family: var(--font-serif);
+  max-width: var(--reading);
+  background: var(--white);
+  padding: 0.75rem;
+  border-left: 3px solid var(--gold);
+  overflow-wrap: anywhere;
+}
+.entry-text mark { background: var(--mark); color: inherit; }
+.entry-text mark.current { background: var(--mark-strong); outline: 2px solid var(--gold-dark); }
+.entry-text .outside { color: var(--text-light); }
+
+.columns { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: calc(var(--space) * 2); }
+@media (max-width: 60rem) { .columns { grid-template-columns: 1fr; } }
+
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; vertical-align: top; padding: 0.35rem 0.5rem 0.35rem 0; border-bottom: 1px solid var(--border); }
+th { font-size: 0.85rem; color: var(--text-light); }
+td.field { font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem; overflow-wrap: anywhere; }
+td.value button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--burgundy);
+  text-align: left;
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
+tr.current td { background: var(--mark); }
+.producer-llm { font-weight: 700; }
+
+#review {
+  max-width: var(--reading);
+  margin-top: var(--space);
+  padding: 0.5rem 0.75rem;
+  background: var(--white);
+  border-left: 3px solid var(--burgundy);
+}
+#review h3 { margin-top: 0.25rem; }
+#review-status { margin: 0.25rem 0; }
+#review-message { margin: 0.25rem 0; font-weight: 600; }
+#review-message:empty { display: none; }
+.reviewer, #decision-form label { display: flex; flex-direction: column; font-size: 0.9rem; font-weight: 600; margin: 0.5rem 0; }
+.reviewer input, #decision-form select, #decision-form textarea { font: inherit; font-weight: 400; padding: 0.35rem 0.5rem; border: 1px solid var(--border); max-width: 28rem; }
+#decision-form label:has(> input[type="checkbox"]) { flex-direction: row; gap: 0.5rem; align-items: center; }
+.object-actions { display: flex; flex-wrap: wrap; gap: 0.5rem var(--space); align-items: center; }
+#decision-form { border-top: 1px solid var(--border); margin-top: 0.75rem; }
+.exact { font-family: var(--font-serif); background: var(--mark); padding: 0 0.2rem; }
+.exact:empty { display: none; }
+td.review { white-space: nowrap; }
+td.review .state { display: inline-block; min-width: 6.5rem; }
+td.review .state.attention { font-weight: 700; }
+td.review button.act { padding: 0.1rem 0.45rem; font-size: 0.85rem; }
+td.review button.act[aria-pressed="true"] { background: var(--burgundy); color: var(--white); }
+/* On a phone each value becomes a block: field above, value and producer
+   side by side, the review line below. */
+@media (max-width: 40rem) {
+  #values thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  #values, #values tbody { display: block; }
+  #values tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.15rem 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  #values td { border-bottom: none; padding: 0; }
+  #values td.field { grid-column: 1 / -1; color: var(--text-light); }
+  #values td.review { grid-column: 1 / -1; white-space: normal; }
+}
+.history { padding-left: 1.1rem; margin: 0.25rem 0 0; }
+
+#chain { position: sticky; top: var(--space); align-self: start; }
+.chain { padding-left: 1.25rem; }
+.chain li { margin-bottom: 0.75rem; }
+.chain .label { font-weight: 600; display: block; }
+.chain .exact { font-family: var(--font-serif); background: var(--mark); padding: 0 0.2rem; }
+.chain .record-text { font-family: var(--font-serif); font-size: 0.9rem; max-height: 14rem; overflow: auto; background: var(--white); padding: 0.5rem; border-left: 3px solid var(--border); }
+.hint { color: var(--text-light); }
+#error { color: var(--burgundy-dark); font-weight: 600; }

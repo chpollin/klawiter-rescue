@@ -38,10 +38,13 @@ Usage: python -m uv run python pipeline/print_volumes/p08_field_check.py
 """
 
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 
 from _common import DERIVED_DIR, PROJECT_ROOT, REPORT_DIR, VOLUMES, write_report
+from _fields import summary
+from _heldout import is_held_out
 from p07_concordance import EXTENT, GENERIC, MIN_FIELD_TOKEN, SILVER, _tokens
 
 CLAIMS = DERIVED_DIR / "claims" / "concordance.jsonl"
@@ -112,20 +115,22 @@ def _title_defect(title: str) -> bool:
 
 
 def _surnames(names: list[str]) -> set[str]:
-    return {_tokens(n)[-1] for n in names if _tokens(n)}
+    # A joint credit ("Forename Surname and Forename Surname") names several people.
+    people = [p for n in names for p in re.split(r"\s+(?:and|&|und|et)\s+|,\s+", n)]
+    return {_tokens(p)[-1] for p in people if _tokens(p)}
 
 
 def _print_side(obj: dict) -> dict:
-    fields = obj["fields"]
+    fields = summary(obj)
     numbers = set()
     for groups in EXTENT.findall(obj["text"]):
         for part in groups:
             numbers.update(int(n) for n in _tokens(part) if n.isdigit())
     return {
-        "title": fields.get("title") or (obj.get("inherited") or {}).get("title", ""),
-        "publisher": fields.get("publisher") or "",
-        "place": fields.get("place") or "",
-        "translator": [fields["translator"]] if fields.get("translator") else [],
+        "title": fields["title"],
+        "publisher": fields["publisher"],
+        "place": fields["place"],
+        "translator": fields["translators"],
         "extent": numbers,
     }
 
@@ -187,12 +192,16 @@ def main() -> int:
     for entry_id, page in pairs:
         entry = entries[entry_id]
         volume = entry["volume"]
+        if is_held_out(entry):
+            # Held-out records never serve the diagnosis of rules.
+            pair_stats[volume]["held_out"] += 1
+            continue
         path = PUBLICATIONS / f"{page}.json"
         pubs = (
             json.loads(path.read_text("utf-8"))["publications"] if path.exists() else []
         )
         for obj in entry["objects"]:
-            year = obj["fields"].get("year")
+            year = summary(obj)["year"]
             if not year:
                 pair_stats[volume]["objects_without_year"] += 1
                 continue
@@ -247,11 +256,7 @@ def main() -> int:
                         "wiki": wiki_id,
                         "layer": layer,
                         "differ": sorted(f for f, o in result.items() if o == "differ"),
-                        "printFields": {
-                            k: v
-                            for k, v in obj["fields"].items()
-                            if v and k != "author"
-                        },
+                        "printFields": {k: v for k, v in summary(obj).items() if v},
                         "wikiFields": {
                             k: sorted(v) if isinstance(v, set) else v
                             for k, v in wiki.items()

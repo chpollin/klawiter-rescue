@@ -3,7 +3,7 @@ title: "Merged Klawiter bibliography: model and plan"
 status: draft
 language: en
 created: 2026-10-23
-updated: 2026-10-23
+updated: 2026-10-24
 related: [print-volumes, data, about, production-readiness]
 ---
 
@@ -24,13 +24,13 @@ Entry
 : A place in a print volume as the compiler set it, with volume, page, address where one exists, and unaltered text. The entry is the evidence every later statement points back to.
 
 Object
-: A publication, printing, article, letter holding or event that an entry describes. An entry describes none, one or several objects (a collected edition with its printings, a reprint list, the reviews of a review entry), and each object belongs to exactly one entry. Numbered sub-items such as "[5]." and volume lines such as "Vol. 2." are objects inside their entry.
+: A publication, printing, article, letter holding or event that an entry describes. An entry describes none, one or several objects (a collected edition with its printings, a reprint list, the reviews of a review entry), and each object belongs to exactly one entry. Numbered sub-items such as "[5]." and volume lines such as "Vol. 2." are objects inside their entry, and so is a further printing a label introduces ("FIE: 266p. 1950"). An object records how it relates to the object it follows (reprint, excerpt, translation, edition, revised version, review, item). Its fields follow the schema described in [Print volumes](print-volumes.md), Structured objects.
 
 Context
 : Some objects inherit data from outside their entry, the imprint from a collection header or the host volume from an address ("in Romans et Nouvelles [BA1 5]"). The object keeps a link to that source and may carry the inherited value, marked as inherited.
 
 Reference
-: A cross-reference entry ("**** … See A 167") is an entry without an object. Its addresses, like every address inside an entry, become edges of the reference network.
+: A cross-reference entry ("**** … See A 167") describes no publication. Since 2026-10-24 it is held as one object of type reference, so that every unit except a heading has a structured record; the concordance skips it. Its addresses, like every address inside an entry, become edges of the reference network.
 
 Group
 : The records of different sources that describe one publication, derived from confirmed identity claims. A group is what users, citations and Stefan Zweig Digital point to, so it receives a stable identifier that is never reused, with a recorded history when groups split or join. The member records stay unmerged; a group holds no values of its own beyond the identifier and its membership.
@@ -85,6 +85,8 @@ The next milestone, concordance measured, carries steps 5 to 7 far enough to jud
 - A report states what exists only in print, only in the wiki or in both, per volume and kind of publication.
 - The field comparison on silver pairs reports the agreement of wiki and print fields per field and volume; done 2026-10-23 for Addendum II, where it carries.
 - A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document. The sample was drawn and frozen on 2026-10-23 (`p09_human_sample`): per volume, entries with a field match, with only a title-year block and with no candidate, so that it also measures what both routes miss. The sheet holds only the print entry; the key with the proposals stays closed until the sheet is complete. It waits for the person who carries the subject checks.
+
+- Step 5 carried to all objects on 2026-10-24: every object of the three volumes is a structured record whose values are bound to their passage with a typed producer, validated against the schema and the invariants over all records, measured per field, type and volume, exported as validated JSON-LD with one provenance chain per value and shown in a local viewer ([Print volumes](print-volumes.md), Structured objects). The LLM stage for objects the rules cannot read waits for the operator's consent to its trial. Correctness of the fields is measured only by persons: the viewer records review decisions per value and object into a separate append-only layer, and `p13_review` measures precision and misses on a frozen review sample of entries that rule development had not seen. The same decision layer, with claims between records as a further kind of target, is the substrate step 9 needs.
 
 The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically. Because the field route matches against wiki fields, it depends on the parallel milestone below.
 

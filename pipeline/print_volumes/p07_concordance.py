@@ -45,6 +45,8 @@ import unicodedata
 from collections import Counter, defaultdict
 
 from _common import DERIVED_DIR, PROJECT_ROOT, VOLUMES, write_report
+from _fields import summary
+from _heldout import is_held_out
 from _lines import START_NUMBER
 
 RECORDS = DERIVED_DIR / "records"
@@ -216,15 +218,14 @@ def _title_key(title: str) -> list[str]:
     return words
 
 
-def _field_tokens(fields: dict, inherited: dict | None, text: str) -> set[str]:
+def _field_tokens(fields: dict, text: str) -> set[str]:
     """Second-field tokens: imprint and translator words, and the numbers of
     extent and page ranges ("396p.", "pp. 300-324"), which periodical and
     contribution entries carry instead of an imprint."""
     texts = [fields.get("publisher", ""), fields.get("place", "")]
     surname = _tokens(fields.get("translator") or "")[-1:]
     texts.extend(surname)
-    if inherited:
-        texts.append(inherited.get("imprint", ""))
+    texts.append(fields.get("inherited_imprint", ""))
     found = set()
     for value in texts:
         for token in _tokens(value or ""):
@@ -259,9 +260,9 @@ def _field_matches(
     A short single-word title ("Angst") is too common for lines but specific
     enough when the page title is exactly that word.
     """
-    fields = obj["fields"]
+    fields = summary(obj)
     # An edition line has no title of its own; it reads the work heading's.
-    title = fields.get("title") or (obj.get("inherited") or {}).get("title", "")
+    title = fields["title"]
     words = _title_key(title)
     year = fields.get("year")
     if not year:
@@ -298,7 +299,7 @@ def _field_matches(
         for page, i in year_lines
         if page in pages and phrase in " " + page_titles[page] + " "
     }
-    extra = _field_tokens(fields, obj.get("inherited"), obj["text"])
+    extra = _field_tokens(fields, obj["text"])
     found = []
     for page, i in sorted(in_lines | in_title):
         lines = latest_lines[page]
@@ -408,7 +409,9 @@ def main() -> int:
                     "state": "proposed",
                 }
             )
-        if aligned and aligned["score"] >= SILVER:
+        # Held-out records stay out of the silver statistics, which serve
+        # rule development as a diagnosis (_heldout.py).
+        if aligned and aligned["score"] >= SILVER and not is_held_out(entry):
             silver[volume]["pairs"] += 1
             kind = field_pages.get(aligned["page"])
             silver[volume]["found_by_title_year"] += kind is not None

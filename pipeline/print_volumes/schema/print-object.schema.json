@@ -1,0 +1,2320 @@
+{
+ "$defs": {
+  "Address": {
+   "additionalProperties": false,
+   "description": "A printed address group (\"F 33, 455\"), resolved to the records it names.",
+   "properties": {
+    "address": {
+     "$ref": "#/$defs/Text"
+    },
+    "targets": {
+     "items": {
+      "$ref": "#/$defs/Target"
+     },
+     "minItems": 1,
+     "title": "Targets",
+     "type": "array"
+    },
+    "locator": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "required": [
+    "address",
+    "targets"
+   ],
+   "title": "Address",
+   "type": "object"
+  },
+  "Citation": {
+   "additionalProperties": false,
+   "description": "Another publication the object cites: its host volume or a reviewed work.",
+   "properties": {
+    "title": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "address": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Address"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "persons": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Person"
+     },
+     "title": "Persons",
+     "type": "array"
+    },
+    "imprints": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Imprint"
+     },
+     "title": "Imprints",
+     "type": "array"
+    },
+    "extent": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Extent"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "series": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Series"
+     },
+     "title": "Series",
+     "type": "array"
+    },
+    "pages": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "locator": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "title": "Citation",
+   "type": "object",
+   "anyOf": [
+    {
+     "required": [
+      "title"
+     ],
+     "properties": {
+      "title": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "address"
+     ],
+     "properties": {
+      "address": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "ContentItem": {
+   "additionalProperties": false,
+   "properties": {
+    "title": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "original_title": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "address": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Address"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "persons": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Person"
+     },
+     "title": "Persons",
+     "type": "array"
+    },
+    "pages": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "notes": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Text"
+     },
+     "title": "Notes",
+     "type": "array"
+    }
+   },
+   "title": "ContentItem",
+   "type": "object",
+   "anyOf": [
+    {
+     "required": [
+      "title"
+     ],
+     "properties": {
+      "title": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "address"
+     ],
+     "properties": {
+      "address": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "EditionNote": {
+   "additionalProperties": false,
+   "properties": {
+    "kind": {
+     "enum": [
+      "printing",
+      "thousand",
+      "copies",
+      "licensed",
+      "reprint",
+      "edition"
+     ],
+     "title": "Kind",
+     "type": "string"
+    },
+    "text": {
+     "$ref": "#/$defs/Text"
+    },
+    "years": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Year"
+     },
+     "title": "Years",
+     "type": "array"
+    }
+   },
+   "required": [
+    "kind",
+    "text"
+   ],
+   "title": "EditionNote",
+   "type": "object"
+  },
+  "Event": {
+   "additionalProperties": false,
+   "properties": {
+    "date": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "year": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Year"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "place": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "medium": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "title": "Event",
+   "type": "object",
+   "anyOf": [
+    {
+     "required": [
+      "date"
+     ],
+     "properties": {
+      "date": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "year"
+     ],
+     "properties": {
+      "year": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "place"
+     ],
+     "properties": {
+      "place": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "medium"
+     ],
+     "properties": {
+      "medium": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "Extent": {
+   "additionalProperties": false,
+   "properties": {
+    "raw": {
+     "$ref": "#/$defs/Text"
+    },
+    "parts": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/ExtentPart"
+     },
+     "title": "Parts",
+     "type": "array"
+    },
+    "volumes": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "illustrations": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "required": [
+    "raw"
+   ],
+   "title": "Extent",
+   "type": "object"
+  },
+  "ExtentPart": {
+   "additionalProperties": false,
+   "properties": {
+    "kind": {
+     "enum": [
+      "roman",
+      "counted",
+      "uncounted"
+     ],
+     "title": "Kind",
+     "type": "string"
+    },
+    "text": {
+     "$ref": "#/$defs/Text"
+    }
+   },
+   "required": [
+    "kind",
+    "text"
+   ],
+   "title": "ExtentPart",
+   "type": "object"
+  },
+  "Flag": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "const": true,
+     "title": "Value",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "Flag",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Holding": {
+   "additionalProperties": false,
+   "properties": {
+    "repository": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "text": {
+     "$ref": "#/$defs/Text"
+    }
+   },
+   "required": [
+    "text"
+   ],
+   "title": "Holding",
+   "type": "object"
+  },
+  "Imprint": {
+   "additionalProperties": false,
+   "properties": {
+    "place": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "publisher": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "year": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Year"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "year_end": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Year"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "year_bracketed": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Flag"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "circa": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Flag"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "title": "Imprint",
+   "type": "object",
+   "anyOf": [
+    {
+     "required": [
+      "place"
+     ],
+     "properties": {
+      "place": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "publisher"
+     ],
+     "properties": {
+      "publisher": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "year"
+     ],
+     "properties": {
+      "year": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "Inherited": {
+   "additionalProperties": false,
+   "description": "Values from outside the object's own span; each names its record in \"from\".",
+   "properties": {
+    "title": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "subject": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "language": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Language"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "work_refs": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Address"
+     },
+     "title": "Work Refs",
+     "type": "array"
+    },
+    "persons": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Person"
+     },
+     "title": "Persons",
+     "type": "array"
+    },
+    "imprints": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Imprint"
+     },
+     "title": "Imprints",
+     "type": "array"
+    },
+    "series": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Series"
+     },
+     "title": "Series",
+     "type": "array"
+    }
+   },
+   "title": "Inherited",
+   "type": "object"
+  },
+  "Language": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "enum": [
+      "Albanian",
+      "Arabic",
+      "Armenian",
+      "Azerbaijani",
+      "Basque",
+      "Bengali",
+      "Bosnian",
+      "Bulgarian",
+      "Byelorussian",
+      "Catalan",
+      "Chinese",
+      "Croatian",
+      "Czech",
+      "Danish",
+      "Dutch",
+      "English",
+      "Esperanto",
+      "Estonian",
+      "Finnish",
+      "Flemish",
+      "French",
+      "Galician",
+      "Georgian",
+      "German",
+      "Greek",
+      "Hebrew",
+      "Hindi",
+      "Hungarian",
+      "Icelandic",
+      "Indonesian",
+      "Italian",
+      "Japanese",
+      "Kazakh",
+      "Korean",
+      "Latvian",
+      "Lithuanian",
+      "Macedonian",
+      "Malayalam",
+      "Marathi",
+      "Moldavian",
+      "Mongolian",
+      "Norwegian",
+      "Persian",
+      "Polish",
+      "Portuguese",
+      "Romanian",
+      "Russian",
+      "Serbian",
+      "Serbo-Croatian",
+      "Slovak",
+      "Slovenian",
+      "Spanish",
+      "Swedish",
+      "Tamil",
+      "Thai",
+      "Turkish",
+      "Ukrainian",
+      "Urdu",
+      "Uzbek",
+      "Vietnamese",
+      "Yiddish"
+     ],
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "Language",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "ObjectType": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "enum": [
+      "book_edition",
+      "translation",
+      "collection_contribution",
+      "periodical_contribution",
+      "review",
+      "event",
+      "holding",
+      "reference",
+      "collection"
+     ],
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "ObjectType",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Periodical": {
+   "additionalProperties": false,
+   "properties": {
+    "title": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "siglum": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "place": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "volume": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "issue": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "date": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "year": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Year"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "pages": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "title": "Periodical",
+   "type": "object",
+   "anyOf": [
+    {
+     "required": [
+      "title"
+     ],
+     "properties": {
+      "title": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "siglum"
+     ],
+     "properties": {
+      "siglum": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "Person": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "roles": {
+     "items": {
+      "$ref": "#/$defs/Role"
+     },
+     "minItems": 1,
+     "title": "Roles",
+     "type": "array"
+    }
+   },
+   "required": [
+    "roles"
+   ],
+   "title": "Person",
+   "type": "object"
+  },
+  "Reference": {
+   "additionalProperties": false,
+   "properties": {
+    "address": {
+     "$ref": "#/$defs/Text"
+    },
+    "targets": {
+     "items": {
+      "$ref": "#/$defs/Target"
+     },
+     "minItems": 1,
+     "title": "Targets",
+     "type": "array"
+    },
+    "locator": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "kind": {
+     "$ref": "#/$defs/ReferenceKind"
+    }
+   },
+   "required": [
+    "address",
+    "targets",
+    "kind"
+   ],
+   "title": "Reference",
+   "type": "object"
+  },
+  "ReferenceKind": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "enum": [
+      "see",
+      "reprint",
+      "contents",
+      "correction",
+      "continuation",
+      "excerpt",
+      "translation",
+      "review",
+      "concerning",
+      "based_on",
+      "index",
+      "related"
+     ],
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "ReferenceKind",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Relation": {
+   "additionalProperties": false,
+   "description": "How a further printing, excerpt or item relates to the object it follows.",
+   "properties": {
+    "kind": {
+     "$ref": "#/$defs/RelationKind"
+    },
+    "target": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Target"
+    }
+   },
+   "required": [
+    "kind"
+   ],
+   "title": "Relation",
+   "type": "object"
+  },
+  "RelationKind": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "enum": [
+      "reprint",
+      "excerpt",
+      "translation",
+      "edition",
+      "revised",
+      "review",
+      "item"
+     ],
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "RelationKind",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Role": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "enum": [
+      "author",
+      "translator",
+      "editor",
+      "introduction",
+      "afterword",
+      "illustrator",
+      "contributor"
+     ],
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "Role",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Series": {
+   "additionalProperties": false,
+   "properties": {
+    "title": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "number": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Text"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "persons": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Person"
+     },
+     "title": "Persons",
+     "type": "array"
+    }
+   },
+   "title": "Series",
+   "type": "object",
+   "anyOf": [
+    {
+     "required": [
+      "title"
+     ],
+     "properties": {
+      "title": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "number"
+     ],
+     "properties": {
+      "number": {
+       "not": {
+        "type": "null"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "Target": {
+   "additionalProperties": false,
+   "properties": {
+    "normalized": {
+     "pattern": "^[A-R](A[12])? \\d{1,4}[a-z]?$",
+     "title": "Normalized",
+     "type": "string"
+    },
+    "record": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Record"
+    }
+   },
+   "required": [
+    "normalized"
+   ],
+   "title": "Target",
+   "type": "object"
+  },
+  "Text": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "minLength": 1,
+     "title": "Value",
+     "type": "string"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "Text",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  "Year": {
+   "additionalProperties": false,
+   "properties": {
+    "span": {
+     "items": {
+      "minimum": 0,
+      "type": "integer"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "title": "Span",
+     "type": "array"
+    },
+    "by": {
+     "enum": [
+      "rule",
+      "llm",
+      "compiler",
+      "inherited"
+     ],
+     "title": "By",
+     "type": "string"
+    },
+    "rule": {
+     "minLength": 1,
+     "title": "Rule",
+     "type": "string"
+    },
+    "from": {
+     "anyOf": [
+      {
+       "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "From"
+    },
+    "state": {
+     "anyOf": [
+      {
+       "const": "proposed",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "State"
+    },
+    "value": {
+     "maximum": 2030,
+     "minimum": 1450,
+     "title": "Value",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "span",
+    "by",
+    "rule",
+    "value"
+   ],
+   "title": "Year",
+   "type": "object",
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "inherited"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "from"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "by": {
+        "const": "llm"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "state"
+      ],
+      "properties": {
+       "state": {
+        "const": "proposed"
+       }
+      }
+     },
+     "else": {
+      "anyOf": [
+       {
+        "not": {
+         "required": [
+          "state"
+         ]
+        }
+       },
+       {
+        "properties": {
+         "state": {
+          "type": "null"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ },
+ "$id": "https://github.com/chpollin/klawiter-rescue/pipeline/print_volumes/schema/print-object.schema.json",
+ "additionalProperties": false,
+ "properties": {
+  "id": {
+   "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+#\\d+$",
+   "title": "Id",
+   "type": "string"
+  },
+  "entry": {
+   "pattern": "^(I|A1|A2)/[A-R]/[^#\\s]+$",
+   "title": "Entry",
+   "type": "string"
+  },
+  "entry_sha256": {
+   "pattern": "^[0-9a-f]{64}$",
+   "title": "Entry Sha256",
+   "type": "string"
+  },
+  "volume": {
+   "enum": [
+    "I",
+    "A1",
+    "A2"
+   ],
+   "title": "Volume",
+   "type": "string"
+  },
+  "part": {
+   "pattern": "^[A-R]$",
+   "title": "Part",
+   "type": "string"
+  },
+  "address": {
+   "title": "Address",
+   "type": "string"
+  },
+  "span": {
+   "items": {
+    "minimum": 0,
+    "type": "integer"
+   },
+   "maxItems": 2,
+   "minItems": 2,
+   "title": "Span",
+   "type": "array"
+  },
+  "text": {
+   "minLength": 1,
+   "title": "Text",
+   "type": "string"
+  },
+  "types": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/ObjectType"
+   },
+   "title": "Types",
+   "type": "array"
+  },
+  "title": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Text"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "subtitle": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Text"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "original_title": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Text"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "variant_titles": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Text"
+   },
+   "title": "Variant Titles",
+   "type": "array"
+  },
+  "subject": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Text"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "language": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Language"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "work_refs": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Address"
+   },
+   "title": "Work Refs",
+   "type": "array"
+  },
+  "persons": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Person"
+   },
+   "title": "Persons",
+   "type": "array"
+  },
+  "imprints": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Imprint"
+   },
+   "title": "Imprints",
+   "type": "array"
+  },
+  "extent": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Extent"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "edition_notes": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/EditionNote"
+   },
+   "title": "Edition Notes",
+   "type": "array"
+  },
+  "series": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Series"
+   },
+   "title": "Series",
+   "type": "array"
+  },
+  "periodicals": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Periodical"
+   },
+   "title": "Periodicals",
+   "type": "array"
+  },
+  "hosts": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Citation"
+   },
+   "title": "Hosts",
+   "type": "array"
+  },
+  "reviewed": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Citation"
+   },
+   "title": "Reviewed",
+   "type": "array"
+  },
+  "event": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Event"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "contents": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/ContentItem"
+   },
+   "title": "Contents",
+   "type": "array"
+  },
+  "informants": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Text"
+   },
+   "title": "Informants",
+   "type": "array"
+  },
+  "holdings": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Holding"
+   },
+   "title": "Holdings",
+   "type": "array"
+  },
+  "notes": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Text"
+   },
+   "title": "Notes",
+   "type": "array"
+  },
+  "references": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Reference"
+   },
+   "title": "References",
+   "type": "array"
+  },
+  "relation": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Relation"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "inherited": {
+   "$ref": "#/$defs/Inherited",
+   "default": {
+    "title": null,
+    "subject": null,
+    "language": null,
+    "work_refs": [],
+    "persons": [],
+    "imprints": [],
+    "series": []
+   }
+  }
+ },
+ "required": [
+  "id",
+  "entry",
+  "entry_sha256",
+  "volume",
+  "part",
+  "address",
+  "span",
+  "text"
+ ],
+ "title": "Klawiter print object",
+ "type": "object",
+ "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

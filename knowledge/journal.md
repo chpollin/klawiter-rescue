@@ -12,7 +12,7 @@ language: en
 version: 0.5
 tags: [journal]
 created: 2026-03-29
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Journal
@@ -20,6 +20,18 @@ updated: 2026-10-23
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry.
 
 ---
+
+## 2026-10-24 — Print objects structured, validated, exported as JSON-LD and viewable
+
+**Round.** Implementation round on step 5 of the merge plan, with four fresh-context agent reviews (the schema before the readers were written, then three on method, code and data on random non-held-out samples), and the human review layer the operator asked for.
+
+**Changed.** Every object of the three print volumes is a structured record of `schema/print-object.schema.json` whose values carry their span, producer and rule, with inherited values apart ([Print volumes](print-volumes.md), Structured objects). Objects split at labels with a citation of their own, cross-reference units became objects of type reference, and several earlier rules were fixed at their root. `p10_validate.py` checks the schema, consistency and provenance invariants and, after the second review, shape checks written apart from the readers; known exceptions are listed by identifier and reason. `p12_jsonld.py` exports all objects as JSON-LD with one provenance node per value and validates every chunk on terms, RDF round trip and SHACL including an exact-quotation constraint; a local viewer shows every value with its chain to passage, record and file. The LLM stage for objects without a type is built, with a frozen trial and a keyed cache, and has not been run. The shape checks now reach host titles and pages, which showed that titles moved into hosts had left their reach; one normalisation of host titles (section code to address, a leading author to a person) and the page patterns fixed the classes found there. The viewer records human review decisions through a localhost server into an append-only log, `p13_review.py` measures field correctness on a frozen review sample of unseen entries, and the export carries every decision in force as a provenance activity ([Print volumes](print-volumes.md), Structured objects).
+
+**Found.** The second review showed that the first validator could not fail on a verbatim value from the wrong passage and found recurring wrong-value classes (translation typed from language alone in secondary literature, heads, sigla, dealers and dates read as titles, sub-edition variants pooled, host credits unread, bracketed years read as item numbers). Each class was fixed or listed. The object split answers error classes documented for the second benchmark, which therefore measures it as development. The concordance recall on silver pairs fell in Addendum II, partly because old matches rested on years that are no years of publication and partly by real losses that stay open. The fourth review read a stratified random sample against the entry texts and found about twenty further classes of values that are verbatim and in scope but wrong in their context, which no invariant catches: bracketed authors and credit phrases as original titles of contents items, contents items running past the next volume statement, holdings cut at a month abbreviation, cited authors read as subjects in the letters, event dates from periodicals, life dates or page numbers, imprints swapped or read from notes, host titles in the forms "Initial. Surname. Title", without their year or with the place of a short-title reference, letter-prefixed page and series numbers read as addresses, shared surnames split, unrecognised language labels with a bracket note, and smaller ones; it also found variants of fixed classes (further edition statements, section codes in periodical titles). They are open.
+
+**Decided.** The operator: schema validity is no correctness, so the verification step belongs in the interface; done as the review layer of the viewer. The live LLM trial waits for the operator's consent.
+
+**Open.** The classes of the fourth review. The operator sketched an adjudication board with source cards (wiki and print) on the left, claim cards linked to their sources in the middle and the curated, authority-linked entry on the right, with the process replayable step by step; it maps onto records, claims and groups of [Merged bibliography](print-wiki-merge.md) step 9 and is not decided.
 
 ## 2026-10-23 — Review round on data, interface and tests; plan extended
 

@@ -38,6 +38,7 @@ import sys
 from collections import defaultdict
 
 from _common import DERIVED_DIR, VOLUMES
+from _fields import summary
 
 CLAIMS = DERIVED_DIR / "claims" / "concordance.jsonl"
 RECORDS = DERIVED_DIR / "records"
@@ -81,7 +82,7 @@ def main() -> int:
             for record in map(json.loads, source):
                 if record["kind"] != "entry" or not record["address"]:
                     continue
-                if not any(o["fields"].get("year") for o in record["objects"]):
+                if not any(summary(o)["year"] for o in record["objects"]):
                     continue
                 routes = proposals.get(record["id"], {})
                 stratum = (
