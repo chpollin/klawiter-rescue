@@ -6,7 +6,9 @@ them. Items under "Contents:" are contained works, never objects. Items under
 an object label that opens their list (FIE, Rep:, Reprinted in, Printed in,
 Editions/Reprints, Excerpts, Translations, REV:, "in [1].") and the unlabelled
 items of correspondence (K) and reviews (M) are objects; an inline label
-("REP: Frankfurter Anthologie [LA1 350]") governs no later item. An
+("REP: Frankfurter Anthologie [LA1 350]") governs no later item. Items under
+a manuscript label ("Manuscript versions:", "Typescript:") are objects that
+name where a version is kept; they relate as items, not as reprints. An
 unlabelled item elsewhere counts as an object when it opens with a section
 code or carries a year, the two features that separate reprint items from
 contents items.
@@ -42,13 +44,33 @@ CONTENTS = re.compile(
     r"\bContents(?:\s?\[[^\]]{1,40}\])?\s?[:.]|\bCon-\s*tents\s?:|\bContains\s?:"
     r"|\bZweig references\s?:|\bLetters, [^:]{3,60}:"
 )
+# Manuscript and typescript versions are holdings, no printings: under
+# "Manuscript versions: [2]. ..." the items name where a version is kept.
+MANUSCRIPT_LABEL = re.compile(
+    r"\b(?:Manuscripts?|Typescripts?)(?: versions?| cop(?:y|ies))?\s?:"
+)
 # "in [1]. ... [2]. ..." governs the whole list that follows "in".
 OBJECT_LABEL = re.compile(
     rf"\b(?:FIE|Rep|REP|EXC|Excerpts?|EXCERPTS|{REPRINTED}|[Pp]rinted in|"
     r"(?:Non-)?Fischer Editions/Reprints|Editions/Reprints|TRANSLATIONS?|"
-    r"Translations?|REV|Reviews?)\s?:"
+    r"Translations?|REV|Reviews?|"
+    r"(?:Manuscripts?|Typescripts?)(?: versions?| cop(?:y|ies))?)\s?:"
     r"|\bin(?=\s*\[\d{1,3}[a-z]?\]\s?\.)"
 )
+
+
+def manuscript_item(text: str, start: int) -> bool:
+    """An item governed by a manuscript label, chosen as object_parts chooses
+    the label that governs an item: the last one before it that opens a list."""
+    if not ITEM.match(text, start):
+        return False
+    governing = None
+    for found in OBJECT_LABEL.finditer(text, 0, start):
+        if ITEM.match(text[found.end() :].lstrip()):
+            governing = found
+    return bool(governing and MANUSCRIPT_LABEL.match(text, governing.start()))
+
+
 # Labels that introduce another publication; the group name is its relation.
 SPLIT_LABEL = re.compile(
     rf"\b(?:(?P<reprint>Rep|REP|{REPRINTED})\s?:"

@@ -30,10 +30,17 @@ in knowledge/print-volumes.md (Entry anatomy):
 import re
 
 from _addresses import REFERENCE, SUFFIX_TO_VOLUME, parse_items
-from _common import MONTH, REPRINTED
+from _common import MONTH, REPRINTED, SECTIONS
+from _objects import manuscript_item
 from _schema import LANGUAGE_VARIANTS, LANGUAGES, iter_values
 
 LANGUAGE_BY_FOLD = {name.lower(): name for name in LANGUAGES} | LANGUAGE_VARIANTS
+# Highest entry number per section, from the volumes' tables of contents.
+TOC_MAX = {
+    volume: {k: v for k, v in spec["toc_max"].items() if not k.startswith("_")}
+    for volume, spec in SECTIONS["volumes"].items()
+    if spec.get("toc_max")
+}
 NUMBER_PREFIX = re.compile(r"^(?:[A-R](?:A[12])? ?)?\d{1,4}[a-z]?\s+")
 ITEM_MARK = re.compile(r"\[(?:\d{1,3}[a-z]?|X|[a-z]|-)\]\s?\.\s*")
 STUB_MARK = re.compile(r"\*{1,5}\s+")
@@ -66,10 +73,50 @@ INITIAL_AUTHOR = re.compile(
     r"(?P<name>(?:[A-ZÀ-Þ][a-z]?\.\s?){1,3}[A-ZÀ-ÞĀ-ž][\w'’-]+(?:[ -][A-ZÀ-ÞĀ-ž][\w'’-]+)?)"
     r"(?:\.\s+(?=[A-ZÀ-ÞĀ-ž\"“„‘(\[])|$)"
 )
+# "Forename Surname", "Forename F. von Surname": a name forename first, no
+# article and not Zweig's, whose name titles the studies about him.
+_FORE = r"[A-ZÀ-ÞĀ-ž][a-zß-ÿā-ž'’]+(?:-[A-ZÀ-ÞĀ-ž]?[a-zß-ÿā-ž'’]+)?"
+FORENAME = re.compile(
+    r"(?!(?:Der|Die|Das|Ein|Eine|The|A|An|Le|La|Les|Il|Lo|El|Los|Las|Un|Une)\s|Stefan Zweig\b)"
+    rf"{_FORE}(?:\s(?:{_FORE}|[A-Z][a-z]?\.)){{0,2}}\s(?:(?:von|van|de|der|da|di|du)\s){{0,2}}{_FORE}"
+)
+FORENAME_AUTHORS = re.compile(
+    rf"{FORENAME.pattern}(?:(?:,\s(?:and\s)?|\s&\s|\sand\s){FORENAME.pattern})*"
+)
+# What follows a cited title sentence: an imprint ("Place: Publisher, 1964",
+# "(Place): ..."), a credit, a volume or an extent or edition in figures.
+IMPRINT_AHEAD = re.compile(
+    r"\(?[A-ZÀ-ÞĀ-ž][\w'’/ .-]{1,40}\)?: [^.:]{2,80}, [\[(]?(?:1[5-9]|20)\d\d"
+)
+CITATION_AFTER_TITLE = re.compile(
+    rf"{IMPRINT_AHEAD.pattern}|(?:Eds?|Comp|Trl?s?|Sel|Intro|Frw|Aftw|Illus|Vol|Bd)\.\s|\d"
+)
+# A dot after a number that follows an article or preposition is an ordinal
+# ("zum 50. Todestag", "des 19. Jahrhunderts"), and one before a month a
+# date's ("28. November"); neither ends a sentence.
+ORDINAL_BEFORE = re.compile(
+    r"\b(?:des|der|dem|den|das|die|zum|zur|am|im|vom|bis|ab|seit|um|ins|beim)\s\d{1,3}$"
+)
+# A sentence after the title that names an issue or the book's form, no
+# subtitle: "No", "Jg", "Braille edition", "Library binding".
+FORMAT_NOTE = re.compile(
+    r"(?:No|Nr|Nos|Jg|Vol|Bd|Heft)\.?|[\w’' .-]{0,30}\b(?:[Ee]dition|binding)"
+)
+EDITOR_GLOSS = re.compile(r"\s?\[(?P<role>Eds?|Editors?)\.?\]\.?\s+")
+VOLUME_WORD = re.compile(r"(?:Band|Bd\.|Vol\.|Teil|Heft|Tome|Book|Buch)\s?[\dIVXL]")
+# An imprint place before its colon. It holds a dot only after an
+# abbreviation of one or two letters ("St. Gallen", "Frankfurt a. M."), so
+# that "Title. Subtitle. Place: " ends the title before the place, not
+# before the subtitle.
+IMPRINT_PLACE_RUN = (
+    r"[A-ZÀ-ÞĀ-ž](?:[\w'’ /-]|(?:(?<=\b[A-Za-z])|(?<=\b[A-Z][a-z]))\.){1,40}: "
+)
 # Where a host title read after its author ends: an imprint, an editor, a
-# volume, an extent, a page locator or a bracket.
+# volume, an extent, a page locator or a bracket. The dot of an initial ends
+# no title ("E. M. Surname: Title").
 HOST_TITLE_END = re.compile(
-    r"\.\s+(?=[A-ZÀ-ÞĀ-ž][\w'’ /.-]{1,40}: |Eds?\.|Vol\.|Bd\.|\d|\(|\[)"
+    rf"(?<!\b[A-Z])\.\s+(?={IMPRINT_PLACE_RUN}"
+    r"|Eds?\.|Vol\.|Bd\.|\d|\(|\[)"
     r"|,\s?(?:pp?\.|Vol\.|S\.)|\s\[|\.?$"
 )
 YEAR_OF_TITLE = re.compile(
@@ -98,7 +145,8 @@ ZONE_END = re.compile(
     r"\b(?:Rep|REP|REV(?: VERSION)?|Rev\. version|EXC(?:ERPTS?)?|Excerpts?|"
     r"Contents|Con-\s?tents|Contains|TRANSLATIONS?|Translations|FIE|"
     rf"Sub\. (?:eds?|imprs?)\.(?:/imprs?\.)?|{REPRINTED}|Further editions|"
-    r"(?:Non-)?Fischer Editions/Reprints|Book editions?|Reviews?|Re-?\s?view of|First printing)\s?:"
+    r"(?:Non-)?Fischer Editions/Reprints|Book editions?|Reviews?|Re-?\s?view of|First printing|"
+    r"(?:Manuscripts?|Typescripts?)(?: versions?| cop(?:y|ies))?)\s?:"
     # "See-Verlag" is a publisher.
     r"|\bSee\b(?!-)|\bReprinted\b|\bSub\. (?:eds?|imprs?)\.(?:/imprs?\.)?"
 )
@@ -388,8 +436,21 @@ HOST_TITLE = re.compile(
     r"\s*(?:\.\s)?(?:in\s+|,\s+)(?P<title>(?![A-R](?:A[12])? \d)(?![A-ZÄÖÜÉ]{3,9}, )"
     r"[A-ZÀ-ÞĀ-ž„“\"][^\[\]]{1,160}?)"
     r"(?=\. Ed\.|\. Edited|\. Hrsg|\. [A-Z][^.:]{1,40}: |,? (?:Vol\.|pp?\.|No\.)|"
-    r"\s+\[[A-R](?:A[12])? ?\d|\s+\[(?:1[5-9]|20)\d\d\]|\.?$)"
+    r"\s+\[[A-R](?:A[12])? ?\d|\s+\[(?:1[5-9]|20)\d\d\]|\.?$"
+    # "in Forename Surname [Ed.]. Title. Place: ..." names the host's editor
+    # first (_split_author).
+    r"|\s?\[(?:Eds?|Editors?)\.?\]\.?\s"
+    # A translated host glosses its title in brackets ("Title [German
+    # title]. Translated by ... 429p. Place: Publisher, 2004") before its
+    # credits, extent or imprint.
+    r"|\s\[(?!(?:Eds?|Editors?|Hrsg|Comp|Trl?s?)\b)[^\[\]\d]{2,160}\]\.\s+"
+    r"(?=\d+(?:/\(\d+\))?p\.|(?:Edited|Translated|Compiled|"
+    rf"Selected|Introduction|Foreword|Afterword|Annotations?)\b|{ABBREVIATED}|"
+    r"\(?[A-ZÀ-ÞĀ-ž][\w'’/ .-]{1,40}\)?: [^.:]{2,80}, [\[(]?(?:1[5-9]|20)\d\d))"
 )
+# "“Essay” in LA2 Title 1942 [12], pp. 116-117": a contribution cites its
+# host as a title reference of Addendum II.
+IN_LEAD = re.compile(r"\s*(?:\.\s)?in\s+")
 HOST_ADDRESS = re.compile(
     r"(?<![\w-])(?P<address>[A-R](?:A[12])? \d{1,4}[a-z]?)"
     r"(?=(?:,? (?:Vol\. [\dIVX]+|\[[^\]]{1,20}\]))?, pp?\.|, p\.)"
@@ -415,8 +476,20 @@ HOLDING_LETTERS = re.compile(
     r"(?:\b(?:Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec|ca|n\.\s?d)\.|\.(?=\d)"
     r"|\[[^\[\]]{1,40}\](?=,)|[^.;\[])*"
 )
+# A letters item that opens with a name and its place in parentheses names
+# the source of the letters, an archive, library or dealer: "[1]. Archive,
+# Publisher (Place),", "[2]. Dealer (Place), Katalog 5, ...". The name ends
+# in a letter, so a bracketed imprint place after a sentence does not count.
+LETTER_SOURCE = re.compile(
+    r"[A-ZÀ-ÞĀ-ž][^()\[\]\d:;\"“„]{0,118}[^\W\d_] \([A-ZÀ-ÞĀ-ž][^()\[\]\d]{1,40}\)"
+    r"(?=[,.:]|\s*$)"
+)
+# After the source, a title with an address in brackets cites a publication.
+CITED_AFTER_SOURCE = re.compile(r",\s+(?=[^\[\],]{2,120}?\s\[[A-R](?:A[12])? ?\d)")
+# The repository runs to the end of its sentence or to its shelfmark.
 LOCATED = re.compile(
-    r"\b(?:is|are) located (?:in|at) (?:the )?(?P<repo>[A-Z][\w ,.-]{1,80}?)(?=[.\[]|$)"
+    r"\b(?:is|are) located (?:in|at) (?:the )?(?P<repo>[A-Z][\w ,.-]{1,80}?)"
+    r"(?=\.(?:\s|$)|\s?\[|\sunder the (?:number|shelfmark|signature)\b|$)"
 )
 MANUSCRIPT = re.compile(r"\b(?:[Tt]ypescript|[Mm]anuscript|Typeschrift|proof sheets)\b")
 # A reprint item of Addendum II cites its collection by section code, title,
@@ -703,6 +776,10 @@ class Reader:
             self._normalize_cited(periodical, author=False, address=False)
         for host in self.out.get("hosts", []):
             self._normalize_cited(host)
+        for reviewed in self.out.get("reviewed", []):
+            # "Review of: Surname, Forename. Title" names the reviewed
+            # work's author before its title.
+            self._normalize_cited(reviewed, address=False)
 
     def _split_code(self, a: int, b: int) -> tuple[dict | None, int, bool]:
         """A cited title led by a section code ("LA2 Title", "AA2 15 Title")
@@ -718,34 +795,104 @@ class Reader:
             address = refs[0] if refs else None
         return address, m.end(), True
 
-    def _split_author(self, a: int, b: int) -> tuple[dict | None, int, int]:
-        """A cited title led by its author ("Surname, Forename. Title", "F.
-        Surname. Title", or the name alone with the title in the next
-        sentence). Returns (author, title start, title end)."""
+    def _split_author(self, a: int, b: int) -> tuple[list[dict], int, int]:
+        """A cited title led by its authors ("Surname, Forename. Title", "F.
+        Surname. Title", or the names alone with the title in the next
+        sentence). Returns (authors, title start, title end)."""
         text = self.text
         head = author_head(text[a:b]) or INITIAL_AUTHOR.match(text[a:b])
-        if not head:
-            return None, a, b
-        name = text_value(
-            text, a + head.start("name"), a + head.end("name"), "p03.head-author"
-        )
-        if not name:
-            return None, a, b
-        c, d = a + head.end(), b
-        if head.end() >= b - a:
-            # '"Essay", F. Surname. Title: Subtitle. Place: ...': the title is
-            # the sentence after the name.
-            after = re.match(r"\.\s+", text[a + head.end("name") : self.zone[1]])
-            if not after:
-                return None, a, b
-            c = a + head.end("name") + after.end()
+        spans = [(a + head.start("name"), a + head.end("name"))] if head else []
+        end = a + head.end() if head else a
+        gloss = None if head else EDITOR_GLOSS.match(text, b, self.zone[1])
+        if gloss and FORENAME_AUTHORS.fullmatch(text, a, b):
+            # "Forename Surname [Ed.]. Title. Place: ..." names the editors,
+            # then the title.
+            c = gloss.end()
             stop = HOST_TITLE_END.search(text, c, self.zone[1])
             d = self._credit_cut(c, stop.start() if stop else self.zone[1])
-        author = {
-            "name": name,
-            "roles": [value("author", *name["span"], "p03.head-author")],
-        }
-        return author, c, d
+            role = gloss.span("role")
+            editors = []
+            for m in FORENAME.finditer(text, a, b):
+                name = text_value(text, *m.span(), "p03.host-editor")
+                if name:
+                    editors.append(
+                        {
+                            "name": name,
+                            "roles": [value("editor", *role, "p03.host-editor")],
+                        }
+                    )
+            return (editors, c, d) if editors and d > c else ([], a, b)
+        if not head:
+            # "Forename Surname, Forename Surname. Title: Subtitle. Place:
+            # ...": names forename first stand alone where the title was cut
+            # before a sentence with a colon, which the cut took for an
+            # imprint. Without that colon "Two Words. Subtitle" is a title.
+            names = FORENAME_AUTHORS.fullmatch(text, a, b)
+            after = re.compile(r"\.\s+").match(text, b, self.zone[1])
+            if not names or not after:
+                return [], a, b
+            at = after.end()
+            stop = HOST_TITLE_END.search(text, at, self.zone[1])
+            if (
+                not stop
+                or not re.match(r"\.\s", stop.group())
+                or ": " not in text[at : stop.start()]
+                # The title sentence ends before an imprint, a credit or an
+                # edition; "Two Words. Band 4: Part" is a title's volume.
+                or not (
+                    CITATION_AFTER_TITLE.match(text, stop.end(), self.zone[1])
+                    or CREDIT.match(text, stop.end(), self.zone[1])
+                )
+                or VOLUME_WORD.match(text, at, self.zone[1])
+                or IMPRINT_AHEAD.match(text, at, self.zone[1])
+                or CREDIT.match(text, at, self.zone[1])
+                or CREDIT_SENTENCE.match(text, at, self.zone[1])
+                or any(p.match(text, at, self.zone[1]) for _, p in EDITION_NOTES)
+            ):
+                return [], a, b
+            spans = [m.span() for m in FORENAME.finditer(text, a, b)]
+            end = b
+        persons = []
+        for s, e in spans:
+            name = text_value(text, s, e, "p03.head-author")
+            if name:
+                persons.append(
+                    {
+                        "name": name,
+                        "roles": [value("author", *name["span"], "p03.head-author")],
+                    }
+                )
+        if not persons:
+            return [], a, b
+        c, d = end, b
+        if end >= b:
+            # '"Essay", F. Surname. Title: Subtitle. Place: ...': the title is
+            # the sentence after the name.
+            after = re.match(r"\.\s+", text[spans[-1][1] : self.zone[1]])
+            if not after:
+                return [], a, b
+            c = spans[-1][1] + after.end()
+            stop = HOST_TITLE_END.search(text, c, self.zone[1])
+            d = self._credit_cut(c, stop.start() if stop else self.zone[1])
+        return persons, c, d
+
+    def _unquoted(self, c: int, b: int, rule: str) -> dict | None:
+        """A cited title text[c:b]; "LA2 “Title . . .”": quotes that enclose
+        the whole title are no part of it, its own final dots are."""
+        text = self.text
+        if (
+            c < b - 1
+            and text[c] in QUOTE_OPEN
+            and text[b - 1] in '”"“’'
+            and not re.search(r'[”"]', text[c + 1 : b - 1])
+        ):
+            c, b = c + 1, b - 1
+            while c < b and text[c].isspace():
+                c += 1
+            while b > c and text[b - 1].isspace():
+                b -= 1
+            return value(text[c:b], c, b, rule) if c < b else None
+        return text_value(text, c, b, rule)
 
     def _normalize_cited(
         self, node: dict, author: bool = True, address: bool = True
@@ -760,23 +907,7 @@ class Reader:
         if coded:
             if address and found and not node.get("address"):
                 node["address"] = found
-            quoted = (
-                c < b - 1
-                and text[c] in QUOTE_OPEN
-                and text[b - 1] in '”"“’'
-                and not re.search(r'[”"]', text[c + 1 : b - 1])
-            )
-            if quoted:
-                # "LA2 “Title . . .”": the quotes enclose the whole title, whose
-                # own final dots stay.
-                c, b = c + 1, b - 1
-                while c < b and text[c].isspace():
-                    c += 1
-                while b > c and text[b - 1].isspace():
-                    b -= 1
-                rest = value(text[c:b], c, b, rule) if c < b else None
-            else:
-                rest = text_value(text, c, b, rule)
+            rest = self._unquoted(c, b, rule)
             if not rest:
                 if address and node.get("address"):
                     node.pop("title")
@@ -785,10 +916,10 @@ class Reader:
             a, b = title["span"]
         if not author:
             return
-        person, c, d = self._split_author(a, b)
-        rest = text_value(text, c, d, rule) if person else None
+        persons, c, d = self._split_author(a, b)
+        rest = text_value(text, c, d, rule) if persons else None
         if rest:
-            node["persons"] = [person, *node.get("persons", [])]
+            node["persons"] = [*persons, *node.get("persons", [])]
             node["title"] = rest
 
     def _item_as_host(self) -> None:
@@ -829,11 +960,18 @@ class Reader:
             a = title["span"][0]
             b = (o.get("subtitle") or title)["span"][1]
             host["title"] = text_value(text, a, b, title["rule"])
-            o.pop("title")
-            o.pop("subtitle", None)
         numbered = code and re.search(r"\s\d", code.group("code"))
         if not numbered and len(o.get("work_refs", [])) == 1:
-            host["address"] = o.pop("work_refs")[0]
+            host["address"] = o["work_refs"][0]
+        if not (host.get("title") or host.get("address")):
+            # A host that names no title and no address cannot stand; the
+            # imprint stays the object's.
+            return
+        if title:
+            o.pop("title")
+            o.pop("subtitle", None)
+        if host.get("address"):
+            o.pop("work_refs")
         for key in ("imprints", "extent", "series"):
             if o.get(key):
                 host[key] = o.pop(key)
@@ -1000,6 +1138,10 @@ class Reader:
         if not m and role == "subject":
             # "STENDHAL / ..." files an essay under a one-word subject.
             m = SUBJECT_SLASH.match(local)
+        if m and re.search(r"\([A-R](?:A[12])? \d", m.group("name")):
+            # "Short Title (I 126), Vol. 3, p. 631" cites a volume by its
+            # address; a name holds no address.
+            return pos
         if not m or not role:
             return pos
         a, b = pos + m.start("name"), pos + m.end("name")
@@ -1076,13 +1218,31 @@ class Reader:
             self.ctx["periodical_start"] = True
             return pos
         item = text[self.start] == "["
-        if self.entry["part"] == "K" and (
+        source = (
+            LETTER_SOURCE.match(text, pos, self.end)
+            if self.entry["part"] == "K" and item
+            else None
+        )
+        cited = source and CITED_AFTER_SOURCE.match(text, source.end(), self.end)
+        if cited:
+            # "[1]. Library (Place), Catalogue Title [LA1 10], p. 83, ..."
+            # names the source, then the publication that prints the letter.
+            pos = cited.end()
+        elif source:
+            # "[1]. Archive (Place)," before the items it holds, or "[2].
+            # Dealer (Place), Katalog 5, ...": the source is no title.
+            return pos
+        elif self.entry["part"] == "K" and (
             HOLDING_REPOSITORY.match(text, pos, zone_end)
             or (item and HOLDING_LETTERS.search(text, pos, self.end))
         ):
             # "SIGL: Zweig to X, ..." names a repository, "[1]. Dealer
             # (Place), Katalog ..., Zweig to X, 1 letter" its source; neither
             # is a title.
+            return pos
+        if manuscript_item(text, self.start):
+            # "Manuscript versions: [2]. Library, Place, Shelfmark" names
+            # where a version is kept, no title.
             return pos
         if self.entry["part"] == "N" and item:
             # A production item opens with its venue and date ("[1].
@@ -1200,13 +1360,26 @@ class Reader:
             return pos
         end = self._title_end(pos, zone_end)
         segment = text[pos:end]
-        split = re.search(r": (?=\S)", segment) or re.search(
-            r"(?<![A-Z])(?<!\b[A-Z][a-z])(?<!\bSt)(?<!\bDr)\. (?=[A-ZÀ-ÞĀ-ž])", segment
+        split = re.search(r": (?=\S)", segment) or next(
+            (
+                m
+                for m in re.finditer(
+                    r"(?<![A-Z])(?<!\b[A-Z][a-z])(?<!\bSt)(?<!\bDr)\. (?=[A-ZÀ-ÞĀ-ž])",
+                    segment,
+                )
+                if not ORDINAL_BEFORE.search(segment, 0, m.start())
+                and not re.match(MONTH_WORD, segment[m.end() :])
+            ),
+            None,
         )
         if split:
             title = text_value(text, pos, pos + split.start(), "p03.title")
             subtitle = text_value(text, pos + split.end(), end, "p03.subtitle")
-            if subtitle and re.search(r"[^\W\d_]", subtitle["value"]):
+            if (
+                subtitle
+                and re.search(r"[^\W\d_]", subtitle["value"])
+                and not FORMAT_NOTE.fullmatch(subtitle["value"])
+            ):
                 self.out["subtitle"] = subtitle
         else:
             title = text_value(text, pos, end, "p03.title")
@@ -1229,7 +1402,7 @@ class Reader:
             # Joined lines leave double spaces ("Title.  97p."), hence \s+.
             re.compile(
                 rf"\.\s+(?={ABBREVIATED}|[A-Z][a-z]+(?: [a-z]+){{0,6}} by\b|By\s|"
-                r"\(?\d|[ivxlc]+/|Vol|In |in |\[|[A-Z][\w.'’/ -]{1,40}: |"
+                rf"\(?\d|[ivxlc]+/|Vol|(?:Bd|Bde|Band)\.?\s[\dIVXL]|In |in |\[|{IMPRINT_PLACE_RUN}|"
                 r"(?:Trl|Tr|Translator)\b)"
             ),
             re.compile(r"\.\s+[^\s]*\d"),
@@ -1240,7 +1413,7 @@ class Reader:
                 r",\s+(?=(?:[A-R] \d{1,4}[a-z]?,\s+)?(?:pp?\.|S\.)\s*[\divxlc(\[])"
             ),
             re.compile(
-                r"[,.]\s(?=[A-Z][\w.'’/ -]{1,40}: [^,]{2,80}, [\[(]?(?:1[5-9]|20)\d\d)"
+                rf"[,.]\s(?={IMPRINT_PLACE_RUN}[^,]{{2,80}}, [\[(]?(?:1[5-9]|20)\d\d)"
             ),
         ):
             m = pattern.search(text, pos, zone_end)
@@ -1499,12 +1672,15 @@ class Reader:
     def _credit_cut(self, a: int, b: int) -> int:
         """End of a cited title before the first sentence that opens with a
         credit, an edition statement, an extent or a bracketed imprint."""
+        # The sentence is matched to the zone's end, since the cut b may fall
+        # before the dot that closes its credit ("Title. New ed. Place: ...").
+        end = max(b, self.zone[1])
         for m in re.finditer(r"[.?!]\s+", self.text[a:b]):
             at = a + m.end()
             if (
-                CREDIT.match(self.text, at, b)
-                or CREDIT_SENTENCE.match(self.text, at, b)
-                or any(p.match(self.text, at, b) for _, p in EDITION_NOTES)
+                CREDIT.match(self.text, at, end)
+                or CREDIT_SENTENCE.match(self.text, at, end)
+                or any(p.match(self.text, at, end) for _, p in EDITION_NOTES)
             ):
                 # A question or exclamation mark belongs to the title.
                 return a + m.start() + (self.text[a + m.start()] != ".")
@@ -1515,26 +1691,26 @@ class Reader:
         if self.out.get("periodicals"):
             return None
         text, hosts, starts = self.text, [], []
-        ref = self.ctx.get("title_ref")
+        ref = self.ctx.get("title_ref") or self._title_ref_after_in()
         if ref:
             t0, t1 = ref.start("title"), ref.end("title")
             host = {}
             # "Surname, F. “Essay” in Host [1992], ...": the essay is the
             # object, its author the object's. A host's own author ("Surname,
             # Forename. Title 1967 [9]") is read by _normalize_cited.
-            author, c, _ = self._split_author(t0, t1)
+            authors, c, _ = self._split_author(t0, t1)
             inner = (
                 re.compile(r"[“\"„](?P<q>[^”\"“]{2,200})[”\"]\s+in\s+").match(
                     text, c, t1
                 )
-                if author
+                if authors
                 else None
             )
             if inner:
                 self.out["title"] = text_value(
                     text, inner.start("q"), inner.end("q"), "p03.title-reference"
                 )
-                self.out.setdefault("persons", []).append(author)
+                self.out.setdefault("persons", []).extend(authors)
                 t0 = inner.end()
             # "Title Place 1998 [3]" gives the place before the year; a place
             # is a word the volumes print as an imprint place.
@@ -1556,7 +1732,7 @@ class Reader:
                 )
                 if place:
                     t1 = t0 + tail.start("place")
-            host["title"] = text_value(text, t0, t1, "p03.title-reference")
+            host["title"] = self._unquoted(t0, t1, "p03.title-reference")
             code = ref.group("code")
             if code and re.search(r"\d", code):
                 refs = self.addresses(ref.start("code"), ref.end("code"))
@@ -1576,6 +1752,12 @@ class Reader:
                         )
                     }
                 ]
+                close = re.compile(r"(?:/\s?\d{2,4})?[\])]").match(text, ref.end(year))
+                if year == "byear" and close:
+                    # "Title [1992], No. 51": the year stands in brackets.
+                    host["imprints"][0]["year_bracketed"] = value(
+                        True, ref.start(year) - 1, close.end(), "p03.title-reference"
+                    )
             if place and host.get("title"):
                 host.setdefault("imprints", [{}])[0]["place"] = place
             number = "no" if ref.group("no") else "no2" if ref.group("no2") else None
@@ -1671,6 +1853,36 @@ class Reader:
                 )
         self.out["hosts"] = hosts
         return min(starts)
+
+    def _title_ref_after_in(self) -> re.Match | None:
+        """A host cited after "in" in the title-reference form of Addendum
+        II, with a section code or a contents number: "“Essay” in LA2 Title
+        1942 [12], pp. 116-117", "in GA2 Title: Subtitle 2000 [1], pp. 7-24"."""
+        if self.entry["volume"] != "A2" or not self.out.get("title"):
+            return None
+        lead = IN_LEAD.match(self.text, getattr(self, "after_title", self.zone[0]))
+        if not lead or lead.end() > self.zone[1]:
+            return None
+        ref = TITLE_REF.match(self.text, lead.end(), self.end)
+        # A bracket in a number's place may name a periodical's place
+        # ("in Journal [Place], pp. 31-40"), so the number holds a digit.
+        number = ref and (re.match(r"\d", ref.group("no") or "") or ref.group("no2"))
+        if not ref or not (ref.group("code") or number):
+            return None
+        if ref.group("year") and self.text.startswith("/", ref.end("year")):
+            # "in SZ Briefe 1914/19, No. 4": a span of years names the
+            # volume, no year of printing.
+            return None
+        title = ref.group("title")
+        if re.search(
+            rf"{ABBREVIATED}|\b(?:Edited|Translated)\b|\.\s[A-ZÀ-ÞĀ-ž(][\w'’/() -]{{1,40}}: ",
+            title,
+        ):
+            # A full citation with credits or an imprint ("Title. Place:
+            # Publisher, 1919, No. 13") is no title reference; a colon inside
+            # the title's first sentence opens its subtitle.
+            return None
+        return ref
 
     def _host_year(self, host: dict) -> None:
         """A host title-reference gives its year after the title ("Stefan Zweig.
@@ -2080,13 +2292,23 @@ class Reader:
                 if v:
                     holdings.append({"text": v})
         located = LOCATED.search(text, pos, e)
-        if located and MANUSCRIPT.search(text, pos, e):
+        manuscript = manuscript_item(text, self.start)
+        if located and (manuscript or MANUSCRIPT.search(text, pos, e)):
             repo = text_value(
                 text, located.start("repo"), located.end("repo"), "p03.holding-located"
             )
             sentence = text_value(text, pos, located.end(), "p03.holding-located")
             if repo and sentence:
                 holdings.append({"repository": repo, "text": sentence})
+        if manuscript and not holdings:
+            # The item's first sentence or the text before its first note
+            # names where the version is kept.
+            stop = re.compile(r"\s\[|\.\s(?=[A-ZÀ-ÞĀ-ž\"“„])").search(text, pos, e)
+            kept = text_value(
+                text, pos, stop.start() if stop else e, "p03.holding-manuscript"
+            )
+            if kept:
+                holdings.append({"text": kept})
         if holdings:
             self.out["holdings"] = holdings
 
@@ -2113,6 +2335,11 @@ class Reader:
         pos = a
         while pos < b and text[pos] == " ":
             pos += 1
+        # "Review of: EA2 Title. ..." cites the reviewed work by its section
+        # code, which is its address when numbered and never an author.
+        address, pos, _ = self._split_code(pos, b)
+        if address:
+            out["address"] = address
         name = re.match(
             r"(?P<name>(?:[A-ZÀ-ÞĀ-ž][a-z]?\.\s?){1,3}[A-ZÀ-ÞĀ-ž][\w'’-]+(?: [A-ZÀ-ÞĀ-ž][\w'’-]+)?"
             r"|[A-ZÀ-ÞĀ-ž][\w'’-]+ [A-ZÀ-ÞĀ-ž][\w'’-]+)\.\s(?=[A-ZÀ-ÞĀ-ž])",
@@ -2253,9 +2480,13 @@ class Reader:
             if suffix not in SUFFIX_TO_VOLUME:
                 continue
             # "A 1927 port", "Vol. I 1945": a four-digit year after a letter is
-            # no address; only section L of the main volume runs that high.
+            # no address; a four-digit number is one only in a section whose
+            # table of contents runs that high (G 1126 and L 1895 of the main
+            # volume, LA1 1063), or in L where a volume has no such table.
             head = re.match(r"\d+", group).group()
-            if len(head) == 4 and not (letter == "L" and int(head) < 1900):
+            toc = TOC_MAX.get(SUFFIX_TO_VOLUME[suffix])
+            highest = toc.get(letter, 0) if toc else (1899 if letter == "L" else 0)
+            if len(head) == 4 and int(head) > highest:
                 continue
             targets, _ = parse_items(group)
             resolved = []
@@ -2442,8 +2673,14 @@ def read_imprints(text: str, start: int, end: int) -> list[dict]:
         publisher_span = (colon + 2, stop)
         publisher = text[publisher_span[0] : publisher_span[1]]
         group = [(place, publisher_span)]
-        # "Place: Publisher / Place: Publisher, 1929" names two imprints.
-        for inner in re.finditer(r" / (?=[A-Z][^:/]{1,40}: )", publisher):
+        # "Place: Publisher / Place: Publisher, 1929" names two imprints. The
+        # second place holds no digit and no sentence end, so "Title: A / B.
+        # 218p. Place: Publisher" is a title, not two imprints.
+        for inner in re.finditer(
+            r" / (?=[A-ZÀ-ÞĀ-ž](?:[^\W\d_]|[ ,'’()-]|(?:(?<=\b[A-Za-z])|(?<=\b[A-Z][a-z]))\.)"
+            r"{1,40}: )",
+            publisher,
+        ):
             a = publisher_span[0] + inner.start()
             b = publisher_span[0] + inner.end()
             nxt = text.find(": ", b, publisher_span[1])
@@ -2616,6 +2853,17 @@ def read_credits(text: str, start: int, end: int, skip, source=None):
         names_start = m.end()
         stop = NAME_END.search(text, names_start, end)
         names_end = stop.start() if stop else end
+        if (
+            stop
+            and text.startswith(": ", names_end)
+            and re.fullmatch(
+                r"[A-ZÀ-ÞĀ-ž][\w'’-]+(?:\s?/\s?[A-ZÀ-ÞĀ-ž][\w'’ -]+)+",
+                text[names_start:names_end],
+            )
+        ):
+            # "Illus. Place/Place: Publisher, 1968": a list of places before
+            # the imprint's colon is no name.
+            continue
         if NOT_INDICATED.match(text, names_start):
             yield {"roles": roles}
             continue

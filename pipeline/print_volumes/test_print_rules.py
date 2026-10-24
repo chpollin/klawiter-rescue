@@ -511,6 +511,250 @@ def test_a_joined_index_line_under_the_running_head_is_no_furniture():
     assert records[1]["lines"] == [[461, 1, 2, 19, 39]]
 
 
+def _objects(text, volume="A2", part="D"):
+    """Read every object of an invented entry as p03 does, with its label."""
+    from _objects import object_parts
+
+    return [
+        read(
+            text,
+            volume=volume,
+            part=part,
+            span=p["span"],
+            label_kind=p["label"][2] if p["label"] else None,
+        )
+        for p in object_parts(text, part, "entry")
+    ]
+
+
+def test_a_letter_source_with_its_place_is_no_title():
+    archive, letters = _objects(
+        "12 Nachname, Vorname [1]. Archiv, Verlag Nachname (Ort), "
+        "[a]. Zweig to Nachname, 2 letters, 5 May 1930.",
+        volume="A1",
+        part="K",
+    )
+    assert "title" not in archive
+    dealer = read(
+        "[2]. Antiquariat Name (Ort), Katalog 5, No. 12, Zweig to someone, 1 letter.",
+        volume="A1",
+        part="K",
+        label_kind="item",
+    )
+    assert "title" not in dealer
+
+
+def test_a_publication_named_after_the_letter_source_is_the_host():
+    out = read(
+        "[1]. Bibliothek Name (Ort), Ein Katalogtitel [LA1 10], p. 83, "
+        "Zweig to Nachname, 1 letter, 5 May 1930.",
+        volume="A1",
+        part="K",
+        label_kind="item",
+    )
+    host = out["hosts"][0]
+    assert val(host, "title") == "Ein Katalogtitel"
+    assert val(host, "address", "address") == "LA1 10"
+    assert val(host, "pages") == "83"
+
+
+def test_items_under_a_manuscript_label_are_holdings():
+    from _objects import object_parts
+
+    text = (
+        "12 “Ein Gedicht” in Zeitung [Ort], 1 May 1910, p. 3. Reprinted in: "
+        "[1]. Ein Buch. Ort: Verlag, 1950, p. 5. Manuscript versions: "
+        "[2]. Handschriftenabteilung, Stadtbibliothek Ort [Abschrift]. "
+        "[3]. The album is located in the Stadtbibliothek Ort under the number Ab 12.345."
+    )
+    labels = [p["label"][2] for p in object_parts(text, "D", "entry")[1:]]
+    assert labels == ["reprint", "item", "item"]
+    *_, kept, located = _objects(text)
+    assert "title" not in kept
+    assert val(kept, "holdings", 0, "text") == (
+        "Handschriftenabteilung, Stadtbibliothek Ort"
+    )
+    assert val(located, "holdings", 0, "repository") == "Stadtbibliothek Ort"
+
+
+def test_a_reviewed_work_cited_by_section_code_has_no_code_author():
+    out = read(
+        "Rt. “Titel” in Zeitung [Ort], 14 May 1908, pp. 1-2. Review of: EA2 "
+        "Werktitel. Ein Trauerspiel. Ort: Verlag, 1907.",
+        volume="A2",
+        part="L",
+    )
+    reviewed = out["reviewed"][0]
+    assert "persons" not in reviewed
+    assert val(reviewed, "title") == "Werktitel. Ein Trauerspiel"
+    assert val(reviewed, "imprints", 0, "place") == "Ort"
+    named = read(
+        "Nachname, Vorname. “Titel” in Zeitung [Ort], 1 May 1999, p. 2. "
+        "Review of: LA2 Autorname, Vorname. Ein Buchtitel. Ort: Verlag, 1998.",
+        volume="A2",
+        part="L",
+    )["reviewed"][0]
+    assert val(named, "persons", 0, "name") == "Autorname, Vorname"
+    assert val(named, "title") == "Ein Buchtitel"
+
+
+def test_a_head_name_holds_no_address():
+    text = "I 12 “Titel” [Original], I 5, p. 3. REP: A 32; Kurztitel (I 126), Vol. 3, p. 631."
+    start = text.index("Kurztitel")
+    out = read(text, part="I", span=(start, len(text)), label_kind="reprint")
+    assert "persons" not in out
+    assert val(out["hosts"][0], "title") == "Kurztitel"
+
+
+def test_host_authors_named_forename_first_are_persons():
+    out = read(
+        "[4]. Vorname Nachname, Anders Zweitname. Haupttitel: Ein Untertitel für "
+        "alle. Ort: Verlag, 1926, pp. 117-118.",
+        part="D",
+        label_kind="reprint",
+    )
+    host = out["hosts"][0]
+    assert [val(p, "name") for p in host["persons"]] == [
+        "Vorname Nachname",
+        "Anders Zweitname",
+    ]
+    assert val(host, "persons", 0, "roles", 0) == "author"
+    assert val(host, "title") == "Haupttitel: Ein Untertitel für alle"
+
+
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "Band 4: Teil. By Vorname Nachname. Ort: Verlag, 1984, p. 99.",
+        "Ort: Verlag, (1996). No. 3, p. 9.",
+    ],
+)
+def test_two_words_before_a_volume_or_an_imprint_stay_the_title(tail):
+    out = read(f'12 "Ein Beitrag" in Kleine Schriften. {tail}', volume="A1", part="L")
+    assert "persons" not in out["hosts"][0]
+
+
+def test_a_host_editor_in_brackets_after_the_name_is_a_person():
+    out = read(
+        '[3]. "Ein Beitrag" in Vorname Nachname [Ed.]. Haupttitel. Ein Führer '
+        "durch alles. Ort: Verlag, 1994, pp. 89-91.",
+        volume="A1",
+        part="G",
+        label_kind="excerpt",
+    )
+    host = out["hosts"][0]
+    assert val(host, "persons", 0, "name") == "Vorname Nachname"
+    assert val(host, "persons", 0, "roles", 0) == "editor"
+    assert val(host, "title") == "Haupttitel. Ein Führer durch alles"
+
+
+def test_a_host_cited_as_title_reference_after_in():
+    out = read(
+        "Nachname, Vorname. “Ein Aufsatz” in LA2 Autor / Sammelband 1942 [12], "
+        "pp. 116-117.",
+        volume="A2",
+        part="L",
+    )
+    host = out["hosts"][0]
+    assert val(host, "title") == "Autor / Sammelband"
+    assert (val(host, "locator"), val(host, "pages")) == ("12", "116-117")
+    assert val(host, "imprints", 0, "year") == 1942
+    bracketed = read(
+        "Nachname, Vorname. “Ein Aufsatz” in LA2 “Ein Titel, ein Untertitel” "
+        "[1997], No. 2, p. 25.",
+        volume="A2",
+        part="L",
+    )["hosts"][0]
+    assert val(bracketed, "title") == "Ein Titel, ein Untertitel"
+    assert val(bracketed, "imprints", 0, "year_bracketed") is True
+
+
+def test_a_place_in_brackets_is_no_contents_number():
+    out = read(
+        "“Eine Erzählung” in Eine Zeitung [Ort], pp. 31-40.", volume="A2", part="F"
+    )
+    assert "locator" not in (out.get("hosts") or [{}])[0]
+
+
+def test_a_host_title_may_carry_a_bracketed_gloss_before_its_credits():
+    out = read(
+        "“Eine Erzählung” [Originaltitel] in Sammlung. Untertitel [Deutscher "
+        "Titel]. Translated by Vorname Nachname. 429/(3)p. Ort: Verlag, 2004, pp. 5-9.",
+        volume="A2",
+        part="F",
+    )
+    host = out["hosts"][0]
+    assert val(host, "title") == "Sammlung. Untertitel"
+    assert val(host, "imprints", 0, "year") == 2004
+
+
+def test_an_imprint_stays_when_no_host_can_be_named():
+    out = read(
+        "[1]. Paperback edition. 400p. Ort: Verlag, 1996, pp. 399-400.",
+        volume="A2",
+        part="L",
+        label_kind="reprint",
+    )
+    assert "hosts" not in out
+    assert val(out, "imprints", 0, "year") == 1996
+
+
+def test_a_language_heading_at_the_margin_does_not_join_its_first_entry():
+    from _segment import consensus
+
+    heading = {
+        "text": "KATALANISCH",
+        "x0": 67.0,
+        "heading": True,
+        "runs": [["Bold", 12.0, 67.0, "KATALANISCH", 140.0]],
+        "kind": "body",
+        "furniture": False,
+        "at_margin": True,
+    }
+    entry = {
+        "text": "“Ein Titel” in Eine Sammlung [Ort], 1 May 1910, p. 3.",
+        "x0": 103.0,
+        "heading": False,
+        "previous": heading,
+        "numbered_part": True,
+        "page_top": False,
+        "votes": {"number": False, "indent": False, "gap": True, "bold": False},
+        "active": ("number", "indent", "gap", "bold"),
+    }
+    assert consensus(entry)
+    wrapped = {**entry, "text": "1902-1942. See A 170."}
+    assert not consensus(wrapped)
+
+
+def test_a_wrapped_address_list_is_no_heading():
+    from _segment import is_heading
+
+    line = {"text": "L 49, 61, 230 / M 31 / O 14 /", "start": None}
+    assert not is_heading(line)
+    assert is_heading({"text": "KATALANISCH", "start": None})
+
+
+def test_a_title_with_a_slash_before_an_extent_is_no_second_imprint():
+    out = read(
+        '12 "Ein Aufsatz" [Tr. Vorname Nachname], Stefan Zweig. Zwei Porträts: Erster '
+        "/ Zweiter. 218p. Ort: Verlag, 1955, pp. 7-127.",
+        part="G",
+    )
+    imprints = out["hosts"][0]["imprints"]
+    assert [(val(i, "place"), val(i, "publisher")) for i in imprints] == [
+        ("Ort", "Verlag")
+    ]
+    two = read(
+        "12 TITEL. 99p. Ort: Verlag Eins / Anderer Ort, N. J.: Verlag Zwei, 1980."
+    )
+    assert [val(i, "place") for i in two["imprints"]] == ["Ort", "Anderer Ort, N. J."]
+
+
+def test_a_four_digit_address_stands_where_the_section_runs_that_high():
+    out = read("12 TITEL. 99p. Ort: Verlag, 1950. See G 1101 / F 1927.", part="A")
+    assert [val(r, "address") for r in out["references"]] == ["G 1101"]
+
+
 def test_rule_patterns_hold_no_control_character():
     import _apparatus
     import _fields

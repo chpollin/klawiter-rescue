@@ -8,7 +8,10 @@ offsets of the piece in its p01 line, so that p10 can check that the pieces
 rebuild the record and that every piece is held once. An index record is one
 index entry: its term, the text before its first address, and its address
 groups, read by the address grammar of the entries and resolved to entry
-records. Front matter and tail are kept as passages, paragraphs held verbatim
+records; a group with a four-digit head, which that grammar leaves to
+section L, is read where its head names an entry. A heading or note of an
+index is a record that reads neither term nor address (HEADING_RECORD).
+Front matter and tail are kept as passages, paragraphs held verbatim
 and not read further; the errata of Addendum I are read by p05.
 
 Furniture is a line at the top where its part sets running heads or page
@@ -44,8 +47,9 @@ import hashlib
 import re
 from collections import Counter
 
+from _addresses import REFERENCE, SUFFIX_TO_VOLUME, parse_items
 from _common import COLUMN_GAP
-from _fields import Reader, value
+from _fields import LOCATOR, Reader, text_value, value
 
 APPARATUS_KINDS = ("index", "front", "tail")
 # Gutter per two-column index part: pieces from this x on are the right
@@ -116,6 +120,11 @@ GAP_ONLY = {("A1", f"Index {x}") for x in "ABC"}
 CONTINUES = re.compile(r"[a-zß-ÿ\d/,;)\]\-–.&]")
 CLOSED = re.compile(r"(?:[.)\]]|\d[a-z]?\*?)$")
 INDEX_HEADING = re.compile(r"^(?:INDEX|Index) [A-E]\b")
+# A record that is no index entry and reads neither term nor address: an
+# index title ("INDEX X / TITLE"), the note under it ("NB: ..."), a group
+# heading of Addendum I whose label the grammar would read as an address
+# ("X1 TITLE: TOPIC"), or a word in capitals without a number ("GROUP").
+HEADING_RECORD = re.compile(r"^(?:INDEX [A-E] / |NB: |[A-E][1-7] (?=[A-Z]{3}))")
 # A cross reference waits for its target: the entry ends in "See", "See
 # Index", an index label, or the piece opens with the label ("A5:Term").
 SEE_PENDING = re.compile(r"(?:\bSee(?: also)?|\bIndex(?:es)?|\b[A-E][1-7]?\s?:)\s*$")
@@ -350,10 +359,14 @@ def _index_units(pieces: list[dict]) -> list[list[dict]]:
 
 
 def unit_text(unit: list[dict]) -> str:
-    """Pieces joined by a space, the glyphs of one strip without one."""
+    """Pieces joined by a space, the glyphs of one strip without one. A strip
+    that reaches the foot of its page goes on at the head of the next page
+    without one too, as its glyphs carry no spaces and the list breaks
+    there inside a number ("L1" at the foot, "23, 45" over the page)."""
     text = unit[0]["text"].strip()
     for previous, piece in zip(unit, unit[1:]):
-        joint = "" if piece.get("strip") and previous.get("strip") else " "
+        strip_on = piece.get("strip") or piece["page"] > previous["page"]
+        joint = "" if previous.get("strip") and strip_on else " "
         text += joint + piece["text"].strip()
     return text
 
@@ -415,6 +428,43 @@ def _masked(text: str) -> tuple[str, list[int]]:
     return "".join(out), back
 
 
+def _long_heads(text: str, read: list[dict], index: dict[str, str]) -> list[dict]:
+    """Address groups with a four-digit head that the shared grammar still
+    skips, read where the head names an entry. The grammar reads four-digit
+    heads up to a section's contents of 1991 (G runs past 1000: "G 1082,
+    1090"); this catches the rest, while a year names no entry ("A 1927").
+    read are the groups the grammar took."""
+    taken = [ref["address"]["span"] for ref in read]
+    out = []
+    for m in REFERENCE.finditer(text):
+        letter, suffix, group = m.groups()
+        suffix = suffix or ""
+        head = re.match(r"\d+", group).group()
+        a, b = m.span()
+        if (
+            suffix not in SUFFIX_TO_VOLUME
+            or len(head) != 4
+            or f"{letter}{suffix} {int(head)}" not in index
+            or any(x < b and a < y for x, y in taken)
+        ):
+            continue
+        targets = []
+        for n, s in parse_items(group)[0]:
+            normalized = f"{letter}{suffix} {n}{s}"
+            targets.append({"normalized": normalized, "record": index.get(normalized)})
+        ref = {
+            "address": value(text[a:b], a, b, "p03.index-long-address", by="compiler"),
+            "targets": targets,
+        }
+        locator = LOCATOR.match(text, b, min(len(text), b + 40))
+        if locator and locator.group().strip(" ,"):
+            lv = text_value(text, locator.start(), locator.end(), "p03.address-locator")
+            if lv:
+                ref["locator"] = lv
+        out.append(ref)
+    return out
+
+
 def _item(record: dict, index: dict[str, str]) -> dict:
     text = record["text"]
     item = {
@@ -434,6 +484,16 @@ def _item(record: dict, index: dict[str, str]) -> dict:
     masked, back = _masked(text)
     reader = Reader({**record, "text": masked}, (0, len(masked)), {"index": index})
     references = reader.addresses(0, len(masked))
+    references += _long_heads(masked, references, index)
+    references.sort(key=lambda ref: ref["address"]["span"][0])
+    if HEADING_RECORD.match(text) or (_heading(text) and not re.search(r"\d", text)):
+        # A heading's label is no address; a heading holding an address
+        # outside its label stays an entry.
+        label = re.match(r"[A-E][1-7] ", masked)
+        if all(
+            label and ref["address"]["span"][1] <= label.end() for ref in references
+        ):
+            return item
     for ref in references:
         for key in ("address", "locator"):
             if key in ref:

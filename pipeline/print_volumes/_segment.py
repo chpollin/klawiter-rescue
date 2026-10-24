@@ -14,8 +14,9 @@ determined by the layout:
 Headings (mostly capitals, no leading number) open their own unit in every
 variant and are counted separately.
 
-The boundary decision (consensus) adds three rules from a survey of the
-development pages (2026-10-23) to the vote:
+The boundary decision (consensus) adds four rules to the vote, R1 to R3
+from a survey of the development pages (2026-10-23), R4 from the fifth
+review (2026-10-24):
 
 - R1: a sub-item opener ("[5].", "[X].", "Vol. 2.", "Contents:", "Reprinted
   in:" and similar labels) never opens a unit; it starts an object inside one.
@@ -25,6 +26,11 @@ development pages (2026-10-23) to the vote:
   page ends in a heading, or in closing punctuation that is no abbreviation
   and either falls short of the right margin or is followed by a bold opener
   after a non-bold end.
+- R4: a line right of a heading line above it (a heading at the margin, its
+  first entry at the indent) opens a unit, unless the heading is a stub or
+  the line opens like a continuation.
+A heading holds letters beyond its section codes, so a wrapped address list
+("L 49, 61 / M 31 / O 14 /") continues its entry.
 Parts with running numbers keep the majority of their informative variants,
 ties opening a boundary, except that a line which is neither a numbered start
 nor a stub and opens with a digit, a lowercase letter or a bracket continues
@@ -54,6 +60,9 @@ ABBREVIATION = re.compile(
 )
 SHORT_LINE = 30
 CONTINUATION_OPENER = re.compile(r"^[\d\[a-z(]")
+# A line this far right of the heading above it sits at the indent.
+INDENT_STEP = 5
+ADDRESS_GROUP = re.compile(r"\b[A-R](?:A[12])?\s?\d{1,4}[a-z]?\b")
 
 
 def is_heading(line: dict) -> bool:
@@ -62,8 +71,12 @@ def is_heading(line: dict) -> bool:
     if len(letters) < 3 or len(text) > 90 or numbered_start(line):
         return False
     # Sigla and citations in capitals ("[RJS].", "1966), 307-312 [DAP].") are
-    # wrapped tails, not headings.
-    if re.match(r"^[\d\[(]", text):
+    # wrapped tails, not headings; so is a wrapped address list ("L 49, 61 /
+    # M 31 / O 14 /"), whose capitals are its section codes.
+    if (
+        re.match(r"^[\d\[(]", text)
+        or len(LETTERS.findall(ADDRESS_GROUP.sub("", text))) < 3
+    ):
         return False
     upper = sum(1 for ch in letters if ch.isupper())
     return upper / len(letters) >= 0.8
@@ -147,6 +160,18 @@ def consensus(line: dict) -> bool:
         return True
     if SUB_ITEM.match(line["text"].lstrip()):
         return False
+    previous = line["previous"]
+    if (
+        previous is not None
+        and previous["heading"]
+        and not is_stub(previous)
+        and line["x0"] > previous["x0"] + INDENT_STEP
+        and not CONTINUATION_OPENER.match(line["text"])
+    ):
+        # R4: a heading set at the margin ("CATALAN", "INDIVIDUAL POEMS") is
+        # followed by its first entry at the indent, which the hanging
+        # indent alone would join to it.
+        return True
     if not line["numbered_part"]:
         if line["page_top"]:
             return _page_top_start(line)
