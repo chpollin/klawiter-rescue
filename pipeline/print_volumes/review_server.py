@@ -86,6 +86,27 @@ def viewer_file(name: str) -> Path | None:
     return None
 
 
+def byte_range(header: str, size: int) -> tuple[int, int] | None:
+    """The inclusive span of a single "bytes=a-b", "bytes=a-" or "bytes=-n" range; None if unsatisfiable."""
+    unit, _, spec = header.partition("=")
+    if unit.strip() != "bytes" or "," in spec:
+        return None
+    first, _, last = spec.strip().partition("-")
+    try:
+        if not first:
+            count = int(last)
+            if count <= 0:
+                return None
+            return max(size - count, 0), size - 1
+        start = int(first)
+        end = int(last) if last else size - 1
+    except ValueError:
+        return None
+    if start > end or start >= size:
+        return None
+    return start, min(end, size - 1)
+
+
 class Store:
     """The current records, reloaded when p03 has rewritten them."""
 
@@ -152,6 +173,8 @@ class Handler(SimpleHTTPRequestHandler):
         return send()
 
     def do_HEAD(self):
+        if self.path.startswith("/print/"):
+            return self._pdf(body=False)
         return self._static(super().do_HEAD)
 
     def do_GET(self):
@@ -171,21 +194,44 @@ class Handler(SimpleHTTPRequestHandler):
             return self._pdf()
         return self._static(super().do_GET)
 
-    def _pdf(self):
+    def _pdf(self, body=True):
+        """One print volume, whole or as the single byte range a PDF viewer asks for."""
         if not self._own():
             return self._json(403, {"error": "foreign host or origin"})
         name = self.path.split("?")[0].split("#")[0].removeprefix("/print/")
         pdf = PDFS.get(name.removesuffix(".pdf")) if name.endswith(".pdf") else None
         if pdf is None or not pdf.exists():
             return self._json(404, {"error": "no such volume"})
-        self.send_response(200)
+        size = pdf.stat().st_size
+        start, end = 0, size - 1
+        wanted = self.headers.get("Range")
+        if wanted:
+            span = byte_range(wanted, size)
+            if span is None:
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{size}")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return None
+            start, end = span
+            self.send_response(206)
+            self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+        else:
+            self.send_response(200)
         self.send_header("Content-Type", "application/pdf")
-        self.send_header("Content-Length", str(pdf.stat().st_size))
-        self.send_header("Cache-Control", "no-store")
+        self.send_header("Accept-Ranges", "bytes")
+        self.send_header("Content-Length", str(end - start + 1))
+        # The volume never leaves this machine, so the browser may keep it.
+        self.send_header("Cache-Control", "private, max-age=3600")
         self.end_headers()
+        if not body:
+            return None
         with pdf.open("rb") as source:
-            while chunk := source.read(1 << 20):
+            source.seek(start)
+            left = end - start + 1
+            while left > 0 and (chunk := source.read(min(1 << 20, left))):
                 self.wfile.write(chunk)
+                left -= len(chunk)
         return None
 
     def do_POST(self):

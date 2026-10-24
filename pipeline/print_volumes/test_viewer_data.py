@@ -293,3 +293,21 @@ def test_server_serves_code_and_data_and_refuses_the_rest(folders, monkeypatch):
     finally:
         server.shutdown()
         server.server_close()
+
+
+@pytest.mark.parametrize(
+    ("header", "span"),
+    [
+        ("bytes=0-99", (0, 99)),
+        ("bytes=900-", (900, 999)),
+        ("bytes=-100", (900, 999)),
+        ("bytes=990-5000", (990, 999)),
+        ("bytes=1000-", None),
+        ("bytes=50-10", None),
+        ("bytes=0-1,5-9", None),
+        ("items=0-1", None),
+        ("bytes=-0", None),
+    ],
+)
+def test_byte_range_reads_one_satisfiable_range(header, span):
+    assert review_server.byte_range(header, 1000) == span
