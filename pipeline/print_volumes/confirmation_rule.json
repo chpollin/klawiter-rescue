@@ -1,0 +1,4 @@
+{
+ "_about": "Decision rule for automatic confirmation (knowledge/print-wiki-merge.md, Measurement), read by p13_review.py. A rule class may confirm without a person when the lower bound of the 95 percent Wilson interval of its precision on the complete objects of the frozen review sample reaches the threshold. The operator sets the threshold before the human round; while it is null no rule class confirms.",
+ "threshold": null
+}

@@ -1,0 +1,19 @@
+{
+ "_about": "Pins of the frozen samples (p14_gate.py): per sample the sha256 of its identifiers as frozen, sorted and joined by LF, after undoing its remap list. Hashes and counts only; written once by --pin, never replaced.",
+ "bench-v1": {
+  "identifiers": 28,
+  "sha256": "15843ebd5ecbe1d4f4864e769325d189cd289f6419d2dacd8e73adea68df37d3"
+ },
+ "bench-v2": {
+  "identifiers": 44,
+  "sha256": "5840c28c01ffa180f7a9b31758290d3e19b0fcfc7b21ec6e475eb195fa7c1f9b"
+ },
+ "blind": {
+  "identifiers": 90,
+  "sha256": "2093721b24c131fd951b32eaac8661e474108e960b596bc2e5b30c63ce948aba"
+ },
+ "review": {
+  "identifiers": 129,
+  "sha256": "3aa7457088c9fe2c2aac3b2631d631d345fac81c8eaf65838a5cc4d5e732cbd9"
+ }
+}
