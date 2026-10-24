@@ -79,7 +79,6 @@ Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload
 | P2 QA | Broaden the stratified semantic sample, complete curation/export browser checks and measure representative performance/accessibility | declared sample protocol and device/task budgets with recorded results |
 | P2 data | The values that keep one damaged letter after the encoding repair, because the byte was lost before the LLM cache was frozen, become gaps (decided by the main instance under the principle "a gap before a wrong value", 2026-10-24, revisable) | the values emptied by rule in the pipeline with a test naming them |
 | P2 model | The PROV-O sidecar, a DQV quality description and the publishable profile of the LLM provenance are planned but not yet represented in the vocabulary | vocabulary terms and a SHACL check |
-| P2 public address | The former wiki addresses redirect to klawiter.stefanzweig.digital, whose main page answered 404 on 2026-10-24; the address needs to lead to the public application or an explanation | a request to the address reaches the application |
 
 The two remaining unresolved See-references name titles no current page carries and stay open. The Maria Stuart case showed that a technically resolved reference can still point to the wrong page, so a resolution rests on the source revision history, never on a guessed target.
 

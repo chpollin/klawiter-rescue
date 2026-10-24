@@ -66,7 +66,6 @@ The research coordinator holds the overall plan ([Merged bibliography](print-wik
 | defects found in production data | either session | coordinator verifies, fixes and regenerates | correct wiki data |
 | operator decision on the twenty fixture-based place decisions, taken 2026-10-23 (a fixture confirms nothing) | operator | blog post, display wording, data.md | step 1, meaning of `confirmed` |
 | decision whether delegation to LLM agents confirms, taken 2026-10-24 under the operator principles (it does not; agent decisions are proposals) | main instance | blog post, production labels | step 1, meaning of `confirmed` |
-| push and deploy of the local commits | operator | blog post, proposal commit citations, public application | correct wiki data in public |
 
 A result of the AI operator enters canonical knowledge only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 

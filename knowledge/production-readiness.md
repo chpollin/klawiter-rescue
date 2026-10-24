@@ -128,8 +128,9 @@ The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done.
 | Print as a source of values | deciding whether print becomes an admitted source of values or the merged bibliography stays a concordance | after the rights decision |
 | Delivery shape | agreeing with Stefan Zweig Digital on one sample object (entry, three sources, claim, group) | after the reconstructed entry |
 | Citation identifiers | deciding with a domain expert whether groups carry the print address and the 1965 number as citable aliases ([About](about.md), How the bibliography is cited) | any time |
-| Push, deploy and tag | pushing the local commits and deploying the public application | a gate-green state the coordinator reports |
 | Decisions under the principles | reading the list under Operator principles and objecting where a decision should be taken otherwise | standing |
+
+The redirect of the former public address and the release with its tag lie outside the project's planning (operator, 2026-10-24); pushes stay with the operator as before.
 
 ## Release scope
 

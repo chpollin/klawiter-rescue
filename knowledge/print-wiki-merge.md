@@ -182,7 +182,6 @@ Frame and delivery
 - Does print become a second admitted source of values? Answered by the operator; a no keeps print values internal and makes the merged bibliography a concordance.
 - What does Stefan Zweig Digital accept as an object, does it want open claims in it, and which stylesheet renders it? Answered by Stefan Zweig Digital on the sample object; the answer decides between claims in TEI and a separate data stream.
 - Which institution publishes the merged bibliography, given that the project documents name the Literaturarchiv Salzburg and the delivery targets Stefan Zweig Digital in GAMS? Answered by the operator.
-- When are the local commits pushed and deployed? Answered by the operator; the public application, the blog post and commit citations in the follow-up proposal depend on it.
 
 Model
 - Is one group identifier per publication the right unit for citation and linking? Answered by the operator with a domain expert.
