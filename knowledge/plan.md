@@ -108,7 +108,7 @@ Snapshot of 2026-10-24.
 | Measurement design, second correction | in progress | entry met by 7147b94 |
 | Reviewable workbench | completed | fffcb29 with the reviewer filter of the review server |
 | Record desk and sitemap | in progress | increment 1 in progress; decision recorded in bc5e8af7; the card's zero coverage gaps of fffcb29 rested on hidden markers, the test is being corrected |
-| Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); specification and design drafts under review; split of Print volumes in progress |
+| Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; split of Print volumes in progress |
 | M2 | pending | entry: M1 |
 
 ## Open decisions and dependencies

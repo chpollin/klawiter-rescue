@@ -4,14 +4,14 @@ status: maintained
 language: en
 created: 2026-10-24
 updated: 2026-10-24
-related: [print-volumes, print-wiki-merge, frontend]
+related: [print-volumes, print-wiki-merge, frontend, specification, design]
 ---
 
 # Print viewer: card workbench for the review of the print readings
 
 The print viewer is a card workbench. In it a person decides whether the values read from the print volumes are right in their context, compares a print record with the wiki, and finds any record with its provenance. Field correctness is measured only from these decisions ([Print volumes](print-volumes.md), Structured objects), and the review happens through work in the workbench rather than through a planned budget of hours ([Production readiness](production-readiness.md), Operator principles). The workbench is therefore judged by the cost of a decision, by whether the evidence stands beside each value, and by whether a key ever acts on something not in view.
 
-The code lies in `pipeline/print_volumes/viewer/`: `cards.html`, `cards.js`, `cards.css` and the pure module `render.js`, which holds every helper that does not touch the page. `review_server.py` serves the code from that folder and the data p12 writes (`index.json`, `vocab.json`, `wiki_concordance.json`) from `data/print/derived/viewer/` only, records decisions, and opens the PDF page of a record (`/print/I.pdf#page=790`, with single byte ranges, so a PDF viewer loads the page and not the volume). A `.gitignore` in the code folder keeps every data file out of the versioned tree. `index.html` forwards to `cards.html` and keeps old links to an object, the review and the help working. Palette and type stacks follow the production frontend.
+The code lies in `pipeline/print_volumes/viewer/`: `cards.html`, `cards.js`, `cards.css` and the pure module `render.js`, which holds every helper that does not touch the page. `review_server.py` serves the code from that folder and the data p12 writes (`index.json`, `vocab.json`, `wiki_concordance.json`) from `data/print/derived/viewer/` only, records decisions, and opens the PDF page of a record (`/print/I.pdf#page=790`, with single byte ranges, so a PDF viewer loads the page and not the volume). A `.gitignore` in the code folder keeps every data file out of the versioned tree. `index.html` forwards to `cards.html` and keeps old links to an object, the review and the help working. Palette and type stacks mirror the production frontend in a stylesheet of their own, whose unification with it [Design](design.md) plans.
 
 ## Requirements
 

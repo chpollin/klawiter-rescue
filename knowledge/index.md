@@ -19,6 +19,8 @@ Start with [Current status](status.md): what is verified, what remains open, and
 | [About](about.md) | origin, responsibilities, scholarly context, how the bibliography is cited, and publication mandate |
 | [Data](data.md) | source scope, entity levels, field meaning, provenance and uncertainty |
 | [Pipeline](pipeline.md) | transformations, dependencies and reproducibility boundaries |
+| [Specification](specification.md) | user groups, research tasks with acceptance criteria, scholar-centred requirements and the open questions they raise |
+| [Design](design.md) | design stance, rule hierarchy, the record desk and page check tool, token roles, component rules and the departures of the committed code |
 | [Frontend](frontend.md) | routes, dashboard interactions, curation and export behaviour |
 | [Testing](testing.md) | test contracts, oracle maintenance, browser validation and evidence limits |
 | [Production readiness](production-readiness.md) | ratified decisions, operator principles, what the operator accepts, and measurable acceptance criteria |
@@ -51,7 +53,7 @@ These are dated observations, not live task lists. Follow their status links bef
 
 - Re-entry: [Status](status.md) → [Handoff](handoff.md) → [Plan](plan.md) → latest [Journal](journal.md) → `git status -sb`.
 - Data work: [Data](data.md) → [Pipeline](pipeline.md) → [Testing](testing.md).
-- Interface work: [Frontend](frontend.md) → [Testing](testing.md).
+- Interface work: [Specification](specification.md) → [Design](design.md) → [Frontend](frontend.md) → [Print viewer](print-viewer.md) → [Testing](testing.md).
 - Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Data](data.md) → [Print viewer](print-viewer.md).
 - Acceptance: [Production readiness](production-readiness.md), What the operator accepts → [Merged bibliography](print-wiki-merge.md), Goal → [Status](status.md).
 

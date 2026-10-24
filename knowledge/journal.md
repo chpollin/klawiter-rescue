@@ -21,6 +21,16 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Specification and design adopted into the knowledge as drafts
+
+**Round.** Handoff point "Specification and design drafts with their reviews" (workflow run wf_236f71c6-273), integrated by an agent and checked by the coordinator.
+
+**Changed.** The findings of the four adversarial reviews that still held at the current commits were applied, and those the commits of the day had overtaken were dropped. [Specification](specification.md) gives user groups, the basis of each task and twenty research tasks with their committed state, among them deciding a wiki value as a patch with producer person, the page check tool and data quality as filter and review mode, and no criterion publishes print data. [Design](design.md) describes the record desk, the three-part sitemap and the page check tool, gives token roles instead of values and lists the departures of the committed code by increment. Index, Documentation, Frontend, Print viewer and Production readiness link both, and Frontend no longer names the retired producer words or claims that CSS variables are the only colour source.
+
+**Open.** Both stay drafts until the operator adopts the tasks. Their open questions (the adjudicator, spelling variants of a claim's subject, the patch target of publication values, the producer wording) wait for the operator. The point left [Handoff](handoff.md).
+
+---
+
 ## 2026-10-24 — Print data ready for review, action layer routed into the knowledge
 
 **Round.** Implementation round by an agent on the print strand and one on the action layer, each checked against the files and the gate before commit.

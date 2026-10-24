@@ -124,7 +124,7 @@ The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done.
 | Second reviewer and adjudication | naming a second person for the marked subset of the review sample and a third person who settles disagreements, since an adjudicator may not be one of the two reviewers | the first reviewer has started |
 | Wiki data before publication | inspecting the regenerated wiki data with the flat fields reduced to what a rule binds and every agent decision shown as a proposal | the wiki data batch is committed |
 | Interface on real tasks | reading, reviewing and citing with the production frontend, the record card and the card workbench on the operator's own tasks | the record card with its provenance chain is built |
-| Research tasks for the trial | naming the research tasks the merged bibliography must support, with Stefan Zweig Digital | any time |
+| Research tasks for the trial | naming the research tasks the merged bibliography must support, with Stefan Zweig Digital; [Specification](specification.md) proposes them | any time |
 | Rights in the print volumes | settling with the rights holder whether print-derived structure and values, including the unpublished Addendum II, may be published | before delivery |
 | Print as a source of values | deciding whether print becomes an admitted source of values or the merged bibliography stays a concordance | after the rights decision |
 | Delivery shape | agreeing with Stefan Zweig Digital on one sample object (entry, three sources, claim, group) | after the reconstructed entry |

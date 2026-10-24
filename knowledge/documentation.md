@@ -20,10 +20,14 @@ Project prose is English, following the operator's August 2026 decision. Histori
 | `knowledge/about.md` | origin, roles, mandate and citation context |
 | `knowledge/data.md` | source scope, entity/field meanings, uncertainty, provenance and curation boundaries |
 | `knowledge/pipeline.md`, `pipeline/README.md` | canonical stage architecture; local quick entry links back to it |
+| `knowledge/specification.md` | user groups, research tasks with acceptance criteria and the requirements of the interface |
+| `knowledge/design.md` | design stance, token roles, component rules and the departures of the committed code |
 | `knowledge/frontend.md` | actual routes, interaction and export contracts |
 | `knowledge/testing.md` | verification layers, test/oracle maintenance and limits |
 | `knowledge/production-readiness.md` | ratified decisions and measurable acceptance contract |
-| `knowledge/print-wiki-merge.md` | model, measurement rules, goal, plan and milestones of the merged bibliography |
+| `knowledge/print-wiki-merge.md` | model, measurement rules, goal and steps of the merged bibliography |
+| `knowledge/plan.md` | milestones, their exit conditions and the status tracker of future work |
+| `knowledge/handoff.md` | received results still waiting to be checked, integrated or rejected; a point leaves it with a journal record |
 | `knowledge/print-volumes.md`, `knowledge/print-viewer.md` | structure of the print volumes and the reading strand; requirements and acceptance of the card workbench; no print text, paraphrase with PDF pages instead |
 | `knowledge/coordination.md` | roles, path ownership and dependencies of parallel sessions; no project state |
 | `.github/ISSUE_TEMPLATE/*.md` | explicitly labelled proposals; point to current scope and avoid claims of implemented evaluation features |

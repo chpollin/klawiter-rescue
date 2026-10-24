@@ -18,14 +18,6 @@ This process inbox holds only open handoff points, the results that arrived from
 
 ## Open handoff points
 
-### Specification and design drafts with their reviews
-
-- Received: 2026-10-24
-- Source: workflow run wf_236f71c6-273, drafts written to `knowledge/specification.md` and `knowledge/design.md`, four adversarial reviews (factual and traceability, convention and duplication) in the session scratchpad
-- Target: [Specification](specification.md), [Design](design.md)
-- Context: the drafts predate the operator's decision for one record desk and the three-part sitemap, and both reviews found working-tree labels that no longer match the repository after the commits of 2026-10-24, a task criterion that would publish print data against the decision to stay local, and duplication with Frontend and Print viewer.
-- Next action: apply the verified review findings, bring both documents to the record desk and the sitemap, remove the working-tree labels, then link them from Index and Plan.
-
 ### Data reach audit of 2026-10-24
 
 - Received: 2026-10-24
