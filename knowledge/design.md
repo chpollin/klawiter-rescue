@@ -91,6 +91,19 @@ State and producer stay visible at rest and in focus. A slip carries the record'
 
 Sections, Source lanes and Card grid arrange the same slips ([Print viewer](print-viewer.md#desk)). Explore is a further arrangement of the filtered records, the decade histogram, the language and type rankings and the map drawn over the current filter, and a selection in it filters the desk (increment 4). Data quality is a set of filters, each class with its count, and a review mode that steps through the filtered cards with the decision keys (increment 5).
 
+### Decisions for increment 2
+
+The research coordinator took these decisions on 2026-10-24 under the operator principles, after a design and an adversarial review of it. They are revisable until the operator accepts the desk.
+
+- Records is one view of the reader, and one card component renders both sources. The card workbench keeps its decision bar and guards for the running review but draws its cards through the same component, so there is one design and one builder. Increment 3 moves the decisions into Records, and the workbench then forwards to it.
+- On the desk every value row names its producer in words, because a decision is read there. The result list keeps the default stated once behind the (i), as in [Value row](#value-row). The words themselves stay the operator's decision (Open design decisions), and until then the desk uses the committed ones.
+- Every value opens its own chain, so a row with several values, such as credits, places or contents, opens one chain per value.
+- A value's passage comes from the offsets the parser held when it read the value, carried through by the pipeline. Where no offset exists the chain names the gap in words, such as "passage not located", and a gap the binding rule made reads "gap by rule" with its rule, apart from a gap in the source. The card never shows a first match as the passage.
+- The place and publisher rows of a publication keep their authority links, contested marks and curation controls, and a verbatim imprint row joins them.
+- The record identifier is the permalink, and the type stays the one type badge of the head, so each fact stands once.
+- Records shows the wiki records on every host. It loads print records only when the review server answers with the print index, and without it the page makes no request for print data and names none. Category pages whose text remains after their category links get a card, infrastructure pages do not.
+- A push of `docs/` publishes Records. While development is local the public frontend stays as it is ([Production readiness](production-readiness.md), Operator principles), so pushes of `docs/` wait for the operator's acceptance of the desk.
+
 ## Page check tool
 
 The page check tool shows one PDF page of a print volume beside everything read from it. The page stands on one side at a readable size, and on the other side stand the lines read from it in reading order, each with its line position and the address of its record, and under each line the values read from it with their fields. A line no record covers and a value without a line stand out by a word. Selecting a line or a value marks the other side. The tool runs only on the local review server over `data/print/`, and nothing it shows reaches a versioned file. While the blind sheets are incomplete, it withholds the readings of their pages ([Specification](specification.md), T19). The tool is increment 1 of the record desk, and this layout is a proposal.
@@ -233,7 +246,7 @@ The workbench comment in `cards.css` says that its tokens follow the production 
 | U9 | Disabled | the workbench rule, a dashed edge and readable faint text without fading |
 | U10 | Links | underlined in running text, value rows and the footer, not in navigation, tabs and list titles |
 | U11 | State colours | the workbench set as `--sz-state-*`, contested and open in the unsure family, wrong in bad, confirmed in ok, replacing the literal contested colours and the alert colours of edit mode and triage |
-| U12 | Producer words | one vocabulary of subdued words, rule as the default stated once, LLM proposal, person and test fixture, with the deciding agent role in the disclosure |
+| U12 | Producer words | one vocabulary of subdued words, rule as the default stated once in the result list and named on every row of the desk, LLM proposal, person and test fixture, with the deciding agent role in the disclosure |
 | U13 | Word "contested" | kept for an open claim, while the workbench class for a card the reviewer flagged becomes `.is-flagged` |
 | U14 | Highlight | the workbench tokens, replacing the literal gold tints of the reader |
 | U15 | Spacing | the scale in the shared tokens |
