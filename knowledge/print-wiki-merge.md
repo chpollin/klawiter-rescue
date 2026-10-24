@@ -9,7 +9,7 @@ related: [print-volumes, data, about, production-readiness]
 
 # Merged Klawiter bibliography: model and plan
 
-The compiler carried the Stefan Zweig bibliography through several states: the main volume of 1991, Addendum I of 1999, the unpublished working file of Addendum II, and the wiki begun in December 2008 as the latest state. The first bibliography of 1965 is not available to the project. Which statements exist only in print, only in the wiki or in both is unknown. This strand reconstructs the print volumes as structured research data, relates them to the wiki records and derives from both a merged Klawiter bibliography in which every statement keeps its source, for delivery as TEI to Stefan Zweig Digital. The result is a curated bibliographic dataset. It is no scholarly edition, since its object is the bibliographic information, not the compiler's text and its transmission. How the print volumes are built is recorded in [Print volumes](print-volumes.md); this document holds the model, the way results are checked, the plan and the open questions. Its plan was revised on 2026-10-23 after three independent agent reviews (constructive, critical, user and infrastructure needs), whose findings on code and documents the main agent checked.
+The compiler carried the Stefan Zweig bibliography through several states: the main volume of 1991, Addendum I of 1999, the unpublished working file of Addendum II, and the wiki begun in December 2008 as the latest state. The first bibliography of 1965 is not available to the project. Which statements exist only in print, only in the wiki or in both is unknown. This strand reconstructs the print volumes as structured research data, relates them to the wiki records and derives from both a merged Klawiter bibliography in which every statement keeps its source, for delivery to Stefan Zweig Digital. The result is a curated bibliographic dataset. It is no scholarly edition, since its object is the bibliographic information, not the compiler's text and its transmission. How the print volumes are built is recorded in [Print volumes](print-volumes.md); this document holds the model, the way results are checked, the plan and the open questions. Its plan was revised on 2026-10-23 after three independent agent reviews (constructive, critical, user and infrastructure needs), whose findings on code and documents the main agent checked.
 
 ## Principles
 
@@ -57,45 +57,104 @@ Two kinds of invariant hold over all records, not only over test pages. A presen
 
 Print and wiki check each other's extraction. Where a print entry stood near-verbatim in a wiki revision and year and title agree, the print strand and the production pipeline have read related text independently, so comparing their remaining fields checks both extractors by rule, without a human gold standard (`p08_field_check`). Because that wiki text descends from the compiler's print file, agreement shows consistency of the two readings, not correctness against the book; a disagreement shows that at least one reading is wrong. The check carries for Addendum II, whose text reached the early wiki; for the main volume and Addendum I the aligned text is mostly translation or review lists pasted into work pages, and the pairs that survive the title gate are too few to measure.
 
+## Goal
+
+The merged Klawiter bibliography is reached when all of the following hold, checked against the files and not against reports:
+
+- Every record of the four sources stands with a stable identifier and leads to where it stands, a print record to its PDF page and line, a wiki page to its permalink.
+- Every value carries its passage, its producer and its state.
+- Field correctness and the precision of the concordance are measured by persons on frozen samples under decision rules fixed before the measurement, and the agreement of two persons is reported on a shared subset.
+- The merged reading shows each group with its member records, the source of every value, the deviations between sources side by side and the open claims as open.
+- Wiki and print rebuild deterministically under their gates.
+- What is published contains only what the rights decision of step 0 admits.
+
 ## Plan
 
-The steps are ordered by dependency. Step 0 runs alongside the others and blocks only publication; step 3 decides how much of steps 5 to 7 is needed.
+The steps are ordered by dependency. Step 0 runs alongside the others and blocks only publication. Step 3 decided that the concordance takes two routes.
 
 | Step | Result | Accepted when | Depends on |
 |---|---|---|---|
 | 0 Frame | decisions on rights in the volumes and in derived data, admission of print as a source of values, delivery shape with Stefan Zweig Digital, publishing institution, vocabulary namespace | recorded in [Production readiness](production-readiness.md) | operator, Stefan Zweig Digital, rights holder |
-| 1 Model and claim schema | this record model confirmed, shared claim schema with group identifiers | existing gate artifacts rebuild under the shared schema, identical or with a reasoned difference | operator |
+| 1 Model and claim schema | the shared terms of [Data](data.md) (one model across print and wiki) and a shared claim schema with group identifiers. The concordance claims of step 7 were written before this schema and migrate into it. | existing gate artifacts and the concordance rebuild under the shared schema, identical or with a reasoned difference | operator |
 | 2 Segmentation | print entries and their objects as records with stable identifiers | boundary and object scores on the frozen second sample, disagreements decided by a person | 1 |
-| 3 Overlap experiments | how far early wiki revisions carry print text, how large the overlap of print and wiki is, which relation types cited addresses have | each question answered on a small counted sample | 2 |
+| 3 Overlap experiments | how far early wiki revisions carry print text, how large the overlap is, which relation types cited addresses have | each question answered on a small counted sample | 2 |
 | 4 Resolution tables | abbreviations, informant, periodical and repository sigla, section codes, each with its source location | every siglum used is resolved or listed as open | p01 |
-| 5 Fields | title, persons with roles, date, imprint and language per object first, further fields as the delivery needs them, inherited values marked | field accuracy on the benchmark | 2, 4 |
-| 6 Compiler claims | references typed, errata of Addendum I and Addendum II title references parsed | every address and erratum resolved or listed as open | 1, 2 |
-| 7 Concordance | identity candidates print and wiki and within print, rule classes for automatic confirmation with measured precision, report of what exists only in print, only in the wiki or in both | report reproducible, a sample checked by a person | 3, 5, 6 |
-| 8 Work and person links | links to the curated work index and to persons of Stefan Zweig Digital or the GND, existing title matches superseded | each link with evidence and state | 7 |
-| 9 Adjudication | the existing curation interface and patch store extended to claims between records, with the chain from claim to print line or wiki revision | a person can follow a claim from evidence to decision and decide it | 1, 7 |
-| 10 Projection and delivery | sample object agreed, TEI profile with ODD, projection, staging ingest, trial on research tasks | deterministic rebuild, every statement traceable to claims, staging ingest succeeds | 0, 8, 9 |
+| 5 Fields | every object a span-bound record with typed producer, inherited values marked | precision and misses per field and volume from the human round, under the rule fixed before it | 2, 4 |
+| 6 Compiler claims | references typed, errata of Addendum I and Addendum II title references parsed, index addresses resolved | every address and erratum resolved or listed as open | 1, 2 |
+| 7 Concordance | a pipeline stage that keeps every candidate `proposed`, rule classes for automatic confirmation, a report of what exists only in print, only in the wiki or in both | report reproducible, precision per route and volume from the human round, recall on silver pairs | 3, 5, 6 |
+| 8 Work and person links | links to the curated work index and to persons of Stefan Zweig Digital or the GND, through the existing reconciliation layer (`pipeline/lib/reconciliation.py`) with its candidates, decisions and open claims; existing title matches superseded | each link with evidence and state | 7 |
+| 9 Adjudication | one local interface and one append-only decision log for values and for claims between records, with the chain from claim to print line or wiki revision. The card workbench of the [Print viewer](print-viewer.md) carries it; the edit mode of the production frontend keeps the field corrections of the wiki under its patch contract. | a person can follow a claim from evidence to decision and decide it | 1, 7 |
+| 10 Projection and delivery | sample object agreed, projection, staging ingest, trial on research tasks. A TEI profile with ODD only if the agreed delivery shape needs TEI; otherwise the validated JSON-LD with provenance per value is the delivery. | deterministic rebuild, every statement traceable to claims, staging ingest succeeds | 0, 8, 9 |
+
+## Measurement
+
+Every human measurement follows rules fixed before its sample is opened.
+
+- The decision rule for automatic confirmation is set before the human round. A rule class may confirm without a person when the lower bound of the 95 percent Wilson interval of its precision on the human sample reaches the threshold the operator sets. Until the operator has set it, no rule class confirms.
+- Values of one object are not independent. Precision is therefore reported per value and per object, and its interval is computed by resampling objects.
+- A second person decides a shared subset of each sample without seeing the first person's decisions. Agreement is reported as Cohen's kappa per kind of decision. Agent annotators measure agreement between agents and never replace the second person.
+- Identifiers of a frozen sample stay valid across rebuilds. A rebuild that moves an identifier fails unless the move is recorded in the sample's remap list with the old identifier, the new one and the reason.
+
+The three human checks that wait for a person run as one round in the card workbench, in this order, so that the blind part stays blind:
+
+1. The blind concordance sample of `p09_human_sample`, from the print entry alone, before the person sees any proposal.
+2. The frozen review sample of `review_sample.py`, value by value with the proposals in view.
+3. The disagreements of the segmentation benchmark.
 
 ## Milestones
 
-The first milestone, segmentation measured, closed step 2 on 2026-10-23: boundary and object scores on the frozen second sample are reported per volume against two blind agent annotators, with the scorer faults found by an independent review corrected, and the disagreement list exists. Its human decision is open and waits for the person who carries the subject checks (Frame).
+Reached
+- Segmentation measured (step 2), 2026-10-23, against two blind agent annotators. Its human decision moves into the human round.
+- Overlap answered (step 3), 2026-10-23.
+- Every object of the three volumes a validated, span-bound record exported as JSON-LD with one provenance chain per value (step 5 without its measurement), 2026-10-24.
 
-The next milestone, concordance measured, carries steps 5 to 7 far enough to judge the merge on all data. Done on 2026-10-23: both routes run over all records, field matches name the wiki publication where the matched line lies in a publication slice that hashes identically to the published one, silver pairs measure the loss of the field route, the errata of Addendum I are compiler claims, and the matches are visible in the lab view from a local file that is never published ([Coordination](coordination.md)). Open:
+Reviewable workbench
+- The findings of the review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) that endanger the measurement are closed, each with a check that fails when the rule is broken.
+- A print gate runs locally: PDF hashes, `p10_validate` with the line-coverage ledger, two rebuilds byte-identical, and the identifier rule of the measurement section.
+- Depends on no person.
 
-- Fields that the concordance depends on are read better, first year and title (an author name before the title, a year inside the title, imprints in brackets), each change measured on the silver pairs before it is kept.
-- A report states what exists only in print, only in the wiki or in both, per volume and kind of publication.
-- The field comparison on silver pairs reports the agreement of wiki and print fields per field and volume; done 2026-10-23 for Addendum II, where it carries.
-- A person with domain expertise annotates a small sample of print entries blind against the wiki, which gives the precision of both routes; an independent review checks method, code and this document. The sample was drawn and frozen on 2026-10-23 (`p09_human_sample`): per volume, entries with a field match, with only a title-year block and with no candidate, so that it also measures what both routes miss. The sheet holds only the print entry; the key with the proposals stays closed until the sheet is complete. It waits for the person who carries the subject checks.
+Human round
+- The three checks above, with the decision rule fixed and the second person's subset.
+- Gives field precision and misses (step 5) and the precision of both concordance routes (step 7).
+- Depends on the reviewable workbench, the operator's threshold and the two persons.
 
-- Step 5 carried to all objects on 2026-10-24: every object of the three volumes is a structured record whose values are bound to their passage with a typed producer, validated against the schema and the invariants over all records, measured per field, type and volume, exported as validated JSON-LD with one provenance chain per value and shown in a local viewer ([Print volumes](print-volumes.md), Structured objects). The LLM stage for objects the rules cannot read waits for the operator's consent to its trial. Correctness of the fields is measured only by persons: the viewer records review decisions per value and object into a separate append-only layer, and `p13_review` measures precision and misses on a frozen review sample of entries that rule development had not seen. The same decision layer, with claims between records as a further kind of target, is the substrate step 9 needs.
+Concordance measured
+- The concordance runs as a pipeline stage, migrates into the shared claim schema (step 1) and reports what exists only in print, only in the wiki or in both.
+- The fields the concordance depends on are read better first, year and title (an author name before the title, a year inside the title, imprints in brackets), each change measured on the silver pairs before it is kept.
+- Recall on silver pairs and precision from the human round per route and volume.
 
-The milestone is reached when recall on silver pairs and precision on the human sample are reported per route and volume and the overlap report exists. No threshold is set in advance; the figures decide which rule classes may confirm automatically. Because the field route matches against wiki fields, it depends on the parallel milestone below.
+Reconstructed entry
+- Groups from confirmed identity claims, and one merged reading per group with the source of every field (print, wiki or both), the deviations side by side and the open claims visible (steps 9 and the projection part of 10).
+- Depends on the operator's decision whether the merge becomes part of the production run, which [Production readiness](production-readiness.md) records.
 
-The parallel milestone, wiki data true to their source passage, makes the published wiki values hold the relation invariant, not only the presence invariant.
+Delivery
+- Work and person links (step 8), delivery shape on the sample object, staging ingest, trial on research tasks (step 10).
+- Depends on step 0.
+
+## Interface milestones
+
+One reader
+- The production frontend is the public reader: the start page shows the sections across the four sources, results open beside the list, and every wiki record states its page kind and permalink.
+- On localhost a print record opens its PDF page.
+- The lab views that hold become views of the production frontend, after which `docs/lab/` and the separate comparison repository are retired.
+
+Reconstructed entry view
+- One card per group with the source of every field, the deviations side by side, the claim states and the way to each member's PDF page or permalink.
+- Depends on the reconstructed entry milestone.
+
+Interface acceptance
+- Keyboard operation, screen reader, 200 percent zoom and narrow widths checked in a browser with read screenshots.
+- An independent review given the user tasks.
+- A session with Zweig specialists on real research tasks.
+
+## Wiki data true to their source passage
+
+This milestone runs in parallel and makes the published wiki values hold the relation invariant, not only the presence invariant.
 
 - Every verified defect class of the review round of 2026-10-23 is fixed at its root cause with a real-record test and an invariant over all records ([Status](status.md)).
 - Original titles link a translation to its work, and the translations section becomes one structured statement per translation (language, title, place, year, translator), each bound to its source passage.
 - Flat fields on pages without edition headers follow an operator decision: shown only where a rule binds them to the described publication, otherwise a gap, or the edition segmentation is extended to these page types.
-- Every statement carries a typed producer (rule, LLM agent, person), which the shared claim schema of step 1 provides; until the operator decides whether delegation to agents confirms, displays name the producer next to the state.
+- Every statement carries a typed producer (rule, LLM agent, person). Until the operator decides whether delegation to agents confirms, displays name the producer next to the state.
 - A second fresh-context review round finds no new defect class, and the wiki-print field comparison gives the accuracy of the wiki fields on the silver pairs.
 
 ## Open questions

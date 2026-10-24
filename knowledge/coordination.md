@@ -43,7 +43,7 @@ The operator set on 2026-10-23 that the whole project advances together: the mer
 | Track | Owner | Plan and milestones | Review before a milestone closes |
 |---|---|---|---|
 | Merged bibliography (print strand) | research coordinator | [Merged bibliography](print-wiki-merge.md), Milestones | independent agent review of method, code and document |
-| Published wiki data | research coordinator | milestone wiki data true to their source passage in [Merged bibliography](print-wiki-merge.md), Milestones; [Status](status.md) | full gate of CLAUDE.md, invariants over all records, fresh-context reviews of data fidelity, interface and tests after each fix batch |
+| Published wiki data | research coordinator | [Merged bibliography](print-wiki-merge.md), Wiki data true to their source passage; [Status](status.md) | full gate of CLAUDE.md, invariants over all records, fresh-context reviews of data fidelity, interface and tests after each fix batch |
 | Lab frontend | AI operator | [Lab frontend](lab-frontend.md), L1 to L7 | independent reviews in the lab plan; coordinator's model check |
 | Blog post | AI operator | [Lab frontend](lab-frontend.md), B1 to B4 | claim check against the artefacts; fresh-context review of the text commissioned by the coordinator |
 | DIA-XAI proposal | AI operator drafts, operator decides | [Lab frontend](lab-frontend.md), A1 to A4; since 2026-10-23 the operator's team draft "Grounds for Use" is the basis, the agent draft v1.4 supplies material | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
