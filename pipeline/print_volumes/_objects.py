@@ -31,6 +31,7 @@ and that probe.
 
 import re
 
+from _common import MONTH
 from _lines import STUB
 
 # Item numbers run to three digits; "[1925]." is a year closing a sentence.
@@ -242,7 +243,6 @@ def unit_kind(unit: list[dict], text: str) -> str:
 IMPRINT = re.compile(
     r"(?<![\w-])[A-Z][\w.'’/ -]{1,40}: [^.;:\[\]]{2,60}?, [\[(]?(1[5-9]|20)\d\d"
 )
-MONTH = r"(?:Jan|Feb|Mar|Apr|May|June?|July?|Aug|Sept?|Oct|Nov|Dec)[a-z]*\.?"
 PERIODICAL = re.compile(
     rf"\d{{1,3}}:\d{{1,3}}[a-z]? \(|\b\d{{1,2}}\.? {MONTH} (1[89]|20)\d\d\b"
 )

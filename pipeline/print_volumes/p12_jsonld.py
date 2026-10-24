@@ -47,7 +47,7 @@ from _common import DERIVED_DIR, HERE, SECTIONS, VOLUMES, write_report
 from _fields import summary
 from _heldout import review_objects
 from _review import MISSING_FIELDS, check, effective, load_log
-from _schema import LANGUAGES, OBJECT_TYPES, ROLES
+from _schema import BASE_KEYS, LANGUAGES, OBJECT_TYPES, ROLES, object_values
 
 RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "jsonld"
@@ -56,7 +56,6 @@ VIEWER = DERIVED_DIR / "viewer"
 CONTEXT_FILE = HERE / "schema" / "print-context.jsonld"
 SHAPES_FILE = HERE / "schema" / "print-shapes.ttl"
 CHUNK = 250
-BASE_KEYS = ("id", "entry", "entry_sha256", "volume", "part", "address", "span", "text")
 CLASSES = {
     "persons": "kp:Person",
     "imprints": "kp:Imprint",
@@ -386,7 +385,9 @@ def build() -> tuple[list[dict], list[dict]]:
                                 "page": r["page"],
                                 "title": label,
                                 "types": [t["value"] for t in o.get("types", [])],
-                                "producers": sorted({v["by"] for v in _walk(o)}),
+                                "producers": sorted(
+                                    {v["by"] for _, v in object_values(o)}
+                                ),
                                 "chunk": "../" + rel,
                                 "review": o["id"] in sample,
                                 "search": _fold(
@@ -395,18 +396,6 @@ def build() -> tuple[list[dict], list[dict]]:
                             }
                         )
     return chunks, index, stale
-
-
-def _walk(node):
-    if isinstance(node, dict):
-        if "span" in node and "by" in node:
-            yield node
-        else:
-            for child in node.values():
-                yield from _walk(child)
-    elif isinstance(node, list):
-        for child in node:
-            yield from _walk(child)
 
 
 def validate_chunk(args: tuple[str, int, int, bool]) -> dict:

@@ -43,7 +43,7 @@ from datetime import UTC, datetime
 from typing import Annotated, Literal
 
 from _common import PRINT_DIR
-from _schema import LANGUAGES, OBJECT_TYPES, ROLES
+from _schema import LANGUAGES, OBJECT_TYPES, ROLES, object_values
 from annotated_types import Len
 from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt, model_validator
 
@@ -55,7 +55,6 @@ DECISIONS = (*VALUE_DECISIONS, *OBJECT_DECISIONS, "withdraw")
 # The paths of p12: keys joined by ".", list positions in brackets.
 PATH = r"^[a-z_]+(?:\[\d+\])?(?:\.[a-z_]+(?:\[\d+\])?)*$"
 OBJECT_ID = r"^(I|A1|A2)/[A-R]/[^#\s]+#\d+$"
-BASE_KEYS = ("id", "entry", "entry_sha256", "volume", "part", "address", "span", "text")
 # The fields a reviewer can add as missing, by family; p13 counts misses so.
 MISSING_FIELDS = (
     "title",
@@ -167,23 +166,7 @@ def stamp(decision: DecisionIn) -> Decision:
 
 def value_paths(obj: dict) -> dict[str, dict]:
     """Every value of an object by its p12 path ("persons[0].roles[1]")."""
-    out: dict[str, dict] = {}
-
-    def walk(node, path: str) -> None:
-        if isinstance(node, dict):
-            if "span" in node and "by" in node:
-                out[path] = node
-                return
-            for key, child in node.items():
-                walk(child, f"{path}.{key}")
-        elif isinstance(node, list):
-            for i, child in enumerate(node):
-                walk(child, f"{path}[{i}]")
-
-    for key, child in obj.items():
-        if key not in BASE_KEYS:
-            walk(child, key)
-    return out
+    return dict(object_values(obj))
 
 
 def _leaf(path: str) -> str:

@@ -14,9 +14,15 @@ from collections import Counter
 
 SUFFIX_TO_VOLUME = {"": "I", "A1": "A1", "A2": "A2"}
 # Address head, then optional continuation items sharing its section letter.
-ITEM = r"\d{1,4}[a-z]?(?:\s?-\s?\d{1,4}[a-z]?)?\*?"
+# An item locator ("HA1 35[1], 38") stays inside the group only where the
+# list goes on; a final one is read as the address's locator.
+ITEM = r"\d{1,4}[a-z]?(?:\s?-\s?\d{1,4}[a-z]?)?\*?(?:\[\d{1,3}[a-z]?\](?=\s?(?:,|&)\s?\d))?"
+# A letter after a page abbreviation, a series word or the dash of a page
+# range is a page or series number ("pp. A345-A346", "Books C 10"), no address.
 REFERENCE = re.compile(
-    rf"(?<![A-Za-z0-9])([A-R])(A[12])?\s?({ITEM}(?:\s?(?:,|&)\s?{ITEM}(?![A-Za-z]))*)"
+    r"(?<![A-Za-z0-9])(?<!\bpp\. )(?<!\bp\. )(?<!\bS\. )(?<!\bBook )(?<!\bBooks )"
+    r"(?<!\bLibrary )(?<!\bSeries )(?<!\d-)(?<!\d- )(?<!\d–)"
+    rf"([A-R])(A[12])?\s?({ITEM}(?:\s?(?:,|&)\s?{ITEM}(?![A-Za-z]))*)"
 )
 INTRO = (
     ("correction", re.compile(r"Correction to\s*$")),

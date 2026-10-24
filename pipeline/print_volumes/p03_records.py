@@ -25,14 +25,16 @@ separately (p07, p08, p09) and the schema and invariants are checked by p10.
 Output: records per volume, pipeline/print_volumes/schema/print-object.schema.json
 (versioned, no print text) and data/print/derived/reports/p03_records.json.
 
-Usage: python -m uv run python pipeline/print_volumes/p03_records.py
+Usage: python -m uv run python pipeline/print_volumes/p03_records.py [--out DIR]
 """
 
+import argparse
 import hashlib
 import json
 import re
 import sys
 from collections import Counter
+from pathlib import Path
 
 from _addresses import REFERENCE
 from _common import DERIVED_DIR, HERE, SECTIONS, VOLUMES, load_lines, write_report
@@ -44,6 +46,7 @@ from _fields import (
     derive_types,
     inherit,
     language_value,
+    place_lexicon,
     text_value,
     value,
 )
@@ -339,7 +342,11 @@ def _relation(record: dict, n: int, span, label, first_id: str | None) -> dict |
 
 
 def structure(
-    records: list[dict], index: dict, llm_cache: dict, stats_llm: Counter
+    records: list[dict],
+    index: dict,
+    llm_cache: dict,
+    stats_llm: Counter,
+    places: frozenset[str] = frozenset(),
 ) -> None:
     """Fill every record's objects with the structured fields."""
     heads: dict[str, dict] = {}
@@ -353,6 +360,7 @@ def structure(
             nxt = parts[n]["span"][0] if n < len(parts) else len(record["text"])
             ctx = {
                 "index": index,
+                "places": places,
                 "next_object_start": nxt,
                 "label_kind": part["label"][2] if part["label"] else None,
             }
@@ -435,23 +443,36 @@ def structure(
 
 
 def main() -> int:
-    RECORDS.mkdir(parents=True, exist_ok=True)
-    SCHEMA_FILE.parent.mkdir(exist_ok=True)
-    SCHEMA_FILE.write_text(
-        json.dumps(json_schema(), ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=RECORDS,
+        help="records directory; another one is a trial run that leaves records, "
+        "schema and report in place (for comparing a refactoring by diff)",
     )
+    args = parser.parse_args()
+    trial = args.out.resolve() != RECORDS.resolve()
+    args.out.mkdir(parents=True, exist_ok=True)
+    SCHEMA_FILE.parent.mkdir(exist_ok=True)
+    if not trial:
+        SCHEMA_FILE.write_text(
+            json.dumps(json_schema(), ensure_ascii=False, indent=1) + "\n",
+            encoding="utf-8",
+        )
     by_volume = {volume: segment(volume) for volume in VOLUMES}
     index: dict[str, str] = {}
     for records in by_volume.values():
         for record in records:
             if record["address"] and record["kind"] != "heading":
                 index.setdefault(record["address"], record["id"])
+    places = place_lexicon(r["text"] for rs in by_volume.values() for r in rs)
     report = {}
     llm_cache = load_cache()
     stats_llm: Counter = Counter()
     for volume, records in by_volume.items():
-        structure(records, index, llm_cache, stats_llm)
-        out = RECORDS / f"entries-{volume}.jsonl"
+        structure(records, index, llm_cache, stats_llm, places)
+        out = args.out / f"entries-{volume}.jsonl"
         tmp = out.with_suffix(".tmp")
         with tmp.open("w", encoding="utf-8") as sink:
             for record in records:
@@ -472,6 +493,9 @@ def main() -> int:
             f"{kinds['reference']} references, {kinds['heading']} headings, "
             f"{len(objects)} objects"
         )
+    if trial:
+        print(f"OK trial records in {args.out}")
+        return 0
     path = write_report("p03_records", report)
     print(f"OK schema {SCHEMA_FILE}")
     print(f"OK report {path}")

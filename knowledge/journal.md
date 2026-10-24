@@ -31,7 +31,9 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 **Decided.** The operator: schema validity is no correctness, so the verification step belongs in the interface; done as the review layer of the viewer. The live LLM trial waits for the operator's consent.
 
-**Open.** The classes of the fourth review. The operator sketched an adjudication board with source cards (wiki and print) on the left, claim cards linked to their sources in the middle and the curated, authority-linked entry on the right, with the process replayable step by step; it maps onto records, claims and groups of [Merged bibliography](print-wiki-merge.md) step 9 and is not decided.
+**Changed after the fourth review.** Its larger classes were fixed at their rules and pinned by invented cases in `test_print_rules.py`; one normalisation now reads every cited title (section code, leading author, credit end), the value walkers of validator, export and review layer became one, and the month notation one strict pattern. The refactoring was accepted by identical trial builds (`p03_records.py --out`), the rule changes by their value-level differences, each read. A fifth review found no regression but three of the fixes incomplete and about twenty further classes (headings glued to entries in Addendum II, credits, imprints and addresses after a double space, periodicals with a non-ASCII initial, holdings cut at a bracket, general abbreviations read as informants, lost hosts and reprint lists, and smaller ones), with about a quarter of the sampled objects carrying a wrong value in both rounds.
+
+**Open.** The classes of the fifth review. The operator sketched an adjudication board with source cards (wiki and print) on the left, claim cards linked to their sources in the middle and the curated, authority-linked entry on the right, with the process replayable step by step; it maps onto records, claims and groups of [Merged bibliography](print-wiki-merge.md) step 9 and is not decided.
 
 ## 2026-10-23 — Review round on data, interface and tests; plan extended
 

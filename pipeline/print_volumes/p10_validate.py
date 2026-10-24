@@ -56,7 +56,7 @@ from _fields import (
 )
 from _llm import PROMPT_ID
 from _objects import ITEM, SPLIT_LABEL, _label_kind
-from _schema import PrintObject
+from _schema import PrintObject, iter_values, object_values
 from pydantic import ValidationError
 
 RECORDS = DERIVED_DIR / "records"
@@ -83,8 +83,9 @@ DATE_ONLY = re.compile(
     re.IGNORECASE,
 )
 EDITION_ONLY = re.compile(
-    r"^(?:\d+(?:st|nd|rd|th)|New|Rev\.|Revised|Large print|Pktbk\.|Paperback|Special)"
-    r"\s(?:ed|impr|edition)|^\(?\d+\.\s?(?:-\s?\d+\.\s?)?(?:Tsd|Auflage)",
+    r"^(?:\d+(?:st|nd|rd|th)|New|Rev\.|Revised|Large print|Pktbk\.|Prbk\.|Paperback|Special|"
+    r"Book ?[Cc]lub)\s(?:ed|impr|edition)|^\(?\d+\.\s?(?:-\s?\d+\.\s?)?(?:Tsd|Auflage)|"
+    r"^(?:New|First|Second|Third|\d+(?:st|nd|rd|th))(?: private)? printing\b|^Microcard\b|^NB$",
     re.IGNORECASE,
 )
 SIGLUM_ONLY = re.compile(r"^[A-Z]{2,6}$")
@@ -93,6 +94,7 @@ ISSUE_ONLY = re.compile(r"^(?:No|Nr|Nos|pp?)\.?$")
 INVERTED_NAME = re.compile(
     r"^[A-ZÀ-ÞĀ-ž][\w'’-]+(?:[ -][A-ZÀ-ÞĀ-ž][\w'’-]+)?, (?:[A-ZÀ-ÞĀ-ž][\w'’-]*\.?\s?){1,4}$"
 )
+EXTENT_IN = re.compile(r"\b\d+(?:/[\[(]\d+[\])])?p\b|\b\d+\.-\d+\. Tsd")
 CITATION_TAIL = re.compile(r"(?:1[5-9]|20)\d\d, pp?\b|,\s(?:pp?|S)\.?$")
 _FN = r"[A-ZÀ-ÞĀ-ž][a-zß-ÿā-ž'’-]+"
 NAME_LIST = re.compile(rf"^{_FN} {_FN}(?:, {_FN} {_FN})+$")
@@ -114,28 +116,8 @@ def _known_rules() -> tuple[set[str], tuple[str, ...]]:
 
 
 def _values(node, path=""):
-    """(path, value dict) for every value inside node."""
-    if isinstance(node, dict):
-        if "span" in node and "by" in node:
-            yield path, node
-            return
-        for key, child in node.items():
-            if key in (
-                "span",
-                "text",
-                "id",
-                "entry",
-                "entry_sha256",
-                "address",
-                "volume",
-                "part",
-            ):
-                if path == "":
-                    continue
-            yield from _values(child, f"{path}.{key}" if path else key)
-    elif isinstance(node, list):
-        for i, child in enumerate(node):
-            yield from _values(child, f"{path}[{i}]")
+    """(path, value dict) for every value inside node; an object's base keys are left out."""
+    return object_values(node) if path == "" else iter_values(node, path)
 
 
 def check_object(
@@ -236,7 +218,7 @@ def _shape(obj: dict) -> list[tuple[str, str]]:
         if not isinstance(val, str):
             continue
         # A title moved into a host is checked like the object's own title.
-        host_title = bool(re.fullmatch(r"hosts\[\d+\]\.title", path))
+        host_title = bool(re.fullmatch(r"(?:hosts|periodicals)\[\d+\]\.title", path))
         if field in ("title", "subtitle"):
             if DATE_ONLY.match(val):
                 out.append(("shape", f"{path}: a date"))
@@ -291,8 +273,10 @@ def _shape(obj: dict) -> list[tuple[str, str]]:
             out.append(("shape", f"{path}: no place"))
         elif field == "name" and (re.search(r"\d", val) or len(val) > 80):
             out.append(("shape", f"{path}: no name"))
-        elif field == "publisher" and (CREDIT_WORD.search(val) or len(val) > 120):
-            out.append(("shape", f"{path}: a credit or a sentence"))
+        elif field == "publisher" and (
+            CREDIT_WORD.search(val) or len(val) > 120 or EXTENT_IN.search(val)
+        ):
+            out.append(("shape", f"{path}: a credit, an extent or a sentence"))
     return out
 
 

@@ -26,6 +26,14 @@ REPORT_DIR = DERIVED_DIR / "reports"
 SECTIONS = json.loads((HERE / "sections.json").read_text(encoding="utf-8"))
 VOLUMES = tuple(SECTIONS["volumes"])
 
+# A month as the volumes abbreviate or spell it in dates, and nothing longer:
+# "Novellen 1920" and "Janowitz. 1970" hold no month. p10 keeps its own
+# notation on purpose.
+MONTH = (
+    r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|Juni|July?|Juli|"
+    r"Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?(?![A-Za-zÀ-ÿ])"
+)
+
 # WordPerfect substitute fonts and the stand-ins they leave in the text layer.
 DEFECT_CHARS = re.compile("[￿\x00─-╿]")
 DEFECT_FONT = re.compile(r"^WP-")

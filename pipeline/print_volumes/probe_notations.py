@@ -17,11 +17,10 @@ import re
 import sys
 from collections import Counter, defaultdict
 
-from _common import DERIVED_DIR, VOLUMES, write_report
+from _common import DERIVED_DIR, MONTH, VOLUMES, write_report
 from _heldout import is_held_out
 
 RECORDS = DERIVED_DIR / "records"
-MONTH = r"(?:Jan|Feb|Mar|Apr|May|June?|July?|Aug|Sept?|Oct|Nov|Dec)[a-z]*\.?"
 NOTATIONS = {
     "role:Tr.": r"\bTr\.",
     "role:Trl.": r"\bTrls?\.",

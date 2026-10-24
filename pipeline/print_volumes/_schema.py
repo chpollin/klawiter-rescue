@@ -370,6 +370,35 @@ class PrintObject(_Strict):
         return self
 
 
+# The keys of an object that are no values of its own.
+BASE_KEYS = ("id", "entry", "entry_sha256", "volume", "part", "address", "span", "text")
+
+
+def iter_values(node, path: str = ""):
+    """(path, value) for every value dict below node, in document order.
+
+    Paths join keys with "." and give list positions in brackets
+    ("persons[0].roles[1]"); p12 names a value's field so, and review
+    decisions are keyed by it, so every walker of the print strand uses this
+    one."""
+    if isinstance(node, dict):
+        if "span" in node and "by" in node:
+            yield path, node
+            return
+        for key, child in node.items():
+            yield from iter_values(child, f"{path}.{key}" if path else key)
+    elif isinstance(node, list):
+        for i, child in enumerate(node):
+            yield from iter_values(child, f"{path}[{i}]")
+
+
+def object_values(obj: dict):
+    """(path, value) for every value of a print object, its base keys left out."""
+    for key, child in obj.items():
+        if key not in BASE_KEYS:
+            yield from iter_values(child, key)
+
+
 NON_EMPTY = {
     "Imprint": ("place", "publisher", "year"),
     "Periodical": ("title", "siglum"),

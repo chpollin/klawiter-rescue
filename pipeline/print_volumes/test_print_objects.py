@@ -14,7 +14,7 @@ from _common import HERE
 from _fields import Reader, derive_types
 from _llm import merge, verify
 from _review import Correction, DecisionIn, ValueRef, check, effective, load_log, stamp
-from _schema import json_schema
+from _schema import json_schema, object_values
 from p10_validate import RECORDS, _known_rules, check_object, validate
 from p12_jsonld import (
     CONTEXT_FILE,
@@ -188,6 +188,31 @@ def test_jsonld_export_validates_and_catches_a_broken_chain(tmp_path):
     assert any("SHACL" in p for p in _validated(doc, values, tmp_path))
     doc["@graph"][-1]["undefined_term"] = 1
     assert any("undefined terms" in p for p in _validated(doc, values, tmp_path))
+
+
+def test_export_fields_are_the_paths_review_decisions_use():
+    # Decisions are keyed by path; p12 must name every value's field alike.
+    record = _record()
+    obj = _object(record)
+    obj["hosts"] = [{"title": obj["title"], "persons": obj.get("persons", [])}]
+    exporter = Exporter(
+        {record["id"]: {**record, "line": 1, "context": [], "objects": [obj]}}
+    )
+    node = exporter.obj(obj)
+    fields = [v["field"] for v in _value_nodes(node)]
+    assert fields == [path for path, _ in object_values(obj)]
+
+
+def _value_nodes(node):
+    if isinstance(node, dict):
+        if "kp:Value" in node.get("type", []):
+            yield node
+            return
+        for child in node.values():
+            yield from _value_nodes(child)
+    elif isinstance(node, list):
+        for child in node:
+            yield from _value_nodes(child)
 
 
 def _reviewed():
