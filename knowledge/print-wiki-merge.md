@@ -139,7 +139,7 @@ Delivery
 One reader
 - The production frontend is the public reader: the start page shows the sections across the four sources, results open beside the list, and every wiki record states its page kind and permalink.
 - On localhost a print record opens its PDF page.
-- The lab views that hold become views of the production frontend, after which `docs/lab/` and the separate comparison repository are retired.
+- The separate `docs/lab/` prototypes and `pipeline/lab/` scripts are retired by operator decision on 2026-10-24; all interface development continues directly on the production frontend and the local card workbench.
 
 Reconstructed entry view
 - One card per group with the source of every field, the deviations side by side, the claim states and the way to each member's PDF page or permalink.

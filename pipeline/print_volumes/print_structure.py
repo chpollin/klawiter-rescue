@@ -5,7 +5,7 @@ the bibliography: the main volume, the two addenda and the wiki. The wiki side
 is public; the print side is derived from the print records and therefore stays
 local. This script writes counts and number ranges only, no print text, to
 data/print/derived/lab/print-structure.json and copies it to the ignored
-docs/lab/local/, where the frontend looks for it on localhost.
+docs/local/, where the frontend looks for it on localhost.
 
 Per volume and part: entries (records of kind entry), the highest entry number
 read from the addresses, the PDF pages, and for an index the number of its
@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SECTIONS = Path(__file__).with_name("sections.json")
 RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "lab" / "print-structure.json"
-LOCAL = ROOT / "docs" / "lab" / "local" / "print-structure.json"
+LOCAL = ROOT / "docs" / "local" / "print-structure.json"
 VIEWER = "http://127.0.0.1:8767/viewer/index.html"
 # Object types that make an object a publication, the level the sources share;
 # holdings, events, series, references and untyped objects are counted apart.
@@ -96,7 +96,8 @@ def main() -> int:
         )
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(structure, indent=1), encoding="utf-8")
-    if LOCAL.parent.exists():
+    if (ROOT / "docs").exists():
+        LOCAL.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(OUT, LOCAL)
     counts = {
         v: sum(p["entries"] for p in s.values() if p["kind"] == "body")

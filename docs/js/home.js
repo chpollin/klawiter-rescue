@@ -9,7 +9,7 @@
  * spans their rows (covers); essays cover C and H, which are not adjacent, so
  * the count stands at C and H points to it (seeAlso). The print columns
  * appear only on localhost when the print strand has written
- * lab/local/print-structure.json (pipeline/print_volumes/print_structure.py),
+ * local/print-structure.json (pipeline/print_volumes/print_structure.py),
  * because the rights to the print volumes are unresolved.
  */
 const SECTION_ROWS = [
@@ -108,7 +108,7 @@ const Home = {
   async loadPrint() {
     if (!App.state.isLocal) return;
     try {
-      const response = await fetch('lab/local/print-structure.json');
+      const response = await fetch('local/print-structure.json');
       if (response.ok) this.print = await response.json();
     } catch {
       this.print = null;
