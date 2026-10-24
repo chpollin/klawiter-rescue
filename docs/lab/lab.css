@@ -293,7 +293,6 @@
   .row-title { font-weight: 600; }
   .row-meta { font-family: var(--font-sans); font-size: 0.875rem; color: var(--sz-text-light); }
   .pub-lines { font-family: var(--font-sans); font-size: 0.875rem; padding-inline-start: 1rem; }
-  .pub-lines li.is-hidden-by-filter { display: none; }
   .tag { font-family: var(--font-sans); font-size: 0.8125rem; color: var(--sz-text-light); font-style: italic; }
   .compiler-text { font-family: var(--font-serif); white-space: pre-wrap; max-inline-size: var(--measure); }
 

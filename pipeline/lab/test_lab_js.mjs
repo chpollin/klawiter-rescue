@@ -1,8 +1,9 @@
 // Node test of the lab's browser rules; runs with `node pipeline/lab/test_lab_js.mjs`,
 // no npm dependency. fold() is checked against fold_samples.json, the file the
 // Python test checks fold_search against, so both folds stay in step. Fixture
-// values are cut from the prepared lab data (pages 279, 340, 4456, 5357 and the
-// search rows of lab-work/249, 281, 774 and 6820).
+// values are cut from the prepared lab data: pages 258, 279, 340, 413, 426,
+// 448, 1846, 4456 and 5357, and the search rows of lab-work/249, 281, 774 and
+// 6820.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
@@ -11,6 +12,7 @@ import {
   editionStateText, originLabel, placeStateParts, placeStateText, printPaneState, provenanceSteps,
 } from '../../docs/lab/js/labels.js';
 import { editionsByLanguage, labelLanguage, pageRank, rankWorks } from '../../docs/lab/js/editions.js';
+import { bibtex, jsonExport, ris } from '../../docs/lab/js/record-export.js';
 
 const samples = JSON.parse(readFileSync(new URL('./fold_samples.json', import.meta.url), 'utf8'));
 for (const { input, expected } of samples.samples) {
@@ -171,4 +173,42 @@ const gapChain = chain(provenanceSteps({
 }));
 assert.match(gapChain, /reported "Jorgi Doksani" in the raw text while the record is empty; no rule and no person adopted it/);
 
-console.log(`ok ${samples.samples.length} fold samples, print-pane cases, label mapping, search order, editions by language, provenance chain`);
+// Exports (S3.2). Page 1846 holds two translators in one page-level value; the
+// 1968 publication of page 448 has the extent "326/(2)p.".
+const state = { commit: '328de7cd69e6', inputsSha256Short: 'ad8ab1babcf8', rulesVersion: 'lab-rules-3' };
+const field = (value, origin = 'regex') => ({ value, origin });
+const page1846 = {
+  pageId: 1846, title: 'Jučerašnji svijet', dataState: state, placeDecision: null, publications: [],
+  record: { fields: {
+    title: field('Jučerašnji svijet'), year: field(1965), publisher: field('Otokar Keršovani'), location: field('Rijeka'),
+    language: field('Croatian'), pageCount: field(null, 'missing'),
+    translator: { value: 'Vladislav Šarić, Mary Melichar', origin: 'llm', verification: 'not-found',
+      occurrences: { parts: [{ part: 'Vladislav Šarić' }, { part: 'Mary Melichar' }] } },
+  } },
+};
+const exportCtx = (page, target, zweigAuthored) => ({ page, meta: { texts: { record: 'one record for the whole page', placeScope: 'x' } }, target, url: 'https://example.org/lab', accessed: '2026-10-24', zweigAuthored });
+const bib1846 = bibtex(exportCtx(page1846, 'page', true));
+assert.match(bib1846, /translator = \{Vladislav Šarić and Mary Melichar\}/);
+assert.match(bib1846, /Author Zweig, Stefan: derived from the entry type by a lab rule\./);
+assert.match(bib1846, /Translator: the automatic check did not find this value in the raw text/);
+assert.match(bib1846, /Translator: LLM gap fill/);
+const page448 = {
+  pageId: 448, title: 'Netrpělivost srdce', dataState: state, placeDecision: null,
+  record: { fields: {} },
+  publications: [{ id: 'klawiter:publication/448-1968-a', year: 1968, title: 'Netrpělivost srdce',
+    editionAssignment: { state: 'proposed', producerShort: 'rule' }, placeDecisions: [{ place: 'Praha', decision: null }],
+    fields: { publisher: field('Svoboda'), places: [field('Praha')], translators: [field('Božena Koseková')], extent: field('326/(2)p.'),
+      language: field('Czech'), editionStatement: field(null, 'missing'), series: field(null, 'missing') } }],
+};
+const ris448 = ris(exportCtx(page448, '0', true));
+assert.ok(!/^SP {2}- /m.test(ris448), 'the extent of a volume is no start page');
+assert.match(ris448, /^N1 {2}- Extent as in the source: 326\/\(2\)p\. Author/m);
+assert.match(ris448, /^A4 {2}- Božena Koseková\r$/m);
+assert.match(ris448, /State and producer: edition assignment: proposed, rule; Praha: no Wikidata decision recorded, no link\./);
+assert.ok(!/pagetotal/.test(bibtex(exportCtx(page448, '0', true))), 'a non-numeric extent is no page total');
+const json448 = jsonExport(exportCtx(page448, '0', true));
+assert.equal(json448.accessed, '2026-10-24');
+assert.equal(json448.fields.extent.origin, 'regex');
+assert.equal(json448.fields.editionStatement.origin, 'missing');
+
+console.log(`ok ${samples.samples.length} fold samples, print-pane cases, label mapping, search order, editions by language, provenance chain, exports`);

@@ -13,15 +13,12 @@
 import {
   loadJSON, h, fill, readHash, writeHash, dataStateBlock, initHeader, errorBlock, plural,
 } from './lab.js';
-import { placeStateText } from './labels.js';
+import { FIELD_LABELS, ORIGIN as ORIGIN_WORDS, placeStateText } from './labels.js';
 
 const main = document.getElementById('main');
-const LABELS = {
-  title: 'Title', year: 'Year', publisher: 'Publisher', location: 'Place',
-  language: 'Language', translator: 'Translator', pageCount: 'Page count', locationSameAs: 'Wikidata link of the place',
-};
-const ORIGIN = { regex: 'rule', llm: 'LLM gap fill', editor: 'editor', missing: 'no value recorded' };
+const LABELS = { ...FIELD_LABELS, locationSameAs: 'Wikidata link of the place' };
 const NO_VALUE = 'no value recorded';
+const ORIGIN = { ...ORIGIN_WORDS, missing: NO_VALUE };
 
 let records = null;
 let current = null;

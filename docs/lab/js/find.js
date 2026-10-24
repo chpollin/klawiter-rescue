@@ -16,21 +16,17 @@ import {
   loadJSON, h, fill, add, readHash, writeHash, fold, typeLabel, dataStateBlock, citation, citeUrl,
   download, copyText, initHeader, errorBlock, yearsSpan, plural,
 } from './lab.js';
-import { editionsByLanguage, pageRank, rankWorks } from './editions.js';
+import { NOT_RECORDED, editionsByLanguage, pageRank, rankWorks } from './editions.js';
+import { FIELD_LABELS } from './labels.js';
 
 const main = document.getElementById('main');
 const NONE = 'none';
-const NOT_RECORDED = 'language not recorded';
 const SEARCH_CAP = 500;
 const EXCLUDED_LABELS = {
   'year-or-number': 'with a year or number',
   place: 'naming a place',
   'english-gloss': 'English glosses',
   'several-titles': 'several titles',
-};
-const FIELD_LABELS = {
-  year: 'Year', publisher: 'Publisher', location: 'Place', language: 'Language',
-  translator: 'Translator', pageCount: 'Page count',
 };
 
 let index = null;
@@ -304,16 +300,18 @@ async function renderWork(params) {
   const rel3Ids = new Set(work.citingTitleInBrackets.pageIds);
   ctx.rel1Ids = rel1Ids;
   ctx.rel3Ids = rel3Ids;
+  const zweig = new Set(typeof ZWEIG_AUTHOR_TYPES !== 'undefined' ? ZWEIG_AUTHOR_TYPES : []);
+  const ed = editionsByLanguage(work, zweig, f);
 
   fill(main, 
     h('h1', {}, work.title),
     filterBar(params, { search: false }),
     status,
-    anchorBlock(work, ctx),
-    editionsSection(work, ctx),
+    anchorBlock(work),
+    editionsSection(ed, ctx),
     h('p', { class: 'sans' }, `${plural(union.count, 'page', 'pages')} in parts 1 and 3 (union, each page counted once); ${plural(union.inBothParts.length, 'page stands', 'pages stand')} in both parts and ${union.inBothParts.length === 1 ? 'is' : 'are'} marked in each. Anchor pages are counted apart.`),
     part1(work, ctx),
-    part2(work, ctx),
+    part2(work, ctx, ed),
     part3(work, ctx),
     h('p', { class: 'note' }, `${work.scopeNote} See the `, h('a', { href: '#scope' }, 'scope panel'), '.'),
     workTools(work, data.dataState));
@@ -324,10 +322,8 @@ async function renderWork(params) {
     if (d.open) ids.add(d.dataset.group); else ids.delete(d.dataset.group);
     if (ids.size) next.set('open', [...ids].join(',')); else next.delete('open');
     writeHash(next, { replace: true });
-    if (d.open && d.dataset.lazy) d.dispatchEvent(new Event('lazyopen'));
     refreshWorkCitation(work, data.dataState);
   }));
-  main.querySelectorAll('details.group[open][data-lazy]').forEach(d => d.dispatchEvent(new Event('lazyopen')));
   status.textContent = filtersActive(f)
     ? `${ctx.shown} of ${ctx.total} listed rows match the filter ${describeFilter(f)}. The counts in the part headings stay those of the whole work.`
     : '';
@@ -341,8 +337,8 @@ function describeFilter(f) {
   return bits.join(', ');
 }
 
-function group(ctx, id, summary, body, { lazy = false } = {}) {
-  return h('details', { class: 'group', 'data-group': id, 'data-lazy': lazy ? 'true' : null, open: ctx.open.has(id) || null },
+function group(ctx, id, summary, body) {
+  return h('details', { class: 'group', 'data-group': id, open: ctx.open.has(id) || null },
     h('summary', {}, summary), body);
 }
 
@@ -378,41 +374,16 @@ function rowsList(rows, ctx, tags = () => []) {
   return { list: items.length ? h('ul', { class: 'rows' }, items) : h('p', { class: 'gap' }, 'No row matches the filter.'), shown };
 }
 
-function anchorBlock(work, ctx) {
+/** The anchor pages; their publications stand in the editions table below. */
+function anchorBlock(work) {
   const a = work.anchor;
   const anchorPage = a.members.find(m => m.pageId === a.pageId);
-  const reprints = work.listedAsText.sources.flatMap(s => s.germanReprints.map(r => ({ ...r, pageId: s.pageId })));
-  const pubsBody = h('div', {}, h('p', { class: 'status' }, 'Opening loads the anchor pages.'));
-  const details = group(ctx, 'anchor-pubs',
-    [`Publications on the anchor pages `, h('span', { class: 'count' }, plural(a.publicationsOnAnchorPages, 'publication', 'publications'))],
-    pubsBody, { lazy: true });
-  details.addEventListener('lazyopen', () => loadAnchorPublications(a, pubsBody, ctx), { once: true });
   return h('section', { class: 'part', 'aria-labelledby': 'anchor-h' },
     h('h2', { id: 'anchor-h' }, 'Anchor'),
     a.germanWorkPage ? null : h('p', { class: 'gap' }, 'No German work page exists for this work.'),
     h('p', {}, `Anchor: "${anchorPage ? anchorPage.title : a.pageId}" (page ${a.pageId})${a.vist ? ', the compiler\'s VIST work page,' : ', a German page without a VIST page,'} and the German pages listed here.`),
     h('ul', { class: 'rows' }, a.members.map(m => h('li', {},
-      h('a', { href: `judge.html#page=${m.pageId}` }, m.title), h('span', { class: 'row-meta' }, ` page ${m.pageId}, ${m.reason}`)))),
-    details,
-    reprints.length ? group(ctx, 'anchor-reprints',
-      ['German reprints listed in the Translations section ', h('span', { class: 'count' }, plural(reprints.length, 'line', 'lines'))],
-      h('ul', { class: 'rows' }, reprints.map(r => h('li', {}, h('span', { class: 'compiler-text', lang: 'de' }, `${r.language}: ${r.text}`), h('span', { class: 'row-meta' }, ` (page ${r.pageId})`))))) : null);
-}
-
-async function loadAnchorPublications(anchor, body, ctx) {
-  try {
-    const pages = await Promise.all(anchor.members.map(m => loadJSON(`pages/${m.pageId}.json`)));
-    fill(body, ...pages.map(p => h('div', {},
-      h('h3', {}, h('a', { href: `judge.html#page=${p.pageId}` }, p.title), h('span', { class: 'row-meta' }, ` page ${p.pageId}`)),
-      p.publications.length
-        ? h('ul', { class: 'pub-lines' }, p.publications
-          .filter(pub => !filtersActive(ctx.f) || unitOk({ year: pub.year, language: pub.fields.language.value }, ctx.f))
-          .map(pub => h('li', {}, h('a', { href: `judge.html#page=${p.pageId}&pub=${encodeURIComponent(pub.id)}` },
-            `${pub.year ?? 'year not recorded'} ${pub.imprint || 'imprint not recorded'}`), pub.fields.language.value ? `, ${pub.fields.language.value}` : ', language not recorded')))
-        : h('p', { class: 'gap' }, `No publication breakdown; the page records ${yearsSpan(p.allYears)}.`))));
-  } catch (error) {
-    fill(body, errorBlock(error));
-  }
+      h('a', { href: `judge.html#page=${m.pageId}` }, m.title), h('span', { class: 'row-meta' }, ` page ${m.pageId}, ${m.reason}`)))));
 }
 
 const BASIS_WORDS = { anchor: 'anchor pages', linked: 'linked by the compiler', brackets: 'cites the title in brackets, lab rule' };
@@ -422,9 +393,7 @@ const BASIS_WORDS = { anchor: 'anchor pages', linked: 'linked by the compiler', 
  * language with first and last year, and every count opens exactly its
  * publications. The parts below keep the evidence of each relation apart.
  */
-function editionsSection(work, ctx) {
-  const zweig = new Set(typeof ZWEIG_AUTHOR_TYPES !== 'undefined' ? ZWEIG_AUTHOR_TYPES : []);
-  const ed = editionsByLanguage(work, zweig, ctx.f);
+function editionsSection(ed, ctx) {
   const unitLine = u => {
     const when = u.publicationId ? (u.year ?? 'year not recorded') : `${yearsSpan(u.years)}, page without breakdown`;
     const href = `judge.html#page=${u.pageId}${u.publicationId ? `&pub=${encodeURIComponent(u.publicationId)}` : ''}`;
@@ -442,9 +411,7 @@ function editionsSection(work, ctx) {
         h('span', { class: 'count' }, `on ${plural(r.pages, 'page', 'pages')}${r.undated ? `, ${r.undated} without a year` : ''}`)],
       h('ul', {}, r.units.map(unitLine)))),
     h('td', { 'data-label': 'Basis' }, Object.entries(r.basis).filter(([, n]) => n).map(([b, n]) => `${BASIS_WORDS[b]} ${n}`).join('; ')),
-    h('td', { 'data-label': 'Translations section' }, r.textLines.length
-      ? group(ctx, `${groupId(r.language)}-text`, 'listed', h('ul', {}, r.textLines.map(l => h('li', { class: 'compiler-text' }, `${l.language}: ${l.text}`))))
-      : 'not listed')));
+    h('td', { 'data-label': 'Translations section' }, r.textLines.length ? 'listed, see part 2' : 'not listed')));
   const left = ed.leftOut;
   return h('section', { class: 'part', 'aria-labelledby': 'ed-h' },
     h('h2', { id: 'ed-h' }, 'Editions and translations by language',
@@ -459,12 +426,6 @@ function editionsSection(work, ctx) {
           h('th', { scope: 'col' }, 'Compiler\'s Translations section'))),
         h('tbody', {}, rows)))
       : h('p', { class: 'gap' }, 'No publication matches the filter.'),
-    ed.textOnly.length ? group(ctx, 'ed-text-only',
-      ['Translations section lines without a table row ', h('span', { class: 'count' }, `${plural(new Set(ed.textOnly.map(l => l.language)).size, 'language name', 'language names')}; the year filter does not apply`)],
-      [h('p', { class: 'part-note' }, 'No row of the table carries exactly the language name of these lines. The compiler\'s names can differ from the languages recorded for the pages, and the lab does not equate them, so a line here can still have pages in the table under another name.'),
-        h('ul', { class: 'rows' }, ed.textOnly.map(l => h('li', {},
-          h('span', { class: 'compiler-text' }, `${l.language}: ${l.text}`),
-          l.variantPages ? h('span', { class: 'row-meta' }, ` ${plural(l.variantPages, 'page', 'pages')} in this language ${l.variantPages === 1 ? 'cites' : 'cite'} a variant of the title, see "Possibly the same title" in part 3.`) : null)))]) : null,
     left.anchorsWithoutBreakdown.length ? h('p', { class: 'part-note' }, `Not counted as editions: ${left.anchorsWithoutBreakdown.map(a => `"${a.title}" (page ${a.pageId})`).join(', ')}, ${left.anchorsWithoutBreakdown.length === 1 ? 'an anchor page without a publication breakdown, which lists' : 'anchor pages without a publication breakdown, which list'} the whole work.`) : null,
     h('p', { class: 'part-note' }, `Left out: ${plural(left.adaptations, 'page', 'pages')} of adaptations and readings and ${plural(left.secondary, 'page', 'pages')} of secondary literature and other kinds linked by the compiler, ${plural(left.otherTypesInBrackets, 'page', 'pages')} citing the title in brackets whose entry type is not one of Zweig's own works, and ${plural(left.germanPagesNamingTheWorkPage, 'German page', 'German pages')} that only name the work page in their see-also list, mostly other works and volumes (listed in part 1). ${left.possiblySameTitle.pages ? `${plural(left.possiblySameTitle.pages, 'page', 'pages')} with ${plural(left.possiblySameTitle.publications, 'publication', 'publications')} cite a variant form of the title and stay a separate list, "Possibly the same title" in part 3, because the lab does not merge name forms. ` : ''}Appearances inside anthologies and collected volumes are covered only where the work page links the volume, marked "anchor page: linked by the VIST page".`));
 }
@@ -532,23 +493,34 @@ function gapGroups(rel, work, ctx, prefix) {
   ];
 }
 
-function part2(work, ctx) {
+/**
+ * The compiler's "Translations" section (relation 2), German reprint lines
+ * first. A line whose language name no row of the editions table carries says
+ * so here, the one place the line stands.
+ */
+function part2(work, ctx, ed) {
   const r = work.listedAsText;
+  const withoutRow = new Map(ed.textOnly.map(l => [`${l.pageId}|${l.language}`, l]));
   const body = [];
   if (!r.sources.length) {
     body.push(h('p', { class: 'gap' }, 'The anchor pages carry no "Translations" section.'));
   }
   for (const source of r.sources) {
-    const entries = source.languages.filter(e => !ctx.f.lang || ctx.f.lang === NONE || e.language.toLowerCase().startsWith(ctx.f.lang.toLowerCase()));
+    const entries = [...source.germanReprints, ...source.languages]
+      .filter(e => !ctx.f.lang || ctx.f.lang === NONE || e.language.toLowerCase().startsWith(ctx.f.lang.toLowerCase()));
     body.push(h('p', { class: 'part-note' }, `From the "Translations" section of page ${source.pageId}, as the compiler wrote it.`));
     if (!entries.length) body.push(h('p', { class: 'gap' }, 'No language line matches the language filter.'));
-    body.push(entries.map(e => group(ctx, `p2-${source.pageId}-${e.language}`,
-      [`${e.language} `, h('span', { class: 'count' }, `"${e.text.length > 70 ? e.text.slice(0, 70) + '…' : e.text}"`)],
-      h('p', { class: 'compiler-text' }, e.text))));
+    body.push(entries.map(e => {
+      const alone = withoutRow.get(`${source.pageId}|${e.language}`);
+      return group(ctx, `p2-${source.pageId}-${e.language}`,
+        [`${e.language} `, h('span', { class: 'count' }, e.text.length > 70 ? `${e.text.slice(0, 70)}…` : e.text), alone ? h('span', { class: 'tag' }, ' no table row') : null],
+        [h('p', { class: 'compiler-text' }, e.text),
+          alone ? h('p', { class: 'part-note' }, `No row of the editions table carries the language name "${e.language}". The compiler's names can differ from the languages recorded for the pages, and the lab does not equate them.${alone.variantPages ? ` ${plural(alone.variantPages, 'page', 'pages')} in this language ${alone.variantPages === 1 ? 'cites' : 'cite'} a variant of the title, see "Possibly the same title" in part 3.` : ''}`) : null]);
+    }));
   }
   return h('section', { class: 'part', 'aria-labelledby': 'p2-h' },
     h('h2', { id: 'p2-h' }, 'Listed on the work page as text', h('span', { class: 'count' }, plural(r.languageCount, 'language', 'languages'))),
-    h('p', { class: 'part-note' }, 'The compiler\'s "Translations" section, parsed by the lab and shown as written. These lines are not linked to pages; the year filter does not apply to them.'),
+    h('p', { class: 'part-note' }, `The compiler's "Translations" section, parsed by the lab and shown as written. These lines are not linked to pages; the year filter does not apply to them. ${plural(new Set(ed.textOnly.map(l => l.language)).size, 'language name has', 'language names have')} no row in the editions table.`),
     body);
 }
 

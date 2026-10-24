@@ -8,20 +8,18 @@
 
 import {
   loadJSON, h, fill, add, readHash, writeHash, typeLabel, dataStateBlock, citation, citeUrl,
-  download, copyText, initHeader, errorBlock, yearsSpan, plural,
+  download, copyText, initHeader, errorBlock, yearsSpan, plural, accessDate,
 } from './lab.js';
 import {
-  ORIGIN, editionStateText, placeStateParts, placeStateText, printPaneState, provenanceSteps,
+  FIELD_LABELS as RECORD_LABELS, ORIGIN, editionStateText, placeStateParts, printPaneState,
+  provenanceSteps,
 } from './labels.js';
+import { bibtex, jsonExport, ris } from './record-export.js';
 
 const main = document.getElementById('main');
 const NO_VALUE = 'no value recorded';
 const NO_EXACT = 'no exact occurrence, the value may be normalised';
 const sentence = text => `${text[0].toUpperCase()}${text.slice(1)}.`;
-const RECORD_LABELS = {
-  title: 'Title', year: 'Year', publisher: 'Publisher', location: 'Place',
-  language: 'Language', translator: 'Translator', pageCount: 'Page count',
-};
 const BOUNDARY_REASONS = {
   'record-has-no-year': 'The record has no year, so the boundary check does not run.',
   'year-publication-passage-not-located':
@@ -619,9 +617,10 @@ function toolsRow() {
   const exportAs = kind => {
     const target = select.value;
     const stem = target === 'page' ? `klawiter-lab-page-${page.pageId}` : `klawiter-lab-${page.publications[Number(target)].id.split('/').pop()}`;
-    const [text, ext, type] = kind === 'bib' ? [bibtex(target), 'bib', 'application/x-bibtex']
-      : kind === 'ris' ? [ris(target), 'ris', 'application/x-research-info-systems']
-        : [JSON.stringify(jsonExport(target), null, 2), 'json', 'application/json'];
+    const ctx = exportContext(target);
+    const [text, ext, type] = kind === 'bib' ? [bibtex(ctx), 'bib', 'application/x-bibtex']
+      : kind === 'ris' ? [ris(ctx), 'ris', 'application/x-research-info-systems']
+        : [JSON.stringify(jsonExport(ctx), null, 2), 'json', 'application/json'];
     download(`${stem}.${ext}`, text, type);
     status.textContent = `Downloaded ${stem}.${ext}.`;
   };
@@ -654,160 +653,13 @@ function citeText(target) {
   return citation({ what: `"${pub.title || page.title}", ${pub.imprint || 'imprint not recorded'}, ${pub.year ?? 'no year recorded'}, publication on wiki page ${page.pageId}`, identifier: pub.id, url, state: page.dataState });
 }
 
-function originText(field) {
-  if (field.value === null || field.value === '') return NO_VALUE;
-  return ORIGIN[field.origin] || field.origin || 'origin not recorded';
-}
-
-/** The record or publication as plain fields plus the provenance statements every format carries. */
-function exportModel(target) {
-  if (target === 'page') {
-    const f = page.record.fields;
-    const warnings = [];
-    for (const [name, field] of Object.entries(f)) {
-      for (const part of field.boundary?.parts || []) {
-        if (part.result === 'fires') warnings.push(`${RECORD_LABELS[name]} "${part.part}" occurs only in the passage of the ${part.heldBy.map(p => p.year).join(' and ')} publication`);
-      }
-      if (field.verification === 'not-found') warnings.push(`${RECORD_LABELS[name]}: the automatic check did not find this value in the raw text`);
-    }
-    return {
-      id: `klawiter page ${page.pageId}`,
-      title: f.title.value, year: f.year.value, publisher: f.publisher.value,
-      // Several names stand comma-separated in one page-level value; the export splits them as S2.1 does.
-      places: f.location.value ? [f.location.value] : [],
-      translators: f.translator.value ? (f.translator.occurrences?.parts.map(p => p.part) || [f.translator.value]) : [],
-      extent: f.pageCount.value, language: f.language.value,
-      origins: Object.fromEntries(Object.keys(RECORD_LABELS).map(k => [RECORD_LABELS[k], originText(f[k])])),
-      states: [placeStateText(page.placeDecision, 'this record'), ...page.publications.map(p => `edition assignment of ${p.year ?? 'undated'}: ${editionStateText(p.editionAssignment)}`)].filter(Boolean),
-      warnings,
-      scope: meta.texts.record,
-    };
-  }
-  const pub = page.publications[Number(target)];
-  const f = pub.fields;
+/** What the export formats of record-export.js need from this view. */
+function exportContext(target) {
   return {
-    id: pub.id,
-    title: pub.title || page.title, year: pub.year, publisher: f.publisher.value,
-    places: f.places.map(p => p.value), translators: f.translators.map(t => t.value),
-    extent: f.extent.value, language: f.language.value,
-    origins: {
-      Publisher: originText(f.publisher),
-      Place: f.places.length ? f.places.map(originText).join(', ') : NO_VALUE,
-      Translator: f.translators.length ? f.translators.map(originText).join(', ') : NO_VALUE,
-      Extent: originText(f.extent),
-      Language: originText(f.language),
-    },
-    states: [`edition assignment: ${editionStateText(pub.editionAssignment)}`,
-      ...pub.placeDecisions.map(pd => placeStateText(pd))].filter(Boolean),
-    warnings: [],
-    scope: `publication on wiki page ${page.pageId}`,
-  };
-}
-
-/** `allExtents`: RIS has no field for the extent of a volume, so every extent goes into its note. */
-function provenanceNote(m, { allExtents = false } = {}) {
-  const origins = Object.entries(m.origins).map(([k, v]) => `${k}: ${v}`).join('; ');
-  const s = page.dataState;
-  return [
-    m.extent && (allExtents || !/^\d+$/.test(String(m.extent))) ? `Extent as in the source: ${m.extent}.` : null,
-    zweigAuthored() ? 'Author Zweig, Stefan: derived from the entry type by a lab rule.' : null,
-    `Origin: ${origins}.`,
-    `State and producer: ${m.states.join('; ') || 'none recorded'}.`,
-    m.warnings.length ? `Warnings: ${m.warnings.join('; ')}.` : null,
-    `Klawiter Bibliography Lab, data commit ${s.commit.slice(0, 7)}, inputs ${s.inputsSha256Short}, rules ${s.rulesVersion}.`,
-  ].filter(Boolean).join(' ');
-}
-
-function zweigAuthored() {
-  return typeof ZWEIG_AUTHOR_TYPES !== 'undefined' && ZWEIG_AUTHOR_TYPES.includes(page.entryType);
-}
-
-function bibEscape(value) {
-  return String(value).replace(/[{}\\]/g, c => `\\${c}`);
-}
-
-function bibtex(target) {
-  const m = exportModel(target);
-  const key = `klawiter${page.pageId}${target === 'page' ? '' : '_' + m.id.split('/').pop().replace(/[^\w]/g, '')}`;
-  const fields = [
-    zweigAuthored() ? ['author', 'Zweig, Stefan'] : null,
-    ['title', m.title],
-    m.year ? ['year', m.year] : null,
-    m.publisher ? ['publisher', m.publisher] : null,
-    m.places.length ? ['address', m.places.join(' and ')] : null,
-    m.translators.length ? ['translator', m.translators.join(' and ')] : null,
-    m.language ? ['language', m.language] : null,
-    m.extent && /^\d+$/.test(String(m.extent)) ? ['pagetotal', m.extent] : null,
-    ['url', citeUrl('judge.html', targetHash(target))],
-    ['note', provenanceNote(m)],
-  ].filter(Boolean);
-  return `@book{${key},\n${fields.map(([k, v]) => `  ${k} = {${bibEscape(v)}}`).join(',\n')}\n}\n`;
-}
-
-function ris(target) {
-  const m = exportModel(target);
-  const lines = [['TY', 'BOOK']];
-  if (zweigAuthored()) lines.push(['AU', 'Zweig, Stefan']);
-  lines.push(['TI', m.title]);
-  if (m.year) lines.push(['PY', m.year]);
-  if (m.publisher) lines.push(['PB', m.publisher]);
-  for (const place of m.places) lines.push(['CY', place]);
-  for (const t of m.translators) lines.push(['A4', t]);
-  if (m.language) lines.push(['LA', m.language]);
-  lines.push(['UR', citeUrl('judge.html', targetHash(target))]);
-  lines.push(['N1', provenanceNote(m, { allExtents: true })]);
-  lines.push(['ER', '']);
-  return lines.map(([k, v]) => `${k}  - ${v}`).join('\r\n') + '\r\n';
-}
-
-function jsonField(field, extra = {}) {
-  return { value: field.value ?? null, origin: field.value === null || field.value === '' ? 'missing' : field.origin, ...extra };
-}
-
-function placeJson(pd) {
-  if (!pd) return null;
-  if (!pd.decision) return { qid: null, state: null, producer: 'no decision recorded', link: false };
-  return { qid: pd.qid ?? null, state: pd.state, producer: pd.producerShort, producerDetail: pd.producer, warning: pd.warning, link: !!pd.link, scope: meta.texts.placeScope };
-}
-
-function jsonExport(target) {
-  const s = page.dataState;
-  const base = {
-    dataState: s,
+    page, meta, target,
     url: citeUrl('judge.html', targetHash(target)),
-    accessed: new Date().toISOString().slice(0, 10),
-    labelMapping: 'provisional',
-  };
-  if (target === 'page') {
-    const f = page.record.fields;
-    return {
-      ...base,
-      identifier: `klawiter page ${page.pageId}`,
-      scope: meta.texts.record,
-      fields: Object.fromEntries(Object.keys(RECORD_LABELS).map(k => [k, jsonField(f[k], {
-        ...(f[k].verification ? { automaticCheck: f[k].verification === 'found' ? 'found in the raw text' : 'not found in the raw text' } : {}),
-        ...(f[k].boundary ? { boundaryCheck: f[k].boundary } : {}),
-        ...(k === 'location' ? { wikidataLink: placeJson(page.placeDecision) } : {}),
-      })])),
-      publications: page.publications.map(p => ({ id: p.id, year: p.year, editionAssignment: p.editionAssignment })),
-    };
-  }
-  const pub = page.publications[Number(target)];
-  const f = pub.fields;
-  return {
-    ...base,
-    identifier: pub.id,
-    year: pub.year,
-    editionAssignment: pub.editionAssignment,
-    fields: {
-      publisher: jsonField(f.publisher),
-      places: f.places.map((p, j) => jsonField(p, { wikidataLink: placeJson(pub.placeDecisions[j]) })),
-      translators: f.translators.map(t => jsonField(t)),
-      extent: jsonField(f.extent),
-      language: jsonField(f.language),
-      editionStatement: jsonField(f.editionStatement),
-      series: jsonField(f.series),
-    },
+    accessed: accessDate(),
+    zweigAuthored: typeof ZWEIG_AUTHOR_TYPES !== 'undefined' && ZWEIG_AUTHOR_TYPES.includes(page.entryType),
   };
 }
 

@@ -6,6 +6,12 @@
 
 export const ORIGIN = { regex: 'rule', llm: 'LLM gap fill', editor: 'editor' };
 
+/** Reader names of the page-level record fields, in the order the record view lists them. */
+export const FIELD_LABELS = {
+  title: 'Title', year: 'Year', publisher: 'Publisher', location: 'Place',
+  language: 'Language', translator: 'Translator', pageCount: 'Page count',
+};
+
 /** Origin word of a value, or null for a gap. */
 export function originLabel(origin) {
   return ORIGIN[origin] || null;
