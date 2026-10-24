@@ -19,6 +19,7 @@ const App = {
     entryId: null,
     page: 0,
     pageSize: 50,
+    selectedId: null,  // the result whose card stands in the reading pane
     editMode: false,
     isLocal: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
     pendingEdits: {},  // pageId -> { field: { value, oldValue, provenance } }
@@ -324,6 +325,7 @@ const App = {
       this.applySortFromParams(params);
       this.filtered = [...this.entries];
       this.state.page = 0;
+      this.state.selectedId = null;
       this.sortEntries();
       this.showView('results');
       this.renderResults();
@@ -362,6 +364,7 @@ const App = {
       this.state.publicationId = entry ? params.get('pub') || null : null;
       this._publicationRevealed = null;
       this.state.page = 0;
+      this.state.selectedId = null;
       this.filtered = entry ? [entry] : [];
       this.showView('results');
       // The sidebar and the chip bar would otherwise keep the state of the
@@ -395,6 +398,7 @@ const App = {
       // word, which reads as a broken link rather than a missing page.
       this._resetSearchState();
       this.state.page = 0;
+      this.state.selectedId = null;
       this.filtered = [];
       this.showView('results');
       Facets.render(this.filtered);
@@ -475,6 +479,8 @@ const App = {
     }
     const sortLabel = document.querySelector && document.querySelector('.sort-label');
     if (sortLabel) sortLabel.classList.add('hidden');
+    this._paneMode = false;
+    this._setPaneLayout(false);
     const list = document.getElementById('results-list');
     if (!list) return;
     list.innerHTML = `<div class="empty-state">
@@ -784,6 +790,7 @@ const App = {
 
     this.sortEntries();
     this.state.page = 0;
+    this.state.selectedId = null;
     this.renderResults();
     Facets.render(this.filtered);
     this.renderChips();
@@ -840,6 +847,7 @@ const App = {
     // Nav active state
     const slug = location.hash.slice(1).split('/')[0];
     document.getElementById('nav-home').classList.toggle('active', view === 'home');
+    document.getElementById('nav-browse').classList.toggle('active', view === 'results');
     document.getElementById('nav-stats').classList.toggle('active', view === 'stats');
     document.getElementById('nav-data').classList.toggle('active',
       view === 'page' && slug === 'data');
@@ -949,21 +957,141 @@ const App = {
       if (label) label.textContent = `Export ${total.toLocaleString('en')} as BibTeX`;
     }
 
-    // The default line describes the cards, so it goes with them.
+    // The note on the default state describes the values, so it goes with them.
     const defaults = document.getElementById('list-defaults');
     if (defaults) defaults.classList.toggle('hidden', total === 0);
 
     const list = document.getElementById('results-list');
+    this._paneMode = total > 0 && this._paneWanted();
+    this._setPaneLayout(this._paneMode);
     if (total === 0) {
       list.innerHTML = this._emptyStateHtml();
       document.getElementById('load-more').classList.add('hidden');
       return;
     }
+    // The list is rewritten, so a header holding the focus is found again by
+    // its entry afterwards rather than leaving the focus on the body.
+    const focused = this._focusedListPid();
     list.innerHTML = visible.map(e => this.renderCard(e)).join('');
-    this._setListStop();
+    if (this._paneMode) {
+      const keep = visible.some(e => e.sourcePageId === this.state.selectedId);
+      this.selectEntry(keep ? this.state.selectedId : visible[0].sourcePageId);
+    } else if (total === 1 && !this.state.singleEntry) {
+      // A list of one is its card; the permalink route opens its own.
+      this.openCard(visible[0].sourcePageId);
+    }
+    const header = this._listHeader(focused);
+    this._setListStop(header || this._listHeader(this.state.selectedId));
+    if (header) header.focus({ preventScroll: true });
     this._scheduleReconciliation();
 
     document.getElementById('load-more').classList.toggle('hidden', end >= total);
+  },
+
+  /**
+   * Width from which the selected result's card stands beside the list
+   * rather than under its title (styles.css, .results-body.has-pane). Below
+   * it the facet sidebar and the list leave the card less than the width at
+   * which its labels share one column.
+   */
+  PANE_QUERY: '(min-width: 75rem)',
+
+  /** True where a list (not the permalink record) has room for the pane. */
+  _paneWanted() {
+    return !this.state.singleEntry && typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function' && window.matchMedia(this.PANE_QUERY).matches;
+  },
+
+  _setPaneLayout(on) {
+    const body = document.getElementById('results-body');
+    if (body) body.classList.toggle('has-pane', on);
+    if (on) return;
+    const pane = document.getElementById('reading-pane');
+    if (pane) {
+      pane.innerHTML = '';
+      pane.hidden = true;
+    }
+  },
+
+  /** The header of a result in the list, by its entry. */
+  _listHeader(pageId) {
+    if (pageId == null || typeof document === 'undefined' || !document.querySelector) return null;
+    return document.querySelector(`#results-list .entry-card[data-pid="${pageId}"] .card-header`);
+  },
+
+  _focusedListPid() {
+    const active = typeof document !== 'undefined' ? document.activeElement : null;
+    const header = active && active.closest ? active.closest('#results-list .card-header') : null;
+    const card = header && header.closest('.entry-card');
+    return card ? parseInt(card.dataset.pid, 10) : null;
+  },
+
+  /**
+   * Put one result's full card into the reading pane and mark it in the list.
+   * The list does not move: the pane is sticky and scrolls on its own, so the
+   * reader keeps the place they chose from.
+   */
+  selectEntry(pageId) {
+    const entry = this.entryMap.get(pageId);
+    const pane = document.getElementById('reading-pane');
+    if (!entry || !pane) return;
+    this.state.selectedId = pageId;
+    for (const card of document.querySelectorAll('#results-list .entry-card')) {
+      const on = parseInt(card.dataset.pid, 10) === pageId;
+      card.classList.toggle('card-selected', on);
+      const header = card.querySelector('.card-header');
+      if (!header) continue;
+      if (on) header.setAttribute('aria-current', 'true');
+      else header.removeAttribute('aria-current');
+    }
+    pane.innerHTML = this._paneCardHtml(entry);
+    pane.hidden = false;
+    pane.scrollTop = 0;
+    // The card is the first place reconciliation data shows up, as in the list.
+    if (Edit.reconciliation === null) {
+      this._ensureReconciliation().then(() => {
+        if (this.state.selectedId === pageId) Edit._rerender(pageId);
+      });
+    }
+  },
+
+  /**
+   * The card of the reading pane. It carries the ids the inline card carries
+   * (card-<pid>, card-detail-<pid>), because the edit layer and the late
+   * renders find the card of an entry by them; in pane mode the list items
+   * carry none.
+   */
+  _paneCardHtml(e) {
+    const pid = e.sourcePageId;
+    const label = e.pageKind === 'author-page' ? '<div class="card-title-label">Author</div>' : '';
+    return `<article class="pane-card" id="card-${pid}" data-pid="${pid}"
+        aria-labelledby="pane-title-${pid}">
+      <div class="pane-head">
+        ${label}
+        <h2 class="card-title pane-title" id="pane-title-${pid}"${titleAttrs(e, e.title)}>${
+          hlEsc(e.title || 'Untitled', this.state.query)}</h2>
+        <div class="card-meta">${this.cardMeta(e)}</div>
+      </div>
+      <div class="pane-detail" id="card-detail-${pid}">${Detail.renderInline(e)}</div>
+    </article>`;
+  },
+
+  /** Follow the pane breakpoint when the window crosses it. */
+  _watchPaneWidth() {
+    if (typeof window.matchMedia !== 'function') return;
+    const query = window.matchMedia(this.PANE_QUERY);
+    const onChange = () => {
+      if (this.state.view !== 'results' || this.state.singleEntry || !this.filtered.length) return;
+      // The card the reader has open travels with the layout.
+      const open = document.querySelector('#results-list .entry-card.card-expanded');
+      const pid = this._paneMode ? this.state.selectedId
+        : (open ? parseInt(open.dataset.pid, 10) : null);
+      if (pid != null) this.state.selectedId = pid;
+      this.renderResults();
+      if (!this._paneMode && pid != null) this.openCard(pid);
+    };
+    if (query.addEventListener) query.addEventListener('change', onChange);
+    else if (query.addListener) query.addListener(onChange);
   },
 
   // A letter of any script but Latin. The source romanises every title, so
@@ -1036,6 +1164,16 @@ const App = {
 
     // No source-text snippet here: it duplicated the start of the full
     // bibliographic entry shown on expansion. Title plus meta identify the card.
+    // Beside the reading pane a result is a line that selects; the card it
+    // selects stands in the pane (_paneCardHtml) under the ids of this one.
+    if (this._paneMode) {
+      return `<div class="entry-card" data-pid="${e.sourcePageId}">
+        <div class="card-header" tabindex="-1" role="button" aria-controls="reading-pane">
+          <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
+          <div class="card-meta">${this.listMeta(e)}</div>
+        </div>
+      </div>`;
+    }
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
       <div class="card-header" tabindex="-1" role="button" aria-expanded="false"
            aria-controls="card-detail-${e.sourcePageId}">
@@ -1052,28 +1190,49 @@ const App = {
   },
 
   /**
-   * The one line under the title: what the entry is, what the page documents
-   * and how it was reviewed, in that order.
-   *
-   * The line is plain text throughout, review status included, so a result
-   * reads as one line rather than as a card with a filled chip on it; colour
-   * stays with the states a reader has to act on (matrix gap, contested claim,
-   * edit-mode triage hint).
-   * A page documenting several publications has no single year, language,
-   * place, publisher or extent, so the triade would describe a publication
-   * that does not exist and its count takes that place. On the permalink route
-   * every value stands named in the block below, so the triade is dropped
-   * there as a repetition and the type keeps its badge.
+   * The line under the title of the element `card-<pid>` stands for: the head
+   * of a full card on the permalink route and in the reading pane, the value
+   * line of a result in a list whose cards open inline. The edit layer
+   * rewrites that element's line through this function.
    */
   cardMeta(e) {
+    return this.state.singleEntry || this._paneMode ? this.cardHeadMeta(e) : this.listMeta(e);
+  },
+
+  /**
+   * The head of a full card: what the entry is, what the page documents and
+   * how it was reviewed. Every value stands named in the blocks below, so the
+   * values of the list line are dropped there as a repetition and the type
+   * keeps its badge; the review status with its producer stays, because the
+   * card is where a decision is read.
+   */
+  cardHeadMeta(e) {
+    const type = ENTRY_TYPE_LABELS[e.entryType] || e.entryType;
+    const kind = this._pageKindLine(e);
+    const items = [`<span class="badge">${type}</span>`];
+    if (kind) items.push(`<span class="card-meta-text"${Detail.help('Page kind')}>${kind}</span>`);
+    items.push(Detail._reviewChip(e));
+    return this._withTriage(items, e);
+  },
+
+  /**
+   * The value line of a result: year, language, place, type, publisher with
+   * extent, as data and nothing else. A state that holds for most records
+   * (a decided place authority, its producer) belongs to the card; the line
+   * names only a state a reader has to act on, as one marker word.
+   *
+   * The line is plain text throughout, so a result reads as one line rather
+   * than as a card with a filled chip on it; colour stays with the states a
+   * reader has to act on (matrix gap, contested claim, edit-mode triage hint).
+   * A page documenting several publications has no single year, language,
+   * place, publisher or extent, so the triade would describe a publication
+   * that does not exist and its count takes that place.
+   */
+  listMeta(e) {
     const items = [];
     const type = ENTRY_TYPE_LABELS[e.entryType] || e.entryType;
     const several = !!e.pageKind && e.pageKind !== 'single-publication';
-    const kind = this._pageKindLine(e);
-    if (this.state.singleEntry) {
-      items.push(`<span class="badge">${type}</span>`);
-      if (kind) items.push(`<span class="card-meta-text"${Detail.help('Page kind')}>${kind}</span>`);
-    } else if (several) {
+    if (several) {
       items.push(`<span class="card-meta-text">${esc(type)}</span>`);
       items.push(`<span class="card-meta-text">${this._publicationCountLabel(e)}</span>`);
       const match = this._matchingPublicationText(e);
@@ -1088,7 +1247,11 @@ const App = {
       if (e.pageCount) parts.push(e.pageCount + ' pp.');
       if (parts.length) items.push(`<span class="card-secondary">${parts.join(', ')}</span>`);
     }
-    items.push(Detail._reviewChip(e));
+    items.push(this._listMarker(e));
+    return this._withTriage(items, e);
+  },
+
+  _withTriage(items, e) {
     if (this.state.editMode) {
       const triage = Edit.cardHint(e.sourcePageId);
       if (triage) items.push(triage);
@@ -1096,6 +1259,34 @@ const App = {
     // The items are separate fields, set apart by the gap of the line (see
     // styles.css); a drawn separator wrapped into a dangling mark on a phone.
     return items.join('');
+  },
+
+  /**
+   * The one state word a result line carries: "contested" where the record's
+   * review is contested or the page carries an open authority claim, and in
+   * edit mode "edited" for an unsaved session edit. What is contested is the
+   * tooltip, and for a screen reader the hidden rest of the phrase; the
+   * readings and the evidence stand in the card.
+   */
+  _listMarker(e) {
+    const st = Edit.entryStatus(e.sourcePageId);
+    if (st.pending) {
+      return '<span class="card-marker" title="Edited in this session, not yet saved">edited'
+        + '<span class="visually-hidden"> in this session, unsaved</span></span>';
+    }
+    let phrase = '';
+    if (e.review && e.review.status === 'contested') {
+      const scope = Detail.reviewScope(e.review);
+      phrase = `${scope ? scope.toLowerCase() : 'review'} contested, decision open`;
+    } else {
+      const nouns = [...new Set(Detail._openAuthorityClaims(e)
+        .map(claim => Detail.CLAIM_NOUNS[claim.entityType] || 'authority'))];
+      if (nouns.length) phrase = `open ${nouns.join(' and ')} claim`;
+    }
+    if (!phrase) return '';
+    return `<span class="card-marker" title="${esc(`${phrase.charAt(0).toUpperCase()}${
+      phrase.slice(1)}. The card shows the readings and their evidence.`)}">contested<span
+      class="visually-hidden">: ${esc(phrase)}</span></span>`;
   },
 
   /** Filter axes a single publication answers on its own. */
@@ -1167,11 +1358,14 @@ const App = {
 
   /** Rewrite the head line of a rendered card after data it reads arrived. */
   refreshCardMeta(pid) {
-    if (typeof document === 'undefined' || !document.getElementById) return;
-    const card = document.getElementById(`card-${pid}`);
-    const meta = card && card.querySelector && card.querySelector('.card-meta');
+    if (typeof document === 'undefined' || !document.querySelector) return;
     const entry = this.entryMap.get(pid);
-    if (meta && entry) meta.innerHTML = this.cardMeta(entry);
+    if (!entry) return;
+    // The list line and, while the entry stands in the pane, the head of its card.
+    const line = document.querySelector(`#results-list .entry-card[data-pid="${pid}"] .card-meta`);
+    if (line) line.innerHTML = this._paneMode ? this.listMeta(entry) : this.cardMeta(entry);
+    const head = document.querySelector(`#reading-pane .pane-card[data-pid="${pid}"] .card-meta`);
+    if (head) head.innerHTML = this.cardHeadMeta(entry);
   },
 
   /**
@@ -1253,7 +1447,19 @@ const App = {
     if (header) header.focus();
   },
 
+  /** Open a card in the list unless it is open already. */
+  openCard(pageId) {
+    const header = this._listHeader(pageId);
+    const card = header && header.closest('.entry-card');
+    if (card && !card.classList.contains('card-expanded')) this.toggleCard(pageId);
+  },
+
   toggleCard(pageId) {
+    // Beside the pane nothing opens in the list; the pane shows the choice.
+    if (this._paneMode) {
+      this.selectEntry(pageId);
+      return;
+    }
     const detailEl = document.getElementById(`card-detail-${pageId}`);
     const cardEl = document.getElementById(`card-${pageId}`);
     if (!detailEl || !cardEl) return;
@@ -1266,7 +1472,7 @@ const App = {
     }
 
     // Close any other open card
-    document.querySelectorAll('.card-detail:not(.hidden)').forEach(el => {
+    document.querySelectorAll('#results-list .card-detail:not(.hidden)').forEach(el => {
       el.classList.add('hidden');
       this._setCardExpanded(el.closest('.entry-card'), false);
     });
@@ -1420,6 +1626,7 @@ const App = {
     this.state.customLabel = label;
     this.filtered = [...entries];
     this.state.page = 0;
+    this.state.selectedId = null;
     this.sortEntries();
     // The list carries no hash, so the way back has to be on the page.
     this._setResultsContext(this._backLinkHtml());
@@ -1557,14 +1764,21 @@ const App = {
     const headers = [...document.querySelectorAll('#results-list .card-header')];
     if (!headers.length) return;
     const active = document.activeElement;
-    const current = active && active.closest
-      ? active.closest('#results-list .card-header') : null;
+    const current = (active && active.closest
+      ? active.closest('#results-list .card-header') : null)
+      // Beside the pane the walk goes on from the selection, wherever the
+      // focus is, so j in the card steps to the next result, not the first.
+      || (this._paneMode ? this._listHeader(this.state.selectedId) : null);
     const at = headers.indexOf(current);
     const next = at === -1 ? (dir > 0 ? 0 : headers.length - 1) : at + dir;
     if (next < 0 || next >= headers.length) return;
     this._setListStop(headers[next]);
-    headers[next].focus();
+    headers[next].focus({ preventScroll: true });
     headers[next].scrollIntoView({ block: 'nearest' });
+    // Beside the pane, walking the list is choosing in it.
+    if (this._paneMode) {
+      this.selectEntry(parseInt(headers[next].closest('.entry-card').dataset.pid, 10));
+    }
   },
 
   /** Slash lands in whichever search field the current view shows. */
@@ -1647,6 +1861,7 @@ const App = {
 
     document.getElementById('sort-select').addEventListener('change', (ev) => {
       this.state.sort = ev.target.value;
+      this.state.selectedId = null;
       this.sortEntries();
       this.renderResults();
       // Only a hash-addressable result list may write itself back to the URL;
@@ -1754,6 +1969,7 @@ const App = {
     });
     overlay.addEventListener('keydown', (ev) => this._mobileFacetsKeydown(ev));
     this._watchDrawerWidth();
+    this._watchPaneWidth();
 
     // Keyboard on the result view: slash reaches the search field, j/k and the
     // arrows walk the card headers, Escape closes the open card. In edit mode
@@ -1784,11 +2000,32 @@ const App = {
       if (ev.key === 'j' || ev.key === 'k') {
         ev.preventDefault();
         const dir = ev.key === 'j' ? 1 : -1;
-        if (this.state.editMode) this._stepCard(dir);
+        // Beside the pane the walk already opens each card it reaches.
+        if (this.state.editMode && !this._paneMode) this._stepCard(dir);
         else this._focusCard(dir);
         return;
       }
       if (ev.key === 'Escape') {
+        // The note on the values closes like any other disclosure that
+        // floats over the list, with the focus kept on its control.
+        const info = t && t.closest && t.closest('.results-info[open]');
+        if (info) {
+          ev.preventDefault();
+          info.open = false;
+          const summary = info.querySelector('summary');
+          if (summary) summary.focus();
+          return;
+        }
+        // In the pane, Escape leads back to the result it shows.
+        if (this._paneMode) {
+          const inPane = t && t.closest && t.closest('#reading-pane');
+          const header = this._listHeader(this.state.selectedId);
+          if (inPane && header) {
+            ev.preventDefault();
+            header.focus();
+          }
+          return;
+        }
         const open = document.querySelector('#results-list .entry-card.card-expanded');
         if (!open) return;
         ev.preventDefault();
@@ -1862,11 +2099,12 @@ const App = {
   // expanded card open.
   _refreshAfterEditToggle() {
     if (this.state.view !== 'results') return;
-    const expanded = document.querySelector('.entry-card.card-expanded');
-    const expandedPid = expanded ? parseInt(expanded.dataset.pid) : null;
+    // Beside the pane the selection survives the render by itself.
+    const expanded = document.querySelector('#results-list .entry-card.card-expanded');
+    const expandedPid = expanded ? parseInt(expanded.dataset.pid, 10) : null;
     if (this.state.sort === 'triage') this.sortEntries();
     this.renderResults();
-    if (expandedPid != null && this.entryMap.has(expandedPid)) this.toggleCard(expandedPid);
+    if (expandedPid != null && this.entryMap.has(expandedPid)) this.openCard(expandedPid);
   },
 };
 

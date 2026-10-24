@@ -898,3 +898,85 @@ test('a place decision carries the same subdued weight as an edition proposal', 
   assert.match(review, /font-size:\s*0\.75rem/);
   assert.match(rule('.publication-status'), /font-size:\s*0\.75rem/);
 });
+
+test('a result line carries data, and only a contested state as one marker word', () => {
+  const { App, ctx } = appCtx();
+  // Page 1800 carries a place authority decided by an agent: a state of the
+  // card, which the list line does not repeat.
+  const entry = sampleEntry();
+  const line = App.listMeta(entry);
+  for (const value of ['1947', 'Bulgarian', 'Sofija', 'Historical Studies', 'Pechat Far, 500 pp.']) {
+    assert.ok(line.includes(value), `${value} stands in the line`);
+  }
+  assert.doesNotMatch(line, /review-chip|agent-verified|LLM agent|card-marker/);
+
+  // Page 4819, Adam Lux: the place authority stays contested.
+  entry.review = { status: 'contested', reviewed_by: 'independent-verification-agent',
+    fields: { location: 'unresolved' }, scope: ['location'] };
+  assert.match(App.listMeta(entry), /<span class="card-marker" title="Place authority contested, decision open\. [^"]+">contested<span\s+class="visually-hidden">: place authority contested, decision open<\/span><\/span>/);
+
+  // An open authority claim on an otherwise unreviewed page reads the same way.
+  ctx.Edit = editStub({ authorityClaimsFor: () => [{ claimId: 'c', entityType: 'location',
+    decisionStatus: 'open', subject: { name: 'Sofija' } }] });
+  const open = sampleEntry();
+  delete open.review;
+  assert.match(App.listMeta(open), /title="Open place claim\. [^"]+">contested</);
+
+  // The head of the full card keeps the decision and its producer.
+  ctx.Edit = editStub();
+  App.state.singleEntry = true;
+  assert.match(App.cardMeta(sampleEntry()), />Place authority agent-verified<span class="decision-producer">, /);
+});
+
+test('beside the reading pane the first result stands as a full card on arrival', () => {
+  const { App, ctx } = appCtx();
+  ctx.Edit = Object.assign(editStub(), { cardHint: () => '' });
+  ctx.window.matchMedia = () => ({ matches: true });
+  const first = sampleEntry();
+  const second = Object.assign(sampleEntry(), { sourcePageId: 1801, title: 'Second' });
+  App.entries = [first, second];
+  App.entryMap = new Map([[1800, first], [1801, second]]);
+  App.filtered = [first, second];
+
+  App.renderResults();
+  const list = ctx.elements['results-list'].innerHTML;
+  const pane = ctx.elements['reading-pane'];
+  assert.strictEqual(App.state.selectedId, 1800);
+  assert.strictEqual(pane.hidden, false);
+  // The pane card carries the ids the edit layer and the late renders find.
+  assert.match(pane.innerHTML, /<article class="pane-card" id="card-1800" data-pid="1800"/);
+  assert.match(pane.innerHTML, /id="card-detail-1800"/);
+  assert.match(pane.innerHTML, /<h2 class="card-title pane-title" id="pane-title-1800"/);
+  assert.match(pane.innerHTML, /Year of publication/);
+  assert.match(pane.innerHTML, />Place authority agent-verified<span class="decision-producer">/);
+  // The list holds a title and a value line per result, and no card.
+  assert.strictEqual((list.match(/aria-controls="reading-pane"/g) || []).length, 2);
+  assert.doesNotMatch(list, /card-detail|id="card-|review-chip/);
+  assert.match(list, /card-secondary/);
+  assert.strictEqual(App.cardMeta(first), App.cardHeadMeta(first),
+    'the edit layer rewrites the pane head through cardMeta');
+
+  // A new list starts at its first result; a rerender of the same list keeps
+  // the choice.
+  App.selectEntry(1801);
+  App.renderResults();
+  assert.strictEqual(App.state.selectedId, 1801);
+
+  // The permalink route keeps its single card and no pane.
+  App.state.singleEntry = true;
+  App.filtered = [first];
+  App.renderResults();
+  assert.strictEqual(pane.hidden, true);
+  assert.match(ctx.elements['results-list'].innerHTML, /id="card-detail-1800"/);
+});
+
+test('the default state of the values is said once, behind a disclosure at the heading', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'index.html'), 'utf8');
+  const statement = /Unless a value is marked, it was extracted by rule\s+from the source text and has not been reviewed\./g;
+  assert.strictEqual((html.match(statement) || []).length, 1);
+  assert.match(html, /<h1 id="results-count"[^>]*><\/h1>\s*(?:<!--[\s\S]*?-->\s*)?<details id="list-defaults" class="results-info">\s*<summary aria-label="About the values"/);
+  assert.doesNotMatch(html, /<p id="list-defaults"/);
+  for (const file of fs.readdirSync(path.join(__dirname, '..', 'docs', 'js'))) {
+    assert.doesNotMatch(read(file), /extracted by rule from the source text and has not been reviewed/, file);
+  }
+});

@@ -441,9 +441,9 @@ const Edit = {
     if (inline && !inline.classList.contains('hidden')) {
       inline.innerHTML = Detail.renderInline(entry);
     }
-    const card = document.getElementById(`card-${pid}`);
-    const meta = card && card.querySelector('.card-meta');
-    if (meta && entry) meta.innerHTML = App.cardMeta(entry);
+    // Beside the reading pane the entry has two lines, the list line and the
+    // pane head; refreshCardMeta writes both.
+    if (entry) App.refreshCardMeta(pid);
   },
 
   getPendingCount() {

@@ -61,6 +61,7 @@
       </a>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="#" id="nav-home">Overview</a>
+        <a href="#browse" id="nav-browse">Browse</a>
         <a href="#stats" id="nav-stats">Explore</a>
         <a href="#data" id="nav-data">Data</a>
         <a href="#about" id="nav-about">About</a>
@@ -126,9 +127,18 @@
         <!-- Way back out of a session list that has no hash of its own -->
         <div id="results-context" class="results-context hidden"></div>
         <div class="results-header">
-          <!-- The result line is the heading of the view; aria-live keeps the
-               changing count announced without displacing the heading role. -->
-          <h1 id="results-count" class="results-count" aria-live="polite"></h1>
+          <div class="results-title">
+            <!-- The result line is the heading of the view; aria-live keeps the
+                 changing count announced without displacing the heading role. -->
+            <h1 id="results-count" class="results-count" aria-live="polite"></h1>
+            <!-- The state nearly every value shares, on request; a card marks
+                 only what deviates from it. -->
+            <details id="list-defaults" class="results-info">
+              <summary aria-label="About the values" title="About the values"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></summary>
+              <p class="results-info-body">Unless a value is marked, it was extracted by rule
+                from the source text and has not been reviewed.</p>
+            </details>
+          </div>
           <div class="results-actions">
             <button id="batch-export-btn" class="action-btn hidden" title="Export filtered results as BibTeX">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -143,13 +153,16 @@
           </select>
           </div>
         </div>
-        <!-- The state nearly every value shares, said once; a card marks
-             only what deviates from it. -->
-        <p id="list-defaults" class="list-defaults">Unless a value is marked, it was
-          extracted by rule from the source text and has not been reviewed.</p>
-        <div id="results-list" class="results-list"></div>
-        <div id="load-more" class="load-more hidden">
-          <button id="load-more-btn">Load more&hellip;</button>
+        <!-- On a wide screen the selected result's card stands beside the
+             list (App.PANE_QUERY sets has-pane); otherwise it opens inline. -->
+        <div id="results-body" class="results-body">
+          <div class="results-column">
+            <div id="results-list" class="results-list"></div>
+            <div id="load-more" class="load-more hidden">
+              <button id="load-more-btn">Load more&hellip;</button>
+            </div>
+          </div>
+          <section id="reading-pane" class="reading-pane" aria-label="Selected entry" hidden></section>
         </div>
       </div>
 
@@ -184,33 +197,17 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <div class="footer-inner">
-      <div>
-        <div class="footer-heading">Credits</div>
-        <div class="footer-text">
-          Compiled by Dr. Randolph J. Klawiter (University of Notre Dame),
-          published with the Literaturarchiv Salzburg. Citation and
-          imprint are in the <a href="#about/imprint">Imprint</a>.
-        </div>
-        <div class="footer-text">
-          Built with the
-          <a href="https://github.com/DigitalHumanitiesCraft/Promptotyping" target="_blank" rel="noopener">Promptotyping method</a>.
-        </div>
-        <div class="footer-org">
-          <a class="footer-org-link" href="https://dhcraft.org" target="_blank" rel="noopener">
-            <img src="img/dhcraft-logo.png" width="30" height="30"
-                 alt="Digital Humanities Craft">
-            <span>Digital Humanities Craft</span>
-          </a>
-        </div>
-        <div class="footer-text">Code MIT, data CC BY 4.0</div>
-      </div>
-      <div>
-        <div class="footer-heading">Information</div>
-        <div class="footer-text footer-links">
-          <a href="#about">About</a>
-          <a href="#data">Data</a>
-          <a href="#data/quality">Data Quality</a>
+    <div class="footer-inner footer-compact">
+      <p class="footer-text">
+        Compiled by Dr. Randolph J. Klawiter (University of Notre Dame), published
+        with the Literaturarchiv Salzburg. Citation in the <a href="#about/imprint">Imprint</a>.
+        Data CC BY 4.0, code MIT. Built with the
+        <a href="https://github.com/DigitalHumanitiesCraft/Promptotyping" target="_blank" rel="noopener">Promptotyping method</a>
+        by
+        <a class="footer-org-link" href="https://dhcraft.org" target="_blank" rel="noopener"><img src="img/dhcraft-logo.png" width="18" height="18" alt="">Digital Humanities Craft</a>.
+      </p>
+      <p class="footer-text footer-links">
+          <a href="#data/quality">Data Quality workbench</a>
           <a href="https://stefanzweig.digital/" target="_blank" rel="noopener">Stefan Zweig Digital</a>
           <a href="https://chpollin.github.io/SZD/" target="_blank" rel="noopener">Ontology &amp; Data</a>
           <a href="https://github.com/chpollin/klawiter-rescue" target="_blank" rel="noopener">
@@ -219,8 +216,7 @@
             </svg>
             GitHub
           </a>
-        </div>
-      </div>
+      </p>
     </div>
   </footer>
 
