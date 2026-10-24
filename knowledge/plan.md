@@ -103,12 +103,12 @@ Snapshot of 2026-10-24.
 | Milestone or item | Status | Notes |
 |---|---|---|
 | Wiki data true to their source passage | in progress | proposals, gaps and translation statements committed (71a0fe0); section mentions and garbage check in progress; damaged letters and revision dates pending |
-| Print data ready for review | in progress | p03, p07 and the overlap report in progress; refreeze pending |
+| Print data ready for review | completed | 7147b94: reading gaps closed, containment predicate, named second field, overlap report `p07b_overlap.py`, p12 writes data only; admissible classes refixed without rehash, remap or redrawn sample |
 | Measurement design corrected | completed | 5db70c1 |
-| Measurement design, second correction | pending | waits for the print refreeze |
+| Measurement design, second correction | in progress | entry met by 7147b94 |
 | Reviewable workbench | completed | fffcb29 with the reviewer filter of the review server |
 | Record desk and sitemap | in progress | increment 1 in progress; decision recorded in bc5e8af7; the card's zero coverage gaps of fffcb29 rested on hidden markers, the test is being corrected |
-| Knowledge and action layer | in progress | handoff and plan created; specification and design drafts under review |
+| Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); specification and design drafts under review; split of Print volumes in progress |
 | M2 | pending | entry: M1 |
 
 ## Open decisions and dependencies
@@ -116,7 +116,6 @@ Snapshot of 2026-10-24.
 - The operator's acceptances and decisions are listed in [Production readiness](production-readiness.md), What the operator accepts. Before M2 the operator decides the unit of a group and the provenance model of claims (who asserts and by what means, apart from who decides), and the identifier scheme.
 - Every change of a reading rule or a proposal comes before the first review decision of the human round.
 - The shared claim schema follows the wiki data batch, because both touch the reconciliation layer.
-- The split of [Print volumes](print-volumes.md) by function waits until the print rebuild is committed.
 
 ## Deviations
 

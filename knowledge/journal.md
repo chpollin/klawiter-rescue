@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Print data ready for review, action layer routed into the knowledge
+
+**Round.** Implementation round by an agent on the print strand and one on the action layer, each checked against the files and the gate before commit.
+
+**Changed.** The reading gaps a rule can close are closed, a field match to a contents line states containment, the agreeing second field is named and sought only in the matched wiki item, `p07b_overlap.py` counts per volume and part what the concordance proposes as overlap, and p12 writes data only (7147b94, [Print volumes](print-volumes.md)). A corrected value is confirmed with the review action `correct`, so the vocabulary keeps three states. The measurement base was frozen again with the admissible classes refixed and no fingerprint, identifier or sample changed. README and `CLAUDE.md` route into Handoff and Plan, state the producer rule and the rules of the print strand, and [Testing](testing.md) holds the one ordered list of check commands, with the production run first because the suites read its outputs (c63ad3d).
+
+**Decided.** A collection header governs its volumes only up to the next heading that is not a cross-reference or an address list, and a print object read by its host's title is contained in the wiki item it matches. Locally plain ruff replaces pre-commit, which skips untracked modules.
+
+**Open.** Two held-out Addendum II objects lost an inherited imprint through the header boundary and could not be inspected; the human round sees them. The remaining M1 items stand in [Plan](plan.md).
+
+---
+
 ## 2026-10-24 — Agent decisions as proposals, one record desk, knowledge by function
 
 **Round.** Implementation and consolidation round with parallel agents and research, each result checked against the files before it was committed.
