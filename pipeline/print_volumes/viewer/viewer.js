@@ -1,6 +1,5 @@
 // The local print viewer (knowledge/print-viewer.md): the review of one object
-// at a time, a table of all records, data-cleaning questions (questions.js) and
-// a help page. Data come from p12
+// at a time, a table of all records, and a help page. Data come from p12
 // (index.json, vocab.json and the JSON-LD chunks next to this page); review
 // decisions come from and go to review_server.py on the same origin. Nothing
 // is fetched from elsewhere.
@@ -22,7 +21,6 @@ import {
   targetsOf,
   valueText,
 } from "./render.js";
-import { initQuestions, loadQuestions, openAsk, renderQuestion, renderQuestions, wireQuestion } from "./questions.js";
 
 const PAGE = 100;
 const el = (id) => document.getElementById(id);
@@ -96,7 +94,7 @@ function sampleProgress() {
 }
 
 function renderHeader(view) {
-  for (const [id, name] of [["nav-review", "review"], ["nav-browse", "browse"], ["nav-questions", "questions"], ["nav-help", "help"]]) {
+  for (const [id, name] of [["nav-review", "review"], ["nav-browse", "browse"], ["nav-help", "help"]]) {
     if (name === view) el(id).setAttribute("aria-current", "page");
     else el(id).removeAttribute("aria-current");
   }
@@ -110,8 +108,6 @@ function showView(view) {
   el("browse-view").hidden = view !== "browse";
   el("object-view").hidden = view !== "object";
   el("help-view").hidden = view !== "help";
-  el("questions-view").hidden = view !== "questions";
-  el("question-view").hidden = view !== "question";
 }
 
 // Browse
@@ -940,7 +936,6 @@ async function renderObject(id, selected = null, { keepScroll = false } = {}) {
   renderValues();
   const decidable = canDecide();
   el("object-actions").hidden = !decidable;
-  el("ask-question").hidden = !review.recording;
   el("action-bar").hidden = isApparatus(object);
   el("all-right").hidden = !decidable;
   el("complete-next").hidden = !decidable;
@@ -997,7 +992,6 @@ function renderHelp() {
 
 function currentView() {
   if (location.hash.startsWith("#/help")) return "help";
-  if (location.hash.startsWith("#/questions") || location.hash.startsWith("#/q/")) return "questions";
   if (location.hash.startsWith("#/o/") || location.hash.startsWith("#/review")) return "review";
   return "browse";
 }
@@ -1015,10 +1009,6 @@ function route() {
     }
   } else if (location.hash.startsWith("#/help")) {
     renderHelp();
-  } else if (location.hash.startsWith("#/questions")) {
-    renderQuestions(params());
-  } else if (location.hash.startsWith("#/q/")) {
-    renderQuestion(location.hash.slice(4).split("?")[0], params());
   } else {
     renderBrowse().catch((e) => showError(e.message));
   }
@@ -1026,7 +1016,7 @@ function route() {
 
 // Keys act on the review only; typing in a field and an open dialog keep them.
 function onKey(e) {
-  if (e.ctrlKey || e.metaKey || e.altKey || el("reviewer-dialog").open || el("ask-dialog").open) return;
+  if (e.ctrlKey || e.metaKey || e.altKey || el("reviewer-dialog").open) return;
   const typing = e.target.closest("input, textarea, select");
   if (e.key === "Escape" && pending) {
     e.preventDefault();
@@ -1056,7 +1046,6 @@ function onKey(e) {
     m: () => canDecide() && openForm("missing"),
     b: () => canDecide() && openForm("boundary"),
     n: () => !el("skip").hidden && (location.hash = el("skip").getAttribute("href")),
-    q: () => askAboutShown(),
   };
   if (acts[key]) {
     e.preventDefault();
@@ -1182,14 +1171,6 @@ function wire() {
   window.addEventListener("scroll", refit, { passive: true });
 }
 
-// A question about the object on screen, with its selected value as the case.
-function askAboutShown() {
-  if (!review.recording || !shown) return;
-  const row = shown.byIndex.get(shown.selected);
-  const where = [VOLUME_LABEL[shown.object.volume], shown.object.part, shown.object.address || `PDF page ${shown.entry.page}`].filter(Boolean).join(", ");
-  openAsk({ object: shown.object.id, path: row?.field, label: row ? `${where}, ${row.label}` : where });
-}
-
 async function startReview() {
   try {
     const status = await fetch("/review/status");
@@ -1229,20 +1210,6 @@ async function start() {
   const kinds = [...new Set(index.flatMap((o) => o.types))].sort((a, b) => (TYPE_LABEL[a] ?? a).localeCompare(TYPE_LABEL[b] ?? b));
   el("kind").append(...kinds.map((t) => make("option", { value: t, text: TYPE_LABEL[t] ?? t })), make("option", { value: "(none)", text: "no type read" }));
   el("missing-field").append(...vocab.missingFields.map((f) => make("option", { value: f, text: missingLabel(f) })));
-  initQuestions({
-    make,
-    say,
-    showView,
-    renderHeader,
-    reviewer,
-    objectHash,
-    recording: () => review.recording,
-    indexEntry: (id) => byIdIndex.get(id),
-    volumeLabel: (v) => VOLUME_LABEL[v] ?? v,
-  });
-  await loadQuestions();
-  wireQuestion();
-  el("ask-question").addEventListener("click", askAboutShown);
   wire();
   route();
 }

@@ -13,7 +13,6 @@
     <nav aria-label="Views">
       <a href="#/review" id="nav-review">Review</a>
       <a href="#/" id="nav-browse">Browse</a>
-      <a href="#/questions" id="nav-questions">Questions</a>
       <a href="cards.html" id="nav-desk">Card desk</a>
       <a href="#/help" id="nav-help">Help</a>
     </nav>
@@ -73,7 +72,6 @@
         <h1 id="object-heading"></h1>
         <p id="object-where"></p>
         <p id="object-state"></p>
-        <button type="button" id="ask-question" hidden>Question about this <kbd>Q</kbd></button>
       </div>
       <div class="workspace">
         <section class="source" aria-labelledby="source-heading">
@@ -114,63 +112,6 @@
       </div>
     </section>
 
-    <section id="questions-view" aria-labelledby="questions-heading" hidden>
-      <h1 id="questions-heading">Questions</h1>
-      <form id="question-filters">
-        <label>State
-          <select id="q-status"><option value="">all</option><option value="open">open</option><option value="answered">answered</option></select>
-        </label>
-        <label>Kind <select id="q-category"></select></label>
-        <label>Answered by <select id="q-answerer"></select></label>
-        <button type="button" id="q-new" hidden>Ask a question</button>
-      </form>
-      <p id="question-count" aria-live="polite"></p>
-      <table id="questions">
-        <thead><tr><th scope="col">Question</th><th scope="col">Kind</th><th scope="col">Answered by</th><th scope="col">Cases</th><th scope="col">State</th><th scope="col">Asked by</th></tr></thead>
-        <tbody id="question-rows"></tbody>
-      </table>
-    </section>
-
-    <section id="question-view" aria-labelledby="question-heading" hidden>
-      <p><a href="#/questions">All questions</a></p>
-      <h1 id="question-heading"></h1>
-      <div id="question-meta" class="question-meta">
-        <label>Kind <select id="qd-category"></select></label>
-        <label>Answered by <select id="qd-answerer"></select></label>
-        <p id="qd-asked"></p>
-      </div>
-      <section id="question-proposal" class="proposal" aria-labelledby="proposal-heading" hidden>
-        <h2 id="proposal-heading">Proposed answer, not decided</h2>
-        <p id="qd-proposal"></p>
-      </section>
-      <section id="question-answer" aria-labelledby="answer-heading" hidden>
-        <h2 id="answer-heading">Answer: <span id="qd-resolution"></span></h2>
-        <p id="qd-answer-text"></p>
-        <p id="qd-answered"></p>
-        <button type="button" id="qd-reopen">Reopen</button>
-      </section>
-      <form id="answer-form" hidden>
-        <h2>Answer</h2>
-        <label>Resolution <select id="af-resolution"></select></label>
-        <label>Answer <textarea id="af-text" rows="3" maxlength="2000"></textarea></label>
-        <p><button type="submit" class="primary">Save answer</button></p>
-      </form>
-      <p id="question-message" role="status"></p>
-      <section id="question-cases-block" aria-labelledby="cases-heading">
-        <h2 id="cases-heading">Cases</h2>
-        <p id="qd-cases-count"></p>
-        <table id="question-cases">
-          <thead><tr><th scope="col">Object</th><th scope="col">Title or text</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
-          <tbody id="qd-cases"></tbody>
-        </table>
-        <p><a id="qd-more" hidden></a></p>
-      </section>
-      <section id="question-history-block" aria-labelledby="history-heading">
-        <h2 id="history-heading">History</h2>
-        <ol id="qd-history" class="history"></ol>
-      </section>
-    </section>
-
     <section id="help-view" aria-labelledby="help-heading" hidden>
       <h1 id="help-heading">Help</h1>
       <h2>What a decision means</h2>
@@ -195,17 +136,6 @@
       <p>Index entries hold a term and the addresses the index gives for it, each linked to the entry it names. Front matter and tail passages are the other pages of the volumes, kept word for word as passages. Neither belongs to the review.</p>
       <h2>Recording decisions</h2>
       <p>Decisions are shown and recorded only while the page is served by the review server of the print strand (<code>review_server.py</code>). Served otherwise, the view is read only and shows no review state beyond what the last export recorded.</p>
-      <h2>Questions</h2>
-      <p>A question records a problem larger than one value: a printed convention whose meaning is unknown, a reading error that recurs, a case the data model cannot hold. It names the objects it concerns, the kind of problem and who can settle it. Rules and LLM agents may ask and propose an answer; only a person answers. Press <kbd>Q</kbd> on an object to ask about it or to add it to an open question.</p>
-      <dl class="kinds">
-        <dt>Reading</dt><dd>a rule reads a value wrong or misses it</dd>
-        <dt>Boundary</dt><dd>an entry, object or index line is split or joined wrongly</dd>
-        <dt>Notation</dt><dd>what a printed convention means</dd>
-        <dt>Source</dt><dd>the print itself is inconsistent or in error</dd>
-        <dt>Data model</dt><dd>the records cannot hold what the print says</dd>
-        <dt>Vocabulary</dt><dd>a type, role or language label</dd>
-        <dt>Print and wiki</dt><dd>how a print record relates to the wiki</dd>
-      </dl>
       <h2>Scope</h2>
       <p>The view shows the main volume of 1991, Addendum I of 1999 and the working file of Addendum II, with their indexes, front matter and tails. It runs only on this computer, because the rights to the print volumes are unresolved.</p>
     </section>
@@ -218,20 +148,6 @@
       <h2 id="reviewer-dialog-heading">Who is reviewing?</h2>
       <label>Name or role <input id="reviewer-input" autocomplete="off" maxlength="80" required></label>
       <p><button type="submit" value="ok" class="primary">Save</button> <button type="button" id="reviewer-cancel">Cancel</button></p>
-    </form>
-  </dialog>
-
-  <dialog id="ask-dialog" aria-labelledby="ask-heading">
-    <form id="ask-form">
-      <h2 id="ask-heading">Question</h2>
-      <p id="ask-case"></p>
-      <label id="ask-which-label">Add to <select id="ask-which"></select></label>
-      <label id="ask-text-label">Question <textarea id="ask-text" rows="3" maxlength="2000"></textarea></label>
-      <label id="ask-category-label">Kind <select id="ask-category"></select></label>
-      <label id="ask-answerer-label">Answered by <select id="ask-answerer"></select></label>
-      <label id="ask-note-label">Note on this case <input id="ask-note" maxlength="300" autocomplete="off"></label>
-      <p id="ask-message" role="status"></p>
-      <p><button type="submit" class="primary">Save</button> <button type="button" id="ask-cancel">Cancel</button></p>
     </form>
   </dialog>
 
