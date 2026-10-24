@@ -9,7 +9,7 @@ related: [print-volumes, data, about, production-readiness]
 
 # Merged Klawiter bibliography: model and plan
 
-The compiler carried the Stefan Zweig bibliography through several states: the main volume of 1991, Addendum I of 1999, the unpublished working file of Addendum II, and the wiki begun in December 2008 as the latest state. The first bibliography of 1965 is not available to the project. Which statements exist only in print, only in the wiki or in both is unknown. This strand reconstructs the print volumes as structured research data, relates them to the wiki records and derives from both a merged Klawiter bibliography in which every statement keeps its source, for delivery to Stefan Zweig Digital. The result is a curated bibliographic dataset. It is no scholarly edition, since its object is the bibliographic information, not the compiler's text and its transmission. How the print volumes are built is recorded in [Print volumes](print-volumes.md); this document holds the model, the way results are checked, the plan and the open questions. Its plan was revised on 2026-10-23 after three independent agent reviews (constructive, critical, user and infrastructure needs), whose findings on code and documents the main agent checked.
+The compiler carried the Stefan Zweig bibliography through several states: the main volume of 1991, Addendum I of 1999, the unpublished working file of Addendum II, and the wiki begun in December 2008 as the latest state. The first bibliography of 1965 is available in open access but not yet used by the project. Which statements exist only in print, only in the wiki or in both is unknown. This strand reconstructs the print volumes as structured research data, relates them to the wiki records and derives from both a merged Klawiter bibliography in which every statement keeps its source, for delivery to Stefan Zweig Digital. The result is a curated bibliographic dataset. It is no scholarly edition, since its object is the bibliographic information, not the compiler's text and its transmission. How the print volumes are built is recorded in [Print volumes](print-volumes.md); this document holds the model, the way results are checked, the plan and the open questions.
 
 ## Principles
 
@@ -94,18 +94,29 @@ The steps are ordered by dependency. Step 0 runs alongside the others and blocks
 
 ## Measurement
 
-Every human measurement follows rules fixed before its sample is opened.
+Every human measurement follows rules fixed before its sample is opened, and under the operator's decision of 2026-10-24 nothing confirms automatically in this phase, so every confirmation is a person's.
 
-- The decision rule for automatic confirmation is set before the human round. A rule class may confirm without a person when the lower bound of the 95 percent Wilson interval of its precision on the human sample reaches the threshold the operator sets. Until the operator has set it, no rule class confirms.
-- Values of one object are not independent. Precision is therefore reported per value and per object, and its interval is computed by resampling objects.
-- A second person decides a shared subset of each sample without seeing the first person's decisions. Agreement is reported as Cohen's kappa per kind of decision. Agent annotators measure agreement between agents and never replace the second person.
-- Identifiers of a frozen sample stay valid across rebuilds. A rebuild that moves an identifier fails unless the move is recorded in the sample's remap list with the old identifier, the new one and the reason.
+Decision rule
+: `confirmation_rule.json` holds two rules, one for the rule classes of the fields and one for the routes of the concordance. A class is bound to one volume and confirms only there. Only classes fixed as admissible before any decision may confirm, those with at least forty judged values or claims expected in the sample (`p13_review.py --fix-rule`, which refuses once the log or a blind sheet holds anything). The rule records the code it was fixed on, and a change of that code invalidates it until the classes are fixed again. A class would confirm when the lower bound of its object-resampled interval, at the level Holm's correction over the admissible classes assigns, exceeds the threshold. Both thresholds are null.
 
-The three human checks that wait for a person run as one round in the card workbench, in this order, so that the blind part stays blind:
+Reviewers
+: Precision comes from the first reviewer of each object. A second person decides a subset of forty objects marked in advance without seeing the first person's decisions and measures agreement only, as raw agreement, Cohen's kappa per kind of decision and the positive specific agreement on corrections. A third person or the operator settles each disagreement by an adjudication that names both decisions and the one that stands. Reports give reviewer 1, reviewer 2 and the adjudicated state, and the export follows the adjudicated state. Until a second person exists, the field figure is acceptance by one reviewer after inspection. Agent annotators never replace the second person.
 
-1. The blind concordance sample of `p09_human_sample`, from the print entry alone, before the person sees any proposal.
-2. The frozen review sample of `review_sample.py`, value by value with the proposals in view.
-3. The disagreements of the segmentation benchmark.
+Estimates
+: Values of one object are not independent, so precision is reported per value and per object with intervals from resampling objects. Beside it stand precision with open values counted as wrong and recall over complete objects. Because the review sample draws a few objects from parts of very different size, a Horvitz-Thompson estimate weighted by part size stands beside the unweighted figures. Entries the sample excluded as hard form a stratum of their own, reported apart and joined in one population estimate. An object marked with a wrong boundary leaves the field figures and enters a boundary rate.
+
+Concordance
+: The blind answers are compared with the proposals the current claims make at measurement time, and each entry is weighed by its inclusion probability in both blind samples. A second, non-blind phase decides the claims of those entries one by one, and only it gives claim precision per route and volume. The supplement brings the title-year route to forty claims per volume, while the field route falls short in every volume and is therefore not admissible. Near-verbatim alignment is a deterministic check and has no route rule. Silver pairs are a development metric.
+
+Stability
+: Identifiers of a frozen sample stay valid across rebuilds. A moved identifier needs a remap entry with its reason, and a changed fingerprint (the entry hash, and for an object its span) needs a rehash entry with its reason. Every report names the commit and the gate result it ran on.
+
+The human round runs in the card workbench in this order, so that the blind part stays blind:
+
+1. Both blind sheets of `p09_human_sample`, from the print entry alone.
+2. The claim sheet of p09, which is written only once both blind sheets are complete.
+3. The review sample and its stratum of hard entries, value by value, with the second person on the marked subset.
+4. The disagreements of the segmentation benchmark.
 
 ## Milestones
 
@@ -113,16 +124,12 @@ Reached
 - Segmentation measured (step 2), 2026-10-23, against two blind agent annotators. Its human decision moves into the human round.
 - Overlap answered (step 3), 2026-10-23.
 - Every object of the three volumes a validated, span-bound record exported as JSON-LD with one provenance chain per value (step 5 without its measurement), 2026-10-24.
+- A print gate runs locally (`p14_gate.py`): PDF hashes, `p10_validate` with the line-coverage ledger, two rebuilds byte-identical, the identifier and fingerprint rules of the measurement section, and no versioned file repeating twelve words of the print, 2026-10-24.
+- Measurement design corrected, 2026-10-24. An independent methodology review found that the round as first built would have measured acceptance and development rather than correctness, because the blind key froze proposals that have since changed, a second reviewer saw the first one's decisions, the review sample excluded the hard entries without weights, and the decision rule could not be decided per class at these sample sizes. The design of the measurement section replaces it.
 
 Reviewable workbench
-- The findings of the review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) that endanger the measurement are closed, each with a check that fails when the rule is broken.
-- A print gate runs locally: PDF hashes, `p10_validate` with the line-coverage ledger, two rebuilds byte-identical, and the identifier rule of the measurement section.
+- Every finding of the review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) is closed with a check that fails on the code before the repair ([Print viewer](print-viewer.md), Acceptance). The repair is verified and waits to be committed together with the reviewer filter of the review server, because parallel interface work changed the same files.
 - Depends on no person.
-
-Measurement design corrected
-- An independent methodology review of 2026-10-24 found that the round as first built would measure acceptance and development rather than correctness: the blind key froze proposals that have since changed, a second reviewer saw the first one's decisions, the review sample excluded the hard entries and carried no weights, and the decision rule could not be decided per class at these sample sizes.
-- Corrected by: decisions kept per reviewer with an adjudication type, weights per part and a weighted estimate, a supplementary stratum of the excluded entries, a pessimistic bound and a field recall, boundary-flagged objects out of the field precision, a second-reviewer subset drawn in advance, a two-phase blind concordance with claims decided one by one, two decision rules with admissible classes fixed in advance, and entry hashes pinned beside the identifiers.
-- No rule class confirms automatically in this phase ([Production readiness](production-readiness.md), Operator principles).
 
 Human round
 - The three checks above, with the decision rule fixed and the second person's subset.
@@ -136,7 +143,7 @@ Concordance measured
 
 Reconstructed entry
 - Groups from confirmed identity claims, and one merged reading per group with the source of every field (print, wiki or both), the deviations side by side and the open claims visible (steps 9 and the projection part of 10).
-- Depends on the operator's decision whether the merge becomes part of the production run, which [Production readiness](production-readiness.md) records.
+- Print addresses, the compiler's notation and evidenced claims enter the production run as a frozen file without print text once the containment predicate for contents lines and the shared claim schema stand (operator decision of 2026-10-24, [Production readiness](production-readiness.md)). The merged reading of print values waits for the rights decision of step 0.
 
 Delivery
 - Work and person links (step 8), delivery shape on the sample object, staging ingest, trial on research tasks (step 10).
@@ -164,8 +171,8 @@ This milestone runs in parallel and makes the published wiki values hold the rel
 
 - Every verified defect class of the review round of 2026-10-23 is fixed at its root cause with a real-record test and an invariant over all records ([Status](status.md)).
 - Original titles link a translation to its work, and the translations section becomes one structured statement per translation (language, title, place, year, translator), each bound to its source passage.
-- Flat fields on pages without edition headers follow an operator decision: shown only where a rule binds them to the described publication, otherwise a gap, or the edition segmentation is extended to these page types.
-- Every statement carries a typed producer (rule, LLM agent, person). Until the operator decides whether delegation to agents confirms, displays name the producer next to the state.
+- Flat fields on pages without edition headers are shown only where a rule binds them to the described publication and are otherwise a gap (operator principle "a gap before a wrong value", 2026-10-24).
+- Every statement carries a typed producer (rule, LLM agent, person), and displays name the producer next to the state. Decisions of LLM agents, delegated ones included, are proposals and produce no `confirmed` state (2026-10-24).
 - A second fresh-context review round finds no new defect class, and the wiki-print field comparison gives the accuracy of the wiki fields on the silver pairs.
 
 ## Open questions
@@ -175,20 +182,18 @@ Frame and delivery
 - Does print become a second admitted source of values? Answered by the operator; a no keeps print values internal and makes the merged bibliography a concordance.
 - What does Stefan Zweig Digital accept as an object, does it want open claims in it, and which stylesheet renders it? Answered by Stefan Zweig Digital on the sample object; the answer decides between claims in TEI and a separate data stream.
 - Which institution publishes the merged bibliography, given that the project documents name the Literaturarchiv Salzburg and the delivery targets Stefan Zweig Digital in GAMS? Answered by the operator.
-- Does a decision by LLM agents under the operator's delegation count as `confirmed`? Answered by the operator; until then interfaces name the producer next to the state.
-- On pages without edition headers, are flat fields shown only where a rule binds them to the described publication, or is the segmentation extended to these page types? Answered by the operator; the recommendation is the gap, because a gap is a valid result under the data integrity rule and a value from the wrong passage is not.
 - When are the local commits pushed and deployed? Answered by the operator; the public application, the blog post and commit citations in the follow-up proposal depend on it.
 
 Model
-- Is one group identifier per publication the right unit for citation and linking, and how are the compiler's addresses carried in it? Answered by the operator with a domain expert.
+- Is one group identifier per publication the right unit for citation and linking? Answered by the operator with a domain expert.
 - Do unnumbered units such as collection headers and commentary paragraphs become entries of their own or context of the following entries? Answered by data analysis and the operator.
 
 Data
 - The three overlap experiments of step 3 have a first answer on small agent-judged samples ([Print volumes](print-volumes.md), Print and wiki). Addendum II can be aligned with the early wiki revisions character by character, the main volume and Addendum I only through fields. The overlap is partial: book editions mostly overlap, periodical items mostly exist in print only. A cited address is never evidence for identity. The concordance of step 7 therefore takes two routes, alignment for Addendum II and title-and-year blocking with a second agreeing field for the other volumes, and it matches print entries also against the contents lines of the wiki, not only its publications. Does the first answer hold on a larger sample checked by a person? Answered by the human control of step 7.
-- Does the open-access bibliography of 1965 resolve sigla of the main volume? Answered by comparing its abbreviations.
+- Does the open-access bibliography of 1965 resolve sigla of the main volume, and can a concordance give each print entry its 1965 number, which research and the trade still cite? Answered by comparing its abbreviations and entries.
 - What do `G 379*` and the end of section D at 223 against 227 in the contents mean? Answered by a domain expert or further print evidence.
 
 Use
-- With which keys does Zweig research cite the bibliography, print addresses, wiki pages or both? Answered by a domain expert; it decides whether addresses are part of the identifiers.
+- Research cites the bibliography mostly without a locator, and where it locates, by page, by print address or by both; the trade cites print addresses systematically, and the wiki is cited as a website only ([About](about.md), How the bibliography is cited). Should the group identifier carry the print address and the 1965 number as citable aliases? Answered by the operator with a domain expert.
 - Which research tasks must the merged bibliography support, now that the owner's own research case was withdrawn? Answered by the operator and Stefan Zweig Digital; the tasks become the trial before delivery.
 - Should authors and translators link to the person index of Stefan Zweig Digital? Answered by Stefan Zweig Digital.

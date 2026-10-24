@@ -2,7 +2,7 @@
 title: Production Readiness and Acceptance
 status: maintained
 language: en
-updated: 2026-10-23
+updated: 2026-10-24
 related: [status, data, pipeline, testing, frontend, journal]
 ---
 
@@ -19,7 +19,7 @@ The July 2026 decisions, ratified on 19 July, remain in force:
 3. Treat the wiki/print merge as a later stage.
 4. Use versioned patch export as the canonical write-back route.
 
-The third point binds the production run. Since October 2026 the print strand works toward the merge outside it ([Merged bibliography](print-wiki-merge.md)), and its frame questions (rights, print as a source of values, delivery shape) wait for the operator.
+The third point binds the production run. Since October 2026 the print strand works toward the merge outside it ([Merged bibliography](print-wiki-merge.md)), with one exception decided on 2026-10-24, a frozen file of print addresses and evidenced claims without print text (Operator principles below). Its frame questions (rights, print as a source of values, delivery shape) wait for the operator.
 
 On 21 August, independent agentic source review and reconciliation became the initial evidence; external scholarly review adds validation. Contested cases were explicitly retained as final-data objects, distinguishable from confirmed relations. The exact decisions and their chronology remain in [Journal](journal.md).
 
@@ -104,11 +104,31 @@ Decided under these principles by the main instance on 2026-10-24, revisable, ea
 - Decisions of LLM agents, including those of the main instance under the operator's delegation, are proposals in both strands. Their records stay as evidence with the producer named, and they produce no `confirmed` state and no `schema:sameAs`.
 - The Git history keeps the print quotations removed on 2026-10-24, because rewriting it would remove nothing from forks or caches and would break cited commits; they belong to the rights clarification.
 - Until a second person reviews, the field figure is reported as acceptance by one reviewer after inspection.
+- The blind supplement leaves the field route of the concordance below forty claims in every volume, and no third draw is made in this phase, because no class confirms automatically. A pre-sized third draw becomes necessary only when the operator sets a threshold.
+- The design choices of the corrected measurement (weights per part from entries less hard entries, one random object per hard entry, adjudication by a third person that adopts one of the two decisions, the first reviewer as whoever decided an object first, code identity over whole modules, fingerprints of the older samples kept local) stand in [Merged bibliography](print-wiki-merge.md), Measurement, and in the code of `p13_review.py`.
 
 Decided by the main instance on 2026-10-24 under the operator's explicit delegation of the two questions left open at the level of principle:
 
 - Print addresses, the compiler's own notation applied by rule (references, corrections, errata) and the concordance claims with a text or field evidence join the production run as a frozen file under `data/provenance/` that holds identifiers, addresses, route, producer and state and no print text, every claim `proposed`. The title-year candidates stay local, because they are too weak to show in public. The file enters only once the containment predicate for contents lines and the shared claim schema stand, and the leak check of `p14_gate.py` covers it. `CLAUDE.md`, Known Limits, records the exception.
 - The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done, extended by a point on the interface, because the principle that people like working in it is otherwise checked by nothing.
+
+## What the operator accepts
+
+The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done. Its points that a person must accept, and the decisions that only the operator or a partner can take, are these. Everything else is checked by rule, test or gate.
+
+| Acceptance or decision | What it takes | Ready when |
+|---|---|---|
+| Human round of the print strand | deciding, in the card workbench, both blind sheets of p09, then the claim sheet, then the review sample with its stratum of hard entries, then the disagreements of the segmentation benchmark; this gives field precision and claim precision | the repaired workbench is committed |
+| Second reviewer and adjudication | naming a second person for the marked subset of the review sample and a third person who settles disagreements, since an adjudicator may not be one of the two reviewers | the first reviewer has started |
+| Wiki data before publication | inspecting the regenerated wiki data with the flat fields reduced to what a rule binds and every agent decision shown as a proposal | the wiki data batch is committed |
+| Interface on real tasks | reading, reviewing and citing with the production frontend, the record card and the card workbench on the operator's own tasks | the record card with its provenance chain is built |
+| Research tasks for the trial | naming the research tasks the merged bibliography must support, with Stefan Zweig Digital | any time |
+| Rights in the print volumes | settling with the rights holder whether print-derived structure and values, including the unpublished Addendum II, may be published | before delivery |
+| Print as a source of values | deciding whether print becomes an admitted source of values or the merged bibliography stays a concordance | after the rights decision |
+| Delivery shape | agreeing with Stefan Zweig Digital on one sample object (entry, three sources, claim, group) | after the reconstructed entry |
+| Citation identifiers | deciding with a domain expert whether groups carry the print address and the 1965 number as citable aliases ([About](about.md), How the bibliography is cited) | any time |
+| Push, deploy and tag | pushing the local commits and deploying the public application | a gate-green state the coordinator reports |
+| Decisions under the principles | reading the list under Operator principles and objecting where a decision should be taken otherwise | standing |
 
 ## Release scope
 

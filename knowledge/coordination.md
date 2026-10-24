@@ -70,20 +70,7 @@ The research coordinator holds the overall plan ([Merged bibliography](print-wik
 
 A result of the AI operator enters canonical knowledge only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 
-## State at the pause of 2026-10-23
-
-Both sessions paused on 2026-10-23 at the operator's request; all commits are local and unpushed.
-
-- Lab: on 2026-10-24 the AI operator reported L5 reached by agent walkthrough and one independent agent review, with no person involved (commits f348bf4 to 8ec4c12, local): editions by language and year in the work view, the provenance chain per value (S2.6), verification candidates at page-level gaps, search ordered by title, the agent label naming that no person decided, and record exports in a tested module. The coordinator confirmed the commits and the lab tests; later the same day the operator retired `docs/lab/`, `pipeline/lab/` and `knowledge/lab-frontend.md`. Two production findings of that report wait for verification: the production label omits that no person decided, and some flat translator values carry a double space that no exact source occurrence matches.
-- Print strand, 2026-10-24: every print object is a structured, validated record exported as validated JSON-LD with a provenance chain per value and shown in a local viewer, which records human review decisions into a separate layer measured on a frozen review sample ([Print volumes](print-volumes.md), Structured objects). Wrong-value classes of the fourth review are open, and no person has reviewed yet.
-- Blog: v4 verified against the repository ([claim check](evaluations/2026-10-23/blog-v4-claims.md)); a v5 tab in the shared blog document awaits the operator's slots and the deploy.
-- Proposal: the team draft "Grounds for Use" is the basis; a v1.7 with evidence corrections and new team questions lies with the operator; reviews and research reports are filed in the dia-xai repository.
-- Wiki data: the frontend fix batch is committed; the pipeline fix batch (corpus-wide defects, invariants over all records) is verified and committed before the pause or resumed after it ([Status](status.md)).
-- Print strand: concordance with publication resolution and ranking, field check, edition lines and language scope fixed, blind sample frozen and waiting for a person ([Merged bibliography](print-wiki-merge.md)).
-- Open for a later round: one shared source for the producer vocabulary used by the production frontend and the lab labels; compaction of the journal.
-
 ## Decisions that stay with the operator
 
 - Display vocabulary that would change the statement states (`proposed`, `confirmed`, `contested`) or their meaning. A display may name the producer next to the state (rule, LLM agent, person); a fourth state needs a decision.
-- Whether a prototype replaces or extends the production frontend.
-- Everything listed under Frame in the open questions of [Merged bibliography](print-wiki-merge.md).
+- Everything listed in [Production readiness](production-readiness.md), What the operator accepts.

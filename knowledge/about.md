@@ -9,7 +9,7 @@ language: en
 version: 1.0
 tags: [project, context, provenance]
 created: 2026-03-29
-updated: 2026-10-23
+updated: 2026-10-24
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, testing, production-readiness]
 ---
@@ -40,11 +40,19 @@ Uncertainty is a data state of its own. Contested statements have a stable ident
 
 The methodological contribution consists in a lossless data rescue with two coupled control loops, systematic pipeline improvement through aggregated checks and object-level expert curation through versioned patches. This preservation claim concerns current page identity, not complete extraction of every bibliographic fact. [Current status](status.md) records that distinction and the remaining acceptance work. [[production-readiness]] describes the ratified contract, [[testing]] the reach of the evidence.
 
-The deliverable subject comprises data, vocabulary, software, static interface, provenance and validation artifacts. A new Klawiter publication is not part of the repository mandate. The Klawiter blog post is written outside the repository, and its claim check against the repository is kept as evidence in `knowledge/evaluations/`. External live write-backs and institutional work decisions remain later options. The wiki/print merge is worked on since October 2026 as a strand outside the production run ([Merged bibliography](print-wiki-merge.md)); what of it is delivered depends on open decisions on rights in the print volumes and on admitting print as a source of values.
+The deliverable subject comprises data, vocabulary, software, static interface, provenance and validation artifacts. A new Klawiter publication is not part of the repository mandate. The Klawiter blog post is written outside the repository, and its claim check against the repository is kept as evidence in `knowledge/evaluations/`. External live write-backs and institutional work decisions remain later options. The wiki/print merge is worked on since October 2026 as a strand outside the production run ([Merged bibliography](print-wiki-merge.md)); print addresses and evidenced claims join the production run as a frozen file without print text (operator decision of 2026-10-24), and whether print values are delivered depends on the open decisions on rights in the print volumes and on admitting print as a source of values.
 
 ## Consortium and Design
 
 The interface is connected with Stefan Zweig Digital and uses the established colour and typography language of the research consortium. The technical holdings stay independently deployable. Details are held in [[frontend]].
+
+## How the bibliography is cited
+
+A literature and trade sweep of 2026-10-24 read research texts, editions, reviews, dealer and auction catalogues and the data of Stefan Zweig Digital for the way they cite Klawiter. Most research cites the bibliography without a locator, as an entry in the reference list or a footnote such as "vgl. Klawiter 1991". Where a text locates a statement, it uses the print, by page (Stefan-Zweig-Handbuch, 2018), by print address (Meissenburg, 2010, "sub F 28") or by both, as the edition of the letters published by S. Fischer does ("S. 64 [D 156]"). The trade cites print addresses systematically, often beside the running number of the bibliography of 1965 ("Klawiter 136. Klawiter² I, F 46."), and research up to the 1980s and recent local history cite the 1965 numbers as well (Durzak, 1974). A bare "Klawiter" with a number is therefore ambiguous without its edition. Addendum I is cited by page, and no citation of an Addendum I address was found. The wiki is cited rarely and only as a website, once with page URLs of the Fredonia instance and no access date (de Brito, 2016). Those URLs now redirect to klawiter.stefanzweig.digital, where the main page answered 404 on 2026-10-24. Stefan Zweig Digital cites no Klawiter numbers, and no Zweig institution has published a citation recommendation.
+
+The one contemporary review that describes the structure praises the system of references between sections and dates the coverage to the end of 1990 (Prater, 1991), against the publisher's "to 1988". No accessible review explains the asterisk convention, the informant sigla or the abbreviations, which therefore remain to be read from the volumes themselves.
+
+This suggests that the print addresses of the main volume already work as identifiers in research and trade and belong in the merged bibliography as citable, resolvable aliases with volume, section and number, together with the 1965 number where a concordance supplies it. They cannot be the primary identifier, because they cover the print holdings only, were not continued in the addenda and the wiki, and relate to wiki pages in a relation of unknown type ([Print volumes](print-volumes.md), Print and wiki). The project has to set its own citation recommendation ([Merged bibliography](print-wiki-merge.md), Open questions).
 
 ## Licenses and Citation
 

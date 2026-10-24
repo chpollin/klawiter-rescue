@@ -2,7 +2,7 @@
 title: Documentation Ownership and Maintenance
 status: maintained
 language: en
-updated: 2026-09-05
+updated: 2026-10-24
 ---
 
 # Documentation ownership and maintenance
@@ -23,11 +23,15 @@ Project prose is English, following the operator's August 2026 decision. Histori
 | `knowledge/frontend.md` | actual routes, interaction and export contracts |
 | `knowledge/testing.md` | verification layers, test/oracle maintenance and limits |
 | `knowledge/production-readiness.md` | ratified decisions and measurable acceptance contract |
+| `knowledge/print-wiki-merge.md` | model, measurement rules, goal, plan and milestones of the merged bibliography |
+| `knowledge/print-volumes.md`, `knowledge/print-viewer.md` | structure of the print volumes and the reading strand; requirements and acceptance of the card workbench; no print text, paraphrase with PDF pages instead |
+| `knowledge/coordination.md` | roles, path ownership and dependencies of parallel sessions; no project state |
 | `.github/ISSUE_TEMPLATE/*.md` | explicitly labelled proposals; point to current scope and avoid claims of implemented evaluation features |
 | `data/corrections/README.md` | exact patch-store examples, validation and replay semantics |
 | `knowledge/journal.md` | append a newest-first session; preserve old statements as history |
 | `knowledge/review-0.9.md`, dated `knowledge/*review*.md`, `knowledge/independent-evaluation-2026-09-05.md`, `knowledge/technical-remediation-2026-09-05.md` | dated reviews/change evidence; add a current-status pointer, preserve original findings |
 | `knowledge/evaluations/2026-09-05/*.md` | independent review and owner worksheet; maintain manifest hashes when bytes change |
+| `knowledge/evaluations/2026-10-*/*.md` | dated claim checks and reviews; preserve findings, record their closure in the owning guide |
 | `data/output/edition-samples/REVIEW.md`, `data/output/unmatched_locations_review.md` | evidence tied to its sampled/generated data; preserve as an artifact, not a live project guide |
 
 Vendored dependency notices and the unchanged raw archive are not project prose to rewrite. Review every authored guide for contradictions; do not rewrite every Markdown file merely to make it look new.
@@ -36,7 +40,7 @@ Vendored dependency notices and the unchanged raw archive are not project prose 
 
 1. Check the responsible code, versioned decision or generated report.
 2. Update the owning guide; replace duplicate explanations with links where useful.
-3. Put volatile corpus/test figures in Status with their date and source artifact. Keep sample counts in dated evidence.
+3. Put volatile corpus/test figures in Status with their date and source artifact. Keep sample counts in dated evidence. Maintained guides state changing quantities qualitatively or point to their report.
 4. Record a changed contract or verified implementation in the latest journal entry.
 5. Check relative links, knowledge wikilinks, commands and text hashes. Use LF for versioned text, including evaluation JSON; hashes must survive Git checkout on another platform.
 

@@ -44,18 +44,19 @@ The pills above the desk select by source combination: records with a text candi
 
 The head names address, volume, part, PDF page and the position of the object in its entry, and holds title and type with their decisions. Each group of values (imprint, extent, persons, contents, references, notes, inherited values) stands on one line close to the printed line, every value shown exactly once with its decision sign, beside the entry text with the object's passages marked. A click on a mark selects its value. Address targets stand at the value with links, and an address that resolves nowhere reads as unresolved. The provenance chain of a value and its decision history open on demand.
 
-The wiki side reads the projection of the p07 claims and the p08 conflicts. Every link is a candidate with its route (text alignment, field match, title-year), its claim identifier and its state, which is `proposed`. The drawer says that the concordance proposed it and nobody confirmed it, a claim whose record has changed since p07 says so, and where more candidates exist than are shown the card says how many. A field conflict shows the print and the wiki fields side by side, with "not read" and "not given" kept apart.
+The wiki side reads the projection of the p07 claims and the p08 conflicts. Every link is a candidate with its route (text alignment, field agreement, title and year) and its state, which is `proposed`, with the claim identifiers in its tooltip rather than in the running text. The drawer says that the concordance proposed it and nobody confirmed it, a claim whose record has changed since p07 says so, and where more candidates exist than are shown the card says how many. A field conflict shows the print and the wiki fields side by side, with "not read" and "not given" kept apart.
 
 ## Decisions
 
-Exactly one card is active, the one that holds the focus and is in view, and keys act on it alone. A key pressed while the next card loads acts on nothing, and the status line says why a key did nothing.
+Exactly one card is active, the one that holds the focus and is in view. The active slip and card carry `aria-current` besides their colour, and a card with a value marked wrong or unsure, or with a missing value or boundary flagged, says "flagged". Keys act on the active card alone. A key pressed while the next card loads acts on nothing, and the status line says why a key did nothing. Every message about a decision names the object it concerns ("Saved on F 61, title right."), so a message standing beside the next card never reads as one about it. A form closes whenever its card is rebuilt, and Escape cancels it only from inside the card.
 
 - R, W and U mark the selected value right, wrong or unsure.
 - Wrong takes the correction from a typed passage, which the workbench finds inside the object nearest the value, or from a selection in the entry text, with "should not exist" as the alternative.
-- A marks every undecided value of the card right, but only values the card displays, and it refuses while an undecided value is not displayed.
+- A marks every undecided value of the card right, but only values that lie inside the viewport and every scrolling column around them. It refuses while an undecided value is out of view and stops as soon as the card leaves the screen.
 - C completes the card and opens the next open one. M adds a missing value, B flags a wrong object boundary, N jumps to the next open card of the sample from anywhere outside a text field.
 - J and K or the arrow keys move between values and stop at the edge of the card. Escape cancels a form or returns from the card to its slip.
-- The reviewer's name is asked once per browser and can be changed in the header. Help and keys stand in one dialog.
+- The reviewer's name is asked once per browser and can be changed in the header. The workbench loads only that reviewer's decisions (`GET /review/decisions?reviewer=`, filtered again in the page), and while recording it hides the review state of the export, so a second reviewer decides blind to the first. A server that cannot read its decision log says so in a banner, and the cards stay read only.
+- Help and keys stand in one dialog. A skip button, the first tab stop, leads into the active card, and only the active slip's move buttons are tab stops.
 
 `_review.check` enforces the rules every caller shares, the server included. A correction keeps the field and the type of its value, a flag is corrected as the boolean true and a flag that does not hold should not exist, and an inherited value can only be marked as one that should not exist.
 
@@ -66,8 +67,8 @@ Index entries and other apparatus records show with their resolved and unresolve
 - `check_render.mjs` confirms over all objects that every value is shown once with its chain and PDF page and that every wiki link is a proposed candidate.
 - `check_review.mjs` confirms the key and confirmation rules, and mutations of `render.js` are caught.
 - The pytest cases of `_review.check` fail against a review layer without these rules.
-- A browser run against a trial review server with its own log (`--log`) exercises the decision flow by keyboard and pointer at a wide and a narrow width with read screenshots.
-- The review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) has every finding that endangered the measurement closed. The review of index entries and the neighbouring line of an index entry stay open.
-- Not yet checked are Firefox and Safari, a screen reader, and drag and drop by pointer. No independent reviewer has read the rebuilt code.
+- `smoke.mjs` drives the workbench in Chromium against a trial review server with its own log (`--log`, never the port 8767 of the real review). It covers the three forms, a pointer decision with a form open followed by keys, "all right" on a card taller than its column, N on a slip, a decision answered after another card opened, a second reviewer under a filtering server, a server without the filter and one sending the whole log, an export carrying a review state, the status error at a wide and a narrow width, the skip link, the wording of the drawer, the focus ring and the live region. It fails on the code before the repair of the review of 2026-10-24. Playwright is no project dependency, and `PLAYWRIGHT_DIR` names a folder that holds it.
+- Every finding of the review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) is closed, each with a check that fails on the code before the repair. The review of index entries and the neighbouring line of an index entry stay open.
+- Not yet checked are Firefox and Safari, a screen reader, 200 percent zoom and drag and drop by pointer. No independent reviewer has read the repaired code.
 
 The operator's own review of the sample is the acceptance.
