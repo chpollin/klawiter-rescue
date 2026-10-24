@@ -402,7 +402,8 @@ def build() -> tuple[list[dict], list[dict]]:
                                 "id": o["id"],
                                 "entry": r["id"],
                                 "volume": volume,
-                                "part": part,
+                                # The part's printed name, not the chunk slug.
+                                "part": r["part"],
                                 "address": r["address"],
                                 "page": r["page"],
                                 "title": label,
