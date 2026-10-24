@@ -40,6 +40,7 @@ from lib.editions import (  # noqa: E402
     apply_review_reconciliation,
     build_corpus,
 )
+from lib.publications import load_attested_places  # noqa: E402
 from lib.reconciliation import parse_szd_work_index  # noqa: E402
 
 log = setup_logging(__name__)
@@ -310,7 +311,7 @@ def main() -> None:
     reconciliation = json.loads(reconciliation_path.read_text(encoding="utf-8"))
     modeling_decisions = json.loads(modeling_path.read_text(encoding="utf-8"))
     rebuilt = apply_review_reconciliation(
-        build_corpus(rows), reconciliation, modeling_decisions
+        build_corpus(rows, load_attested_places()), reconciliation, modeling_decisions
     )
     apply_confirmed_work_links(
         rebuilt,

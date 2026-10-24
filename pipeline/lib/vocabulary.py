@@ -58,6 +58,7 @@ CONTEXT = {
         "pageNamespace": "klawiter:pageNamespace",
         "isRedirect": "klawiter:isRedirect",
         "redirectTarget": "klawiter:redirectTarget",
+        "wikiPageTitle": "klawiter:wikiPageTitle",
         # Wiki page kind and cited print addresses (lib/page_kinds.py,
         # lib/print_addresses.py), with their source evidence.
         "wikiPageKind": "klawiter:wikiPageKind",
@@ -91,6 +92,32 @@ CONTEXT = {
         "passageText": "klawiter:passageText",
         "passageStart": {"@id": "klawiter:passageStart", "@type": "xsd:integer"},
         "passageEnd": {"@id": "klawiter:passageEnd", "@type": "xsd:integer"},
+        # Fields a stated rule emptied, apart from source gaps (stage 05).
+        "ruleGaps": {"@id": "klawiter:ruleGaps", "@container": "@set"},
+        "gapField": "klawiter:gapField",
+        "gapRule": "klawiter:gapRule",
+        # First and last revision of the wiki page (stage 01, zweig_revision).
+        "revisionDates": "klawiter:revisionDates",
+        "revisionRule": "klawiter:revisionRule",
+        "sourceTable": "klawiter:sourceTable",
+        "firstRevisionId": {"@id": "klawiter:firstRevisionId", "@type": "xsd:integer"},
+        "firstRevisionTimestamp": {
+            "@id": "klawiter:firstRevisionTimestamp",
+            "@type": "xsd:dateTime",
+        },
+        "lastRevisionId": {"@id": "klawiter:lastRevisionId", "@type": "xsd:integer"},
+        "lastRevisionTimestamp": {
+            "@id": "klawiter:lastRevisionTimestamp",
+            "@type": "xsd:dateTime",
+        },
+        "historyStartsInDump": {
+            "@id": "klawiter:historyStartsInDump",
+            "@type": "xsd:boolean",
+        },
+        "absentParentRevisionId": {
+            "@id": "klawiter:absentParentRevisionId",
+            "@type": "xsd:integer",
+        },
     }
 }
 

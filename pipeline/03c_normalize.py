@@ -26,7 +26,12 @@ from lib.config import (
     setup_logging,
     write_csv,
 )
-from lib.encoding import fix_encoding, has_mojibake, unescape_dump_quotes
+from lib.encoding import (
+    fix_encoding,
+    has_damaged_letter,
+    has_mojibake,
+    source_value,
+)
 
 log = setup_logging("normalize")
 
@@ -162,17 +167,53 @@ UNESCAPED_LIST_FIELDS = (
 
 
 def unescape_row(row):
-    """Undo the dump's quote escape in every value field of a row."""
+    """Bring every value field of a row out of the dump form (source_value)."""
     for field in UNESCAPED_SCALAR_FIELDS:
         if row.get(field):
-            row[field] = unescape_dump_quotes(row[field])
+            row[field] = source_value(row[field])
     for field in UNESCAPED_LIST_FIELDS:
-        if row.get(field) and "\\" in row[field]:
+        if row.get(field):
             items = json.loads(row[field])
-            row[field] = json.dumps(
-                [unescape_dump_quotes(item) for item in items], ensure_ascii=False
-            )
+            flat = [source_value(item) for item in items]
+            if flat != items:
+                row[field] = json.dumps(flat, ensure_ascii=False)
     return row
+
+
+# Published flat values; page_title and redirect_target are source identifiers
+# that stay as the dump gives them.
+DAMAGE_CHECKED_SCALAR_FIELDS = (
+    "title",
+    "original_title",
+    "publisher",
+    "location",
+    "translator",
+)
+
+
+def gap_damaged_values(row):
+    """Empty every flat value that keeps a letter whose bytes were lost.
+
+    No repair restores the letter, and guessing it would put a reading into
+    the record that the source does not carry. The field names go to
+    encoding_damaged_fields, from which stage 05 writes a review hint; a list
+    loses only its damaged items.
+    """
+    damaged = []
+    for field in DAMAGE_CHECKED_SCALAR_FIELDS:
+        if has_damaged_letter(row.get(field, "")):
+            row[field] = ""
+            damaged.append(field)
+    for field in UNESCAPED_LIST_FIELDS:
+        if not row.get(field):
+            continue
+        items = json.loads(row[field])
+        kept = [item for item in items if not has_damaged_letter(item)]
+        if len(kept) != len(items):
+            row[field] = json.dumps(kept, ensure_ascii=False) if kept else ""
+            damaged.append(field)
+    row["encoding_damaged_fields"] = json.dumps(damaged) if damaged else ""
+    return damaged
 
 
 # --- Main ---
@@ -212,8 +253,10 @@ def main() -> None:
         "pagecount_rejected": 0,
     }
 
+    damaged_values = 0
     for row in rows:
         unescape_row(row)
+        damaged_values += len(gap_damaged_values(row))
 
         # Location
         old_loc = row.get("location", "")
@@ -251,6 +294,7 @@ def main() -> None:
     write_csv(STEP_03C_OUTPUT, rows, PARSED_FIELDS)
 
     log.info(f"Wrote {len(rows)} entries to {os.path.basename(STEP_03C_OUTPUT)}")
+    log.info(f"Values emptied for a lost byte: {damaged_values}")
     log.info("Normalization stats:")
     for key, count in stats.items():
         log.info(f"  {key}: {count}")

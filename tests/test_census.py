@@ -181,13 +181,21 @@ class TestRequiredFields:
 
     def test_every_ns0_entry_has_title(self, ns0_entries):
         """Every ns-0 entry must have a title. The blanked stub 2979 is shown with
-        its page-title fallback (decision 2026-06-21), so there are no exceptions."""
+        its page-title fallback (decision 2026-06-21). The one exception is a
+        title the dump delivers with a lost byte, a stated gap (page 2364)."""
         missing = [
             e["sourcePageId"]
             for e in ns0_entries
             if not e.get("title") or str(e["title"]).strip() == ""
         ]
-        assert len(missing) == 0, (
+        damaged = [
+            e["sourcePageId"]
+            for e in ns0_entries
+            if {"gapField": "title", "gapRule": "damaged-letter"}
+            in e.get("ruleGaps", [])
+        ]
+        assert damaged == [2364]
+        assert missing == damaged, (
             f"{len(missing)} ns-0 entries missing title: {missing[:20]}"
         )
 

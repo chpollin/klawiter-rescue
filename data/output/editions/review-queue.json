@@ -1,5 +1,5 @@
 {
-  "caseCount": 354,
+  "caseCount": 332,
   "cases": [
     {
       "editionId": "klawiter:edition/4916-2016-b",
@@ -493,7 +493,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Spiel gegen den Schachmeister\\\" in ''Argentinisches Tageblatt'' [Buenos Aires], 20 December 1942, p. 6",
+        "description": ". \"Spiel gegen den Schachmeister\" in ''Argentinisches Tageblatt'' [Buenos Aires], 20 December 1942, p. 6",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -526,7 +526,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Das königliche Spiel\\\" in ''Deutsche Schachrundschau Caissa'' [Weidenau-Sieg], 4:17 [September 1950], p. 263",
+        "description": ". \"Das königliche Spiel\" in ''Deutsche Schachrundschau Caissa'' [Weidenau-Sieg], 4:17 [September 1950], p. 263",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -559,7 +559,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Schachnovelle\\\" in ''Film und Frau'' [Hamburg], 12:13 [1960], pp. 34-42. Contains 6 photographs from the film version starring Curd Jürgens",
+        "description": ". \"Schachnovelle\" in ''Film und Frau'' [Hamburg], 12:13 [1960], pp. 34-42. Contains 6 photographs from the film version starring Curd Jürgens",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -625,7 +625,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Der Weltschachmeister\\\" in ''Lesestücke und Übersetzungen''. Compiled and edited by Johannes Schneider. 7th impression. Groningen: Noordhoff Verlag, 1964, pp. 91-92",
+        "description": ". \"Der Weltschachmeister\" in ''Lesestücke und Übersetzungen''. Compiled and edited by Johannes Schneider. 7th impression. Groningen: Noordhoff Verlag, 1964, pp. 91-92",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -658,7 +658,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". “Schachnovelle” in ''Literatur und Widerstand. Anthologie europäischer Poesie und Prosa''. Edited by the Internationale Föderation der  in Widerstandskämpfer. Frankfurt am Main: Röderberg Verlag, 1969, pp. 434-440",
+        "description": ". “Schachnovelle” in ''Literatur und Widerstand. Anthologie europäischer Poesie und Prosa''. Edited by the Internationale Föderation der in Widerstandskämpfer. Frankfurt am Main: Röderberg Verlag, 1969, pp. 434-440",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -691,7 +691,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ".  “Schachnovelle” [A summary of the story] in H. D. Tiesema. ''Der Rote Faden. Fünfzig Zusammenfassungen vielgelesener Werke aus der deutschen Literatur für Examenskandidaten Höherer Schulen, L. O.- und M. O.-Kandiaten''.",
+        "description": ". “Schachnovelle” [A summary of the story] in H. D. Tiesema. ''Der Rote Faden. Fünfzig Zusammenfassungen vielgelesener Werke aus der deutschen Literatur für Examenskandidaten Höherer Schulen, L. O.- und M. O.-Kandiaten''.",
         "location": null,
         "pageCount": 234,
         "pageCountCandidate": null,
@@ -757,7 +757,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Das Geheimnis des künstlerischen Schaffens\\\" [1938] in [[Das Geheimnis des künstlerischen Schaffens]] [1981],20, pp. 227-(250). Pages 244-245 contain a comparison of the story itself with the game of chess",
+        "description": ". \"Das Geheimnis des künstlerischen Schaffens\" [1938] in [[Das Geheimnis des künstlerischen Schaffens]] [1981],20, pp. 227-(250). Pages 244-245 contain a comparison of the story itself with the game of chess",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -823,7 +823,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Schachnovelle\\\" in''Wahlfach Deutsch. Literatur''. Compiled and edited by R. Hazekamp & J. V. Zambon. Groningen: Wolters-Noordhoff Verlag, 1990 [Reprinted 1996], pp. 219-221",
+        "description": ". \"Schachnovelle\" in''Wahlfach Deutsch. Literatur''. Compiled and edited by R. Hazekamp & J. V. Zambon. Groningen: Wolters-Noordhoff Verlag, 1990 [Reprinted 1996], pp. 219-221",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -856,7 +856,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". A cartoon caricature [2 drawings] of \\\"Schachnovelle\\\" drawn by S. Bastian in ''Das Magazin'' [Zürich] 8 [28/29 February 1992], p. 46 [\\\"Impressum: Wochenendbeilage des Tages-Anzeigers und der Berliner Zeitung\\\"]",
+        "description": ". A cartoon caricature [2 drawings] of \"Schachnovelle\" drawn by S. Bastian in ''Das Magazin'' [Zürich] 8 [28/29 February 1992], p. 46 [\"Impressum: Wochenendbeilage des Tages-Anzeigers und der Berliner Zeitung\"]",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -922,7 +922,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". \\\"Die Herausforderung des geheimnisvollen Fremden\\\" in ''Welt am Sonntag'' [Hamburg], 11 March 1999 [No. 11], p. 44",
+        "description": ". \"Die Herausforderung des geheimnisvollen Fremden\" in ''Welt am Sonntag'' [Hamburg], 11 March 1999 [No. 11], p. 44",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -955,7 +955,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ".  \\\"Die Schachnovelle\\\" in ''Wort und Sinn. Ein Lese- und literarisches Arbeitsbuch für die Jahrgangsstufe 9/10''. Edited by Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290 Contains a photograph of Stefan Zweig and two illustrations",
+        "description": ". \"Die Schachnovelle\" in ''Wort und Sinn. Ein Lese- und literarisches Arbeitsbuch für die Jahrgangsstufe 9/10''. Edited by Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290 Contains a photograph of Stefan Zweig and two illustrations",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -1312,7 +1312,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": "''Les Fleurs du Mal'' [Oeuvres complètes de Charles  Baudelaire. Vol. 1]. Introduction by Théophile Gautier [A biographical sketch of Baudelaire, dated 20 February 1869]. Frontispiece portrait by Félix Braquemond. 411p. Paris: Michel Lévy Frères, Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. References to the numbers of each poem are taken from the Michel Lévy edition",
+        "description": "''Les Fleurs du Mal'' [Oeuvres complètes de Charles Baudelaire. Vol. 1]. Introduction by Théophile Gautier [A biographical sketch of Baudelaire, dated 20 February 1869]. Frontispiece portrait by Félix Braquemond. 411p. Paris: Michel Lévy Frères, Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. References to the numbers of each poem are taken from the Michel Lévy edition",
         "location": null,
         "pageCount": 411,
         "pageCountCandidate": null,
@@ -1345,7 +1345,7 @@
       "priority": "P1",
       "proposedValues": {
         "contestedClaim": null,
-        "description": "\\\"Les Fleurs du mal\\\" [Oeuvres complètes. Vol. 1]. Text established and annotated by Claude Pichois. Paris: Éditions Gallimard. Vol. I, 1975. Vol. II, 1976. Both reprinted 1983. All 1975 references are to Vol. I",
+        "description": "\"Les Fleurs du mal\" [Oeuvres complètes. Vol. 1]. Text established and annotated by Claude Pichois. Paris: Éditions Gallimard. Vol. I, 1975. Vol. II, 1976. Both reprinted 1983. All 1975 references are to Vol. I",
         "location": null,
         "pageCount": null,
         "pageCountCandidate": null,
@@ -2515,732 +2515,6 @@
       "sourceSliceSha256": "8215097a8b5f094c13379e65cae1704f6985d58b79fb9cc3885feebbf7c187b8"
     },
     {
-      "editionId": "klawiter:edition/3757-1911-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 1580,
-          "oa:start": 1437
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1911]''', p. 12",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", p. 12",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1911"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "9dc2d4ea47aefbcd341ce61b946510df158e198c04ee109943a887c8b72ddafb"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1914-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 1835,
-          "oa:start": 1580
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1914]''', pp. 12-19",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 12-19",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1914"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "c3b5158e2d2a6dc0e703754385bddfb640bc228f4dbeb1f7fb136d87508af4f4"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1916-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 1989,
-          "oa:start": 1835
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1916]''', pp. 19-21",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 19-21",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1916"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "727b7f53f499afbd1bb82c50828cf1b00b08bf07eaaaf8306d91ae0553cbb35c"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1917-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2139,
-          "oa:start": 1989
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1917]''', pp. 21-22",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 21-22",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1917"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "298ed4ce32f61bd937ceac8d5d10dbb128b16062444de46fdffd1efeb5549a88"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1920-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2410,
-          "oa:start": 2139
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1920]''', pp. 22-28",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 22-28",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1920"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "3dd784de252f3ae57f89c4e97f956346426699793bf73a7c9e7b85b4d76275a2"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1921-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2613,
-          "oa:start": 2410
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1921]''', pp. 28-30",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 28-30",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1921"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "8aff014cd15fa8dc6de645e722aca0b04e0f68a291d744a099d8ce179ffed365"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1923-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3033,
-          "oa:start": 2613
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1923]''', pp. 31-40",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 31-40",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1923"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "a4eb60d611f5632cf9c3f176ed58866b55634ff84d0d45bb8e2c6189a5bf2c8b"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1925-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3236,
-          "oa:start": 3033
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1925]''', pp. 40-42",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 40-42",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1925"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "0284c99488cb6fae254a7db0f563cf550a82ce801d24252e3b946acdc7474d81"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1927-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3437,
-          "oa:start": 3236
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1927]''', pp. 42-44",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 42-44",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1927"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "9c32cd59460a07c75c698f3e45727b79e339ec9c049d64da76d8cf3df14fac10"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1928-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3800,
-          "oa:start": 3437
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1928]''', pp. 44-50",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 44-50",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1928"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "1e1df4a0fe08787c30e3248a663da00b34bc7cfeca007bbaba610dbab25393b9"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1929-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4000,
-          "oa:start": 3800
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1929]''', pp. 50-51",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 50-51",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1929"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "194fc466c85a5895f4dbed7daa2b9867ed9efa0e528f2b3b8bb6da559b6de901"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1930-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4148,
-          "oa:start": 4000
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1930]''', pp. 52-53",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 52-53",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1930"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "deb424fd8df5e2af776eec8a1951b3654642438c59d7e6eb2d35aa7229de4e3c"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1932-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4396,
-          "oa:start": 4148
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1932]''', pp. 53-56",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 53-56",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1932"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "13917e51f80e3447b67a5b7c870002e1f1d4a1f2827d430337ad365cde33bb48"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1933-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 5090,
-          "oa:start": 4396
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1933]''', pp. 56-77",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 56-77",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1933"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "1720e4e00c4f903c24961c0f7b07159188255ee2c33a4bca8bc2965773f8e5cc"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1934-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 5313,
-          "oa:start": 5090
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1934]''', pp. 78-80",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 78-80",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1934"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "9ff04ff1508d67807a22085c690d91ea850ee3caf31be6027362fb7899ea5e77"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1935-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 5849,
-          "oa:start": 5313
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1935]''', pp. 80-86",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 80-86",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1935"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "2b3aa16db50bee947c21b89ee3bc34d0607e2e7029ad6d1f17821ee9dc169f8a"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1936-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 6312,
-          "oa:start": 5849
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1936]''', pp. 86-92",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 86-92",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1936"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "abce489b8f4369a658377c1b02038a808e216ddc295127e67400af7731aeeada"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1937-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 6614,
-          "oa:start": 6312
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1937]''', pp. 93-96",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 93-96",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1937"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "8ffedba19aa492ebcd14a58891401249210d2273b20de99c2a56a23f4cc5c4f2"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1938-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 6765,
-          "oa:start": 6614
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1938]''', pp. 96-97",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 96-97",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1938"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "949520bb74efd1a6d4e6b38d5966cdeadb65d4bfcf3877e12c145342b10c4f64"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1939-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7017,
-          "oa:start": 6765
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1939]''', pp. 98-110",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 98-110",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1939"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "6e723105e7c7472ace8a1490a7b14893e624edff2735a1b9d1b103cb26fe4b2c"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1940-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7329,
-          "oa:start": 7017
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1940]''', pp. 110-120",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 110-120",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1940"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "da6c7d308e1dbc7a30f2f35b8bfb2e59060f944a89180a6b06f9bf06429ab9e9"
-    },
-    {
-      "editionId": "klawiter:edition/3757-1942-a",
-      "evidence": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7905,
-          "oa:start": 7329
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      },
-      "flags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "headerLine": "'''[1942]''', pp. 121-126",
-      "priority": "P1",
-      "proposedValues": {
-        "contestedClaim": null,
-        "description": ", pp. 121-126",
-        "location": null,
-        "pageCount": null,
-        "pageCountCandidate": null,
-        "publisher": null,
-        "series": null,
-        "year": "1942"
-      },
-      "reviewStatus": "proposed",
-      "sourcePageId": 3757,
-      "sourceSliceSha256": "853fd4a67d025e27d87924c2143432b4f31450e1f2ff94ae4b2327b30f415a10"
-    },
-    {
       "editionId": "klawiter:edition/3996-1931-a",
       "evidence": {
         "@type": "oa:SpecificResource",
@@ -3295,10 +2569,10 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": null,
+        "location": "Beirut",
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Beirut",
+        "publisher": null,
         "series": null,
         "year": "1947"
       },
@@ -3424,10 +2698,10 @@
       "proposedValues": {
         "contestedClaim": null,
         "description": null,
-        "location": null,
+        "location": "Stockholm",
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Stockholm",
+        "publisher": null,
         "series": null,
         "year": "1931"
       },
@@ -4264,7 +3538,7 @@
       "priority": "P2",
       "proposedValues": {
         "contestedClaim": null,
-        "description": ". ''Hommes et destins''. Translated by Hélène Denis-Jeanroy. Foreword by Raymond Jeanroy.   Cover Bernard Flaguel. Cover photographs of Marcel Proust, Sigmund Freud, Romain Rolland, Theodor Herzl, Rainer Maria Rilke, Gustav Mahler, Jean Jaurès, Paul Verlaine, Stefan Zweig & Friedrich Nietzsche © Roger-Viollet Agency, Paris. 218/(3)p [Le Livre de Poche, 14918]",
+        "description": ". ''Hommes et destins''. Translated by Hélène Denis-Jeanroy. Foreword by Raymond Jeanroy. Cover Bernard Flaguel. Cover photographs of Marcel Proust, Sigmund Freud, Romain Rolland, Theodor Herzl, Rainer Maria Rilke, Gustav Mahler, Jean Jaurès, Paul Verlaine, Stefan Zweig & Friedrich Nietzsche © Roger-Viollet Agency, Paris. 218/(3)p [Le Livre de Poche, 14918]",
         "location": "Paris",
         "pageCount": null,
         "pageCountCandidate": null,
@@ -6967,7 +6241,7 @@
         "location": "Moskva",
         "pageCount": 234,
         "pageCountCandidate": null,
-        "publisher": "Izdatel'stvo \\\"Lomonosov\\\"",
+        "publisher": "Izdatel'stvo \"Lomonosov\"",
         "series": null,
         "year": "2011"
       },
@@ -7127,7 +6401,7 @@
         "location": "Moskva",
         "pageCount": null,
         "pageCountCandidate": null,
-        "publisher": "Izdatel’stvo “Druzhba  narodov” / SP  “Lexica”",
+        "publisher": "Izdatel’stvo “Druzhba narodov” / SP “Lexica”",
         "series": null,
         "year": "1992"
       },
@@ -9892,7 +9166,7 @@
         "location": "Tiranë",
         "pageCount": 493,
         "pageCountCandidate": null,
-        "publisher": "Botimet \\\"Omsca-1\\\"",
+        "publisher": "Botimet \"Omsca-1\"",
         "series": "[Tirana]",
         "year": "2001"
       },
@@ -9924,7 +9198,7 @@
         "location": "Tiranë",
         "pageCount": 280,
         "pageCountCandidate": null,
-        "publisher": "Botimet \\\"Omsca-1\\\"",
+        "publisher": "Botimet \"Omsca-1\"",
         "series": "[Tirana]",
         "year": "2018"
       },
@@ -11336,7 +10610,7 @@
         "location": "Ulaanbaatar",
         "pageCount": 302,
         "pageCountCandidate": null,
-        "publisher": "Monsudar Khevleliin Gazar  [Monsudar Publishing House]",
+        "publisher": "Monsudar Khevleliin Gazar [Monsudar Publishing House]",
         "series": "[formerly Ulan Bator]",
         "year": "2016"
       },

@@ -222,6 +222,8 @@ const RECORD_PLACES = {
     ? 'visible' : null),
   reviewFlags: (e, r) => placeOfAll(e.reviewFlags.map(flag => flag.detail || flag.code), r.fields),
   sourceRevision: (e, r) => placeOf(`revision ${e.sourceRevision.humanRevision.revisionId}`, r.fields),
+  revisionDates: (e, r) => (marked(r.card.html, 'revisionDates') ? 'visible' : null),
+  ruleGaps: (e, r) => (marked(r.card.html, 'ruleGaps') ? 'visible' : null),
   pageKind: (e, r, ctx) => (ctx.App.PAGE_KIND_LABELS[e.pageKind]
     ? placeOf(ctx.App.PAGE_KIND_LABELS[e.pageKind], r.fields)
     : (marked(r.card.html, 'pageKind') ? 'visible' : null)),

@@ -8,6 +8,9 @@ documents nothing.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
 from lib.encoding import unescape_dump_quotes
 from lib.llm_extract import occurs_in_source, page_count_in_source
@@ -391,3 +394,142 @@ def test_every_translation_value_is_the_text_of_its_span(record_sources):
                     continue
                 value = " ".join(unescape_dump_quotes(text[start:end]).split())
                 assert str(statement[field]) == value, (page_id, field)
+
+
+# Defect 14: a letter whose byte the dump lost becomes a gap, not a guess.
+
+
+def _normalize_stage():
+    import importlib
+
+    return importlib.import_module("03c_normalize")
+
+
+def test_a_title_with_a_lost_byte_is_a_gap(record_sources):
+    """The dump's page title of page 2364 lost the byte A0 of the final "à";
+    the page text spells the title intact, but the rule takes the page title."""
+    title = record_sources[2364]["page_title"]
+    assert title == "Estasi di libertÃ"
+    row = {"title": title, "page_title": title, "translator": "Luciana Rotter"}
+    assert _normalize_stage().gap_damaged_values(row) == ["title"]
+    assert row["title"] == "" and row["page_title"] == title
+    assert row["translator"] == "Luciana Rotter"
+    assert row["encoding_damaged_fields"] == '["title"]'
+
+
+def test_the_published_damaged_titles_are_gaps_with_a_hint(ns0_by_id, all_entries):
+    by_page = {entry["sourcePageId"]: entry for entry in all_entries}
+    for page_id in (2364, 7432):
+        entry = by_page[page_id]
+        assert "title" not in entry
+        assert any(
+            flag["code"] == "encoding-damaged" and flag["field"] == "title"
+            for flag in entry["reviewFlags"]
+        )
+        assert {"gapField": "title", "gapRule": "damaged-letter"} in entry["ruleGaps"]
+    assert "Estasi di libertà" in ns0_by_id[2364]["fullBibliographicEntry"]
+
+
+# Defect 15: a whitespace run of the dump is one space in the value.
+
+
+def test_a_credit_with_a_double_space_reads_as_the_wiki_shows_it(
+    record_sources, ns0_by_id
+):
+    text = record_sources[384]["text"]
+    assert "Translated by A.  Druktenis." in text
+    raw = extract_translator(text)
+    assert raw == "A.  Druktenis"
+    row = {"translator": raw}
+    _normalize_stage().unescape_row(row)
+    assert row["translator"] == "A. Druktenis"
+    assert ns0_by_id[384]["translator"] == "A. Druktenis"
+    assert "A. Druktenis" in ns0_by_id[384]["fullBibliographicEntry"]
+
+
+# Defect 16: a gap by rule is labelled as one.
+
+
+def test_an_unbound_value_is_a_rule_gap_not_a_source_gap(ns0_by_id):
+    entry = ns0_by_id[41]
+    gaps = {gap["gapField"]: gap["gapRule"] for gap in entry["ruleGaps"]}
+    assert gaps
+    assert set(gaps.values()) == {"statement-bindings"}
+    for field in gaps:
+        assert entry["_provenance"][field] == "rule-gap"
+
+
+# Defect 17: a category page of the same title neither blocks nor receives a
+# main-namespace redirect.
+
+
+def test_redirects_blocked_by_category_titles_resolve(frontend_data):
+    redirects = frontend_data["redirects"]
+    assert redirects["Correspondence / Volumes (Portuguese)"] == 2431
+    assert redirects["Secondary Literature / Titles (Uzbek)"] == 5104
+    assert redirects["Secondary Literature / Authors (Japanese)"] == 7475
+    for key in ("Main", "Sidebar", "Mainpage"):
+        assert key not in redirects
+
+
+def test_redirects_into_category_titles_are_reported_unresolved():
+    from lib.config import OUTPUT_UNRESOLVED_REDIRECTS
+
+    report = json.loads(Path(OUTPUT_UNRESOLVED_REDIRECTS).read_text(encoding="utf-8"))
+    reported = {item["pageId"]: item for item in report["redirects"]}
+    assert reported[5211]["pageTitle"] == "Secondary Literature/ Titles (Thai)"
+    assert reported[5211]["kind"] == "absent-target"
+    for page_id in (6440, 7435):
+        assert reported[page_id]["kind"] == "absent-target"
+
+
+# Defect 18: a structure page names no author.
+
+
+def test_category_pages_name_no_author(canonical_entries):
+    by_page = {entry["sourcePageId"]: entry for entry in canonical_entries}
+    for page_id in (232, 7432):
+        assert "author" not in by_page[page_id]
+
+
+# Defect 19: Gate 1 reads a lone attested place as a place, leaves the dump
+# form, and a year heading before a page locator is no edition.
+
+
+def _editions(record_sources, attested, page_id):
+    from lib.editions import segment_page
+
+    entry = record_sources[page_id]
+    return {
+        edition["@id"]: edition
+        for edition in segment_page(
+            page_id, entry["text"], entry["page_title"], attested
+        )["editions"]
+    }
+
+
+def test_a_lone_attested_place_is_the_edition_place(record_sources, attested):
+    for page_id, edition_id, place in (
+        (4101, "klawiter:edition/4101-1947-a", "Beirut"),
+        (4353, "klawiter:edition/4353-1931-a", "Stockholm"),
+    ):
+        edition = _editions(record_sources, attested, page_id)[edition_id]
+        assert edition["schema:locationCreated"] == place
+        assert "schema:publisher" not in edition
+
+
+def test_edition_values_leave_the_dump_form_on_real_pages(record_sources, attested):
+    editions = _editions(record_sources, attested, 2485)
+    assert (
+        editions["klawiter:edition/2485-2010-a"]["schema:publisher"]
+        == 'Izdatel\'stvo "AST"'
+    )
+    editions = _editions(record_sources, attested, 2530)
+    assert editions["klawiter:edition/2530-2018-a"]["schema:publisher"] == "Lind & Co."
+
+
+def test_a_year_heading_before_a_page_locator_is_no_edition(record_sources, attested):
+    editions = _editions(record_sources, attested, 3757)
+    assert list(editions) == ["klawiter:edition/3757-2016-a"]
+    publications = _publications(record_sources, attested, 3757)
+    assert [p["id"] for p in publications] == ["klawiter:publication/3757-2016-a"]

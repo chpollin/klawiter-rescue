@@ -146,6 +146,9 @@ def verify_entry(entry, raw_content, page_title=""):
 
     # Clean version of raw content (wiki markup removed) for title comparison
     raw_clean = remove_wiki_markup(raw_content)
+    # A field a stated rule emptied is no missed extraction; it is reported
+    # as a rule gap with its rule instead of as a false negative.
+    rule_gaps = {gap["gapField"]: gap["gapRule"] for gap in entry.get("ruleGaps", [])}
 
     # --- Title verification ---
     # The pipeline uses page_title as fallback when wiki extraction returns a
@@ -209,7 +212,9 @@ def verify_entry(entry, raw_content, page_title=""):
         }
 
     # Check for publisher patterns in raw content not captured
-    if not publisher:
+    if not publisher and "publisher" in rule_gaps:
+        result["fields"]["publisher_rule_gap"] = rule_gaps["publisher"]
+    elif not publisher:
         raw_publisher = extract_publisher(raw_content) or has_publisher_indicator(
             raw_clean
         )
@@ -230,7 +235,9 @@ def verify_entry(entry, raw_content, page_title=""):
         }
 
     # Check for locations not captured
-    if not location:
+    if not location and "location" in rule_gaps:
+        result["fields"]["location_rule_gap"] = rule_gaps["location"]
+    elif not location:
         raw_location = extract_location(raw_content)
         if raw_location:
             result["fields"]["location_false_negative"] = {
@@ -249,7 +256,9 @@ def verify_entry(entry, raw_content, page_title=""):
         }
 
     # Check for translator patterns not captured
-    if not translator:
+    if not translator and "translator" in rule_gaps:
+        result["fields"]["translator_rule_gap"] = rule_gaps["translator"]
+    elif not translator:
         raw_translator = extract_translator(raw_content) or has_translator_indicator(
             raw_clean
         )
@@ -283,6 +292,7 @@ def compute_summary(results):
         correct_fallback = 0
         false_positive = 0
         false_negative = 0
+        rule_gap = 0
 
         for r in results:
             f = r.get("fields", {})
@@ -299,6 +309,8 @@ def compute_summary(results):
             fn_key = f"{field}_false_negative"
             if fn_key in f:
                 false_negative += 1
+            if f"{field}_rule_gap" in f:
+                rule_gap += 1
 
         total_entries = len(results)
         coverage = total_extracted / total_entries if total_entries else 0
@@ -313,6 +325,7 @@ def compute_summary(results):
             "correct_fallback": correct_fallback,
             "false_positive": false_positive,
             "false_negative": false_negative,
+            "rule_gap": rule_gap,
             "coverage": round(coverage * 100, 1),
             "precision": round(precision * 100, 1),
         }
@@ -371,6 +384,7 @@ def main():
             f"  {field:15s}: coverage={stats['coverage']:5.1f}%  "
             f"precision={stats['precision']:5.1f}%  "
             f"FP={stats['false_positive']:4d}  FN={stats['false_negative']:4d}  "
+            f"rule gaps={stats['rule_gap']:4d}  "
             f"extracted={stats['extracted']}/{stats['total_entries']}"
         )
 

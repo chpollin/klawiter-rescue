@@ -421,6 +421,14 @@ klawiter:redirectTarget
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
+klawiter:wikiPageTitle
+    a rdf:Property ;
+    rdfs:label "wiki page title"@en ;
+    rdfs:comment "The redirect page's own title in the wiki, the name a reference to the redirect uses; the entry's schema:name is its target's title."@en ;
+    rdfs:range xsd:string ;
+    skos:changeNote "Added on 2026-10-24."@en ;
+    rdfs:isDefinedBy klawiter: .
+
 klawiter:headerLine
     a rdf:Property ;
     rdfs:label "header line"@en ;
@@ -867,5 +875,97 @@ klawiter:passageEnd
     a rdf:Property ;
     rdfs:label "passage end"@en ;
     rdfs:comment "Character offset where the citation passage ends, exclusive, in the page's source text in dump form."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Rule gap properties
+#################################################################
+
+klawiter:ruleGaps
+    a rdf:Property ;
+    rdfs:label "rule gaps"@en ;
+    rdfs:comment "The flat fields of an entry that a stated rule left empty although the source page carries text there, each with the field and the rule. A rule gap is no source gap: statement-bindings empties a place, publisher or translator that no position of the page's first statement binds to the described publication, damaged-letter a value that kept a letter whose bytes were lost before the dump was written."@en ;
+    skos:changeNote "Added on 2026-10-24."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:gapField
+    a rdf:Property ;
+    rdfs:label "gap field"@en ;
+    rdfs:comment "The flat field a rule left empty, named by its key in the interface record (location, publisher, translator, title and others)."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:gapRule
+    a rdf:Property ;
+    rdfs:label "gap rule"@en ;
+    rdfs:comment "Identifier of the rule that left a flat field empty: statement-bindings or damaged-letter."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+#################################################################
+#    Wiki revision properties
+#################################################################
+
+klawiter:revisionDates
+    a rdf:Property ;
+    rdfs:label "revision dates"@en ;
+    rdfs:comment "The first and last revision of the wiki page that the dump's revision table holds, with the rule that selected them, the source table and the revision identifiers. The revisions of the wiki's automatic Redirect fixer account are not counted."@en ;
+    skos:changeNote "Added on 2026-10-24."@en ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:revisionRule
+    a rdf:Property ;
+    rdfs:label "revision rule"@en ;
+    rdfs:comment "Identifier of the deterministic rule that selected the first and last revision of a wiki page."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:sourceTable
+    a rdf:Property ;
+    rdfs:label "source table"@en ;
+    rdfs:comment "The table of the MediaWiki dump a value was read from, such as zweig_revision."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:firstRevisionId
+    a rdf:Property ;
+    rdfs:label "first revision ID"@en ;
+    rdfs:comment "rev_id of the earliest counted revision of the wiki page in the dump."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:firstRevisionTimestamp
+    a rdf:Property ;
+    rdfs:label "first revision timestamp"@en ;
+    rdfs:comment "rev_timestamp (UTC) of the earliest counted revision of the wiki page in the dump. Where historyStartsInDump is false the page was recorded earlier than this date."@en ;
+    rdfs:range xsd:dateTime ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:lastRevisionId
+    a rdf:Property ;
+    rdfs:label "last revision ID"@en ;
+    rdfs:comment "rev_id of the latest counted revision of the wiki page in the dump."@en ;
+    rdfs:range xsd:integer ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:lastRevisionTimestamp
+    a rdf:Property ;
+    rdfs:label "last revision timestamp"@en ;
+    rdfs:comment "rev_timestamp (UTC) of the latest counted revision of the wiki page in the dump."@en ;
+    rdfs:range xsd:dateTime ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:historyStartsInDump
+    a rdf:Property ;
+    rdfs:label "history starts in dump"@en ;
+    rdfs:comment "True where the first counted revision has no parent revision, so the dump holds the page's history from its creation; false where its parent revision is absent from the dump."@en ;
+    rdfs:range xsd:boolean ;
+    rdfs:isDefinedBy klawiter: .
+
+klawiter:absentParentRevisionId
+    a rdf:Property ;
+    rdfs:label "absent parent revision ID"@en ;
+    rdfs:comment "rev_parent_id of the first counted revision where that revision is absent from the dump."@en ;
     rdfs:range xsd:integer ;
     rdfs:isDefinedBy klawiter: .

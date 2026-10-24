@@ -1,0 +1,450 @@
+{
+  "description": "Main-namespace redirects whose target no current main-namespace page carries, with the kind of failure; no target is inferred. Withheld Redirect fixer cases are open source-revision claims in Gate 2 instead.",
+  "count": 74,
+  "redirects": [
+    {
+      "pageId": 1877,
+      "pageTitle": "2004 : Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh (2004)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2445,
+      "pageTitle": "(Der) Brief einer Unbekannten",
+      "redirectTarget": "Brief einer Unbekannten / Individual Story",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2678,
+      "pageTitle": "1982-1984: Sobranie sochineniĭ Stefana Tsveĭga v chetyrekh tomakh",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh. 1982-1984",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2679,
+      "pageTitle": "1982-1984: Sobranie sochineniĭ Stefana Tsveĭga v chetyrekh tomakh. 1982-1984",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh. 1982-1984",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2729,
+      "pageTitle": "1914 und Heute",
+      "redirectTarget": "Martin du Gard, Roger / 1914 und heute",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2851,
+      "pageTitle": "Viografies",
+      "redirectTarget": "Biografies",
+      "kind": "diacritic-variant"
+    },
+    {
+      "pageId": 2903,
+      "pageTitle": "2004: Sobranie sochineniĭ Stefana Tsveĭga v chetyrekh tomakh",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh (2004)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2908,
+      "pageTitle": "Sobranie sochineniĭ Stefana Tsveĭga v chetyrekh tomakh. 1982-1984",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh. 1982-1984",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2916,
+      "pageTitle": "Sobranie sochineniĭ v vosem' tomakh",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v vosem' tomakh",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2926,
+      "pageTitle": "2004: Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh (2004)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2927,
+      "pageTitle": "Sobranie Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh (2004)",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v chetyrekh tomakh (2004)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 2928,
+      "pageTitle": "Sobranie sochineni Stefana Tsveiga v vosem' tomakh",
+      "redirectTarget": "Sobranie sochinenii Stefana Tsveiga v vosem' tomakh",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3125,
+      "pageTitle": "Kedjan *(Amerigo)",
+      "redirectTarget": "Kedjan",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3127,
+      "pageTitle": "Kedjan * (Amerigo)",
+      "redirectTarget": "Kedjan",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3148,
+      "pageTitle": "Episode am Genfer See",
+      "redirectTarget": "Episode vom Genfer See / Episode am Genfer See",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3244,
+      "pageTitle": "Paul Zech / Gelandet",
+      "redirectTarget": "Paul Zechs ''Gelandet''",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3245,
+      "pageTitle": "(Paul Zech) / Gelandet",
+      "redirectTarget": "Paul Zechs ''Gelandet''",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3246,
+      "pageTitle": "Gelandet",
+      "redirectTarget": "Paul Zechs ''Gelandet''",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3247,
+      "pageTitle": "Wie Stahl, wie Metall",
+      "redirectTarget": "Paul Zechs ''Gelandet''",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3281,
+      "pageTitle": "Russell, Archibald B. G.",
+      "redirectTarget": "Russell, Archibald G(eorge) B(lomefield)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3282,
+      "pageTitle": "Russell, Archibald G. B.",
+      "redirectTarget": "Russell, Archibald G(eorge) B(lomefield)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3286,
+      "pageTitle": "Suarès, Andre",
+      "redirectTarget": "Suares, André",
+      "kind": "diacritic-variant"
+    },
+    {
+      "pageId": 3287,
+      "pageTitle": "Suares, Andre",
+      "redirectTarget": "Suarès, Andre",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 3479,
+      "pageTitle": "E fyge sto Theo",
+      "redirectTarget": "Ē fygē sto Theo",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3480,
+      "pageTitle": "Ē fyge sto Theo",
+      "redirectTarget": "Ē fygē sto Theo",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3501,
+      "pageTitle": "O kosmos tou othes",
+      "redirectTarget": "O kosmos tou ōthes",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3513,
+      "pageTitle": "Stefan Zweig. Romans et nouvelles",
+      "redirectTarget": "Stefan Zweig. Romans et nouvelles / Romans, nouvelles et théâtre / Essais",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3514,
+      "pageTitle": "Stefan Zweig. Romans et nouvelles / Romans, nouvelles et theatre / Essais",
+      "redirectTarget": "Stefan Zweig. Romans et nouvelles / Romans, nouvelles et théatre / Essais",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 3515,
+      "pageTitle": "Stefan Zweig. Romans et nouvelles / Romans, nouvelles et théatre / Essais",
+      "redirectTarget": "Stefan Zweig. Romans et nouvelles / Romans, nouvelles et théâtre / Essais",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 3646,
+      "pageTitle": "Novlete setrenc",
+      "redirectTarget": "Novlête setrenc",
+      "kind": "diacritic-variant"
+    },
+    {
+      "pageId": 3698,
+      "pageTitle": "Satarañji kā khel",
+      "redirectTarget": "Satarañji kā khel",
+      "kind": "self"
+    },
+    {
+      "pageId": 3699,
+      "pageTitle": "Satarañji ka khel",
+      "redirectTarget": "Satarañji kā khel",
+      "kind": "loop"
+    },
+    {
+      "pageId": 4036,
+      "pageTitle": "Переписка Стефана Цвейга с издательством «Время»",
+      "redirectTarget": "Переписка Стефана Цвейга с издательством «Время» 1925 - 1934",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 4369,
+      "pageTitle": "Al-Saqitun",
+      "redirectTarget": "Gorki, Maxim / Arabic",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 4414,
+      "pageTitle": "Al-Sāqiṭūn",
+      "redirectTarget": "Gorki, Maxim / Arabic",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 4416,
+      "pageTitle": "Jūrkī, Māksīm / Al-Sāqiṭūn",
+      "redirectTarget": "Gorki, Maxim / Arabic",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 4417,
+      "pageTitle": "Jūrkī, Māksīm / Arabic",
+      "redirectTarget": "Gorki, Maxim / Arabic",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 4629,
+      "pageTitle": "Īd, Ḥasan",
+      "redirectTarget": "'Īd, Ḥasan",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 4642,
+      "pageTitle": "Impaciencia del Corazon",
+      "redirectTarget": "Impaciencia del Corazón",
+      "kind": "case-variant"
+    },
+    {
+      "pageId": 4771,
+      "pageTitle": "La dernière fete",
+      "redirectTarget": "La dernière fête",
+      "kind": "case-variant"
+    },
+    {
+      "pageId": 5211,
+      "pageTitle": "Secondary Literature/ Titles (Thai)",
+      "redirectTarget": "Secondary Literature / Titles (Thai)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 5234,
+      "pageTitle": "San ren shujian",
+      "redirectTarget": "Sanren shujian",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 5272,
+      "pageTitle": "Magelani. ˜jeriu the Vera e tin heroine",
+      "redirectTarget": "Magelani. Njeriu the Vera e tin heroine",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 5292,
+      "pageTitle": "R. (Full name unknown)",
+      "redirectTarget": "R. / Full name unknown",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 5345,
+      "pageTitle": "Al-Hilāl bi-Misr",
+      "redirectTarget": "Al-Hilāl bi-Misr, Dār",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 5668,
+      "pageTitle": "Hugo von Hofmannsthal. Charla commemorativa",
+      "redirectTarget": "Hugo von Hofmannsthal (Charla commemorativa)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6393,
+      "pageTitle": "Buadelaire, Charles / Albatros",
+      "redirectTarget": "Baudelaire, Charles / Blutstrom",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6394,
+      "pageTitle": "Buadelaire, Charles / Alleinheit",
+      "redirectTarget": "Baudelaire, Charles / Blutstrom",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6396,
+      "pageTitle": "Baudelaire, Charles / Balkon",
+      "redirectTarget": "Baudelaire, Charles / Blutstrom",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6399,
+      "pageTitle": "Baudelaire, Charles / Der Balkon",
+      "redirectTarget": "Baudelaire, Charles / Der Albatros",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 6400,
+      "pageTitle": "Baudelaire, Charles / Don Juan in der Holle",
+      "redirectTarget": "Baudelaire, Charles / Der Balkon",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 6401,
+      "pageTitle": "Baudelaire, Charles / Don Juan in der Hölle",
+      "redirectTarget": "Baudelaire, Charles / Der Balkon",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 6402,
+      "pageTitle": "Baudelaire, Charles / Die gesprungene Glocke",
+      "redirectTarget": "Baudelaire, Charles / Der Albatros",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 6403,
+      "pageTitle": "Baudelaire, Charles / Gedicht",
+      "redirectTarget": "Baudelaire, Charles / Blutstrom",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6405,
+      "pageTitle": "Baudelaire, Charles / Harmonie des Abends",
+      "redirectTarget": "Baudelaire, Charles / Der Balkon",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 6408,
+      "pageTitle": "Baudelaire, Charles / Beruhigung",
+      "redirectTarget": "Baudelaire, Charles / Blutstrom",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6409,
+      "pageTitle": "Baudelaire, Charles / Causerie",
+      "redirectTarget": "Baudelaire, Charles / Der Balkon",
+      "kind": "chain-into-absent"
+    },
+    {
+      "pageId": 6410,
+      "pageTitle": "Baudelaire, Charles / Der Albatros",
+      "redirectTarget": "Baudelaire, Charles / Alleinheit",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6418,
+      "pageTitle": "Russell, Archibald / Die visionäre Kunstphilisophie des William Blake",
+      "redirectTarget": "Russell, Archibald / Die visionäre Kunstphilisophie des William Blake",
+      "kind": "self"
+    },
+    {
+      "pageId": 6419,
+      "pageTitle": "Russell, Archibald / Die visionare Kunstphilisophie des William Blake",
+      "redirectTarget": "Russell, Archibald / Die visionäre Kunstphilisophie des William Blake",
+      "kind": "loop"
+    },
+    {
+      "pageId": 6440,
+      "pageTitle": "Fiction / Volumes (Norwegian/Nynorsk)",
+      "redirectTarget": "Fiction / Volumes (Norwegian)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6444,
+      "pageTitle": "Balzac, Honore de",
+      "redirectTarget": "Balzac, Honoré de",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6510,
+      "pageTitle": "Die Arbeit",
+      "redirectTarget": "Verhaeren, Emile / Die Auswanderer",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6512,
+      "pageTitle": "Verhaeren, Emile / Die Arbeit",
+      "redirectTarget": "Verhaeren, Emile / Die Auswanderer",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6531,
+      "pageTitle": "Die schonsten Gedichte der Weltliteratur",
+      "redirectTarget": "Die schönsten Gedichte der Weltliteratur",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 6675,
+      "pageTitle": "Verlaine, Paul / Poetische Werke. Franzosisch und deutsch",
+      "redirectTarget": "Verlaine, Paul / Poetische Werke. Französisch und deutsch",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7164,
+      "pageTitle": "Martin du Gard, Roger",
+      "redirectTarget": "Martin du Gard, Roger / 1914 und heute",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7234,
+      "pageTitle": "Verlaine",
+      "redirectTarget": "Verlaine, Paul / German",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7248,
+      "pageTitle": "Suchkov, Boris / Bulgarian",
+      "redirectTarget": "Suchkov, Boris L. / Bulgarian",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7252,
+      "pageTitle": "Fiction / Volumes (Belarussian/Belorussian)",
+      "redirectTarget": "Fiction / Category:Volumes (Belarusian/Belorussian)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7431,
+      "pageTitle": "Fiction / Volumes (Belarusian/Belorussian)",
+      "redirectTarget": "Fiction / Category:Volumes (Belarusian/Belorussian)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7435,
+      "pageTitle": "Fiction:Individual Stories (Uzbek)",
+      "redirectTarget": "Fiction / Individual Stories (Uzbek)",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7462,
+      "pageTitle": "Brief ener Unbekannten / IS",
+      "redirectTarget": "Brief einer Unbekannten / IS",
+      "kind": "absent-target"
+    },
+    {
+      "pageId": 7493,
+      "pageTitle": "Episode vom Genfer See / Episode am Genfer See (VIST)",
+      "redirectTarget": "Episode vom Genfer See / Episode am Genfer See",
+      "kind": "absent-target"
+    }
+  ]
+}

@@ -265,6 +265,7 @@ def main() -> None:
     not_in_source = {"publisher": 0, "location": 0, "translator": 0, "page_count": 0}
     publication_scoped = {"publisher": 0, "page_count": 0}
     repairs = []
+    encoding_damaged = []
     for pid, validated in sorted(cache.items(), key=lambda item: int(item[0])):
         clean = {"page_id": validated["page_id"]}
         source_row = row_index.get(pid, {})
@@ -275,6 +276,10 @@ def main() -> None:
             if not val:
                 continue
             kept = repair_or_reject(val)
+            if kept is None:
+                # A misread value the round trip cannot restore, or one that
+                # kept a letter whose bytes were lost before the cache froze.
+                encoding_damaged.append({"pageId": int(pid), "field": field})
             if kept and field == "publisher" and scoped:
                 publication_scoped[field] += 1
                 rejected += 1
@@ -370,6 +375,7 @@ def main() -> None:
             "rejectedNotInSource": not_in_source,
             "rejectedPublicationScoped": publication_scoped,
             "encodingRepairs": repairs,
+            "rejectedEncodingDamaged": encoding_damaged,
             "fieldsFilled": fields_filled,
         },
         indent=2,

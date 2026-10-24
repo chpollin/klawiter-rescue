@@ -18,6 +18,7 @@ import re
 from dataclasses import dataclass
 from typing import Iterable
 
+from lib.encoding import source_value
 from lib.patterns import (
     ABSENCE_MARKS,
     CORPORATE_SUFFIXES,
@@ -27,12 +28,21 @@ from lib.patterns import (
 )
 from lib.producers import EDITION_SAMPLE_DECIDER, confirms, may_confirm
 
-ALGORITHM_VERSION = "1.4"
+# 1.5: a lone header segment the location stock attests is a place, values
+# leave the dump form (quote escape, whitespace runs), and a year header
+# followed only by a page locator is no edition.
+ALGORITHM_VERSION = "1.5"
 # Header grammar built from the shared year fragment in lib/patterns.py, so
 # '[ca. YEAR]' parses identically in the flat extraction and here. patterns.py
 # is part of segment_editions.py's provenance code hash for this reason.
 EDITION_HEADER_RE = re.compile(
     rf"^'''\s*\[{EDITION_YEAR_PREFIX}\]", re.MULTILINE | re.IGNORECASE
+)
+# A year header followed only by a page locator is a heading inside a
+# publication, not an edition ("'''[1911]''', p. 12" on page 3757). It still
+# ends the block before it and counts under the selection rule.
+LOCATOR_HEADER_RE = re.compile(
+    r"^'''\s*\[(?:ca\.\s*)?\d{4}\]\s*'''\s*,\s*pp?\.\s*[\d()\-–]+\s*$"
 )
 YEAR_RE = re.compile(r"(\d{4})")
 COMPOUND_HEADER_RE = re.compile(rf"\s+/\s+(?=\[{EDITION_YEAR_PREFIX}\])")
@@ -357,6 +367,47 @@ def split_imprint(value: str) -> tuple[Imprint, ...]:
     return tuple(imprints)
 
 
+def attested_place(value: str, attested: Iterable[str]) -> bool:
+    """Whether the location stock attests a value, or every part of a slash
+    list such as "London/New York" (page 1565)."""
+    return value in attested or all(part in attested for part in value.split("/"))
+
+
+def resolve_imprints(
+    fields: HeaderFields, attested: Iterable[str]
+) -> tuple[list[Imprint], list[str]]:
+    """The header's imprint pairs read with the reviewed location stock, and
+    the places of a trailing attested run.
+
+    The string rules of split_imprint cannot tell a lone place from a lone
+    publisher. A single segment the stock attests is a place ("'''[1930]:
+    Oslo'''", page 5057; "Beirut", page 4101), and an undecided header whose
+    trailing run of two or more segments the stock attests carries several
+    places ("Nasionale Pers Beperk, Bloemfontein, Kaapstad (Capetown)", page
+    4209). Gate 1 and the publication layer share this reading.
+    """
+    imprints = list(fields.imprints)
+    segments = [" ".join(part.split()) for part in (fields.imprint or "").split(",")]
+    segments = [segment for segment in segments if segment]
+    run_places: list[str] = []
+    if len(imprints) == 1 and not imprints[0].resolved:
+        run = 0
+        while run < len(segments) - 1 and segments[len(segments) - 1 - run] in attested:
+            run += 1
+        if run >= 2:
+            imprints = [Imprint(", ".join(segments[:-run]), None, True)]
+            run_places = segments[-run:]
+    imprints = [
+        Imprint(None, item.publisher, True)
+        if item.place is None
+        and item.publisher
+        and attested_place(item.publisher, attested)
+        else item
+        for item in imprints
+    ]
+    return imprints, run_places
+
+
 def _split_publisher_location(
     value: str,
 ) -> tuple[tuple[Imprint, ...], bool]:
@@ -500,8 +551,17 @@ def _one_or_all(values: tuple[str, ...]) -> str | list[str]:
     return values[0] if len(values) == 1 else list(values)
 
 
-def segment_page(page_id: int, text: str, work_title: str) -> dict:
-    """Segment one page into proposed edition nodes and exact annotations."""
+def segment_page(
+    page_id: int,
+    text: str,
+    work_title: str,
+    attested_places: Iterable[str] = frozenset(),
+) -> dict:
+    """Segment one page into proposed edition nodes and exact annotations.
+
+    Values leave the dump form (encoding.source_value), as in the publication
+    layer; the header line, selectors and hashes keep it.
+    """
     boundaries = _boundaries(text)
     editions: list[dict] = []
     annotations: list[dict] = []
@@ -520,11 +580,25 @@ def segment_page(page_id: int, text: str, work_title: str) -> dict:
             )
             continue
 
+        if LOCATOR_HEADER_RE.match(boundary.line.strip()):
+            continue
         block = text[boundary.start : end]
         page_count, page_count_candidate, page_count_raw, page_flags = _page_count(
             block
         )
         for fields in parse_header_line(boundary.line):
+            imprints, run_places = resolve_imprints(fields, attested_places)
+            publishers = tuple(
+                dict.fromkeys(
+                    source_value(item.publisher) for item in imprints if item.publisher
+                )
+            )
+            locations = tuple(
+                dict.fromkeys(
+                    [source_value(item.place) for item in imprints if item.place]
+                    + [source_value(place) for place in run_places]
+                )
+            )
             occurrences[fields.year] = occurrences.get(fields.year, 0) + 1
             suffix = _letter_suffix(occurrences[fields.year])
             year_anchor = str(fields.year) if fields.year is not None else "x"
@@ -546,10 +620,10 @@ def segment_page(page_id: int, text: str, work_title: str) -> dict:
                 edition["schema:datePublished"] = str(fields.year)
             # A co-imprint names several publishers and places; the pairing
             # itself lives in the publication layer.
-            if fields.publishers:
-                edition["schema:publisher"] = _one_or_all(fields.publishers)
-            if fields.locations:
-                edition["schema:locationCreated"] = _one_or_all(fields.locations)
+            if publishers:
+                edition["schema:publisher"] = _one_or_all(publishers)
+            if locations:
+                edition["schema:locationCreated"] = _one_or_all(locations)
             if page_count is not None:
                 edition["schema:numberOfPages"] = page_count
             if page_count_candidate is not None:
@@ -559,7 +633,7 @@ def segment_page(page_id: int, text: str, work_title: str) -> dict:
             if fields.series:
                 edition["klawiter:headerSeries"] = fields.series
             if fields.description:
-                edition["schema:description"] = fields.description
+                edition["schema:description"] = source_value(fields.description)
             editions.append(edition)
 
             annotation_id = edition_id.replace(
@@ -909,12 +983,26 @@ def apply_review_reconciliation(
 
 
 def count_edition_headers(text: str) -> int:
-    """Count source lines that satisfy the ratified edition-header rule."""
-    return len(EDITION_HEADER_RE.findall(text))
+    """Count source lines that satisfy the ratified edition-header rule.
+
+    A year heading followed only by a page locator opens no publication, so it
+    counts as no edition header (page 3757 sorts letters under such headings).
+    """
+    return sum(
+        1
+        for line in text.split("\n")
+        if EDITION_HEADER_RE.match(line) and not LOCATOR_HEADER_RE.match(line.strip())
+    )
 
 
-def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
-    """Build the deterministic Gate-1 graph for every intended source page."""
+def build_corpus(
+    rows: Iterable[dict[str, str]], attested_places: Iterable[str] = frozenset()
+) -> dict:
+    """Build the deterministic Gate-1 graph for every intended source page.
+
+    attested_places is the reviewed location stock (docs/data/locations.json)
+    that tells a lone place from a lone publisher in a header.
+    """
     works: list[dict] = []
     editions: list[dict] = []
     annotations: list[dict] = []
@@ -930,7 +1018,7 @@ def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
         if header_count < 2:
             continue
         page_id = int(row["page_id"])
-        result = segment_page(page_id, text, row.get("page_title", ""))
+        result = segment_page(page_id, text, row.get("page_title", ""), attested_places)
         works.append(result["work"])
         editions.extend(result["editions"])
         annotations.extend(result["annotations"])
@@ -1001,7 +1089,7 @@ def build_corpus(rows: Iterable[dict[str, str]]) -> dict:
             "derived convenience projection."
         ),
         "klawiter:algorithmVersion": ALGORITHM_VERSION,
-        "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header",
+        "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header that a page locator alone does not follow",
         "klawiter:sourceCorpusSha256": source_hasher.hexdigest(),
         "works": works,
         "editions": editions,

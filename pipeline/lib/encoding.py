@@ -194,11 +194,53 @@ def _redecode_value_run(match):
     return run
 
 
-def is_encoding_damaged(value):
-    """Whether a short value still shows a misread-UTF-8 signature."""
+# A byte lost before the value was recorded: the replacement character, a C1
+# control left from an undefined CP1252 byte, or a lead char of a two-byte
+# sequence for U+0080..U+017F (Â Ã Ä Å) whose continuation byte is gone.
+_LOST_BYTE_RE = re.compile("[�\u0080-\u009f]")
+_TWO_BYTE_LEADS = frozenset("ÂÃÄÅ")
+
+
+def _has_lone_lead(value):
+    """A two-byte lead char inside a word that no continuation char follows.
+
+    Read as a letter, such a char would be a capital after a lower-case letter
+    ("libertÃ", "TihrÄ n") or a capital closing a word after another letter
+    ("DÄ r"). Over the repaired corpus the rule matches the one title whose
+    byte the dump lost; it would misread an all-capital word ending in Å.
+    """
+    for index in range(1, len(value)):
+        if value[index] not in _TWO_BYTE_LEADS:
+            continue
+        before, after = value[index - 1], value[index + 1 : index + 2]
+        if not before.isalpha() or "\u0080" <= after <= "¿":
+            continue
+        if before.islower() or not after.isalnum():
+            return True
+    return False
+
+
+def has_damaged_letter(value):
+    """Whether a value keeps a letter whose bytes were lost before it was read.
+
+    No repair restores such a letter, so every caller turns the value into a
+    gap instead of guessing it: stage 03c for values read from the source,
+    repair_or_reject for enrichment values (through is_encoding_damaged).
+    """
     if not value:
         return False
-    return bool(_VALUE_RUN_RE.search(value) or _DOUBLE_ENCODED_RE.search(value))
+    return bool(_LOST_BYTE_RE.search(value)) or _has_lone_lead(value)
+
+
+def is_encoding_damaged(value):
+    """Whether a short value still shows a misread-UTF-8 signature or a lost byte."""
+    if not value:
+        return False
+    return bool(
+        _VALUE_RUN_RE.search(value)
+        or _DOUBLE_ENCODED_RE.search(value)
+        or has_damaged_letter(value)
+    )
 
 
 def repair_value_encoding(value, passes=4):
@@ -301,6 +343,19 @@ def unescape_dump_quotes(text):
     if not text or "\\" not in text:
         return text
     return re.sub(r"\\([\\\"])", r"\1", text)
+
+
+def source_value(text):
+    """A value as it leaves the dump text: quote escape undone, whitespace
+    runs flattened to one space.
+
+    MediaWiki renders a run of spaces as one, so "Translated by A.  Druktenis"
+    shows one space, and value_in_content compares with the runs collapsed.
+    The text and its offsets keep the dump form; only the value is flattened.
+    """
+    if not text:
+        return text
+    return " ".join(unescape_dump_quotes(text).split())
 
 
 def _whole_word_in(needle, haystack):

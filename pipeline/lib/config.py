@@ -33,6 +33,7 @@ INTERMEDIATE_DIR = os.path.join(PROJECT_ROOT, "data", "intermediate")
 CORRECTIONS_DIR = os.path.join(PROJECT_ROOT, "data", "corrections")
 STEP_01_OUTPUT = os.path.join(INTERMEDIATE_DIR, "01_extracted.csv")
 STEP_01_PAGELINKS = os.path.join(INTERMEDIATE_DIR, "01_pagelinks.csv")
+STEP_01_REVISIONS = os.path.join(INTERMEDIATE_DIR, "01_revision_dates.csv")
 STEP_02_OUTPUT = os.path.join(INTERMEDIATE_DIR, "02_encoding_fixed.csv")
 STEP_03_OUTPUT = os.path.join(INTERMEDIATE_DIR, "03_parsed.csv")
 STEP_03B_OUTPUT = os.path.join(INTERMEDIATE_DIR, "03b_llm_enriched.csv")
@@ -52,6 +53,8 @@ OUTPUT_JSONLD = os.path.join(OUTPUT_DIR, "klawiter.jsonld")
 OUTPUT_ENTRIES_DIR = os.path.join(OUTPUT_DIR, "entries")
 OUTPUT_QUALITY_REPORT = os.path.join(OUTPUT_DIR, "quality-report.json")
 OUTPUT_LLM_REPORT = os.path.join(OUTPUT_DIR, "llm-enrichment-report.json")
+# Main-namespace redirects whose target no current page carries (stage 05).
+OUTPUT_UNRESOLVED_REDIRECTS = os.path.join(OUTPUT_DIR, "unresolved-redirects.json")
 OUTPUT_EDITIONS_DIR = os.path.join(OUTPUT_DIR, "editions")
 OUTPUT_RECONCILIATION_DIR = os.path.join(OUTPUT_DIR, "reconciliation")
 EDITION_SAMPLE_RECONCILIATION = os.path.join(
@@ -194,6 +197,9 @@ PARSED_FIELDS = [
     # value no rule binds to the described publication; stage 03 empties them
     # and stage 03b leaves them empty.
     "unbound_fields",
+    # JSON list of the flat fields stage 03c emptied because their value kept
+    # a letter whose bytes were lost (encoding.has_damaged_letter).
+    "encoding_damaged_fields",
 ]
 
 # Step 04 adds entry_type and time_period
@@ -227,6 +233,8 @@ CLASSIFIED_FIELDS = [
     "content_items",
     "clean_content",
     "raw_content",
+    "unbound_fields",
+    "encoding_damaged_fields",
 ]
 
 # Minimum content length for LLM processing

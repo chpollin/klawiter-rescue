@@ -1,11 +1,11 @@
 {
-  "algorithmVersion": "1.4",
+  "algorithmVersion": "1.5",
   "artifacts": {
-    "earl.jsonld": "0460a99563074e467457edc43271a15dcebf6f5e133c517b612ca262f7c9551c",
-    "provenance.jsonld": "599f47000dd81804060b05efa2e5ed36ccc8fa739f7e37741e9f58438e194771",
-    "review-queue.json": "4557766322fb0f3b784069d835c2d50e381a73f200b3f065be6e572ed11921f1",
-    "validation-report.json": "31aa5d6a8b4c71cfdb869346382879311388e7abaaa4566a0b4188338ca2f206",
-    "work-editions.jsonld": "585fc0093d8097caab0e03894f5dfe33a022f1789ac7cc69eccb81a1efd46db3"
+    "earl.jsonld": "b375e4c95d45f4507f2deef6f8f41f63634e23988270fd44e1b6d920a3670c64",
+    "provenance.jsonld": "b5023ee3edb59b4b81510f0931415068e4c2c612d1e0bf297d4435726298217d",
+    "review-queue.json": "f79da89591755de1222979f2be4e3606e5f477018f5bf55505ac6f023c41c51e",
+    "validation-report.json": "fae53eb0c418b94e36746d6f7f10e537de4f6bb9999c3f5a90f457d950f35fb2",
+    "work-editions.jsonld": "6a8db4c37c525ab0db54f9bd84a4352d309b9d12a765dd634a4d7a5972ec89f9"
   },
   "authorityEvidence": {
     "szdWorkIndex": {
@@ -17,20 +17,26 @@
       "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
     }
   },
-  "codeSha256": "f1a808d4acef8df58a95e81e677f0b72b688e57b60f73e0308c12a29ddb632a9",
+  "codeSha256": "c174fe5fe95fee181091d6b9523ca4f870ef123c09856d6d179cd28703560103",
   "counts": {
-    "annotations": 2077,
+    "annotations": 2054,
     "candidateWorks": 1,
     "carriers": 6,
     "confirmedEditions": 0,
     "contestedEditionClaims": 1,
     "contestedEditions": 1,
     "decidedEditionClaims": 0,
-    "editions": 2077,
-    "reviewCases": 354,
-    "works": 447
+    "editions": 2054,
+    "reviewCases": 332,
+    "works": 446
   },
-  "generatedAt": "2026-10-24T18:20:51.106070+00:00",
+  "generatedAt": "2026-10-24T19:28:22.806277+00:00",
+  "placeEvidence": {
+    "attestedPlaces": {
+      "path": "docs/data/locations.json",
+      "sha256": "e8ba28c3a5baee29d0313255cf3ff4aaeb11a1df9d6438e3f5f082f2876a77d3"
+    }
+  },
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",
@@ -41,10 +47,10 @@
       "sha256": "388ade9b6a8ff93949c366472a2c5311cccd5749dc0ee5ad4f164db5c487f0cf"
     }
   },
-  "selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header",
+  "selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header that a page locator alone does not follow",
   "source": {
     "path": "data/intermediate/02_encoding_fixed.csv",
-    "selectedCorpusSha256": "b835a27e222fdd2e3a6b9eaf8d70ed59c9a6784c00f6568e3b79f3680909e01d",
+    "selectedCorpusSha256": "3806734bede4964209056c94c151ee71d172f217f7bd59a9834d781150b5ef08",
     "sha256": "e760ec8f3b639064f63a97d15f9d555e5518a43369209a5fe3f1aee15e2d2877"
   },
   "validation": {

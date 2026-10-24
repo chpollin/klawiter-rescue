@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import tomllib
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
@@ -30,9 +31,11 @@ from lib.config import (
     OUTPUT_PUBLISHABLE_LINKS,
     OUTPUT_RECONCILIATION_DECISIONS,
     OUTPUT_RECONCILIATION_DIR,
+    OUTPUT_UNRESOLVED_REDIRECTS,
     PROJECT_ROOT,
     SOURCE_REVISION_DECISIONS,
     STEP_01_PAGELINKS,
+    STEP_01_REVISIONS,
     STEP_04_OUTPUT,
     csv_bool,
     load_csv,
@@ -196,9 +199,14 @@ def build_reference_targets(rows, withheld=None):
     target takes, without displacing an exact name. A withheld redirect
     neither resolves nor carries a chain; it defaults to the recorded
     decisions so that every caller applies them.
+
+    Only main-namespace pages take part. A link or redirect without a
+    namespace prefix names a main-namespace page, so a category page of the
+    same title neither receives it nor blocks the alias of a redirect.
     """
     if withheld is None:
         withheld = load_withheld_redirects()
+    rows = [row for row in rows if row.get("page_namespace", "0") == "0"]
     direct = {}
     for row in rows:
         if csv_bool(row.get("is_redirect")):
@@ -235,6 +243,79 @@ def build_reference_targets(rows, withheld=None):
                     targets.setdefault(value, pid)
                     targets.setdefault(_collapse(value), pid)
     return targets
+
+
+def _fold_case(title):
+    return _collapse(title).casefold()
+
+
+def _fold_diacritics(title):
+    decomposed = unicodedata.normalize("NFKD", _fold_case(title))
+    return "".join(char for char in decomposed if not unicodedata.combining(char))
+
+
+def unresolved_redirects(rows, reference_targets, withheld=None):
+    """Main-namespace redirects whose target no current main-namespace page
+    carries, each with the kind of failure and its own page title.
+
+    The kind describes the failure and names no target: a target that differs
+    from a page title only in case or diacritics is reported as such a
+    variant and stays unresolved, because which page the compiler meant is a
+    decision, not a rule. Withheld Redirect fixer cases have open claims of
+    their own and are left out.
+    """
+    if withheld is None:
+        withheld = load_withheld_redirects()
+    rows = [row for row in rows if row.get("page_namespace", "0") == "0"]
+    titles = [
+        row.get(key, "")
+        for row in rows
+        if not csv_bool(row.get("is_redirect"))
+        for key in ("title", "page_title")
+        if row.get(key)
+    ]
+    case_forms = {_fold_case(title) for title in titles}
+    diacritic_forms = {_fold_diacritics(title) for title in titles}
+    redirects = {
+        row["page_title"]: row.get("redirect_target") or row.get("title", "")
+        for row in rows
+        if csv_bool(row.get("is_redirect")) and row.get("page_title")
+    }
+    report = []
+    for row in rows:
+        page_id = int(row["page_id"])
+        if not csv_bool(row.get("is_redirect")) or page_id in withheld:
+            continue
+        own = row.get("page_title", "")
+        if reference_targets.get(own) or reference_targets.get(_collapse(own)):
+            continue
+        target = row.get("redirect_target", "") or row.get("title", "")
+        if _collapse(target) == _collapse(own):
+            kind = "self"
+        else:
+            seen, current = {own}, target
+            while current in redirects and current not in seen:
+                seen.add(current)
+                current = redirects[current]
+            if current in seen:
+                kind = "loop"
+            elif current != target:
+                kind = "chain-into-absent"
+            elif _fold_case(target) in case_forms:
+                kind = "case-variant"
+            elif _fold_diacritics(target) in diacritic_forms:
+                kind = "diacritic-variant"
+            else:
+                kind = "absent-target"
+        report.append(
+            {
+                "pageId": page_id,
+                "pageTitle": own,
+                "redirectTarget": target,
+                "kind": kind,
+            }
+        )
+    return report
 
 
 def _load_edition_graph():
@@ -334,7 +415,13 @@ def load_contested_values():
     return contested
 
 
-def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=None):
+def row_to_jsonld(
+    row,
+    location_uris=None,
+    reference_targets=None,
+    work_pages=None,
+    revision_dates=None,
+):
     """Convert a CSV row to a JSON-LD entry using Schema.org + DC + klawiter: blend."""
     location_uris = location_uris or {}
     page_id = row["page_id"]
@@ -369,16 +456,25 @@ def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=No
         except (ValueError, TypeError):
             pass
 
-    # Redirect
+    # When the wiki first and last recorded the page (stage 01, zweig_revision).
+    dates = (revision_dates or {}).get(int(page_id))
+    if dates:
+        entry["revisionDates"] = dates
+
+    # Redirect; its name is the target's title, so its own page title is kept
+    # beside it.
     if csv_bool(row.get("is_redirect")):
         entry["isRedirect"] = True
+        if row.get("page_title"):
+            entry["wikiPageTitle"] = row["page_title"]
         redirect_target = row.get("redirect_target", "")
         if redirect_target:
             entry["redirectTarget"] = redirect_target
         return entry
 
-    # Author (Stefan Zweig for primary works, omit for secondary literature)
-    if entry_type not in (
+    # Author (Stefan Zweig for primary works, omit for secondary literature
+    # and for category and other wiki infrastructure pages, which are no works)
+    if namespace == 0 and entry_type not in (
         "secondary-literature",
         "historical-study",
         "symposium",
@@ -513,7 +609,33 @@ def row_to_jsonld(row, location_uris=None, reference_targets=None, work_pages=No
         except (ValueError, TypeError):
             pass
 
+    gaps = rule_gaps(row)
+    if gaps:
+        entry["ruleGaps"] = gaps
+
     return entry
+
+
+# A field a stated rule emptied is a gap by rule, not a source gap: stage 03
+# empties a headerless page's place, publisher or translator that no position
+# binds to the described publication (publications.statement_bindings), stage
+# 03c a value that kept a letter whose bytes were lost (has_damaged_letter).
+STATEMENT_BINDINGS_RULE = "statement-bindings"
+DAMAGED_LETTER_RULE = "damaged-letter"
+
+
+def rule_gaps(row):
+    """The fields of a row a rule emptied, each with the rule's identifier,
+    named by their frontend key."""
+    gaps = [
+        {"gapField": field, "gapRule": STATEMENT_BINDINGS_RULE}
+        for field in safe_json_parse(row.get("unbound_fields", "")) or []
+    ]
+    gaps += [
+        {"gapField": _DAMAGED_FIELD_KEYS[field], "gapRule": DAMAGED_LETTER_RULE}
+        for field in safe_json_parse(row.get("encoding_damaged_fields", "")) or []
+    ]
+    return gaps
 
 
 # Mapping from JSON-LD keys to frontend short keys (where they differ)
@@ -761,6 +883,74 @@ def make_frontend_entry(jsonld_entry, review_index=None, publications=None):
     return e
 
 
+# Stage 03c field name -> frontend key, for the hint on a value emptied because
+# it kept a letter whose bytes were lost.
+_DAMAGED_FIELD_KEYS = {
+    "title": "title",
+    "original_title": "originalTitle",
+    "publisher": "publisher",
+    "location": "location",
+    "translator": "translator",
+    "all_locations": "allLocations",
+    "see_also": "seeAlso",
+    "reprints": "reprints",
+    "translations": "translations",
+    "content_items": "contentItems",
+}
+ENCODING_DAMAGED_DETAIL = (
+    "The source value kept a letter whose bytes were lost before the dump was "
+    "written; no repair restores it, so the field is left empty instead of "
+    "guessing the letter. The full source text shows the passage."
+)
+
+
+def encoding_damage_flags(row):
+    """Review hints for the fields stage 03c emptied for a lost byte."""
+    fields = safe_json_parse(row.get("encoding_damaged_fields", "")) or []
+    return [
+        {
+            "code": "encoding-damaged",
+            "detail": ENCODING_DAMAGED_DETAIL,
+            "field": _DAMAGED_FIELD_KEYS[field],
+        }
+        for field in fields
+    ]
+
+
+REVISION_DATES_RULE = "first-and-last-revision-without-redirect-fixer"
+
+
+def load_revision_dates():
+    """Page id -> the first and last revision stage 01 read from the dump.
+
+    The node names its rule, its source table and the revision rows, so a
+    date can be checked against zweig_revision. Where the first revision's
+    parent is absent from the dump the page's history began earlier, and
+    historyStartsInDump says so instead of presenting the date as the
+    page's creation.
+    """
+    if not os.path.exists(STEP_01_REVISIONS):
+        raise FileNotFoundError(
+            f"Revision dates are missing: {STEP_01_REVISIONS}. Run stage 01 first."
+        )
+    dates = {}
+    for row in load_csv(STEP_01_REVISIONS):
+        parent = int(row["first_revision_parent_id"])
+        node = {
+            "revisionRule": REVISION_DATES_RULE,
+            "sourceTable": "zweig_revision",
+            "firstRevisionId": int(row["first_revision_id"]),
+            "firstRevisionTimestamp": row["first_revision_timestamp"],
+            "lastRevisionId": int(row["last_revision_id"]),
+            "lastRevisionTimestamp": row["last_revision_timestamp"],
+            "historyStartsInDump": parent == 0,
+        }
+        if parent:
+            node["absentParentRevisionId"] = parent
+        dates[int(row["page_id"])] = node
+    return dates
+
+
 def _normalize_title(title):
     """MediaWiki title normalization: underscores as spaces, collapsed
     whitespace, first letter uppercased."""
@@ -843,11 +1033,14 @@ def main():
     work_pages = load_work_pages()
     edition_states = load_edition_states()
     version = release_version()
+    revision_dates = load_revision_dates()
     log.info(f"Work/Edition coupling targets: {len(work_pages)} pages")
 
     entries = []
     for row in rows:
-        entry = row_to_jsonld(row, location_uris, reference_targets, work_pages)
+        entry = row_to_jsonld(
+            row, location_uris, reference_targets, work_pages, revision_dates
+        )
         entries.append(entry)
 
     # Write complete dataset. The published RDF shape (language-tagged
@@ -930,10 +1123,14 @@ def main():
             restoration = restorations.get(fe.get("sourcePageId"))
             if restoration:
                 fe["sourceRevision"] = restoration
+            damage_flags = encoding_damage_flags(row)
+            if damage_flags:
+                fe["reviewFlags"] = damage_flags
             non_redirect_entries.append(fe)
             title = e.get("name", "")
             pid = e.get("sourcePageId")
-            if title and pid:
+            # A frontend title key resolves like a link: main namespace only.
+            if title and pid and e.get("pageNamespace") == 0:
                 title_to_pid[title] = pid
 
     for row, e in zip(rows, entries, strict=True):
@@ -951,7 +1148,7 @@ def main():
     # of its own entry. Real redirects keep precedence.
     alias_count = 0
     for row, e in zip(rows, entries, strict=True):
-        if e.get("isRedirect"):
+        if e.get("isRedirect") or e.get("pageNamespace") != 0:
             continue
         pid = e.get("sourcePageId")
         page_title = row.get("page_title", "")
@@ -960,6 +1157,23 @@ def main():
                 redirect_map[page_title] = pid
                 alias_count += 1
     log.info(f"Page-title aliases added to the redirect map: {alias_count}")
+
+    unresolved = unresolved_redirects(rows, reference_targets)
+    write_json(
+        OUTPUT_UNRESOLVED_REDIRECTS,
+        {
+            "description": (
+                "Main-namespace redirects whose target no current main-namespace "
+                "page carries, with the kind of failure; no target is inferred. "
+                "Withheld Redirect fixer cases are open source-revision claims "
+                "in Gate 2 instead."
+            ),
+            "count": len(unresolved),
+            "redirects": unresolved,
+        },
+        indent=2,
+    )
+    log.info(f"Unresolved redirects reported: {len(unresolved)}")
 
     # Compute _meta for frontend data verification
     ns0 = [e for e in non_redirect_entries if e.get("pageNamespace") == 0]
@@ -1036,8 +1250,11 @@ def main():
         # review here, the LLM enrichment run from inject_provenance.py, 1.9 the
         # producer class, per-field state and proposal basis of a review
         # decision, the agent review of a publication's edition, and the
-        # structured translation statements.
-        "frontendSchemaVersion": "1.9",
+        # structured translation statements, 1.10 the first and last revision
+        # of the page, the fields a stated rule emptied (ruleGaps, provenance
+        # label rule-gap), the encoding-damaged hint, and a title that a lost
+        # byte can leave empty.
+        "frontendSchemaVersion": "1.10",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,

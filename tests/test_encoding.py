@@ -216,3 +216,55 @@ class TestValueRepair:
         """The closing quote of this value never reached the cache, so the
         round-trip leaves damage behind and the caller must reject it."""
         assert is_encoding_damaged(repair_value_encoding("Izdatelâ€™stvo â€œPravdaâ€"))
+
+
+class TestDamagedLetter:
+    """A letter whose bytes were lost before the value was read becomes a gap.
+
+    The values are real: the dump's page title of page 2364 lost the byte A0
+    of "à", the title of category page 7432 carries U+FFFD in the dump, and
+    the frozen enrichment cache lost the byte 0x81 of "ā" (page 2589) and the
+    lead byte of "Š" (page 1451).
+    """
+
+    def test_lost_bytes_are_detected(self):
+        from lib.encoding import has_damaged_letter
+
+        for value in (
+            "Estasi di libertÃ",
+            "Fiction / Individual Studies (Uzbek) �",
+            "TihrÄ n [Tehran]",
+            "DÄ r al-HilÄ l",
+            "Katja \x90purova",
+        ):
+            assert has_damaged_letter(value), value
+
+    def test_letters_of_the_corpus_are_no_damage(self):
+        from lib.encoding import has_damaged_letter
+
+        # Page 5164 (Vietnamese), page 3003 (a table of German letters), and
+        # repaired names of the enrichment.
+        for value in (
+            "Thế giới những ngày qua (Hồi ức của một người dân Châu Âu)",
+            "| Ã || ã || Ä || ä || Á || á || Â || â || À || à || Å || å ||",
+            "Otokar Keršovani",
+            "Estasi di libertà",
+            "",
+        ):
+            assert not has_damaged_letter(value), value
+
+    def test_the_enrichment_refuses_a_value_with_a_lost_byte(self):
+        from lib.llm_extract import repair_or_reject
+
+        assert repair_or_reject("TihrÄ n [Tehran]") is None
+        assert repair_or_reject("Otokar KerÅ¡ovani") == "Otokar Keršovani"
+
+
+class TestSourceValue:
+    def test_whitespace_runs_flatten_as_the_wiki_renders_them(self):
+        from lib.encoding import source_value
+
+        # Page 384: "Translated by A.  Druktenis"; page 1706 with three spaces.
+        assert source_value("A.  Druktenis") == "A. Druktenis"
+        assert source_value("Alka   Škiljan") == "Alka Škiljan"
+        assert source_value('\\"Rad\\"') == '"Rad"'

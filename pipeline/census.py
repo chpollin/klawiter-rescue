@@ -131,7 +131,20 @@ def main():
     def display_name(e):
         return (e.get("title") or plain_value(e.get("name")) or "").strip()
 
-    unnamed_displayed = [e for e in displayed if not display_name(e)]
+    def title_is_rule_gap(e):
+        # A title whose bytes the dump lost is a stated gap (damaged-letter),
+        # not a lost record name; the record carries the hint and the source.
+        return any(
+            gap["gapField"] == "title" and gap["gapRule"] == "damaged-letter"
+            for gap in e.get("ruleGaps", [])
+        )
+
+    damaged_titles = sorted(
+        e.get("sourcePageId") for e in displayed if title_is_rule_gap(e)
+    )
+    unnamed_displayed = [
+        e for e in displayed if not display_name(e) and not title_is_rule_gap(e)
+    ]
 
     # --- Reconciliation identities ---------------------------------------
     ns0_redirects = sum(
@@ -169,7 +182,8 @@ def main():
         "every_displayed_entry_is_named",
         unnamed_pids == set(),
         f"empty_biblio={len(empty_biblio)} (blanked, shown with page-title fallback) "
-        f"unnamed_displayed={len(unnamed_pids)} ids={sorted(unnamed_pids)[:20]}",
+        f"unnamed_displayed={len(unnamed_pids)} ids={sorted(unnamed_pids)[:20]} "
+        f"title_rule_gaps={damaged_titles}",
     )
 
     report = {

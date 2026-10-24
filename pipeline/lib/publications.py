@@ -33,14 +33,15 @@ from pathlib import Path
 from lib.config import LOCATIONS_JSON
 from lib.editions import (
     EDITION_HEADER_RE,
+    LOCATOR_HEADER_RE,
     HeaderFields,
-    Imprint,
     parse_header_line,
     protected_mask,
+    resolve_imprints,
     segment_page,
     split_imprint,
 )
-from lib.encoding import unescape_dump_quotes
+from lib.encoding import source_value, unescape_dump_quotes
 from lib.patterns import (
     ABSENCE_MARKS,
     BRACKET_KNOWN_RE,
@@ -214,11 +215,6 @@ _LANGUAGE_EDITION_RE = re.compile(
     rf"^'''\s*(?:{'|'.join(map(re.escape, LANGUAGE_MAP))}) edition\s*:?\s*'''\s*$",
     re.MULTILINE,
 )
-# A year header followed only by a page locator is a heading inside a
-# publication, not a publication ("'''[1911]''', p. 12" on page 3757).
-_LOCATOR_HEADER_RE = re.compile(
-    r"^'''\s*\[(?:ca\.\s*)?\d{4}\]\s*'''\s*,\s*pp?\.\s*[\d()\-–]+\s*$"
-)
 _CONTRIBUTION_NOTE_RE = re.compile(r"^(.*?)\s*\[(.+)\]$", re.DOTALL)
 _PAGE_NUMBER_RE = re.compile(r"\d+")
 _NAME_SHAPED_RE = re.compile(
@@ -329,12 +325,6 @@ def _category_languages(categories: list[str]) -> list[str]:
     return names
 
 
-def _attested_place(value: str, attested: set[str]) -> bool:
-    """Whether the location stock attests a value, or every part of a slash
-    list such as "London/New York" (page 1565)."""
-    return value in attested or all(part in attested for part in value.split("/"))
-
-
 _DATE_SEGMENT_RE = re.compile(
     r"^\d{1,2}\.?\s+(?:January|February|March|April|May|June|July|August|"
     r"September|October|November|December)\b"
@@ -347,32 +337,13 @@ def _split_imprint(
     """Publisher, places and imprint pairs of a header, in source wording.
 
     The string rules of lib.editions.split_imprint read qualifiers, legal-form
-    suffixes and co-imprints. Two further readings need the reviewed location
-    stock: a single segment it attests is a place, not a publisher ("'''[1930]:
-    Oslo'''", page 5057), and an undecided header whose trailing run of two or
-    more segments it attests carries several places ("Nasionale Pers Beperk,
-    Bloemfontein, Kaapstad (Capetown)", page 4209). What stays undecided is
-    reported as a review flag.
+    suffixes and co-imprints, and lib.editions.resolve_imprints the readings
+    that need the reviewed location stock, which Gate 1 shares. What stays
+    undecided is reported as a review flag.
     """
-    imprints = list(fields.imprints)
+    imprints, run_places = resolve_imprints(fields, attested)
     segments = [_flat(part) for part in (fields.imprint or "").split(",")]
     segments = [segment for segment in segments if segment]
-    run_places: list[str] = []
-    if len(imprints) == 1 and not imprints[0].resolved:
-        run = 0
-        while run < len(segments) - 1 and segments[len(segments) - 1 - run] in attested:
-            run += 1
-        if run >= 2:
-            imprints = [Imprint(", ".join(segments[:-run]), None, True)]
-            run_places = segments[-run:]
-    imprints = [
-        Imprint(None, item.publisher, True)
-        if item.place is None
-        and item.publisher
-        and _attested_place(item.publisher, attested)
-        else item
-        for item in imprints
-    ]
     # A film header can set its broadcast date where an imprint names the
     # publisher ("'''[1973]: 13 February and 31 October, Warszawa'''", page
     # 4474); a date is no publisher.
@@ -1128,7 +1099,7 @@ def imprint_publisher(text: str, attested_places: set[str]) -> str | None:
     if not text:
         return None
     for line in text.splitlines():
-        if not EDITION_HEADER_RE.match(line) or _LOCATOR_HEADER_RE.match(line):
+        if not EDITION_HEADER_RE.match(line) or LOCATOR_HEADER_RE.match(line):
             continue
         for fields in parse_header_line(line):
             publisher, places, _, _ = _split_imprint(fields, attested_places)
@@ -1308,8 +1279,21 @@ def unbound_flat_fields(text: str, values: dict[str, str]) -> list[str]:
     the positions statement_bindings reads; elsewhere it can be a reprint, a
     translation, a lecturer's town or a person's name, and the field is a gap
     (knowledge/production-readiness.md, a gap before a wrong value).
+
+    Both sides are compared as values leave the dump (encoding.source_value),
+    so a whitespace run or quote escape of the dump decides nothing.
     """
-    bindings = statement_bindings(text)
+    raw = statement_bindings(text)
+    bindings = {
+        "places": {source_value(place) for place in raw["places"]},
+        "containerBrackets": [source_value(b) for b in raw["containerBrackets"]],
+        "publishers": [source_value(bound) for bound in raw["publishers"]],
+        "translator": source_value(raw["translator"] or ""),
+    }
+    values = {
+        field: source_value(value) if isinstance(value, str) else value
+        for field, value in values.items()
+    }
     checks = {
         "location": lambda value: (
             value in bindings["places"]
@@ -1379,8 +1363,6 @@ def build_page_publications(
         part = parts_seen.get(start, 0)
         parts_seen[start] = part + 1
         header_line = edition["klawiter:headerLine"]
-        if _LOCATOR_HEADER_RE.match(header_line.strip()):
-            continue
         fields = parse_header_line(header_line)[part]
         language = _language_at(scopes, start)
         if language is None and len(category_languages) == 1:

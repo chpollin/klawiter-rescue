@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (  # noqa: E402
     EDITION_MODELING_DECISIONS,
     EDITION_SAMPLE_RECONCILIATION,
+    LOCATIONS_JSON,
     OUTPUT_EDITIONS_DIR,
     STEP_02_OUTPUT,
     SZD_WORK_INDEX,
@@ -38,6 +39,7 @@ from lib.editions import (  # noqa: E402
     apply_review_reconciliation,
     build_corpus,
 )
+from lib.publications import load_attested_places  # noqa: E402
 from lib.reconciliation import parse_szd_work_index  # noqa: E402
 
 log = setup_logging(__name__)
@@ -65,6 +67,7 @@ def _code_hash() -> str:
     paths = (
         Path(__file__),
         Path(__file__).parent / "lib" / "editions.py",
+        Path(__file__).parent / "lib" / "encoding.py",
         Path(__file__).parent / "lib" / "patterns.py",
         Path(__file__).parent / "lib" / "producers.py",
     )
@@ -249,7 +252,7 @@ def main() -> None:
     if modeling_decisions["sample_reconciliation_sha256"] != reconciliation_hash:
         raise ValueError("Edition modeling decisions reference another reconciliation")
     dataset = apply_review_reconciliation(
-        build_corpus(rows), reconciliation, modeling_decisions
+        build_corpus(rows, load_attested_places()), reconciliation, modeling_decisions
     )
     work_decisions = json.loads(Path(WORK_DECISIONS).read_text(encoding="utf-8"))
     szd_authorities = parse_szd_work_index(Path(SZD_WORK_INDEX))
@@ -310,6 +313,14 @@ def main() -> None:
             },
         },
         "codeSha256": code_hash,
+        # The reviewed location stock tells a lone place from a lone
+        # publisher in a header (lib/editions.resolve_imprints).
+        "placeEvidence": {
+            "attestedPlaces": {
+                "path": "docs/data/locations.json",
+                "sha256": _sha256(Path(LOCATIONS_JSON)),
+            },
+        },
         "selectionRule": dataset["klawiter:selectionRule"],
         "counts": {
             "works": len(dataset["works"]),

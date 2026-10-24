@@ -29,8 +29,10 @@ from pathlib import Path
 # class, per-field state and proposal basis of a review decision (an LLM
 # agent's decision is proposed, never confirmed), the agent review disposition
 # and producer of a publication's edition, and the structured translation
-# statements of a translations section.
-FRONTEND_SCHEMA_VERSION = "1.9"
+# statements of a translations section, 1.10 the first and last revision of
+# the page, the fields a stated rule emptied with their rule, and a title that
+# a lost byte leaves empty (encoding-damaged hint).
+FRONTEND_SCHEMA_VERSION = "1.10"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -72,7 +74,8 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "pageNamespace": (True, (int,)),
     "sourcePageId": (True, (int,)),
     "sourceTextId": (True, (int,)),
-    "title": (True, (str,)),
+    # A title whose bytes the dump lost is a gap with an encoding-damaged hint.
+    "title": (False, (str,)),
     "allLocations": (False, (list,)),
     "allYears": (False, (list,)),
     "categories": (False, (list,)),
@@ -94,6 +97,8 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "publicationReviewFlags": (False, (list,)),
     "publicationYears": (False, (list,)),
     "reviewFlags": (False, (list,)),
+    "revisionDates": (False, (dict,)),
+    "ruleGaps": (False, (list,)),
     "publisher": (False, (str,)),
     "reprints": (False, (list,)),
     "review": (False, (dict,)),

@@ -4,10 +4,11 @@
     "redirects": 1538,
     "non_redirects_main": 4758,
     "non_redirects_all": 5187,
-    "entries_with_issues": 443,
-    "total_issues": 443,
+    "entries_with_issues": 445,
+    "total_issues": 445,
     "severity_counts": {
-      "info": 443
+      "info": 443,
+      "warning": 2
     }
   },
   "namespace_distribution": {
@@ -20,7 +21,7 @@
   },
   "field_coverage": {
     "name": {
-      "count": 4758,
+      "count": 4757,
       "percentage": 100.0
     },
     "datePublished": {

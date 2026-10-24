@@ -266,6 +266,18 @@
       "rdfs:label": "Work Identity Candidate"
     },
     {
+      "@id": "klawiter:absentParentRevisionId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "rev_parent_id of the first counted revision where that revision is absent from the dump.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "absent parent revision ID",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
       "@id": "klawiter:algorithmVersion",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Version of the deterministic algorithm that produced a dataset.",
@@ -593,6 +605,54 @@
       }
     },
     {
+      "@id": "klawiter:firstRevisionId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "rev_id of the earliest counted revision of the wiki page in the dump.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "first revision ID",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:firstRevisionTimestamp",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "rev_timestamp (UTC) of the earliest counted revision of the wiki page in the dump. Where historyStartsInDump is false the page was recorded earlier than this date.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "first revision timestamp",
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
+      }
+    },
+    {
+      "@id": "klawiter:gapField",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The flat field a rule left empty, named by its key in the interface record (location, publisher, translator, title and others).",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "gap field",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:gapRule",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Identifier of the rule that left a flat field empty: statement-bindings or damaged-letter.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "gap rule",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
       "@id": "klawiter:hasContestedClaim",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Links a statement subject to the contested claim that keeps it open: an edition whose work binding is disputed, or a place, person or publisher node of the flat dataset whose authority identity is disputed.",
@@ -655,6 +715,18 @@
       "rdfs:label": "header series",
       "rdfs:range": {
         "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:historyStartsInDump",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "True where the first counted revision has no parent revision, so the dump holds the page's history from its creation; false where its parent revision is absent from the dump.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "history starts in dump",
+      "rdfs:range": {
+        "@id": "xsd:boolean"
       }
     },
     {
@@ -737,6 +809,30 @@
       "rdfs:label": "language name",
       "rdfs:range": {
         "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:lastRevisionId",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "rev_id of the latest counted revision of the wiki page in the dump.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "last revision ID",
+      "rdfs:range": {
+        "@id": "xsd:integer"
+      }
+    },
+    {
+      "@id": "klawiter:lastRevisionTimestamp",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "rev_timestamp (UTC) of the latest counted revision of the wiki page in the dump.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "last revision timestamp",
+      "rdfs:range": {
+        "@id": "xsd:dateTime"
       }
     },
     {
@@ -1056,6 +1152,38 @@
       "skos:changeNote": "Extended on 2026-09-23 to the dataset review status of an entry in the per-entry export."
     },
     {
+      "@id": "klawiter:revisionDates",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The first and last revision of the wiki page that the dump's revision table holds, with the rule that selected them, the source table and the revision identifiers. The revisions of the wiki's automatic Redirect fixer account are not counted.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "revision dates",
+      "skos:changeNote": "Added on 2026-10-24."
+    },
+    {
+      "@id": "klawiter:revisionRule",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "Identifier of the deterministic rule that selected the first and last revision of a wiki page.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "revision rule",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
+      "@id": "klawiter:ruleGaps",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The flat fields of an entry that a stated rule left empty although the source page carries text there, each with the field and the rule. A rule gap is no source gap: statement-bindings empties a place, publisher or translator that no position of the page's first statement binds to the described publication, damaged-letter a value that kept a letter whose bytes were lost before the dump was written.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "rule gaps",
+      "skos:changeNote": "Added on 2026-10-24."
+    },
+    {
       "@id": "klawiter:seeAlsoText",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Unresolvable See-reference preserved as written: the referenced bibliography page was never created (a red link in the source wiki). Resolved references use dcterms:relation with entry IRIs.",
@@ -1252,6 +1380,18 @@
       }
     },
     {
+      "@id": "klawiter:sourceTable",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The table of the MediaWiki dump a value was read from, such as zweig_revision.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "source table",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
       "@id": "klawiter:sourceText",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "Exact source line retained as evidence for a reconciliation occurrence.",
@@ -1367,6 +1507,19 @@
       "rdfs:range": {
         "@id": "xsd:string"
       }
+    },
+    {
+      "@id": "klawiter:wikiPageTitle",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "The redirect page's own title in the wiki, the name a reference to the redirect uses; the entry's schema:name is its target's title.",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "wiki page title",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      },
+      "skos:changeNote": "Added on 2026-10-24."
     },
     {
       "@id": "klawiter:works",

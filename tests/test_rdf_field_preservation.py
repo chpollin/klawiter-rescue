@@ -324,3 +324,70 @@ def test_page_kind_and_cited_addresses_survive_rdf_conversion() -> None:
         KLAWITER.passageEnd: Literal(21),
     }
     assert dict(graph.predicate_objects(citation)) == expected
+
+
+@pytest.mark.parametrize(
+    ("term", "datatype"),
+    [
+        ("revisionRule", XSD.string),
+        ("sourceTable", XSD.string),
+        ("firstRevisionId", XSD.integer),
+        ("firstRevisionTimestamp", XSD.dateTime),
+        ("lastRevisionId", XSD.integer),
+        ("lastRevisionTimestamp", XSD.dateTime),
+        ("historyStartsInDump", XSD.boolean),
+        ("absentParentRevisionId", XSD.integer),
+        ("gapField", XSD.string),
+        ("gapRule", XSD.string),
+        ("wikiPageTitle", XSD.string),
+    ],
+)
+def test_revision_rule_gap_and_redirect_properties_are_registered(
+    term: str, datatype: URIRef
+) -> None:
+    test_restored_rdf_properties_are_registered(term, datatype)
+
+
+@pytest.mark.parametrize("term", ["revisionDates", "ruleGaps"])
+def test_node_valued_properties_are_registered(term: str) -> None:
+    register = Path(__file__).resolve().parents[1] / "docs/vocab/klawiter.ttl"
+    graph = Graph().parse(register, format="turtle")
+    predicate = KLAWITER[term]
+    assert (predicate, RDF.type, RDF.Property) in graph
+    assert graph.value(predicate, RDFS.comment, any=False)
+
+
+def test_every_context_term_of_the_flat_graph_is_registered() -> None:
+    """A klawiter: term the flat JSON-LD context maps must be in the register."""
+    from lib.vocabulary import CONTEXT
+
+    register = Path(__file__).resolve().parents[1] / "docs/vocab/klawiter.ttl"
+    graph = Graph().parse(register, format="turtle")
+    for definition in CONTEXT["@context"].values():
+        iri = definition["@id"] if isinstance(definition, dict) else definition
+        if isinstance(iri, str) and iri.startswith("klawiter:"):
+            predicate = KLAWITER[iri.split(":", 1)[1]]
+            assert (predicate, RDF.type, RDF.Property) in graph, iri
+
+
+def test_rule_gaps_survive_rdf_conversion() -> None:
+    from lib.vocabulary import CONTEXT, to_rdf_entry
+
+    entry = {
+        "@id": "klawiter:entry/41",
+        "ruleGaps": [{"gapField": "location", "gapRule": "statement-bindings"}],
+        "isRedirect": True,
+        "wikiPageTitle": "Correspondence / Volumes (Portuguese)",
+    }
+    graph = _rdf({**CONTEXT, **to_rdf_entry(entry)})
+    subject = _iri("klawiter:entry/41")
+    (gap,) = graph.objects(subject, KLAWITER.ruleGaps)
+    assert dict(graph.predicate_objects(gap)) == {
+        KLAWITER.gapField: Literal("location"),
+        KLAWITER.gapRule: Literal("statement-bindings"),
+    }
+    assert (
+        subject,
+        KLAWITER.wikiPageTitle,
+        Literal("Correspondence / Volumes (Portuguese)"),
+    ) in graph

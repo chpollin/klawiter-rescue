@@ -361,3 +361,221 @@ def test_no_published_string_carries_an_escape_or_a_lost_byte(
             if match:
                 violations[page_id] = repr(match.group(0))
     _check_allowlist(violations, ESCAPE_ALLOWLIST)
+
+
+# (h) A value with a letter whose bytes were lost is a gap with a hint; a flat
+# value carries no whitespace run; a field a rule emptied says so.
+
+_FLAT_VALUE_KEYS = (
+    "title",
+    "originalTitle",
+    "publisher",
+    "location",
+    "translator",
+    "language",
+    "allLocations",
+    "translations",
+    "contentItems",
+    "reprints",
+    "seeAlso",
+)
+
+
+def _flat_values(entry):
+    for key in _FLAT_VALUE_KEYS:
+        value = entry.get(key)
+        for item in value if isinstance(value, list) else [value]:
+            if isinstance(item, str):
+                yield key, item
+
+
+def test_no_published_value_keeps_a_damaged_letter(frontend_data, publication_layers):
+    """Every string of every record and side file except the delivered source
+    text, which is the source itself (page 7432 ends in U+FFFD there)."""
+    from lib.encoding import has_damaged_letter
+
+    violations = {}
+    for entry in frontend_data["entries"]:
+        for key, value in entry.items():
+            if key == "fullBibliographicEntry":
+                continue
+            for text in _strings(value):
+                if has_damaged_letter(text):
+                    violations[entry["sourcePageId"]] = f"{key}={text!r}"
+    for page_id, layer in publication_layers.items():
+        for text in _strings(layer):
+            if has_damaged_letter(text):
+                violations[page_id] = repr(text)
+    _check_allowlist(violations, {})
+
+
+def test_every_damage_hint_names_an_empty_field(frontend_data, classified_rows):
+    rows = {int(row["page_id"]): row for row in classified_rows}
+    hinted = {}
+    for entry in frontend_data["entries"]:
+        for flag in entry.get("reviewFlags", []):
+            if flag["code"] == "encoding-damaged":
+                assert not entry.get(flag["field"]), entry["sourcePageId"]
+                hinted.setdefault(entry["sourcePageId"], set()).add(flag["field"])
+    emptied = {
+        int(pid): set(json.loads(row["encoding_damaged_fields"]))
+        for pid, row in rows.items()
+        if row.get("encoding_damaged_fields") and row["is_redirect"] != "True"
+    }
+    assert emptied
+    assert emptied == hinted
+
+
+def test_no_flat_value_keeps_a_whitespace_run(ns0_entries):
+    violations = {}
+    for entry in ns0_entries:
+        for key, value in _flat_values(entry):
+            if value != " ".join(value.split()):
+                violations[entry["sourcePageId"]] = f"{key}={value!r}"
+    _check_allowlist(violations, {})
+
+
+def test_a_field_a_rule_emptied_is_a_rule_gap(ns0_entries, classified_rows):
+    """Each unbound field of stage 03 is a rule gap with its rule, labelled
+    rule-gap and never missing, in the interface record."""
+    rows = {int(row["page_id"]): row for row in classified_rows}
+    checked = 0
+    for entry in ns0_entries:
+        row = rows[entry["sourcePageId"]]
+        unbound = set(json.loads(row["unbound_fields"] or "[]"))
+        gaps = {gap["gapField"]: gap["gapRule"] for gap in entry.get("ruleGaps", [])}
+        assert {f for f, r in gaps.items() if r == "statement-bindings"} == unbound
+        for field in gaps:
+            assert not entry.get(field), (entry["sourcePageId"], field)
+            if field in entry["_provenance"]:
+                assert entry["_provenance"][field] == "rule-gap"
+        checked += bool(gaps)
+    assert checked
+
+
+def test_the_canonical_graph_carries_the_rule_gaps(canonical_entries, ns0_by_id):
+    for entry in canonical_entries:
+        if entry["sourcePageId"] in ns0_by_id:
+            expected = ns0_by_id[entry["sourcePageId"]].get("ruleGaps")
+            assert entry.get("ruleGaps") == expected
+
+
+def test_verification_counts_no_rule_gap_as_a_false_negative(ns0_by_id):
+    report = json.loads(
+        (PROJECT_ROOT / "data/output/verification-report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    for result in report["detailed_results"]:
+        entry = ns0_by_id.get(result["page_id"]) or {}
+        for gap in entry.get("ruleGaps", []):
+            assert f"{gap['gapField']}_false_negative" not in result["fields"]
+    for field in ("publisher", "location", "translator"):
+        assert "rule_gap" in report["summary"][field]
+
+
+# (i) References resolve in the main namespace only.
+
+
+def test_redirects_land_on_main_namespace_records(frontend_data):
+    namespace = {
+        entry["sourcePageId"]: entry["pageNamespace"]
+        for entry in frontend_data["entries"]
+    }
+    off = {
+        key: pid
+        for key, pid in frontend_data["redirects"].items()
+        if namespace.get(pid) != 0
+    }
+    assert not off
+
+
+_REDIRECT_KINDS = {
+    "absent-target",
+    "chain-into-absent",
+    "diacritic-variant",
+    "case-variant",
+    "loop",
+    "self",
+}
+
+
+def test_every_main_namespace_redirect_resolves_or_is_reported(
+    classified_rows, frontend_data
+):
+    from lib.config import OUTPUT_UNRESOLVED_REDIRECTS, SOURCE_REVISION_DECISIONS
+
+    withheld = {
+        decision["pageId"]
+        for decision in json.loads(
+            Path(SOURCE_REVISION_DECISIONS).read_text(encoding="utf-8")
+        )["decisions"]
+        if decision["action"] == "withhold-redirect-relation"
+    }
+    report = json.loads(Path(OUTPUT_UNRESOLVED_REDIRECTS).read_text(encoding="utf-8"))
+    reported = {item["pageId"]: item for item in report["redirects"]}
+    titles = {
+        entry["title"]
+        for entry in frontend_data["entries"]
+        if entry.get("pageNamespace") == 0 and entry.get("title")
+    }
+    for row in classified_rows:
+        if row["page_namespace"] != "0" or row["is_redirect"] != "True":
+            continue
+        pid = int(row["page_id"])
+        if pid in withheld:
+            assert pid not in reported
+            continue
+        own = row["page_title"]
+        resolves = own in frontend_data["redirects"] or own in titles
+        assert resolves != (pid in reported), (pid, own)
+        if pid in reported:
+            assert reported[pid]["pageTitle"] == own
+            assert reported[pid]["kind"] in _REDIRECT_KINDS
+
+
+def test_every_redirect_record_keeps_its_own_page_title(
+    canonical_entries, classified_rows
+):
+    titles = {int(row["page_id"]): row["page_title"] for row in classified_rows}
+    for entry in canonical_entries:
+        if entry.get("isRedirect"):
+            assert entry["wikiPageTitle"] == titles[entry["sourcePageId"]]
+
+
+# (j) Structure pages are no works of Zweig.
+
+
+def test_no_structure_page_names_an_author(canonical_entries):
+    assert not [
+        entry["sourcePageId"]
+        for entry in canonical_entries
+        if entry.get("pageNamespace") != 0 and "author" in entry
+    ]
+
+
+# (k) Edition values leave the dump form, and a locator heading is no edition.
+
+
+def test_edition_values_leave_the_dump_form():
+    from lib.editions import LOCATOR_HEADER_RE
+
+    graph = json.loads(
+        (PROJECT_ROOT / "data/output/editions/work-editions.jsonld").read_text(
+            encoding="utf-8"
+        )
+    )
+    escape = chr(92) + '"'
+    violations = {}
+    for edition in graph["editions"]:
+        assert not LOCATOR_HEADER_RE.match(edition["klawiter:headerLine"].strip())
+        for key in ("schema:publisher", "schema:locationCreated", "schema:description"):
+            value = edition.get(key)
+            for item in value if isinstance(value, list) else [value]:
+                if isinstance(item, dict):
+                    item = item.get("schema:name", "")
+                if isinstance(item, str) and (
+                    escape in item or item != " ".join(item.split())
+                ):
+                    violations[edition["@id"]] = f"{key}={item!r}"
+    assert not violations

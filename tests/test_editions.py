@@ -25,7 +25,9 @@ SAMPLES = Path("data/output/edition-samples")
 
 @pytest.fixture(scope="module")
 def _edition_corpus(source_rows):
-    return build_corpus(source_rows)
+    from lib.publications import load_attested_places
+
+    return build_corpus(source_rows, load_attested_places())
 
 
 @pytest.fixture
@@ -223,10 +225,13 @@ def test_sample_boundaries_and_selectors(
 def test_real_corpus_selection_and_output_counts(edition_corpus) -> None:
     corpus = edition_corpus
     # Pages 35, 279, 793 and 2817 joined with their restored human revisions
-    # (data/reconciliation/source-revision-decisions.json).
-    assert len(corpus["works"]) == 447
-    assert len(corpus["editions"]) == 2077
-    assert len(corpus["annotations"]) == 2077
+    # (data/reconciliation/source-revision-decisions.json). Algorithm 1.5 reads
+    # the 22 year headings before a page locator on page 3757 as no edition
+    # headers, so that page of one publication left the multi-edition corpus
+    # with its 23 nodes.
+    assert len(corpus["works"]) == 446
+    assert len(corpus["editions"]) == 2054
+    assert len(corpus["annotations"]) == 2054
     assert all(
         edition["klawiter:reviewStatus"] == "proposed" for edition in corpus["editions"]
     )
@@ -268,7 +273,7 @@ def test_agent_reviewed_sample_editions_stay_proposed(edition_corpus) -> None:
         )
         for status in ("proposed", "confirmed", "contested")
     }
-    assert status_counts == {"proposed": 2076, "confirmed": 0, "contested": 1}
+    assert status_counts == {"proposed": 2053, "confirmed": 0, "contested": 1}
     sample = [e for e in reviewed["editions"] if "klawiter:reviewDecision" in e]
     assert len(sample) == 76
     assert {e["klawiter:reviewDecision"] for e in sample} == {

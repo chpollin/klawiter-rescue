@@ -84,7 +84,7 @@
     {
       "check": "every_displayed_entry_is_named",
       "pass": true,
-      "detail": "empty_biblio=1 (blanked, shown with page-title fallback) unnamed_displayed=0 ids=[]"
+      "detail": "empty_biblio=1 (blanked, shown with page-title fallback) unnamed_displayed=0 ids=[] title_rule_gaps=[2364]"
     }
   ],
   "all_checks_pass": true

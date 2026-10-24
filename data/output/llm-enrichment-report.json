@@ -19,13 +19,13 @@
   "networkCallsMade": false,
   "rejectedCachedValues": 1003,
   "rejectedNotInSource": {
-    "publisher": 12,
-    "location": 26,
-    "translator": 38,
+    "publisher": 2,
+    "location": 11,
+    "translator": 11,
     "page_count": 24
   },
   "rejectedPublicationScoped": {
-    "publisher": 736,
+    "publisher": 704,
     "page_count": 139
   },
   "encodingRepairs": [
@@ -593,6 +593,440 @@
       "pageId": 7227,
       "field": "location",
       "value": "Athēna"
+    }
+  ],
+  "rejectedEncodingDamaged": [
+    {
+      "pageId": 213,
+      "field": "publisher"
+    },
+    {
+      "pageId": 224,
+      "field": "publisher"
+    },
+    {
+      "pageId": 225,
+      "field": "publisher"
+    },
+    {
+      "pageId": 226,
+      "field": "publisher"
+    },
+    {
+      "pageId": 229,
+      "field": "publisher"
+    },
+    {
+      "pageId": 230,
+      "field": "publisher"
+    },
+    {
+      "pageId": 231,
+      "field": "publisher"
+    },
+    {
+      "pageId": 726,
+      "field": "translator"
+    },
+    {
+      "pageId": 732,
+      "field": "translator"
+    },
+    {
+      "pageId": 756,
+      "field": "translator"
+    },
+    {
+      "pageId": 854,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1408,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1417,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1451,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1451,
+      "field": "translator"
+    },
+    {
+      "pageId": 1452,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1687,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1687,
+      "field": "translator"
+    },
+    {
+      "pageId": 1692,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1692,
+      "field": "translator"
+    },
+    {
+      "pageId": 1752,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1841,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1845,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1889,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1890,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1892,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1893,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1894,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1895,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1900,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1902,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1915,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1917,
+      "field": "publisher"
+    },
+    {
+      "pageId": 1918,
+      "field": "publisher"
+    },
+    {
+      "pageId": 2589,
+      "field": "location"
+    },
+    {
+      "pageId": 3230,
+      "field": "publisher"
+    },
+    {
+      "pageId": 3370,
+      "field": "publisher"
+    },
+    {
+      "pageId": 3377,
+      "field": "publisher"
+    },
+    {
+      "pageId": 3641,
+      "field": "publisher"
+    },
+    {
+      "pageId": 3641,
+      "field": "location"
+    },
+    {
+      "pageId": 3641,
+      "field": "translator"
+    },
+    {
+      "pageId": 3656,
+      "field": "publisher"
+    },
+    {
+      "pageId": 3656,
+      "field": "location"
+    },
+    {
+      "pageId": 3656,
+      "field": "translator"
+    },
+    {
+      "pageId": 4079,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4113,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4113,
+      "field": "translator"
+    },
+    {
+      "pageId": 4138,
+      "field": "translator"
+    },
+    {
+      "pageId": 4171,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4194,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4215,
+      "field": "translator"
+    },
+    {
+      "pageId": 4225,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4231,
+      "field": "location"
+    },
+    {
+      "pageId": 4290,
+      "field": "translator"
+    },
+    {
+      "pageId": 4292,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4312,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4384,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4399,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4402,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4402,
+      "field": "location"
+    },
+    {
+      "pageId": 4426,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4426,
+      "field": "translator"
+    },
+    {
+      "pageId": 4439,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4452,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4515,
+      "field": "translator"
+    },
+    {
+      "pageId": 4518,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4530,
+      "field": "location"
+    },
+    {
+      "pageId": 4539,
+      "field": "location"
+    },
+    {
+      "pageId": 4544,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4544,
+      "field": "location"
+    },
+    {
+      "pageId": 4545,
+      "field": "location"
+    },
+    {
+      "pageId": 4552,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4553,
+      "field": "location"
+    },
+    {
+      "pageId": 4562,
+      "field": "location"
+    },
+    {
+      "pageId": 4562,
+      "field": "translator"
+    },
+    {
+      "pageId": 4563,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4563,
+      "field": "location"
+    },
+    {
+      "pageId": 4564,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4573,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4575,
+      "field": "location"
+    },
+    {
+      "pageId": 4575,
+      "field": "translator"
+    },
+    {
+      "pageId": 4588,
+      "field": "location"
+    },
+    {
+      "pageId": 4589,
+      "field": "translator"
+    },
+    {
+      "pageId": 4606,
+      "field": "translator"
+    },
+    {
+      "pageId": 4617,
+      "field": "translator"
+    },
+    {
+      "pageId": 4619,
+      "field": "translator"
+    },
+    {
+      "pageId": 4704,
+      "field": "translator"
+    },
+    {
+      "pageId": 4705,
+      "field": "translator"
+    },
+    {
+      "pageId": 4742,
+      "field": "translator"
+    },
+    {
+      "pageId": 4812,
+      "field": "translator"
+    },
+    {
+      "pageId": 4825,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4826,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4828,
+      "field": "translator"
+    },
+    {
+      "pageId": 4871,
+      "field": "translator"
+    },
+    {
+      "pageId": 4908,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4908,
+      "field": "translator"
+    },
+    {
+      "pageId": 4945,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4957,
+      "field": "publisher"
+    },
+    {
+      "pageId": 4958,
+      "field": "translator"
+    },
+    {
+      "pageId": 5058,
+      "field": "location"
+    },
+    {
+      "pageId": 5108,
+      "field": "publisher"
+    },
+    {
+      "pageId": 5254,
+      "field": "publisher"
+    },
+    {
+      "pageId": 5255,
+      "field": "publisher"
+    },
+    {
+      "pageId": 5256,
+      "field": "publisher"
+    },
+    {
+      "pageId": 5755,
+      "field": "publisher"
+    },
+    {
+      "pageId": 5755,
+      "field": "location"
+    },
+    {
+      "pageId": 6044,
+      "field": "publisher"
+    },
+    {
+      "pageId": 7425,
+      "field": "publisher"
     }
   ],
   "fieldsFilled": {

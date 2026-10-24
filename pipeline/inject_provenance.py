@@ -6,7 +6,7 @@ Diffs the regex output (03_parsed.csv) against the final values to decide
 which fields were LLM-filled vs regex-extracted. Cache presence alone is not
 enough: the 03b merge fills gaps only, so the cache can hold a value for a
 field the regex had already filled — that value was never used.
-Adds a `_provenance` object to each entry: { field: "regex"|"llm"|"missing" },
+Adds a `_provenance` object to each entry: { field: "regex"|"llm"|"missing"|"rule-gap" },
 and `_meta.llmEnrichment`, the run those `llm` labels point to.
 
 Input:  docs/data/klawiter.json + data/intermediate/03_parsed.csv
@@ -51,16 +51,18 @@ TRACKED_FIELDS = {
 }
 
 
-def field_provenance(has_value, regex_had, llm_has):
+def field_provenance(has_value, regex_had, llm_has, rule_gap=False):
     """Decide the provenance label for one field.
 
     regex_had wins over llm_has because the 03b merge never overwrites a
     regex value — a cache entry for an already-filled field was never merged.
     A filled field with neither source is labeled regex (the conservative
-    default; normalization only rewrites values, it never adds them).
+    default; normalization only rewrites values, it never adds them). An
+    empty field a stated rule emptied is a rule gap, not a source gap; the
+    entry's ruleGaps names the rule.
     """
     if not has_value:
-        return "missing"
+        return "rule-gap" if rule_gap else "missing"
     if regex_had:
         return "regex"
     if llm_has:
@@ -180,12 +182,13 @@ def main():
     log.info(f"Frontend entries: {len(entries)}")
 
     # Inject provenance
-    stats = {"regex": 0, "llm": 0, "missing": 0}
+    stats = {"regex": 0, "llm": 0, "missing": 0, "rule-gap": 0}
 
     for entry in entries:
         pid = str(entry.get("sourcePageId", ""))
         entry_llm = llm_fields.get(pid, set())
         regex_row = regex_rows.get(pid)
+        gap_fields = {gap["gapField"] for gap in entry.get("ruleGaps", [])}
         prov = {}
 
         for frontend_key, cache_key in TRACKED_FIELDS.items():
@@ -193,7 +196,9 @@ def main():
             regex_had = bool(regex_row and regex_row.get(cache_key))
             llm_has = cache_key in entry_llm
 
-            label = field_provenance(has_value, regex_had, llm_has)
+            label = field_provenance(
+                has_value, regex_had, llm_has, frontend_key in gap_fields
+            )
             prov[frontend_key] = label
             stats[label] += 1
 
@@ -207,10 +212,18 @@ def main():
             for field, cache_key in TRACKED_FIELDS.items()
             if prov.get(field) == "llm" and cache_key in encoding_repairs.get(pid, [])
         ]
-        if repaired:
-            entry["reviewFlags"] = [
-                {**REPAIR_FLAG, "field": field} for field in repaired
-            ]
+        # Stage 05 writes the hints on values it emptied; the repair hints join
+        # them, replacing any of a previous injection so a rerun adds none twice.
+        flags = [
+            flag
+            for flag in entry.get("reviewFlags", [])
+            if flag["code"] != REPAIR_FLAG["code"]
+        ]
+        flags += [{**REPAIR_FLAG, "field": field} for field in repaired]
+        if flags:
+            entry["reviewFlags"] = flags
+        else:
+            entry.pop("reviewFlags", None)
 
     log.info(f"Provenance stats: {stats}")
     log.info(

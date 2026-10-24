@@ -303,3 +303,147 @@ def test_withheld_cases_are_open_claims() -> None:
         assert evidence["sourcePageId"] == page_id
         assert evidence["sourceTextId"] == fixer["textId"]
         assert evidence["sourceValue"] == fixer["redirectText"]
+
+
+# First and last revision of each page (stage 01, zweig_revision).
+
+
+def test_revision_dates_skip_the_fixer_and_mark_an_absent_history() -> None:
+    """Page 1 opens its history in the dump and ends in a fixer overwrite,
+    page 2 follows a revision the dump lacks, page 3 holds fixer revisions
+    only."""
+    human, fixer = "Klawiter", extract.FIXER_ACTOR
+    pages = {1: {}, 2: {}, 3: {}}
+    revisions = {
+        10: {
+            "page": 1,
+            "parent": None,
+            "timestamp": "2009-01-01T00:00:00Z",
+            "actor": human,
+        },
+        11: {
+            "page": 1,
+            "parent": 10,
+            "timestamp": "2012-01-01T00:00:00Z",
+            "actor": human,
+        },
+        12: {
+            "page": 1,
+            "parent": 11,
+            "timestamp": "2017-01-01T00:00:00Z",
+            "actor": fixer,
+        },
+        25: {
+            "page": 2,
+            "parent": 24,
+            "timestamp": "2011-03-22T01:29:22Z",
+            "actor": human,
+        },
+        30: {
+            "page": 3,
+            "parent": 29,
+            "timestamp": "2010-01-01T00:00:00Z",
+            "actor": fixer,
+        },
+    }
+    assert extract.page_revision_dates(pages, revisions) == [
+        {
+            "page_id": 1,
+            "first_revision_id": 10,
+            "first_revision_timestamp": "2009-01-01T00:00:00Z",
+            "first_revision_parent_id": 0,
+            "last_revision_id": 11,
+            "last_revision_timestamp": "2012-01-01T00:00:00Z",
+        },
+        {
+            "page_id": 2,
+            "first_revision_id": 25,
+            "first_revision_timestamp": "2011-03-22T01:29:22Z",
+            "first_revision_parent_id": 24,
+            "last_revision_id": 25,
+            "last_revision_timestamp": "2011-03-22T01:29:22Z",
+        },
+    ]
+
+
+def test_a_restored_page_keeps_the_dates_of_its_page(frontend_data) -> None:
+    """Maria Stuart: first surviving revision 7106 of 2010, whose parent 3201
+    the dump lacks; the last counted revision is the restored 33251, not the
+    fixer's 33773."""
+    by_page = {entry["sourcePageId"]: entry for entry in frontend_data["entries"]}
+    dates = by_page[35]["revisionDates"]
+    assert dates == {
+        "revisionRule": stage_05.REVISION_DATES_RULE,
+        "sourceTable": "zweig_revision",
+        "firstRevisionId": 7106,
+        "firstRevisionTimestamp": "2010-08-09T21:28:57Z",
+        "lastRevisionId": 33251,
+        "lastRevisionTimestamp": "2017-09-25T20:31:36Z",
+        "historyStartsInDump": False,
+        "absentParentRevisionId": 3201,
+    }
+    assert (
+        dates["lastRevisionId"]
+        == (by_page[35]["sourceRevision"]["humanRevision"]["revisionId"])
+    )
+
+
+def test_every_record_carries_the_dates_the_revision_table_gives(
+    dump_tables, canonical_entries
+) -> None:
+    """Invariant over all records, recomputed from the dump without the rule
+    function: the counted revisions are the page's earliest and latest that
+    are not the fixer's, and a record without dates has no other revision."""
+    pages, revisions = dump_tables["pages"], dump_tables["revisions"]
+    human = {}
+    for rev_id, rev in revisions.items():
+        if rev["actor"] != extract.FIXER_ACTOR:
+            human.setdefault(rev["page"], []).append((rev["timestamp"], rev_id))
+    records = {entry["sourcePageId"]: entry for entry in canonical_entries}
+    assert set(records) == set(pages)
+    for page_id, entry in records.items():
+        dates = entry.get("revisionDates")
+        if page_id not in human:
+            assert dates is None, page_id
+            continue
+        first, last = min(human[page_id]), max(human[page_id])
+        parent = revisions[first[1]]["parent"] or 0
+        assert (dates["firstRevisionTimestamp"], dates["firstRevisionId"]) == first
+        assert (dates["lastRevisionTimestamp"], dates["lastRevisionId"]) == last
+        assert dates["historyStartsInDump"] is (parent == 0)
+        assert dates.get("absentParentRevisionId") == (parent or None)
+        if parent:
+            assert parent not in revisions
+    assert {pid for pid in records if pid not in human} == WITHHELD
+
+
+def test_revision_dates_survive_rdf_conversion() -> None:
+    from lib.vocabulary import CONTEXT, to_rdf_entry
+    from rdflib import XSD, Graph, Literal, Namespace
+
+    klawiter = Namespace("https://chpollin.github.io/klawiter-rescue/vocab/")
+    entry = {
+        "@id": "klawiter:entry/35",
+        "revisionDates": {
+            "revisionRule": stage_05.REVISION_DATES_RULE,
+            "sourceTable": "zweig_revision",
+            "firstRevisionId": 7106,
+            "firstRevisionTimestamp": "2010-08-09T21:28:57Z",
+            "lastRevisionId": 33251,
+            "lastRevisionTimestamp": "2017-09-25T20:31:36Z",
+            "historyStartsInDump": False,
+            "absentParentRevisionId": 3201,
+        },
+    }
+    graph = Graph().parse(
+        data=json.dumps({**CONTEXT, **to_rdf_entry(entry)}), format="json-ld"
+    )
+    (node,) = graph.objects(None, klawiter.revisionDates)
+    values = dict(graph.predicate_objects(node))
+    assert values[klawiter.firstRevisionTimestamp] == Literal(
+        "2010-08-09T21:28:57Z", datatype=XSD.dateTime
+    )
+    assert values[klawiter.lastRevisionId] == Literal(33251)
+    assert values[klawiter.historyStartsInDump] == Literal(False)
+    assert values[klawiter.absentParentRevisionId] == Literal(3201)
+    assert values[klawiter.sourceTable] == Literal("zweig_revision")

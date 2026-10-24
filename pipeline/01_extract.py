@@ -14,7 +14,8 @@ cover a case the dump does not show.
 
 Input:  data/raw/zweig_part_01.sql, data/raw/zt_00..zt_07,
         data/reconciliation/source-revision-decisions.json
-Output: data/intermediate/01_extracted.csv, data/intermediate/01_pagelinks.csv
+Output: data/intermediate/01_extracted.csv, data/intermediate/01_pagelinks.csv,
+        data/intermediate/01_revision_dates.csv
 """
 
 import hashlib
@@ -31,11 +32,20 @@ from lib.config import (
     SQL_DUMP_PATH,
     STEP_01_OUTPUT,
     STEP_01_PAGELINKS,
+    STEP_01_REVISIONS,
     setup_logging,
     write_csv,
 )
 
 PAGELINK_FIELDS = ["pl_from", "pl_namespace", "pl_title"]
+REVISION_DATE_FIELDS = [
+    "page_id",
+    "first_revision_id",
+    "first_revision_timestamp",
+    "first_revision_parent_id",
+    "last_revision_id",
+    "last_revision_timestamp",
+]
 FIXER_ACTOR = "Redirect fixer"
 RESTORE_ACTION = "restore-human-revision"
 WITHHOLD_ACTION = "withhold-redirect-relation"
@@ -401,6 +411,43 @@ def detect_fixer_overwrites(pages, revisions, slots, contents, text_index):
     return cases
 
 
+def page_revision_dates(pages, revisions) -> list[dict]:
+    """First and last revision of each page in the dump's revision table.
+
+    Revisions of the Redirect fixer account are left out: it is the wiki
+    software's maintenance account, never creates a page with a human
+    history, and its rewrite of a restored page postdates the text the page
+    publishes. A first revision whose rev_parent_id names a revision the dump
+    does not hold opens no history: the page was recorded earlier, and its
+    first date is only the earliest that survives. A page with no other
+    revision gets no row.
+    """
+    by_page: dict[int, list[tuple[str, int]]] = {}
+    for rev_id, rev in revisions.items():
+        if rev["actor"] != FIXER_ACTOR:
+            by_page.setdefault(rev["page"], []).append((rev["timestamp"], rev_id))
+    rows = []
+    for page_id in sorted(pages):
+        counted = sorted(by_page.get(page_id, []))
+        if not counted:
+            continue
+        (first_ts, first_id), (last_ts, last_id) = counted[0], counted[-1]
+        parent = revisions[first_id]["parent"] or 0
+        rows.append(
+            {
+                "page_id": page_id,
+                "first_revision_id": first_id,
+                "first_revision_timestamp": first_ts,
+                # rev_parent_id of the first counted revision, 0 where the
+                # page's history begins in the dump.
+                "first_revision_parent_id": parent,
+                "last_revision_id": last_id,
+                "last_revision_timestamp": last_ts,
+            }
+        )
+    return rows
+
+
 def text_sha256(text_data: dict) -> str:
     """SHA-256 over the delivered text bytes (the Latin-1 reading is lossless)."""
     return hashlib.sha256(text_data["content"].encode("latin-1")).hexdigest()
@@ -522,9 +569,8 @@ def main():
 
     log.info(f"Total text index entries: {len(text_index)}")
 
-    cases = detect_fixer_overwrites(
-        pages, load_revisions(sql_text), slots, contents, text_index
-    )
+    revisions = load_revisions(sql_text)
+    cases = detect_fixer_overwrites(pages, revisions, slots, contents, text_index)
     apply_source_revision_decisions(
         mapping, cases, load_source_revision_decisions(), text_index
     )
@@ -580,6 +626,11 @@ def main():
     pagelinks = load_pagelinks_table(sql_text)
     write_csv(STEP_01_PAGELINKS, pagelinks, PAGELINK_FIELDS)
     log.info(f"Page links written to {STEP_01_PAGELINKS}")
+    revision_dates = page_revision_dates(pages, revisions)
+    write_csv(STEP_01_REVISIONS, revision_dates, REVISION_DATE_FIELDS)
+    log.info(
+        f"Revision dates of {len(revision_dates)} pages written to {STEP_01_REVISIONS}"
+    )
     log.info(
         f"Success rate: {found}/{found + not_found} ({100 * found / (found + not_found):.1f}%)"
     )

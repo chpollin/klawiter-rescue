@@ -28,10 +28,10 @@
     "publishableAgentLinks": 0,
     "publishableLocationLinks": 0,
     "publishableWorkLinks": 0,
-    "reviewCases": 930,
-    "workCandidates": 853,
+    "reviewCases": 929,
+    "workCandidates": 852,
     "workDecisions": 3,
-    "workSubjects": 447
+    "workSubjects": 446
   },
   "errors": {
     "agentOccurrenceEvidence": [],
@@ -44,5 +44,5 @@
     "shacl": [],
     "sourceRevisions": []
   },
-  "generatedAt": "2026-10-24T18:23:12.535430+00:00"
+  "generatedAt": "2026-10-24T19:30:36.923246+00:00"
 }

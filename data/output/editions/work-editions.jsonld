@@ -29636,420 +29636,6 @@
       }
     },
     {
-      "@id": "klawiter:annotation/3757-2016-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-2016-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 641,
-          "oa:start": 0
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1911-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1911-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 1580,
-          "oa:start": 1437
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1914-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1914-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 1835,
-          "oa:start": 1580
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1916-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1916-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 1989,
-          "oa:start": 1835
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1917-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1917-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2139,
-          "oa:start": 1989
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1920-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1920-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2410,
-          "oa:start": 2139
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1921-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1921-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 2613,
-          "oa:start": 2410
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1923-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1923-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3033,
-          "oa:start": 2613
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1925-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1925-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3236,
-          "oa:start": 3033
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1927-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1927-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3437,
-          "oa:start": 3236
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1928-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1928-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 3800,
-          "oa:start": 3437
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1929-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1929-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4000,
-          "oa:start": 3800
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1930-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1930-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4148,
-          "oa:start": 4000
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1932-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1932-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 4396,
-          "oa:start": 4148
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1933-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1933-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 5090,
-          "oa:start": 4396
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1934-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1934-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 5313,
-          "oa:start": 5090
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1935-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1935-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 5849,
-          "oa:start": 5313
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1936-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1936-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 6312,
-          "oa:start": 5849
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1937-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1937-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 6614,
-          "oa:start": 6312
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1938-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1938-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 6765,
-          "oa:start": 6614
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1939-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1939-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7017,
-          "oa:start": 6765
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1940-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1940-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7329,
-          "oa:start": 7017
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
-      "@id": "klawiter:annotation/3757-1942-a",
-      "@type": "oa:Annotation",
-      "oa:hasBody": {
-        "@id": "klawiter:edition/3757-1942-a"
-      },
-      "oa:hasTarget": {
-        "@type": "oa:SpecificResource",
-        "oa:hasSelector": {
-          "@type": "oa:TextPositionSelector",
-          "oa:end": 7905,
-          "oa:start": 7329
-        },
-        "oa:hasSource": {
-          "@id": "klawiter:sourceText/3757"
-        }
-      }
-    },
-    {
       "@id": "klawiter:annotation/3772-1956-a",
       "@type": "oa:Annotation",
       "oa:hasBody": {
@@ -43050,7 +42636,7 @@
       },
       "schema:locationCreated": "Minsk",
       "schema:numberOfPages": 493,
-      "schema:publisher": "Izdatel’stvo  “Uradzhai”"
+      "schema:publisher": "Izdatel’stvo “Uradzhai”"
     },
     {
       "@id": "klawiter:edition/122-1988-a",
@@ -43221,7 +42807,7 @@
       "klawiter:sourceSliceSha256": "7d63c9a560f1b35aceeb2b42a27147638f34aee90be64215ff77eabfef014202",
       "klawiter:yearRaw": "2000",
       "schema:datePublished": "2000",
-      "schema:description": ". ''Hommes et destins''. Translated by Hélène Denis-Jeanroy. Foreword by Raymond Jeanroy.   Cover Bernard Flaguel. Cover photographs of Marcel Proust, Sigmund Freud, Romain Rolland, Theodor Herzl, Rainer Maria Rilke, Gustav Mahler, Jean Jaurès, Paul Verlaine, Stefan Zweig & Friedrich Nietzsche © Roger-Viollet Agency, Paris. 218/(3)p [Le Livre de Poche, 14918]",
+      "schema:description": ". ''Hommes et destins''. Translated by Hélène Denis-Jeanroy. Foreword by Raymond Jeanroy. Cover Bernard Flaguel. Cover photographs of Marcel Proust, Sigmund Freud, Romain Rolland, Theodor Herzl, Rainer Maria Rilke, Gustav Mahler, Jean Jaurès, Paul Verlaine, Stefan Zweig & Friedrich Nietzsche © Roger-Viollet Agency, Paris. 218/(3)p [Le Livre de Poche, 14918]",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/190"
       },
@@ -45320,7 +44906,7 @@
       "klawiter:sourceSliceSha256": "597bfdd3276266ac6a343088be090cc64f1845820ddd1e5004f38d787b240c4f",
       "klawiter:yearRaw": "1942",
       "schema:datePublished": "1942",
-      "schema:description": ". \\\"Spiel gegen den Schachmeister\\\" in ''Argentinisches Tageblatt'' [Buenos Aires], 20 December 1942, p. 6",
+      "schema:description": ". \"Spiel gegen den Schachmeister\" in ''Argentinisches Tageblatt'' [Buenos Aires], 20 December 1942, p. 6",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45338,7 +44924,7 @@
       "klawiter:sourceSliceSha256": "cbca1e51348ef8c6a77be680772a04cb9cd89d25090a03e44239d9a4e5633ceb",
       "klawiter:yearRaw": "1950",
       "schema:datePublished": "1950",
-      "schema:description": ". \\\"Das königliche Spiel\\\" in ''Deutsche Schachrundschau Caissa'' [Weidenau-Sieg], 4:17 [September 1950], p. 263",
+      "schema:description": ". \"Das königliche Spiel\" in ''Deutsche Schachrundschau Caissa'' [Weidenau-Sieg], 4:17 [September 1950], p. 263",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45356,7 +44942,7 @@
       "klawiter:sourceSliceSha256": "a32a27f01f7f1977237cf0fb7a63799eebdb7343cd8d946de0f76254fc2a9cae",
       "klawiter:yearRaw": "1960",
       "schema:datePublished": "1960",
-      "schema:description": ". \\\"Schachnovelle\\\" in ''Film und Frau'' [Hamburg], 12:13 [1960], pp. 34-42. Contains 6 photographs from the film version starring Curd Jürgens",
+      "schema:description": ". \"Schachnovelle\" in ''Film und Frau'' [Hamburg], 12:13 [1960], pp. 34-42. Contains 6 photographs from the film version starring Curd Jürgens",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45392,7 +44978,7 @@
       "klawiter:sourceSliceSha256": "0ca5ee4df5614d1aaaecab61d64d1da724789d2bf79e1a96095ebb4fb3b6004a",
       "klawiter:yearRaw": "1964",
       "schema:datePublished": "1964",
-      "schema:description": ". \\\"Der Weltschachmeister\\\" in ''Lesestücke und Übersetzungen''. Compiled and edited by Johannes Schneider. 7th impression. Groningen: Noordhoff Verlag, 1964, pp. 91-92",
+      "schema:description": ". \"Der Weltschachmeister\" in ''Lesestücke und Übersetzungen''. Compiled and edited by Johannes Schneider. 7th impression. Groningen: Noordhoff Verlag, 1964, pp. 91-92",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45410,7 +44996,7 @@
       "klawiter:sourceSliceSha256": "c7e25623787677bb3c897f1de492d214fc410e06711bdbeb37211588746b39f5",
       "klawiter:yearRaw": "1969",
       "schema:datePublished": "1969",
-      "schema:description": ". “Schachnovelle” in ''Literatur und Widerstand. Anthologie europäischer Poesie und Prosa''. Edited by the Internationale Föderation der  in Widerstandskämpfer. Frankfurt am Main: Röderberg Verlag, 1969, pp. 434-440",
+      "schema:description": ". “Schachnovelle” in ''Literatur und Widerstand. Anthologie europäischer Poesie und Prosa''. Edited by the Internationale Föderation der in Widerstandskämpfer. Frankfurt am Main: Röderberg Verlag, 1969, pp. 434-440",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45429,7 +45015,7 @@
       "klawiter:sourceSliceSha256": "c4b2315ef5e300783fcf6ecfdb8bbb542a99c6712bd0657a3b1ca8d1919b9cab",
       "klawiter:yearRaw": "1970",
       "schema:datePublished": "1970",
-      "schema:description": ".  “Schachnovelle” [A summary of the story] in H. D. Tiesema. ''Der Rote Faden. Fünfzig Zusammenfassungen vielgelesener Werke aus der deutschen Literatur für Examenskandidaten Höherer Schulen, L. O.- und M. O.-Kandiaten''.",
+      "schema:description": ". “Schachnovelle” [A summary of the story] in H. D. Tiesema. ''Der Rote Faden. Fünfzig Zusammenfassungen vielgelesener Werke aus der deutschen Literatur für Examenskandidaten Höherer Schulen, L. O.- und M. O.-Kandiaten''.",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       },
@@ -45448,7 +45034,7 @@
       "klawiter:sourceSliceSha256": "d144682ac416c4beeb5c5280b6d8e91f0d7814fdd7b336635ed1663f76d3b53a",
       "klawiter:yearRaw": "1981",
       "schema:datePublished": "1981",
-      "schema:description": ". \\\"Das Geheimnis des künstlerischen Schaffens\\\" [1938] in [[Das Geheimnis des künstlerischen Schaffens]] [1981],20, pp. 227-(250). Pages 244-245 contain a comparison of the story itself with the game of chess",
+      "schema:description": ". \"Das Geheimnis des künstlerischen Schaffens\" [1938] in [[Das Geheimnis des künstlerischen Schaffens]] [1981],20, pp. 227-(250). Pages 244-245 contain a comparison of the story itself with the game of chess",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45484,7 +45070,7 @@
       "klawiter:sourceSliceSha256": "520174e7165eaefe0a885060e322300ce086c03569ea483b239fefa2f849e465",
       "klawiter:yearRaw": "1990",
       "schema:datePublished": "1990",
-      "schema:description": ". \\\"Schachnovelle\\\" in''Wahlfach Deutsch. Literatur''. Compiled and edited by R. Hazekamp & J. V. Zambon. Groningen: Wolters-Noordhoff Verlag, 1990 [Reprinted 1996], pp. 219-221",
+      "schema:description": ". \"Schachnovelle\" in''Wahlfach Deutsch. Literatur''. Compiled and edited by R. Hazekamp & J. V. Zambon. Groningen: Wolters-Noordhoff Verlag, 1990 [Reprinted 1996], pp. 219-221",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45502,7 +45088,7 @@
       "klawiter:sourceSliceSha256": "24b77f45aa1c8655b1c7e24a5f03b818bba1e136f1b3cfe6fb0573880264b5e9",
       "klawiter:yearRaw": "1992",
       "schema:datePublished": "1992",
-      "schema:description": ". A cartoon caricature [2 drawings] of \\\"Schachnovelle\\\" drawn by S. Bastian in ''Das Magazin'' [Zürich] 8 [28/29 February 1992], p. 46 [\\\"Impressum: Wochenendbeilage des Tages-Anzeigers und der Berliner Zeitung\\\"]",
+      "schema:description": ". A cartoon caricature [2 drawings] of \"Schachnovelle\" drawn by S. Bastian in ''Das Magazin'' [Zürich] 8 [28/29 February 1992], p. 46 [\"Impressum: Wochenendbeilage des Tages-Anzeigers und der Berliner Zeitung\"]",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45538,7 +45124,7 @@
       "klawiter:sourceSliceSha256": "1cb0695ebf2f5565c885a0d29079e9636e4b7c4beec9bf043d7e014dcf644137",
       "klawiter:yearRaw": "1999",
       "schema:datePublished": "1999",
-      "schema:description": ". \\\"Die Herausforderung des geheimnisvollen Fremden\\\" in ''Welt am Sonntag'' [Hamburg], 11 March 1999 [No. 11], p. 44",
+      "schema:description": ". \"Die Herausforderung des geheimnisvollen Fremden\" in ''Welt am Sonntag'' [Hamburg], 11 March 1999 [No. 11], p. 44",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -45556,7 +45142,7 @@
       "klawiter:sourceSliceSha256": "0f0b102733be73282798e541b5acb86c33886c1758fa98042c3fd2f7b30da573",
       "klawiter:yearRaw": "2002",
       "schema:datePublished": "2002",
-      "schema:description": ".  \\\"Die Schachnovelle\\\" in ''Wort und Sinn. Ein Lese- und literarisches Arbeitsbuch für die Jahrgangsstufe 9/10''. Edited by Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290 Contains a photograph of Stefan Zweig and two illustrations",
+      "schema:description": ". \"Die Schachnovelle\" in ''Wort und Sinn. Ein Lese- und literarisches Arbeitsbuch für die Jahrgangsstufe 9/10''. Edited by Peter Mettenleiter. Paderborn: Schöningh Verlag, (2002), pp. 288-290 Contains a photograph of Stefan Zweig and two illustrations",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/279"
       }
@@ -46031,7 +45617,7 @@
         "@id": "klawiter:work/279"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "\\\"Kvadro Disk\\\""
+      "schema:publisher": "\"Kvadro Disk\""
     },
     {
       "@id": "klawiter:edition/279-2010-c",
@@ -46137,7 +45723,7 @@
         "N. Y."
       ],
       "schema:publisher": [
-        "\\\"33\\\" Film Video Group, Luton",
+        "\"33\" Film Video Group, Luton",
         "International Production Center, New York"
       ]
     },
@@ -49439,7 +49025,7 @@
       },
       "schema:locationCreated": "New York",
       "schema:numberOfPages": 272,
-      "schema:publisher": "E. P. Dutton  Publisher"
+      "schema:publisher": "E. P. Dutton Publisher"
     },
     {
       "@id": "klawiter:edition/503-1989-a",
@@ -51241,7 +50827,7 @@
       "klawiter:sourceSliceSha256": "0142f5d67354eb2487d6eb2d2487c1cd13fec6d884dfc4607b5a9fa6d5c7e3f9",
       "klawiter:yearRaw": "1868",
       "schema:datePublished": "1868",
-      "schema:description": "''Les Fleurs du Mal'' [Oeuvres complètes de Charles  Baudelaire. Vol. 1]. Introduction by Théophile Gautier [A biographical sketch of Baudelaire, dated 20 February 1869]. Frontispiece portrait by Félix Braquemond. 411p. Paris: Michel Lévy Frères, Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. References to the numbers of each poem are taken from the Michel Lévy edition",
+      "schema:description": "''Les Fleurs du Mal'' [Oeuvres complètes de Charles Baudelaire. Vol. 1]. Introduction by Théophile Gautier [A biographical sketch of Baudelaire, dated 20 February 1869]. Frontispiece portrait by Félix Braquemond. 411p. Paris: Michel Lévy Frères, Libraires Éditeurs. Reprinted: Paris: Calmann-Lévy, Éditeurs, 1886. References to the numbers of each poem are taken from the Michel Lévy edition",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/793"
       },
@@ -51260,7 +50846,7 @@
       "klawiter:sourceSliceSha256": "5f3164840ac12ec50f740fdace652b6323ade9670bb4cedc2d1d69f79e6f94d1",
       "klawiter:yearRaw": "1975",
       "schema:datePublished": "1975",
-      "schema:description": "\\\"Les Fleurs du mal\\\" [Oeuvres complètes. Vol. 1]. Text established and annotated by Claude Pichois. Paris: Éditions Gallimard. Vol. I, 1975. Vol. II, 1976. Both reprinted 1983. All 1975 references are to Vol. I",
+      "schema:description": "\"Les Fleurs du mal\" [Oeuvres complètes. Vol. 1]. Text established and annotated by Claude Pichois. Paris: Éditions Gallimard. Vol. I, 1975. Vol. II, 1976. Both reprinted 1983. All 1975 references are to Vol. I",
       "schema:exampleOfWork": {
         "@id": "klawiter:work/793"
       }
@@ -54976,7 +54562,7 @@
         "@id": "klawiter:work/1417"
       },
       "schema:locationCreated": "Beograd",
-      "schema:publisher": "Izdavačka Radna Organizacija \\\"Rad\\\""
+      "schema:publisher": "Izdavačka Radna Organizacija \"Rad\""
     },
     {
       "@id": "klawiter:edition/1526-1933-a",
@@ -56797,7 +56383,7 @@
       },
       "schema:locationCreated": "Zagreb",
       "schema:numberOfPages": 223,
-      "schema:publisher": "Naklada knjižare \\\"Zabavne biblioteke\\\" u Zagrebu"
+      "schema:publisher": "Naklada knjižare \"Zabavne biblioteke\" u Zagrebu"
     },
     {
       "@id": "klawiter:edition/1823-2007-a",
@@ -56849,7 +56435,7 @@
         "@id": "klawiter:work/1825"
       },
       "schema:locationCreated": "Beograd",
-      "schema:publisher": "Izdavačka Radna Organizacija \\\"Rad\\\""
+      "schema:publisher": "Izdavačka Radna Organizacija \"Rad\""
     },
     {
       "@id": "klawiter:edition/1837-1948-a",
@@ -56971,7 +56557,7 @@
         "@id": "klawiter:work/1851"
       },
       "schema:locationCreated": "Beograd",
-      "schema:publisher": "Izdavačka Radna Organizacija \\\"Rad\\\""
+      "schema:publisher": "Izdavačka Radna Organizacija \"Rad\""
     },
     {
       "@id": "klawiter:edition/1855-1959-a",
@@ -57007,7 +56593,7 @@
       },
       "schema:locationCreated": "Beograd, Serbia",
       "schema:numberOfPages": 415,
-      "schema:publisher": "Izdavačka Radna Organizacija \\\"Rad\\\""
+      "schema:publisher": "Izdavačka Radna Organizacija \"Rad\""
     },
     {
       "@id": "klawiter:edition/1889-1992-a",
@@ -57093,7 +56679,7 @@
       },
       "schema:locationCreated": "Moskva",
       "schema:numberOfPages": 591,
-      "schema:publisher": "Izdatel'stvo \\\"Khudozhestvennaia literatura\\\""
+      "schema:publisher": "Izdatel'stvo \"Khudozhestvennaia literatura\""
     },
     {
       "@id": "klawiter:edition/1949-2010-a",
@@ -57219,7 +56805,7 @@
       },
       "schema:locationCreated": "Moskva",
       "schema:numberOfPages": 380,
-      "schema:publisher": "Izdatel' stvo \\\"AST\\\""
+      "schema:publisher": "Izdatel' stvo \"AST\""
     },
     {
       "@id": "klawiter:edition/1977-1956-a",
@@ -57235,7 +56821,7 @@
         "@id": "klawiter:work/1977"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \\\"Khudozhestvennaia Literatura"
+      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \"Khudozhestvennaia Literatura"
     },
     {
       "@id": "klawiter:edition/1977-1960-a",
@@ -57267,7 +56853,7 @@
         "@id": "klawiter:work/1977"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Pravda\\\""
+      "schema:publisher": "Izdatel'stvo \"Pravda\""
     },
     {
       "@id": "klawiter:edition/1977-1992-a",
@@ -57283,7 +56869,7 @@
         "@id": "klawiter:work/1977"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Druzhba narodov\\\" / SP \\\"Lexica\\\""
+      "schema:publisher": "Izdatel'stvo \"Druzhba narodov\" / SP \"Lexica\""
     },
     {
       "@id": "klawiter:edition/1977-1993-a",
@@ -57299,7 +56885,7 @@
         "@id": "klawiter:work/1977"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'skii Tsenter \\\"TERRA\\\""
+      "schema:publisher": "Izdatel'skii Tsenter \"TERRA\""
     },
     {
       "@id": "klawiter:edition/1977-1996-a",
@@ -57315,7 +56901,7 @@
         "@id": "klawiter:work/1977"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Bibliosfera\\\""
+      "schema:publisher": "Izdatel'stvo \"Bibliosfera\""
     },
     {
       "@id": "klawiter:edition/1977-1999-a",
@@ -57347,7 +56933,7 @@
         "@id": "klawiter:work/1977"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Veche\\\""
+      "schema:publisher": "Izdatel'stvo \"Veche\""
     },
     {
       "@id": "klawiter:edition/1977-2001-b",
@@ -57517,7 +57103,7 @@
         "@id": "klawiter:work/2149"
       },
       "schema:locationCreated": "New York/London",
-      "schema:publisher": "W. W. Norton  & Company"
+      "schema:publisher": "W. W. Norton & Company"
     },
     {
       "@id": "klawiter:edition/2149-2006-a",
@@ -58578,7 +58164,7 @@
       },
       "schema:locationCreated": "Kiiv/Kiev",
       "schema:numberOfPages": 183,
-      "schema:publisher": "Vidavnitstvo khudozhn'oï literaturi \\\"Dnipro\\\""
+      "schema:publisher": "Vidavnitstvo khudozhn'oï literaturi \"Dnipro\""
     },
     {
       "@id": "klawiter:edition/2341-1981-a",
@@ -58596,7 +58182,7 @@
       },
       "schema:locationCreated": "Kiiv/Kiev",
       "schema:numberOfPages": 261,
-      "schema:publisher": "Vidavnitstvo khudozhn'oï literaturi \\\"Dnipro\\\""
+      "schema:publisher": "Vidavnitstvo khudozhn'oï literaturi \"Dnipro\""
     },
     {
       "@id": "klawiter:edition/2341-2010-a",
@@ -58614,7 +58200,7 @@
       },
       "schema:locationCreated": "Kharkiv",
       "schema:numberOfPages": 409,
-      "schema:publisher": "\\\"Folio\\\""
+      "schema:publisher": "\"Folio\""
     },
     {
       "@id": "klawiter:edition/2450-2010-a",
@@ -59091,7 +58677,7 @@
       },
       "schema:locationCreated": "Moskva",
       "schema:numberOfPages": 233,
-      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \\\"Geograficheskoi Literaturi\\\""
+      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \"Geograficheskoi Literaturi\""
     },
     {
       "@id": "klawiter:edition/2485-1956-b",
@@ -59125,7 +58711,7 @@
         "@id": "klawiter:work/2485"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \\\"Khudozhestvennaia Literatura\\\""
+      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \"Khudozhestvennaia Literatura\""
     },
     {
       "@id": "klawiter:edition/2485-1963-a",
@@ -59191,7 +58777,7 @@
         "@id": "klawiter:work/2485"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \\\"Khudozhestvennaia Literatura\\\""
+      "schema:publisher": "Gosudarstvennoe Izdatel'stvo \"Khudozhestvennaia Literatura\""
     },
     {
       "@id": "klawiter:edition/2485-1986-a",
@@ -59334,7 +58920,7 @@
         "@id": "klawiter:work/2485"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"AST\\\""
+      "schema:publisher": "Izdatel'stvo \"AST\""
     },
     {
       "@id": "klawiter:edition/2485-2011-a",
@@ -59354,7 +58940,7 @@
       },
       "schema:locationCreated": "Moskva",
       "schema:numberOfPages": 234,
-      "schema:publisher": "Izdatel'stvo \\\"Lomonosov\\\""
+      "schema:publisher": "Izdatel'stvo \"Lomonosov\""
     },
     {
       "@id": "klawiter:edition/2493-1940-a",
@@ -59976,7 +59562,7 @@
       },
       "schema:locationCreated": "Stockholm",
       "schema:numberOfPages": 175,
-      "schema:publisher": "Lind  & Co."
+      "schema:publisher": "Lind & Co."
     },
     {
       "@id": "klawiter:edition/2530-2018-b",
@@ -60274,7 +59860,7 @@
       },
       "schema:locationCreated": "Athēna",
       "schema:numberOfPages": 388,
-      "schema:publisher": "Ekdotikos Oikos \\\"K. M.\\\""
+      "schema:publisher": "Ekdotikos Oikos \"K. M.\""
     },
     {
       "@id": "klawiter:edition/2567-1971-a",
@@ -60681,7 +60267,7 @@
       },
       "schema:locationCreated": "Warszawa",
       "schema:numberOfPages": 337,
-      "schema:publisher": "Nakład \\\"Rój\\\" / \\\"Feniks\\\""
+      "schema:publisher": "Nakład \"Rój\" / \"Feniks\""
     },
     {
       "@id": "klawiter:edition/2591-1959-a",
@@ -61184,7 +60770,7 @@
         "@id": "klawiter:work/2595"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Khudozhestvennaia literatura\\\""
+      "schema:publisher": "Izdatel'stvo \"Khudozhestvennaia literatura\""
     },
     {
       "@id": "klawiter:edition/2595-1992-a",
@@ -61240,7 +60826,7 @@
         "@id": "klawiter:work/2595"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel’stvo “Druzhba  narodov” / SP  “Lexica”"
+      "schema:publisher": "Izdatel’stvo “Druzhba narodov” / SP “Lexica”"
     },
     {
       "@id": "klawiter:edition/2595-1993-a",
@@ -61288,7 +60874,7 @@
         "@id": "klawiter:work/2595"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Veche\\\""
+      "schema:publisher": "Izdatel'stvo \"Veche\""
     },
     {
       "@id": "klawiter:edition/2595-2003-a",
@@ -61337,7 +60923,7 @@
         "@id": "klawiter:work/2595"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"EKSMO\\\"-Press"
+      "schema:publisher": "Izdatel'stvo \"EKSMO\"-Press"
     },
     {
       "@id": "klawiter:edition/2598-1971-a",
@@ -63601,7 +63187,7 @@
       },
       "schema:locationCreated": "Moskva",
       "schema:numberOfPages": 494,
-      "schema:publisher": "\\\"Molodaia Gvardiia\\\""
+      "schema:publisher": "\"Molodaia Gvardiia\""
     },
     {
       "@id": "klawiter:edition/2991-1963-a",
@@ -63617,7 +63203,7 @@
         "@id": "klawiter:work/2991"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Pravda\\\""
+      "schema:publisher": "Izdatel'stvo \"Pravda\""
     },
     {
       "@id": "klawiter:edition/2991-1984-a",
@@ -63635,7 +63221,7 @@
       },
       "schema:locationCreated": "Minsk",
       "schema:numberOfPages": 399,
-      "schema:publisher": "\\\"Kharodnaia Asveta\\\""
+      "schema:publisher": "\"Kharodnaia Asveta\""
     },
     {
       "@id": "klawiter:edition/2991-1992-a",
@@ -63651,7 +63237,7 @@
         "@id": "klawiter:work/2991"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'stvo \\\"Druzhba Narodov\\\" / SP Lexica"
+      "schema:publisher": "Izdatel'stvo \"Druzhba Narodov\" / SP Lexica"
     },
     {
       "@id": "klawiter:edition/2991-1992-b",
@@ -63667,7 +63253,7 @@
         "@id": "klawiter:work/2991"
       },
       "schema:locationCreated": "Moskva",
-      "schema:publisher": "Izdatel'skii Tsentr \\\"TERRA\\\"\\\""
+      "schema:publisher": "Izdatel'skii Tsentr \"TERRA\"\""
     },
     {
       "@id": "klawiter:edition/2991-1994-a",
@@ -63683,7 +63269,7 @@
         "@id": "klawiter:work/2991"
       },
       "schema:locationCreated": "Tula",
-      "schema:publisher": "AO \\\"Grif\\\": Levska"
+      "schema:publisher": "AO \"Grif\": Levska"
     },
     {
       "@id": "klawiter:edition/3004-1939-a",
@@ -64839,7 +64425,7 @@
       },
       "schema:locationCreated": "Bratislava",
       "schema:numberOfPages": 229,
-      "schema:publisher": "Slovenský  Spisovatel'"
+      "schema:publisher": "Slovenský Spisovatel'"
     },
     {
       "@id": "klawiter:edition/3078-1937-a",
@@ -65400,7 +64986,7 @@
       },
       "schema:locationCreated": "Madrid",
       "schema:numberOfPages": 34,
-      "schema:publisher": "Revista Literaria \\\"Novelas y Cuentos\\\""
+      "schema:publisher": "Revista Literaria \"Novelas y Cuentos\""
     },
     {
       "@id": "klawiter:edition/3119-1962-a",
@@ -67447,420 +67033,6 @@
       "schema:publisher": "Uitgeverij Ad. Donker"
     },
     {
-      "@id": "klawiter:edition/3757-2016-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[2016]: Vittorio Klostermann Verlag, Frankfurt am Main'''",
-      "klawiter:pageCountRaw": "464p.",
-      "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "16e481cc4ddb56b85368dc598411725a97ad55eaa3eed9f571a99a1a130db279",
-      "klawiter:yearRaw": "2016",
-      "schema:datePublished": "2016",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      },
-      "schema:locationCreated": "Frankfurt am Main",
-      "schema:numberOfPages": 464,
-      "schema:publisher": "Vittorio Klostermann Verlag"
-    },
-    {
-      "@id": "klawiter:edition/3757-1911-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1911]''', p. 12",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "9dc2d4ea47aefbcd341ce61b946510df158e198c04ee109943a887c8b72ddafb",
-      "klawiter:yearRaw": "1911",
-      "schema:datePublished": "1911",
-      "schema:description": ", p. 12",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1914-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1914]''', pp. 12-19",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "c3b5158e2d2a6dc0e703754385bddfb640bc228f4dbeb1f7fb136d87508af4f4",
-      "klawiter:yearRaw": "1914",
-      "schema:datePublished": "1914",
-      "schema:description": ", pp. 12-19",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1916-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1916]''', pp. 19-21",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "727b7f53f499afbd1bb82c50828cf1b00b08bf07eaaaf8306d91ae0553cbb35c",
-      "klawiter:yearRaw": "1916",
-      "schema:datePublished": "1916",
-      "schema:description": ", pp. 19-21",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1917-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1917]''', pp. 21-22",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "298ed4ce32f61bd937ceac8d5d10dbb128b16062444de46fdffd1efeb5549a88",
-      "klawiter:yearRaw": "1917",
-      "schema:datePublished": "1917",
-      "schema:description": ", pp. 21-22",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1920-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1920]''', pp. 22-28",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "3dd784de252f3ae57f89c4e97f956346426699793bf73a7c9e7b85b4d76275a2",
-      "klawiter:yearRaw": "1920",
-      "schema:datePublished": "1920",
-      "schema:description": ", pp. 22-28",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1921-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1921]''', pp. 28-30",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "8aff014cd15fa8dc6de645e722aca0b04e0f68a291d744a099d8ce179ffed365",
-      "klawiter:yearRaw": "1921",
-      "schema:datePublished": "1921",
-      "schema:description": ", pp. 28-30",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1923-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1923]''', pp. 31-40",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "a4eb60d611f5632cf9c3f176ed58866b55634ff84d0d45bb8e2c6189a5bf2c8b",
-      "klawiter:yearRaw": "1923",
-      "schema:datePublished": "1923",
-      "schema:description": ", pp. 31-40",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1925-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1925]''', pp. 40-42",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "0284c99488cb6fae254a7db0f563cf550a82ce801d24252e3b946acdc7474d81",
-      "klawiter:yearRaw": "1925",
-      "schema:datePublished": "1925",
-      "schema:description": ", pp. 40-42",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1927-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1927]''', pp. 42-44",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "9c32cd59460a07c75c698f3e45727b79e339ec9c049d64da76d8cf3df14fac10",
-      "klawiter:yearRaw": "1927",
-      "schema:datePublished": "1927",
-      "schema:description": ", pp. 42-44",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1928-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1928]''', pp. 44-50",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "1e1df4a0fe08787c30e3248a663da00b34bc7cfeca007bbaba610dbab25393b9",
-      "klawiter:yearRaw": "1928",
-      "schema:datePublished": "1928",
-      "schema:description": ", pp. 44-50",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1929-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1929]''', pp. 50-51",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "194fc466c85a5895f4dbed7daa2b9867ed9efa0e528f2b3b8bb6da559b6de901",
-      "klawiter:yearRaw": "1929",
-      "schema:datePublished": "1929",
-      "schema:description": ", pp. 50-51",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1930-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1930]''', pp. 52-53",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "deb424fd8df5e2af776eec8a1951b3654642438c59d7e6eb2d35aa7229de4e3c",
-      "klawiter:yearRaw": "1930",
-      "schema:datePublished": "1930",
-      "schema:description": ", pp. 52-53",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1932-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1932]''', pp. 53-56",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "13917e51f80e3447b67a5b7c870002e1f1d4a1f2827d430337ad365cde33bb48",
-      "klawiter:yearRaw": "1932",
-      "schema:datePublished": "1932",
-      "schema:description": ", pp. 53-56",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1933-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1933]''', pp. 56-77",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "1720e4e00c4f903c24961c0f7b07159188255ee2c33a4bca8bc2965773f8e5cc",
-      "klawiter:yearRaw": "1933",
-      "schema:datePublished": "1933",
-      "schema:description": ", pp. 56-77",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1934-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1934]''', pp. 78-80",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "9ff04ff1508d67807a22085c690d91ea850ee3caf31be6027362fb7899ea5e77",
-      "klawiter:yearRaw": "1934",
-      "schema:datePublished": "1934",
-      "schema:description": ", pp. 78-80",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1935-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1935]''', pp. 80-86",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "2b3aa16db50bee947c21b89ee3bc34d0607e2e7029ad6d1f17821ee9dc169f8a",
-      "klawiter:yearRaw": "1935",
-      "schema:datePublished": "1935",
-      "schema:description": ", pp. 80-86",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1936-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1936]''', pp. 86-92",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "abce489b8f4369a658377c1b02038a808e216ddc295127e67400af7731aeeada",
-      "klawiter:yearRaw": "1936",
-      "schema:datePublished": "1936",
-      "schema:description": ", pp. 86-92",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1937-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1937]''', pp. 93-96",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "8ffedba19aa492ebcd14a58891401249210d2273b20de99c2a56a23f4cc5c4f2",
-      "klawiter:yearRaw": "1937",
-      "schema:datePublished": "1937",
-      "schema:description": ", pp. 93-96",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1938-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1938]''', pp. 96-97",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "949520bb74efd1a6d4e6b38d5966cdeadb65d4bfcf3877e12c145342b10c4f64",
-      "klawiter:yearRaw": "1938",
-      "schema:datePublished": "1938",
-      "schema:description": ", pp. 96-97",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1939-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1939]''', pp. 98-110",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "6e723105e7c7472ace8a1490a7b14893e624edff2735a1b9d1b103cb26fe4b2c",
-      "klawiter:yearRaw": "1939",
-      "schema:datePublished": "1939",
-      "schema:description": ", pp. 98-110",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1940-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1940]''', pp. 110-120",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "da6c7d308e1dbc7a30f2f35b8bfb2e59060f944a89180a6b06f9bf06429ab9e9",
-      "klawiter:yearRaw": "1940",
-      "schema:datePublished": "1940",
-      "schema:description": ", pp. 110-120",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
-      "@id": "klawiter:edition/3757-1942-a",
-      "@type": "schema:Book",
-      "klawiter:headerLine": "'''[1942]''', pp. 121-126",
-      "klawiter:reviewFlags": [
-        "missing-location",
-        "header-suffix"
-      ],
-      "klawiter:reviewStatus": "proposed",
-      "klawiter:sourcePageId": 3757,
-      "klawiter:sourceSliceSha256": "853fd4a67d025e27d87924c2143432b4f31450e1f2ff94ae4b2327b30f415a10",
-      "klawiter:yearRaw": "1942",
-      "schema:datePublished": "1942",
-      "schema:description": ", pp. 121-126",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work/3757"
-      }
-    },
-    {
       "@id": "klawiter:edition/3772-1956-a",
       "@type": "schema:Book",
       "klawiter:headerLine": "'''[1956]: Ḥilmī Murād, al-Qāhirah [Cairo]'''",
@@ -68431,7 +67603,7 @@
       "schema:exampleOfWork": {
         "@id": "klawiter:work/4101"
       },
-      "schema:publisher": "Beirut"
+      "schema:locationCreated": "Beirut"
     },
     {
       "@id": "klawiter:edition/4101-1962-a",
@@ -69066,7 +68238,7 @@
       },
       "schema:locationCreated": "Rīga",
       "schema:numberOfPages": 224,
-      "schema:publisher": "\\\"Grāmatu draugs\\\""
+      "schema:publisher": "\"Grāmatu draugs\""
     },
     {
       "@id": "klawiter:edition/4171-1959-a",
@@ -70157,7 +69329,7 @@
       "schema:exampleOfWork": {
         "@id": "klawiter:work/4353"
       },
-      "schema:publisher": "Stockholm"
+      "schema:locationCreated": "Stockholm"
     },
     {
       "@id": "klawiter:edition/4353-1984-a",
@@ -70440,7 +69612,7 @@
       },
       "schema:locationCreated": "Montevideo",
       "schema:numberOfPages": 284,
-      "schema:publisher": "Ediciones \\\"Humanidad\\\""
+      "schema:publisher": "Ediciones \"Humanidad\""
     },
     {
       "@id": "klawiter:edition/4440-1948-a",
@@ -71530,7 +70702,7 @@
       },
       "schema:locationCreated": "Tiranë",
       "schema:numberOfPages": 493,
-      "schema:publisher": "Botimet \\\"Omsca-1\\\""
+      "schema:publisher": "Botimet \"Omsca-1\""
     },
     {
       "@id": "klawiter:edition/4830-2018-a",
@@ -71551,7 +70723,7 @@
       },
       "schema:locationCreated": "Tiranë",
       "schema:numberOfPages": 280,
-      "schema:publisher": "Botimet \\\"Omsca-1\\\""
+      "schema:publisher": "Botimet \"Omsca-1\""
     },
     {
       "@id": "klawiter:edition/4851-1992-a",
@@ -72786,7 +71958,7 @@
       },
       "schema:locationCreated": "Gorredijk",
       "schema:numberOfPages": 45,
-      "schema:publisher": "Grafisch Atelier \\\"de Prent\\\""
+      "schema:publisher": "Grafisch Atelier \"de Prent\""
     },
     {
       "@id": "klawiter:edition/5055-1930-a",
@@ -74018,7 +73190,7 @@
       },
       "schema:locationCreated": "Ulaanbaatar",
       "schema:numberOfPages": 302,
-      "schema:publisher": "Monsudar Khevleliin Gazar  [Monsudar Publishing House]"
+      "schema:publisher": "Monsudar Khevleliin Gazar [Monsudar Publishing House]"
     },
     {
       "@id": "klawiter:edition/5585-2016-b",
@@ -75645,7 +74817,7 @@
       },
       "schema:locationCreated": "Utrecht",
       "schema:numberOfPages": 65,
-      "schema:publisher": "De  Roos"
+      "schema:publisher": "De Roos"
     },
     {
       "@id": "klawiter:edition/7460-1989-a",
@@ -75666,15 +74838,15 @@
       "schema:publisher": "Fischer Taschenbuch Verlag"
     }
   ],
-  "klawiter:algorithmVersion": "1.4",
+  "klawiter:algorithmVersion": "1.5",
   "klawiter:authorityNote": "This Work/Edition graph is the canonical dataset for pages with multiple editions; the flat dataset klawiter.jsonld is a derived convenience projection.",
   "klawiter:derivedProjection": {
     "@id": "klawiter:klawiter-bibliography"
   },
   "klawiter:reviewContract": "Agentic sample decisions are recorded within their exact selectors as proposals; only a person or an exact rule confirms an edition. Contested bindings remain explicit claims with open decisions, an LLM agent's resolution standing in their review history as a proposal.",
   "klawiter:reviewEvidenceSha256": "388ade9b6a8ff93949c366472a2c5311cccd5749dc0ee5ad4f164db5c487f0cf",
-  "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header",
-  "klawiter:sourceCorpusSha256": "b835a27e222fdd2e3a6b9eaf8d70ed59c9a6784c00f6568e3b79f3680909e01d",
+  "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header that a page locator alone does not follow",
+  "klawiter:sourceCorpusSha256": "3806734bede4964209056c94c151ee71d172f217f7bd59a9834d781150b5ef08",
   "pageSummaries": [
     {
       "editionCount": 5,
@@ -77817,13 +76989,6 @@
       "reviewFlagCount": 0,
       "sourcePageId": 3708,
       "sourceTextId": 27063
-    },
-    {
-      "editionCount": 23,
-      "headerCount": 23,
-      "reviewFlagCount": 22,
-      "sourcePageId": 3757,
-      "sourceTextId": 55360
     },
     {
       "editionCount": 3,
@@ -86181,83 +85346,6 @@
         },
         {
           "@id": "klawiter:edition/3708-1980-a"
-        }
-      ]
-    },
-    {
-      "@id": "klawiter:work/3757",
-      "@type": "schema:CreativeWork",
-      "klawiter:sourcePageId": 3757,
-      "schema:name": "Thomas Mann - Stefan Zweig Briefwechsel, Dokumente und Schnittpunkte",
-      "schema:workExample": [
-        {
-          "@id": "klawiter:edition/3757-2016-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1911-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1914-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1916-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1917-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1920-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1921-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1923-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1925-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1927-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1928-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1929-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1930-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1932-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1933-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1934-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1935-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1936-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1937-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1938-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1939-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1940-a"
-        },
-        {
-          "@id": "klawiter:edition/3757-1942-a"
         }
       ]
     },

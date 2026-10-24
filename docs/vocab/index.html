@@ -173,6 +173,7 @@
     <tr><td><code><a href="pageNamespace/">klawiter:pageNamespace</a></code></td><td class="kind">Property</td><td>MediaWiki namespace, for example 0 for main, 14 for category.</td></tr>
     <tr><td><code><a href="isRedirect/">klawiter:isRedirect</a></code></td><td class="kind">Property</td><td>True if the entry is a redirect alias.</td></tr>
     <tr><td><code><a href="redirectTarget/">klawiter:redirectTarget</a></code></td><td class="kind">Property</td><td>Title of the target entry for redirects.</td></tr>
+    <tr><td><code><a href="wikiPageTitle/">klawiter:wikiPageTitle</a></code></td><td class="kind">Property</td><td>The redirect page&#x27;s own title in the wiki, the name a reference to the redirect uses; the entry&#x27;s schema:name is its target&#x27;s title.</td></tr>
     <tr><td><code><a href="headerLine/">klawiter:headerLine</a></code></td><td class="kind">Property</td><td>The unmodified source header line an edition was segmented from.</td></tr>
     <tr><td><code><a href="headerSeries/">klawiter:headerSeries</a></code></td><td class="kind">Property</td><td>Series notation retained from an edition header, including its source brackets.</td></tr>
     <tr><td><code><a href="yearRaw/">klawiter:yearRaw</a></code></td><td class="kind">Property</td><td>The year exactly as written in the source header, including ca. notation.</td></tr>
@@ -263,6 +264,36 @@
     <tr><td><code><a href="passageText/">klawiter:passageText</a></code></td><td class="kind">Property</td><td>The citation passage an address stands in, with the dump&#x27;s quote escape resolved.</td></tr>
     <tr><td><code><a href="passageStart/">klawiter:passageStart</a></code></td><td class="kind">Property</td><td>Character offset where the citation passage begins in the page&#x27;s source text in dump form.</td></tr>
     <tr><td><code><a href="passageEnd/">klawiter:passageEnd</a></code></td><td class="kind">Property</td><td>Character offset where the citation passage ends, exclusive, in the page&#x27;s source text in dump form.</td></tr>
+  </tbody>
+</table>
+
+<h2>Rule gap properties</h2>
+<table>
+  <thead>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code><a href="ruleGaps/">klawiter:ruleGaps</a></code></td><td class="kind">Property</td><td>The flat fields of an entry that a stated rule left empty although the source page carries text there, each with the field and the rule. A rule gap is no source gap: statement-bindings empties a place, publisher or translator that no position of the page&#x27;s first statement binds to the described publication, damaged-letter a value that kept a letter whose bytes were lost before the dump was written.</td></tr>
+    <tr><td><code><a href="gapField/">klawiter:gapField</a></code></td><td class="kind">Property</td><td>The flat field a rule left empty, named by its key in the interface record (location, publisher, translator, title and others).</td></tr>
+    <tr><td><code><a href="gapRule/">klawiter:gapRule</a></code></td><td class="kind">Property</td><td>Identifier of the rule that left a flat field empty: statement-bindings or damaged-letter.</td></tr>
+  </tbody>
+</table>
+
+<h2>Wiki revision properties</h2>
+<table>
+  <thead>
+    <tr><th>Term</th><th>Kind</th><th>Definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code><a href="revisionDates/">klawiter:revisionDates</a></code></td><td class="kind">Property</td><td>The first and last revision of the wiki page that the dump&#x27;s revision table holds, with the rule that selected them, the source table and the revision identifiers. The revisions of the wiki&#x27;s automatic Redirect fixer account are not counted.</td></tr>
+    <tr><td><code><a href="revisionRule/">klawiter:revisionRule</a></code></td><td class="kind">Property</td><td>Identifier of the deterministic rule that selected the first and last revision of a wiki page.</td></tr>
+    <tr><td><code><a href="sourceTable/">klawiter:sourceTable</a></code></td><td class="kind">Property</td><td>The table of the MediaWiki dump a value was read from, such as zweig_revision.</td></tr>
+    <tr><td><code><a href="firstRevisionId/">klawiter:firstRevisionId</a></code></td><td class="kind">Property</td><td>rev_id of the earliest counted revision of the wiki page in the dump.</td></tr>
+    <tr><td><code><a href="firstRevisionTimestamp/">klawiter:firstRevisionTimestamp</a></code></td><td class="kind">Property</td><td>rev_timestamp (UTC) of the earliest counted revision of the wiki page in the dump. Where historyStartsInDump is false the page was recorded earlier than this date.</td></tr>
+    <tr><td><code><a href="lastRevisionId/">klawiter:lastRevisionId</a></code></td><td class="kind">Property</td><td>rev_id of the latest counted revision of the wiki page in the dump.</td></tr>
+    <tr><td><code><a href="lastRevisionTimestamp/">klawiter:lastRevisionTimestamp</a></code></td><td class="kind">Property</td><td>rev_timestamp (UTC) of the latest counted revision of the wiki page in the dump.</td></tr>
+    <tr><td><code><a href="historyStartsInDump/">klawiter:historyStartsInDump</a></code></td><td class="kind">Property</td><td>True where the first counted revision has no parent revision, so the dump holds the page&#x27;s history from its creation; false where its parent revision is absent from the dump.</td></tr>
+    <tr><td><code><a href="absentParentRevisionId/">klawiter:absentParentRevisionId</a></code></td><td class="kind">Property</td><td>rev_parent_id of the first counted revision where that revision is absent from the dump.</td></tr>
   </tbody>
 </table>
 
