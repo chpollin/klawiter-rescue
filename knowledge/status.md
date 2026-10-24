@@ -13,16 +13,16 @@ This is the current status snapshot; future work lives in [Plan](plan.md) and re
 
 ## Verified data snapshot — 24 October 2026
 
-The snapshot follows commit 71a0fe0 of 24 October, which makes every decision of an LLM agent a proposal, so no link is published and no edition or claim is confirmed until a person or an exact rule decides, empties flat values no rule binds to the described publication on pages without edition headers, and adds 3,007 translation statements on 181 pages. Earlier rounds stand in the [Journal](journal.md).
+The snapshot follows commit 64cbaea of 24 October. Since 71a0fe0 every decision of an LLM agent is a proposal, so no link is published and no edition or claim is confirmed until a person or an exact rule decides, flat values no rule binds are gaps by rule, and 181 pages carry translation statements. 64cbaea dates every page by its first and last human revision, keeps a gap by rule apart from a source gap, resolves redirects in the main namespace and reports 74 broken ones in `data/output/unresolved-redirects.json`, and moves Gate 1 to algorithm 1.5, which takes page 3757 out of the multi-edition corpus. Earlier rounds stand in the [Journal](journal.md).
 
 | Population | Current result | Evidence |
 |---|---:|---|
 | Current source pages / canonical records | 6,725 / 6,725 | [quality](../data/output/quality-report.json), [census](../data/output/census-report.json) |
-| Redirects / frontend records | 1,538 / 5,187 | redirects from the [quality report](../data/output/quality-report.json); the frontend's `_meta.redirectCount` reads 1,523: the redirect map merges title aliases, but keys that are now entry titles and keys that differed only by a dump quote escape are no longer separate (no key lost its resolution) |
+| Redirects / frontend records | 1,538 / 5,187 | redirects from the [quality report](../data/output/quality-report.json); the frontend's `_meta.redirectCount` reads 1,517: the map merges title aliases, resolves in the main namespace only and leaves out the redirects whose target no current page carries, which the [unresolved-redirects report](../data/output/unresolved-redirects.json) lists with their kind |
 | Bibliography entries visible in the interface | 4,758 | namespace 0, excluding redirects |
-| Work / edition / source annotation nodes | 447 / 2,077 / 2,077 (and 1 candidate work) | [Gate 1 manifest](../data/output/editions/manifest.json) |
-| Confirmed / proposed / contested editions | 0 / 2,076 / 1 | same manifest and graph |
-| Prioritized edition / reconciliation review cases | 354 / 930 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
+| Work / edition / source annotation nodes | 446 / 2,054 / 2,054 (and 1 candidate work) | [Gate 1 manifest](../data/output/editions/manifest.json) |
+| Confirmed / proposed / contested editions | 0 / 2,053 / 1 | same manifest and graph |
+| Prioritized edition / reconciliation review cases | 332 / 929 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
 | Publishable location / work / agent links | 0 / 0 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json); the twenty places decided only by the test fixture are proposed again |
 | Open authority / source-revision / edition claims | 17 / 10 / 1 | same manifest |
 | Decided authority / edition claims | 0 / 0 | same manifest |

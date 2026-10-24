@@ -21,6 +21,18 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Wiki pages dated, gaps by rule, redirects and edition graph corrected
+
+**Round.** Implementation by an agent on the wiki pipeline, covering the open M1 wiki items and the root causes of the data reach audit, checked by the coordinator with both suites, both gates and a repeated production run whose main outputs were byte-identical.
+
+**Changed.** Every page carries its first and last human revision from the dump's revision table, and a record whose history the dump truncates says so. A value with a damaged letter becomes a gap by rule, and flat values are compared and published in the form the wiki showed, which closes the double-space finding of the retired lab (handoff point "Two findings of the retired lab"). A value the binding rule emptied carries the provenance `rule-gap` with its rule, and verification counts it apart from a false negative. Redirects resolve in the main namespace, which repairs three blocked redirects, and those whose target no current page carries are listed in a report with their kind and own page title. The edition graph reads a place as a place in a single imprint, leaves the dump form and no longer forms editions from year headers with a page locator (Gate 1 algorithm 1.5). Structure pages carry no author ([Data](data.md), [Pipeline](pipeline.md)).
+
+**Decided.** The Redirect fixer's revisions do not date a page, because they are maintenance and never open a human history. Dating truncated histories from the patrol log would be a second rule over another table and stays undone. Unresolved redirects are a report, because an absent target offers no competing interpretations for a claim. Page 3757 left the multi-edition corpus as a consequence of the ratified decomposition rule, without a new ratification.
+
+**Open.** The card does not yet show revision dates and gaps by rule; the coverage test pins them until the record desk does. The point left [Handoff](handoff.md).
+
+---
+
 ## 2026-10-24 — Measurement design, second correction
 
 **Round.** Implementation by an agent on the measurement code, checked by the coordinator with the gate and a refix of the admissible classes on the final code.

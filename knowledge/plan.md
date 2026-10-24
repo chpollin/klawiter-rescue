@@ -104,7 +104,7 @@ Snapshot of 2026-10-24.
 
 | Milestone or item | Status | Notes |
 |---|---|---|
-| Wiki data true to their source passage | in progress | proposals, gaps and translation statements committed (71a0fe0); section mentions typed and the coverage test made honest (217acef); revision dates, damaged letters and the root causes of the data reach audit in progress |
+| Wiki data true to their source passage | in progress | proposals, gaps and translation statements (71a0fe0); section mentions typed and the coverage test made honest (217acef); revision dates, damaged letters, reader-form values, gaps by rule, namespace-aware redirects with a report of the broken ones, edition graph at Gate 1 algorithm 1.5 and no author on structure pages (64cbaea); the second fresh-context review round is open |
 | Print data ready for review | completed | 7147b94: reading gaps closed, containment predicate, named second field, overlap report `p07b_overlap.py`, p12 writes data only; admissible classes refixed without rehash, remap or redrawn sample |
 | Measurement design corrected | completed | 5db70c1 |
 | Measurement design, second correction | in progress | decision rule at zero errors, agreement coefficients, anchoring, seeded order, hidden repeats and reporting fields implemented; protocol in the review mode, its pin in the gate and the benchmark order open |
