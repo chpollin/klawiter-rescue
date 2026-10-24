@@ -22,7 +22,8 @@ ITEM = r"\d{1,4}[a-z]?(?:\s?-\s?\d{1,4}[a-z]?)?\*?(?:\[\d{1,3}[a-z]?\](?=\s?(?:,
 REFERENCE = re.compile(
     r"(?<![A-Za-z0-9])(?<!\bpp\. )(?<!\bp\. )(?<!\bS\. )(?<!\bBook )(?<!\bBooks )"
     r"(?<!\bLibrary )(?<!\bSeries )(?<!\d-)(?<!\d- )(?<!\d–)"
-    rf"([A-R])(A[12])?\s?({ITEM}(?:\s?(?:,|&)\s?{ITEM}(?![A-Za-z]))*)"
+    # Joined lines may leave two spaces after the letter ("DA2  6").
+    rf"([A-R])(A[12])?\s{{0,2}}({ITEM}(?:\s?(?:,|&)\s?{ITEM}(?![A-Za-z]))*)"
 )
 INTRO = (
     ("correction", re.compile(r"Correction to\s*$")),

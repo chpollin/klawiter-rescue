@@ -30,7 +30,7 @@ in knowledge/print-volumes.md (Entry anatomy):
 import re
 
 from _addresses import REFERENCE, SUFFIX_TO_VOLUME, parse_items
-from _common import MONTH
+from _common import MONTH, REPRINTED
 from _schema import LANGUAGE_VARIANTS, LANGUAGES, iter_values
 
 LANGUAGE_BY_FOLD = {name.lower(): name for name in LANGUAGES} | LANGUAGE_VARIANTS
@@ -97,9 +97,10 @@ YEAR = re.compile(r"(?<!\d)(1[5-9]\d\d|20[0-2]\d)(?!\d)")
 ZONE_END = re.compile(
     r"\b(?:Rep|REP|REV(?: VERSION)?|Rev\. version|EXC(?:ERPTS?)?|Excerpts?|"
     r"Contents|Con-\s?tents|Contains|TRANSLATIONS?|Translations|FIE|"
-    r"Sub\. (?:eds?|imprs?)\.(?:/imprs?\.)?|Reprinted(?: in| as)?|Further editions|"
-    r"(?:Non-)?Fischer Editions/Reprints|Book editions?|Reviews?|Review of|First printing)\s?:"
-    r"|\bSee\b|\bReprinted\b|\bSub\. (?:eds?|imprs?)\.(?:/imprs?\.)?"
+    rf"Sub\. (?:eds?|imprs?)\.(?:/imprs?\.)?|{REPRINTED}|Further editions|"
+    r"(?:Non-)?Fischer Editions/Reprints|Book editions?|Reviews?|Re-?\s?view of|First printing)\s?:"
+    # "See-Verlag" is a publisher.
+    r"|\bSee\b(?!-)|\bReprinted\b|\bSub\. (?:eds?|imprs?)\.(?:/imprs?\.)?"
 )
 # Each opening quote with its closing ones; single quotes may stand inside
 # double ones (“… ‘…’ …”).
@@ -181,7 +182,9 @@ ROLE_WORDS = {
 }
 ABBREVIATED = r"(?:Tr|Trls?|Eds?|Comp|Sel|Intro|Frw|Pref|Aftw|Illus|Comt|Dir|Prod)\."
 CREDIT = re.compile(
-    r"(?:^|(?<=[.\];:] )|(?<=\[)|(?<=\. ))"
+    # A credit opens a sentence, also after the double space of a joined line
+    # or right after "].".
+    r"(?:^|(?<=[.\];:] )|(?<=[.\];:]  )|(?<=\[)|(?<=\]\.))"
     rf"(?P<phrase>{ABBREVIATED}(?:\s?/\s?[A-Z][a-z]+\.?(?: [a-z]+\.)?)*"
     r"|(?:Translator|Translators|Trl\.|Tr\.) not indicated"
     r"|[A-Z][a-z]+(?:[ /-](?:[a-z’']+|[A-Z][a-z]+)){0,10}? by"
@@ -274,8 +277,9 @@ LABEL_WORDS = frozenset(
 )
 LABEL_PHRASES = frozenset(("new edition", "new ed.", "new ed", "new special edition"))
 PLACE_ABBREVIATION = re.compile(r"\b(?:St|Ste|S|a|N|Mt|Ft|Bad)\.\s$")
+# Joined lines leave double spaces ("Publisher,  2005"), hence \s{1,2}.
 IMPRINT_YEAR = re.compile(
-    r", (?P<open>[\[(])?(?P<circa>ca\.\s)?(?P<year>1[5-9]\d\d|20[0-2]\d)(?P<close>[\])])?"
+    r",\s{1,2}(?P<open>[\[(])?(?P<circa>ca\.\s)?(?P<year>1[5-9]\d\d|20[0-2]\d)(?P<close>[\])])?"
     r"(?:\s?[-/–]\s?[\[(]?(?P<end>1[5-9]\d\d|20[0-2]\d)[\])]?)?(?!\d)"
 )
 COLON_YEAR = re.compile(
@@ -334,7 +338,9 @@ SERIES_STOP = re.compile(
     r"Reprinted|Licensed|Translations|Contains|Concerning|First|Stage|\d)"
     r"|\b(?:ed\.|copies|impr|Tsd\.)|\b[Ee]dition\b"
 )
-INFORMANT = re.compile(r"\[(?P<sigla>[A-Z]{2,5}(?:/[A-Z]{2,5})*)\]")
+# "[EXC]" and "[FAC]" are the volumes' general abbreviations (excerpt,
+# facsimile), no informant sigla.
+INFORMANT = re.compile(r"\[(?P<sigla>(?!(?:EXC|FAC)\])[A-Z]{2,5}(?:/[A-Z]{2,5})*)\]")
 BRACKET = re.compile(r"\[(?P<inner>[^\[\]]{3,600})\]")
 VARIANT = re.compile(
     r"\[(?:Under the titles? |Here entitled |Released (?:also |in [^,\]]{2,30} )?"
@@ -355,7 +361,7 @@ SIGLUM_PERIODICAL = re.compile(
     r"(?:\s?-\s?[\divxlc()\[\]]+)?))?"
 )
 _SPELLED = (
-    r"(?P<title>[A-Z][^()\[\]“”\"„]{1,150}?)\s+[(\[](?P<place>[A-Z][^()\[\]]{1,50})"
+    r"(?P<title>[A-ZÀ-ÞĀ-ž][^()\[\]“”\"„]{1,150}?)\s+[(\[](?P<place>[A-ZÀ-ÞĀ-ž][^()\[\]]{1,50})"
     r"[)\]],\s*"
     r"(?:(?P<volume>(?:Year \d+ / )?(?:Vol\. )?\d+)(?::\s?(?P<issue>[\d/]+))?\s+"
     r"[(\[](?P<date>[^()\[\]]{3,40})[)\]]"
@@ -395,16 +401,19 @@ PAGES = re.compile(
 # "SIGL: Zweig to X, 1 letter, 27 Oct. 1912." runs past the dot of a
 # month to the end of the holding.
 HOLDING_REPOSITORY = re.compile(
-    r"(?P<repo>[A-Z][A-Z]{1,5}): (?P<text>[^;]+?)(?=;\s|;?$|\s\[|\.?$|\.\s(?![\da-z]))"
+    # A short note before a comma ("1 letter [Copy], 15 Aug. 1940") stays.
+    r"(?P<repo>[A-Z][A-Z]{1,5}): (?P<text>[^;]+?)"
+    r"(?=;\s|;?$|\s\[(?![^\[\]]{1,40}\],)|\.?$|\.\s(?![\da-z]))"
 )
 HOLDING_LETTERS = re.compile(
     r"(?:Zweig|[A-ZÀ-Þ][\w’'-]+(?: (?:von |van |de |der |du |di |da |zu )?[A-ZÀ-Þ][\w’'-]+){0,3}) to "
     r"(?:Zweig|[A-ZÀ-Þ][\w’'()-]+(?: (?:von |van |de |der |du |di |da |zu )?[A-ZÀ-Þ][\w’'()-]+){0,3}), "
     r"(?:\d+|one|two) (?:letters?|postcards?|cards?|notes?|telegrams?|"
     r"calling cards?)"
-    # The holding runs past the dot of a month, "ca." and "n. d.", and of a
-    # date in figures ("18.12.1912").
-    r"(?:\b(?:Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec|ca|n\.\s?d)\.|\.(?=\d)|[^.;\[])*"
+    # The holding runs past the dot of a month, "ca." and "n. d.", of a date in
+    # figures ("18.12.1912") and past a short note ("1 letter [Copy], 15 Aug.").
+    r"(?:\b(?:Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec|ca|n\.\s?d)\.|\.(?=\d)"
+    r"|\[[^\[\]]{1,40}\](?=,)|[^.;\[])*"
 )
 LOCATED = re.compile(
     r"\b(?:is|are) located (?:in|at) (?:the )?(?P<repo>[A-Z][\w ,.-]{1,80}?)(?=[.\[]|$)"
@@ -471,7 +480,7 @@ EVENT_PLACE = re.compile(
     r"\]\.\s(?P<place>[A-Z][\w./ -]{1,40}?),\s(?=\d|[A-Z][a-z]+ \d)"
     r"|Premiere(?: \w+)?[,:]\s(?P<pplace>[^.]{3,80}?),\s(?=\d{1,2} \w+\.? \d{4})"
 )
-REVIEW_LABEL = re.compile(r"\bREV:\s?|\bReview of:\s?")
+REVIEW_LABEL = re.compile(r"\bREV:\s?|\bRe-?\s?view of:\s?")
 CONTENTS_LABEL = re.compile(
     r"\b(?:Contents(?:\s?\[[^\]]{1,40}\])?\s?[:.]|Con-\s?tents\s?:|Contains\s?:"
     r"|Zweig references\s?:|Letters, [^:]{3,60}:)"

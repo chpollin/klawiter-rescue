@@ -181,6 +181,45 @@ def test_a_reviewed_book_in_a_rev_list_opens_with_its_author():
     assert val(out["persons"][0], "name") == "Vorname Nachname"
 
 
+def test_general_abbreviations_are_no_informants():
+    out = read(
+        "[1]. SIGL: Zweig to Nachname, 1 letter [EXC], 22 July 1938 [AB].", part="K"
+    )
+    assert [val(i) for i in out.get("informants", [])] == ["AB"]
+    assert val(out["holdings"][0], "text").endswith("1938")
+
+
+def test_a_periodical_title_may_open_with_a_non_ascii_letter():
+    out = read(
+        '12 "Ein Aufsatz" in Österreichische Blätter (Wien), 5:57 (30 Nov. 1905), 222.',
+        volume="A1",
+        part="D",
+    )
+    assert val(out["periodicals"][0], "title") == "Österreichische Blätter"
+
+
+def test_a_double_space_does_not_hide_credit_imprint_or_address():
+    out = read(
+        "[1]. Titel.  Translated by Vorname Nachname.  99p. Ort: Verlag,  2005. See DA2  6.",
+        volume="A2",
+        part="G",
+    )
+    assert [val(p, "name") for p in out["persons"]] == ["Vorname Nachname"]
+    assert val(out["imprints"][0], "year") == 2005
+    assert [m.group(3) for m in REFERENCE.finditer("See DA2  6.")] == ["6"]
+
+
+def test_a_hyphenated_reprint_label_still_splits():
+    from _objects import SPLIT_LABEL
+
+    for label in (
+        "Reprin- ted in:",
+        "Reprinted [slightly revised] in:",
+        "Reprinted in:",
+    ):
+        assert SPLIT_LABEL.search(label).group("reprint")
+
+
 def test_rule_patterns_hold_no_control_character():
     import _fields
 

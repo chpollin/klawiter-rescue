@@ -34,6 +34,10 @@ MONTH = (
     r"Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?(?![A-Za-zÀ-ÿ])"
 )
 
+# "Reprinted in", also hyphenated at a line end ("Reprin- ted in") or with a
+# note ("Reprinted [slightly revised] in").
+REPRINTED = r"Re-?\s?prin-?\s?ted(?:\s\[[^\[\]]{1,40}\])?(?: in| as)?"
+
 # WordPerfect substitute fonts and the stand-ins they leave in the text layer.
 DEFECT_CHARS = re.compile("[￿\x00─-╿]")
 DEFECT_FONT = re.compile(r"^WP-")

@@ -31,7 +31,7 @@ and that probe.
 
 import re
 
-from _common import MONTH
+from _common import MONTH, REPRINTED
 from _lines import STUB
 
 # Item numbers run to three digits; "[1925]." is a year closing a sentence.
@@ -44,14 +44,14 @@ CONTENTS = re.compile(
 )
 # "in [1]. ... [2]. ..." governs the whole list that follows "in".
 OBJECT_LABEL = re.compile(
-    r"\b(?:FIE|Rep|REP|EXC|Excerpts?|EXCERPTS|Reprinted(?: in| as)?|[Pp]rinted in|"
+    rf"\b(?:FIE|Rep|REP|EXC|Excerpts?|EXCERPTS|{REPRINTED}|[Pp]rinted in|"
     r"(?:Non-)?Fischer Editions/Reprints|Editions/Reprints|TRANSLATIONS?|"
     r"Translations?|REV|Reviews?)\s?:"
     r"|\bin(?=\s*\[\d{1,3}[a-z]?\]\s?\.)"
 )
 # Labels that introduce another publication; the group name is its relation.
 SPLIT_LABEL = re.compile(
-    r"\b(?:(?P<reprint>Rep|REP|Reprinted(?: in| as)?)\s?:"
+    rf"\b(?:(?P<reprint>Rep|REP|{REPRINTED})\s?:"
     r"|(?P<revised>Rev\. version|REV VERSION|Revised version)\s?:"
     r"|(?P<excerpt>EXC|EXCERPTS?|Excerpts?)\s?:"
     r"|(?P<translation>TRANSLATIONS?|Translations?)\s?:"
