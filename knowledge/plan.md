@@ -109,7 +109,7 @@ Snapshot of 2026-10-24.
 | Measurement design corrected | completed | 5db70c1 |
 | Measurement design, second correction | in progress | decision rule at zero errors, agreement coefficients, anchoring, seeded order, hidden repeats and reporting fields implemented; protocol in the review mode, its pin in the gate and the benchmark order open |
 | Reviewable workbench | completed | fffcb29 with the reviewer filter of the review server |
-| Record desk and sitemap | in progress | increment 1 in progress; decision recorded in bc5e8af7; the card's zero coverage gaps of fffcb29 rested on hidden markers, the test is being corrected |
+| Record desk and sitemap | in progress | increment 1 committed (53b9397: Documentation, help dialog, footer imprint, start-page labels, page check tool); increment 2 in progress under the decisions of design.md; the coverage test counts only what a reader sees (217acef); Frontend and Print viewer describe the state before increment 1 until the knowledge pass after increment 2 |
 | Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; [Print volumes](print-volumes.md) split into the volumes as domain and [Print pipeline](print-pipeline.md) |
 | M2 | pending | entry: M1 |
 
