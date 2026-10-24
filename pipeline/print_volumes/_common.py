@@ -4,7 +4,7 @@ The print strand is a script pipeline outside the production run. Its inputs
 are the three PDFs in data/print/ (gitignored, rights unresolved), and every
 derived file goes to data/print/derived/, which the same ignore rule covers,
 because lines and reports carry the compiler's text. Only aggregated findings
-move into knowledge/print-volumes.md.
+move into knowledge/print-volumes.md and knowledge/print-pipeline.md.
 """
 
 import json

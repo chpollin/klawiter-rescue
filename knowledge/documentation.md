@@ -28,7 +28,7 @@ Project prose is English, following the operator's August 2026 decision. Histori
 | `knowledge/print-wiki-merge.md` | model, measurement rules, goal and steps of the merged bibliography |
 | `knowledge/plan.md` | milestones, their exit conditions and the status tracker of future work |
 | `knowledge/handoff.md` | received results still waiting to be checked, integrated or rejected; a point leaves it with a journal record |
-| `knowledge/print-volumes.md`, `knowledge/print-viewer.md` | structure of the print volumes and the reading strand; requirements and acceptance of the card workbench; no print text, paraphrase with PDF pages instead |
+| `knowledge/print-volumes.md`, `knowledge/print-pipeline.md`, `knowledge/print-viewer.md` | structure and conventions of the print volumes; stages, measurement and reproduction of the print strand, with figures in the local reports; requirements and acceptance of the card workbench; no print text, paraphrase with PDF pages instead |
 | `knowledge/coordination.md` | roles, path ownership and dependencies of parallel sessions; no project state |
 | `.github/ISSUE_TEMPLATE/*.md` | explicitly labelled proposals; point to current scope and avoid claims of implemented evaluation features |
 | `data/corrections/README.md` | exact patch-store examples, validation and replay semantics |

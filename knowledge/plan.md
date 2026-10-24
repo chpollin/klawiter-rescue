@@ -42,7 +42,7 @@ Wiki data true to their source passage
 - Still open: the values that keep one damaged letter after the encoding repair become gaps by rule; the first and last revision of each wiki page enter the record as a deterministic rule over the dump's revision table, so that a page first recorded after Addendum II closed in August 2009 is datable as wiki-only; a section mention such as "LA2" among the cited print addresses is typed as a section and not as an entry; a second fresh-context review round finds no new defect class.
 
 Print data ready for review
-- Done when the reading gaps of [Print volumes](print-volumes.md), Known reading gaps, that a rule can close are closed, a match to a contents line carries a containment predicate, the agreeing second field is named by its field, an overlap report states per volume and section what exists only in print, in both or only in the wiki, and p12 writes data only.
+- Done when the reading gaps of [Print pipeline](print-pipeline.md), Known reading gaps, that a rule can close are closed, a match to a contents line carries a containment predicate, the agreeing second field is named by its field, an overlap report states per volume and section what exists only in print, in both or only in the wiki, and p12 writes data only.
 - Then the measurement base is frozen again: admissible classes fixed anew (`p13_review.py --fix-rule`), changed fingerprints recorded as rehash entries with their reason, moved identifiers as remap entries, no sample redrawn.
 
 Measurement design, second correction
@@ -108,7 +108,7 @@ Snapshot of 2026-10-24.
 | Measurement design, second correction | in progress | entry met by 7147b94 |
 | Reviewable workbench | completed | fffcb29 with the reviewer filter of the review server |
 | Record desk and sitemap | in progress | increment 1 in progress; decision recorded in bc5e8af7; the card's zero coverage gaps of fffcb29 rested on hidden markers, the test is being corrected |
-| Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; split of Print volumes in progress |
+| Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; [Print volumes](print-volumes.md) split into the volumes as domain and [Print pipeline](print-pipeline.md) |
 | M2 | pending | entry: M1 |
 
 ## Open decisions and dependencies

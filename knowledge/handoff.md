@@ -34,15 +34,6 @@ This process inbox holds only open handoff points, the results that arrived from
 - Context: the package was written for the AI operator, whom the operator has since paused; the research coordinator builds the interface. Its items overlap with increment 1, which is running.
 - Next action: after increment 1 is committed, merge the remaining items into increments 2 to 5 of the plan.
 
-### Conventions of the print volumes
-
-- Received: 2026-10-24
-- Source: read-only research agent over the local volumes, report in the session
-- Target: [Print volumes](print-volumes.md), Open questions and Abbreviations and sigla; [Merged bibliography](print-wiki-merge.md), Open questions
-- Context: the star after an address marks an excerpt, shown by the compiler restating the same list with the abbreviation for excerpt in Addendum I; D 224 to D 227 of 1991 were absorbed into D 88a, D 98, D 154 and D 159 of the revised file; the "I," in trade citations names the main volume, while "I 83" without a comma is an address in section I; the unresolved periodical sigla are three single-use near-variants, and the informant residue is listed per volume.
-- Blocker: the print rebuild agent is editing `print-volumes.md`.
-- Next action: integrate once the print rebuild is committed, paraphrased with PDF pages and without print text.
-
 ### Identifier and citation practice
 
 - Received: 2026-10-24

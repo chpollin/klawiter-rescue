@@ -84,7 +84,7 @@ The print strand reads the three print volumes into records and relates them to 
 - The real review server (`review_server.py`, port 8767, log `data/print/review/decisions.jsonl`) records decisions only from a person. An agent that drives the workbench starts a trial server on another port with its own `--log` outside `data/print/review/`.
 - `p11_llm_spans.py` runs only in its frozen mode unless the operator consents to a live run.
 
-Stages in order are `p01_extract`, `p03_records`, `p04_wiki_revisions`, `p05_errata`, `p06_claims`, `p07_concordance`, `p07b_overlap`, `p08_field_check`, `p10_validate`, `p12_jsonld` and then `p14_gate.py --export`, while `p09`, `p11` and `p13` serve the human round and the frozen LLM trial (`knowledge/print-volumes.md`, Approach and Reproducing the strand).
+Stages in order are `p01_extract`, `p03_records`, `p04_wiki_revisions`, `p05_errata`, `p06_claims`, `p07_concordance`, `p07b_overlap`, `p08_field_check`, `p10_validate`, `p12_jsonld` and then `p14_gate.py --export`, while `p09`, `p11` and `p13` serve the human round and the frozen LLM trial (`knowledge/print-pipeline.md`, Stages and Reproducing the strand).
 
 ## Code and Documentation Conventions
 

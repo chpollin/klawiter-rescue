@@ -24,7 +24,8 @@ Start with [Current status](status.md): what is verified, what remains open, and
 | [Frontend](frontend.md) | routes, dashboard interactions, curation and export behaviour |
 | [Testing](testing.md) | test contracts, oracle maintenance, browser validation and evidence limits |
 | [Production readiness](production-readiness.md) | ratified decisions, operator principles, what the operator accepts, and measurable acceptance criteria |
-| [Print volumes](print-volumes.md) | structure, conventions and reference system of the three print-volume PDFs, and the approach for parsing them |
+| [Print volumes](print-volumes.md) | structure, conventions, reference system and sigla of the three print-volume PDFs, and what a reader of the files has to expect |
+| [Print pipeline](print-pipeline.md) | stages, probes, benchmark, structured objects, reading gaps and reproduction of the print strand, with its figures in the local reports |
 | [Print viewer](print-viewer.md) | the local card workbench in which persons review the print readings and the claims between records |
 | [Merged bibliography](print-wiki-merge.md) | record and claim model relating print and wiki, how results are checked, goal, measurement rules, plan and milestones toward the merged Klawiter bibliography |
 | [Coordination](coordination.md) | roles, path ownership and result reporting of the parallel sessions on this repository |
@@ -54,7 +55,7 @@ These are dated observations, not live task lists. Follow their status links bef
 - Re-entry: [Status](status.md) → [Handoff](handoff.md) → [Plan](plan.md) → latest [Journal](journal.md) → `git status -sb`.
 - Data work: [Data](data.md) → [Pipeline](pipeline.md) → [Testing](testing.md).
 - Interface work: [Specification](specification.md) → [Design](design.md) → [Frontend](frontend.md) → [Print viewer](print-viewer.md) → [Testing](testing.md).
-- Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Data](data.md) → [Print viewer](print-viewer.md).
+- Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Print pipeline](print-pipeline.md) → [Data](data.md) → [Print viewer](print-viewer.md).
 - Acceptance: [Production readiness](production-readiness.md), What the operator accepts → [Merged bibliography](print-wiki-merge.md), Goal → [Status](status.md).
 
 Code, versioned decisions and generated validation reports take precedence over descriptive documentation. Volatile counts come from the quality report, gate manifests and frontend dataset; the current prose snapshot lives only in Status. A green technical gate does not establish complete extraction or scholarly accuracy.

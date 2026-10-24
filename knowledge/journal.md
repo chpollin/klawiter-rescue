@@ -21,6 +21,16 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Print conventions verified, print knowledge split by function
+
+**Round.** Handoff point "Conventions of the print volumes" (read-only research agent), verified against the local lines by a second agent and checked by the coordinator.
+
+**Changed.** Four claims held against the PDFs and entered [Print volumes](print-volumes.md) paraphrased with PDF pages: the star marks an excerpt in the one list Addendum I restates, the last four poems of section D in 1991 stand under four earlier numbers of the revised file by their co-citations, three periodical sigla are single-use near-variants of index headings, and the informant residue is listed per volume. The claim that "I," names the main volume in trade citations rests on the trade citation in [About](about.md) and not on the PDFs, which never cite that way, and stands with that source. The questions they leave open moved into [Merged bibliography](print-wiki-merge.md), Open questions. Print volumes now holds the volumes as domain, and the stages, probes, benchmark, structured objects, reading gaps and reproduction moved into [Print pipeline](print-pipeline.md), with links in the knowledge, README, `CLAUDE.md` and the pipeline README updated.
+
+**Open.** Whether every star means an excerpt and how D 224 to D 227 read in 1991 waits for a domain expert or a printed copy. The point left [Handoff](handoff.md).
+
+---
+
 ## 2026-10-24 — Specification and design adopted into the knowledge as drafts
 
 **Round.** Handoff point "Specification and design drafts with their reviews" (workflow run wf_236f71c6-273), integrated by an agent and checked by the coordinator.

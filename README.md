@@ -63,7 +63,7 @@ BibTeX and RIS exports cite flat records. Browser JSON-LD exports and the full c
 
 ## Print volumes (local)
 
-A second strand reads Klawiter's three printed volumes into records with stable identifiers and relates them to the wiki through proposed claims, as the ground for a merged bibliography. The PDFs and everything derived from them stay under `data/print/`, which Git ignores because the rights in the print are unresolved, and nothing of the strand is published until the operator decides so. Rebuilding it needs the three PDFs. [Print volumes](knowledge/print-volumes.md) describes their source, the stages and how to reproduce them.
+A second strand reads Klawiter's three printed volumes into records with stable identifiers and relates them to the wiki through proposed claims, as the ground for a merged bibliography. The PDFs and everything derived from them stay under `data/print/`, which Git ignores because the rights in the print are unresolved, and nothing of the strand is published until the operator decides so. Rebuilding it needs the three PDFs. [Print volumes](knowledge/print-volumes.md) describes their source and structure, [Print pipeline](knowledge/print-pipeline.md) the stages and how to reproduce them.
 
 ```bash
 python -m uv run --group print python pipeline/print_volumes/review_server.py
