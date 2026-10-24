@@ -131,6 +131,15 @@ Reviewable workbench
 - Every finding of the review of 2026-10-24 ([review record](evaluations/2026-10-24/print-viewer-review.md)) is closed with a check that fails on the code before the repair ([Print viewer](print-viewer.md), Acceptance). The repair is verified and waits to be committed together with the reviewer filter of the review server, because parallel interface work changed the same files.
 - Depends on no person.
 
+Measurement design, second correction
+- A literature review of 2026-10-24 (Berzak et al., 2016; Hripcsak and Wilcox, 2002; Artstein and Poesio, 2008; de Vet et al., 2013; Miller, 2024; Card et al., 2020; Gilbert et al., 2018) supports the blind phase first, resampling by object, the stratum of hard entries, recall over complete objects and Holm's correction, and found what the design still lacks.
+- The decision rule collapses for a class without an observed error, because every resample then equals one and the bootstrap p-value falls to its floor at any threshold below one (`p13_review.py`); it needs a bound that holds at zero errors, a minimum number of objects per class, and a minimum sample derived from threshold and Holm level instead of a fixed forty.
+- Agreement is reported as Krippendorff's alpha with raw agreement and positive and negative specific agreement with intervals, because kappa depends on prevalence and most values are expected right.
+- The second-reviewer subset is decided blind to the proposals, or its agreement is reported as agreement under shared proposals; that the operator develops the rules and reviews is named as a limit.
+- The anchoring effect is measured where the same entries are decided blind and with proposals; the order inside each phase is randomised, and a hidden repeat set measures the reviewer's agreement with themself.
+- Reports follow the reporting items of GRRAS and GUILD, with the match criterion of each field stated.
+- Depends on the print rebuild; it closes before the human round opens.
+
 Human round
 - The three checks above, with the decision rule fixed and the second person's subset.
 - Gives field precision and misses (step 5) and the precision of both concordance routes (step 7).
