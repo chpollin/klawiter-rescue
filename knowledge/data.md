@@ -2,7 +2,7 @@
 title: Data and Model
 status: maintained
 language: en
-updated: 2026-10-23
+updated: 2026-10-24
 related: [about, pipeline, frontend, testing, production-readiness, status]
 ---
 
@@ -87,6 +87,16 @@ A source page can describe several publications. The flat record answers with on
 Stage 05 builds the layer from the page's source text through `lib/publications.py`, which segments with `lib.editions.segment_page`, the same function Gate 1 uses. Publication identifiers, source slices and extents therefore agree with the edition graph wherever both cover a page; `klawiter:publication/{page}-{year}-{suffix}` corresponds to `klawiter:edition/{page}-{year}-{suffix}`. A page whose source carries no publication header receives no layer, because absence of a header is the honest statement about such a page.
 
 The records live in one file per source page under `docs/data/publications/`, named by page id and reached through the template in `_meta.publicationCoverage.pathTemplate`. The main dataset keeps the page-level summary, so search and facets work without loading any of them, and the interface fetches a page's file when it shows that page. The canonical Work/Edition graph stays the reference structure for multi-edition pages, and the flat `klawiter.jsonld` does not carry the layer. Carrying the layer into the canonical RDF needs a vocabulary extension and remains open work.
+
+### Wiki page kind
+
+Every content page of the main namespace carries `wikiPageKind`, one of work-hub, edition-page, author-page, other or undetermined. `wikiPageKindRule` names the rule that decided it and `wikiPageKindEvidence` the category, page title or source passage it read, with offsets into the dump-form source text. A VIST title or a translations section on a page of Zweig's own works makes a work hub. An Authors category, or a "Translations by Zweig" page titled by a person, makes an author page. Adaptation, event, periodical, index and pure cross-reference pages are other. A page filed as one item in one language is an edition page. A page the rules cannot decide stays undetermined, because it names several category languages, has no body or no category, or carries conflicting categories. The largest undetermined group names only Bosnian, Croatian, Serbian and Serbo-Croatian as languages, and whether that group counts as one language is open. The kind describes the page and asserts no work identity. The `pageKind` of the publication layer is a separate card label and keeps its meaning. The rules are in `pipeline/lib/page_kinds.py`, the counts in `_meta.wikiPageKinds` of `docs/data/klawiter.json`.
+
+### Cited print addresses
+
+`printAddressCitations` lists the print addresses a page's text cites, read syntactically into volume, section and entry number, each with its token and passage spans and the state `cites`. No citation is matched against a print record or read as identity. Addendum codes count anywhere. Main-volume codes count only after See, Rep, Cont. or Correction to, inside a bracket or parenthesis, or continuing such a citation. Bare numbers after an address stay unread, because they may be entries or pages. Known misses are list lines that start with an address, the section ranges of the 1991 contents on page 2101, an address without a full stop before it inside a bracket, and "From" before an address. The reader is `pipeline/lib/print_addresses.py`.
+
+A wiki page that no concordance claim names is unlinked, which does not make it absent from print. That set holds structure pages and pages whose text cites a print address, and it changes with the concordance rules.
 
 ### Page-level fields
 
