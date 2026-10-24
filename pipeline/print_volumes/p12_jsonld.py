@@ -471,9 +471,15 @@ def main() -> int:
     with ProcessPoolExecutor() as pool:
         results = list(pool.map(validate_chunk, jobs))
     failed = [r for r in results if r["problems"]]
-    if VIEWER.exists():
-        shutil.rmtree(VIEWER)
-    shutil.copytree(VIEWER_SRC, VIEWER)
+    # Empty the folder rather than remove it: on Windows a shell or editor
+    # standing in it locks the folder itself, not its files.
+    VIEWER.mkdir(parents=True, exist_ok=True)
+    for child in VIEWER.iterdir():
+        if child.is_dir():
+            shutil.rmtree(child)
+        else:
+            child.unlink()
+    shutil.copytree(VIEWER_SRC, VIEWER, dirs_exist_ok=True)
     (VIEWER / "index.json").write_text(
         json.dumps(index, ensure_ascii=False), encoding="utf-8"
     )
