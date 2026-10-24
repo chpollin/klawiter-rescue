@@ -17,6 +17,7 @@ The compiler carried the Stefan Zweig bibliography through several states: the m
 - What belongs together is stated as a claim between records, with evidence, producer and status, using the states `proposed`, `confirmed` and `contested` of the reconciliation layer ([Data](data.md)).
 - An LLM proposes claims. A claim is confirmed only by an exact deterministic rule or by a person. Contested claims stay visible in the data and in the merged bibliography.
 - The curated work index of Stefan Zweig Digital is linked, never extended. Klawiter becomes an object of its own there.
+- The interface is built so that people like working with the data in it. Review decisions arise from that work, and no budget of review hours is planned or measured (operator, 2026-10-24). What the interface can be judged by is the cost of a decision: how many actions a value takes, whether the evidence stands beside it, and whether a key ever acts on something not in view.
 
 ## Record model
 
@@ -166,7 +167,6 @@ Frame and delivery
 - Does print become a second admitted source of values? Answered by the operator; a no keeps print values internal and makes the merged bibliography a concordance.
 - What does Stefan Zweig Digital accept as an object, does it want open claims in it, and which stylesheet renders it? Answered by Stefan Zweig Digital on the sample object; the answer decides between claims in TEI and a separate data stream.
 - Which institution publishes the merged bibliography, given that the project documents name the Literaturarchiv Salzburg and the delivery targets Stefan Zweig Digital in GAMS? Answered by the operator.
-- How much human review time exists for adjudication? Answered by the operator; it decides how much automatic confirmation the concordance needs.
 - Does a decision by LLM agents under the operator's delegation count as `confirmed`? Answered by the operator; until then interfaces name the producer next to the state.
 - On pages without edition headers, are flat fields shown only where a rule binds them to the described publication, or is the segmentation extended to these page types? Answered by the operator; the recommendation is the gap, because a gap is a valid result under the data integrity rule and a value from the wrong passage is not.
 - When are the local commits pushed and deployed? Answered by the operator; the public application, the blog post and commit citations in the follow-up proposal depend on it.
