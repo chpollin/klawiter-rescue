@@ -6,10 +6,18 @@ as a static site and accepts decisions, which it validates with the strict
 models of _review.py, checks against the current records, stamps with
 identifier and time, and appends to data/print/review/decisions.jsonl.
 
+/viewer/<file> is the viewer's code from its versioned folder (viewer/ beside
+this module) when the file exists there, so that an edit shows on reload
+without a copy, and otherwise the file in data/print/derived/viewer/. The
+data files p12 writes (VIEWER_DATA_FILES) come from derived only, so that a
+stray copy in the versioned folder never stands in for them.
+
 Trust boundary: the browser. The server binds to 127.0.0.1 only, refuses a
-Host or Origin other than its own (against DNS rebinding and cross-site
-posts), accepts JSON bodies up to MAX_BODY bytes, and never takes identifier,
-time or a value's current state from the request.
+Host or Origin other than its own on every request (against DNS rebinding,
+which would otherwise read the print data, and cross-site posts), refuses a
+path with a dot segment or a backslash and any /viewer/ path that resolves
+outside both viewer folders, accepts JSON bodies up to MAX_BODY bytes, and
+never takes identifier, time or a value's current state from the request.
 
 Endpoints:
 - GET /review/status: {"recording": true}; the viewer offers decisions only
@@ -33,21 +41,49 @@ import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import unquote
 
 import _review
 from _common import DERIVED_DIR, PRINT_DIR
 from _review import DecisionIn, append, check, load_log, load_records, stamp
+from _viewer_data import VIEWER_DATA_FILES
 from pydantic import ValidationError
 
 RECORDS = DERIVED_DIR / "records"
 MAX_BODY = 64 * 1024
 SECTIONS = Path(__file__).with_name("sections.json")
+VIEWER_CODE = Path(__file__).resolve().with_name("viewer")
+VIEWER_DATA = DERIVED_DIR / "viewer"
 PDFS = {
     volume: PRINT_DIR / spec["file"]
     for volume, spec in json.loads(SECTIONS.read_text(encoding="utf-8"))[
         "volumes"
     ].items()
 }
+
+
+def route(path: str) -> str | None:
+    """The decoded request path without query and fragment; None if it holds a dot segment or a backslash."""
+    path = unquote(path.split("?", 1)[0].split("#", 1)[0])
+    if "\\" in path or "\0" in path:
+        return None
+    if any(part in (".", "..") for part in path.split("/")):
+        return None
+    return path
+
+
+def viewer_file(name: str) -> Path | None:
+    """The file /viewer/<name> serves: versioned code first, derived data otherwise."""
+    name = name or "index.html"
+    folders = (
+        (VIEWER_DATA,) if name in VIEWER_DATA_FILES else (VIEWER_CODE, VIEWER_DATA)
+    )
+    for folder in folders:
+        base = folder.resolve()
+        candidate = (base / name).resolve()
+        if candidate.is_relative_to(base) and candidate.is_file():
+            return candidate
+    return None
 
 
 class Store:
@@ -88,6 +124,36 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def translate_path(self, path: str) -> str:
+        clean = route(path)
+        if clean is not None and clean.startswith("/viewer/"):
+            found = viewer_file(clean.removeprefix("/viewer/"))
+            if found is not None:
+                return str(found)
+        return super().translate_path(path)
+
+    def end_headers(self) -> None:
+        # Revalidate every file, so that an edit of the viewer code shows on reload.
+        if getattr(self, "static", False):
+            self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
+
+    def _static(self, send):
+        self.static = False
+        if not self._own():
+            return self.send_error(403, "foreign host or origin")
+        path = route(self.path)
+        if path is None or (
+            path.startswith("/viewer/")
+            and viewer_file(path.removeprefix("/viewer/")) is None
+        ):
+            return self.send_error(404, "no such file")
+        self.static = True
+        return send()
+
+    def do_HEAD(self):
+        return self._static(super().do_HEAD)
+
     def do_GET(self):
         if self.path.startswith("/review/"):
             if not self._own():
@@ -103,7 +169,7 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(404, {"error": "unknown endpoint"})
         if self.path.startswith("/print/"):
             return self._pdf()
-        return super().do_GET()
+        return self._static(super().do_GET)
 
     def _pdf(self):
         if not self._own():
@@ -177,8 +243,8 @@ def main() -> int:
         ("127.0.0.1", args.port), partial(Handler, directory=str(DERIVED_DIR))
     )
     print(
-        f"OK serving {DERIVED_DIR} on http://127.0.0.1:{args.port}/viewer/cards.html, "
-        f"decisions to {_review.LOG}",
+        f"OK serving {DERIVED_DIR} with the viewer code from {VIEWER_CODE} on "
+        f"http://127.0.0.1:{args.port}/viewer/cards.html, decisions to {_review.LOG}",
         flush=True,
     )
     try:

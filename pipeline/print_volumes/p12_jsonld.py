@@ -27,13 +27,18 @@ four levels:
    quotes its source record exactly and every text value equals its passage;
 4. exits non-zero on any failure.
 
-The viewer (viewer/ beside this module, no print text) is copied next to the
-data with an index of all objects; both stay local under data/print/derived/
-(rights unresolved).
+The viewer data stay local under data/print/derived/viewer/ (rights
+unresolved): an index of all objects, the vocabulary, and the wiki
+concordance that _viewer_data.py projects from the p07 claims and p08 cases.
+The review server serves the viewer code from its versioned folder (viewer/
+beside this module, no print text) and these data from derived. The code is
+still copied beside the data because check_render.mjs runs there: it imports
+./render.js and reads index.json and the chunks relative to its own folder.
 
 Output: data/print/derived/jsonld/<volume>/<part>-<n>.jsonld,
-data/print/derived/viewer/ (index.json and the viewer files),
-data/print/derived/reports/p12_jsonld.json.
+data/print/derived/lab/wiki_concordance.json,
+data/print/derived/viewer/ (index.json, vocab.json, wiki_concordance.json and
+a copy of the viewer code), data/print/derived/reports/p12_jsonld.json.
 
 Usage: python -m uv run python pipeline/print_volumes/p12_jsonld.py [--no-shacl]
 """
@@ -53,12 +58,13 @@ from _fields import summary
 from _heldout import review_objects
 from _review import MISSING_FIELDS, check, effective, load_log
 from _schema import BASE_KEYS, LANGUAGES, OBJECT_TYPES, ROLES, object_values
+from _viewer_data import CONCORDANCE, VIEWER_DATA_FILES, concordance, snippet
 
 RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "jsonld"
 VIEWER_SRC = HERE / "viewer"
 VIEWER = DERIVED_DIR / "viewer"
-LOCAL_VIEWER_FILES = (DERIVED_DIR / "lab" / "wiki_concordance.json",)
+LOCAL_VIEWER_FILES = (CONCORDANCE,)
 CONTEXT_FILE = HERE / "schema" / "print-context.jsonld"
 SHAPES_FILE = HERE / "schema" / "print-shapes.ttl"
 CHUNK = 250
@@ -408,7 +414,7 @@ def build() -> tuple[list[dict], list[dict]]:
                                 "address": r["address"],
                                 "page": r["page"],
                                 "title": label,
-                                "snippet": "" if label else o["text"][:120],
+                                "snippet": snippet(o, bool(label)),
                                 "types": [o["kind"]]
                                 if "kind" in o
                                 else [t["value"] for t in o.get("types", [])],
@@ -464,6 +470,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--no-shacl", action="store_true")
     args = parser.parse_args()
+    # First, so that a missing input fails before the long export.
+    links = concordance()
+    print(f"OK wiki concordance {CONCORDANCE}: {links}")
     chunks, index, stale = build()
     print(
         f"OK {len(chunks)} chunks, {sum(c['objects'] for c in chunks)} objects, "
@@ -481,7 +490,14 @@ def main() -> int:
             shutil.rmtree(child)
         else:
             child.unlink()
-    shutil.copytree(VIEWER_SRC, VIEWER, dirs_exist_ok=True)
+    # A stray data file in the versioned folder must not stand in for the
+    # data written here.
+    shutil.copytree(
+        VIEWER_SRC,
+        VIEWER,
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns(*VIEWER_DATA_FILES),
+    )
     # Print-derived files the viewer reads live under data/print/, never in the
     # versioned viewer folder; they are copied in beside the page.
     for local in LOCAL_VIEWER_FILES:
@@ -511,6 +527,7 @@ def main() -> int:
         "review_decisions": sum(c["decisions"] for c in chunks),
         "review_decisions_stale": stale,
         "shacl": not args.no_shacl,
+        "wiki_concordance": links,
         "chunks_failed": len(failed),
         "failures": [
             {"path": Path(r["path"]).name, "problems": r["problems"]}
