@@ -30,7 +30,7 @@ Operator
 | AI operator | `docs/index.html`, `docs/js/`, `docs/css/`, and in `pipeline/print_volumes/viewer/` the files `cards.html`, `cards.js`, `cards.css` and `render.js` |
 | Neither without a verified finding | production code and data (`pipeline/lib/`, `pipeline/*.py`, `docs/data/`, `docs/vocab/`, `data/` outside `data/print/`); changes there go through the research coordinator |
 
-The AI operator's paths pass to it once the running repair of the card workbench and the running wiki data batch, which also changes `docs/js/` and `docs/css/`, are committed, so that no two sessions write the same file. A change the interface needs in the data (a field, a projection, a producer label) goes to the research coordinator as a request with its reason. The checks `check_render.mjs`, `check_review.mjs` and `smoke.mjs` stay with the research coordinator, because they are the acceptance of the interface and not part of it.
+The AI operator's paths passed to it on 2026-10-24, once the repair of the card workbench and the wiki data batch were committed (fffcb29, 71a0fe0), so that no two sessions write the same file. A change the interface needs in the data (a field, a projection, a producer label) goes to the research coordinator as a request with its reason. The checks `check_render.mjs`, `check_review.mjs` and `smoke.mjs` stay with the research coordinator, because they are the acceptance of the interface and not part of it.
 
 Each session stages its own files by explicit path and commits only its own units. Pushes stay with the operator.
 
