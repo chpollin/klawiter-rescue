@@ -131,26 +131,6 @@ SCHEMA_TYPE_MAP = {
     "file": ["klawiter:WikiInfrastructurePage"],
 }
 
-# Entry types derived from actual data
-ENTRY_TYPES = {
-    "fiction": "Fiction (novels, novellas, stories)",
-    "essay": "Essays and articles",
-    "poetry": "Poetry (individual poems, collections)",
-    "drama": "Dramatic works (plays, libretti)",
-    "correspondence": "Letters and correspondence",
-    "film": "Film adaptations, operas, performances",
-    "historical-study": "Historical and academic studies",
-    "secondary-literature": "Secondary literature about Zweig",
-    "collected-works": "Collected and selected works",
-    "foreword": "Forewords, afterwords, editorial contributions",
-    "translation": "Translations by Zweig of other authors",
-    "symposium": "Symposia, exhibitions, conferences",
-    "dramatic-reading": "Dramatic readings and performances",
-    "newspaper": "Newspaper articles",
-    "redirect": "Redirect to another entry",
-    "other": "Unclassified entry",
-}
-
 TIME_PERIODS = {
     "pre-zweig": {"label": "Pre-Zweig", "range": (None, 1880)},
     "lifetime": {"label": "During Zweig's Lifetime", "range": (1881, 1942)},
