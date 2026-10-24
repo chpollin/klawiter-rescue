@@ -842,6 +842,13 @@ klawiter:citationNotation
     rdfs:range xsd:string ;
     rdfs:isDefinedBy klawiter: .
 
+klawiter:citationTarget
+    a rdf:Property ;
+    rdfs:label "citation target"@en ;
+    rdfs:comment "What a cited print address names: entry for an address with an entry number, section for an unnumbered Addendum II address that names a whole section (LA2)."@en ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy klawiter: .
+
 klawiter:passageText
     a rdf:Property ;
     rdfs:label "passage text"@en ;

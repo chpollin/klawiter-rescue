@@ -640,6 +640,7 @@ CITATION_KEYS = {
     "printEntryNumberEnd",
     "citationState",
     "citationNotation",
+    "citationTarget",
     "sourceValue",
     "sourceStart",
     "sourceEnd",
@@ -650,6 +651,7 @@ CITATION_KEYS = {
 CITATION_REQUIRED_KEYS = CITATION_KEYS - {"printEntryNumber", "printEntryNumberEnd"}
 PRINT_VOLUMES = {"main-volume", "addendum-1", "addendum-2"}
 CITATION_NOTATIONS = {"see", "bracket", "parenthesis", "plain"}
+CITATION_TARGETS = {"entry", "section"}
 
 
 def test_every_content_page_declares_its_wiki_page_kind(all_entries) -> None:
@@ -685,4 +687,8 @@ def test_cited_print_addresses_match_the_declared_contract(all_entries) -> None:
             assert citation["citationState"] == "cites"
             assert citation["printVolume"] in PRINT_VOLUMES
             assert citation["citationNotation"] in CITATION_NOTATIONS
+            assert citation["citationTarget"] in CITATION_TARGETS
+            assert (citation["citationTarget"] == "entry") == (
+                "printEntryNumber" in citation
+            )
             assert citation["printAddress"].startswith(citation["printSection"])

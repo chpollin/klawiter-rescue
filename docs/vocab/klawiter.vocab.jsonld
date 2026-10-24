@@ -422,6 +422,18 @@
       }
     },
     {
+      "@id": "klawiter:citationTarget",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": "What a cited print address names: entry for an address with an entry number, section for an unnumbered Addendum II address that names a whole section (LA2).",
+      "rdfs:isDefinedBy": {
+        "@id": "klawiter:"
+      },
+      "rdfs:label": "citation target",
+      "rdfs:range": {
+        "@id": "xsd:string"
+      }
+    },
+    {
       "@id": "klawiter:claimPredicate",
       "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
       "rdfs:comment": "The relation the contested claim would assert if resolved, for example schema:sameAs or schema:exampleOfWork.",

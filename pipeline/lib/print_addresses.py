@@ -23,7 +23,10 @@ What counts as a citation:
   a citation across separators and locators ("See H 670, G 131 & H 490").
 
 Bare numbers after an address ("See G 201, 491, 492") stay unread, because the
-notation does not say whether they are further entries or pages. Offsets are
+notation does not say whether they are further entries or pages. Each
+citation is typed by what it names: ``citationTarget`` is ``entry`` for an
+address with an entry number and ``section`` for an unnumbered Addendum II
+address ("LA2"), which names a whole section of the volume. Offsets are
 character offsets into the page's source text in dump form, the text the
 publication layer's ``sourceSlice`` addresses; text values have the dump's
 quote escape resolved.
@@ -198,6 +201,7 @@ def cited_print_addresses(text: str) -> list[dict]:
             if key in token
         }
         citation.update(
+            citationTarget="entry" if "printEntryNumber" in citation else "section",
             citationState=CITATION_STATE,
             citationNotation=notation,
             sourceValue=text[start:end],

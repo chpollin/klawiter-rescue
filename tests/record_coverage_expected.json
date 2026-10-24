@@ -1,13 +1,52 @@
 {
- "note": "Known gaps of the rendered card against docs/data/klawiter.json, measured by tests/record_coverage.test.js. absent: records whose non-empty field stands nowhere in the card outside the quoted source; tooltipOnly: it stands in a title or link attribute alone. chains: values found in the source text (a publication value in its own passage) and how many of them carry no provenance disclosure (data-provenance-for). Lower a figure in the change that closes the gap.",
+ "note": "Known gaps of the rendered card against docs/data/klawiter.json, measured by tests/record_coverage.test.js. absent: records whose non-empty field stands nowhere in the card outside the quoted source; tooltipOnly: it stands in a title or link attribute alone. chains: values found in the source text (a publication value in its own passage) and how many of them carry no visible provenance disclosure. The card is read as a reader sees it: elements with the hidden attribute are removed first, and a data-provenance-for row counts only where it holds a provenance badge (rule-extracted and missing values show none). Lower a figure in the change that closes the gap. renderedGarbage: cards whose visible text outside the quoted source holds [object Object], undefined or NaN, by record count, token count and the data-key row; a known defect of detail.js (wikiPageKindEvidence, an array of objects, goes through esc()), lowered when it is fixed.",
  "gaps": {
-  "recordFieldGaps": {},
-  "publicationFieldGaps": {},
+  "recordFieldGaps": {
+   "_provenance": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "@id": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "@type": {
+    "absent": 4758,
+    "tooltipOnly": 0
+   },
+   "translationStatements": {
+    "absent": 181,
+    "tooltipOnly": 0
+   }
+  },
+  "publicationFieldGaps": {
+   "imprint": {
+    "absent": 3039,
+    "tooltipOnly": 0
+   },
+   "provenance": {
+    "absent": 3273,
+    "tooltipOnly": 0
+   },
+   "sourceSlice": {
+    "absent": 2,
+    "tooltipOnly": 0
+   }
+  },
   "chains": {
    "recordValues": 18412,
-   "recordWithoutChain": 0,
+   "recordWithoutChain": 17790,
    "publicationValues": 16854,
-   "publicationWithoutChain": 0
+   "publicationWithoutChain": 16854
+  }
+ },
+ "renderedGarbage": {
+  "fields": {
+   "wikiPageKindEvidence": 4716
+  },
+  "records": 4716,
+  "tokens": {
+   "[object Object]": 5619
   }
  }
 }

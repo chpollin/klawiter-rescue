@@ -25,6 +25,7 @@ def test_a_bracketed_work_address_after_a_title_is_read() -> None:
         "printVolume": "main-volume",
         "printSection": "F",
         "printEntryNumber": 1,
+        "citationTarget": "entry",
         "citationState": "cites",
         "citationNotation": "bracket",
         "sourceValue": "F 1",
@@ -157,3 +158,22 @@ def test_the_meta_counts_the_cited_addresses(frontend_data, ns0_entries) -> None
         "pages": len(cited),
         "citations": sum(len(e["printAddressCitations"]) for e in cited),
     }
+
+
+def test_a_citation_is_typed_by_whether_it_names_an_entry(ns0_by_id) -> None:
+    """Page 42 names section L of Addendum II, not an entry; page 185 cites
+    the numbered entry G 173."""
+    (section,) = ns0_by_id[42]["printAddressCitations"]
+    assert section["printAddress"] == "LA2"
+    assert section["citationTarget"] == "section"
+    numbered = [
+        c
+        for c in ns0_by_id[185]["printAddressCitations"]
+        if c["printAddress"] == "G 173"
+    ]
+    assert [c["citationTarget"] for c in numbered] == ["entry"]
+    for entry in ns0_by_id.values():
+        for citation in entry.get("printAddressCitations", []):
+            assert (citation["citationTarget"] == "entry") == (
+                "printEntryNumber" in citation
+            )

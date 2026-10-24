@@ -19,6 +19,12 @@
  * without the expectation being lowered with it. After a deliberate change,
  * RECORD_COVERAGE_WRITE=1 node --test tests/record_coverage.test.js rewrites
  * the expectation from the measurement; review its diff before committing.
+ *
+ * The visible text of a card outside the quoted source must also hold none of
+ * the tokens a failed stringification leaves ("[object Object]", "undefined",
+ * "NaN"). The cards that still do are pinned under renderedGarbage in the same
+ * file, by record count, token count and the field row they appear in; the
+ * pin is lowered when the renderer is fixed and fails when it grows.
  */
 const test = require('node:test');
 const assert = require('node:assert');
@@ -92,8 +98,76 @@ function region(html) {
   return { html, text: loose(visible(html)), attrs: loose(attributes(html)) };
 }
 
+// Tokens of a failed stringification, as values and not as part of a word.
+const GARBAGE_RE = /\[object Object\]|\bundefined\b|\bNaN\b/g;
+
+/** The data-key row a position of the card html stands in, the last one opened before it. */
+function rowKeyAt(html, index) {
+  const keys = [...html.slice(0, index).matchAll(/data-key="([^"]*)"/g)];
+  return keys.length ? keys[keys.length - 1][1] : '(no data-key)';
+}
+
 const marked = (html, key) => html.includes(`data-key="${key}"`);
-const chained = (html, key) => html.includes(`data-provenance-for="${key}"`);
+const chained = (html, key) => chainedKeys(html).has(key);
+
+// The card is read as a reader sees it: an element with the hidden attribute
+// and everything inside it is gone before any value or marker is matched, so a
+// hidden span cannot stand in for a field the card does not show.
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+const TAG_RE = /<(\/?)([a-zA-Z][\w-]*)((?:"[^"]*"|'[^']*'|[^>"'])*)>/g;
+
+/** Every element of the html with the offsets of its opening tag and its end. */
+function elements(html) {
+  const found = [];
+  const stack = [];
+  for (const m of html.matchAll(TAG_RE)) {
+    const tag = m[2].toLowerCase();
+    const after = m.index + m[0].length;
+    if (m[1]) {
+      const at = stack.map(el => el.tag).lastIndexOf(tag);
+      if (at === -1) continue;
+      for (const el of stack.splice(at)) el.end = after;
+    } else {
+      const el = { tag, attrs: m[3], start: m.index, end: html.length };
+      found.push(el);
+      if (!VOID_TAGS.has(tag) && !m[3].trimEnd().endsWith('/')) stack.push(el);
+      else el.end = after;
+    }
+  }
+  return found;
+}
+
+const hasAttr = (el, name) => new RegExp(`(^|\\s)${name}(\\s|=|$)`).test(el.attrs);
+
+function stripHidden(html) {
+  let out = '';
+  let at = 0;
+  for (const el of elements(html)) {
+    if (!hasAttr(el, 'hidden') || el.start < at) continue;
+    out += html.slice(at, el.start);
+    at = el.end;
+  }
+  return out + html.slice(at);
+}
+
+const chainCache = new Map();
+/**
+ * The keys whose chain a reader can see: an element that carries
+ * data-provenance-for="<key>" and holds a provenance badge. Rule extraction
+ * and a missing value show no badge, so they disclose no chain.
+ */
+function chainedKeys(html) {
+  if (!chainCache.has(html)) {
+    if (chainCache.size > 64) chainCache.clear();
+    const keys = new Set();
+    for (const el of elements(html)) {
+      const key = /data-provenance-for="([^"]*)"/.exec(el.attrs);
+      if (key && html.slice(el.start, el.end).includes('prov-badge')) keys.add(key[1]);
+    }
+    chainCache.set(html, keys);
+  }
+  return chainCache.get(html);
+}
 
 /** The weakest place over several values: every value must stand somewhere. */
 function placeOfAll(values, where) {
@@ -224,6 +298,9 @@ function tally(map, key, place) {
   if (place === null) row.absent += 1;
 }
 
+const sorted = obj => JSON.parse(JSON.stringify(obj, (k, v) => (v && typeof v === 'object' && !Array.isArray(v)
+  ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b))) : v)));
+
 function measure() {
   const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'docs', 'data', 'klawiter.json'), 'utf8'));
   const card = cardContext(data);
@@ -235,7 +312,7 @@ function measure() {
   ctx.PERIOD_LABELS = vm.runInContext('PERIOD_LABELS', constants);
 
   const report = { records: 0, publications: 0, undeclared: {}, recordFields: {},
-    publicationFields: {}, chains: { recordValues: 0, recordWithoutChain: 0,
+    publicationFields: {}, garbage: { records: 0, tokens: {}, fields: {} }, chains: { recordValues: 0, recordWithoutChain: 0,
       publicationValues: 0, publicationWithoutChain: 0 } };
   const examples = {};
   const note = (key, pid) => { (examples[key] = examples[key] || []).length < 3 && examples[key].push(pid); };
@@ -248,7 +325,7 @@ function measure() {
       Detail._pubCache.set(pid, { status: 'ready', publications: side.publications || [],
         nameVariants: side.nameVariants || [] });
     }
-    const html = App.renderCard(entry) + Detail.renderInline(entry);
+    const html = stripHidden(App.renderCard(entry) + Detail.renderInline(entry));
     const cut = html.indexOf('<details class="detail-source-details"');
     const end = html.indexOf('<div class="action-bar">');
     const sourceHtml = cut === -1 ? '' : html.slice(cut, end === -1 ? undefined : end);
@@ -257,6 +334,22 @@ function measure() {
     const r = { card: region(html), fields: region(fieldsHtml), source: region(sourceHtml),
       publications: region(sections.join(' ')) };
     report.records += 1;
+
+    const hits = [...fieldsHtml.matchAll(GARBAGE_RE)].filter(m => {
+      // Only text counts; an attribute value or a tag name is not visible.
+      const before = fieldsHtml.slice(0, m.index);
+      return before.lastIndexOf('<') <= before.lastIndexOf('>');
+    });
+    if (hits.length) {
+      report.garbage.records += 1;
+      note('renderedGarbage', pid);
+      const fieldsHere = new Set();
+      for (const m of hits) {
+        report.garbage.tokens[m[0]] = (report.garbage.tokens[m[0]] || 0) + 1;
+        fieldsHere.add(rowKeyAt(fieldsHtml, m.index));
+      }
+      for (const key of fieldsHere) report.garbage.fields[key] = (report.garbage.fields[key] || 0) + 1;
+    }
 
     for (const [key, value] of Object.entries(entry)) {
       if (isEmpty(value)) continue;
@@ -319,12 +412,38 @@ test('every record field has a place in the card and every sourced value its cha
     publicationFieldGaps: gaps(report.publicationFields),
     chains: report.chains,
   };
+  const garbage = sorted(report.garbage);
   if (process.env.RECORD_COVERAGE_WRITE === '1') {
-    fs.writeFileSync(EXPECTED_PATH, `${JSON.stringify({ ...EXPECTED, gaps: actual }, null, 1)}
+    fs.writeFileSync(EXPECTED_PATH, `${JSON.stringify({ ...EXPECTED, gaps: actual,
+      renderedGarbage: sorted(report.garbage) }, null, 1)}
 `);
     return;
   }
   assert.deepStrictEqual(actual, EXPECTED.gaps,
     `the card coverage differs from tests/record_coverage_expected.json.\n`
     + `actual ${JSON.stringify(actual, null, 1)}\nexamples (page ids) ${JSON.stringify(examples)}`);
+});
+
+test('no card shows a failed stringification outside the quoted source, beyond the pinned cards', () => {
+  const { report, examples } = measure();
+  assert.deepStrictEqual(sorted(report.garbage), EXPECTED.renderedGarbage,
+    `cards render [object Object], undefined or NaN differently from renderedGarbage in `
+    + `tests/record_coverage_expected.json; lower it when the renderer is fixed.
+`
+    + `actual ${JSON.stringify(report.garbage)}
+examples (page ids) ${JSON.stringify(examples.renderedGarbage)}`);
+});
+
+test('a hidden element places no field and discloses no chain', () => {
+  const card = '<div class="meta-row" data-key="year" data-provenance-for="year"><span class="prov-badge prov-llm">LLM-enriched</span></div>'
+    + '<div class="meta-row" data-key="title" data-provenance-for="title">A title</div>'
+    + '<span hidden data-key="allYears"></span><span hidden data-provenance-for="timePeriod"><i class="prov-badge"></i></span>'
+    + '<div hidden><span data-key="seeAlso" data-provenance-for="seeAlso" class="prov-badge"></span></div>';
+  const html = stripHidden(card);
+  assert.ok(marked(html, 'year') && marked(html, 'title'));
+  assert.ok(!marked(html, 'allYears') && !marked(html, 'seeAlso'));
+  assert.ok(chained(html, 'year'), 'a visible badge discloses the chain');
+  assert.ok(!chained(html, 'title'), 'a row without a badge discloses no chain');
+  assert.ok(!chained(html, 'timePeriod') && !chained(html, 'seeAlso'), 'hidden markers disclose no chain');
+  assert.ok(!visible(html).includes('hidden'));
 });

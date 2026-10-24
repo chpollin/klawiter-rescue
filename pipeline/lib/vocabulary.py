@@ -87,6 +87,7 @@ CONTEXT = {
         },
         "citationState": "klawiter:citationState",
         "citationNotation": "klawiter:citationNotation",
+        "citationTarget": "klawiter:citationTarget",
         "passageText": "klawiter:passageText",
         "passageStart": {"@id": "klawiter:passageStart", "@type": "xsd:integer"},
         "passageEnd": {"@id": "klawiter:passageEnd", "@type": "xsd:integer"},
