@@ -9,7 +9,7 @@ language: en
 version: 1.1
 tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
-updated: 2026-10-23
+updated: 2026-10-24
 authors: [Christopher Pollin]
 related: [data, testing, frontend, production-readiness]
 ---
@@ -89,7 +89,7 @@ Source occurrences are documented from `04_classified.csv` with page ID, text ID
 
 Stage 05 adopts from Gate 2 exclusively confirmed links. The flat JSON-LD file preserves all current page records. Its dataset description states the release scope, the compiler as creator, the responsible editor, the CC BY 4.0 licence and the version, which it reads from `pyproject.toml`, the single version source. A redirect withheld under a source-revision decision resolves no reference, and a restored page carries its decision as `sourceRevision` in the frontend record. The frontend file removes redirects and adds a redirect map. `inject_provenance.py` adds field provenance from exactly the selected LLM mode.
 
-Stage 05 also builds the publication- and contribution-scoped layer of the frontend record. `lib/publications.py` segments the page's source text with `lib.editions.segment_page`, so the layer shares Gate 1's boundaries, identifiers and extents without changing the Gate 1 artifacts. It reads one further frozen input, the reviewed location stock `docs/data/locations.json`, which attests the place names that let a header with more than two comma segments be split into a publisher and several places. Stage 03 reads the same stock for the flat publisher, which follows the publication imprint. The records are written one file per source page into `docs/data/publications/`; the directory is rewritten on every run, so a page that loses its layer leaves no file behind. The main dataset keeps only the page-level summary, and `klawiter.jsonld` is unaffected. [Data](data.md) holds the field contract. Stage 05 also classifies each content page (`lib/page_kinds.py`) and reads the print addresses its text cites (`lib/print_addresses.py`), both into the flat JSON-LD and the frontend record (frontend schema 1.7).
+Stage 05 also builds the publication- and contribution-scoped layer of the frontend record. `lib/publications.py` segments the page's source text with `lib.editions.segment_page`, so the layer shares Gate 1's boundaries, identifiers and extents without changing the Gate 1 artifacts. It reads one further frozen input, the reviewed location stock `docs/data/locations.json`, which attests the place names that let a header with more than two comma segments be split into a publisher and several places. Stage 03 reads the same stock for the flat publisher, which follows the publication imprint. The records are written one file per source page into `docs/data/publications/`; the directory is rewritten on every run, so a page that loses its layer leaves no file behind. The main dataset keeps only the page-level summary, and `klawiter.jsonld` is unaffected. [Data](data.md) holds the field contract. Stage 05 also classifies each content page (`lib/page_kinds.py`) and reads the print addresses its text cites (`lib/print_addresses.py`), both into the flat JSON-LD and the frontend record ([Data](data.md) names the frontend schema).
 
 `docs/data/reconciliation.json` is a deterministic projection of candidates, decisions, open claims and edition claims. Run timestamps are held only in audit and manifest artifacts and do not alter this public data file.
 
@@ -101,7 +101,7 @@ Stage 05 also builds the publication- and contribution-scoped layer of the front
 
 Both gates rebuild their core documents inside the validators, and CI compares the result with the reviewed manifests of Git HEAD ([Testing](testing.md#ci-reproduction-boundary)).
 
-Historical repeated-run evidence remains in the journal and run audits. [Status](status.md) records the runtime and checks actually verified in this session. Two consecutive full runs reproduce every compared deterministic file, including the ignored candidate and queue artifacts and the vocabulary files. A local success is not a claim that remote CI has already run.
+Historical repeated-run evidence remains in the journal and run audits. [Status](status.md) records the current verified state. Two consecutive full runs reproduce every compared deterministic file, including the ignored candidate and queue artifacts and the vocabulary files. A local success is not a claim that remote CI has already run.
 
 ## Limits
 
@@ -111,4 +111,4 @@ Historical repeated-run evidence remains in the journal and run audits. [Status]
 - Live enrichment is deliberately not a component of the default run.
 - External expert review can extend the agentic evidence, yet does not change the technical repeatability.
 
-The current results and Operator Points are held in [[production-readiness]], the check commands and the limits of what is asserted in [[testing]].
+Current results are held in [[status]], the operator's acceptances in [[production-readiness]], the check commands and the limits of what is asserted in [[testing]].

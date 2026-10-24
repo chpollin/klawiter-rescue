@@ -2,7 +2,7 @@
 title: Current Project Status
 status: maintained
 language: en
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Current project status
@@ -63,7 +63,7 @@ In the evening of 23 October the fields fell further where values came from the 
 - Interfaces. The production frontend opens with the compiler's sections across the four sources and shows a reading pane beside the result list ([Frontend](frontend.md)). The card workbench of the [Print viewer](print-viewer.md) is the local review instrument; its repair after the review of 24 October is verified and waits to be committed together with parallel interface work in the same files. The interface passes to the AI operator after that ([Coordination](coordination.md)).
 - Acceptance. What the operator accepts and decides is listed in [Production readiness](production-readiness.md), What the operator accepts.
 
-The verification history of each round stands in the [Journal](journal.md), the September closeout in [Session 34](journal.md#2026-09-05--session-34-controlled-closeout).
+The verification history of each round stands in the [Journal](journal.md), the September closeout in its entry of 2026-09-05.
 
 Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](evaluations/2026-09-05/validation.json) and [dashboard QA](evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
 

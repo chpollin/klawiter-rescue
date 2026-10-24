@@ -1,6 +1,6 @@
 ---
 title: "Merged Klawiter bibliography: model and plan"
-status: draft
+status: maintained
 language: en
 created: 2026-10-23
 updated: 2026-10-24
@@ -72,7 +72,7 @@ The merged Klawiter bibliography is reached when all of the following hold, chec
 - What is published contains only what the rights decision of step 0 admits.
 - The interface carries reading, review and citation, and the operator has accepted it on real tasks.
 
-The operator made this list the criterion of done on 2026-10-24 ([Production readiness](production-readiness.md), Operator principles).
+This list is the criterion of done since 2026-10-24, decided by the main instance under the operator's explicit delegation ([Production readiness](production-readiness.md), Operator principles).
 
 ## Plan
 

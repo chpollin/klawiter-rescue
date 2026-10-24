@@ -1,6 +1,6 @@
 ---
 title: "Print viewer: card workbench for the review of the print readings"
-status: draft
+status: maintained
 language: en
 created: 2026-10-24
 updated: 2026-10-24

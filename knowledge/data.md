@@ -158,7 +158,7 @@ Three review flags mark what the rules leave open. The rules behind them were re
 
 A contribution's pages are its first page statement outside brackets. The contents line stops at a "See" or "(First/Re)printed in" reference, and a contents list ends at a wiki heading or a bold label such as "Reprinted in:". A year header followed only by a page locator, as on page 3757, is no publication. Page 1875 still merges its six volumes into one publication, because splitting it would change the Gate 1 segmentation.
 
-`nameVariants` records a bracket spelling that has the same token count and the same final token as a credited name and a similarity of at least 0.85, as with the foreword spelling Hymme Weiss beside the credited translator Hymne Weiss on page 4209. Both spellings stay in the record and no identity between them is asserted.
+`nameVariants` records a bracket spelling that has the same token count and the same final token as a credited name and a similarity of at least 0.85, as with a foreword spelling beside the credited translator's name on page 4209 that differs from it in one letter. Both spellings stay in the record and no identity between them is asserted.
 
 ## Work/edition model
 

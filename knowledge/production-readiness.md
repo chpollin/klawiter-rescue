@@ -118,7 +118,7 @@ The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done.
 
 | Acceptance or decision | What it takes | Ready when |
 |---|---|---|
-| Human round of the print strand | deciding, in the card workbench, both blind sheets of p09, then the claim sheet, then the review sample with its stratum of hard entries, then the disagreements of the segmentation benchmark; this gives field precision and claim precision | the repaired workbench is committed |
+| Human round of the print strand | deciding the four parts of the human round in the card workbench in the order of [Merged bibliography](print-wiki-merge.md), Measurement; this gives field precision and claim precision | the repaired workbench is committed |
 | Second reviewer and adjudication | naming a second person for the marked subset of the review sample and a third person who settles disagreements, since an adjudicator may not be one of the two reviewers | the first reviewer has started |
 | Wiki data before publication | inspecting the regenerated wiki data with the flat fields reduced to what a rule binds and every agent decision shown as a proposal | the wiki data batch is committed |
 | Interface on real tasks | reading, reviewing and citing with the production frontend, the record card and the card workbench on the operator's own tasks | the record card with its provenance chain is built |

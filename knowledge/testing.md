@@ -9,7 +9,7 @@ language: en
 version: 1.2
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
-updated: 2026-10-23
+updated: 2026-10-24
 authors: [Christopher Pollin]
 related: [data, pipeline, frontend, production-readiness]
 ---
@@ -60,7 +60,7 @@ Unit and real-entry tests cover encoding, wiki parser, field patterns, vocabular
 
 The old `existing` extraction snapshots and `needed` hints were removed. Every field now receives both a default regression check and an exact semantic diagnostic, including null values. These are field-level checks with documented scope: bibliographic fields follow the first cited item unless the note states an ambiguity, while category language tests the first language-bearing category. They do not establish edition-level coherence for an entire multi-edition page. In particular, the bilingual thesis page 4445 has an Arabic category before German, independently of the first German thesis imprint.
 
-The initial restored fixture exposed twenty rule/expectation disagreements against unchanged production code. The [fixture review](test-fixture-review-2026-09-05.md) and [independent evaluation](independent-evaluation-2026-09-05.md) preserve that historical inventory. Source-reviewed remediation subsequently resolved six cases and retained fourteen. `.github/extraction-baseline.json` records their exact observed values separately from the unchanged correct expectations. Partial name-transcription improvements on pages 1891 and 285 are documented without accepting their unresolved publication scope.
+The initial restored fixture exposed twenty rule/expectation disagreements against unchanged production code. The [fixture review](test-fixture-review-2026-09-05.md) and [independent evaluation](independent-evaluation-2026-09-05.md) preserve that historical inventory. Source-reviewed remediation and later repairs resolved part of them. `.github/extraction-baseline.json` lists the retained cases under `knownMismatches` and records their exact observed values separately from the unchanged correct expectations. Partial name-transcription improvements on pages 1891 and 285 are documented without accepting their unresolved publication scope.
 
 The [technical remediation](technical-remediation-2026-09-05.md) distinguishes rule changes from published changes and explains why removing citation locators lowers extent coverage legitimately. No test tolerance was widened to accept deteriorating output.
 
@@ -111,7 +111,7 @@ The review round of 2026-10-23 is the reason for this layer: eight defects found
 
 ## Agentic Review
 
-The edition sample comprises 76 segments from three complex pages. Two independent initial reviews worked against schema, source excerpt and hash. An independent stronger verification agent reconciled the deviations. The result confirmed 75 segments and kept one work binding as an open claim, which was decided on 2026-09-22 ([Data](data.md), work binding of `klawiter:edition/4916-2016-b`).
+The edition sample comprises 76 segments from three complex pages. Two independent initial reviews worked against schema, source excerpt and hash. An independent stronger verification agent reconciled the deviations. The result accepted 75 segments as agent proposals and kept one work binding as an open claim, which was decided on 2026-09-22 ([Data](data.md), work binding of `klawiter:edition/4916-2016-b`).
 
 The location review examined the remaining low-scored cases independently. Confirmations and corrections were adopted as decisions. Five cases stayed open in domain terms and were materialized as contested claims.
 
@@ -147,7 +147,7 @@ Gate 1 and Gate 2 rebuild their core documents inside the validators. CI then ru
 
 Freeze a reviewed semantic change by committing both current gate manifests with the matching code, inputs and generated outputs. Before that commit, comparison against HEAD correctly detects the pending change. For local review only, `--reference-dir <snapshot-root>` accepts the already reviewed manifests at their repository-relative paths. It does not update the reference or alter production artifacts. CI uses HEAD and no override.
 
-Before freezing evidence on an existing Windows checkout, inspect referenced tracked text inputs with `git ls-files --eol`. An older working copy can retain CRLF bytes after `.gitattributes` starts requiring LF, even when `git diff` is empty. Confirm that normalizing those bytes produces the exact committed blob before aligning the local copy and rebuilding the affected gate. Keep raw archival bytes unchanged. Session 34 records the location-input mismatch caught by the first remote reproduction check.
+Before freezing evidence on an existing Windows checkout, inspect referenced tracked text inputs with `git ls-files --eol`. An older working copy can retain CRLF bytes after `.gitattributes` starts requiring LF, even when `git diff` is empty. Confirm that normalizing those bytes produces the exact committed blob before aligning the local copy and rebuilding the affected gate. Keep raw archival bytes unchanged. The journal entry of 2026-09-05 records the location-input mismatch caught by the first remote reproduction check.
 
 ## Production Evidence
 
@@ -167,4 +167,4 @@ Automatically documented are record completeness, schema, known bounds, selector
 
 Two structural limits of the round-trip verification must be named. First, the circularity. `verify.py` checks extracted values against the same raw text from which they were extracted; a systematically wrong string that is present in the text passes the check. The comparison documents fidelity to the source, no factual correctness. Second, the substring weakness of the `correct` definition. A value counts as documented as soon as it occurs as a substring in the raw text; a shortened value, or one originating from the wrong edition block, can thereby count as correct, especially on multi-edition pages. For that reason the occurrence display in the editing mode makes multiple occurrences explicit.
 
-Not documented are a corpus-wide factual accuracy rate, an external scholarly confirmation of the graphic-novel work identity (decided by the main instance after delegation by the operator on 2026-09-22, revisable) and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[production-readiness]] names the remaining Operator Points.
+Not documented are a corpus-wide factual accuracy rate, an external scholarly confirmation of the graphic-novel work identity (decided by the main instance after delegation by the operator on 2026-09-22, revisable) and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[production-readiness]] lists what the operator accepts.
