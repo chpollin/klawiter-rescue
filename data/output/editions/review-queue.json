@@ -1,6 +1,44 @@
 {
-  "caseCount": 339,
+  "caseCount": 354,
   "cases": [
+    {
+      "editionId": "klawiter:edition/4916-2016-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 7104,
+          "oa:start": 6866
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/4916"
+        }
+      },
+      "flags": [
+        "contested-work-identity"
+      ],
+      "headerLine": "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''",
+      "priority": "P0",
+      "proposedDecision": {
+        "basis": "adaptation-work-identity",
+        "disposition": "unresolved"
+      },
+      "proposedValues": {
+        "contestedClaim": {
+          "@id": "klawiter:claim/work-binding/4916-2016-b"
+        },
+        "description": null,
+        "location": "München",
+        "pageCount": 120,
+        "pageCountCandidate": null,
+        "publisher": "Knesebeck GmbH & Co. Verlag",
+        "series": null,
+        "year": "2016"
+      },
+      "reviewStatus": "contested",
+      "sourcePageId": 4916,
+      "sourceSliceSha256": "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5"
+    },
     {
       "editionId": "klawiter:edition/29-1978-a",
       "evidence": {
@@ -128,6 +166,150 @@
       "reviewStatus": "proposed",
       "sourcePageId": 36,
       "sourceSliceSha256": "9722d5978a1d7621d6b7299d6db312722bf9aaf366a35511b85a7826a786db45"
+    },
+    {
+      "editionId": "klawiter:edition/54-1960-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 1543,
+          "oa:start": 1371
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "compound-header"
+      ],
+      "headerLine": "'''[1960]: Deutscher Bücherbund, Düsseldorf / [1964]: Ex Libris Verlag, Zürich''' ",
+      "priority": "P1",
+      "proposedDecision": {
+        "basis": "double-header-two-editions",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Düsseldorf",
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": "Deutscher Bücherbund",
+        "series": null,
+        "year": "1960"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "0579d873e4310211284680312c958c71a124f37d04588cff998e89bb80c52b48"
+    },
+    {
+      "editionId": "klawiter:edition/54-1964-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 1543,
+          "oa:start": 1371
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "compound-header"
+      ],
+      "headerLine": "'''[1960]: Deutscher Bücherbund, Düsseldorf / [1964]: Ex Libris Verlag, Zürich''' ",
+      "priority": "P1",
+      "proposedDecision": {
+        "basis": "double-header-two-editions",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Zürich",
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": "Ex Libris Verlag",
+        "series": null,
+        "year": "1964"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "0579d873e4310211284680312c958c71a124f37d04588cff998e89bb80c52b48"
+    },
+    {
+      "editionId": "klawiter:edition/54-1965-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 2043,
+          "oa:start": 1933
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "approximate-year"
+      ],
+      "headerLine": "'''[ca. 1965]: Deutscher Bücherklub, Bochum'''",
+      "priority": "P1",
+      "proposedDecision": {
+        "basis": "approximate-year-stable-id",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Bochum",
+        "pageCount": 463,
+        "pageCountCandidate": null,
+        "publisher": "Deutscher Bücherklub",
+        "series": null,
+        "year": "1965"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "4a7e06f38284263f94d13822540ff682dfd0520c0dd36134b54944a3c67f2b1a"
+    },
+    {
+      "editionId": "klawiter:edition/54-1965-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 2173,
+          "oa:start": 2043
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "approximate-year"
+      ],
+      "headerLine": "'''[ca. 1965]: Europäischer Buchklub, Stuttgart/Zürich/Salzburg'''",
+      "priority": "P1",
+      "proposedDecision": {
+        "basis": "approximate-year-stable-id",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Stuttgart/Zürich/Salzburg",
+        "pageCount": 453,
+        "pageCountCandidate": null,
+        "publisher": "Europäischer Buchklub",
+        "series": null,
+        "year": "1965"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "63100243e552e08576319bd5405437f620bd3363610840cc1d7c7bd49c53eaee"
     },
     {
       "editionId": "klawiter:edition/165-1901-a",
@@ -3669,6 +3851,334 @@
       "reviewStatus": "proposed",
       "sourcePageId": 36,
       "sourceSliceSha256": "81b140911373c4ec30b85791350c7bc6087e9b2107aa2b269019173b9a446b8a"
+    },
+    {
+      "editionId": "klawiter:edition/54-1981-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 4907,
+          "oa:start": 4612
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "malformed-bold-header",
+        "header-series"
+      ],
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "header-cleanup",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": 445,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": "[Gesammelte Werke in Einzelbänden]",
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "d96be7cd3074563009e8f51f5757cab77588e5df5fb51854b2b77f85b197c681"
+    },
+    {
+      "editionId": "klawiter:edition/54-1981-d",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 5161,
+          "oa:start": 4907
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "malformed-bold-header",
+        "normalized-header-residue"
+      ],
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main]]]",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "header-cleanup",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": null,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": null,
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "de2f3ea964d4fbb761f8e7273211040a9773409cdc394a582fb4002c7ce6bd90"
+    },
+    {
+      "editionId": "klawiter:edition/54-2013-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 6225,
+          "oa:start": 6095
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/54"
+        }
+      },
+      "flags": [
+        "malformed-bold-header"
+      ],
+      "headerLine": "'''[2013]: Insel-Verlag, Berlin ",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "malformed-header-fields-clean",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Berlin",
+        "pageCount": 460,
+        "pageCountCandidate": null,
+        "publisher": "Insel-Verlag",
+        "series": null,
+        "year": "2013"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 54,
+      "sourceSliceSha256": "89eebc7a09aa4ad31b3caf4357ad42f973aa8bd6302e33a8a116703964546fba"
+    },
+    {
+      "editionId": "klawiter:edition/56-1952-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 1002,
+          "oa:start": 671
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/56"
+        }
+      },
+      "flags": [
+        "header-series",
+        "normalized-header-residue"
+      ],
+      "headerLine": "'''[1952]: S. Fischer Verlag. Frankfurt am Main''' [S. Fischer Bibliothek]",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "header-cleanup",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": 394,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": "[S. Fischer Bibliothek]",
+        "year": "1952"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 56,
+      "sourceSliceSha256": "8ac1aec10f5249cdd1134ed91da71bc9cb5ab34bd120edb6ad9b51f0e93f6ea7"
+    },
+    {
+      "editionId": "klawiter:edition/56-1978-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 2960,
+          "oa:start": 2789
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/56"
+        }
+      },
+      "flags": [
+        "header-suffix"
+      ],
+      "headerLine": "'''[1978]: S. Fischer Verlag, Frankfurt am Main''' Special edition",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "header-cleanup",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": "Special edition",
+        "location": "Frankfurt am Main",
+        "pageCount": 394,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": null,
+        "year": "1978"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 56,
+      "sourceSliceSha256": "caf760120d406b316b39c158ed9c9ab8c2442d03fe68ab710662d655b211da8c"
+    },
+    {
+      "editionId": "klawiter:edition/56-1981-b",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 3514,
+          "oa:start": 3151
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/56"
+        }
+      },
+      "flags": [
+        "malformed-bold-header",
+        "header-series"
+      ],
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main [Gesammelte Werke in Einzelbänden]",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "header-cleanup",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": 494,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": "[Gesammelte Werke in Einzelbänden]",
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 56,
+      "sourceSliceSha256": "4b6f866b58afee6f631e5738b50e5aa5254958e6623d06b04b925cfe8df72a8f"
+    },
+    {
+      "editionId": "klawiter:edition/56-1981-c",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 3785,
+          "oa:start": 3514
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/56"
+        }
+      },
+      "flags": [
+        "malformed-bold-header"
+      ],
+      "headerLine": "'''[1981]: S. Fischer Verlag, Frankfurt am Main",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "carrier-occurrence",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": 494,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": null,
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 56,
+      "sourceSliceSha256": "0b152f01f43a474660e027e7594b3858b54beddd67328071ee8075a4e6cd633a"
+    },
+    {
+      "editionId": "klawiter:edition/56-1981-d",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 4151,
+          "oa:start": 3919
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/56"
+        }
+      },
+      "flags": [
+        "malformed-bold-header"
+      ],
+      "headerLine": "'''[1981]: Aufbau Verlag, Berlin/Weimar",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "malformed-header-fields-clean",
+        "disposition": "reject-proposal"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Berlin/Weimar",
+        "pageCount": 509,
+        "pageCountCandidate": null,
+        "publisher": "Aufbau Verlag",
+        "series": null,
+        "year": "1981"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 56,
+      "sourceSliceSha256": "b19b92c476bb8c9a44313c514197083d0dc43ca884a5cd5123b759ed41ad441f"
+    },
+    {
+      "editionId": "klawiter:edition/56-2010-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 4585,
+          "oa:start": 4335
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/56"
+        }
+      },
+      "flags": [
+        "normalized-page-count-notation"
+      ],
+      "headerLine": "'''[2010]. Fischer Taschenbuch Verlag, Frankfurt am Main'''",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "page-count-repair",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": 463,
+        "pageCountCandidate": null,
+        "publisher": "Fischer Taschenbuch Verlag",
+        "series": null,
+        "year": "2010"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 56,
+      "sourceSliceSha256": "38460f2424c66bafe7352a4d3436f4ee79564b338b80aefb80a5a018a1487d1a"
     },
     {
       "editionId": "klawiter:edition/122-1957-a",
@@ -9549,6 +10059,42 @@
       "reviewStatus": "proposed",
       "sourcePageId": 4889,
       "sourceSliceSha256": "56badf76ad3fe351479e6023ec89f0462bcad76d53c8bfad178244aef7cfdec3"
+    },
+    {
+      "editionId": "klawiter:edition/4916-1995-a",
+      "evidence": {
+        "@type": "oa:SpecificResource",
+        "oa:hasSelector": {
+          "@type": "oa:TextPositionSelector",
+          "oa:end": 5791,
+          "oa:start": 5521
+        },
+        "oa:hasSource": {
+          "@id": "klawiter:sourceText/4916"
+        }
+      },
+      "flags": [
+        "normalized-page-count-notation"
+      ],
+      "headerLine": "'''[1995]: S. Fischer Verlag, Frankfurt am Main'''",
+      "priority": "P2",
+      "proposedDecision": {
+        "basis": "page-count-repair",
+        "disposition": "correct"
+      },
+      "proposedValues": {
+        "contestedClaim": null,
+        "description": null,
+        "location": "Frankfurt am Main",
+        "pageCount": 80,
+        "pageCountCandidate": null,
+        "publisher": "S. Fischer Verlag",
+        "series": null,
+        "year": "1995"
+      },
+      "reviewStatus": "proposed",
+      "sourcePageId": 4916,
+      "sourceSliceSha256": "f7c39070e87bd43a2b733e6e479b0dbe6acd62afacdac5c2e3fa8e79ef3fce59"
     },
     {
       "editionId": "klawiter:edition/4992-1977-a",

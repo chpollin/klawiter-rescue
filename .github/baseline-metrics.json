@@ -1,6 +1,6 @@
 {
   "description": "Baseline metrics for regression testing. Generated from data/output/quality-report.json and the frontend dataset. Field coverage is two-sided: tests fail when a percentage moves more than 0.3 pp either way; a reviewed change is frozen here with a reason per value under reviewedUpdates.",
-  "date": "2026-10-23-record-fidelity-batch",
+  "date": "2026-10-24-unbound-flat-fields",
   "summary": {
     "total_entries": 6725,
     "redirects": 1538,
@@ -22,12 +22,12 @@
       "percentage": 93.0
     },
     "publisher": {
-      "count": 2439,
-      "percentage": 51.3
+      "count": 2066,
+      "percentage": 43.4
     },
     "locationCreated": {
-      "count": 4257,
-      "percentage": 89.5
+      "count": 3749,
+      "percentage": 78.8
     },
     "inLanguage": {
       "count": 4477,
@@ -42,8 +42,8 @@
       "percentage": 49.1
     },
     "translator": {
-      "count": 1948,
-      "percentage": 40.9
+      "count": 1743,
+      "percentage": 36.6
     },
     "categories": {
       "count": 4747,
@@ -111,7 +111,7 @@
   "known_issues": {
     "description": "Frozen counts of known data-quality issues. Tests bound the current count against these. Lower is better; when extraction improves, update the value in an evidence-freeze commit.",
     "redirect_map_size": 1523,
-    "german_translator_fp": 113,
+    "german_translator_fp": 36,
     "film_pagecount": 9,
     "publisher_equals_location": 2,
     "broken_see_also_refs": 2,
@@ -164,6 +164,16 @@
         "reprints": "8.8% -> 8.8%: follows the restored pages since the earlier baseline",
         "workTranslation": "3.7% -> 3.8%: the translations block no longer stops at the second bold language heading",
         "hasPart": "19.7% -> 19.7%: follows the restored pages since the earlier baseline"
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "evidence": "pipeline/lib/publications.py (statement_bindings, unbound_flat_fields), pipeline/03_parse_entries.py, pipeline/03b_llm_enrich.py; tests/test_record_invariants.py, tests/test_record_regressions.py",
+      "reason": "On a page without a publication header a flat place, publisher or translator stays only where the page's first statement carries it in a position a rule binds to the described publication (a header, a 'Place: Publisher, YEAR' imprint, a place bracket, the bracket after a container title, a translation credit of the statement); otherwise the field is a gap, and stage 03b does not refill it from the model cache. The values removed were read from reprint lists, later printings of an 'in:' list, translations sections, review lists, notes, lecturers' affiliations and personal names. German entries with a flat translator fall from 113 to 36 for the same reason.",
+      "fieldCoverage": {
+        "publisher": "51.3% -> 43.4%: values no rule binds to the publication of a headerless page are gaps",
+        "locationCreated": "89.5% -> 78.8%: values no rule binds to the publication of a headerless page are gaps",
+        "translator": "40.9% -> 36.6%: values no rule binds to the publication of a headerless page are gaps"
       }
     }
   ]

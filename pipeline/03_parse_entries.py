@@ -33,7 +33,11 @@ from lib.patterns import (
     extract_translator,
     extract_year,
 )
-from lib.publications import first_publication_fields, load_attested_places
+from lib.publications import (
+    first_publication_fields,
+    load_attested_places,
+    unbound_flat_fields,
+)
 from lib.vocabulary import LANGUAGE_MAP, language_to_iso
 from lib.wiki_parser import (
     blank_translations_block,
@@ -397,6 +401,19 @@ def process_entry(row, attested_places=None):
     if lang_name == "German":
         translator_text = blank_translations_block(content)
     result["translator"] = extract_translator(translator_text) or ""
+
+    # On a page without a publication header the body patterns read place,
+    # publisher and translator from anywhere in the text. A value stays only
+    # where the page's first statement carries it in a position a rule reads;
+    # otherwise the field is a gap, because a value from another passage
+    # describes another publication (a reprint, a translation, a note).
+    result["unbound_fields"] = ""
+    if scoped is None:
+        unbound = unbound_flat_fields(content, result)
+        for field in unbound:
+            result[field] = ""
+        if unbound:
+            result["unbound_fields"] = json.dumps(unbound)
 
     # Cross-references
     see_also = parsed.get("see_also", [])

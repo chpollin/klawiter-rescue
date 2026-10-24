@@ -14,7 +14,7 @@
   },
   "frozenResultCount": 3905,
   "workingResultCount": 0,
-  "cacheMissCount": 119,
+  "cacheMissCount": 321,
   "networkCallsAllowed": false,
   "networkCallsMade": false,
   "rejectedCachedValues": 1003,

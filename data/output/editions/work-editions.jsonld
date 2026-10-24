@@ -37448,13 +37448,23 @@
       }
     }
   ],
-  "candidateWorks": [],
+  "candidateWorks": [
+    {
+      "@id": "klawiter:work-candidate/4916-2016-b-adaptation",
+      "@type": "klawiter:WorkIdentityCandidate",
+      "klawiter:identityStatus": "contested",
+      "prov:wasDerivedFrom": {
+        "@id": "klawiter:annotation/4916-2016-b"
+      },
+      "schema:name": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)"
+    }
+  ],
   "carriers": [
     {
       "@id": "klawiter:carrier/source-54-1981-d",
       "@type": "schema:PublicationVolume",
       "klawiter:identityScope": "source-occurrence",
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourceEdition": {
         "@id": "klawiter:edition/54-1981-d"
       },
@@ -37464,7 +37474,7 @@
       "@id": "klawiter:carrier/source-54-1982-a",
       "@type": "schema:PublicationVolume",
       "klawiter:identityScope": "source-occurrence",
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourceEdition": {
         "@id": "klawiter:edition/54-1982-a"
       },
@@ -37474,7 +37484,7 @@
       "@id": "klawiter:carrier/source-54-1995-a",
       "@type": "schema:PublicationVolume",
       "klawiter:identityScope": "source-occurrence",
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourceEdition": {
         "@id": "klawiter:edition/54-1995-a"
       },
@@ -37484,7 +37494,7 @@
       "@id": "klawiter:carrier/source-54-2020-a",
       "@type": "schema:PublicationVolume",
       "klawiter:identityScope": "source-occurrence",
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourceEdition": {
         "@id": "klawiter:edition/54-2020-a"
       },
@@ -37494,7 +37504,7 @@
       "@id": "klawiter:carrier/source-56-1981-c",
       "@type": "schema:PublicationVolume",
       "klawiter:identityScope": "source-occurrence",
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourceEdition": {
         "@id": "klawiter:edition/56-1981-c"
       },
@@ -37504,7 +37514,7 @@
       "@id": "klawiter:carrier/source-4916-1966-a",
       "@type": "schema:PublicationVolume",
       "klawiter:identityScope": "source-occurrence",
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourceEdition": {
         "@id": "klawiter:edition/4916-1966-a"
       },
@@ -37518,11 +37528,11 @@
       "klawiter:claimPredicate": {
         "@id": "schema:exampleOfWork"
       },
-      "klawiter:claimStatus": "resolved",
+      "klawiter:claimStatus": "contested",
       "klawiter:claimSubject": {
         "@id": "klawiter:edition/4916-2016-b"
       },
-      "klawiter:decisionStatus": "decided",
+      "klawiter:decisionStatus": "open",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/4916-2016-b/reviewer-a",
@@ -37567,8 +37577,8 @@
           "@id": "klawiter:review/4916-2016-b/decision-2026-09-22",
           "@type": "klawiter:ReviewAction",
           "dcterms:date": "2026-09-22",
-          "klawiter:reviewBasis": "Decided by the main instance after delegation by the operator on 2026-09-22; revisable. The publication is its own work, an adaptation with a change of medium: page 4916 credits it as a graphic novel by its illustrator, adapted into German by a second person; the illustrator's author page 5110 lists the French graphic novel of 2015 and this edition under the heading German translation; page 675 lists the French graphic novel of 2015 as freely inspired by the Schachnovelle. The German edition of 2016 translates the French graphic novel of 2015 and leaves the editions of the Schachnovelle.",
-          "klawiter:reviewOutcome": "confirm",
+          "klawiter:reviewBasis": "Proposed by an LLM agent, no person: selects klawiter:interpretation/4916-2016-b/adaptation-work. Decided by the main instance after delegation by the operator on 2026-09-22; revisable. The publication is its own work, an adaptation with a change of medium: page 4916 credits it as a graphic novel by its illustrator, adapted into German by a second person; the illustrator's author page 5110 lists the French graphic novel of 2015 and this edition under the heading German translation; page 675 lists the French graphic novel of 2015 as freely inspired by the Schachnovelle. The German edition of 2016 translates the French graphic novel of 2015 and leaves the editions of the Schachnovelle.",
+          "klawiter:reviewOutcome": "propose",
           "prov:used": [
             {
               "@id": "klawiter:annotation/4916-2016-b"
@@ -37589,7 +37599,7 @@
         {
           "@id": "klawiter:interpretation/4916-2016-b/original-work",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "klawiter:work/4916"
           },
@@ -37599,7 +37609,7 @@
         {
           "@id": "klawiter:interpretation/4916-2016-b/adaptation-work",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:interpretationStatus": "accepted",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "klawiter:work-candidate/4916-2016-b-adaptation"
           },
@@ -41892,7 +41902,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "59b2837cc4b7ef936c58c15640d3616a6107ac5849ff077a2f3e9d28e27e096f",
       "klawiter:yearRaw": "1939",
@@ -41920,7 +41930,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "9368ff8c417ef205158b5c04ce036f62e3fe342afa615e0657b215308ec5334e",
       "klawiter:yearRaw": "1952",
@@ -41940,7 +41950,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "6342a724fc45a31756b706c9847e6c2e7e6392f7657b72af61e02ec1b4b5fe75",
       "klawiter:yearRaw": "1953",
@@ -41960,7 +41970,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "af30b8be4e2ca60ba5daf9c7994480d3d38714c49d734f39382026fe4f8646fd",
       "klawiter:yearRaw": "1954",
@@ -41980,7 +41990,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "ffcd8edfe4b188e1b596b837ed2958037856510854bed6e6d4a90065cbe1ebc6",
       "klawiter:yearRaw": "1956",
@@ -42000,7 +42010,7 @@
       "klawiter:reviewBasis": "source-exact-authority-normalization-deferred",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "1a9d1981dc60246c989382b8f6194f7a16cbc8fa91e5c1aaf8359c19103d9032",
       "klawiter:yearRaw": "1957",
@@ -42021,7 +42031,7 @@
       "klawiter:reviewFlags": [
         "compound-header"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "0579d873e4310211284680312c958c71a124f37d04588cff998e89bb80c52b48",
       "klawiter:yearRaw": "1960",
@@ -42041,7 +42051,7 @@
       "klawiter:reviewFlags": [
         "compound-header"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "0579d873e4310211284680312c958c71a124f37d04588cff998e89bb80c52b48",
       "klawiter:yearRaw": "1964",
@@ -42060,7 +42070,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "46df4164c282a79a2da76f3de4379af02314ae6584402d45cf5fa27d6305648c",
       "klawiter:yearRaw": "1961",
@@ -42080,7 +42090,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "18aa4b6a155f89f4fd94efa65d4ba7806af6720319ae8494fe112dba7ef2722a",
       "klawiter:yearRaw": "1963",
@@ -42100,7 +42110,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "1052074b8f663d4a4435f1e5e64b46797adbf02b060124c3544f304684d0d3ad",
       "klawiter:yearRaw": "1963",
@@ -42122,7 +42132,7 @@
       "klawiter:reviewFlags": [
         "approximate-year"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "4a7e06f38284263f94d13822540ff682dfd0520c0dd36134b54944a3c67f2b1a",
       "klawiter:yearRaw": "ca. 1965",
@@ -42144,7 +42154,7 @@
       "klawiter:reviewFlags": [
         "approximate-year"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "63100243e552e08576319bd5405437f620bd3363610840cc1d7c7bd49c53eaee",
       "klawiter:yearRaw": "ca. 1965",
@@ -42164,7 +42174,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "0a765ae4e6bdf2eb9fc84feae8197d5af1e90262e0e20f2779b61716dd65e0b2",
       "klawiter:yearRaw": "1968",
@@ -42184,7 +42194,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "a594d4d3900236bdf73666d6338715b14f15e921a76311344cd7ed3f14a5c55b",
       "klawiter:yearRaw": "1968",
@@ -42204,7 +42214,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "94881e0d0de92caca582730adcf6abb8ddc37100ea19703a07ac8f56d52897b3",
       "klawiter:yearRaw": "1971",
@@ -42224,7 +42234,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "8d1c0f2e6b5440fcc8262490787dcce95d1c2609485b0f1c1a3e6c7442febfcb",
       "klawiter:yearRaw": "1972",
@@ -42244,7 +42254,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "1f70144f736f70f867165d5171caad6c0a2401153a8d5ec5f703dcb194b2a482",
       "klawiter:yearRaw": "1976",
@@ -42264,7 +42274,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "3331d4aeaba274ce89658de2b7128b13a744f7f782517a2cb1ee300e906def5c",
       "klawiter:yearRaw": "1977",
@@ -42284,7 +42294,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "d689ce1622d8d4c941f35db32f37056dd0143503a99b563065581881c323223c",
       "klawiter:yearRaw": "1978",
@@ -42304,7 +42314,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "b64d2df93ea3f333b35d19f775410b6c1904867ddb688cfea1b1ab9ea023ab71",
       "klawiter:yearRaw": "1981",
@@ -42324,7 +42334,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "9b9694ce72a2a365d99cd86c65ef309a5c8bc438bd86ed75c6aad472f029434b",
       "klawiter:yearRaw": "1981",
@@ -42348,7 +42358,7 @@
         "malformed-bold-header",
         "header-series"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "d96be7cd3074563009e8f51f5757cab77588e5df5fb51854b2b77f85b197c681",
       "klawiter:yearRaw": "1981",
@@ -42370,7 +42380,7 @@
         "malformed-bold-header",
         "normalized-header-residue"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "de2f3ea964d4fbb761f8e7273211040a9773409cdc394a582fb4002c7ce6bd90",
       "klawiter:yearRaw": "1981",
@@ -42391,7 +42401,7 @@
       "klawiter:reviewBasis": "carrier-occurrence",
       "klawiter:reviewDecision": "reject-proposal",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "160c0c9c5d8994f8bded28300a92c6dde46a8fa3e0b79e0fbba8a1966602557b",
       "klawiter:yearRaw": "1982",
@@ -42413,7 +42423,7 @@
       "klawiter:reviewBasis": "carrier-occurrence",
       "klawiter:reviewDecision": "reject-proposal",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "f14b25d1a73a83c4e35f3442e6d12690338da7b42a52fa9b9b9accc096962ae9",
       "klawiter:yearRaw": "1995",
@@ -42436,7 +42446,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "42bbfe6089e8b3f6952be8da4d9d599eb8a19512ebeaa4ed2a84ed522b032d7f",
       "klawiter:yearRaw": "2006",
@@ -42456,7 +42466,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "f4c7cf8ff1e715244ad4f051115b64a17e60fc1683aa09e575dc55dd1ad5a7b8",
       "klawiter:yearRaw": "2013",
@@ -42478,7 +42488,7 @@
       "klawiter:reviewFlags": [
         "malformed-bold-header"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "89eebc7a09aa4ad31b3caf4357ad42f973aa8bd6302e33a8a116703964546fba",
       "klawiter:yearRaw": "2013",
@@ -42498,7 +42508,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "a3a764d19aa4b58f4bd6291865867d18bb3b46dc9311777ce2a7f08cdbcb205e",
       "klawiter:yearRaw": "2015",
@@ -42517,7 +42527,7 @@
       "klawiter:reviewBasis": "carrier-occurrence",
       "klawiter:reviewDecision": "reject-proposal",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 54,
       "klawiter:sourceSliceSha256": "a288af6cfd215171a0740313102361db70d519ee18c71fa193ca8216f771ec35",
       "klawiter:yearRaw": "2020",
@@ -42539,7 +42549,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "dad24bb87a80a9496c94c7344ccbb89f4412a44ee73ae5092cea828ae382b122",
       "klawiter:yearRaw": "1942",
@@ -42559,7 +42569,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "7d70479e402200ea12f340305e6a05b76d84a555f08e655623685f383d7c3ce9",
       "klawiter:yearRaw": "1947",
@@ -42583,7 +42593,7 @@
         "header-series",
         "normalized-header-residue"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "8ac1aec10f5249cdd1134ed91da71bc9cb5ab34bd120edb6ad9b51f0e93f6ea7",
       "klawiter:yearRaw": "1952",
@@ -42603,7 +42613,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "469a915b61893d264631eed2ca10955088338a36d97735846e3964dfb2eaaab6",
       "klawiter:yearRaw": "1952",
@@ -42623,7 +42633,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "0f43b45a4d04f4e5adf6a79a02f3ddbe26176cec32a67e76f88f144306a68045",
       "klawiter:yearRaw": "1953",
@@ -42643,7 +42653,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "9fa2d5d5b03daaae66fa192a6fee5e1f27719b59ad109a763cca3cf885418323",
       "klawiter:yearRaw": "1959",
@@ -42663,7 +42673,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "ca1d599ea3c741a3686d96757ebddf16e786c07aba7e8a3329443ffccd0ca53a",
       "klawiter:yearRaw": "1960",
@@ -42683,7 +42693,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "1f8fd8de05eb0a46d3f63bd1fa6b550a56c596577a751c0276ee937ceee441c0",
       "klawiter:yearRaw": "1962",
@@ -42703,7 +42713,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "4d065b37f3d9f527db0ef5cbfcc7cf0894c5648d9838721df3b35f0be4256593",
       "klawiter:yearRaw": "1964",
@@ -42723,7 +42733,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "abccfe4c2bc9ce48834b43f4c9072f06b65c6d96d3a04aa03d8983dd48678ec5",
       "klawiter:yearRaw": "1968",
@@ -42743,7 +42753,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "4150b1236e6c5831c9488b9ce6e8913ec564a02d365e62c54fd9ce3d73fea87e",
       "klawiter:yearRaw": "1970",
@@ -42765,7 +42775,7 @@
       "klawiter:reviewFlags": [
         "header-suffix"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "caf760120d406b316b39c158ed9c9ab8c2442d03fe68ab710662d655b211da8c",
       "klawiter:yearRaw": "1978",
@@ -42786,7 +42796,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "030b2e3928075e2469280e5075c26242b9af4198a0ca1f6295e4e66894e7984b",
       "klawiter:yearRaw": "1981",
@@ -42810,7 +42820,7 @@
         "malformed-bold-header",
         "header-series"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "4b6f866b58afee6f631e5738b50e5aa5254958e6623d06b04b925cfe8df72a8f",
       "klawiter:yearRaw": "1981",
@@ -42832,7 +42842,7 @@
       "klawiter:reviewFlags": [
         "malformed-bold-header"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "0b152f01f43a474660e027e7594b3858b54beddd67328071ee8075a4e6cd633a",
       "klawiter:yearRaw": "1981",
@@ -42857,7 +42867,7 @@
       "klawiter:reviewFlags": [
         "malformed-bold-header"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "b19b92c476bb8c9a44313c514197083d0dc43ca884a5cd5123b759ed41ad441f",
       "klawiter:yearRaw": "1981",
@@ -42877,7 +42887,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "0b16950da8790db0e45320f4025ee18bc13b321d2133e1945debadac57fc4c49",
       "klawiter:yearRaw": "1982",
@@ -42899,7 +42909,7 @@
       "klawiter:reviewFlags": [
         "normalized-page-count-notation"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "38460f2424c66bafe7352a4d3436f4ee79564b338b80aefb80a5a018a1487d1a",
       "klawiter:yearRaw": "2010",
@@ -42919,7 +42929,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "00bbeda12cce2c30ae2d512654d577ea0daef5c823f679177a66d70b89e0ec5f",
       "klawiter:yearRaw": "2013",
@@ -42939,7 +42949,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 56,
       "klawiter:sourceSliceSha256": "0903b5d2b0d8d29a5bd68b5f53a06545eed260340e8206674bcfadc360fc4ff0",
       "klawiter:yearRaw": "2017",
@@ -71770,7 +71780,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "ede2f584b38d7684770a0338933c12a2467b74fa236488fb976e68b00d9a798a",
       "klawiter:yearRaw": "1942",
@@ -71790,7 +71800,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "71c2df7fefdb842e2041c352d287727fd16c211c34a6c39ac69542bf06b212ed",
       "klawiter:yearRaw": "1942",
@@ -71810,7 +71820,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "45d32039df23b90759e748fc395f8a667d3479c74f1ce92ea5968a598c8e779a",
       "klawiter:yearRaw": "1943",
@@ -71830,7 +71840,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "ac9518fe0e7cc1367474fe54b30534e09147392387dbc63e0b3ba0dec47569d7",
       "klawiter:yearRaw": "1950",
@@ -71850,7 +71860,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "b35523296b634fe07749ff85b40d64d1abe804255b9bcb77b40c7eb7202bba20",
       "klawiter:yearRaw": "1950",
@@ -71870,7 +71880,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "78997deda0d1558af93711ee7c997b26f938093ec0a0aa46cf92c25adfe0e218",
       "klawiter:yearRaw": "1951",
@@ -71890,7 +71900,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "dfd1cf8f7a42dee2ac3ed8d11f90db202fc8516b150ac1e7de61f2162f7fa4f4",
       "klawiter:yearRaw": "1951",
@@ -71910,7 +71920,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "c2f3d3e61a9c65ae0c1947985ee0ac6c545582c0475364f31e0a1d520e8ad27d",
       "klawiter:yearRaw": "1960",
@@ -71930,7 +71940,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "35c438dd3003e6941e59c2120a12d4d90f5a96ba3cfb0b7d64664c7dfa671fe0",
       "klawiter:yearRaw": "1962",
@@ -71949,7 +71959,7 @@
       "klawiter:reviewBasis": "carrier-occurrence",
       "klawiter:reviewDecision": "reject-proposal",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "ba161379b2a15f4ec834bf8bfcf1f1f4332585fd7d38dc88f3960fecca32cdcf",
       "klawiter:yearRaw": "1966",
@@ -71979,7 +71989,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "f45f736db966c1c5413e1a54d2f641d8a12b5084e78c92bfe092e45a161b5c61",
       "klawiter:yearRaw": "1968",
@@ -71999,7 +72009,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "c3e26c04751d50ab1d6c8da33582850bd96bed1391524eaf585be8c432c8bd57",
       "klawiter:yearRaw": "1969",
@@ -72019,7 +72029,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "68b68e20c7e14428391a1f7a38625836d468cf088fd97c62b76d8848184e5fdf",
       "klawiter:yearRaw": "1974",
@@ -72039,7 +72049,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "fc626a5d2677ea38a266f120c8e7fd368f4f1eff7f9f13c5f9cf08f9842bcbfe",
       "klawiter:yearRaw": "1976",
@@ -72059,7 +72069,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "1ddc84e50b7abb71456264d1b1e4e5aa3299aa32068787b9b47b2ab63ba86384",
       "klawiter:yearRaw": "1979",
@@ -72079,7 +72089,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "3c59d13feb116e9ca74c2a48f748d5d807c3086a8a861ade634fc03e02233884",
       "klawiter:yearRaw": "1992",
@@ -72101,7 +72111,7 @@
       "klawiter:reviewFlags": [
         "normalized-page-count-notation"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "f7c39070e87bd43a2b733e6e479b0dbe6acd62afacdac5c2e3fa8e79ef3fce59",
       "klawiter:yearRaw": "1995",
@@ -72121,7 +72131,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "b36d31a462bb49f280635a824d686ef4dd36e3bb590daf82369b58d8a6481908",
       "klawiter:yearRaw": "1995",
@@ -72141,7 +72151,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "67b59f9e3e09f7ed0813e5f2d4e7be611ab1c52e03974b0cc542c2e150dd96ac",
       "klawiter:yearRaw": "2003",
@@ -72167,7 +72177,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "845008420abb4b130ad058772f59fe24bd89fd312c66090a4f6b68cef4ece129",
       "klawiter:yearRaw": "2003",
@@ -72187,7 +72197,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "42096db68f1d8ba00f40b006388b60094d84d5ffdab61bba365a409409b08f80",
       "klawiter:yearRaw": "2015",
@@ -72207,7 +72217,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "f1637ca4e17ee9d1e8c86c9911049dd1a6ea681cef47eb54fac5424698f02ef0",
       "klawiter:yearRaw": "2016",
@@ -72222,36 +72232,25 @@
     {
       "@id": "klawiter:edition/4916-2016-b",
       "@type": "schema:Book",
-      "klawiter:bindingStatus": "decided",
+      "klawiter:bindingStatus": "contested",
       "klawiter:hasContestedClaim": {
         "@id": "klawiter:claim/work-binding/4916-2016-b"
       },
       "klawiter:headerLine": "'''[2016]: Knesebeck GmbH & Co. Verlag, München'''",
       "klawiter:pageCountRaw": "120p.",
-      "klawiter:reviewBasis": "Decided by the main instance after delegation by the operator on 2026-09-22; revisable. The publication is its own work, an adaptation with a change of medium: page 4916 credits it as a graphic novel by its illustrator, adapted into German by a second person; the illustrator's author page 5110 lists the French graphic novel of 2015 and this edition under the heading German translation; page 675 lists the French graphic novel of 2015 as freely inspired by the Schachnovelle. The German edition of 2016 translates the French graphic novel of 2015 and leaves the editions of the Schachnovelle.",
-      "klawiter:reviewDecision": "confirm",
+      "klawiter:reviewBasis": "adaptation-work-identity",
+      "klawiter:reviewDecision": "unresolved",
       "klawiter:reviewFlags": [
-        "extent-differs-across-source-pages"
+        "contested-work-identity"
       ],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "contested",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5",
       "klawiter:yearRaw": "2016",
       "schema:datePublished": "2016",
-      "schema:exampleOfWork": {
-        "@id": "klawiter:work-candidate/4916-2016-b-adaptation"
-      },
       "schema:locationCreated": "München",
       "schema:numberOfPages": 120,
-      "schema:publisher": "Knesebeck GmbH & Co. Verlag",
-      "schema:translationOfWork": [
-        {
-          "@id": "klawiter:edition/675-2015-a"
-        },
-        {
-          "@id": "klawiter:edition/5110-2015-a"
-        }
-      ]
+      "schema:publisher": "Knesebeck GmbH & Co. Verlag"
     },
     {
       "@id": "klawiter:edition/4916-2016-c",
@@ -72261,7 +72260,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "762a4d12738816fb92eb4a0a5be4465e1ab877b2c2aa95e831e49cf1be82f016",
       "klawiter:yearRaw": "2016",
@@ -72281,7 +72280,7 @@
       "klawiter:reviewBasis": "exact-match",
       "klawiter:reviewDecision": "confirm",
       "klawiter:reviewFlags": [],
-      "klawiter:reviewStatus": "confirmed",
+      "klawiter:reviewStatus": "proposed",
       "klawiter:sourcePageId": 4916,
       "klawiter:sourceSliceSha256": "a518e5051114a90babf9ef194781166fbc67fe23a5e1547ce6da4bf90c68e5ad",
       "klawiter:yearRaw": "2019",
@@ -75667,12 +75666,12 @@
       "schema:publisher": "Fischer Taschenbuch Verlag"
     }
   ],
-  "klawiter:algorithmVersion": "1.3",
+  "klawiter:algorithmVersion": "1.4",
   "klawiter:authorityNote": "This Work/Edition graph is the canonical dataset for pages with multiple editions; the flat dataset klawiter.jsonld is a derived convenience projection.",
   "klawiter:derivedProjection": {
     "@id": "klawiter:klawiter-bibliography"
   },
-  "klawiter:reviewContract": "Agentic sample decisions are confirmed only within their exact selectors; all other editions remain proposals and contested bindings remain explicit claims with open decisions.",
+  "klawiter:reviewContract": "Agentic sample decisions are recorded within their exact selectors as proposals; only a person or an exact rule confirms an edition. Contested bindings remain explicit claims with open decisions, an LLM agent's resolution standing in their review history as a proposal.",
   "klawiter:reviewEvidenceSha256": "388ade9b6a8ff93949c366472a2c5311cccd5749dc0ee5ad4f164db5c487f0cf",
   "klawiter:selectionRule": "namespace 0 page with at least two source lines matching a four-digit or ca.-year bold header",
   "klawiter:sourceCorpusSha256": "b835a27e222fdd2e3a6b9eaf8d70ed59c9a6784c00f6568e3b79f3680909e01d",
@@ -79712,14 +79711,6 @@
       "@type": "schema:CreativeWork",
       "klawiter:sourcePageId": 54,
       "schema:name": "Ungeduld des Herzens (VIST)",
-      "schema:sameAs": [
-        {
-          "@id": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.133"
-        },
-        {
-          "@id": "http://d-nb.info/gnd/4447444-1"
-        }
-      ],
       "schema:workExample": [
         {
           "@id": "klawiter:edition/54-1939-a"
@@ -79821,14 +79812,6 @@
       "@type": "schema:CreativeWork",
       "klawiter:sourcePageId": 56,
       "schema:name": "Die Welt von Gestern. Erinnerungen eines Europäers",
-      "schema:sameAs": [
-        {
-          "@id": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.5"
-        },
-        {
-          "@id": "http://d-nb.info/gnd/4436762-4"
-        }
-      ],
       "schema:workExample": [
         {
           "@id": "klawiter:edition/56-1942-a"
@@ -87490,14 +87473,6 @@
       "@type": "schema:CreativeWork",
       "klawiter:sourcePageId": 4916,
       "schema:name": "Schachnovelle / Volume",
-      "schema:sameAs": [
-        {
-          "@id": "https://gams.uni-graz.at/o:szd.werkindex#SZDWRK.39"
-        },
-        {
-          "@id": "http://d-nb.info/gnd/4255212-6"
-        }
-      ],
       "schema:workExample": [
         {
           "@id": "klawiter:edition/4916-1942-a"
@@ -88633,25 +88608,6 @@
         },
         {
           "@id": "klawiter:edition/7460-1989-a"
-        }
-      ]
-    },
-    {
-      "@id": "klawiter:work-candidate/4916-2016-b-adaptation",
-      "@type": "schema:CreativeWork",
-      "prov:wasDerivedFrom": {
-        "@id": "klawiter:claim/work-binding/4916-2016-b"
-      },
-      "schema:creator": "Thomas Humeau",
-      "schema:description": "Adaptation of the Schachnovelle with a change of medium, first published in French in 2015 as Le Joueur d'échecs.",
-      "schema:genre": "graphic novel",
-      "schema:isBasedOn": {
-        "@id": "klawiter:work/4916"
-      },
-      "schema:name": "Die Schachnovelle nach Stefan Zweig (graphic-novel adaptation)",
-      "schema:workExample": [
-        {
-          "@id": "klawiter:edition/4916-2016-b"
         }
       ]
     }

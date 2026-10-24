@@ -34,15 +34,18 @@ from lib.config import (  # noqa: E402
     setup_logging,
     write_json,
 )
+from lib.producers import confirms, producer_class  # noqa: E402
 from lib.reconciliation import (  # noqa: E402
     AGENT_SOURCE_FIELDS,
     SOURCE_REVISION_RESTORE,
     SOURCE_REVISION_WITHHOLD,
     build_reconciliation,
     closes_claim,
+    decision_key,
     load_reconciliation_patches,
     merge_agent_decision_patches,
     merge_decision_patches,
+    opens_claim,
     parse_szd_work_index,
 )
 
@@ -77,18 +80,37 @@ def _check_public_projection(publishable: dict, dataset: dict) -> list[str]:
 
 
 def _check_decisions(result: dict) -> list[str]:
+    """Every public link rests on a confirm or correct decision by a person
+    or an exact rule; a decision by an LLM agent publishes nothing."""
     errors = []
-    decision_ids = {
-        decision["decisionId"]
-        for key in ("locationDecisions", "workDecisions", "agentDecisions")
+    decisions = [
+        (entity_type, decision)
+        for key, entity_type in (
+            ("locationDecisions", "location"),
+            ("workDecisions", "work"),
+            ("agentDecisions", "agent"),
+        )
         for decision in result["decisions"][key]
-        if decision["action"] in {"confirm", "correct"}
+    ]
+    decision_ids = {
+        decision["decisionId"] for _, decision in decisions if confirms(decision)
     }
+    states = result["decisions"]["decisionStates"]
+    for entity_type, decision in decisions:
+        state = states.get(decision_key(decision, entity_type))
+        if state is None or state["decisionId"] != decision["decisionId"]:
+            errors.append(f"{decision['decisionId']}: decision has no state")
+            continue
+        if state["producer"] != producer_class(decision["decidedBy"]):
+            errors.append(f"{decision['decisionId']}: producer class differs")
+        if state["decisionState"] == "confirmed" and state["producer"] == "llm-agent":
+            errors.append(f"{decision['decisionId']}: an LLM agent confirms")
     for entity_type in ("locations", "works", "agents"):
         for subject, link in result["publishable"][entity_type].items():
             if link["decisionId"] not in decision_ids:
                 errors.append(
-                    f"{entity_type}/{subject}: public link lacks an accepted decision"
+                    f"{entity_type}/{subject}: public link lacks a decision by a "
+                    "person or an exact rule"
                 )
             if entity_type in ("locations", "agents") and not re.fullmatch(
                 r"Q\d+", link["qid"]
@@ -102,7 +124,8 @@ def _check_contested_claims(result: dict) -> list[str]:
 
     An open claim keeps every reading contested; a decided claim accepts
     exactly one reading and rejects the others, and its subject was once an
-    open claim. Neither publishes a link on its own.
+    open claim. Neither publishes a link on its own. Only a person or an
+    exact rule closes a claim; an LLM agent's final decision leaves it open.
     """
     errors = []
     decisions = [
@@ -110,7 +133,9 @@ def _check_contested_claims(result: dict) -> list[str]:
         for key in ("locationDecisions", "workDecisions", "agentDecisions")
         for decision in result["decisions"][key]
     ]
-    unresolved = sum(decision["action"] == "unresolved" for decision in decisions)
+    unresolved = sum(
+        opens_claim(decision) and not closes_claim(decision) for decision in decisions
+    )
     unresolved += sum(
         decision["action"] == SOURCE_REVISION_WITHHOLD
         for decision in result["decisions"].get("sourceRevisionDecisions", [])
@@ -121,7 +146,7 @@ def _check_contested_claims(result: dict) -> list[str]:
     decided = [c for c in claims if c["klawiter:decisionStatus"] == "decided"]
     if len(open_claims) != unresolved:
         errors.append(
-            f"{len(open_claims)} open claims for {unresolved} unresolved decisions"
+            f"{len(open_claims)} open claims for {unresolved} open decision chains"
         )
     if len(decided) != closed:
         errors.append(f"{len(decided)} decided claims for {closed} closing decisions")

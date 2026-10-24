@@ -247,12 +247,19 @@ def _reviewed(corpus: dict, modeling: dict | None = None) -> dict:
     return apply_review_reconciliation(corpus, reconciliation, modeling)
 
 
-def test_reviewed_sample_overlay_records_the_adaptation_decision(
-    edition_corpus,
-) -> None:
-    """The graphic novel's work binding, open until 2026-09-22, is decided as a
-    work of its own: an adaptation of the Schachnovelle whose German edition
-    translates the French graphic novel. The claim stays as the record."""
+def _decided_by_a_person(corpus: dict) -> dict:
+    """The sample overlay with the adaptation resolution recorded by a person,
+    the only producer besides an exact rule whose decision closes a claim."""
+    modeling = json.loads(Path(EDITION_MODELING_DECISIONS).read_text(encoding="utf-8"))
+    for claim in modeling["contested_claims"]:
+        claim["resolution"]["decided_by"] = "Editor (SZD)"
+    return _reviewed(corpus, modeling)
+
+
+def test_agent_reviewed_sample_editions_stay_proposed(edition_corpus) -> None:
+    """Two agent reviewers and an LLM verifier decided the sample of
+    2026-08-21; only a person or an exact rule confirms, so its editions are
+    proposals that keep the agents' disposition as evidence."""
     reviewed = _reviewed(edition_corpus)
     status_counts = {
         status: sum(
@@ -261,13 +268,72 @@ def test_reviewed_sample_overlay_records_the_adaptation_decision(
         )
         for status in ("proposed", "confirmed", "contested")
     }
-    assert status_counts == {"proposed": 2001, "confirmed": 76, "contested": 0}
+    assert status_counts == {"proposed": 2076, "confirmed": 0, "contested": 1}
+    sample = [e for e in reviewed["editions"] if "klawiter:reviewDecision" in e]
+    assert len(sample) == 76
+    assert {e["klawiter:reviewDecision"] for e in sample} == {
+        "confirm",
+        "correct",
+        "reject-proposal",
+        "unresolved",
+    }
     assert len(reviewed["carriers"]) == 6
+    assert {carrier["klawiter:reviewStatus"] for carrier in reviewed["carriers"]} == {
+        "proposed"
+    }
+
+
+def test_an_llm_resolution_leaves_the_adaptation_claim_open(edition_corpus) -> None:
+    """The resolution the main instance recorded on 2026-09-22 (the graphic
+    novel as an adaptation of its own) is a proposal: the claim stays open with
+    that resolution in its review history, and the binding stays withheld."""
+    reviewed = _reviewed(edition_corpus)
     assert len(reviewed["contestedClaims"]) == 1
-    assert reviewed["candidateWorks"] == []
+    assert [item["@id"] for item in reviewed["candidateWorks"]] == [ADAPTATION_WORK]
 
     editions = {edition["@id"]: edition for edition in reviewed["editions"]}
     edition = editions[ADAPTATION_EDITION]
+    assert edition["klawiter:reviewStatus"] == "contested"
+    assert edition["klawiter:bindingStatus"] == "contested"
+    assert "schema:exampleOfWork" not in edition
+    assert "schema:translationOfWork" not in edition
+    assert "contested-work-identity" in edition["klawiter:reviewFlags"]
+    assert edition["klawiter:hasContestedClaim"] == {
+        "@id": "klawiter:claim/work-binding/4916-2016-b"
+    }
+
+    claim = reviewed["contestedClaims"][0]
+    assert claim["klawiter:claimStatus"] == "contested"
+    assert claim["klawiter:decisionStatus"] == "open"
+    assert claim["klawiter:sourceSliceSha256"] == (
+        "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5"
+    )
+    assert {
+        item["klawiter:interpretationStatus"]
+        for item in claim["klawiter:interpretation"]
+    } == {"contested"}
+    proposal = claim["klawiter:hasReviewAction"][-1]
+    assert len(claim["klawiter:hasReviewAction"]) == 4
+    assert proposal["klawiter:reviewOutcome"] == "propose"
+    assert proposal["prov:wasAssociatedWith"] == {"@id": "klawiter:agent/main-instance"}
+    assert proposal["dcterms:date"] == "2026-09-22"
+    assert proposal["klawiter:reviewBasis"].startswith(
+        "Proposed by an LLM agent, no person: selects "
+        "klawiter:interpretation/4916-2016-b/adaptation-work."
+    )
+    assert "120p." in claim["klawiter:reviewNote"][0]
+    assert ADAPTATION_WORK not in {work["@id"] for work in reviewed["works"]}
+
+
+def test_a_person_resolution_binds_the_adaptation(edition_corpus) -> None:
+    """The same resolution recorded by a person decides the claim: the graphic
+    novel becomes a work of its own, an adaptation of the Schachnovelle whose
+    German edition translates the French graphic novel."""
+    reviewed = _decided_by_a_person(edition_corpus)
+    assert reviewed["candidateWorks"] == []
+    editions = {edition["@id"]: edition for edition in reviewed["editions"]}
+    edition = editions[ADAPTATION_EDITION]
+    assert edition["klawiter:reviewStatus"] == "confirmed"
     assert edition["schema:exampleOfWork"] == {"@id": ADAPTATION_WORK}
     assert edition["schema:translationOfWork"] == [
         {"@id": "klawiter:edition/675-2015-a"},
@@ -279,25 +345,18 @@ def test_reviewed_sample_overlay_records_the_adaptation_decision(
     assert edition["klawiter:bindingStatus"] == "decided"
     assert "contested-work-identity" not in edition["klawiter:reviewFlags"]
     assert "extent-differs-across-source-pages" in edition["klawiter:reviewFlags"]
-    assert edition["klawiter:hasContestedClaim"] == {
-        "@id": "klawiter:claim/work-binding/4916-2016-b"
-    }
 
     claim = reviewed["contestedClaims"][0]
     assert claim["klawiter:claimStatus"] == "resolved"
     assert claim["klawiter:decisionStatus"] == "decided"
-    assert claim["klawiter:sourceSliceSha256"] == (
-        "ff138801185823a39d7be8c03523c74144f649088592128feac2202979c66bc5"
-    )
     assert {
         item["klawiter:proposedObject"]["@id"]: item["klawiter:interpretationStatus"]
         for item in claim["klawiter:interpretation"]
     } == {"klawiter:work/4916": "rejected", ADAPTATION_WORK: "accepted"}
     decision = claim["klawiter:hasReviewAction"][-1]
     assert len(claim["klawiter:hasReviewAction"]) == 4
-    assert decision["dcterms:date"] == "2026-09-22"
+    assert decision["klawiter:reviewOutcome"] == "confirm"
     assert "revisable" in decision["klawiter:reviewBasis"]
-    assert "120p." in claim["klawiter:reviewNote"][0]
 
     works = {work["@id"]: work for work in reviewed["works"]}
     adaptation = works[ADAPTATION_WORK]
@@ -308,6 +367,13 @@ def test_reviewed_sample_overlay_records_the_adaptation_decision(
         item["@id"] for item in works["klawiter:work/4916"]["schema:workExample"]
     }
     assert ADAPTATION_EDITION not in schachnovelle
+
+
+def test_an_unregistered_decider_fails_the_build(edition_corpus) -> None:
+    modeling = json.loads(Path(EDITION_MODELING_DECISIONS).read_text(encoding="utf-8"))
+    modeling["contested_claims"][0]["resolution"]["decided_by"] = "someone"
+    with pytest.raises(ValueError, match="no registered producer class"):
+        _reviewed(edition_corpus, modeling)
 
 
 def test_without_its_resolution_the_claim_stays_open(edition_corpus) -> None:
@@ -325,6 +391,7 @@ def test_without_its_resolution_the_claim_stays_open(edition_corpus) -> None:
     assert "schema:exampleOfWork" not in edition
     assert [item["@id"] for item in reviewed["candidateWorks"]] == [ADAPTATION_WORK]
     assert reviewed["contestedClaims"][0]["klawiter:decisionStatus"] == "open"
+    assert len(reviewed["contestedClaims"][0]["klawiter:hasReviewAction"]) == 3
     assert ADAPTATION_WORK not in {work["@id"] for work in reviewed["works"]}
 
 
@@ -333,7 +400,8 @@ def test_the_validator_rejects_a_decision_the_graph_does_not_carry_out(
 ) -> None:
     from validate_editions import _check_contested_claims
 
-    reviewed = _reviewed(edition_corpus)
+    assert _check_contested_claims(_reviewed(edition_corpus)) == []
+    reviewed = _decided_by_a_person(edition_corpus)
     assert _check_contested_claims(reviewed) == []
 
     unbound = deepcopy(reviewed)

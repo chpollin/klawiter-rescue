@@ -1,6 +1,2171 @@
 {
   "agentDecisions": [],
-  "contract": "Decisions remain separate from generated candidates and public links.",
+  "contract": "Decisions remain separate from generated candidates and public links. decisionStates names each decision's producer class and the state it gives its subject; only a person or an exact rule confirms.",
+  "decisionStates": {
+    "location/'s-Gravenhage": {
+      "decisionId": "location/s-Gravenhage/Q36600",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Aalborg": {
+      "decisionId": "location/Aalborg/Q25410",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 9
+    },
+    "location/Abu Dhabi": {
+      "decisionId": "location/Abu-Dhabi/Q1519",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Aldershot, Hants, England / Brookfield, Vt": {
+      "decisionId": "location/Aldershot-Hants-England-Brookfield-Vt/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 0
+    },
+    "location/Algiers": {
+      "decisionId": "location/Algiers/Q3561",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Almaty": {
+      "decisionId": "location/Almaty/Q35493",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Amersfoort": {
+      "decisionId": "location/Amersfoort/Q992",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Amman": {
+      "decisionId": "location/Amman/Q3805",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 15
+    },
+    "location/Amman, Jordan": {
+      "decisionId": "location/Amman-Jordan/Q3805",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Amstelveen": {
+      "decisionId": "location/Amstelveen/Q9898",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Amsterdan": {
+      "decisionId": "location/Amsterdan/Q727",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Antwerpen": {
+      "decisionId": "location/Antwerpen/Q12892",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 17
+    },
+    "location/Antwerpen / Rotterdam": {
+      "decisionId": "location/Antwerpen-Rotterdam/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 0
+    },
+    "location/Apeldoorn": {
+      "decisionId": "location/Apeldoorn/Q101918",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Arnhem": {
+      "decisionId": "location/Arnhem/Q1310",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Astana": {
+      "decisionId": "location/Astana/Q1520",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Athena": {
+      "decisionId": "location/Athena-412b726d/Q1524",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Athēna": {
+      "decisionId": "location/Athena-f1eebd7a/Q1524",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 140
+    },
+    "location/Augsburg": {
+      "decisionId": "location/Augsburg/Q2749",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 38
+    },
+    "location/Bad Nauheim": {
+      "decisionId": "location/Bad-Nauheim/Q16105",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Badalona": {
+      "decisionId": "location/Badalona/Q15468",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Baden-Baden": {
+      "decisionId": "location/Baden-Baden/Q4100",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 9
+    },
+    "location/Baghdad": {
+      "decisionId": "location/Baghdad-c6bd9a06/Q1530",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 60
+    },
+    "location/Baghdād": {
+      "decisionId": "location/Baghdad-01fb184f/Q1530",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Bakı": {
+      "decisionId": "location/Bak/Q9248",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 21
+    },
+    "location/Bakı (Baku)": {
+      "decisionId": "location/Bak-Baku-79937c26/Q9248",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Bakı [Baku]": {
+      "decisionId": "location/Bak-Baku-f670542b/Q9248",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 15
+    },
+    "location/Bakı/Baku": {
+      "decisionId": "location/Bak-Baku-551a2501/Q9248",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Baltimore, MD": {
+      "decisionId": "location/Baltimore-MD/Q5092",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Bambaī": {
+      "decisionId": "location/Bambai/Q1156",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Bamberg": {
+      "decisionId": "location/Bamberg/Q3936",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Bandung": {
+      "decisionId": "location/Bandung/Q10389",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Bangkok": {
+      "decisionId": "location/Bangkok/Q1861",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Basel": {
+      "decisionId": "location/Basel/Q78",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 30
+    },
+    "location/Baton Rouge, LA": {
+      "decisionId": "location/Baton-Rouge-LA/Q28218",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Batumi": {
+      "decisionId": "location/Batumi/Q25475",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Beltershausen": {
+      "decisionId": "location/Beltershausen/Q816204",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Beograd": {
+      "decisionId": "location/Beograd/Q3711",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 67
+    },
+    "location/Berat": {
+      "decisionId": "location/Berat/Q170244",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Bern": {
+      "decisionId": "location/Bern/Q70",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 71
+    },
+    "location/Beverly Hills, CA": {
+      "decisionId": "location/Beverly-Hills-CA/Q127856",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Bielefeld": {
+      "decisionId": "location/Bielefeld/Q2112",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 20
+    },
+    "location/Bishkek": {
+      "decisionId": "location/Bishkek/Q9361",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Bloemfontein": {
+      "decisionId": "location/Bloemfontein/Q37701",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Bloemfontein, Kaapstad": {
+      "decisionId": "location/Bloemfontein-Kaapstad/reject",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Bloemfontein, Kaapstad (Capetown)": {
+      "decisionId": "location/Bloemfontein-Kaapstad-Capetown/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Bogotá": {
+      "decisionId": "location/Bogota/Q2841",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 8
+    },
+    "location/Bonn": {
+      "decisionId": "location/Bonn/Q586",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 31
+    },
+    "location/Bordeaux": {
+      "decisionId": "location/Bordeaux/Q1479",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Borås, Sweden": {
+      "decisionId": "location/Boras-Sweden/Q26040",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Bratislava": {
+      "decisionId": "location/Bratislava/Q1780",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 36
+    },
+    "location/Braunschweig": {
+      "decisionId": "location/Braunschweig/Q2773",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 18
+    },
+    "location/Brescia": {
+      "decisionId": "location/Brescia/Q6221",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Brno": {
+      "decisionId": "location/Brno/Q14960",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Brussel": {
+      "decisionId": "location/Brussel/Q239",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Brussels": {
+      "decisionId": "location/Brussels/Q239",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Bruxelles": {
+      "decisionId": "location/Bruxelles/Q239",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 308
+    },
+    "location/Bucharest": {
+      "decisionId": "location/Bucharest/Q19660",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Bucureşti": {
+      "decisionId": "location/Bucuresti-4bb15dde/Q19660",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 27
+    },
+    "location/Budapest": {
+      "decisionId": "location/Budapest/Q1781",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 201
+    },
+    "location/Calcutta": {
+      "decisionId": "location/Calcutta/Q1348",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 33
+    },
+    "location/Cambridge, MA": {
+      "decisionId": "location/Cambridge-MA/Q49111",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Celje": {
+      "decisionId": "location/Celje/Q1012",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Celovec": {
+      "decisionId": "location/Celovec/Q41753",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 20
+    },
+    "location/Celovec/Klagenfurt": {
+      "decisionId": "location/Celovec-Klagenfurt/Q41753",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Cham, Switzerland": {
+      "decisionId": "location/Cham-Switzerland/Q69235",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Changsha": {
+      "decisionId": "location/Changsha/Q174091",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 46
+    },
+    "location/Charkiv": {
+      "decisionId": "location/Charkiv/Q42308",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Chengdou": {
+      "decisionId": "location/Chengdou/Q30002",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Chengdu": {
+      "decisionId": "location/Chengdu/Q30002",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Chennai": {
+      "decisionId": "location/Chennai/Q1352",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Chicago": {
+      "decisionId": "location/Chicago/Q1297",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 41
+    },
+    "location/Coimbatore": {
+      "decisionId": "location/Coimbatore/Q9885",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Craiova": {
+      "decisionId": "location/Craiova/Q168057",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Cuttack": {
+      "decisionId": "location/Cuttack/Q207324",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Czeladź": {
+      "decisionId": "location/Czeladz/Q161605",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Damascus": {
+      "decisionId": "location/Damascus/Q3766",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 96
+    },
+    "location/Darmstadt": {
+      "decisionId": "location/Darmstadt/Q2973",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 45
+    },
+    "location/Delhi": {
+      "decisionId": "location/Delhi/Q1353",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 45
+    },
+    "location/Den Haag": {
+      "decisionId": "location/Den-Haag/Q36600",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Dhaka": {
+      "decisionId": "location/Dhaka/Q1354",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Dimashq": {
+      "decisionId": "location/Dimashq/Q3766",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 57
+    },
+    "location/Dimashq [Damascus]": {
+      "decisionId": "location/Dimashq-Damascus/Q3766",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 34
+    },
+    "location/Doha": {
+      "decisionId": "location/Doha/Q3861",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 8
+    },
+    "location/Donetsk": {
+      "decisionId": "location/Donetsk/Q43070",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Dresden": {
+      "decisionId": "location/Dresden/Q1731",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 33
+    },
+    "location/Duisburg": {
+      "decisionId": "location/Duisburg/Q2100",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Durrës": {
+      "decisionId": "location/Durres/Q83285",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Dushanbe": {
+      "decisionId": "location/Dushanbe/Q9365",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Düsseldorf": {
+      "decisionId": "location/Dusseldorf/Q1718",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 39
+    },
+    "location/Eberswalde": {
+      "decisionId": "location/Eberswalde/Q9306",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 23
+    },
+    "location/Enschede": {
+      "decisionId": "location/Enschede/Q10002",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Erfurt": {
+      "decisionId": "location/Erfurt/Q1729",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Ernakulam": {
+      "decisionId": "location/Ernakulam/Q1025408",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Evanston, IL": {
+      "decisionId": "location/Evanston-IL/Q462799",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Firenze": {
+      "decisionId": "location/Firenze/Q2044",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Frankfurt": {
+      "decisionId": "location/Frankfurt/Q1794",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1872
+    },
+    "location/Freiburg": {
+      "decisionId": "location/Freiburg/Q2833",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 20
+    },
+    "location/Friedrichsfehn": {
+      "decisionId": "location/Friedrichsfehn/Q1464215",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Frunze": {
+      "decisionId": "location/Frunze/Q9361",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Fuzhou": {
+      "decisionId": "location/Fuzhou/Q68481",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Garden City, NY": {
+      "decisionId": "location/Garden-City-NY/Q739452",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Gent": {
+      "decisionId": "location/Gent/Q1296",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Genève": {
+      "decisionId": "location/Geneve/Q71",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 46
+    },
+    "location/Genève/Geneva": {
+      "decisionId": "location/Geneve-Geneva/Q71",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Girona": {
+      "decisionId": "location/Girona/Q7038",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Graz": {
+      "decisionId": "location/Graz/Q13298",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 43
+    },
+    "location/Grenoble": {
+      "decisionId": "location/Grenoble/Q1289",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Guangzhou": {
+      "decisionId": "location/Guangzhou/Q16572",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 29
+    },
+    "location/Guilin": {
+      "decisionId": "location/Guilin/Q189633",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 33
+    },
+    "location/Gurugram": {
+      "decisionId": "location/Gurugram/Q238508",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Gyoma": {
+      "decisionId": "location/Gyoma/Q18980272",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Göttingen": {
+      "decisionId": "location/Gottingen/Q3033",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 13
+    },
+    "location/Hamburg": {
+      "decisionId": "location/Hamburg/Q1055",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 204
+    },
+    "location/Hannover": {
+      "decisionId": "location/Hannover/Q1715",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 21
+    },
+    "location/Harbin": {
+      "decisionId": "location/Harbin/Q42956",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Hefei": {
+      "decisionId": "location/Hefei/Q185684",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 37
+    },
+    "location/Heidelberg": {
+      "decisionId": "location/Heidelberg/Q2966",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 32
+    },
+    "location/Helsinki": {
+      "decisionId": "location/Helsinki/Q1757",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Heronsgate/Rickmansworth, England": {
+      "decisionId": "location/Heronsgate-Rickmansworth-England/Q3889674",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Hollfeld": {
+      "decisionId": "location/Hollfeld/Q503048",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Hollfeld/Oberfranken": {
+      "decisionId": "location/Hollfeld-Oberfranken/Q503048",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Hong Kong": {
+      "decisionId": "location/Hong-Kong/Q8646",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Hoyvík": {
+      "decisionId": "location/Hoyvik/Q677723",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Huis ter Heide": {
+      "decisionId": "location/Huis-ter-Heide/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Hvannasund": {
+      "decisionId": "location/Hvannasund/Q933117",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Hyderabad": {
+      "decisionId": "location/Hyderabad/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Hà Nội": {
+      "decisionId": "location/Ha-Noi-6ac69af8/Q1858",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 13
+    },
+    "location/Hà Nội [Hanoi]": {
+      "decisionId": "location/Ha-Noi-Hanoi/Q1858",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Hà-Nội": {
+      "decisionId": "location/Ha-Noi-c2913d31/Q1858",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Indaura": {
+      "decisionId": "location/Indaura/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Innsbruck": {
+      "decisionId": "location/Innsbruck/Q1735",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 16
+    },
+    "location/Irbid": {
+      "decisionId": "location/Irbid/Q194165",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Irun (Iruñea) [Pamplona]": {
+      "decisionId": "location/Irun-Irunea-Pamplona/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Iruñea [Pamplona]": {
+      "decisionId": "location/Irunea-Pamplona/Q10282",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Istanbul": {
+      "decisionId": "location/Istanbul-70af65c9/Q406",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 30
+    },
+    "location/Jakarta": {
+      "decisionId": "location/Jakarta-592e27e2/Q3630",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Jakarta?": {
+      "decisionId": "location/Jakarta-306b4ba2/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Jena": {
+      "decisionId": "location/Jena/Q3150",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Jerusalem": {
+      "decisionId": "location/Jerusalem/Q1218",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 29
+    },
+    "location/Jinan": {
+      "decisionId": "location/Jinan/Q170247",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 50
+    },
+    "location/Jyväskylä": {
+      "decisionId": "location/Jyvaskyla/Q134620",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Kaapstad (Capetown)": {
+      "decisionId": "location/Kaapstad-Capetown/Q5465",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Kafr El Sheikh, Egypt": {
+      "decisionId": "location/Kafr-El-Sheikh-Egypt/Q328176",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Kiev": {
+      "decisionId": "location/Kiev/Q1899",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 24
+    },
+    "location/Kiiv": {
+      "decisionId": "location/Kiiv-4d3a9c73/Q1899",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Kiiv/Kiev": {
+      "decisionId": "location/Kiiv-Kiev-3a67c6dc/Q1899",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Kiïv": {
+      "decisionId": "location/Kiiv-583176cc/Q1899",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 16
+    },
+    "location/Kiïv/Kiev": {
+      "decisionId": "location/Kiiv-Kiev-c79c7c0d/Q1899",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 8
+    },
+    "location/Kolkata": {
+      "decisionId": "location/Kolkata/Q1348",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 33
+    },
+    "location/Koper": {
+      "decisionId": "location/Koper/Q1015",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Korçë/Korce, Tiranë/Tirana": {
+      "decisionId": "location/Korce-Korce-Tirane-Tirana/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 0
+    },
+    "location/Kottayam": {
+      "decisionId": "location/Kottayam/Q659887",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Kraków": {
+      "decisionId": "location/Krakow/Q31487",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Krems": {
+      "decisionId": "location/Krems/Q131266",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 145
+    },
+    "location/Krems an der Donau": {
+      "decisionId": "location/Krems-an-der-Donau/Q131266",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 142
+    },
+    "location/Kuala Lampur": {
+      "decisionId": "location/Kuala-Lampur/Q1865",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Kuwait": {
+      "decisionId": "location/Kuwait/Q35178",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Kyïv": {
+      "decisionId": "location/Kyiv/Q1899",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Köln": {
+      "decisionId": "location/Koln/Q365",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 72
+    },
+    "location/København": {
+      "decisionId": "location/Kbenhavn/Q1748",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 118
+    },
+    "location/Laaber": {
+      "decisionId": "location/Laaber/Q491811",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Lahr (Schwarzwald)": {
+      "decisionId": "location/Lahr-Schwarzwald/Q7039",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Lannuon": {
+      "decisionId": "location/Lannuon/Q207581",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Lanzhou": {
+      "decisionId": "location/Lanzhou/Q183584",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 44
+    },
+    "location/Lattakia": {
+      "decisionId": "location/Lattakia/Q200030",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Lausanne": {
+      "decisionId": "location/Lausanne/Q807",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Lavin": {
+      "decisionId": "location/Lavin/Q65557",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Leikanger": {
+      "decisionId": "location/Leikanger/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 8
+    },
+    "location/Lelystad": {
+      "decisionId": "location/Lelystad/Q166065",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Lexington, MA": {
+      "decisionId": "location/Lexington-MA/Q929667",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 20
+    },
+    "location/Lille": {
+      "decisionId": "location/Lille/Q648",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Linz": {
+      "decisionId": "location/Linz/Q41329",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Lisboa": {
+      "decisionId": "location/Lisboa/Q597",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 22
+    },
+    "location/Ljubljana": {
+      "decisionId": "location/Ljubljana/Q437",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 44
+    },
+    "location/Locarno": {
+      "decisionId": "location/Locarno/Q11935",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 24
+    },
+    "location/Longpont-sur-Orge": {
+      "decisionId": "location/Longpont-sur-Orge/Q247627",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Los Angeles, CA": {
+      "decisionId": "location/Los-Angeles-CA/Q65",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Ludwigshafen am Rhein": {
+      "decisionId": "location/Ludwigshafen-am-Rhein/Q2910",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Luxembourg City": {
+      "decisionId": "location/Luxembourg-City/Q1842",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Luxembourg City, Luxembourg": {
+      "decisionId": "location/Luxembourg-City/Q1842",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Maastricht": {
+      "decisionId": "location/Maastricht/Q1309",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Maastricht / Brussel": {
+      "decisionId": "location/Maastricht-Brussel/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Madison, WI": {
+      "decisionId": "location/Madison-WI/Q43788",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Madrid": {
+      "decisionId": "location/Madrid/Q2807",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 120
+    },
+    "location/Mainz": {
+      "decisionId": "location/Mainz/Q1720",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 22
+    },
+    "location/Marburg": {
+      "decisionId": "location/Marburg/Q3869",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 31
+    },
+    "location/Maribor": {
+      "decisionId": "location/Maribor/Q1010",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 19
+    },
+    "location/Mataró": {
+      "decisionId": "location/Mataro/Q11492",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Meerut": {
+      "decisionId": "location/Meerut/Q200237",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Melbourne": {
+      "decisionId": "location/Melbourne/Q3141",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 15
+    },
+    "location/Memmingen": {
+      "decisionId": "location/Memmingen/Q14825",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Mengen": {
+      "decisionId": "location/Mengen/Q82279",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Menlo Park, CA": {
+      "decisionId": "location/Menlo-Park-CA/Q74195",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Meppadi": {
+      "decisionId": "location/Meppadi/Q14224739",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Metz": {
+      "decisionId": "location/Metz/Q22690",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Mexico City": {
+      "decisionId": "location/Mexico-City/Q1489",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Milan": {
+      "decisionId": "location/Milan/Q490",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Milano": {
+      "decisionId": "location/Milano/Q490",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 96
+    },
+    "location/Minsk": {
+      "decisionId": "location/Minsk/Q2280",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 38
+    },
+    "location/Montevideo": {
+      "decisionId": "location/Montevideo/Q1335",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Montevideo, Uruguay": {
+      "decisionId": "location/Montevideo-Uruguay/Q1335",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Morsbach/Sieg": {
+      "decisionId": "location/Morsbach-Sieg/Q11050",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Moscow": {
+      "decisionId": "location/Moscow/Q649",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 16
+    },
+    "location/Moskau": {
+      "decisionId": "location/Moskau/Q649",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 37
+    },
+    "location/Moskva": {
+      "decisionId": "location/Moskva/Q649",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 223
+    },
+    "location/Moskva / Vladivostok": {
+      "decisionId": "location/Moskva-Vladivostok/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 0
+    },
+    "location/Mountain View, CA": {
+      "decisionId": "location/Mountain-View-CA/Q486860",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 13
+    },
+    "location/Mumbai": {
+      "decisionId": "location/Mumbai/Q1156",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Munich": {
+      "decisionId": "location/Munich/Q1726",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 8
+    },
+    "location/Muscat": {
+      "decisionId": "location/Muscat/Q3826",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/México": {
+      "decisionId": "location/Mexico/Q1489",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 68
+    },
+    "location/Münster": {
+      "decisionId": "location/Munster/Q2742",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Nabeul": {
+      "decisionId": "location/Nabeul/Q867615",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Nablus": {
+      "decisionId": "location/Nablus/Q214178",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Namur": {
+      "decisionId": "location/Namur/Q134121",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Nanjing": {
+      "decisionId": "location/Nanjing/Q16666",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 90
+    },
+    "location/Nanning": {
+      "decisionId": "location/Nanning/Q179608",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Nanterre": {
+      "decisionId": "location/Nanterre/Q170507",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Nanterre (Hauts-de-Seine)": {
+      "decisionId": "location/Nanterre-Hauts-de-Seine/Q170507",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Neckarsteinach": {
+      "decisionId": "location/Neckarsteinach/Q1973855",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/New Delhi": {
+      "decisionId": "location/New-Delhi/Q987",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 16
+    },
+    "location/New Orleans, LA": {
+      "decisionId": "location/New-Orleans-LA/Q34404",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Nicosia, Cyprus": {
+      "decisionId": "location/Nicosia-Cyprus/Q3856",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Nokis": {
+      "decisionId": "location/Nokis/Q489898",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Norderstedt": {
+      "decisionId": "location/Norderstedt/Q3928",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Novi Sad": {
+      "decisionId": "location/Novi-Sad/Q55630",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 21
+    },
+    "location/Oberhausen": {
+      "decisionId": "location/Oberhausen/Q2838",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Oldenburg": {
+      "decisionId": "location/Oldenburg/Q2936",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Olomouc": {
+      "decisionId": "location/Olomouc/Q81137",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Olpe": {
+      "decisionId": "location/Olpe/Q10898",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Oslo": {
+      "decisionId": "location/Oslo/Q585",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 61
+    },
+    "location/Ottawa, ON": {
+      "decisionId": "location/Ottawa-ON/Q1930",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 24
+    },
+    "location/Philadelphia": {
+      "decisionId": "location/Philadelphia/Q1345",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Planegg": {
+      "decisionId": "location/Planegg/Q255796",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Pleven": {
+      "decisionId": "location/Pleven/Q165420",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Plovdiv": {
+      "decisionId": "location/Plovdiv/Q459",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/Porto": {
+      "decisionId": "location/Porto/Q36433",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 85
+    },
+    "location/Porto Alegre": {
+      "decisionId": "location/Porto-Alegre/Q40269",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Porto Alegre, RS": {
+      "decisionId": "location/Porto-Alegre-RS/Q40269",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Prag": {
+      "decisionId": "location/Prag/Q1085",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 36
+    },
+    "location/Prague": {
+      "decisionId": "location/Prague/Q1085",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 55
+    },
+    "location/Pretoria": {
+      "decisionId": "location/Pretoria/Q3926",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Prishtina": {
+      "decisionId": "location/Prishtina-0e7834f9/Q25270",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Prishtina?": {
+      "decisionId": "location/Prishtina-45e8b796/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Prishtinë": {
+      "decisionId": "location/Prishtine/Q25270",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 19
+    },
+    "location/Pune": {
+      "decisionId": "location/Pune/Q1538",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Pôrto [Porto]": {
+      "decisionId": "location/Porto-Porto/Q36433",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Reykjavik": {
+      "decisionId": "location/Reykjavik-c8bf9cc7/Q1764",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Reykjavík": {
+      "decisionId": "location/Reykjavik-b607805a/Q1764",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Riga": {
+      "decisionId": "location/Riga-d1199df7/Q1773",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Rijeka": {
+      "decisionId": "location/Rijeka/Q1647",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 70
+    },
+    "location/Rio de Janeiro": {
+      "decisionId": "location/Rio-de-Janeiro/Q8678",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 260
+    },
+    "location/Rio de Janiero": {
+      "decisionId": "location/Rio-de-Janiero/Q8678",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Rio de Janiro": {
+      "decisionId": "location/Rio-de-Janiro/Q8678",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Riverside, CA": {
+      "decisionId": "location/Riverside-CA/Q49243",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 37
+    },
+    "location/Riyadh": {
+      "decisionId": "location/Riyadh/Q3692",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Rochester, NY": {
+      "decisionId": "location/Rochester-NY/Q49218",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 15
+    },
+    "location/Roma": {
+      "decisionId": "location/Roma/Q220",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 38
+    },
+    "location/Rostock": {
+      "decisionId": "location/Rostock/Q2861",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Rotterdam": {
+      "decisionId": "location/Rotterdam/Q34370",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 134
+    },
+    "location/Rudolstadt": {
+      "decisionId": "location/Rudolstadt/Q517107",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Rīga": {
+      "decisionId": "location/Riga-b4d4433a/Q1773",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Saint-Aignan": {
+      "decisionId": "location/Saint-Aignan/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/San Francisco": {
+      "decisionId": "location/San-Francisco/Q62",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 57
+    },
+    "location/San Francisco, CA": {
+      "decisionId": "location/San-Francisco-CA/Q62",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 8
+    },
+    "location/Sankt-Peterburg": {
+      "decisionId": "location/Sankt-Peterburg/Q656",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Santiago": {
+      "decisionId": "location/Santiago/Q2887",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 34
+    },
+    "location/Sarajevo": {
+      "decisionId": "location/Sarajevo/Q11194",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 68
+    },
+    "location/Saratov": {
+      "decisionId": "location/Saratov/Q5332",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Scheveningen, Netherlands": {
+      "decisionId": "location/Scheveningen-Netherlands/Q837211",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Secunderabad": {
+      "decisionId": "location/Secunderabad/Q1003502",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Seoul": {
+      "decisionId": "location/Seoul/Q8684",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Sewanee, TN": {
+      "decisionId": "location/Sewanee-TN/Q1987614",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Shanghai": {
+      "decisionId": "location/Shanghai/Q8686",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 102
+    },
+    "location/Shenyang": {
+      "decisionId": "location/Shenyang/Q11720",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Simferopol'": {
+      "decisionId": "location/Simferopol/Q19566",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Skopje": {
+      "decisionId": "location/Skopje/Q384",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 7
+    },
+    "location/Soesterberg": {
+      "decisionId": "location/Soesterberg/Q1025080",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Sofija, Varna": {
+      "decisionId": "location/Sofija-Varna/reject",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Soul-si [Seoul, South Korea]": {
+      "decisionId": "location/Soul-si-Seoul-South-Korea/Q8684",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/St. Petersburg": {
+      "decisionId": "location/St-Petersburg/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 11
+    },
+    "location/St.-Peterburg": {
+      "decisionId": "location/St-Peterburg/Q656",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Stamford, CT": {
+      "decisionId": "location/Stamford-CT/Q49169",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Sulzbach": {
+      "decisionId": "location/Sulzbach/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Surabaya": {
+      "decisionId": "location/Surabaya/Q11462",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Sydney": {
+      "decisionId": "location/Sydney/Q3130",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 19
+    },
+    "location/São Paulo": {
+      "decisionId": "location/Sao-Paulo/Q174",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 27
+    },
+    "location/T'aipei": {
+      "decisionId": "location/T-aipei/Q1867",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 168
+    },
+    "location/Taiyuan": {
+      "decisionId": "location/Taiyuan/Q72778",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 196
+    },
+    "location/Taiyuan/Xi'an": {
+      "decisionId": "location/Taiyuan-Xi-an/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 177
+    },
+    "location/Taiyuan/Xián": {
+      "decisionId": "location/Taiyuan-Xian/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Tallinn": {
+      "decisionId": "location/Tallinn/Q1770",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 37
+    },
+    "location/Tashkent": {
+      "decisionId": "location/Tashkent-8de56ea4/Q269",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 14
+    },
+    "location/Tashkent?": {
+      "decisionId": "location/Tashkent-027ff90c/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Tbilisi": {
+      "decisionId": "location/Tbilisi/Q994",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 37
+    },
+    "location/Tehran": {
+      "decisionId": "location/Tehran/Q3616",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 25
+    },
+    "location/Tel Aviv": {
+      "decisionId": "location/Tel-Aviv-68371d5b/Q33935",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 17
+    },
+    "location/Tel-Aviv": {
+      "decisionId": "location/Tel-Aviv-3d4179cc/Q33935",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 15
+    },
+    "location/Tel-ʾAviv": {
+      "decisionId": "location/Tel-Aviv-3db4706d/Q33935",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Thành-phô-Hô-chí-Minh": {
+      "decisionId": "location/Thanh-pho-Ho-chi-Minh-1aaee677/Q1854",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Thành-phô-Hô-chí-Minh [Ho Chi Minh City]": {
+      "decisionId": "location/Thanh-pho-Ho-chi-Minh-Ho-Chi-Minh-City/Q1854",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Thành-phô-Hồ-chí-Minh": {
+      "decisionId": "location/Thanh-pho-Ho-chi-Minh-00e7c9d0/Q1854",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Tianjin": {
+      "decisionId": "location/Tianjin/Q11736",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 82
+    },
+    "location/Tihrān": {
+      "decisionId": "location/Tihran/Q3616",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 23
+    },
+    "location/Tihrān [Tehran]": {
+      "decisionId": "location/Tihran-Tehran/Q3616",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 19
+    },
+    "location/Tilburg": {
+      "decisionId": "location/Tilburg/Q26430",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Tirana": {
+      "decisionId": "location/Tirana-9e8e9239/Q19689",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 175
+    },
+    "location/Tirana?": {
+      "decisionId": "location/Tirana-cd439c8e/unresolved",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Tirane/Tirana": {
+      "decisionId": "location/Tirane-Tirana-96b7f8c7/Q19689",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Tiranë": {
+      "decisionId": "location/Tirane/Q19689",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 167
+    },
+    "location/Tiranë (Tirana)": {
+      "decisionId": "location/Tirane-Tirana-b5a58aa8/Q19689",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 45
+    },
+    "location/Tiranë [Tirana]": {
+      "decisionId": "location/Tirane-Tirana-29af0fc1/Q19689",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 59
+    },
+    "location/Tiranë/Tirana": {
+      "decisionId": "location/Tirane-Tirana-3059e1ae/Q19689",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 53
+    },
+    "location/Toronto": {
+      "decisionId": "location/Toronto/Q172",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 58
+    },
+    "location/Toshkent": {
+      "decisionId": "location/Toshkent/Q269",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Toulouse": {
+      "decisionId": "location/Toulouse/Q7880",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 36
+    },
+    "location/Tunis": {
+      "decisionId": "location/Tunis-61275990/Q3572",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 69
+    },
+    "location/Tutzing": {
+      "decisionId": "location/Tutzing/Q533166",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Tyresö": {
+      "decisionId": "location/Tyreso/Q113730",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Tórshavn": {
+      "decisionId": "location/Torshavn/Q10704",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 10
+    },
+    "location/Tübingen": {
+      "decisionId": "location/Tubingen/Q3806",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 26
+    },
+    "location/Tōkyō": {
+      "decisionId": "location/Tokyo/Q1490",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 4
+    },
+    "location/Tūnis": {
+      "decisionId": "location/Tunis-49ce6012/Q3572",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 19
+    },
+    "location/Tūnis / Ottawa, ON": {
+      "decisionId": "location/Tunis-Ottawa-ON/reject",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 0
+    },
+    "location/Tūnis [Tunis]": {
+      "decisionId": "location/Tunis-Tunis/Q3572",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 12
+    },
+    "location/Udin [Udine]": {
+      "decisionId": "location/Udin-Udine/Q2790",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Ulaanbaatar": {
+      "decisionId": "location/Ulaanbaatar/Q23430",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 22
+    },
+    "location/Ulaanbaatar [formerly Ulan Bator]": {
+      "decisionId": "location/Ulaanbaatar-formerly-Ulan-Bator/Q23430",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 17
+    },
+    "location/Utrecht": {
+      "decisionId": "location/Utrecht/Q803",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 6
+    },
+    "location/Varna": {
+      "decisionId": "location/Varna/Q6506",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 27
+    },
+    "location/Varna, Sofija": {
+      "decisionId": "location/Varna-Sofija/reject",
+      "decisionState": "contested",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Vestmanna, Streymoy, Faeroe Islands": {
+      "decisionId": "location/Vestmanna-Streymoy-Faeroe-Islands/Q608352",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Vienna": {
+      "decisionId": "location/Vienna/Q1741",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 89
+    },
+    "location/Vigo": {
+      "decisionId": "location/Vigo/Q8745",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Villeneuve d'Ascq": {
+      "decisionId": "location/Villeneuve-d-Ascq/Q43295",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 0
+    },
+    "location/Vilnius": {
+      "decisionId": "location/Vilnius/Q216",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 17
+    },
+    "location/Växjö": {
+      "decisionId": "location/Vaxjo/Q26152",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Warsaw": {
+      "decisionId": "location/Warsaw/Q270",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 16
+    },
+    "location/Warszawa": {
+      "decisionId": "location/Warszawa/Q270",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 39
+    },
+    "location/Weimar": {
+      "decisionId": "location/Weimar/Q3955",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 223
+    },
+    "location/Wiesbaden": {
+      "decisionId": "location/Wiesbaden/Q1721",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 39
+    },
+    "location/Wilmington, DE": {
+      "decisionId": "location/Wilmington-DE/Q174224",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Wuhan": {
+      "decisionId": "location/Wuhan/Q11746",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 5
+    },
+    "location/Würzburg": {
+      "decisionId": "location/Wurzburg-e1b62de9/Q2999",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 136
+    },
+    "location/Wũrzburg": {
+      "decisionId": "location/Wurzburg-ff7b53f0/Q2999",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 9
+    },
+    "location/Xi'an": {
+      "decisionId": "location/Xi-an/Q5826",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 214
+    },
+    "location/Yanji": {
+      "decisionId": "location/Yanji/Q713362",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 34
+    },
+    "location/Yerevan": {
+      "decisionId": "location/Yerevan/Q1953",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 39
+    },
+    "location/Yogyakarta": {
+      "decisionId": "location/Yogyakarta/Q7568",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/Zagreb": {
+      "decisionId": "location/Zagreb/Q1435",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 33
+    },
+    "location/Zürich": {
+      "decisionId": "location/Zurich/Q72",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 505
+    },
+    "location/al-Riyāḍ": {
+      "decisionId": "location/al-Riyad/Q3692",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Étival-lès-Le Mans": {
+      "decisionId": "location/Etival-les-Le-Mans/Q1224451",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 2
+    },
+    "location/Ürümchi [Ürümqi]": {
+      "decisionId": "location/Urumchi-Urumqi/Q16959",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 3
+    },
+    "location/Ürümqi": {
+      "decisionId": "location/Urumqi/Q16959",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 31
+    },
+    "location/Đà Nẵng": {
+      "decisionId": "location/a-Nang/Q25282",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 1
+    },
+    "location/İstanbul": {
+      "decisionId": "location/Istanbul-24ec8f72/Q406",
+      "decisionState": "proposed",
+      "producer": "llm-agent",
+      "sourceOccurrences": 127
+    },
+    "work/klawiter:work/4916": {
+      "decisionId": "work/4916/SZDWRK.39",
+      "decisionState": "proposed",
+      "producer": "llm-agent"
+    },
+    "work/klawiter:work/54": {
+      "decisionId": "work/54/SZDWRK.133",
+      "decisionState": "proposed",
+      "producer": "llm-agent"
+    },
+    "work/klawiter:work/56": {
+      "decisionId": "work/56/SZDWRK.5",
+      "decisionState": "proposed",
+      "producer": "llm-agent"
+    }
+  },
   "locationDecisions": [
     {
       "action": "confirm",

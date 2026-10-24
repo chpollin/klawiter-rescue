@@ -90,7 +90,7 @@ def authority_claims() -> list[dict]:
         return {
             "decisionId": "test/" + next(iter(subject.values())),
             "action": "unresolved",
-            "decidedBy": "Test reviewer",
+            "decidedBy": "independent-verification-agent",
             "decidedAt": "2026-09-05T00:00:00Z",
             "evidence": ["Synthetic source fixture"],
             **subject,

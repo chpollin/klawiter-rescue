@@ -190,6 +190,10 @@ PARSED_FIELDS = [
     # "true" where the page has a publication layer, whose first publication
     # then owns the flat year, publisher and extent (stage 03).
     "publication_scoped",
+    # JSON list of the flat fields of a headerless page whose body-pattern
+    # value no rule binds to the described publication; stage 03 empties them
+    # and stage 03b leaves them empty.
+    "unbound_fields",
 ]
 
 # Step 04 adds entry_type and time_period

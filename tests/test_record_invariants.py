@@ -8,6 +8,7 @@ list, so an allowlist can only shrink by review.
 
 from __future__ import annotations
 
+import hashlib
 import importlib
 import json
 import re
@@ -16,9 +17,10 @@ from pathlib import Path
 
 import pytest
 from lib.config import SQL_DUMP_PATH
-from lib.encoding import value_in_content
+from lib.encoding import unescape_dump_quotes, value_in_content
 from lib.llm_extract import occurs_in_source, page_count_in_source
 from lib.patterns import ABSENCE_MARKS, publisher_shape_ok
+from lib.publications import unbound_flat_fields
 from lib.wiki_parser import (
     _LANGUAGE_HEAD,
     _TRANSLATIONS_HEAD,
@@ -243,6 +245,82 @@ def test_rule_read_values_occur_in_the_dump_text(source_rows, ns0_by_id):
             if not any(value_in_content(s, t) for s in spellings for t in texts):
                 violations[entry["sourcePageId"]] = f"{field}={value!r}"
     _check_allowlist(violations, ROUND_TRIP_ALLOWLIST)
+
+
+# (f) On a page without a publication header, a rule-read place, publisher
+# or translator stands in the first statement of the page, in a position a
+# rule binds to the described publication; otherwise the field is a gap.
+
+UNBOUND_FLAT_ALLOWLIST: dict[int, str] = {}
+
+
+def test_headerless_flat_values_are_bound_to_the_first_statement(
+    source_rows, ns0_by_id
+):
+    violations = {}
+    for row in source_rows:
+        entry = ns0_by_id.get(int(row["page_id"]))
+        if entry is None or entry.get("publicationCount"):
+            continue
+        provenance = entry.get("_provenance") or {}
+        for field in ("location", "publisher", "translator"):
+            value = entry.get(field)
+            if not value or provenance.get(field, "regex") != "regex":
+                continue
+            spellings = {value}
+            if field == "location":
+                spellings |= _normalized_variants().get(value, set())
+            if all(
+                unbound_flat_fields(row["content"], {field: spelling})
+                for spelling in spellings
+            ):
+                violations[entry["sourcePageId"]] = f"{field}={value!r}"
+    _check_allowlist(violations, UNBOUND_FLAT_ALLOWLIST)
+
+
+# (g) Every structured translation statement is bound to its passage: each
+# value is the text of its span, the span lies in the statement's source
+# slice or its translation's head, and every language heading yields one.
+
+TRANSLATION_STATEMENT_ALLOWLIST: dict[int, str] = {}
+
+
+def test_translation_statements_are_bound_to_their_passages(source_rows, ns0_by_id):
+    violations = {}
+    for row in source_rows:
+        entry = ns0_by_id.get(int(row["page_id"]))
+        if entry is None:
+            continue
+        text = row["content"]
+        statements = entry.get("translationStatements") or []
+        block = _wiki_section(text, _TRANSLATIONS_HEAD, _LANGUAGE_HEAD)
+        if block and not statements:
+            violations[entry["sourcePageId"]] = "section without statements"
+            continue
+        headings = {
+            remove_wiki_markup(match.group(0)).strip(" :'").split(" (")[0]
+            for match in _HEADING_RE.finditer(block.group(1) if block else "")
+        }
+        read = {
+            statement.get("language", "").split(" (")[0] for statement in statements
+        }
+        if headings - read:
+            violations[entry["sourcePageId"]] = (
+                f"headings without a statement {headings - read}"
+            )
+        for statement in statements:
+            source_slice = statement["sourceSlice"]
+            passage = text[source_slice["start"] : source_slice["end"]]
+            if (
+                hashlib.sha256(passage.encode("utf-8")).hexdigest()
+                != source_slice["sha256"]
+            ):
+                violations[entry["sourcePageId"]] = "slice hash"
+            for field, (start, end) in statement["spans"].items():
+                value = " ".join(unescape_dump_quotes(text[start:end]).split())
+                if field != "language" and str(statement[field]) != value:
+                    violations[entry["sourcePageId"]] = f"{field}={statement[field]!r}"
+    _check_allowlist(violations, TRANSLATION_STATEMENT_ALLOWLIST)
 
 
 _ESCAPE_RE = re.compile(r'\\["\'\\]|\ufffd|[\x00-\x08\x0b\x0c\x0e-\x1f]')

@@ -1,11 +1,11 @@
 {
-  "algorithmVersion": "1.3",
+  "algorithmVersion": "1.4",
   "artifacts": {
-    "earl.jsonld": "7f1ac9196bff3221b3a3c2e39d00a22e7b5abed6b0ae092b6d1b8cb9f8e9ecfc",
-    "provenance.jsonld": "eff0109fe7adafd2e0b41db214ae4f905a2cacb8d687ae62cd9b9f273b5ef9fa",
-    "review-queue.json": "706fdabcbd73222db78258d6192b58ce416aec5e4f8678a04384f76966876d39",
-    "validation-report.json": "5401d7fa50040d243636878a6263a0b40d1f3a023df3ca55b63546cff6b6894c",
-    "work-editions.jsonld": "686f8a96774f0c11e31ca65b6717d324c3d012fd79f8a9228da9d7d9d5647d70"
+    "earl.jsonld": "c08db4183d8926f37a07dfeeaa13729c8e9ccf4eb49010d71dfae852e6cc7fa6",
+    "provenance.jsonld": "73479ce4742605263ff017efd5562b8f3db4a56e63ef438197d1f394c8243409",
+    "review-queue.json": "4557766322fb0f3b784069d835c2d50e381a73f200b3f065be6e572ed11921f1",
+    "validation-report.json": "ddf29ee4b77b739e8c4600e68d620adeac57f5b663873f4682be4120dcd1a0f7",
+    "work-editions.jsonld": "585fc0093d8097caab0e03894f5dfe33a022f1789ac7cc69eccb81a1efd46db3"
   },
   "authorityEvidence": {
     "szdWorkIndex": {
@@ -17,20 +17,20 @@
       "sha256": "b8a306eadd08bf35b0d2c7751296f9cd0a52b4c244b5c3c0c0f95f00aa9032bc"
     }
   },
-  "codeSha256": "d323c978b36ae3398330693a52c5d47706d43d78e4fd07724d0f318a22c7d99d",
+  "codeSha256": "f1a808d4acef8df58a95e81e677f0b72b688e57b60f73e0308c12a29ddb632a9",
   "counts": {
     "annotations": 2077,
-    "candidateWorks": 0,
+    "candidateWorks": 1,
     "carriers": 6,
-    "confirmedEditions": 76,
-    "contestedEditionClaims": 0,
-    "contestedEditions": 0,
-    "decidedEditionClaims": 1,
+    "confirmedEditions": 0,
+    "contestedEditionClaims": 1,
+    "contestedEditions": 1,
+    "decidedEditionClaims": 0,
     "editions": 2077,
-    "reviewCases": 339,
-    "works": 448
+    "reviewCases": 354,
+    "works": 447
   },
-  "generatedAt": "2026-10-24T15:57:44.498688+00:00",
+  "generatedAt": "2026-10-24T17:53:23.148942+00:00",
   "reviewEvidence": {
     "modelingDecisions": {
       "path": "data/reconciliation/edition-modeling-decisions.json",

@@ -17,14 +17,66 @@
     "translator": "Donika Omari"
    }
   },
+  "41": {
+   "detectable": {
+    "publisher": "Die Arche",
+    "location": "Berlin"
+   }
+  },
+  "53": {
+   "detectable": {
+    "location": "Zürich"
+   }
+  },
   "54": {
    "detectable": {
     "translator": "Jorgi Doksani"
    }
   },
+  "92": {
+   "detectable": {
+    "translator": "Ljuba and Rudolf Pellarovi"
+   }
+  },
+  "94": {
+   "detectable": {
+    "publisher": "Hallam Edition",
+    "translator": "Eden and Cedar Paul"
+   }
+  },
+  "98": {
+   "detectable": {
+    "publisher": "Bernard Grasset",
+    "translator": "Alzir Hella et Olivier Bournac"
+   }
+  },
+  "103": {
+   "detectable": {
+    "location": "Tokyo",
+    "translator": "Hikaru Tsuji et al"
+   }
+  },
+  "105": {
+   "detectable": {
+    "publisher": "Spamer Verlag",
+    "translator": "N. Shul’govskii"
+   }
+  },
+  "113": {
+   "detectable": {
+    "publisher": "Guanabara",
+    "translator": "Odilon Gallotti"
+   }
+  },
   "119": {
    "detectable": {
-    "publisher": "December 1945"
+    "publisher": "December 1945",
+    "translator": "José Francisco dos Santos"
+   }
+  },
+  "141": {
+   "detectable": {
+    "translator": "Arístides Gamboa"
    }
   },
   "147": {
@@ -32,14 +84,32 @@
     "translator": "Eden and Cedar Paul"
    }
   },
+  "149": {
+   "detectable": {
+    "publisher": "Berger",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "161": {
+   "detectable": {
+    "publisher": "Pfeiffer Verlag"
+   }
+  },
   "163": {
    "detectable": {
-    "publisher": "Fredonia.\n\nCategory"
+    "publisher": "Fredonia.\n\nCategory",
+    "location": "London"
    }
   },
   "165": {
    "detectable": {
     "publisher": "Niemeyer Verlag"
+   }
+  },
+  "171": {
+   "detectable": {
+    "publisher": "Buchpublikation der Edition",
+    "location": "Leipzig"
    }
   },
   "172": {
@@ -51,6 +121,17 @@
   "174": {
    "detectable": {
     "publisher": "Amalthea-Veralg"
+   }
+  },
+  "186": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "187": {
+   "detectable": {
+    "location": "Tallinn",
+    "translator": "Airis Erme"
    }
   },
   "249": {
@@ -65,6 +146,8 @@
   },
   "261": {
    "detectable": {
+    "publisher": "Juedischer Verlag",
+    "location": "Wien",
     "translator": "Wei Xie"
    }
   },
@@ -75,16 +158,26 @@
   },
   "272": {
    "detectable": {
+    "publisher": "Fischer Taschenbuch Verlag",
+    "location": "Wien",
     "translator": "Mien Labberton"
    }
   },
   "273": {
    "detectable": {
+    "publisher": "S. Fischer Verlag",
+    "location": "Leipzig",
     "translator": "Oswald Burkard"
+   }
+  },
+  "278": {
+   "detectable": {
+    "location": "Wien"
    }
   },
   "285": {
    "detectable": {
+    "location": "Stockholm",
     "translator": "Alzir Hella and Olivier Bournac"
    }
   },
@@ -99,6 +192,11 @@
     "translator": "Afrim Koçi"
    }
   },
+  "298": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
   "303": {
    "detectable": {
     "translator": "Hymne Weiss"
@@ -106,21 +204,25 @@
   },
   "306": {
    "detectable": {
+    "location": "Wien",
     "translator": "Vladislav"
    }
   },
   "307": {
    "detectable": {
+    "location": "Frankfurt am Main",
     "translator": "Dimitūr Stoevski"
    }
   },
   "308": {
    "detectable": {
+    "publisher": "Piper Verlag",
     "translator": "Rongchang Zhang"
    }
   },
   "310": {
    "detectable": {
+    "publisher": "Willi Weismann Verlag",
     "translator": "Mahmut Bobrati"
    }
   },
@@ -131,11 +233,15 @@
   },
   "313": {
    "detectable": {
+    "publisher": "Stilke Verlag",
+    "location": "Berlin",
     "translator": "Afrim Koçi"
    }
   },
   "314": {
    "detectable": {
+    "publisher": "Wegweiser-Verlag",
+    "location": "Frankfurt am Main",
     "translator": "K. A. Meranaios"
    }
   },
@@ -144,9 +250,21 @@
     "translator": "Laure Bernardi"
    }
   },
+  "318": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
   "319": {
    "detectable": {
+    "publisher": "Allert de Lange",
+    "location": "Berlin",
     "translator": "Alzir Hella"
+   }
+  },
+  "320": {
+   "detectable": {
+    "publisher": "Fischer Taschenbuch Verlag"
    }
   },
   "323": {
@@ -156,18 +274,256 @@
   },
   "324": {
    "detectable": {
+    "location": "Wien",
     "translator": "Liliana Scalero"
+   }
+  },
+  "326": {
+   "detectable": {
+    "publisher": "Heyne Verlag"
+   }
+  },
+  "327": {
+   "detectable": {
+    "publisher": "Fischer E-Books",
+    "location": "Wien"
+   }
+  },
+  "328": {
+   "detectable": {
+    "location": "Frankfurt am Main"
    }
   },
   "329": {
    "detectable": {
     "publisher": "Verlag des Gesamtverbandes schaffender Künstler Österreichs",
+    "location": "Frankfurt am Main",
     "translator": "Ramon Monton"
+   }
+  },
+  "331": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "333": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "437": {
+   "detectable": {
+    "location": "Beograd"
+   }
+  },
+  "438": {
+   "detectable": {
+    "location": "Rijeka"
+   }
+  },
+  "443": {
+   "detectable": {
+    "location": "Beograd"
+   }
+  },
+  "464": {
+   "detectable": {
+    "translator": "Jaroslava Vobrubová-Koutecká"
+   }
+  },
+  "472": {
+   "detectable": {
+    "location": "København"
+   }
+  },
+  "510": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "512": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "517": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "520": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "529": {
+   "detectable": {
+    "location": "Tallinn"
+   }
+  },
+  "585": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "587": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "591": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "599": {
+   "detectable": {
+    "publisher": "Corp",
+    "location": "New York"
+   }
+  },
+  "610": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "614": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "617": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "622": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "623": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "624": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "626": {
+   "detectable": {
+    "location": "T'aipei"
+   }
+  },
+  "630": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "632": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "633": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "635": {
+   "detectable": {
+    "location": "Shanghai"
+   }
+  },
+  "637": {
+   "detectable": {
+    "translator": "Yaocheng Han"
+   }
+  },
+  "639": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "640": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "642": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "647": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "654": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "660": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "695": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "709": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "768": {
+   "detectable": {
+    "translator": "Yaśapāla Jaina"
+   }
+  },
+  "779": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag"
    }
   },
   "782": {
    "detectable": {
     "translator": "Dimitŭr Stoevski"
+   }
+  },
+  "790": {
+   "detectable": {
+    "publisher": "Volk und Welt",
+    "location": "München"
+   }
+  },
+  "794": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "795": {
+   "detectable": {
+    "publisher": "Saturn-Verlag",
+    "location": "Wien"
+   }
+  },
+  "797": {
+   "detectable": {
+    "publisher": "Gallimard",
+    "translator": "Norman R. Shapiro"
+   }
+  },
+  "799": {
+   "detectable": {
+    "publisher": "Fischer Taschenbuch Verlag",
+    "location": "Frankfurt am Main"
    }
   },
   "805": {
@@ -180,30 +536,453 @@
     "translator"
    ]
   },
+  "811": {
+   "detectable": {
+    "location": "Barcelona"
+   }
+  },
+  "820": {
+   "detectable": {
+    "translator": "Lin Hui"
+   }
+  },
+  "841": {
+   "detectable": {
+    "translator": "Chengjun Diao"
+   }
+  },
+  "881": {
+   "detectable": {
+    "publisher": "Simon and Simon Publishers",
+    "location": "Praha"
+   }
+  },
+  "882": {
+   "detectable": {
+    "location": "København"
+   }
+  },
+  "905": {
+   "detectable": {
+    "publisher": "X. Éditions"
+   }
+  },
+  "908": {
+   "detectable": {
+    "publisher": "Complexe"
+   }
+  },
+  "947": {
+   "detectable": {
+    "location": "Barcelona"
+   }
+  },
+  "963": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "966": {
+   "detectable": {
+    "publisher": "Stefan Zweig and His American Publisher",
+    "location": "Paris",
+    "translator": "Marion Sonnenfeld"
+   }
+  },
+  "968": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
   "969": {
    "detectable": {
-    "publisher": "Fredonia"
+    "publisher": "Fredonia",
+    "location": "New York"
+   }
+  },
+  "970": {
+   "detectable": {
+    "location": "Paris"
    }
   },
   "971": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "972": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "982": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "983": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "987": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "990": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1064": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1088": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1090": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1091": {
+   "detectable": {
+    "location": "Beijing",
+    "translator": "Kaiqi Zheng"
+   }
+  },
+  "1093": {
+   "detectable": {
+    "location": "Beijing",
+    "translator": "Wenhua Huang"
+   }
+  },
+  "1094": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1096": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1097": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1099": {
+   "detectable": {
+    "translator": "Wenhua Huang"
+   }
+  },
+  "1106": {
+   "detectable": {
+    "translator": "Wenlini Shen"
+   }
+  },
+  "1107": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1109": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1112": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1113": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1114": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1115": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1116": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1137": {
+   "detectable": {
+    "translator": "Shuzhi An"
+   }
+  },
+  "1140": {
+   "detectable": {
+    "publisher": "University of Notre Dame Press",
+    "location": "New York"
+   }
+  },
+  "1143": {
+   "detectable": {
+    "translator": "Yukang Wu"
+   }
+  },
+  "1155": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1156": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1197": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1434": {
+   "detectable": {
+    "publisher": "Stefan Zweig und der Herbert Reichner Verlag"
+   }
+  },
+  "1497": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "1505": {
+   "detectable": {
+    "location": "Weimar"
+   }
+  },
+  "1556": {
+   "detectable": {
+    "location": "New York"
+   }
   },
   "1563": {
    "detectable": {
-    "publisher": "NY. No date indicated. Willey Hance"
+    "publisher": "NY. No date indicated. Willey Hance",
+    "location": "New York"
+   }
+  },
+  "1567": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "1581": {
+   "detectable": {
+    "publisher": "Juventud",
+    "location": "Barcelona",
+    "translator": "Tristán La Rosa"
+   }
+  },
+  "1584": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "1586": {
+   "detectable": {
+    "publisher": "Stock",
+    "location": "Stuttgart",
+    "translator": "Alzir Hella and Olivier Bournac"
+   }
+  },
+  "1588": {
+   "detectable": {
+    "publisher": "Fredonia Opera House",
+    "location": "New York"
+   }
+  },
+  "1589": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1590": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "1614": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "1636": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1637": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "1639": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1641": {
+   "detectable": {
+    "publisher": "Grasset"
+   }
+  },
+  "1643": {
+   "detectable": {
+    "publisher": "Stock"
+   }
+  },
+  "1645": {
+   "detectable": {
+    "publisher": "Lacombe",
+    "translator": "Alena Bláhová"
+   }
+  },
+  "1661": {
+   "detectable": {
+    "location": "Wien",
+    "translator": "Stefan Zweig"
+   }
+  },
+  "1663": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1664": {
+   "detectable": {
+    "location": "Dresden"
+   }
+  },
+  "1666": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1667": {
+   "detectable": {
+    "publisher": "Armando Dadò Editore"
+   }
+  },
+  "1668": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1669": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1670": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1671": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1672": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1673": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1674": {
+   "detectable": {
+    "publisher": "Rascher Verlag",
+    "location": "Berlin"
+   }
+  },
+  "1682": {
+   "detectable": {
+    "publisher": "Kiepenheuer & Witsch Verlag",
+    "location": "Köln"
+   }
+  },
+  "1683": {
+   "detectable": {
+    "publisher": "Gert Kerschbaumers Buch",
+    "location": "Salzburg"
    }
   },
   "1705": {
    "detectable": {
     "publisher": "Fredonia",
+    "location": "Berlin",
     "translator": "Boris Buden"
+   }
+  },
+  "1706": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1707": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1708": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1709": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1710": {
+   "detectable": {
+    "location": "Zagreb"
+   }
+  },
+  "1738": {
+   "detectable": {
+    "translator": "Dimitŭr Stoevski"
+   }
+  },
+  "1814": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag",
+    "location": "Frankfurt am Main"
    }
   },
   "1818": {
    "detectable": {
     "publisher": "Klincksieck"
+   }
+  },
+  "1822": {
+   "detectable": {
+    "publisher": "AMS Press",
+    "location": "London"
    }
   },
   "1836": {
@@ -221,14 +1000,107 @@
     "translator"
    ]
   },
+  "1857": {
+   "detectable": {
+    "translator": "Boško Petrović"
+   }
+  },
+  "1872": {
+   "detectable": {
+    "translator": "D. M. Gorfinkel’"
+   }
+  },
   "1874": {
    "detectable": {
-    "publisher": "Sonnabend"
+    "publisher": "Sonnabend",
+    "translator": "A. I. Kartuzhanskaia"
+   }
+  },
+  "1876": {
+   "detectable": {
+    "translator": "S. Fridliand"
+   }
+  },
+  "1888": {
+   "detectable": {
+    "translator": "N. Bunin"
+   }
+  },
+  "1905": {
+   "detectable": {
+    "location": "Moskva",
+    "translator": "R. Gal'perina"
+   }
+  },
+  "1906": {
+   "detectable": {
+    "publisher": "Eksmo-Press"
    }
   },
   "1925": {
    "detectable": {
-    "publisher": "Sonnabend"
+    "publisher": "Sonnabend",
+    "translator": "S. Fridliand"
+   }
+  },
+  "1941": {
+   "detectable": {
+    "publisher": "Inc"
+   }
+  },
+  "1950": {
+   "detectable": {
+    "publisher": "Publishing GmbH",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "1951": {
+   "detectable": {
+    "publisher": "Refordis Verlag"
+   }
+  },
+  "1957": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "1961": {
+   "detectable": {
+    "publisher": "Planeta"
+   }
+  },
+  "1963": {
+   "detectable": {
+    "location": "München",
+    "translator": "Alexa Nieschlag pp"
+   }
+  },
+  "1967": {
+   "detectable": {
+    "publisher": "Peter Lang Verlag",
+    "location": "Berlin"
+   }
+  },
+  "1969": {
+   "detectable": {
+    "publisher": "Pushkin Press"
+   }
+  },
+  "1980": {
+   "detectable": {
+    "publisher": "Leipzig",
+    "location": "Wien"
+   }
+  },
+  "1981": {
+   "detectable": {
+    "publisher": "De Gemeenschap",
+    "location": "Köln"
+   }
+  },
+  "1986": {
+   "detectable": {
+    "location": "Basel"
    }
   },
   "1987": {
@@ -236,34 +1108,335 @@
     "publisher": "Verlag der Stefan-Zweig-Gesellschaft"
    }
   },
+  "1988": {
+   "detectable": {
+    "publisher": "Diogenes Verlag"
+   }
+  },
+  "1989": {
+   "detectable": {
+    "publisher": "Rowohlt Taschenbuch Verlag",
+    "translator": "Elda Boriçi"
+   }
+  },
+  "1993": {
+   "detectable": {
+    "publisher": "University of California Press",
+    "translator": "Max Knight"
+   }
+  },
+  "1994": {
+   "detectable": {
+    "location": "Marburg"
+   }
+  },
+  "1997": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "1999": {
+   "detectable": {
+    "publisher": "Peter Lang Verlag"
+   }
+  },
+  "2000": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
+  },
+  "2002": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
   "2003": {
    "detectable": {
     "publisher": "Edition Büchergilde"
    }
   },
+  "2005": {
+   "detectable": {
+    "publisher": "Georg Müller Verlag",
+    "location": "München"
+   }
+  },
+  "2009": {
+   "detectable": {
+    "publisher": "The New York Review of Books"
+   }
+  },
+  "2011": {
+   "detectable": {
+    "publisher": "Bouvier Verlag"
+   }
+  },
+  "2013": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2018": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "2025": {
+   "detectable": {
+    "publisher": "Böhlau Verlag"
+   }
+  },
   "2026": {
    "detectable": {
-    "publisher": "NY 10021. The collection also contains Amann"
+    "publisher": "NY 10021. The collection also contains Amann",
+    "location": "New York"
+   }
+  },
+  "2028": {
+   "detectable": {
+    "location": "Zürich"
+   }
+  },
+  "2031": {
+   "detectable": {
+    "location": "Frankfurt am Main"
    }
   },
   "2034": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Moscow"
+   }
+  },
+  "2035": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "2037": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2049": {
+   "detectable": {
+    "translator": "Benjamin Huebsch and Helmut Ripperger"
+   }
+  },
+  "2050": {
+   "detectable": {
+    "location": "Leipzig",
+    "translator": "Christobel Fowler"
+   }
+  },
+  "2051": {
+   "detectable": {
+    "publisher": "Leipzig",
+    "location": "Wien"
+   }
+  },
+  "2059": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
+  },
+  "2060": {
+   "detectable": {
+    "publisher": "Wremja",
+    "location": "Berlin"
+   }
+  },
+  "2065": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "2079": {
+   "detectable": {
+    "publisher": "A. Michel"
+   }
   },
   "2080": {
    "detectable": {
     "publisher": "Kindler Verlag"
    }
   },
+  "2088": {
+   "detectable": {
+    "publisher": "Parce",
+    "location": "Paris",
+    "translator": "Gisella Hauer and Didier Plassard"
+   }
+  },
+  "2094": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "2100": {
+   "detectable": {
+    "publisher": "Königshausen & Neumann Verlag"
+   }
+  },
   "2112": {
    "detectable": {
-    "publisher": "Fischer Bücherei"
+    "publisher": "Fischer Bücherei",
+    "location": "Düsseldorf"
+   }
+  },
+  "2115": {
+   "detectable": {
+    "publisher": "Jahre Insel Verlag"
+   }
+  },
+  "2131": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2133": {
+   "detectable": {
+    "publisher": "Andreas Meyer"
+   }
+  },
+  "2135": {
+   "detectable": {
+    "location": "Moskau"
+   }
+  },
+  "2137": {
+   "detectable": {
+    "publisher": "Jahre S. Fischer Verlag",
+    "location": "Berlin"
+   }
+  },
+  "2139": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag and the Fischer Taschenbuch Verlag",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "2144": {
+   "detectable": {
+    "publisher": "Editions of the S. Fischer Verlag"
+   }
+  },
+  "2150": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "2152": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "2154": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "2155": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "2156": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "2160": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "2168": {
+   "detectable": {
+    "publisher": "Peter Lang Verlag"
+   }
+  },
+  "2172": {
+   "detectable": {
+    "location": "Bern"
+   }
+  },
+  "2173": {
+   "detectable": {
+    "publisher": "Traugott Bautz",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "2174": {
+   "detectable": {
+    "publisher": "Guanabara",
+    "location": "Bern"
+   }
+  },
+  "2175": {
+   "detectable": {
+    "publisher": "Inc",
+    "location": "Tübingen"
+   }
+  },
+  "2176": {
+   "detectable": {
+    "location": "Bern"
+   }
+  },
+  "2177": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "2178": {
+   "detectable": {
+    "location": "Bern"
+   }
+  },
+  "2179": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "2180": {
+   "detectable": {
+    "publisher": "Guanabara",
+    "location": "Bern"
+   }
+  },
+  "2187": {
+   "detectable": {
+    "location": "Bern"
+   }
+  },
+  "2188": {
+   "detectable": {
+    "publisher": "Peter Lang Verlag",
+    "location": "Berlin"
+   }
+  },
+  "2192": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2193": {
+   "detectable": {
+    "location": "London",
+    "translator": "Pierre-Emmanuel Dauzat"
    }
   },
   "2201": {
    "detectable": {
-    "publisher": "Librairie Générale Francaise"
+    "publisher": "Librairie Générale Francaise",
+    "location": "Paris",
+    "translator": "Jacqueline Des Gouttes"
+   }
+  },
+  "2208": {
+   "detectable": {
+    "location": "London",
+    "translator": "Benjamin W. Huebsch and Helmut Ripperger"
    }
   },
   "2216": {
@@ -271,14 +1444,82 @@
     "translator": "Jean-Baptiste Para"
    }
   },
+  "2221": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "2222": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2225": {
+   "detectable": {
+    "publisher": "J. M. Spaeth Verlag"
+   }
+  },
+  "2226": {
+   "detectable": {
+    "publisher": "Buchpublikation der Edition"
+   }
+  },
+  "2227": {
+   "detectable": {
+    "publisher": "Rosario",
+    "translator": "Gregory Warren"
+   }
+  },
+  "2228": {
+   "detectable": {
+    "publisher": "Fischer Taschenbuch Verlag"
+   }
+  },
+  "2229": {
+   "detectable": {
+    "publisher": "Eigenbrödler Verlag"
+   }
+  },
+  "2231": {
+   "detectable": {
+    "publisher": "Plon"
+   }
+  },
+  "2236": {
+   "detectable": {
+    "publisher": "Mercure de France"
+   }
+  },
+  "2237": {
+   "detectable": {
+    "publisher": "Insel Verlag"
+   }
+  },
+  "2241": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2267": {
+   "detectable": {
+    "publisher": "Publishing",
+    "location": "Wien"
+   }
+  },
   "2271": {
    "detectable": {
     "translator": "Erling Nielsen"
    }
   },
+  "2274": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
   "2275": {
    "detectable": {
-    "publisher": "Company"
+    "publisher": "Company",
+    "translator": "Friderike Maria Zweig"
    }
   },
   "2277": {
@@ -291,24 +1532,115 @@
     "publisher": "Verlag der Stefan-Zweig-Gesellschaft"
    }
   },
+  "2282": {
+   "detectable": {
+    "publisher": "Residenz Verlag",
+    "location": "Wien"
+   }
+  },
+  "2283": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2286": {
+   "detectable": {
+    "publisher": "Otto Müller Verlag",
+    "location": "Berlin",
+    "translator": "Christobel Fowler"
+   }
+  },
+  "2287": {
+   "detectable": {
+    "publisher": "Amalthea Verlag"
+   }
+  },
+  "2288": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
   "2289": {
    "detectable": {
     "publisher": "Sportverlag"
    }
   },
+  "2295": {
+   "detectable": {
+    "publisher": "Styria"
+   }
+  },
   "2299": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "publisher": "Payot",
+    "location": "Vienna"
+   }
+  },
+  "2300": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "2303": {
+   "detectable": {
+    "publisher": "Kurt Desch",
+    "location": "Tübingen"
+   }
   },
   "2304": {
    "detectable": {
+    "publisher": "Bechtle Verlag",
+    "location": "München",
     "translator": "Nobuo Iizuka"
+   }
+  },
+  "2305": {
+   "detectable": {
+    "publisher": "Viking Press",
+    "translator": "Gottfried Ippisch"
    }
   },
   "2306": {
    "detectable": {
-    "publisher": "Company"
+    "publisher": "Company",
+    "location": "Zürich"
+   }
+  },
+  "2307": {
+   "detectable": {
+    "publisher": "Gallimard",
+    "location": "Paris"
+   }
+  },
+  "2308": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "2309": {
+   "detectable": {
+    "publisher": "Winkler Verlag"
+   }
+  },
+  "2310": {
+   "detectable": {
+    "publisher": "Esslingen Verlag",
+    "location": "Wien"
+   }
+  },
+  "2311": {
+   "detectable": {
+    "publisher": "Paul Zsolnay Verlag"
+   }
+  },
+  "2316": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2323": {
+   "detectable": {
+    "location": "Berlin"
    }
   },
   "2330": {
@@ -321,19 +1653,88 @@
     "translator": "Mahmud Bobrati"
    }
   },
+  "2338": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "2344": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "2352": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2357": {
+   "detectable": {
+    "publisher": "Carmel"
+   }
+  },
   "2360": {
    "detectable": {
-    "publisher": "Publications de la Sorbonne"
+    "publisher": "Publications de la Sorbonne",
+    "location": "Paris"
+   }
+  },
+  "2367": {
+   "detectable": {
+    "publisher": "C. H. Beck",
+    "location": "Köln",
+    "translator": "Alzir Hella and Olivier Bornac"
+   }
+  },
+  "2379": {
+   "detectable": {
+    "publisher": "Walter de Gruyter Verlag",
+    "location": "Wien"
    }
   },
   "2382": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "publisher": "Königshausen & Neumann Verlag",
+    "location": "Vienna"
+   }
+  },
+  "2383": {
+   "detectable": {
+    "publisher": "Imprint",
+    "location": "Heidelberg"
+   }
+  },
+  "2386": {
+   "detectable": {
+    "publisher": "Bernard Grasset",
+    "translator": "Alzir Hella and Olivier Bournac"
+   }
+  },
+  "2391": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "2396": {
+   "detectable": {
+    "publisher": "Fayard",
+    "location": "Le Livre de Poche"
+   }
+  },
+  "2399": {
+   "detectable": {
+    "publisher": "Nouvelles Éditions"
+   }
+  },
+  "2402": {
+   "detectable": {
+    "location": "Bogotá"
+   }
   },
   "2407": {
    "detectable": {
-    "publisher": "Librairie Arthème Fayard"
+    "publisher": "Librairie Arthème Fayard",
+    "location": "Paris"
    }
   },
   "2408": {
@@ -341,9 +1742,71 @@
     "publisher": "Librairie Gallimard"
    }
   },
+  "2414": {
+   "detectable": {
+    "publisher": "Stock"
+   }
+  },
+  "2417": {
+   "detectable": {
+    "location": "Melbourne"
+   }
+  },
   "2418": {
    "detectable": {
+    "publisher": "Poeschel & Trpte Verlag",
     "translator": "M. Pres"
+   }
+  },
+  "2419": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "2420": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2421": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "2422": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "2425": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "2426": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2428": {
+   "detectable": {
+    "publisher": "Artemis & Winkler Verlag",
+    "location": "Berlin"
+   }
+  },
+  "2431": {
+   "detectable": {
+    "location": "Lisboa"
+   }
+  },
+  "2444": {
+   "detectable": {
+    "location": "Marburg"
+   }
+  },
+  "2447": {
+   "detectable": {
+    "location": "Berlin"
    }
   },
   "2450": {
@@ -351,14 +1814,130 @@
     "publisher": "Bernard Grasset"
    }
   },
+  "2451": {
+   "detectable": {
+    "publisher": "Diogenes Verlag",
+    "location": "London"
+   }
+  },
+  "2457": {
+   "detectable": {
+    "publisher": "Hartmut Kühler"
+   }
+  },
+  "2462": {
+   "detectable": {
+    "publisher": "Bermann-Fischer Verlag"
+   }
+  },
+  "2466": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2469": {
+   "detectable": {
+    "publisher": "Hans Rosenkranz und der J. M. Spaeth-Verlag",
+    "location": "Berlin"
+   }
+  },
+  "2476": {
+   "detectable": {
+    "publisher": "Allert de Lange Verlag"
+   }
+  },
+  "2486": {
+   "detectable": {
+    "location": "Rio de Janeiro"
+   }
+  },
+  "2491": {
+   "detectable": {
+    "publisher": "Warehouse"
+   }
+  },
+  "2492": {
+   "detectable": {
+    "publisher": "G. Frick Verlag",
+    "location": "Wien"
+   }
+  },
+  "2501": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
   "2502": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "2504": {
+   "detectable": {
+    "publisher": "Limited",
+    "location": "London"
+   }
+  },
+  "2506": {
+   "detectable": {
+    "translator": "Eden and Cedar Paul"
+   }
+  },
+  "2537": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2541": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "2542": {
+   "detectable": {
+    "publisher": "Payot & Rivages",
+    "translator": "Pierre Deshusses"
+   }
+  },
+  "2548": {
+   "detectable": {
+    "publisher": "Gerstenberg Verlag"
+   }
+  },
+  "2550": {
+   "detectable": {
+    "publisher": "Flammarion"
+   }
+  },
+  "2553": {
+   "detectable": {
+    "publisher": "Reclam Verlag"
+   }
+  },
+  "2605": {
+   "detectable": {
+    "location": "Buenos Aires"
+   }
+  },
+  "2606": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag"
+   }
+  },
+  "2612": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag",
+    "location": "Krems an der Donau"
+   }
   },
   "2613": {
    "detectable": {
     "publisher": "S. Fischer Verlag"
+   }
+  },
+  "2618": {
+   "detectable": {
+    "location": "Berlin"
    }
   },
   "2622": {
@@ -366,9 +1945,40 @@
     "publisher": "Insel Verlag"
    }
   },
+  "2623": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
   "2624": {
    "detectable": {
     "publisher": "Insel Verlag"
+   }
+  },
+  "2629": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2631": {
+   "detectable": {
+    "publisher": "Peter Lang GmbH Internationaler Verlag"
+   }
+  },
+  "2637": {
+   "detectable": {
+    "publisher": "Office"
+   }
+  },
+  "2639": {
+   "detectable": {
+    "location": "Berlin",
+    "translator": "Eden and Cedar Paul"
+   }
+  },
+  "2645": {
+   "detectable": {
+    "publisher": "Oldenbourg Verlag"
    }
   },
   "2648": {
@@ -376,9 +1986,71 @@
     "publisher": "House"
    }
   },
+  "2649": {
+   "detectable": {
+    "publisher": "Mensch und Arbeit"
+   }
+  },
+  "2669": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag"
+   }
+  },
+  "2670": {
+   "detectable": {
+    "publisher": "Rikola-Verlag"
+   }
+  },
+  "2674": {
+   "detectable": {
+    "publisher": "Peter Lang"
+   }
+  },
+  "2680": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2683": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "2684": {
+   "detectable": {
+    "location": "Innsbruck"
+   }
+  },
+  "2685": {
+   "detectable": {
+    "publisher": "Unit"
+   }
+  },
   "2686": {
    "detectable": {
     "publisher": "D. C. Heath & Co"
+   }
+  },
+  "2687": {
+   "detectable": {
+    "location": "Wien",
+    "translator": "K. L. Ammer"
+   }
+  },
+  "2703": {
+   "detectable": {
+    "publisher": "Der Neue Geist-Verlag"
+   }
+  },
+  "2708": {
+   "detectable": {
+    "publisher": "Herbert Reichner Verlag",
+    "location": "Wien"
+   }
+  },
+  "2721": {
+   "detectable": {
+    "translator": "Hannah Szass"
    }
   },
   "2722": {
@@ -389,19 +2061,72 @@
     "translator": "N. N. Zhegalov"
    }
   },
+  "2758": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "2775": {
+   "detectable": {
+    "location": "London"
+   }
+  },
   "2787": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "2790": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "2808": {
+   "detectable": {
+    "location": "Tübingen"
+   }
+  },
+  "2825": {
+   "detectable": {
+    "location": "København"
+   }
   },
   "2826": {
    "detectable": {
     "translator": "Marion Sonnenfeld"
    }
   },
+  "2848": {
+   "detectable": {
+    "publisher": "Bermann-Fischer Verlag"
+   }
+  },
   "2863": {
    "detectable": {
-    "publisher": "Revue Littéraire des Primaires"
+    "publisher": "Revue Littéraire des Primaires",
+    "location": "Wien"
+   }
+  },
+  "2879": {
+   "detectable": {
+    "publisher": "Königshausen & Neumann Verlag",
+    "location": "Berlin"
+   }
+  },
+  "2882": {
+   "detectable": {
+    "publisher": "Residenz Verlag"
+   }
+  },
+  "2892": {
+   "detectable": {
+    "publisher": "Jupiter Verlag"
+   }
+  },
+  "2942": {
+   "detectable": {
+    "publisher": "The New York Review of Books",
+    "translator": "Aḥmad Shāfiʿī"
    }
   },
   "2944": {
@@ -409,14 +2134,72 @@
     "publisher": "Company"
    }
   },
+  "2947": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "2956": {
+   "detectable": {
+    "translator": "Isabelle Hausser"
+   }
+  },
+  "2958": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
   "2960": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "publisher": "Cambridge University Press",
+    "location": "Vienna",
+    "translator": "Vera Ribeiro"
+   }
+  },
+  "2966": {
+   "detectable": {
+    "location": "Moscow"
+   }
+  },
+  "2973": {
+   "detectable": {
+    "publisher": "Tor",
+    "translator": "Hugo Moss"
+   }
+  },
+  "2980": {
+   "detectable": {
+    "location": "Stockholm"
+   }
+  },
+  "2981": {
+   "detectable": {
+    "location": "Stockholm"
+   }
   },
   "2993": {
    "detectable": {
     "publisher": "Verlag des Vereins"
+   }
+  },
+  "2994": {
+   "detectable": {
+    "translator": "Najāḥ al-Jubaylī"
+   }
+  },
+  "2997": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "3001": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "3002": {
+   "detectable": {
+    "location": "Wien"
    }
   },
   "3015": {
@@ -424,29 +2207,101 @@
     "publisher": "Buchverlag Der Morgen"
    }
   },
+  "3090": {
+   "detectable": {
+    "location": "Düsseldorf"
+   }
+  },
   "3122": {
    "detectable": {
-    "publisher": "Bergstedter Schachklub"
+    "publisher": "Bergstedter Schachklub",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "3136": {
+   "detectable": {
+    "location": "Heidelberg"
+   }
+  },
+  "3149": {
+   "detectable": {
+    "publisher": "Druckwerk Krems"
+   }
+  },
+  "3157": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "3167": {
+   "detectable": {
+    "publisher": "Pushkin Press"
+   }
+  },
+  "3168": {
+   "detectable": {
+    "location": "Leipzig"
    }
   },
   "3180": {
    "detectable": {
-    "publisher": "Bonnier"
+    "publisher": "Bonnier",
+    "location": "London"
    }
   },
   "3181": {
    "detectable": {
-    "publisher": "Bonnier"
+    "publisher": "Bonnier",
+    "location": "London"
+   }
+  },
+  "3182": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "3184": {
+   "detectable": {
+    "publisher": "Other Press",
+    "translator": "Anthea Bell"
+   }
+  },
+  "3185": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "3186": {
+   "detectable": {
+    "publisher": "London Review of Books"
    }
   },
   "3195": {
    "detectable": {
-    "publisher": "Argentina and Brazil"
+    "publisher": "Argentina and Brazil",
+    "location": "New York"
    }
   },
   "3197": {
    "detectable": {
-    "publisher": "Auction 460"
+    "publisher": "Auction 460",
+    "location": "Leipzig"
+   }
+  },
+  "3203": {
+   "detectable": {
+    "publisher": "Rütten & Loening Verlag"
+   }
+  },
+  "3204": {
+   "detectable": {
+    "publisher": "Oskar Wöhrle Verlag",
+    "translator": "Fritz Brügel"
+   }
+  },
+  "3217": {
+   "detectable": {
+    "location": "Die Fähre. Sonderdruck"
    }
   },
   "3224": {
@@ -454,9 +2309,55 @@
     "translator": "Wu Mei"
    }
   },
+  "3228": {
+   "detectable": {
+    "publisher": "Claridad",
+    "location": "Wien",
+    "translator": "Wu Mei"
+   }
+  },
+  "3237": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "3238": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
   "3240": {
    "detectable": {
-    "publisher": "Edition Büchergilde"
+    "publisher": "Edition Büchergilde",
+    "location": "Wien"
+   }
+  },
+  "3258": {
+   "detectable": {
+    "location": "Leipzig"
+   }
+  },
+  "3259": {
+   "detectable": {
+    "publisher": "Gallimard"
+   }
+  },
+  "3260": {
+   "detectable": {
+    "publisher": "Serre",
+    "location": "Paris",
+    "translator": "Steen Albrectsen"
+   }
+  },
+  "3261": {
+   "detectable": {
+    "publisher": "Littéraires et Artistiques"
+   }
+  },
+  "3262": {
+   "detectable": {
+    "publisher": "Rikola Verlag",
+    "location": "Krems an der Donau"
    }
   },
   "3265": {
@@ -464,9 +2365,15 @@
     "publisher": "Calmann Lévy"
    }
   },
+  "3270": {
+   "detectable": {
+    "publisher": "Gallimard"
+   }
+  },
   "3278": {
    "detectable": {
-    "publisher": "Philipp Reclam jun. Verlag"
+    "publisher": "Philipp Reclam jun. Verlag",
+    "translator": "Philip Hale and the German translation by Stefan Zweig"
    }
   },
   "3279": {
@@ -474,14 +2381,69 @@
     "publisher": "Mercure de France"
    }
   },
+  "3283": {
+   "detectable": {
+    "publisher": "Philipp Verlag",
+    "location": "Krems an der Donau"
+   }
+  },
   "3284": {
    "detectable": {
-    "publisher": "Bibliothèque-Charpentier"
+    "publisher": "Bibliothèque-Charpentier",
+    "location": "Krems an der Donau"
+   }
+  },
+  "3290": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "3295": {
+   "detectable": {
+    "publisher": "A. Hartlebens Verlag"
+   }
+  },
+  "3302": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "3318": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "3321": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "3322": {
+   "detectable": {
+    "publisher": "Arcadia Books",
+    "location": "Düsseldorf"
    }
   },
   "3323": {
    "detectable": {
     "publisher": "April 1940"
+   }
+  },
+  "3331": {
+   "detectable": {
+    "publisher": "Kiepenheuer Verlag",
+    "translator": "Friderike Maria von Winternitz"
+   }
+  },
+  "3344": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "3360": {
+   "detectable": {
+    "publisher": "Crown Publishers",
+    "translator": "Eden and Cedar Paul"
    }
   },
   "3447": {
@@ -491,6 +2453,7 @@
   },
   "3529": {
    "detectable": {
+    "publisher": "Grove Press",
     "translator": "William G. Phelps"
    }
   },
@@ -504,29 +2467,271 @@
     "publisher": "Messer & Cie. Verlag"
    }
   },
+  "3555": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "3592": {
+   "detectable": {
+    "publisher": "E. Diederichs Verlag"
+   }
+  },
+  "3593": {
+   "detectable": {
+    "publisher": "Schuster & Loeffler Verlag"
+   }
+  },
+  "3657": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "3659": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "3677": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "3685": {
+   "detectable": {
+    "location": "Bern"
+   }
+  },
+  "3691": {
+   "detectable": {
+    "publisher": "Refordis Verlag",
+    "location": "Wien"
+   }
+  },
+  "3692": {
+   "detectable": {
+    "location": "México"
+   }
+  },
+  "3707": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "3711": {
+   "detectable": {
+    "publisher": "Schaumburg Verlag"
+   }
+  },
+  "3713": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "3714": {
+   "detectable": {
+    "location": "München"
+   }
+  },
   "3719": {
    "detectable": {
     "publisher": "Sportverlag"
    }
   },
+  "3741": {
+   "detectable": {
+    "publisher": "Plume Publisher",
+    "location": "New York",
+    "translator": "Max Pam"
+   }
+  },
+  "3743": {
+   "detectable": {
+    "publisher": "Collier Books"
+   }
+  },
+  "3747": {
+   "detectable": {
+    "publisher": "Payot",
+    "location": "Paris"
+   }
+  },
+  "3749": {
+   "detectable": {
+    "publisher": "Stauffacher Verlag",
+    "translator": "Vladimír Karafiát"
+   }
+  },
+  "3806": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "3812": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
   "3815": {
    "detectable": {
-    "publisher": "Verlag des Allgemeinen Österreichischen Frauenvereins"
+    "publisher": "Verlag des Allgemeinen Österreichischen Frauenvereins",
+    "location": "Zürich"
    }
   },
   "3817": {
    "detectable": {
-    "publisher": "Reading traces in Zweig's Library"
+    "publisher": "Reading traces in Zweig's Library",
+    "location": "London"
+   }
+  },
+  "3818": {
+   "detectable": {
+    "location": "Marburg"
+   }
+  },
+  "3821": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "3827": {
+   "detectable": {
+    "location": "Stuttgart"
+   }
+  },
+  "3828": {
+   "detectable": {
+    "publisher": "Rita G. Fischer Verlag",
+    "location": "Frankfurt"
+   }
+  },
+  "3829": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "3846": {
+   "detectable": {
+    "location": "Beijing"
    }
   },
   "3850": {
    "detectable": {
-    "publisher": "Hutchinson & Co. Publishers"
+    "publisher": "Hutchinson & Co. Publishers",
+    "location": "London"
+   }
+  },
+  "3854": {
+   "detectable": {
+    "publisher": "Eggert Verlag"
+   }
+  },
+  "3855": {
+   "detectable": {
+    "publisher": "Moritz Perles Verlag"
+   }
+  },
+  "3905": {
+   "detectable": {
+    "location": "Buenos Aires"
+   }
+  },
+  "3910": {
+   "detectable": {
+    "publisher": "Residenz-Verlag",
+    "location": "Salzburg"
+   }
+  },
+  "3911": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "3915": {
+   "detectable": {
+    "location": "Ljubljana"
+   }
+  },
+  "3916": {
+   "detectable": {
+    "publisher": "Guanabara Koogan",
+    "location": "Rio de Janeiro"
+   }
+  },
+  "3918": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "3921": {
+   "detectable": {
+    "translator": "David Kretz"
+   }
+  },
+  "3924": {
+   "detectable": {
+    "location": "Tübingen"
    }
   },
   "3927": {
    "detectable": {
-    "publisher": "Salzburg"
+    "publisher": "Salzburg",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "3929": {
+   "detectable": {
+    "location": "Buenos Aires"
+   }
+  },
+  "3931": {
+   "detectable": {
+    "location": "Dresden"
+   }
+  },
+  "3932": {
+   "detectable": {
+    "location": "Zürich"
+   }
+  },
+  "3934": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "3937": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "3950": {
+   "detectable": {
+    "publisher": "Radikaler Geist"
+   }
+  },
+  "3962": {
+   "detectable": {
+    "location": "Marburg"
+   }
+  },
+  "3967": {
+   "detectable": {
+    "publisher": "F. Lehmann Verlag"
+   }
+  },
+  "3969": {
+   "detectable": {
+    "publisher": "Moritz Perles Verlag"
+   }
+  },
+  "3972": {
+   "detectable": {
+    "location": "Leipzig"
+   }
+  },
+  "3981": {
+   "detectable": {
+    "publisher": "Brockhaus Verlag"
    }
   },
   "3987": {
@@ -534,14 +2739,31 @@
     "publisher": "Librairie Simon Kra"
    }
   },
+  "3988": {
+   "detectable": {
+    "publisher": "Ullstein Verlag"
+   }
+  },
   "3996": {
    "detectable": {
     "publisher": "Kiesel Verlag"
    }
   },
+  "4000": {
+   "detectable": {
+    "publisher": "Reichner Verlag",
+    "location": "Wien"
+   }
+  },
+  "4007": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
   "4019": {
    "detectable": {
-    "publisher": "Fredonia\n\nReprinted in"
+    "publisher": "Fredonia\n\nReprinted in",
+    "location": "Wien"
    }
   },
   "4021": {
@@ -554,9 +2776,40 @@
     "location"
    ]
   },
+  "4026": {
+   "detectable": {
+    "location": "New York"
+   }
+  },
+  "4027": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag"
+   }
+  },
+  "4037": {
+   "detectable": {
+    "publisher": "Offices"
+   }
+  },
   "4042": {
    "detectable": {
-    "publisher": "House"
+    "publisher": "House",
+    "location": "Weimar"
+   }
+  },
+  "4045": {
+   "detectable": {
+    "publisher": "Office"
+   }
+  },
+  "4048": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "4089": {
+   "detectable": {
+    "publisher": "First Morning Edition"
    }
   },
   "4101": {
@@ -569,6 +2822,31 @@
     "publisher": "Zürcher Institut für Interreligiösen Dialog"
    }
   },
+  "4133": {
+   "detectable": {
+    "location": "Marburg"
+   }
+  },
+  "4184": {
+   "detectable": {
+    "publisher": "Germany Lacks Decent Books"
+   }
+  },
+  "4290": {
+   "detectable": {
+    "translator": "Fāris Yūwākīm"
+   }
+  },
+  "4336": {
+   "detectable": {
+    "translator": "Saḥar Sattālah"
+   }
+  },
+  "4340": {
+   "detectable": {
+    "translator": "Mīshīl Wākīm and Quṣayy Atāsī"
+   }
+  },
   "4346": {
    "notInSource": [
     "publisher"
@@ -577,6 +2855,21 @@
   "4411": {
    "detectable": {
     "translator": "Fuʾād Ayyūb"
+   }
+  },
+  "4438": {
+   "detectable": {
+    "publisher": "Shādī Faqīh"
+   }
+  },
+  "4447": {
+   "detectable": {
+    "translator": "Yaḥyā Ḥaqqī"
+   }
+  },
+  "4470": {
+   "detectable": {
+    "publisher": "Other Press"
    }
   },
   "4472": {
@@ -594,9 +2887,102 @@
     "translator": "Ilyich Tchaikovsky"
    }
   },
+  "4501": {
+   "detectable": {
+    "location": "Beirut"
+   }
+  },
+  "4503": {
+   "detectable": {
+    "publisher": "Muʾassasat",
+    "translator": "Saḥar Sattālah"
+   }
+  },
+  "4504": {
+   "detectable": {
+    "translator": "Saḥar Sattālah"
+   }
+  },
+  "4511": {
+   "detectable": {
+    "publisher": "Other Press"
+   }
+  },
+  "4514": {
+   "detectable": {
+    "translator": "Muḥammad Quṭb"
+   }
+  },
+  "4537": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
+  "4570": {
+   "detectable": {
+    "publisher": "National Publication & Printing House"
+   }
+  },
+  "4571": {
+   "detectable": {
+    "publisher": "Muʾassasat"
+   }
+  },
+  "4572": {
+   "detectable": {
+    "publisher": "Muʾassasat Dubayy",
+    "location": "Paris"
+   }
+  },
+  "4579": {
+   "detectable": {
+    "publisher": "Muʾassasat"
+   }
+  },
+  "4589": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "4591": {
+   "detectable": {
+    "publisher": "Pushkin Press"
+   }
+  },
+  "4600": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "4601": {
+   "detectable": {
+    "location": "London",
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "4602": {
+   "detectable": {
+    "publisher": "Company F.K.A",
+    "location": "Beirut"
+   }
+  },
+  "4606": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Fāris Yūwākīm"
+   }
+  },
   "4613": {
    "detectable": {
-    "publisher": "Company"
+    "publisher": "Company",
+    "location": "Beirut",
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "4617": {
+   "detectable": {
+    "location": "London"
    }
   },
   "4618": {
@@ -604,29 +2990,280 @@
     "publisher": "Granta"
    }
   },
+  "4619": {
+   "detectable": {
+    "publisher": "Pushkin Press",
+    "location": "London"
+   }
+  },
+  "4636": {
+   "detectable": {
+    "publisher": "Maren Sell",
+    "location": "Paris"
+   }
+  },
+  "4650": {
+   "detectable": {
+    "translator": "Saḥar Sattālah"
+   }
+  },
   "4651": {
    "notInSource": [
     "location"
    ]
   },
+  "4676": {
+   "detectable": {
+    "publisher": "Buchenau & Reichert Verlag"
+   }
+  },
+  "4698": {
+   "detectable": {
+    "translator": "Ağalar Məmmədov"
+   }
+  },
+  "4704": {
+   "detectable": {
+    "translator": "Nāṣir Muḥammad al-Kindī"
+   }
+  },
+  "4706": {
+   "detectable": {
+    "publisher": "WordPress",
+    "location": "London",
+    "translator": "Anthea Bell and B. W. Huebsch"
+   }
+  },
+  "4709": {
+   "detectable": {
+    "publisher": "Avalun-Verlag"
+   }
+  },
+  "4710": {
+   "detectable": {
+    "location": "Frankfurt am Main"
+   }
+  },
+  "4715": {
+   "detectable": {
+    "publisher": "Today"
+   }
+  },
+  "4718": {
+   "detectable": {
+    "publisher": "New York Review of Books",
+    "location": "New York",
+    "translator": "Joel Rotenberg"
+   }
+  },
+  "4723": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "4726": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "4727": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Yaḥyā Ḥaqqī"
+   }
+  },
+  "4728": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Yaḥyā Ḥaqqī"
+   }
+  },
+  "4729": {
+   "detectable": {
+    "publisher": "Fischer Taschenbuch Verlag"
+   }
+  },
+  "4730": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Fāris Yūwākīm"
+   }
+  },
+  "4731": {
+   "detectable": {
+    "publisher": "Gallimard",
+    "location": "Paris",
+    "translator": "Dominique Tassel"
+   }
+  },
+  "4732": {
+   "detectable": {
+    "publisher": "Gallimard",
+    "location": "Paris",
+    "translator": "Dominique Tassel"
+   }
+  },
+  "4742": {
+   "detectable": {
+    "publisher": "The New York Review of Books",
+    "location": "New York"
+   }
+  },
+  "4743": {
+   "detectable": {
+    "publisher": "Muʾassasat"
+   }
+  },
+  "4745": {
+   "detectable": {
+    "publisher": "Gallimard",
+    "location": "Paris",
+    "translator": "Dominique Tassel"
+   }
+  },
   "4748": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Prague"
+   }
+  },
+  "4751": {
+   "detectable": {
+    "publisher": "Company F.K.A",
+    "location": "Beirut"
+   }
   },
   "4755": {
    "notInSource": [
     "location"
-   ]
+   ],
+   "detectable": {
+    "publisher": "Brookings Institution Press",
+    "translator": "Timothée Demont"
+   }
+  },
+  "4765": {
+   "detectable": {
+    "translator": "Ali Audah"
+   }
+  },
+  "4767": {
+   "detectable": {
+    "publisher": "Company F.K.A",
+    "location": "Beirut"
+   }
+  },
+  "4774": {
+   "detectable": {
+    "publisher": "Arab United Press"
+   }
+  },
+  "4785": {
+   "detectable": {
+    "location": "United States"
+   }
+  },
+  "4812": {
+   "detectable": {
+    "publisher": "Albin Michel",
+    "location": "Paris"
+   }
+  },
+  "4821": {
+   "detectable": {
+    "translator": "Knút Olsen"
+   }
+  },
+  "4823": {
+   "detectable": {
+    "publisher": "Albin Michel"
+   }
+  },
+  "4826": {
+   "detectable": {
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "4827": {
+   "detectable": {
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "4828": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "4836": {
+   "detectable": {
+    "location": "München"
+   }
   },
   "4841": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "publisher": "Company F.K.A",
+    "location": "Vienna"
+   }
+  },
+  "4842": {
+   "detectable": {
+    "publisher": "Company F.K.A",
+    "location": "Beirut"
+   }
+  },
+  "4852": {
+   "detectable": {
+    "translator": "Fāris Yūwākīm"
+   }
+  },
+  "4856": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "4859": {
+   "detectable": {
+    "publisher": "Iraqyoon Press",
+    "location": "Cairo"
+   }
   },
   "4860": {
    "detectable": {
     "publisher": "S. Fischer Verlag"
+   }
+  },
+  "4864": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Fāris Yūwākīm"
+   }
+  },
+  "4865": {
+   "detectable": {
+    "publisher": "Widād Farḥān",
+    "location": "Beirut",
+    "translator": "Fāris Yūwākīm"
+   }
+  },
+  "4880": {
+   "detectable": {
+    "translator": "Ali Audah"
+   }
+  },
+  "4886": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
+  "4887": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
+  "4888": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Fāris Yūwākīm"
    }
   },
   "4897": {
@@ -634,19 +3271,199 @@
     "location"
    ]
   },
+  "4899": {
+   "detectable": {
+    "translator": "Fāris Yūwākīm"
+   }
+  },
+  "4900": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
+  "4901": {
+   "detectable": {
+    "publisher": "The Books"
+   }
+  },
   "4903": {
    "notInSource": [
     "publisher"
    ]
+  },
+  "4905": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "4906": {
+   "detectable": {
+    "location": "Hamburg"
+   }
+  },
+  "4907": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "4910": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "4913": {
+   "detectable": {
+    "publisher": "The Talk of Books",
+    "translator": "Saḥar Sattālah"
+   }
+  },
+  "4919": {
+   "detectable": {
+    "translator": "Ḥabīb Jāmātī"
+   }
+  },
+  "4920": {
+   "detectable": {
+    "publisher": "National Publication & Printing House"
+   }
+  },
+  "4924": {
+   "detectable": {
+    "translator": "Ḥabīb Jāmātī"
+   }
+  },
+  "4925": {
+   "detectable": {
+    "translator": "Ḥabīb Jāmātī"
+   }
+  },
+  "4947": {
+   "detectable": {
+    "translator": "Joan Fontcuberta"
+   }
+  },
+  "4955": {
+   "detectable": {
+    "location": "Barcelona",
+    "translator": "J. Fontcuberta and A. Orzeszek"
+   }
+  },
+  "4956": {
+   "detectable": {
+    "publisher": "National Publication & Printing House"
+   }
+  },
+  "4958": {
+   "detectable": {
+    "publisher": "Other Press",
+    "location": "New York"
+   }
+  },
+  "4960": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
+  "4964": {
+   "detectable": {
+    "publisher": "The Syrian General Organization of Books",
+    "translator": "Farīd Anṭūniyūs"
+   }
+  },
+  "4980": {
+   "detectable": {
+    "publisher": "Herbert Reichner Verlag",
+    "location": "Wien"
+   }
+  },
+  "4981": {
+   "detectable": {
+    "location": "Vestmanna: Sprotin"
+   }
+  },
+  "4984": {
+   "detectable": {
+    "publisher": "Gottfried Bermann-Fischer Verlag",
+    "location": "Stockholm"
+   }
+  },
+  "4985": {
+   "detectable": {
+    "publisher": "Stefan Zweig und der Insel-Verlag"
+   }
   },
   "4989": {
    "notInSource": [
     "publisher"
    ]
   },
+  "5016": {
+   "detectable": {
+    "translator": "Ashym Jakypbekov"
+   }
+  },
+  "5021": {
+   "detectable": {
+    "translator": "Ashym Jakypbekov"
+   }
+  },
+  "5029": {
+   "detectable": {
+    "location": "London"
+   }
+  },
+  "5051": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "5087": {
+   "detectable": {
+    "location": "Hamburg",
+    "translator": "Elda Boriçi"
+   }
+  },
+  "5091": {
+   "detectable": {
+    "location": "Mexico City"
+   }
+  },
+  "5106": {
+   "detectable": {
+    "translator": "Muḥammad Jadīd"
+   }
+  },
+  "5112": {
+   "detectable": {
+    "translator": "Vĕra Macháčková-Riegerová"
+   }
+  },
+  "5114": {
+   "detectable": {
+    "publisher": "Arab United Press",
+    "location": "Beirut"
+   }
+  },
+  "5118": {
+   "detectable": {
+    "publisher": "Philipp Reclam"
+   }
+  },
+  "5123": {
+   "detectable": {
+    "publisher": "Pushkin Press",
+    "location": "London"
+   }
+  },
   "5166": {
    "detectable": {
     "publisher": "House"
+   }
+  },
+  "5189": {
+   "detectable": {
+    "location": "Vestmanna: Sprotin"
    }
   },
   "5190": {
@@ -654,24 +3471,788 @@
     "publisher": "Company"
    }
   },
+  "5206": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
+  "5214": {
+   "detectable": {
+    "publisher": "Other Press"
+   }
+  },
+  "5242": {
+   "detectable": {
+    "location": "Budapest"
+   }
+  },
   "5247": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "5252": {
+   "detectable": {
+    "translator": "Amānī Lāzār"
+   }
+  },
+  "5299": {
+   "detectable": {
+    "translator": "Izrael Lejzerowicz"
+   }
+  },
+  "5310": {
+   "detectable": {
+    "location": "Tiranë (Tirana)"
+   }
+  },
+  "5314": {
+   "detectable": {
+    "location": "Barcelona"
+   }
+  },
+  "5318": {
+   "detectable": {
+    "location": "Salzburg"
+   }
+  },
+  "5319": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "5338": {
+   "detectable": {
+    "publisher": "Insel-Verlag",
+    "location": "Salzburg"
+   }
+  },
+  "5353": {
+   "detectable": {
+    "translator": "Aristidh Ristani"
+   }
+  },
+  "5399": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "5400": {
+   "detectable": {
+    "publisher": "Opus Publishers",
+    "translator": "Muḥammad Quṭb"
+   }
   },
   "5415": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "5416": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5417": {
+   "detectable": {
+    "translator": "Amānī Lāzār"
+   }
+  },
+  "5441": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "5502": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "5503": {
+   "detectable": {
+    "location": "Paris"
+   }
   },
   "5504": {
    "notInSource": [
     "location"
    ]
   },
+  "5507": {
+   "detectable": {
+    "location": "Praha"
+   }
+  },
+  "5508": {
+   "detectable": {
+    "location": "Praha"
+   }
+  },
+  "5510": {
+   "detectable": {
+    "location": "Praha"
+   }
+  },
+  "5523": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5526": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5535": {
+   "detectable": {
+    "location": "Barcelona",
+    "translator": "Marina Bornas Montaña"
+   }
+  },
+  "5552": {
+   "detectable": {
+    "location": "Barcelona"
+   }
+  },
+  "5555": {
+   "detectable": {
+    "location": "Tiranë (Tirana)"
+   }
+  },
+  "5561": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "5586": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "José Fernández"
+   }
+  },
+  "5608": {
+   "detectable": {
+    "translator": "L. Sodov"
+   }
+  },
+  "5614": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5615": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5617": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5619": {
+   "detectable": {
+    "publisher": "Juventud",
+    "location": "Barcelona",
+    "translator": "Tristán La Rosa"
+   }
+  },
+  "5620": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5622": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5623": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5624": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5625": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5626": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5627": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5630": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5631": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5632": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5633": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5635": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5637": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5639": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5640": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5641": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5661": {
+   "detectable": {
+    "translator": "Latā Rāmakiruṣṇaṉ"
+   }
+  },
+  "5694": {
+   "detectable": {
+    "translator": "Baḷkṛṣṇa Bhagvant Borkar"
+   }
+  },
+  "5704": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Caludio Gancho"
+   }
+  },
+  "5715": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5719": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5723": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5726": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5727": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5730": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5743": {
+   "detectable": {
+    "translator": "Baḷkṛṣṇa Bhagvant Borkar"
+   }
+  },
+  "5745": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5746": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5747": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5748": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5749": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5751": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5754": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5763": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5765": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5766": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5768": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5769": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5771": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5773": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5775": {
+   "detectable": {
+    "translator": "Baḷkṛṣṇa Bhagvant Borkar"
+   }
+  },
+  "5776": {
+   "detectable": {
+    "translator": "Baḷkṛṣṇa Bhagvant Borkar"
+   }
+  },
+  "5779": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5780": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5781": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5782": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5783": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5784": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Sigfrido Krebs"
+   }
+  },
+  "5787": {
+   "detectable": {
+    "publisher": "Juventud"
+   }
+  },
+  "5788": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5789": {
+   "detectable": {
+    "publisher": "Juventud",
+    "location": "Buenos Aires"
+   }
+  },
+  "5791": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5792": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5793": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5794": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5795": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5798": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5799": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5804": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5823": {
+   "detectable": {
+    "publisher": "Juventud",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "5825": {
+   "detectable": {
+    "publisher": "About Books",
+    "location": "London"
+   }
+  },
+  "5834": {
+   "detectable": {
+    "publisher": "Niyatham Books",
+    "translator": "A. K. Abdul Majeed"
+   }
+  },
+  "5853": {
+   "detectable": {
+    "location": "Barcelona",
+    "translator": "Claudio Gancho"
+   }
+  },
+  "5893": {
+   "detectable": {
+    "location": "Weimar"
+   }
+  },
+  "5904": {
+   "detectable": {
+    "location": "Weimar"
+   }
+  },
+  "5914": {
+   "detectable": {
+    "translator": "Maisāʾ al-ʿArfāwī"
+   }
+  },
+  "5929": {
+   "detectable": {
+    "publisher": "Shādī Faqīh",
+    "location": "Beirut"
+   }
+  },
+  "5955": {
+   "detectable": {
+    "translator": "Fuʾād Ayyūb"
+   }
+  },
+  "5960": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5961": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5962": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5963": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5964": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5965": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5966": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5968": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5969": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "5971": {
+   "detectable": {
+    "location": "Beirut",
+    "translator": "Muḥammad Binʿabbūd"
+   }
+  },
   "5973": {
    "detectable": {
     "publisher": "German"
+   }
+  },
+  "5974": {
+   "detectable": {
+    "publisher": "Company F.K.A",
+    "location": "Beirut"
+   }
+  },
+  "5989": {
+   "detectable": {
+    "publisher": "Esst",
+    "translator": "Saḥar Sattālah"
+   }
+  },
+  "6000": {
+   "detectable": {
+    "location": "Tiranë/Tirana"
+   }
+  },
+  "6044": {
+   "detectable": {
+    "translator": "Abū Bakr al-ʿAyyādī"
+   }
+  },
+  "6058": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6059": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6071": {
+   "detectable": {
+    "translator": "Vladislav Šarić"
+   }
+  },
+  "6091": {
+   "detectable": {
+    "translator": "C. D. Pandey"
+   }
+  },
+  "6102": {
+   "detectable": {
+    "location": "New Delhi"
+   }
+  },
+  "6113": {
+   "detectable": {
+    "location": "New Delhi"
+   }
+  },
+  "6132": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "6146": {
+   "detectable": {
+    "location": "Beijing",
+    "translator": "Yushu Zhang"
+   }
+  },
+  "6148": {
+   "detectable": {
+    "location": "Shanghai",
+    "translator": "Kun Ji"
+   }
+  },
+  "6149": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "6150": {
+   "detectable": {
+    "translator": "Hanjie Lan"
+   }
+  },
+  "6158": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "6176": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "6191": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "6202": {
+   "detectable": {
+    "publisher": "Ledermann Verlag",
+    "translator": "Alfred Brieger"
+   }
+  },
+  "6210": {
+   "detectable": {
+    "publisher": "Insel Verlag"
+   }
+  },
+  "6213": {
+   "detectable": {
+    "publisher": "Deuticke Verlag"
+   }
+  },
+  "6218": {
+   "detectable": {
+    "publisher": "Wagenbach Verlag"
+   }
+  },
+  "6220": {
+   "detectable": {
+    "publisher": "Müller Verlag",
+    "translator": "Arthur Schurig"
+   }
+  },
+  "6222": {
+   "detectable": {
+    "publisher": "Der Greif Walther Gericke"
+   }
+  },
+  "6224": {
+   "detectable": {
+    "location": "Beijing"
+   }
+  },
+  "6225": {
+   "detectable": {
+    "publisher": "Schuster & Loeffler Verlag"
+   }
+  },
+  "6227": {
+   "detectable": {
+    "publisher": "Schuster & Loeffler Verlag"
+   }
+  },
+  "6232": {
+   "detectable": {
+    "publisher": "Au Sans Pareil"
+   }
+  },
+  "6238": {
+   "detectable": {
+    "publisher": "C. H. Beck Verlag"
+   }
+  },
+  "6242": {
+   "detectable": {
+    "publisher": "Rotapfel-Verlag",
+    "translator": "Erna Grautoff"
+   }
+  },
+  "6247": {
+   "detectable": {
+    "location": "Frankfurt am Main"
    }
   },
   "6254": {
@@ -679,19 +4260,215 @@
     "publisher": "Im Verlag der Internationalen Stefan-Zweig-Gesellschaft"
    }
   },
+  "6255": {
+   "detectable": {
+    "publisher": "Insel Verlag"
+   }
+  },
+  "6263": {
+   "detectable": {
+    "location": "Leipzig"
+   }
+  },
+  "6267": {
+   "detectable": {
+    "publisher": "The European Press"
+   }
+  },
+  "6268": {
+   "detectable": {
+    "publisher": "Aufbau Verlag",
+    "location": "Berlin"
+   }
+  },
+  "6269": {
+   "detectable": {
+    "publisher": "Suhrkamp Verlag"
+   }
+  },
+  "6276": {
+   "detectable": {
+    "publisher": "GmbH"
+   }
+  },
+  "6288": {
+   "detectable": {
+    "publisher": "Filser Verlag"
+   }
+  },
+  "6303": {
+   "detectable": {
+    "translator": "Jean Engel"
+   }
+  },
   "6319": {
    "detectable": {
     "publisher": "April 9"
    }
   },
+  "6327": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6335": {
+   "detectable": {
+    "location": "Würzburg"
+   }
+  },
+  "6336": {
+   "detectable": {
+    "location": "Würzburg"
+   }
+  },
+  "6353": {
+   "detectable": {
+    "publisher": "Notes",
+    "location": "New York"
+   }
+  },
+  "6363": {
+   "detectable": {
+    "publisher": "Frans Masereel",
+    "location": "Wien",
+    "translator": "Karl Wolfskehl"
+   }
+  },
+  "6383": {
+   "detectable": {
+    "publisher": "Buchhandlung Vorwärts",
+    "location": "Frankfurt am Main",
+    "translator": "Stefan Zweig and for poems by Stefan Zweig see"
+   }
+  },
+  "6385": {
+   "detectable": {
+    "publisher": "Ernst Reinhardt"
+   }
+  },
+  "6387": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
+  },
+  "6389": {
+   "detectable": {
+    "publisher": "Pick"
+   }
+  },
+  "6416": {
+   "detectable": {
+    "publisher": "Garnier Frères",
+    "location": "Paris"
+   }
+  },
+  "6429": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6448": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
+  },
+  "6495": {
+   "detectable": {
+    "publisher": "Paul Neff Verlag",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "6497": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "6498": {
+   "detectable": {
+    "location": "Leipzig"
+   }
+  },
+  "6503": {
+   "detectable": {
+    "location": "Mumbai",
+    "translator": "Omā Śarmā"
+   }
+  },
+  "6505": {
+   "detectable": {
+    "location": "Leipzig"
+   }
+  },
+  "6515": {
+   "detectable": {
+    "translator": "Omā Śarmā"
+   }
+  },
+  "6528": {
+   "detectable": {
+    "publisher": "Safari-Verlag"
+   }
+  },
   "6537": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "6547": {
+   "detectable": {
+    "location": "New Delhi"
+   }
+  },
+  "6553": {
+   "detectable": {
+    "location": "Innsbruck"
+   }
+  },
+  "6606": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "6616": {
+   "detectable": {
+    "publisher": "George Westermann Verlag"
+   }
+  },
+  "6629": {
+   "detectable": {
+    "publisher": "Tor",
+    "translator": "Alfredo Cahn"
+   }
+  },
+  "6669": {
+   "detectable": {
+    "publisher": "Gallimard",
+    "translator": "Norman R. Shapiro"
+   }
   },
   "6676": {
    "detectable": {
     "publisher": "Berlin-Grunewald"
+   }
+  },
+  "6699": {
+   "detectable": {
+    "publisher": "Brenner-Verlag"
+   }
+  },
+  "6701": {
+   "detectable": {
+    "publisher": "John Hopkins University Press"
+   }
+  },
+  "6706": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
+  },
+  "6718": {
+   "detectable": {
+    "translator": "Justin O'Brien"
    }
   },
   "6725": {
@@ -700,6 +4477,41 @@
    ],
    "detectable": {
     "publisher": "House"
+   }
+  },
+  "6734": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "6741": {
+   "detectable": {
+    "publisher": "Ferdinand Schöningh"
+   }
+  },
+  "6755": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "6758": {
+   "detectable": {
+    "translator": "Ines Schütz"
+   }
+  },
+  "6759": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "6776": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "6780": {
+   "detectable": {
+    "translator": "Alzir Hella"
    }
   },
   "6782": {
@@ -717,6 +4529,11 @@
     "location"
    ]
   },
+  "6793": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
   "6794": {
    "detectable": {
     "publisher": "Fredonia"
@@ -727,20 +4544,58 @@
     "location"
    ]
   },
+  "6797": {
+   "detectable": {
+    "publisher": "Humboldt-Verlag",
+    "translator": "Erwin Einziger"
+   }
+  },
   "6807": {
-   "notInSource": [
-    "location"
-   ]
+   "detectable": {
+    "location": "Vienna"
+   }
+  },
+  "6811": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
   },
   "6820": {
    "detectable": {
+    "publisher": "Artemis & Winkler Verlag",
+    "location": "Düsseldorf",
     "translator": "Klio Evangjeli"
+   }
+  },
+  "6827": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6828": {
+   "detectable": {
+    "publisher": "Wremja"
+   }
+  },
+  "6829": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6848": {
+   "detectable": {
+    "location": "Paris"
    }
   },
   "6864": {
    "notInSource": [
     "location"
    ]
+  },
+  "6883": {
+   "detectable": {
+    "location": "Paris"
+   }
   },
   "6887": {
    "detectable": {
@@ -750,11 +4605,19 @@
   "6900": {
    "notInSource": [
     "location"
-   ]
+   ],
+   "detectable": {
+    "publisher": "Europa Verlag"
+   }
   },
   "6911": {
    "detectable": {
     "publisher": "Fredonia NY and in the Deutsches Literaturarchiv Marbach"
+   }
+  },
+  "6913": {
+   "detectable": {
+    "translator": "Alzir Hella"
    }
   },
   "6918": {
@@ -767,6 +4630,27 @@
     "publisher": "Fredonia NY\n\nSee"
    }
   },
+  "6927": {
+   "detectable": {
+    "translator": "Dominique Tassel"
+   }
+  },
+  "6935": {
+   "detectable": {
+    "location": "São Paulo"
+   }
+  },
+  "6938": {
+   "detectable": {
+    "publisher": "Brandstätter Verlag",
+    "location": "Frankfurt am Main"
+   }
+  },
+  "6950": {
+   "detectable": {
+    "translator": "Isabelle Hausser"
+   }
+  },
   "6953": {
    "detectable": {
     "publisher": "Geistige Strömungen um 1900"
@@ -774,60 +4658,322 @@
   },
   "6964": {
    "detectable": {
-    "publisher": "Fredonia"
+    "publisher": "Fredonia",
+    "location": "Berlin"
+   }
+  },
+  "6965": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "6971": {
+   "detectable": {
+    "location": "Berlin"
+   }
+  },
+  "6992": {
+   "detectable": {
+    "location": "Paris"
    }
   },
   "6995": {
    "detectable": {
-    "publisher": "Fredonia\n\nFrench translation"
+    "publisher": "Fredonia\n\nFrench translation",
+    "location": "Paris"
+   }
+  },
+  "7019": {
+   "detectable": {
+    "location": "Paris"
+   }
+  },
+  "7049": {
+   "detectable": {
+    "location": "Würzburg"
+   }
+  },
+  "7053": {
+   "detectable": {
+    "publisher": "Präsenz-Verlag"
+   }
+  },
+  "7054": {
+   "detectable": {
+    "publisher": "Colloquium Verlag"
    }
   },
   "7055": {
    "detectable": {
+    "publisher": "Fink Verlag",
     "translator": "Brigitte Vergne-Cain and Gérard Rudent"
+   }
+  },
+  "7132": {
+   "detectable": {
+    "publisher": "Fischer Taschenbuch Verlag"
+   }
+  },
+  "7174": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
+   }
+  },
+  "7182": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "7192": {
+   "detectable": {
+    "publisher": "Schmiede Verlag",
+    "translator": "Rudolf Schottlaender"
+   }
+  },
+  "7195": {
+   "detectable": {
+    "location": "Leipzig"
+   }
+  },
+  "7196": {
+   "detectable": {
+    "publisher": "Victor Attinger"
+   }
+  },
+  "7198": {
+   "detectable": {
+    "publisher": "Kösel Verlag"
    }
   },
   "7207": {
    "detectable": {
+    "publisher": "Suhrkamp Verlag",
     "translator": "Joan Fontcuberta i Gel"
+   }
+  },
+  "7210": {
+   "detectable": {
+    "location": "Köln"
+   }
+  },
+  "7216": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
    }
   },
   "7218": {
    "detectable": {
+    "publisher": "Fischer Verlag",
     "translator": "Ẕabīḥ Allāh Manṣūrī"
+   }
+  },
+  "7219": {
+   "detectable": {
+    "publisher": "Kultur und Fortschritt"
+   }
+  },
+  "7220": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
    }
   },
   "7224": {
    "detectable": {
+    "publisher": "Insel-Verlag",
     "translator": "Alzir Hella and Olivier Bouranc"
+   }
+  },
+  "7274": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7276": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7301": {
+   "detectable": {
+    "publisher": "Koehler & Amelang Verlag"
+   }
+  },
+  "7312": {
+   "detectable": {
+    "publisher": "Jüdischer Verlag"
+   }
+  },
+  "7313": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7326": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7329": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7331": {
+   "detectable": {
+    "publisher": "Athenäum",
+    "location": "Krems an der Donau"
+   }
+  },
+  "7332": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7338": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7340": {
+   "detectable": {
+    "publisher": "Knauer Nachfolger Verlag"
+   }
+  },
+  "7342": {
+   "detectable": {
+    "publisher": "Neufeld & Henius Verlag",
+    "location": "Krems an der Donau"
+   }
+  },
+  "7343": {
+   "detectable": {
+    "publisher": "Jüdischer Verlag"
+   }
+  },
+  "7345": {
+   "detectable": {
+    "publisher": "Reinhardt Verlag",
+    "location": "Krems an der Donau"
+   }
+  },
+  "7346": {
+   "detectable": {
+    "publisher": "Concordia Verlag"
    }
   },
   "7347": {
    "detectable": {
-    "publisher": "Verlag der Dichtergabe"
+    "publisher": "Verlag der Dichtergabe",
+    "location": "Krems an der Donau"
+   }
+  },
+  "7348": {
+   "detectable": {
+    "publisher": "Jugend & Volk",
+    "location": "Krems an der Donau"
+   }
+  },
+  "7349": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7350": {
+   "detectable": {
+    "publisher": "Bong Verlag"
+   }
+  },
+  "7351": {
+   "detectable": {
+    "publisher": "Stollberg Verlag",
+    "location": "Krems an der Donau"
+   }
+  },
+  "7353": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7354": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7356": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7357": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7358": {
+   "detectable": {
+    "location": "München"
+   }
+  },
+  "7359": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7361": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7365": {
+   "detectable": {
+    "location": "Wien"
+   }
+  },
+  "7367": {
+   "detectable": {
+    "location": "Krems an der Donau"
+   }
+  },
+  "7368": {
+   "detectable": {
+    "publisher": "S. Fischer Verlag",
+    "location": "Darmstadt"
    }
   },
   "7369": {
    "detectable": {
-    "publisher": "November 1904"
+    "publisher": "November 1904",
+    "location": "Paris"
    }
   },
   "7378": {
    "detectable": {
-    "publisher": "Philipp Reclam jun. Verlag"
+    "publisher": "Philipp Reclam jun. Verlag",
+    "location": "November"
    }
   },
   "7383": {
    "detectable": {
+    "publisher": "Agora Verlag",
+    "location": "Bonn",
     "translator": "Oriana Tamburi"
    }
   },
-  "7393": {
-   "notInSource": [
-    "location"
-   ],
+  "7387": {
    "detectable": {
+    "publisher": "Wolff Verlag",
+    "location": "Leipzig"
+   }
+  },
+  "7393": {
+   "detectable": {
+    "location": "Prag",
     "translator": "Yan Zhu"
+   }
+  },
+  "7395": {
+   "detectable": {
+    "publisher": "Insel-Verlag"
    }
   },
   "7399": {
@@ -843,6 +4989,11 @@
     "translator": "Erna McArthur"
    }
   },
+  "7403": {
+   "detectable": {
+    "publisher": "Zolnay Verlag"
+   }
+  },
   "7406": {
    "detectable": {
     "translator": "Brigitte Vergne-Cain and Gérard Rudent"
@@ -851,6 +5002,17 @@
   "7460": {
    "detectable": {
     "translator": "Robert Shvarc"
+   }
+  },
+  "7499": {
+   "detectable": {
+    "location": "Moscow"
+   }
+  },
+  "7503": {
+   "detectable": {
+    "publisher": "Jüdischer Verlag",
+    "location": "Berlin"
    }
   },
   "7525": {

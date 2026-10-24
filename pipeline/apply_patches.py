@@ -10,8 +10,9 @@ that folder, together with this overlay, is the audit trail.
 
 For each correction the matching entry's field is set, its provenance is moved
 to "editor", and an edit-history record preserving the machine original is
-written. The entry's review status is raised to reflect human (approved) or
-agent (agent_verified) verification.
+written. The entry's review status is raised to approved where a person
+decided; a patch an agent produced stays a proposal (proposed), because only a
+person or an exact rule confirms.
 
 The corrections store is authoritative: each run rebuilds an entry's
 edit_history from the store rather than appending, so the step is idempotent
@@ -181,7 +182,8 @@ def apply_patches(entries, patches, location_links=None):
             by_action[action] += 1
         entry["edit_history"] = history
         last = plist[-1]
-        status = "approved" if "human" in sources else "agent_verified"
+        human = "human" in sources
+        status = "approved" if human else "proposed"
         # Stage 05 projects the Gate-2 field decisions into review["fields"];
         # the editor decision raises the entry status without discarding that
         # record of what the dataset already had reviewed.
@@ -191,8 +193,13 @@ def apply_patches(entries, patches, location_links=None):
                 "status": status,
                 "reviewed_by": last["edited_by"],
                 "reviewed_at": last["edited_at"],
+                "producer": "person" if human else "llm-agent",
             }
         )
+        # The proposal basis of a Gate-2 decision no longer describes an entry
+        # a person has decided.
+        if human:
+            review.pop("basis", None)
         touched += 1
 
     return {

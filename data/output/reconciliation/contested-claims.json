@@ -46,12 +46,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "resolved",
+      "klawiter:claimStatus": "contested",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Tyres%C3%B6",
         "schema:name": "Tyresö"
       },
-      "klawiter:decisionStatus": "decided",
+      "klawiter:decisionStatus": "open",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/c2e71f5d9a751732",
@@ -88,7 +88,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Tyresö/Q113730",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "accepted",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q113730"
           },
@@ -99,7 +99,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Tyresö/Q21667397",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q21667397"
           },
@@ -109,7 +109,7 @@
           "@id": "klawiter:claim/reconciliation/location/13c36aabb066d6a3/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
         }
       ],
@@ -155,12 +155,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "resolved",
+      "klawiter:claimStatus": "contested",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Sofija%2C%20Varna",
         "schema:name": "Sofija, Varna"
       },
-      "klawiter:decisionStatus": "decided",
+      "klawiter:decisionStatus": "open",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/2555757b78ef071e",
@@ -197,7 +197,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Sofija, Varna/Q472",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q472"
           },
@@ -208,7 +208,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Sofija, Varna/Q6506",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q6506"
           },
@@ -218,14 +218,14 @@
           "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
         },
         {
           "@id": "klawiter:claim/reconciliation/location/1ff25adffafe2fd7/interpretation/two-places",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:candidateSource": "reviewed-decision",
-          "klawiter:interpretationStatus": "accepted",
+          "klawiter:candidateSource": "llm-agent-proposal",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "Two places of publication, decided separately: Sofija (Q472) and Varna (Q6506)"
         }
       ],
@@ -574,12 +574,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "resolved",
+      "klawiter:claimStatus": "contested",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Kuwait",
         "schema:name": "Kuwait"
       },
-      "klawiter:decisionStatus": "decided",
+      "klawiter:decisionStatus": "open",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/b6b9a36fd31d7476",
@@ -620,7 +620,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Kuwait/Q35178",
           "klawiter:candidateSource": "legacy-reconciliation-output",
-          "klawiter:interpretationStatus": "accepted",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q35178"
           },
@@ -630,7 +630,7 @@
           "@id": "klawiter:claim/reconciliation/location/7e730fbf007dd947/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
         }
       ],
@@ -1495,12 +1495,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "resolved",
+      "klawiter:claimStatus": "contested",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Bloemfontein%2C%20Kaapstad",
         "schema:name": "Bloemfontein, Kaapstad"
       },
-      "klawiter:decisionStatus": "decided",
+      "klawiter:decisionStatus": "open",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/55bfb7a5fa7f12fa",
@@ -1537,7 +1537,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Bloemfontein, Kaapstad/Q37701",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q37701"
           },
@@ -1548,7 +1548,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Bloemfontein, Kaapstad/Q5465",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q5465"
           },
@@ -1558,14 +1558,14 @@
           "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
         },
         {
           "@id": "klawiter:claim/reconciliation/location/e5742c35b57192e9/interpretation/two-places",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:candidateSource": "reviewed-decision",
-          "klawiter:interpretationStatus": "accepted",
+          "klawiter:candidateSource": "llm-agent-proposal",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "Two places of publication, decided separately: Bloemfontein (Q37701) and Kaapstad (Capetown) (Q5465)"
         }
       ],
@@ -1733,12 +1733,12 @@
       "klawiter:claimPredicate": {
         "@id": "schema:sameAs"
       },
-      "klawiter:claimStatus": "resolved",
+      "klawiter:claimStatus": "contested",
       "klawiter:claimSubject": {
         "@id": "klawiter:location/Varna%2C%20Sofija",
         "schema:name": "Varna, Sofija"
       },
-      "klawiter:decisionStatus": "decided",
+      "klawiter:decisionStatus": "open",
       "klawiter:hasReviewAction": [
         {
           "@id": "klawiter:review/reconciliation/1a0a02215105f3e0",
@@ -1775,7 +1775,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Varna, Sofija/Q6506",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q6506"
           },
@@ -1786,7 +1786,7 @@
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateId": "location/Varna, Sofija/Q472",
           "klawiter:candidateSource": "independent-review-proposal",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "klawiter:proposedObject": {
             "@id": "http://www.wikidata.org/entity/Q472"
           },
@@ -1796,14 +1796,14 @@
           "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/no-assignment",
           "@type": "klawiter:ClaimInterpretation",
           "klawiter:candidateSource": "fail-closed-alternative",
-          "klawiter:interpretationStatus": "rejected",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "No canonical authority assignment in the current evidence"
         },
         {
           "@id": "klawiter:claim/reconciliation/location/f401570c46e6b7e9/interpretation/two-places",
           "@type": "klawiter:ClaimInterpretation",
-          "klawiter:candidateSource": "reviewed-decision",
-          "klawiter:interpretationStatus": "accepted",
+          "klawiter:candidateSource": "llm-agent-proposal",
+          "klawiter:interpretationStatus": "contested",
           "schema:name": "Two places of publication, decided separately: Varna (Q6506) and Sofija (Q472)"
         }
       ],

@@ -13,13 +13,15 @@ from pathlib import Path
 from typing import NamedTuple
 from urllib.parse import quote
 
+from lib.producers import confirms, may_confirm, producer_class
+
 # Canonical Wikidata RDF entity IRI: the http form is what Wikidata's own
 # RDF uses; the https form never joins against external triples.
 WIKIDATA_URI = "http://www.wikidata.org/entity/"
 SZD_WORK_URI = "https://gams.uni-graz.at/o:szd.werkindex#"
 TEI_NS = {"tei": "http://www.tei-c.org/ns/1.0"}
 XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
-ALGORITHM_VERSION = "1.2"
+ALGORITHM_VERSION = "1.3"
 
 
 def load_reconciliation_patches(directory: Path) -> dict:
@@ -511,6 +513,12 @@ def build_agent_candidates(
     return subjects
 
 
+def _check_producers(decision: dict) -> None:
+    """Every decision of a supersession chain names a registered producer."""
+    for item in decision_chain(decision):
+        producer_class(item["decidedBy"])
+
+
 def apply_agent_decisions(subjects: list[dict], decisions: list[dict]) -> list[dict]:
     """Attach reviewed agent decisions with the same guarantees locations
     and works enjoy: unique subjects, evidence required, confirmed targets
@@ -532,6 +540,7 @@ def apply_agent_decisions(subjects: list[dict], decisions: list[dict]) -> list[d
             raise ValueError(f"Unsupported decision action: {action}")
         if not decision.get("evidence"):
             raise ValueError(f"Decision lacks evidence: {decision['decisionId']}")
+        _check_producers(decision)
         if action == "unresolved" and not subject["sourceOccurrences"]:
             raise ValueError(
                 "An unresolved agent decision needs source-occurrence "
@@ -586,6 +595,7 @@ def apply_decisions(
             raise ValueError(f"Unsupported decision action: {action}")
         if not decision.get("evidence"):
             raise ValueError(f"Decision lacks evidence: {decision['decisionId']}")
+        _check_producers(decision)
 
         target_key = "qid" if entity_type == "location" else "szdId"
         target = decision.get(target_key)
@@ -632,9 +642,25 @@ def apply_decisions(
     return subjects
 
 
+def decision_state(decision: dict | None) -> str:
+    """The statement state a subject's decision gives its authority link.
+
+    A decision by a person or an exact rule confirms, a subject whose claim
+    stays open is contested, and an LLM agent's decision, like no decision
+    at all, leaves the link proposed.
+    """
+    if decision is None:
+        return "proposed"
+    if opens_claim(decision) and not closes_claim(decision):
+        return "contested"
+    if may_confirm(decision["decidedBy"]):
+        return "confirmed"
+    return "proposed"
+
+
 def _priority(subject: dict, entity_type: str) -> str:
     decision = subject.get("decision")
-    if decision and decision["action"] == "unresolved":
+    if decision and decision_state(decision) == "contested":
         return "P0"
     candidates = subject["candidates"]
     if not candidates:
@@ -670,22 +696,25 @@ def _review_queue(locations: list[dict], works: list[dict], agents: list[dict]) 
     cases = []
     for entity_type, subject in _queue_subject_groups(locations, works, agents):
         decision = subject.get("decision")
-        if decision and decision["action"] not in {"unresolved"}:
+        state = decision_state(decision)
+        if state == "confirmed":
             continue
-        cases.append(
-            {
-                "entityType": entity_type,
-                "subject": _queue_display(subject, entity_type),
-                "priority": _priority(subject, entity_type),
-                "status": decision["action"] if decision else "proposed",
-                "candidates": subject["candidates"],
-                "evidence": {
-                    key: value
-                    for key, value in subject.items()
-                    if key not in {"candidates", "decision"}
-                },
-            }
-        )
+        case = {
+            "entityType": entity_type,
+            "subject": _queue_display(subject, entity_type),
+            "priority": _priority(subject, entity_type),
+            "status": "unresolved" if state == "contested" else "proposed",
+            "candidates": subject["candidates"],
+            "evidence": {
+                key: value
+                for key, value in subject.items()
+                if key not in {"candidates", "decision"}
+            },
+        }
+        # An LLM agent's decision waits for a person beside its candidates.
+        if decision and decision["action"] != "unresolved":
+            case["proposedDecision"] = decision
+        cases.append(case)
     order = {"P0": 0, "P1": 1, "P2": 2}
     cases.sort(
         key=lambda case: (
@@ -697,7 +726,8 @@ def _review_queue(locations: list[dict], works: list[dict], agents: list[dict]) 
     return {
         "contract": (
             "A candidate is never publishable before an evidence-bearing confirm "
-            "or correct decision. Unresolved cases remain explicit."
+            "or correct decision by a person or an exact rule. Unresolved cases "
+            "and the decisions of LLM agents remain explicit as proposals."
         ),
         "caseCount": len(cases),
         "cases": cases,
@@ -708,7 +738,7 @@ def _publishable_agent_links(agents: list[dict]) -> dict:
     links: dict = {}
     for subject in agents:
         decision = subject.get("decision")
-        if not decision or decision["action"] not in {"confirm", "correct"}:
+        if not decision or not confirms(decision):
             continue
         qid = decision["qid"]
         candidate = next(item for item in subject["candidates"] if item["qid"] == qid)
@@ -727,7 +757,7 @@ def _publishable_links(locations: list[dict], works: list[dict]) -> dict:
     location_links = {}
     for subject in locations:
         decision = subject.get("decision")
-        if not decision or decision["action"] not in {"confirm", "correct"}:
+        if not decision or not confirms(decision):
             continue
         qid = decision["qid"]
         candidate = next(item for item in subject["candidates"] if item["qid"] == qid)
@@ -741,7 +771,7 @@ def _publishable_links(locations: list[dict], works: list[dict]) -> dict:
     work_links = {}
     for subject in works:
         decision = subject.get("decision")
-        if not decision or decision["action"] not in {"confirm", "correct"}:
+        if not decision or not confirms(decision):
             continue
         szd_id = decision["szdId"]
         candidate = next(
@@ -759,7 +789,8 @@ def _publishable_links(locations: list[dict], works: list[dict]) -> dict:
     return {
         "publicationContract": (
             "Only targets with an evidence-bearing confirm or correct decision "
-            "are projected into public data."
+            "by a person or an exact rule are projected into public data. A "
+            "decision by an LLM agent stays a proposal."
         ),
         "locations": location_links,
         "works": work_links,
@@ -810,30 +841,39 @@ def decision_chain(decision: dict) -> list[dict]:
     return chain
 
 
+def opens_claim(decision: dict) -> bool:
+    """A subject whose decision chain has held it open as a claim."""
+    return any(item["action"] == "unresolved" for item in decision_chain(decision))
+
+
 def closes_claim(decision: dict) -> bool:
-    """A final decision on a subject that was once an open claim.
+    """A final decision by a person or an exact rule on a once open claim.
 
     The claim stays in the data as a decided record, the way a decided
-    edition claim does, so the decision can be traced and revised.
+    edition claim does, so the decision can be traced and revised. An LLM
+    agent's final decision closes nothing: the claim stays open with that
+    decision in its review history as a proposal.
     """
-    return decision["action"] != "unresolved" and any(
-        item["action"] == "unresolved" for item in decision_chain(decision)[1:]
+    return (
+        decision["action"] != "unresolved"
+        and may_confirm(decision["decidedBy"])
+        and opens_claim(decision)
     )
 
 
-def _decide_claim(claim: dict, decision: dict) -> None:
-    """Mark the accepted reading of a closed claim and reject the others.
+def _selected_reading(claim: dict, decision: dict) -> tuple[str, list[str]]:
+    """The interpretation a final decision selects, and its review notes.
 
-    confirm and correct accept the interpretation of their target. A reject
-    accepts the reading its resolution names, such as a compound subject that
+    confirm and correct select the interpretation of their target. A reject
+    selects the reading its resolution names, such as a compound subject that
     names two places, which then joins the interpretations. A reject without
-    a resolution, as the editor records it, accepts the no-assignment reading.
+    a resolution, as the editor records it, selects the no-assignment reading.
     """
     claim_id = claim["@id"]
     interpretations = claim["klawiter:interpretation"]
+    notes: list[str] = []
     if decision["action"] == "reject" and not decision.get("resolution"):
         selected = f"{claim_id}/interpretation/no-assignment"
-        notes = []
     elif decision["action"] == "reject":
         resolution = decision["resolution"]
         selected = f"{claim_id}/interpretation/{resolution['reading']}"
@@ -843,24 +883,42 @@ def _decide_claim(claim: dict, decision: dict) -> None:
                 "@type": "klawiter:ClaimInterpretation",
                 "schema:name": resolution["label"],
                 "klawiter:interpretationStatus": "contested",
-                "klawiter:candidateSource": "reviewed-decision",
+                "klawiter:candidateSource": (
+                    "reviewed-decision"
+                    if may_confirm(decision["decidedBy"])
+                    else "llm-agent-proposal"
+                ),
             }
         )
         notes = resolution.get("reviewNotes", [])
     else:
         target = decision.get("qid") or decision.get("szdId")
         selected = f"{claim_id}/interpretation/{target}"
-        notes = []
     if selected not in {item["@id"] for item in interpretations}:
         raise ValueError(f"Decision on {claim_id} selects no interpretation")
-    for item in interpretations:
+    return selected, list(notes)
+
+
+def _decide_claim(claim: dict, decision: dict) -> None:
+    """Mark the accepted reading of a closed claim and reject the others."""
+    selected, notes = _selected_reading(claim, decision)
+    for item in claim["klawiter:interpretation"]:
         item["klawiter:interpretationStatus"] = (
             "accepted" if item["@id"] == selected else "rejected"
         )
     claim["klawiter:claimStatus"] = "resolved"
     claim["klawiter:decisionStatus"] = "decided"
     if notes:
-        claim["klawiter:reviewNote"] = list(notes)
+        claim["klawiter:reviewNote"] = notes
+
+
+def _keep_proposed_reading(claim: dict, decision: dict) -> None:
+    """An LLM agent's final decision on an open claim stays a proposal: the
+    reading it selects joins the competing interpretations, every reading
+    stays contested, and the decision stands in the review history."""
+    _, notes = _selected_reading(claim, decision)
+    if notes:
+        claim["klawiter:reviewNote"] = notes
 
 
 def _contested_claims(
@@ -868,8 +926,9 @@ def _contested_claims(
 ) -> list[dict]:
     """Materialize unresolved decisions as claims without publishing them as links.
 
-    A subject decided after an open claim keeps that claim as a decided
-    record with its accepted and rejected readings.
+    A subject decided by a person or a rule after an open claim keeps that
+    claim as a decided record with its accepted and rejected readings; one an
+    LLM agent decided keeps it open.
     """
     claims = []
     groups: list[tuple[str, list[dict]]] = [("location", locations), ("work", works)]
@@ -878,9 +937,7 @@ def _contested_claims(
     for entity_type, subjects in groups:
         for subject in subjects:
             decision = subject.get("decision")
-            if not decision or (
-                decision["action"] != "unresolved" and not closes_claim(decision)
-            ):
+            if not decision or not opens_claim(decision):
                 continue
             subject_id = subject["subjectId"]
             subject_key = _claim_subject_key(subject, entity_type)
@@ -945,8 +1002,10 @@ def _contested_claims(
                 "klawiter:interpretation": interpretations,
                 "klawiter:hasReviewAction": _decision_history(decision),
             }
-            if decision["action"] != "unresolved":
+            if closes_claim(decision):
                 _decide_claim(claim, decision)
+            elif decision["action"] != "unresolved":
+                _keep_proposed_reading(claim, decision)
             claims.append(claim)
     claims.sort(key=lambda item: item["@id"])
     return claims
@@ -1051,6 +1110,40 @@ def _source_revision_claims(
     return claims
 
 
+def decision_key(decision: dict, entity_type: str) -> str:
+    """The key of a decision's subject: decision ids repeat across subjects
+    (two place spellings can share one target), subjects do not."""
+    if entity_type == "location":
+        return f"location/{decision['subject']}"
+    if entity_type == "work":
+        return f"work/{decision['subjectId']}"
+    return f"{decision['entityType']}/{decision['subject']}"
+
+
+def _decision_states(
+    locations: list[dict], works: list[dict], agents: list[dict]
+) -> dict:
+    """Subject key -> its decision's id and producer class, the state the
+    decision gives the subject and, where the subject has an occurrence scan,
+    how many source lines carry it."""
+    states: dict[str, dict] = {}
+    groups = [("location", locations), ("work", works), ("agent", agents)]
+    for entity_type, subjects in groups:
+        for subject in subjects:
+            decision = subject.get("decision")
+            if not decision:
+                continue
+            item = {
+                "decisionId": decision["decisionId"],
+                "producer": producer_class(decision["decidedBy"]),
+                "decisionState": decision_state(decision),
+            }
+            if "sourceOccurrences" in subject:
+                item["sourceOccurrences"] = len(subject["sourceOccurrences"])
+            states[decision_key(decision, entity_type)] = item
+    return dict(sorted(states.items()))
+
+
 def build_reconciliation(
     edition_dataset: dict,
     locations: dict,
@@ -1084,11 +1177,18 @@ def build_reconciliation(
         (agent_decisions or {}).get("decisions", []),
     )
     decisions = {
-        "contract": "Decisions remain separate from generated candidates and public links.",
+        "contract": (
+            "Decisions remain separate from generated candidates and public "
+            "links. decisionStates names each decision's producer class and the "
+            "state it gives its subject; only a person or an exact rule confirms."
+        ),
         "locationDecisions": location_decisions["decisions"],
         "workDecisions": work_decisions["decisions"],
         "agentDecisions": (agent_decisions or {}).get("decisions", []),
         "sourceRevisionDecisions": source_revisions["decisions"],
+        "decisionStates": _decision_states(
+            location_subjects, work_subjects, agent_subjects
+        ),
     }
     candidates = {
         "algorithmVersion": ALGORITHM_VERSION,

@@ -42,12 +42,15 @@ from lib.config import (
 from lib.encoding import unescape_dump_quotes
 from lib.page_kinds import WIKI_PAGE_KINDS, classify_wiki_page
 from lib.print_addresses import cited_print_addresses
+from lib.producers import EDITION_SAMPLE_DECIDER, producer_class
 from lib.publications import (
     attach_edition_state,
     build_page_publications,
     load_attested_places,
     review_flag_codes,
 )
+from lib.reconciliation import decision_key
+from lib.translations import translation_statements
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP, to_rdf_entry
 
 log = setup_logging(__name__)
@@ -256,19 +259,30 @@ def load_work_pages():
 
 
 def load_edition_states():
-    """Review status of every edition node of the reviewed Gate-1 graph."""
+    """Review status of every edition node of the reviewed Gate-1 graph, with
+    the sample review's disposition and producer class where it has one.
+
+    The agentic sample reconciliation is the only review source of Gate 1, so
+    a recorded disposition is that sample's and its producer is the sample's
+    decider.
+    """
+    producer = producer_class(EDITION_SAMPLE_DECIDER)
     return {
-        edition["@id"]: edition["klawiter:reviewStatus"]
+        edition["@id"]: {
+            "status": edition["klawiter:reviewStatus"],
+            "decision": edition.get("klawiter:reviewDecision"),
+            "producer": producer,
+        }
         for edition in _load_edition_graph()["editions"]
     }
 
 
 def edition_review_source(path: str = EDITION_SAMPLE_RECONCILIATION) -> dict:
-    """Who reviewed the editions the sample reconciliation confirms, and when.
+    """Who reviewed the editions of the agentic sample reconciliation, and when.
 
-    A publication reports its edition state without its producer; this is the
-    one review artifact behind the confirmed states, so the interface can name
-    the producer beside the state instead of reading the artifact itself.
+    This is the one review artifact behind every recorded edition disposition.
+    Its reviewers and verifier are LLM agents, so the dispositions stay
+    proposals; the interface names them beside the state.
     """
     with open(path, encoding="utf-8") as handle:
         document = json.load(handle)
@@ -282,6 +296,7 @@ def edition_review_source(path: str = EDITION_SAMPLE_RECONCILIATION) -> dict:
         ),
         "verifierRole": verifier["role"],
         "verifierAgent": verifier["agent"],
+        "producer": producer_class(EDITION_SAMPLE_DECIDER),
         "cases": document["summary"]["total_cases"],
     }
 
@@ -521,22 +536,44 @@ _FRONTEND_SKIPPED_KEYS = {"author", "relation", "seeAlsoText", "decomposedAsWork
 # kind that decides each of them.
 _REVIEW_FIELDS = ("location", "translator", "publisher")
 _AGENT_DECISION_FIELDS = {"person": "translator", "publisher": "publisher"}
-# What a decision action says about the entry as a whole. A rejection
-# refuses a candidate link and verifies no value, so it yields the weakest
-# status, reviewed: a decision exists, nothing was verified.
-_REVIEW_STATUS_BY_ACTION = {
-    "confirm": "agent_verified",
-    "correct": "agent_verified",
-    "reject": "reviewed",
-    "unresolved": "contested",
-}
+
+
+def _review_status(decision):
+    """What a decision says about the entry as a whole, by its Gate-2 state.
+
+    A decision by an LLM agent is a proposal whatever its action, an open
+    claim is contested, and a person's or an exact rule's confirm or correct
+    confirms. A rejection refuses a candidate link and verifies no value, so
+    it yields reviewed: a decision exists, nothing was verified.
+    """
+    state = decision["decisionState"]
+    if state != "confirmed":
+        return state
+    return "reviewed" if decision["action"] == "reject" else "confirmed"
+
+
 # approved is reserved for apply_patches.py, where a human editor decided.
 _REVIEW_STATUS_RANK = {
-    "reviewed": 0,
-    "contested": 1,
-    "agent_verified": 2,
-    "approved": 3,
+    "proposed": 0,
+    "reviewed": 1,
+    "contested": 2,
+    "confirmed": 3,
+    "approved": 4,
 }
+
+
+def _review_basis(decision):
+    """The producer and its evidence in a reader's words, for a proposal."""
+    if decision["decisionProducer"] != "llm-agent":
+        return None
+    occurrences = decision.get("sourceOccurrences")
+    if occurrences is None:
+        evidence = "no occurrence scan"
+    elif occurrences:
+        evidence = "source occurrence checked"
+    else:
+        evidence = "no source occurrence"
+    return f"proposed by LLM agents, {evidence}, no person"
 
 
 def load_review_index():
@@ -548,13 +585,28 @@ def load_review_index():
     """
     with open(OUTPUT_RECONCILIATION_DECISIONS, encoding="utf-8") as handle:
         document = json.load(handle)
+    states = document["decisionStates"]
+
+    def with_state(decision, entity_type):
+        state = states[decision_key(decision, entity_type)]
+        return {
+            **decision,
+            "decisionProducer": state["producer"],
+            "decisionState": state["decisionState"],
+            **(
+                {"sourceOccurrences": state["sourceOccurrences"]}
+                if "sourceOccurrences" in state
+                else {}
+            ),
+        }
+
     index = {}
     for decision in document.get("locationDecisions", []):
-        index[("location", decision["subject"])] = decision
+        index[("location", decision["subject"])] = with_state(decision, "location")
     for decision in document.get("agentDecisions", []):
         field = _AGENT_DECISION_FIELDS.get(decision["entityType"])
         if field:
-            index[(field, decision["subject"])] = decision
+            index[(field, decision["subject"])] = with_state(decision, "agent")
     log.info("Review index: %d decided field values", len(index))
     return index
 
@@ -569,6 +621,7 @@ def build_review(frontend_entry, review_index):
     place says nothing about year, translator or any other field.
     """
     fields = {}
+    field_states = {}
     strongest = None
     for field in _REVIEW_FIELDS:
         value = frontend_entry.get(field)
@@ -577,7 +630,8 @@ def build_review(frontend_entry, review_index):
             continue
         action = decision["action"]
         fields[field] = action
-        status = _REVIEW_STATUS_BY_ACTION[action]
+        field_states[field] = decision["decisionState"]
+        status = _review_status(decision)
         if strongest is None or (
             _REVIEW_STATUS_RANK[status] > _REVIEW_STATUS_RANK[strongest[0]]
         ):
@@ -585,10 +639,20 @@ def build_review(frontend_entry, review_index):
     if not fields:
         return None
     status, decision = strongest
-    review = {"status": status, "reviewed_by": decision["decidedBy"]}
+    review = {
+        "status": status,
+        "reviewed_by": decision["decidedBy"],
+        "producer": decision["decisionProducer"],
+    }
+    basis = _review_basis(decision)
+    if basis:
+        review["basis"] = basis
     if decision.get("decidedAt"):
         review["reviewed_at"] = decision["decidedAt"]
     review["fields"] = fields
+    # Per field, whether its decision confirms or stays a proposal; the status
+    # above reports only the strongest of them.
+    review["fieldStates"] = field_states
     review["scope"] = list(fields)
     return review
 
@@ -857,6 +921,12 @@ def main():
             if layer:
                 publication_layers[int(row["page_id"])] = layer
             fe = make_frontend_entry(e, review_index, layer)
+            # One statement per printing of the translations section, each
+            # value with its span of the dump-form source (lib/translations.py).
+            if row.get("page_namespace") == "0":
+                statements = translation_statements(row.get("raw_content", ""))
+                if statements:
+                    fe["translationStatements"] = statements
             restoration = restorations.get(fe.get("sourcePageId"))
             if restoration:
                 fe["sourceRevision"] = restoration
@@ -941,6 +1011,11 @@ def main():
     wiki_page_kinds = {kind: 0 for kind in WIKI_PAGE_KINDS}
     for e in ns0:
         wiki_page_kinds[e["wikiPageKind"]] += 1
+    translated = [e for e in ns0 if e.get("translationStatements")]
+    translation_coverage = {
+        "pages": len(translated),
+        "statements": sum(len(e["translationStatements"]) for e in translated),
+    }
     cited = [e for e in ns0 if e.get("printAddressCitations")]
     print_citation_coverage = {
         "pages": len(cited),
@@ -958,8 +1033,11 @@ def main():
         # restored page, 1.6 the "uncertain" mark of a credit, 1.7 the wiki
         # page kind with its rule and evidence and the cited print addresses,
         # 1.8 the producers behind the provenance chain of a value: the edition
-        # review here, the LLM enrichment run from inject_provenance.py.
-        "frontendSchemaVersion": "1.8",
+        # review here, the LLM enrichment run from inject_provenance.py, 1.9 the
+        # producer class, per-field state and proposal basis of a review
+        # decision, the agent review of a publication's edition, and the
+        # structured translation statements.
+        "frontendSchemaVersion": "1.9",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,
@@ -976,6 +1054,7 @@ def main():
         "publicationCoverage": publication_coverage,
         "wikiPageKinds": wiki_page_kinds,
         "printAddressCitations": print_citation_coverage,
+        "translationStatements": translation_coverage,
         "editionReview": edition_review_source(),
     }
 

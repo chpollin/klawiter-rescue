@@ -10,15 +10,15 @@
   },
   "counts": {
     "annotations": 2077,
-    "candidateWorks": 0,
+    "candidateWorks": 1,
     "carriers": 6,
-    "confirmedEditions": 76,
-    "contestedEditionClaims": 0,
-    "contestedEditions": 0,
-    "decidedEditionClaims": 1,
+    "confirmedEditions": 0,
+    "contestedEditionClaims": 1,
+    "contestedEditions": 1,
+    "decidedEditionClaims": 0,
     "editions": 2077,
-    "reviewCases": 339,
-    "works": 448
+    "reviewCases": 354,
+    "works": 447
   },
   "errors": {
     "contestedClaims": [],
@@ -26,6 +26,6 @@
     "selectors": [],
     "stableIdentifiers": []
   },
-  "generatedAt": "2026-10-24T15:57:47.629375+00:00",
+  "generatedAt": "2026-10-24T17:53:26.333691+00:00",
   "shaclReport": "Validation Report\nConforms: True\n"
 }

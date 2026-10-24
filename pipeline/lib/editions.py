@@ -25,8 +25,9 @@ from lib.patterns import (
     PLACE_NAMES_STANDING_ALONE,
     PLACE_QUALIFIERS,
 )
+from lib.producers import EDITION_SAMPLE_DECIDER, confirms, may_confirm
 
-ALGORITHM_VERSION = "1.3"
+ALGORITHM_VERSION = "1.4"
 # Header grammar built from the shared year fragment in lib/patterns.py, so
 # '[ca. YEAR]' parses identically in the flat extraction and here. patterns.py
 # is part of segment_editions.py's provenance code hash for this reason.
@@ -685,6 +686,38 @@ def _resolve_claim(
     return work
 
 
+def _record_proposed_resolution(
+    claim: dict, annotation: dict, resolution: dict
+) -> None:
+    """Keep an LLM agent's resolution of a claim as a proposal in its history.
+
+    The claim stays open and its edition contested; the reading the agent
+    selected, its basis and its review notes stay readable for the person
+    who decides.
+    """
+    claim["klawiter:hasReviewAction"].append(
+        {
+            "@id": resolution["review_id"],
+            "@type": "klawiter:ReviewAction",
+            "prov:wasAssociatedWith": {"@id": resolution["decided_by"]},
+            "prov:used": [
+                {"@id": annotation["@id"]},
+                *({"@id": source} for source in resolution["evidence"]),
+            ],
+            "klawiter:reviewOutcome": "propose",
+            "klawiter:reviewBasis": (
+                "Proposed by an LLM agent, no person: selects "
+                f"{resolution['selected_interpretation']}. "
+                f"{resolution['provenance']} {resolution['basis']}"
+            ),
+            "dcterms:date": resolution["decided_on"],
+        }
+    )
+    notes = resolution.get("review_notes", [])
+    if notes:
+        claim["klawiter:reviewNote"] = [note["detail"] for note in notes]
+
+
 def apply_review_reconciliation(
     dataset: dict, reconciliation: dict, modeling_decisions: dict
 ) -> dict:
@@ -719,10 +752,17 @@ def apply_review_reconciliation(
         if edition["klawiter:headerLine"].rstrip() != source["header"].rstrip():
             raise ValueError(f"Reviewed header changed for {edition_id}")
 
+        # The sample was decided by two agent reviewers and an LLM verifier;
+        # their disposition stays as evidence, and only a person or an exact
+        # rule would make the edition confirmed.
         disposition = decision["disposition"]
-        edition["klawiter:reviewStatus"] = (
-            "contested" if disposition == "unresolved" else "confirmed"
-        )
+        if disposition == "unresolved":
+            status = "contested"
+        elif may_confirm(EDITION_SAMPLE_DECIDER):
+            status = "confirmed"
+        else:
+            status = "proposed"
+        edition["klawiter:reviewStatus"] = status
         edition["klawiter:reviewDecision"] = disposition
         edition["klawiter:reviewBasis"] = decision["basis"]
         if disposition == "unresolved":
@@ -800,13 +840,15 @@ def apply_review_reconciliation(
                     "klawiter:reviewBasis": decision["basis"],
                 }
             )
+            resolution = specification.get("resolution")
+            decided = bool(resolution) and may_confirm(resolution["decided_by"])
             claim = {
                 "@id": claim_id,
                 "@type": "klawiter:ContestedClaim",
                 "klawiter:claimSubject": {"@id": edition_id},
                 "klawiter:claimPredicate": {"@id": specification["predicate"]},
                 "klawiter:claimStatus": "contested",
-                "klawiter:decisionStatus": specification["decision_status"],
+                "klawiter:decisionStatus": "decided" if decided else "open",
                 "klawiter:sourcePageId": edition["klawiter:sourcePageId"],
                 "klawiter:sourceSliceSha256": edition["klawiter:sourceSliceSha256"],
                 "oa:hasTarget": copy.deepcopy(annotation["oa:hasTarget"]),
@@ -817,8 +859,9 @@ def apply_review_reconciliation(
                 "klawiter:interpretation": interpretations,
                 "klawiter:hasReviewAction": review_actions,
             }
-            resolution = specification.get("resolution")
-            if resolution:
+            if resolution and not decided:
+                _record_proposed_resolution(claim, annotation, resolution)
+            elif resolution:
                 work = _resolve_claim(claim, edition, works, annotation, resolution)
                 reviewed["works"].append(work)
                 works[work["@id"]] = work
@@ -843,7 +886,9 @@ def apply_review_reconciliation(
                 "@type": "schema:PublicationVolume",
                 "schema:name": relation["source_label"],
                 "klawiter:identityScope": "source-occurrence",
-                "klawiter:reviewStatus": "confirmed",
+                # Recorded with the agentic sample modelling; no person or
+                # exact rule has confirmed the relation.
+                "klawiter:reviewStatus": "proposed",
                 "klawiter:sourceEdition": {"@id": edition_id},
             }
         )
@@ -855,9 +900,10 @@ def apply_review_reconciliation(
         "sample_reconciliation_sha256"
     ]
     reviewed["klawiter:reviewContract"] = (
-        "Agentic sample decisions are confirmed only within their exact selectors; "
-        "all other editions remain proposals and contested bindings remain explicit "
-        "claims with open decisions."
+        "Agentic sample decisions are recorded within their exact selectors as "
+        "proposals; only a person or an exact rule confirms an edition. Contested "
+        "bindings remain explicit claims with open decisions, an LLM agent's "
+        "resolution standing in their review history as a proposal."
     )
     return reviewed
 
@@ -970,12 +1016,13 @@ def apply_confirmed_work_links(dataset, work_decisions, szd_authorities):
     The edition graph is the canonical dataset (operator decision
     2026-08-26); the human-confirmed work identities must live here, not
     only in a reconciliation side file. Only confirmed or corrected
-    decisions produce links; everything else stays a candidate.
+    decisions by a person or an exact rule produce links; an LLM agent's
+    decision, like everything else, stays a candidate.
     """
     by_szd = {authority["szdId"]: authority for authority in szd_authorities}
     links = {}
     for decision in work_decisions.get("decisions", []):
-        if decision.get("action") not in {"confirm", "correct"}:
+        if not confirms(decision):
             continue
         authority = by_szd.get(decision.get("szdId"))
         if not authority:

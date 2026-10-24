@@ -32,9 +32,11 @@ from lib.config import (  # noqa: E402
     setup_logging,
     write_json,
 )
+from lib.producers import producer_class  # noqa: E402
 from lib.reconciliation import (  # noqa: E402
     ALGORITHM_VERSION,
     build_reconciliation,
+    decision_key,
     load_reconciliation_patches,
     merge_agent_decision_patches,
     merge_decision_patches,
@@ -176,6 +178,9 @@ def _frontend_authority_claims(claims: list[dict]) -> list[dict]:
                         "decisionId": item["klawiter:decisionId"],
                         "action": item["klawiter:reviewOutcome"],
                         "decidedBy": item["prov:wasAssociatedWith"]["schema:name"],
+                        "producer": producer_class(
+                            item["prov:wasAssociatedWith"]["schema:name"]
+                        ),
                         "decidedAt": item.get("klawiter:decidedAt"),
                         "evidence": item["klawiter:evidence"],
                         **(
@@ -226,13 +231,39 @@ def claim_counts(claims: list[dict], edition_claims: list[dict]) -> dict[str, in
     }
 
 
+def _decision_fields(subject: dict, states: dict, entity_type: str) -> dict:
+    """The producer class and state of a subject's decision, where it has one."""
+    decision = subject.get("decision")
+    if not decision:
+        return {}
+    state = states[decision_key(decision, entity_type)]
+    return {
+        "decisionProducer": state["producer"],
+        "decisionState": state["decisionState"],
+    }
+
+
+def decision_state_counts(states: dict) -> dict[str, int]:
+    """Decisions per state they give their subject, all entity types together."""
+    counts = {"confirmed": 0, "proposed": 0, "contested": 0}
+    for item in states.values():
+        counts[item["decisionState"]] += 1
+    return {
+        "confirmedDecisions": counts["confirmed"],
+        "proposedDecisions": counts["proposed"],
+        "contestedDecisions": counts["contested"],
+    }
+
+
 def _frontend(result: dict, edition_dataset: dict) -> dict:
+    states = result["decisions"]["decisionStates"]
     location_items = {}
     for subject in result["candidates"]["locations"]:
         name = subject["sourceLocation"]
         location_items[name] = {
             "candidates": subject["candidates"],
             "decision": subject.get("decision"),
+            **_decision_fields(subject, states, "location"),
             "publishable": result["publishable"]["locations"].get(name),
             "legacyStatus": subject["legacyStatus"],
         }
@@ -287,8 +318,10 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
         # 1.1 added source-occurrence evidence to the agent subjects, 1.2 the
         # decided edition claims with their review notes and decision dates,
         # 1.3 decided authority claims, source-revision claims and the split
-        # of open and decided claim counts.
-        "schemaVersion": "1.3",
+        # of open and decided claim counts, 1.4 the producer class and state of
+        # every decision and the producer of every review step; only a person
+        # or an exact rule confirms.
+        "schemaVersion": "1.4",
         "contract": result["publishable"]["publicationContract"],
         "summary": {
             "locationSubjects": len(result["candidates"]["locations"]),
@@ -299,6 +332,7 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
             **claim_counts(
                 result["contestedClaims"], edition_dataset["contestedClaims"]
             ),
+            **decision_state_counts(states),
         },
         "locations": location_items,
         "works": result["candidates"]["works"],
@@ -324,6 +358,7 @@ def _frontend(result: dict, edition_dataset: dict) -> dict:
                 ),
                 "candidates": subject["candidates"],
                 "decision": subject.get("decision"),
+                **_decision_fields(subject, states, "agent"),
                 "publishable": result["publishable"]["agents"].get(
                     f"{subject['entityType']}/{subject['sourceName']}"
                 ),
@@ -415,10 +450,14 @@ def main() -> None:
     # LF-normalize so the recorded provenance hash is independent of the
     # git eol settings that produced the working copy.
     code_hash = hashlib.sha256(
-        Path(__file__).read_bytes().replace(b"\r\n", b"\n")
-        + (Path(__file__).parent / "lib" / "reconciliation.py")
-        .read_bytes()
-        .replace(b"\r\n", b"\n")
+        b"".join(
+            path.read_bytes().replace(b"\r\n", b"\n")
+            for path in (
+                Path(__file__),
+                Path(__file__).parent / "lib" / "reconciliation.py",
+                Path(__file__).parent / "lib" / "producers.py",
+            )
+        )
     ).hexdigest()
 
     artifacts = {
@@ -468,6 +507,7 @@ def main() -> None:
             **claim_counts(
                 result["contestedClaims"], edition_dataset["contestedClaims"]
             ),
+            **decision_state_counts(result["decisions"]["decisionStates"]),
         },
         "artifacts": {name: _sha256(output_dir / name) for name in artifacts},
         "frontendArtifact": {
@@ -475,8 +515,9 @@ def main() -> None:
             "sha256": _sha256(Path(OUTPUT_RECONCILIATION_FRONTEND)),
         },
         # The adaptation binding of klawiter:edition/4916-2016-b, the one point
-        # listed here before, was decided on 2026-09-22 and is recorded in the
-        # edition modeling decisions.
+        # listed here before, was decided by the main instance on 2026-09-22;
+        # under the rule that only a person or an exact rule confirms, that
+        # decision is a proposal and the claim is open for a person again.
         "operatorPoints": [],
     }
     write_json(str(output_dir / "manifest.json"), manifest, indent=2, sort_keys=True)

@@ -8,7 +8,7 @@
     {
       "pageId": 285,
       "field": "location",
-      "actual": "Stockholm"
+      "actual": null
     },
     {
       "pageId": 285,
@@ -32,13 +32,13 @@
     },
     {
       "pageId": 1667,
-      "field": "publisher",
-      "actual": "Armando Dadò Editore"
-    },
-    {
-      "pageId": 1667,
       "field": "year",
       "actual": 1919
+    },
+    {
+      "pageId": 4133,
+      "field": "location",
+      "actual": null
     },
     {
       "pageId": 4133,
@@ -168,6 +168,38 @@
           "field": "location",
           "was": "Berlin",
           "reason": "A known city joined to a word by a hyphen is no city of its own, so the header place stays in its source wording 'Berlin-Wilmersdorf' instead of being cut to 'Berlin'."
+        }
+      ]
+    },
+    {
+      "date": "2026-10-24",
+      "evidence": "pipeline/lib/publications.py (unbound_flat_fields)",
+      "partialImprovements": [
+        {
+          "pageId": 285,
+          "field": "location",
+          "before": "Stockholm",
+          "after": null,
+          "expectedRemains": "Leipzig",
+          "reason": "Stockholm came from a reprint list below the first statement; no rule binds it to the publication, so the field is a gap. The statement's imprint 'Leipzig: Insel-Verlag, 1927' is readable, but the rule empties an unbound value and does not choose another one."
+        }
+      ],
+      "acceptedRegressions": [
+        {
+          "pageId": 4133,
+          "field": "location",
+          "before": "Marburg",
+          "after": null,
+          "expectedRemains": "Marburg",
+          "reason": "The place stands only inside the institution name 'Marburg University'; no imprint, header or place bracket states it, so no rule binds it to the thesis and the field is a gap (a gap before a wrong value)."
+        }
+      ],
+      "resolved": [
+        {
+          "pageId": 1667,
+          "field": "publisher",
+          "was": "Armando Dadò Editore",
+          "reason": "The publisher came from the Italian letter section below the German first statement; no rule binds it to the described item, so the field is a gap, which the oracle expects (the page documents no single publisher)."
         }
       ]
     }

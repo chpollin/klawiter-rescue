@@ -66,6 +66,7 @@ def _code_hash() -> str:
         Path(__file__),
         Path(__file__).parent / "lib" / "editions.py",
         Path(__file__).parent / "lib" / "patterns.py",
+        Path(__file__).parent / "lib" / "producers.py",
     )
     digest = hashlib.sha256()
     for path in paths:
@@ -126,6 +127,12 @@ def _review_queue(dataset: dict) -> dict:
                 "sourceSliceSha256": edition["klawiter:sourceSliceSha256"],
             }
         )
+        # An agent reviewer's disposition waits for a person beside the case.
+        if edition.get("klawiter:reviewDecision"):
+            cases[-1]["proposedDecision"] = {
+                "disposition": edition["klawiter:reviewDecision"],
+                "basis": edition.get("klawiter:reviewBasis"),
+            }
     priority_order = {"P0": 0, "P1": 1, "P2": 2}
     cases.sort(
         key=lambda case: (

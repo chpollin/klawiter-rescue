@@ -602,7 +602,7 @@ def extract_publisher(text):
     return None
 
 
-def _clean_location(value):
+def clean_location(value):
     """Strip bold markup, reduce a 'Primary [Alternate]' form to the primary
     name, and trim brackets and trailing punctuation from a location token."""
     value = re.sub(r"'{2,3}", "", value).strip()
@@ -610,7 +610,7 @@ def _clean_location(value):
     return value.strip().strip("[]").strip().rstrip(".,;:").strip()
 
 
-def _location_from_header(header):
+def location_from_header(header):
     """Pick the location out of a publication-line header body (the text after
     '[YEAR]:'). The location is the segment after the last comma; a trailing US
     state code falls back to the city segment before it. A known city is
@@ -618,9 +618,9 @@ def _location_from_header(header):
     kept so non-Western places absent from the known list are still recovered."""
     parts = [p.strip() for p in header.split(",") if p.strip()]
     if len(parts) >= 2:
-        tail = _clean_location(parts[-1])
+        tail = clean_location(parts[-1])
         if _US_STATE_RE.match(tail) and len(parts) >= 3:
-            tail = _clean_location(parts[-2])
+            tail = clean_location(parts[-2])
         m = LOCATION_RE.search(tail)
         if m:
             return m.group(1).strip("[]")
@@ -645,7 +645,7 @@ def extract_location(text):
         return None
     m = PUBLICATION_LINE_RE.search(text)
     if m:
-        loc = _location_from_header(m.group(1))
+        loc = location_from_header(m.group(1))
         if loc:
             return loc
         # Header present but carries no location: fall through to body heuristics.
@@ -657,7 +657,7 @@ def extract_location(text):
         return bk.group(1)
     bm = BRACKET_PLACE_RE.search(text)
     if bm:
-        cleaned = _clean_location(bm.group(1))
+        cleaned = clean_location(bm.group(1))
         if cleaned:
             return cleaned
     m2 = LOCATION_RE.search(text)

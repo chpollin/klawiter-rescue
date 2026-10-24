@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import importlib
 import json
 from pathlib import Path
@@ -49,9 +50,50 @@ def reconciliation(classified_rows) -> dict:
     )
 
 
-def test_frozen_szd_index_and_confirmed_work_links(reconciliation: dict) -> None:
+def _as_person(document: dict) -> dict:
+    """The decision file with every decision of every chain recorded by a
+    person, the producer whose confirm or correct publishes a link."""
+    document = copy.deepcopy(document)
+    for decision in document["decisions"]:
+        current = decision
+        while current:
+            current["decidedBy"] = "Editor (SZD)"
+            current = current.get("supersedes")
+    return document
+
+
+@pytest.fixture(scope="session")
+def person_reconciliation() -> dict:
+    """The same decisions as if a person had made them. The occurrence scan
+    and the source-revision claims are left out; publication depends on
+    neither."""
+
+    def read(path: str | Path) -> dict | list:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+
+    return build_reconciliation(
+        read(Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld"),
+        read(LOCATIONS_JSON),
+        read(LOCATION_RECONCILIATION_LOG),
+        read(LOCATION_REVIEW_EVIDENCE),
+        _as_person(read(LOCATION_DECISIONS)),
+        _as_person(read(WORK_DECISIONS)),
+        parse_szd_work_index(Path(SZD_WORK_INDEX)),
+        [],
+        {"agents": []},
+        {"decisions": []},
+        {"decisions": []},
+    )
+
+
+def test_frozen_szd_index_and_work_links(
+    reconciliation: dict, person_reconciliation: dict
+) -> None:
+    """The three work decisions of the independent verification agent are
+    proposals; recorded by a person, the same decisions would publish."""
     assert len(parse_szd_work_index(Path(SZD_WORK_INDEX))) == 590
-    works = reconciliation["publishable"]["works"]
+    assert reconciliation["publishable"]["works"] == {}
+    works = person_reconciliation["publishable"]["works"]
     assert {work_id: link["szdId"] for work_id, link in works.items()} == {
         "klawiter:work/54": "SZDWRK.133",
         "klawiter:work/56": "SZDWRK.5",
@@ -70,10 +112,33 @@ def _decided(action_set: set[str]) -> set[str]:
     return {d["subject"] for d in _location_decisions() if d["action"] in action_set}
 
 
-def test_location_candidates_are_not_public_links(reconciliation: dict) -> None:
-    """Exactly the confirm and correct decisions publish; a subject with a
-    candidate but no decision, such as La Tour d'Aigues, does not."""
-    published = reconciliation["publishable"]["locations"]
+def _held_open() -> set[str]:
+    """Places whose decision chain held them open; no person or rule has
+    closed any of them, so each is an open claim."""
+    subjects = set()
+    for decision in _location_decisions():
+        current = decision
+        while current:
+            if current["action"] == "unresolved":
+                subjects.add(decision["subject"])
+            current = current.get("supersedes")
+    return subjects
+
+
+def test_llm_agent_decisions_publish_no_place_link(
+    reconciliation: dict, person_reconciliation: dict
+) -> None:
+    """Every place decision is an LLM agent's, so none publishes; the same
+    confirm and correct decisions by a person would. A subject with a
+    candidate but no decision, such as La Tour d'Aigues, publishes neither."""
+    assert reconciliation["publishable"]["locations"] == {}
+    states = reconciliation["decisions"]["decisionStates"]
+    assert {item["producer"] for item in states.values()} == {"llm-agent"}
+    assert {item["decisionState"] for item in states.values()} == {
+        "proposed",
+        "contested",
+    }
+    published = person_reconciliation["publishable"]["locations"]
     assert set(published) == _decided({"confirm", "correct"})
     undecided = next(
         item
@@ -84,8 +149,10 @@ def test_location_candidates_are_not_public_links(reconciliation: dict) -> None:
     assert "La Tour d'Aigues" not in published
 
 
-def test_wrong_legacy_qids_are_replaced_fail_closed(reconciliation: dict) -> None:
-    published = reconciliation["publishable"]["locations"]
+def test_wrong_legacy_qids_are_replaced_fail_closed(
+    person_reconciliation: dict,
+) -> None:
+    published = person_reconciliation["publishable"]["locations"]
     assert published["Rio de Janiero"]["qid"] == "Q8678"
     assert published["Yanji"]["qid"] == "Q713362"
     assert published["Bambaī"]["qid"] == "Q1156"
@@ -114,14 +181,19 @@ def test_unresolved_and_unreviewed_cases_remain_in_complete_queue(
     reconciliation: dict,
 ) -> None:
     queue = reconciliation["queue"]
-    # 794 location and work cases before the agent place review of
-    # 2026-09-23; its 344 decisions and the later decisions on Tyresö and
-    # Kuwait leave twelve places unresolved, and decided places leave the queue.
-    # The twenty fixture places returned to the queue on 2026-10-23.
-    assert queue["caseCount"] == 480 + 101
+    # Only a decision by a person or an exact rule takes a subject out of the
+    # queue, and none exists, so every place, work and agent subject queues;
+    # an LLM agent's decision waits beside its candidates.
+    candidates = reconciliation["candidates"]
+    assert queue["caseCount"] == sum(
+        len(candidates[kind]) for kind in ("locations", "works", "agents")
+    )
     queued = {(item["entityType"], item["subject"]): item for item in queue["cases"]}
     assert queued[("location", "Saint-Aignan")]["status"] == "unresolved"
-    assert ("work", "klawiter:work/54") not in queued
+    assert queued[("location", "Tyresö")]["status"] == "unresolved"
+    work = queued[("work", "klawiter:work/54")]
+    assert work["status"] == "proposed"
+    assert work["proposedDecision"]["decidedBy"] == "independent-verification-agent"
 
 
 def test_unresolved_decisions_are_explicit_contested_claims(
@@ -134,8 +206,10 @@ def test_unresolved_decisions_are_explicit_contested_claims(
         and claim["klawiter:identityScope"] == "location"
     ]
     names = {claim["klawiter:claimSubject"]["schema:name"] for claim in claims}
-    assert names == _decided({"unresolved"})
-    assert "Saint-Aignan" in names and "Tyresö" not in names
+    # An LLM agent's later decision closes no claim (Tyresö, Kuwait and the
+    # compound places, decided by the main instance on 2026-09-23).
+    assert names == _held_open()
+    assert {"Saint-Aignan", "Tyresö", "Kuwait"} <= names
     assert all(claim["klawiter:claimStatus"] == "contested" for claim in claims)
     assert all(len(claim["klawiter:interpretation"]) >= 2 for claim in claims)
     assert all(claim["klawiter:sourceEvidence"] for claim in claims)
@@ -154,10 +228,8 @@ def test_unresolved_decisions_are_explicit_contested_claims(
 
 def test_stage_05_reads_only_publishable_links() -> None:
     stage_05 = importlib.import_module("05_to_jsonld")
-    links = stage_05.load_location_wikidata()
-    assert set(links) == _decided({"confirm", "correct"})
-    assert links["Yanji"] == "http://www.wikidata.org/entity/Q713362"
-    assert "La Tour d'Aigues" not in links
+    # The publishable layer holds decisions by a person or an exact rule only.
+    assert stage_05.load_location_wikidata() == {}
 
 
 def test_public_reconciliation_projection_is_time_independent(
@@ -409,7 +481,7 @@ def test_public_agent_projection_carries_occurrence_evidence(
         (Path(OUTPUT_EDITIONS_DIR) / "work-editions.jsonld").read_text(encoding="utf-8")
     )
     frontend = reconcile_entities._frontend(reconciliation, edition_dataset)
-    assert frontend["schemaVersion"] == "1.3"
+    assert frontend["schemaVersion"] == "1.4"
     subject = reconciliation["candidates"]["agents"][0]
     key = f"{subject['entityType']}/{subject['sourceName']}"
     projected = frontend["agents"][key]
@@ -419,17 +491,25 @@ def test_public_agent_projection_carries_occurrence_evidence(
         {name: value for name, value in occurrence.items() if name != "sourcePath"}
         for occurrence in subject["sourceOccurrences"]
     ]
-    # The interface list holds open claims; decided ones keep their record.
+    # The interface list holds open claims; no person or rule has decided one.
     assert {claim["decisionStatus"] for claim in frontend["contestedClaims"]} == {
         "open"
     }
-    assert {claim["subject"]["name"] for claim in frontend["decidedClaims"]} == {
+    assert frontend["decidedClaims"] == []
+    assert {
         "Sofija, Varna",
         "Varna, Sofija",
         "Bloemfontein, Kaapstad",
         "Tyresö",
         "Kuwait",
-    }
+    } <= {claim["subject"]["name"] for claim in frontend["contestedClaims"]}
+    for claim in frontend["contestedClaims"]:
+        assert {step["producer"] for step in claim["reviewHistory"]} == {"llm-agent"}
+    varna = frontend["locations"]["Varna"]
+    assert varna["decision"]["action"] == "confirm"
+    assert varna["decisionProducer"] == "llm-agent"
+    assert varna["decisionState"] == "proposed"
+    assert varna["publishable"] is None
 
 
 # Compound place strings decided on 2026-09-23: each names two cities, whose
@@ -441,15 +521,55 @@ COMPOUND_CLAIMS = {
 }
 
 
-def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
+def test_compound_places_stay_open_with_the_proposed_reading(
+    reconciliation: dict,
+) -> None:
+    """The main instance decided the compound places as two places each; the
+    decision is a proposal, so the claim stays open with that reading among
+    the competing ones, and neither the compound nor a component publishes."""
     claims = {
         claim["klawiter:claimSubject"]["schema:name"]: claim
         for claim in reconciliation["contestedClaims"]
     }
-    published = reconciliation["publishable"]["locations"]
     for name, (suffix, qids, _) in COMPOUND_CLAIMS.items():
         claim = claims[name]
         assert claim["@id"] == f"klawiter:claim/reconciliation/location/{suffix}"
+        assert claim["klawiter:claimStatus"] == "contested"
+        assert claim["klawiter:decisionStatus"] == "open"
+        readings = {
+            item["@id"].rsplit("/", 1)[1]: (
+                item["klawiter:interpretationStatus"],
+                item["klawiter:candidateSource"],
+            )
+            for item in claim["klawiter:interpretation"]
+        }
+        assert {key: status for key, (status, _) in readings.items()} == dict.fromkeys(
+            [*qids, "no-assignment", "two-places"], "contested"
+        )
+        assert readings["two-places"][1] == "llm-agent-proposal"
+        history = claim["klawiter:hasReviewAction"]
+        assert [item["klawiter:reviewOutcome"] for item in history] == [
+            "unresolved",
+            "reject",
+        ]
+        assert history[-1]["klawiter:reviewBasis"] == (
+            "decided by the main instance after delegation by the operator on "
+            "2026-09-23, revisable"
+        )
+        assert claim["klawiter:reviewNote"]
+    assert reconciliation["publishable"]["locations"] == {}
+
+
+def test_a_person_decides_the_compound_places(person_reconciliation: dict) -> None:
+    """Recorded by a person, the same decisions close the compound claims with
+    the two-places reading and publish the components."""
+    claims = {
+        claim["klawiter:claimSubject"]["schema:name"]: claim
+        for claim in person_reconciliation["contestedClaims"]
+    }
+    published = person_reconciliation["publishable"]["locations"]
+    for name, (_, qids, _) in COMPOUND_CLAIMS.items():
+        claim = claims[name]
         assert claim["klawiter:claimStatus"] == "resolved"
         assert claim["klawiter:decisionStatus"] == "decided"
         readings = {
@@ -461,16 +581,6 @@ def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
             "no-assignment": "rejected",
             "two-places": "accepted",
         }
-        history = claim["klawiter:hasReviewAction"]
-        assert [item["klawiter:reviewOutcome"] for item in history] == [
-            "unresolved",
-            "reject",
-        ]
-        assert history[-1]["klawiter:reviewBasis"] == (
-            "decided by the main instance after delegation by the operator on "
-            "2026-09-23, revisable"
-        )
-        assert claim["klawiter:reviewNote"]
         assert name not in published
     # Sofija alone rested on the test fixture, which confirms nothing since
     # 2026-10-23; the compound decision rejects only the single-identity reading.
@@ -480,7 +590,7 @@ def test_compound_places_stay_as_decided_claims(reconciliation: dict) -> None:
     assert published["Kaapstad (Capetown)"]["qid"] == "Q5465"
     open_ids = {
         claim["@id"]
-        for claim in reconciliation["contestedClaims"]
+        for claim in person_reconciliation["contestedClaims"]
         if claim["klawiter:identityScope"] == "location"
         and claim["klawiter:decisionStatus"] == "open"
     }
@@ -551,8 +661,13 @@ def test_open_and_decided_claim_counts_agree_across_gates() -> None:
     assert "contestedClaims" not in gate1
     for key in ("contestedEditionClaims", "decidedEditionClaims"):
         assert gate1[key] == gate2[key]
-    assert gate1["contestedEditionClaims"] == 0
-    assert gate1["decidedEditionClaims"] == 1
-    assert gate2["contestedAuthorityClaims"] == len(_decided({"unresolved"}))
-    assert gate2["decidedAuthorityClaims"] == 5
+    # The adaptation resolution of 2026-09-22 and the place decisions closing
+    # claims were made by LLM agents, so every claim is open.
+    assert gate1["contestedEditionClaims"] == 1
+    assert gate1["decidedEditionClaims"] == 0
+    assert gate2["contestedAuthorityClaims"] == len(_held_open())
+    assert gate2["decidedAuthorityClaims"] == 0
     assert gate2["contestedSourceRevisionClaims"] == 10
+    assert gate2["confirmedDecisions"] == 0
+    assert gate2["publishableLocationLinks"] == 0
+    assert gate2["publishableWorkLinks"] == 0

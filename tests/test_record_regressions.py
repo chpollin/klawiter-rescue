@@ -20,7 +20,13 @@ from lib.patterns import (
     extract_year,
     publisher_shape_ok,
 )
-from lib.publications import build_page_publications, load_attested_places
+from lib.publications import (
+    build_page_publications,
+    load_attested_places,
+    statement_bindings,
+    unbound_flat_fields,
+)
+from lib.translations import translation_statements
 from lib.vocabulary import language_to_iso
 from lib.wiki_parser import blank_translations_block, extract_categories
 
@@ -219,3 +225,169 @@ def test_a_category_language_outside_the_old_list_is_kept(record_sources):
     # Page 5657 is categorized "(Tamil)", which the old closed list dropped.
     assert language == "Tamil"
     assert language_to_iso(language) == "ta"
+
+
+# A flat place, publisher or translator of a page without a publication header
+# stands only where its first statement carries it (a gap before a wrong value).
+
+
+def _flat_values(text):
+    return {
+        "location": extract_location(text),
+        "publisher": extract_publisher(text),
+        "translator": extract_translator(text),
+    }
+
+
+@pytest.mark.parametrize(
+    ("page_id", "field", "value"),
+    [
+        # The third printing of an "in:" list, not the first (Taiyuan/Xi'an).
+        (635, "location", "Shanghai"),
+        # A reprint of 2019; the essay appeared in Zürich in 1918.
+        (6776, "location", "Wien"),
+        # The town of a lecturer at a symposium held in Wien.
+        (968, "location", "Budapest"),
+        # A person's name, "Jeffrey B. Berlin", in the source citation.
+        (1666, "location", "Berlin"),
+        # "Wien/Leipzig/Zürich" of a reprint below the 1934 header.
+        (53, "location", "Zürich"),
+        # A translation credit ("Translated by the Editorial Juventud") is no
+        # imprint, and Alfredo Cahn translated the second printing only.
+        (5747, "publisher", "Juventud"),
+        (5747, "translator", "Alfredo Cahn"),
+    ],
+)
+def test_an_unbound_headerless_value_is_a_gap(record_sources, page_id, field, value):
+    text = record_sources[page_id]["text"]
+    values = _flat_values(text)
+    assert values[field] == value
+    assert field in unbound_flat_fields(text, values)
+
+
+@pytest.mark.parametrize(
+    ("page_id", "field", "value"),
+    [
+        # The bracket after the container title ("''Blätter …'' [Wien]").
+        (4421, "location", "Wien"),
+        # The first item of the "in:" list ("[Paris, 1937]").
+        (720, "location", "Paris"),
+        # A bracket without a comma ("[Beijing 2000]") and a credit in the
+        # statement ("[Translated by Yan Zhu]").
+        (1258, "location", "Beijing"),
+        (1258, "translator", "Yan Zhu"),
+        # The bold header of a numbered edition, "[1]. 1934: Herbert Reichner
+        # Verlag, Wien".
+        (53, "publisher", "Herbert Reichner Verlag"),
+        # The imprint "Locarno: Armando Dadò Editore, 2009" of the statement.
+        (1666, "publisher", "Armando Dadò Editore"),
+        # The label word stays out of the value ("Paris: Éditions Hervas").
+        (3439, "publisher", "Hervas"),
+    ],
+)
+def test_a_bound_headerless_value_stays(record_sources, page_id, field, value):
+    text = record_sources[page_id]["text"]
+    values = _flat_values(text)
+    assert values[field] == value
+    assert field not in unbound_flat_fields(text, values)
+
+
+def test_the_first_statement_ends_before_the_second_item(record_sources):
+    bindings = statement_bindings(record_sources[635]["text"])
+    lines = bindings["statement"].splitlines()
+    assert len(lines) == 2
+    assert lines[1].startswith("[[Ciweige wenji]] [Taiyuan/Xi'an, 1998]")
+    assert bindings["places"] == ["Taiyuan/Xi'an"]
+
+
+# The translations section becomes one statement per printing, each value
+# with its span; what the rules cannot read stays absent.
+
+
+def _translations(record_sources, page_id):
+    return [
+        {
+            key: value
+            for key, value in statement.items()
+            if key not in {"spans", "sourceSlice"}
+        }
+        for statement in translation_statements(record_sources[page_id]["text"])
+    ]
+
+
+def test_each_printing_of_a_translation_is_a_statement(record_sources):
+    # Page 7166, "Brügge": the French translation is printed twice, the first
+    # Portuguese printing stands before the first number.
+    statements = _translations(record_sources, 7166)
+    assert statements[0] == {
+        "language": "Bulgarian",
+        "languageCode": "bg",
+        "title": "Briuge",
+        "container": "Portreti na evropeĭski pisateli",
+        "place": "Sofija",
+        "year": 1984,
+    }
+    french = [s for s in statements if s["language"] == "French"]
+    assert [(s["place"], s["year"]) for s in french] == [
+        ("Paris", 1996),
+        ("Paris", 1998),
+    ]
+    portuguese = [s for s in statements if s["language"] == "Portuguese"]
+    assert [s["container"] for s in portuguese] == [
+        "Obras completas de Stefan Zweig, 1934-1950",
+        "Obras completas de Stefan Zweig, 1960",
+        "Obras de Stefan Zweig, 1934-1950",
+    ]
+    # A range of years is no publication year; it stays the raw statement.
+    assert portuguese[0]["yearRaw"] == "1934-1950" and "year" not in portuguese[0]
+    serbian = next(s for s in statements if s["language"].startswith("Serbian"))
+    assert serbian["language"] == "Serbian (Serbo-Croatian)"
+    assert {s["language"] for s in statements} >= {
+        "Danish",
+        "English",
+        "Hungarian",
+        "Spanish",
+        "Swedish",
+    }
+
+
+def test_a_translated_book_reads_its_own_imprint_and_credit(record_sources):
+    # Page 4411: the Arabic translation is a book, not a contribution, and its
+    # title gloss is no container.
+    (statement,) = _translations(record_sources, 4411)
+    assert statement == {
+        "language": "Arabic",
+        "languageCode": "ar",
+        "title": "Al-Sāqiṭūn",
+        "place": "Dimashq [Damascus]",
+        "publisher": (
+            "Dār al-Yaqẓah al-ʿArabiyyah li-l-Taʾlīf waʾl-Tarjamah waʾl-Nashr "
+            "bi-Sūriyyah"
+        ),
+        "year": 1950,
+        "translator": "Fuʾād Ayyūb",
+    }
+
+
+def test_translations_split_at_double_slashes_and_keep_misprints_raw(record_sources):
+    # Page 7224: two French translations, the second a book with its credit;
+    # the Greek bracket prints the year as 19556.
+    statements = _translations(record_sources, 7224)
+    french = [s for s in statements if s["language"] == "French"]
+    assert french[0]["container"] == "Souvenirs et rencontres"
+    assert french[0]["yearRaw"] == "1951 and 1997" and "year" not in french[0]
+    assert french[1]["translator"] == "Alzir Hella and Olivier Bouranc"
+    assert french[1]["year"] == 2004 and "container" not in french[1]
+    greek = next(s for s in statements if s["language"] == "Greek")
+    assert greek["yearRaw"] == "19556" and "year" not in greek
+
+
+def test_every_translation_value_is_the_text_of_its_span(record_sources):
+    for page_id in (7139, 7166, 7203, 7224, 4411):
+        text = record_sources[page_id]["text"]
+        for statement in translation_statements(text):
+            for field, (start, end) in statement["spans"].items():
+                if field == "language":
+                    continue
+                value = " ".join(unescape_dump_quotes(text[start:end]).split())
+                assert str(statement[field]) == value, (page_id, field)

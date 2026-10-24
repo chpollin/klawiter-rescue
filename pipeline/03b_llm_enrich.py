@@ -89,8 +89,18 @@ def filter_entries(
 
 
 def merge_result(row: dict[str, str], validated: dict[str, object]) -> dict[str, str]:
-    """Merge LLM result into row, filling gaps only."""
+    """Merge LLM result into row, filling gaps only.
+
+    A field stage 03 emptied because no rule binds its body value to the
+    described publication stays empty: the model would read the same text
+    and return the same unbound value.
+    """
+    unbound = (
+        set(json.loads(row["unbound_fields"])) if row.get("unbound_fields") else set()
+    )
     for field in ["publisher", "location", "translator"]:
+        if field in unbound:
+            continue
         if not row.get(field) and validated.get(field):
             row[field] = validated[field]
     if not row.get("page_count") and validated.get("page_count"):

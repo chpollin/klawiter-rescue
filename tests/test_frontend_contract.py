@@ -25,8 +25,12 @@ from pathlib import Path
 # "uncertain" mark of a credit the source qualifies with "(?)", 1.7 the wiki
 # page kind with its rule and evidence, and the print addresses the page's text
 # cites, with their counts in _meta, 1.8 the producers a value's provenance
-# chain names, the edition review and the LLM enrichment run.
-FRONTEND_SCHEMA_VERSION = "1.8"
+# chain names, the edition review and the LLM enrichment run, 1.9 the producer
+# class, per-field state and proposal basis of a review decision (an LLM
+# agent's decision is proposed, never confirmed), the agent review disposition
+# and producer of a publication's edition, and the structured translation
+# statements of a translations section.
+FRONTEND_SCHEMA_VERSION = "1.9"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -52,6 +56,7 @@ META_KEYS = {
     "redirectCount",
     "printAddressCitations",
     "totalCount",
+    "translationStatements",
     "version",
     "wikiPageKinds",
     "yearRange",
@@ -96,6 +101,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "sourceBlobId": (False, (int,)),
     "sourceRevision": (False, (dict,)),
     "timePeriod": (False, (str,)),
+    "translationStatements": (False, (list,)),
     "translations": (False, (list,)),
     "translator": (False, (str,)),
     "wikiPageKind": (False, (str,)),
@@ -136,9 +142,20 @@ def test_every_entry_matches_the_declared_contract(all_entries) -> None:
 
 
 # Review projection: which review vocabulary a projected entry may carry.
-REVIEW_KEYS = {"status", "reviewed_by", "reviewed_at", "fields", "scope"}
-REVIEW_REQUIRED_KEYS = {"status", "reviewed_by"}
-REVIEW_STATUSES = {"approved", "agent_verified", "contested", "reviewed"}
+REVIEW_KEYS = {
+    "status",
+    "reviewed_by",
+    "reviewed_at",
+    "producer",
+    "basis",
+    "fields",
+    "fieldStates",
+    "scope",
+}
+REVIEW_REQUIRED_KEYS = {"status", "reviewed_by", "producer"}
+REVIEW_STATUSES = {"approved", "confirmed", "proposed", "contested", "reviewed"}
+REVIEW_PRODUCERS = {"llm-agent", "person", "rule"}
+DECISION_STATES = {"proposed", "confirmed", "contested"}
 REVIEW_FIELDS = {"location", "translator", "publisher"}
 REVIEW_ACTIONS = {"confirm", "correct", "reject", "unresolved"}
 
@@ -164,6 +181,14 @@ def test_review_projection_matches_the_declared_vocabulary(all_entries) -> None:
         assert set(fields.values()) <= REVIEW_ACTIONS
         if fields:
             assert review["scope"] == list(fields)
+            assert set(review["fieldStates"]) == set(fields)
+            assert set(review["fieldStates"].values()) <= DECISION_STATES
+        assert review["producer"] in REVIEW_PRODUCERS
+        # Only a person or an exact rule confirms (operator principle).
+        if review["producer"] == "llm-agent":
+            assert review["status"] in {"proposed", "contested"}
+            assert review["basis"].startswith("proposed by LLM agents")
+            assert "confirmed" not in review.get("fieldStates", {}).values()
         for field in fields:
             assert entry.get(field), (
                 f"entry {entry['@id']} reviews {field} without carrying a value"
@@ -178,8 +203,15 @@ def test_review_projection_is_derived_from_gate2_decisions() -> None:
     entry = {"location": "Amstelveen", "translator": "not a reviewed name"}
     review = stage_05.build_review(entry, index)
     assert review["fields"] == {"location": "confirm"}
+    assert review["fieldStates"] == {"location": "proposed"}
     assert review["scope"] == ["location"]
-    assert review["status"] == "agent_verified"
+    # The independent verification agent confirmed Amstelveen; an LLM agent's
+    # confirm is a proposal.
+    assert review["status"] == "proposed"
+    assert review["producer"] == "llm-agent"
+    assert review["basis"] == (
+        "proposed by LLM agents, source occurrence checked, no person"
+    )
     # A test fixture confirms nothing (operator decision of 2026-10-23).
     assert stage_05.build_review({"location": "Amsterdam"}, index) is None
     assert review["reviewed_by"] == index[("location", "Amstelveen")]["decidedBy"]
@@ -193,39 +225,69 @@ def test_unresolved_decision_projects_as_contested() -> None:
             "action": "unresolved",
             "decidedBy": "independent-verification-agent",
             "decidedAt": "2026-08-21T20:00:00Z",
+            "decisionProducer": "llm-agent",
+            "decisionState": "contested",
+            "sourceOccurrences": 1,
         }
     }
     review = stage_05.build_review({"location": "Tyresö"}, index)
     assert review == {
         "status": "contested",
         "reviewed_by": "independent-verification-agent",
+        "producer": "llm-agent",
+        "basis": "proposed by LLM agents, source occurrence checked, no person",
         "reviewed_at": "2026-08-21T20:00:00Z",
         "fields": {"location": "unresolved"},
+        "fieldStates": {"location": "contested"},
         "scope": ["location"],
     }
 
 
 def test_rejection_verifies_nothing() -> None:
-    """A rejected candidate link lends the entry no verified status; a
-    confirmed place on the same entry still states its own field scope."""
+    """A person's rejected candidate link lends the entry no verified status;
+    a person's confirmed place on the same entry states its own field scope,
+    and an LLM agent's confirm beside it stays a proposal."""
     stage_05 = importlib.import_module("05_to_jsonld")
-    reject = {"action": "reject", "decidedBy": "main-instance"}
-    confirm = {"action": "confirm", "decidedBy": "independent-verification-agent"}
+    person = {"decidedBy": "Editor (SZD)", "decisionProducer": "person"}
+    reject = {"action": "reject", "decisionState": "confirmed", **person}
+    confirm = {"action": "confirm", "decisionState": "confirmed", **person}
+    agent_confirm = {
+        "action": "confirm",
+        "decidedBy": "independent-verification-agent",
+        "decisionProducer": "llm-agent",
+        "decisionState": "proposed",
+        "sourceOccurrences": 0,
+    }
     only_reject = stage_05.build_review(
         {"location": "Sofija, Varna"}, {("location", "Sofija, Varna"): reject}
     )
     assert only_reject == {
         "status": "reviewed",
-        "reviewed_by": "main-instance",
+        "reviewed_by": "Editor (SZD)",
+        "producer": "person",
         "fields": {"location": "reject"},
+        "fieldStates": {"location": "confirmed"},
         "scope": ["location"],
     }
     mixed = stage_05.build_review(
         {"location": "Wien", "publisher": "Refused"},
         {("location", "Wien"): confirm, ("publisher", "Refused"): reject},
     )
-    assert mixed["status"] == "agent_verified"
+    assert mixed["status"] == "confirmed"
     assert mixed["scope"] == ["location", "publisher"]
+    proposal = stage_05.build_review(
+        {"location": "Wien", "publisher": "Refused"},
+        {("location", "Wien"): agent_confirm, ("publisher", "Refused"): reject},
+    )
+    assert proposal["status"] == "reviewed"
+    assert proposal["fieldStates"] == {"location": "proposed", "publisher": "confirmed"}
+    only_agent = stage_05.build_review(
+        {"location": "Wien"}, {("location", "Wien"): agent_confirm}
+    )
+    assert only_agent["status"] == "proposed"
+    assert only_agent["basis"] == (
+        "proposed by LLM agents, no source occurrence, no person"
+    )
 
 
 def test_place_review_states_its_field_scope(all_entries) -> None:
@@ -272,7 +334,9 @@ PUBLICATION_KEYS = {
     "places",
     "provenance",
     "publisher",
+    "reviewDecision",
     "reviewFlags",
+    "reviewProducer",
     "reviewStatus",
     "series",
     "seriesGloss",
@@ -287,7 +351,9 @@ PUBLICATION_STRUCTURAL_KEYS = {
     "editionId",
     "id",
     "provenance",
+    "reviewDecision",
     "reviewFlags",
+    "reviewProducer",
     "reviewStatus",
     "sourceSlice",
 }
@@ -397,9 +463,11 @@ def test_publications_name_their_edition_node_and_its_review_status(
     all_entries,
 ) -> None:
     """A publication that is a Gate-1 edition names that node and reports its
-    status; any other publication is proposed and names no node."""
+    status; any other publication is proposed and names no node. An edition the
+    agentic sample reviewed names that disposition and its producer, and stays
+    proposed or contested, because only a person or an exact rule confirms."""
     states = _gate1_edition_states()
-    named = 0
+    named = agent_reviewed = 0
     for entry in _pages_with_publications(all_entries):
         for publication in _side_file(entry["sourcePageId"])["publications"]:
             status = publication["reviewStatus"]
@@ -414,12 +482,15 @@ def test_publications_name_their_edition_node_and_its_review_status(
             else:
                 assert "editionId" not in publication
                 assert status == "proposed"
+            if "reviewDecision" in publication:
+                agent_reviewed += 1
+                assert publication["reviewProducer"] == "llm-agent"
+                assert status in {"proposed", "contested"}
+            else:
+                assert "reviewProducer" not in publication
+            assert status != "confirmed"
     assert named, "no publication names a Gate-1 edition node"
-    assert "confirmed" in {
-        publication["reviewStatus"]
-        for entry in _pages_with_publications(all_entries)
-        for publication in _side_file(entry["sourcePageId"])["publications"]
-    }, "the reviewed Gate-1 sample did not reach the publication layer"
+    assert agent_reviewed, "the agent-reviewed Gate-1 sample did not reach the layer"
 
 
 def test_entry_names_the_flag_codes_of_its_publications(all_entries) -> None:
@@ -445,8 +516,9 @@ def test_entry_names_the_flag_codes_of_its_publications(all_entries) -> None:
 def test_meta_names_the_producers_of_the_provenance_chain(
     frontend_data, all_entries
 ) -> None:
-    """A confirmed edition and an `llm` value name who produced them."""
+    """An agent-reviewed edition and an `llm` value name who produced them."""
     review = frontend_data["_meta"]["editionReview"]
+    assert review["producer"] == "llm-agent"
     assert (
         review["artifact"] == "data/output/edition-samples/reviews/reconciliation.json"
     )

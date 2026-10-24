@@ -38,9 +38,20 @@ from lib.editions import (
     parse_header_line,
     protected_mask,
     segment_page,
+    split_imprint,
 )
 from lib.encoding import unescape_dump_quotes
-from lib.patterns import ABSENCE_MARKS, CATEGORY_LANGUAGE_RE, credited_name
+from lib.patterns import (
+    ABSENCE_MARKS,
+    BRACKET_KNOWN_RE,
+    BRACKET_PLACE_RE,
+    CATEGORY_LANGUAGE_RE,
+    CORPORATE_SUFFIXES,
+    clean_location,
+    credited_name,
+    extract_translator,
+    location_from_header,
+)
 from lib.vocabulary import LANGUAGE_MAP, language_to_iso
 from lib.wiki_parser import (
     extract_categories,
@@ -221,7 +232,16 @@ _VARIANT_SIMILARITY = 0.85
 
 # Fields whose provenance the publication record reports individually.
 _PROVENANCE_EXCLUDED = frozenset(
-    {"id", "provenance", "sourceSlice", "reviewFlags", "editionId", "reviewStatus"}
+    {
+        "id",
+        "provenance",
+        "sourceSlice",
+        "reviewFlags",
+        "editionId",
+        "reviewStatus",
+        "reviewDecision",
+        "reviewProducer",
+    }
 )
 
 
@@ -1162,6 +1182,171 @@ def first_publication_fields(
     }
 
 
+# The first statement of a page without a publication header: the lines the
+# described publication stands in, read before any reprint list, translations
+# section, review list, note or cross-reference that follows it.
+_STATEMENT_SKIP_RE = re.compile(
+    r"^\s*(?:\[\[Category:|\{\{DEFAULTSORT|</?lst\b|__[A-Z]+__\s*$|<!--|$)",
+    re.IGNORECASE,
+)
+# A line that only labels what follows: a bold label ("'''Volume:'''",
+# "'''English'''", "'''Printed in'''"), a wiki heading ("===German===") or the
+# bracket of an original title alone ("[Joseph Fouché. Bildnis eines
+# politischen Menschen]", page 1838).
+_STATEMENT_LABEL_RE = re.compile(
+    r"^\s*(?:'''[^']{1,60}'''\s*:?|={2,}[^=\n]+={2,}|\[[^\[\]\n]+\]\.?)\s*$"
+)
+# A statement that names its container on the next line ('"Virata" in:').
+_STATEMENT_CONTINUES_RE = re.compile(r"\bin\s*:?\s*$")
+# A bold header of any bracket, including the year forms the edition grammar
+# does not read ("'''[196-?]: Foreign Languages Publishing House, Moscow'''")
+# and a numbered header that states its year after the number ("'''[1]. 1934:
+# Herbert Reichner Verlag, Wien'''", page 53).
+_ANY_HEADER_RE = re.compile(
+    r"'''\s*\[[^\]\n]*\]\s*[:.]\s*(?:(?:ca\.\s*)?\d{4}\s*[:.]\s*)?(.+?)'''"
+)
+# The bracket directly after a container title names the container's place
+# ("in ''Neue Freie Presse'' [Wien]", "in [[Yin xian ji]] [Beijing 2000]").
+_CONTAINER_BRACKET_RE = re.compile(
+    r"\bin\s*:?\s*(?:''[^\n]+?''|\[\[[^\]\n]+\]\])\s*\[([^\[\]\n]+)\]"
+)
+# "Place: Publisher, YEAR" with any publisher wording, also inside a bracket
+# ("[München: Heller Verlag 1936]", "Hamburg: Verlag Dr. Kovač, 2004").
+_LOOSE_IMPRINT_RE = re.compile(
+    r"(?:^|(?<=[.;\]]\s)|(?<=\[))([^\W\d_][^:;.\n\[\]]{0,40}):\s+"
+    r"([^:\n\[\]]{2,80}?),?\s+\(?(?:1[789]|20)\d{2}\b",
+    re.MULTILINE,
+)
+
+
+def _first_statement(text: str) -> str:
+    """The lines of the first statement of a page.
+
+    A label, heading or header joins the line after it, and a line ending in
+    "in" joins the first item it introduces, one item and no more: the items
+    after it are further printings, not the described publication. A line
+    after the statement is not read, because author and list pages set one
+    item per line without a blank line between them (page 2542).
+    """
+    lines = [line for line in text.splitlines() if not _STATEMENT_SKIP_RE.match(line)]
+    if not lines:
+        return ""
+    statement = [lines[0]]
+    index = 1
+    while index < len(lines) and (
+        _STATEMENT_LABEL_RE.match(statement[-1])
+        or _STATEMENT_CONTINUES_RE.search(statement[-1])
+    ):
+        statement.append(lines[index])
+        index += 1
+    return "\n".join(statement)
+
+
+# Legal forms a body imprint sets after the publisher's name.
+_LEGAL_FORMS = CORPORATE_SUFFIXES | {"GmbH", "AG", "KG", "Inc", "Ltd"}
+# The label words of the first publisher pattern in lib/patterns.py.
+_PUBLISHER_LABEL_WORDS = frozenset(
+    "Verlag Publisher Press Publishing Édition Éditions Editore Editorial Editora "
+    "Wydawnictwo Издательство".split()
+)
+
+
+def _whole_word(value: str, text: str) -> bool:
+    return re.search(rf"(?<!\w){re.escape(value)}(?!\w)", text) is not None
+
+
+def statement_bindings(text: str) -> dict:
+    """The places, publishers and translator a rule reads from the first
+    statement of a page without a publication header.
+
+    A place is bound where it is the place of a header, of a "Place:
+    Publisher, YEAR" imprint or of a place bracket, or stands as a word in the
+    bracket after a container title; a publisher where it is the publisher of
+    a header or an imprint; a translator where a translation credit of the
+    statement names it.
+    """
+    statement = _first_statement(text)
+    places: list[str] = []
+    publishers: list[str] = []
+    for match in _ANY_HEADER_RE.finditer(statement):
+        place = location_from_header(match.group(1))
+        if place:
+            places.append(place)
+        for imprint in split_imprint(match.group(1)):
+            if imprint.publisher:
+                publishers.append(_flat(imprint.publisher))
+            if imprint.place:
+                places.append(_flat(imprint.place))
+    places += [match.group(1) for match in BRACKET_KNOWN_RE.finditer(statement)]
+    places += [
+        clean_location(match.group(1)) for match in BRACKET_PLACE_RE.finditer(statement)
+    ]
+    for match in _BODY_IMPRINT_RE.finditer(statement):
+        publisher, chain_places = _imprint_chain(match.group("chain"))
+        places += chain_places
+        if publisher:
+            publishers.append(publisher)
+    for match in _LOOSE_IMPRINT_RE.finditer(statement):
+        places.append(_flat(match.group(1)))
+        publishers.append(_flat(match.group(2)))
+    return {
+        "statement": statement,
+        "places": _unique(places),
+        "containerBrackets": [
+            match.group(1) for match in _CONTAINER_BRACKET_RE.finditer(statement)
+        ],
+        "publishers": _unique(publishers),
+        "translator": extract_translator(statement),
+    }
+
+
+def unbound_flat_fields(text: str, values: dict[str, str]) -> list[str]:
+    """The flat fields of a headerless page whose value no rule binds.
+
+    A value the body patterns chose from anywhere in the text describes the
+    page's publication only where its first statement carries it in one of
+    the positions statement_bindings reads; elsewhere it can be a reprint, a
+    translation, a lecturer's town or a person's name, and the field is a gap
+    (knowledge/production-readiness.md, a gap before a wrong value).
+    """
+    bindings = statement_bindings(text)
+    checks = {
+        "location": lambda value: (
+            value in bindings["places"]
+            or any(
+                _whole_word(value, bracket) for bracket in bindings["containerBrackets"]
+            )
+        ),
+        # A legal form the source sets after a comma stays with the bound
+        # publisher ("München: GRIN Verlag, GmbH, 2004", page 2511).
+        # The label pattern leaves the label word out ("Hervas" of "Paris:
+        # Éditions Hervas, 1997", page 3439); the value still names the
+        # publisher the imprint binds.
+        "publisher": lambda value: any(
+            bound == value
+            or (
+                bound.startswith(value + ", ")
+                and bound[len(value) + 2 :] in _LEGAL_FORMS
+            )
+            or (
+                bound.endswith(" " + value)
+                and bound[: -len(value) - 1] in _PUBLISHER_LABEL_WORDS
+            )
+            for bound in bindings["publishers"]
+        ),
+        # Stage 03c drops a closing initial's period ("J. L." -> "J. L").
+        "translator": lambda value: (
+            bool(bindings["translator"])
+            and value.rstrip(".") == bindings["translator"].rstrip(".")
+        ),
+    }
+    return [
+        field
+        for field, bound in checks.items()
+        if values.get(field) and not bound(values[field])
+    ]
+
+
 def build_page_publications(
     page_id: int,
     text: str,
@@ -1244,20 +1429,25 @@ def build_page_publications(
     }
 
 
-def attach_edition_state(layer: dict, edition_states: dict[str, str]) -> None:
+def attach_edition_state(layer: dict, edition_states: dict[str, dict]) -> None:
     """Name the Gate-1 edition node and its review status per publication.
 
     A publication whose page lies outside the Gate-1 corpus has no edition
-    node; it is rule-extracted and unreviewed, so it reports "proposed".
+    node; it is rule-extracted and unreviewed, so it reports "proposed". An
+    edition the agentic sample reviewed also names that review's disposition
+    and its producer class, so the state never reads as a person's check.
     """
     for publication in layer.get("publications", []):
         edition_id = publication["id"].replace(
             "klawiter:publication/", "klawiter:edition/", 1
         )
-        status = edition_states.get(edition_id)
-        if status is not None:
+        state = edition_states.get(edition_id)
+        if state is not None:
             publication["editionId"] = edition_id
-        publication["reviewStatus"] = status or "proposed"
+            if state.get("decision"):
+                publication["reviewDecision"] = state["decision"]
+                publication["reviewProducer"] = state["producer"]
+        publication["reviewStatus"] = state["status"] if state else "proposed"
 
 
 def review_flag_codes(layer: dict) -> list[str]:
