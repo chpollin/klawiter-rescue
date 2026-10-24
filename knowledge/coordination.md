@@ -17,7 +17,7 @@ Research coordinator
 : Holds the plan of the merged Klawiter bibliography ([Merged bibliography](print-wiki-merge.md)) and the print strand, owns the shared knowledge documents, checks results of the other session against their evidence before they enter canonical knowledge, and prepares decisions for the operator.
 
 AI operator
-: Carries out a bounded assignment given by the operator, currently a scholar-centred frontend for the wiki data as prototypes with an evaluation. Writes only to its own paths and reports results with evidence.
+: Carries out a bounded assignment given by the operator, since 2026-10-24 the interface of both strands: the production frontend and the card workbench of the print strand. Its first assignment is the record card with the provenance chain of every value. Writes only to its own paths, takes data as the pipelines write them, and reports results with evidence. The research coordinator checks each result against the tests, the record coverage test and read screenshots before it is committed.
 
 Operator
 : The human project owner. Decides goals, rights, publication, vocabulary that enters the data model, and acceptance. Agent reviews, including simulated user evaluations, never stand in for that acceptance.
@@ -26,9 +26,11 @@ Operator
 
 | Owner | Paths |
 |---|---|
-| Research coordinator | `pipeline/print_volumes/`, `data/print/` (local only), `knowledge/` except `lab-frontend.md` |
-| AI operator | `docs/lab/`, `pipeline/lab/` (reads data, never part of the production run), `knowledge/lab-frontend.md` |
-| Neither without a verified finding | production code and data (`pipeline/lib/`, `pipeline/*.py`, `docs/` outside `docs/lab/`, `data/` outside `data/print/`); changes there go through the research coordinator |
+| Research coordinator | `pipeline/print_volumes/` except the interface files of `viewer/`, `data/print/` (local only), `knowledge/` |
+| AI operator | `docs/index.html`, `docs/js/`, `docs/css/`, and in `pipeline/print_volumes/viewer/` the files `cards.html`, `cards.js`, `cards.css` and `render.js` |
+| Neither without a verified finding | production code and data (`pipeline/lib/`, `pipeline/*.py`, `docs/data/`, `docs/vocab/`, `data/` outside `data/print/`); changes there go through the research coordinator |
+
+The AI operator's paths pass to it once the running repair of the card workbench is committed, so that no two sessions write the same file. A change the interface needs in the data (a field, a projection, a producer label) goes to the research coordinator as a request with its reason. The checks `check_render.mjs`, `check_review.mjs` and `smoke.mjs` stay with the research coordinator, because they are the acceptance of the interface and not part of it.
 
 Each session stages its own files by explicit path and commits only its own units. Pushes stay with the operator.
 
@@ -38,13 +40,13 @@ The sessions exchange messages directly (Claude Code cross-session messages). A 
 
 ## Tracks
 
-The operator set on 2026-10-23 that the whole project advances together: the merged bibliography, the correctness of the published wiki data, the lab, the blog post, the DIA-XAI follow-up proposal and the vault knowledge, each tested, verified and reviewed critically before it counts, with milestones planned and reported. Each track has one owner and one plan.
+The operator set on 2026-10-23 that the whole project advances together: the merged bibliography, the correctness of the published wiki data, the interface, the blog post, the DIA-XAI follow-up proposal and the vault knowledge, each tested, verified and reviewed critically before it counts, with milestones planned and reported. Each track has one owner and one plan.
 
 | Track | Owner | Plan and milestones | Review before a milestone closes |
 |---|---|---|---|
 | Merged bibliography (print strand) | research coordinator | [Merged bibliography](print-wiki-merge.md), Milestones | independent agent review of method, code and document |
 | Published wiki data | research coordinator | [Merged bibliography](print-wiki-merge.md), Wiki data true to their source passage; [Status](status.md) | full gate of CLAUDE.md, invariants over all records, fresh-context reviews of data fidelity, interface and tests after each fix batch |
-| Lab frontend | retired 2026-10-24 | `docs/lab/`, `pipeline/lab/` and `knowledge/lab-frontend.md` removed by operator decision; work continues on the production frontend and the card workbench | — |
+| Interface | AI operator, from 2026-10-24 | [Merged bibliography](print-wiki-merge.md), Interface milestones; [Print viewer](print-viewer.md); [Frontend](frontend.md) | tests, record coverage test and read screenshots by the coordinator; a fresh-context review of the interface before a milestone closes |
 | Blog post | AI operator | B1 to B4 | claim check against the artefacts; fresh-context review of the text commissioned by the coordinator |
 | DIA-XAI proposal | AI operator drafts, operator decides | A1 to A4; since 2026-10-23 the operator's team draft "Grounds for Use" is the basis, the agent draft v1.4 supplies material | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
 | Vault knowledge | a session started in the vault | handoff list prepared by the coordinator; repository sessions read the vault, never write it | vault conventions and audit |
@@ -57,17 +59,16 @@ The research coordinator holds the overall plan ([Merged bibliography](print-wik
 
 | Dependency | Delivered by | Needed for | Serves in the overall plan |
 |---|---|---|---|
-| verified regeneration of `docs/data` and `data/output` after the pipeline fixes | coordinator | lab L3 data preparation, blog B2 | correct wiki data as the base of every concordance |
-| local print matches `data/print/derived/lab/print-links.json`, copied by the operator to the ignored `docs/lab/local/` | coordinator (p07) | lab print slot (E6) | next milestone, matches visible to the operator |
+| verified regeneration of `docs/data` and `data/output` after the pipeline fixes | coordinator | interface, blog B2 | correct wiki data as the base of every concordance |
 | `publicationIds` on field matches, delivered 2026-10-23 (a4dbd63) where the wiki line lies in a hash-verified publication slice | coordinator (p07) | edition-level print slot | step 7, matches at publication level |
-| interface specification and its critical review (L2) | AI operator | coordinator's check of states, producer labels and print display against the model | steps 1 and 9, display of claim states |
-| running prototypes and evaluation (L4 to L6) | AI operator | coordinator's integration of findings; the adjudication view of step 9 builds on what holds | step 9, adjudication through the curation interface |
+| committed repair of the card workbench | coordinator | handover of the interface paths | interface milestone One reader |
+| record card with the provenance chain of every value | AI operator | coordinator's check against tests, record coverage and screenshots | Goal, every value with passage, producer and state |
 | defects found in production data | either session | coordinator verifies, fixes and regenerates | correct wiki data |
 | operator decision on the twenty fixture-based place decisions, taken 2026-10-23 (a fixture confirms nothing) | operator | blog B1, display wording, data.md | step 1, meaning of `confirmed` |
-| operator decision whether delegation to LLM agents confirms; until then the producer is named next to the state | operator | blog B1, lab and production labels | step 1, meaning of `confirmed` |
+| decision whether delegation to LLM agents confirms, taken 2026-10-24 under the operator principles (it does not; agent decisions are proposals) | main instance | blog B1, production labels | step 1, meaning of `confirmed` |
 | push and deploy of the local commits | operator | blog B4, proposal commit citations, public application | correct wiki data in public |
 
-A result of the AI operator enters canonical knowledge outside `lab-frontend.md` only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
+A result of the AI operator enters canonical knowledge only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 
 ## State at the pause of 2026-10-23
 

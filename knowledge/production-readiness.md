@@ -105,7 +105,10 @@ Decided under these principles by the main instance on 2026-10-24, revisable, ea
 - The Git history keeps the print quotations removed on 2026-10-24, because rewriting it would remove nothing from forks or caches and would break cited commits; they belong to the rights clarification.
 - Until a second person reviews, the field figure is reported as acceptance by one reviewer after inspection.
 
-Open at the level of principle are whether the concordance claims and print addresses join the production run as a frozen file without print text (which `CLAUDE.md` excludes today), and whether the goal of [Merged bibliography](print-wiki-merge.md) is the operator's criterion of done.
+Decided by the main instance on 2026-10-24 under the operator's explicit delegation of the two questions left open at the level of principle:
+
+- Print addresses, the compiler's own notation applied by rule (references, corrections, errata) and the concordance claims with a text or field evidence join the production run as a frozen file under `data/provenance/` that holds identifiers, addresses, route, producer and state and no print text, every claim `proposed`. The title-year candidates stay local, because they are too weak to show in public. The file enters only once the containment predicate for contents lines and the shared claim schema stand, and the leak check of `p14_gate.py` covers it. `CLAUDE.md`, Known Limits, records the exception.
+- The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done, extended by a point on the interface, because the principle that people like working in it is otherwise checked by nothing.
 
 ## Release scope
 

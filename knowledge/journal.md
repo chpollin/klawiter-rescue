@@ -21,6 +21,14 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Criterion of done, public print claims, interface ownership
+
+**Round.** Decision round. The operator delegated the two questions left open at the level of principle and the ownership of the interface to the main instance.
+
+**Decided.** The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done and gained a point on the interface. Print addresses, the compiler's rule-applied notation and evidenced concordance claims join the production run as a frozen file without print text once the containment predicate and the shared claim schema stand, which `CLAUDE.md` records as the one exception to the excluded merge ([Production readiness](production-readiness.md), Operator principles). The interface of both strands passes to the AI operator once the repair of the card workbench is committed, and the acceptance checks stay with the coordinator ([Coordination](coordination.md), Paths).
+
+---
+
 ## 2026-10-24 — Plan with fixed decision rules, page kinds, concordance as a pipeline step
 
 **Round.** Consolidation after the print export, with an audit of the knowledge folder, an extraction of what the parallel work on the card board had established, and two implementation agents whose results the main agent checked against tests and files.

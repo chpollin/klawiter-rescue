@@ -70,6 +70,9 @@ The merged Klawiter bibliography is reached when all of the following hold, chec
 - The merged reading shows each group with its member records, the source of every value, the deviations between sources side by side and the open claims as open.
 - Wiki and print rebuild deterministically under their gates.
 - What is published contains only what the rights decision of step 0 admits.
+- The interface carries reading, review and citation, and the operator has accepted it on real tasks.
+
+The operator made this list the criterion of done on 2026-10-24 ([Production readiness](production-readiness.md), Operator principles).
 
 ## Plan
 
