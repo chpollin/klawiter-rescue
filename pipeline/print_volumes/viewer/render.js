@@ -45,7 +45,7 @@ export function valueNodes(node, out = []) {
 }
 
 // Address targets travel beside the address value they resolve.
-function targetsOf(node, field) {
+export function targetsOf(node, field) {
   const found = [];
   const walk = (n) => {
     if (Array.isArray(n)) n.forEach(walk);
@@ -212,6 +212,179 @@ export function objectReview(object, all, active, sha256) {
 // Every logged decision on one value, oldest first: its review history.
 export function history(decisions, objectId, path) {
   return decisions.filter((d) => d.object === objectId && d.target && d.target.path === path);
+}
+
+// Readable names. A value's field is a path of the schema
+// ("persons[0].roles[1]"); the page shows it in a group ("Person 1") with a
+// label ("Role 2"), so that no code path reaches the reader.
+export const VOLUME_LABEL = { I: "Main volume", A1: "Addendum I", A2: "Addendum II" };
+export const TYPE_LABEL = {
+  book_edition: "book edition",
+  translation: "translation",
+  collection_contribution: "contribution to a collection",
+  periodical_contribution: "periodical contribution",
+  review: "review",
+  event: "event",
+  holding: "holding",
+  reference: "cross-reference",
+  collection: "collection header",
+  index: "index entry",
+  front: "front matter",
+  tail: "tail passage",
+};
+const KEY_LABEL = {
+  title: "Title",
+  subtitle: "Subtitle",
+  original_title: "Original title",
+  variant_titles: "Variant title",
+  subject: "Subject",
+  language: "Language",
+  term: "Term",
+  passage: "Passage",
+  name: "Name",
+  roles: "Role",
+  place: "Place",
+  publisher: "Publisher",
+  year: "Year",
+  year_end: "End year",
+  year_bracketed: "Year in brackets",
+  circa: "Circa",
+  raw: "As printed",
+  parts: "Segment",
+  volumes: "Volumes",
+  illustrations: "Illustrations",
+  years: "Year",
+  number: "Number",
+  siglum: "Siglum",
+  volume: "Volume",
+  issue: "Issue",
+  date: "Date",
+  pages: "Pages",
+  locator: "Locator",
+  address: "Address",
+  kind: "Kind",
+  repository: "Repository",
+  medium: "Medium",
+  persons: "Person",
+  imprints: "Imprint",
+  extent: "Extent",
+  edition_notes: "Edition note",
+  series: "Series",
+  work_refs: "Work reference",
+  types: "Type",
+  informants: "Informant",
+  notes: "Note",
+};
+// Top-level keys in reading order; HEAD keys form the untitled first group,
+// LISTS one group per item, the rest one group each.
+const ORDER = [
+  "head",
+  "persons",
+  "imprints",
+  "extent",
+  "edition_notes",
+  "series",
+  "periodicals",
+  "hosts",
+  "reviewed",
+  "event",
+  "contents",
+  "holdings",
+  "informants",
+  "notes",
+  "references",
+  "work_refs",
+  "relation",
+  "inherited",
+];
+const HEAD_ORDER = ["term", "title", "subtitle", "original_title", "variant_titles", "subject", "language", "types", "passage"];
+const HEAD = new Set(HEAD_ORDER);
+const LISTS = new Set(["persons", "imprints", "edition_notes", "series", "periodicals", "hosts", "reviewed", "contents", "holdings", "references", "work_refs"]);
+const GROUP_LABEL = {
+  persons: "Person",
+  imprints: "Imprint",
+  extent: "Extent",
+  edition_notes: "Edition note",
+  series: "Series",
+  periodicals: "Periodical",
+  hosts: "Published in",
+  reviewed: "Reviewed work",
+  event: "Event",
+  contents: "Contents item",
+  holdings: "Holding",
+  informants: "Informants",
+  notes: "Notes",
+  references: "Reference",
+  work_refs: "Work reference",
+  relation: "Relation",
+  inherited: "From a heading or header",
+};
+
+function pathSegments(path) {
+  return path.split(".").map((part) => {
+    const m = part.match(/^([a-z_]+)(?:\[(\d+)\])?$/);
+    return { key: m[1], index: m[2] === undefined ? null : Number(m[2]) };
+  });
+}
+
+// The group and label of a value's field.
+export function fieldLabel(path) {
+  const segs = pathSegments(path);
+  const first = segs[0];
+  let group;
+  let heading;
+  let rest;
+  if (HEAD.has(first.key)) {
+    group = "head";
+    heading = "";
+    rest = segs;
+  } else if (LISTS.has(first.key)) {
+    group = `${first.key}[${first.index}]`;
+    heading = `${GROUP_LABEL[first.key]} ${first.index + 1}`;
+    rest = segs.slice(1);
+  } else {
+    group = first.key;
+    heading = GROUP_LABEL[first.key] ?? first.key;
+    rest = ["informants", "notes"].includes(first.key) ? segs : segs.slice(1);
+  }
+  // "address.address" and "parts[1].text" name one thing each.
+  const words = [];
+  rest.forEach((s, i) => {
+    if (s.key === "text" && i > 0) return;
+    if (s.key === "address" && i < rest.length - 1) return;
+    const base = KEY_LABEL[s.key] ?? s.key.replaceAll("_", " ");
+    words.push(s.index !== null && s.index > 0 ? `${base} ${s.index + 1}` : base);
+  });
+  const label = words.length
+    ? words.map((w, i) => (i ? w.toLowerCase() : w)).join(", ")
+    : first.key === "relation"
+      ? "Kind"
+      : "Value";
+  const order = ORDER.indexOf(group.replace(/\[\d+\]$/, ""));
+  return { group, heading, label: label.charAt(0).toUpperCase() + label.slice(1), order: order < 0 ? ORDER.length : order, item: first.index ?? 0 };
+}
+
+// A derived value in words: types and kinds without underscores.
+export function valueText(row) {
+  if (typeof row.value === "boolean") return row.value ? "yes" : "no";
+  if (/(?:^|\.)types\[\d+\]$/.test(row.field)) return TYPE_LABEL[row.value] ?? String(row.value);
+  return String(row.value).replaceAll("_", " ");
+}
+
+// Rows in reading order, grouped: [{group, heading, rows}].
+export function grouped(all) {
+  const groups = new Map();
+  for (const row of all) {
+    const f = fieldLabel(row.field);
+    if (!groups.has(f.group)) groups.set(f.group, { group: f.group, heading: f.heading, order: f.order, item: f.item, rows: [] });
+    groups.get(f.group).rows.push({ ...row, label: f.label });
+  }
+  const head = groups.get("head");
+  if (head) {
+    const rank = (row) => HEAD_ORDER.indexOf(row.field.split(/[.[]/)[0]);
+    head.rows.sort((a, b) => rank(a) - rank(b) || a.index - b.index);
+  }
+  return [...groups.values()].sort((a, b) => a.order - b.order || a.item - b.item);
 }
 
 // Segments of a text with the spans of the given rows marked.

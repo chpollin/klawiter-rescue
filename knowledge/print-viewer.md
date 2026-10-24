@@ -38,6 +38,23 @@ Task
 First screen
 : The state of the review with the way to continue it, the filters (search, volume, kind of record, review state) and a table of records with address, volume, part, page, title and kind, one line each. A record without a read title shows the start of its text, marked as such. Readable kind names replace the codes of the schema.
 
+## Questions
+
+Task
+: Record a data-cleaning question once, with the objects it concerns, sort it by the kind of problem and by who can settle it, and answer it with a resolution.
+
+Why a layer of its own
+: A review decision says whether one value is right. Many problems are larger: a printed convention whose meaning is unknown, a reading class that recurs across entries, a case the data model cannot hold, a gap only a printed copy can close. Such a question gathers its cases instead of being repeated as notes on single decisions.
+
+First screen
+: The list of questions with their kind, who can answer, the number of cases, the state (open or the resolution) and who asked, filtered by state, kind and answerer. One question shows its text, kind and answerer as editable fields, a proposed answer where a rule or agent made one (headed as not decided), the answer or the answer form, the cases as links into the object view with title and value, and the history.
+
+Interaction
+: Q on any object, print object or apparatus item, opens a dialog that asks a new question or adds the object, with its selected value, as a case to an open question. Categorising, answering and reopening are events in an append-only log (`_questions.py`, `data/print/review/questions.jsonl`), validated and stamped by `review_server.py`, which also folds the log into the state the page shows. Only a person answers; the browser always speaks for a person. Rules and LLM agents seed questions from the shell (`questions_seed.py`, from the open questions of the knowledge base and probes over the records), each with a stable key and marked with its producer.
+
+Kinds and answerers
+: Kinds are reading, boundary, notation, source, data model, vocabulary, print and wiki, other; answerers are the operator, a domain expert, data analysis and a printed copy. Resolutions are change the rule, change the data model, keep as read, error in the print, needs an expert, out of scope. The definitions stand on the help page.
+
 ## Help
 
 A page of its own explains what a decision means and what the sample measures, lists the keys, and states that the view is local because the rights to the print volumes are unresolved. No other view repeats this.

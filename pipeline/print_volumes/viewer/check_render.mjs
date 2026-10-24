@@ -1,12 +1,15 @@
 // Coverage check of the print viewer over all JSON-LD chunks: every value of
-// every object gets a row, and every row a complete provenance chain.
+// every object gets a row, every row a complete provenance chain and a
+// readable label, so that no schema path reaches the page.
 // Usage (from data/print/derived/viewer): node check_render.mjs
-// Exits 1 on the first object whose rows or chains are incomplete.
+// Exits 1 if any object's rows, chains or labels are incomplete.
 
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chain, chainComplete, indexGraph, rows } from "./render.js";
+import { chain, chainComplete, fieldLabel, indexGraph, rows, valueText } from "./render.js";
+
+const CODE = /[[\]._]/;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const index = JSON.parse(readFileSync(join(here, "index.json"), "utf8"));
@@ -35,6 +38,15 @@ for (const chunk of chunks) {
       if (!chainComplete(chain(object, row, byId))) {
         failures += 1;
         console.error(`FEHLER ${object.id} ${row.field}: incomplete chain`);
+      }
+      const { heading, label } = fieldLabel(row.field);
+      if (!label || CODE.test(label) || CODE.test(heading)) {
+        failures += 1;
+        console.error(`FEHLER ${object.id} ${row.field}: label "${heading}" / "${label}"`);
+      }
+      if (/types\[\d+\]$/.test(row.field) && valueText(row).includes("_")) {
+        failures += 1;
+        console.error(`FEHLER ${object.id} ${row.field}: type shown as code`);
       }
     }
   }
