@@ -58,6 +58,7 @@ RECORDS = DERIVED_DIR / "records"
 OUT = DERIVED_DIR / "jsonld"
 VIEWER_SRC = HERE / "viewer"
 VIEWER = DERIVED_DIR / "viewer"
+LOCAL_VIEWER_FILES = (DERIVED_DIR / "lab" / "wiki_concordance.json",)
 CONTEXT_FILE = HERE / "schema" / "print-context.jsonld"
 SHAPES_FILE = HERE / "schema" / "print-shapes.ttl"
 CHUNK = 250
@@ -481,6 +482,11 @@ def main() -> int:
         else:
             child.unlink()
     shutil.copytree(VIEWER_SRC, VIEWER, dirs_exist_ok=True)
+    # Print-derived files the viewer reads live under data/print/, never in the
+    # versioned viewer folder; they are copied in beside the page.
+    for local in LOCAL_VIEWER_FILES:
+        if local.exists():
+            shutil.copyfile(local, VIEWER / local.name)
     (VIEWER / "index.json").write_text(
         json.dumps(index, ensure_ascii=False), encoding="utf-8"
     )
