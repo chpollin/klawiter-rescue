@@ -99,9 +99,9 @@ Stage 05 also builds the publication- and contribution-scoped layer of the front
 
 ## Repeatability
 
-Gate 1 and Gate 2 rebuild their core documents inside the validators. CI then runs `pipeline/verify_committed_evidence.py`, reading the reviewed manifests directly from Git HEAD so regeneration cannot replace the reference. Every stable key/value must match, including source/input/code hashes, counts, validation and operator points. Only the run timestamp and hashes of the explicitly timestamped EARL/PROV/validation artifacts may differ; their files must still exist and match the current manifest hashes. All referenced input and artifact bytes are checked, including the ignored reconciliation candidates and review queue. The existing explicit Git-diff artifact list remains an additional comparison.
+Both gates rebuild their core documents inside the validators, and CI compares the result with the reviewed manifests of Git HEAD ([Testing](testing.md#ci-reproduction-boundary)).
 
-Historical repeated-run evidence remains in the journal and run audits. [Status](status.md) records the runtime and checks actually verified in this session. The latest full locked-uv rebuild reproduced all 117 compared deterministic files, including the ignored candidate/queue artifacts and vocabulary files. A local success is not a claim that remote CI has already run.
+Historical repeated-run evidence remains in the journal and run audits. [Status](status.md) records the runtime and checks actually verified in this session. Two consecutive full runs reproduce every compared deterministic file, including the ignored candidate and queue artifacts and the vocabulary files. A local success is not a claim that remote CI has already run.
 
 ## Limits
 

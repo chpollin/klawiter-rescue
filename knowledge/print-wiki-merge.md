@@ -20,6 +20,8 @@ The compiler carried the Stefan Zweig bibliography through several states: the m
 
 ## Record model
 
+The units of the sources (entry, heading and reference unit, wiki page, described object, publication, work, value) are defined once in [Data](data.md), one model across print and wiki. The terms below add what the merge needs.
+
 Entry
 : A place in a print volume as the compiler set it, with volume, page, address where one exists, and unaltered text. The entry is the evidence every later statement points back to.
 
@@ -30,7 +32,7 @@ Context
 : Some objects inherit data from outside their entry, the imprint from a collection header or the host volume from an address ("in Romans et Nouvelles [BA1 5]"). The object keeps a link to that source and may carry the inherited value, marked as inherited.
 
 Reference
-: A cross-reference entry ("**** … See A 167") describes no publication. Since 2026-10-24 it is held as one object of type reference, so that every unit except a heading has a structured record; the concordance skips it. Its addresses, like every address inside an entry, become edges of the reference network.
+: A reference unit ("**** … See A 167") describes no publication. Since 2026-10-24 it is held as one object of type reference, so that every unit except a heading has a structured record; the concordance skips it. Its addresses, like every address inside an entry, become edges of the reference network.
 
 Group
 : The records of different sources that describe one publication, derived from confirmed identity claims. A group is what users, citations and Stefan Zweig Digital point to, so it receives a stable identifier that is never reused, with a recorded history when groups split or join. The member records stay unmerged; a group holds no values of its own beyond the identifier and its membership.

@@ -227,22 +227,6 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("wiki_entry", entries, ids=ids)
 
 
-# --- Gemini client fixture ---
-
-
-@pytest.fixture(scope="session")
-def gemini_client():
-    """Create Gemini client, loading API key from .env if needed."""
-    from lib.config import load_env
-
-    load_env()
-    if not os.environ.get("GEMINI_API_KEY"):
-        pytest.skip("GEMINI_API_KEY not set — LLM tests need it in .env")
-    from lib.llm_extract import create_client
-
-    return create_client()
-
-
 # --- Wiki content samples for unit tests ---
 
 

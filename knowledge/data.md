@@ -48,7 +48,7 @@ Unnumbered entry
 : A unit without an address: a collection header, a commentary paragraph, and most of Addendum II. Its identifier is its position, volume, section, PDF page and line where it begins (`A2/F/p270l3`). A position identifier is the project's, not the compiler's, and holds only as long as the line extraction stays the same.
 
 Heading and reference unit
-: A heading (section, language, work) and a cross-reference unit ("See …") are records of the print, but neither is an entry. A reference unit can name a work that has no edition of its own and say where it is printed (G 3).
+: A heading (section, language, work) and a cross-reference unit ("See …") are records of the print, but neither is an entry. A reference unit can name a work that has no edition of its own and say where it is printed (G 3). A unit set like a cross-reference that also carries a year or a manuscript describes something of its own and is read as an entry.
 
 Index entry
 : An entry of a print index: a term (person, title, year, language or periodical) and the addresses the index gives for it, each resolved to the record it names. An index entry describes no publication.

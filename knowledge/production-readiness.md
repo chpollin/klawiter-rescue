@@ -23,7 +23,7 @@ The third point binds the production run. Since October 2026 the print strand wo
 
 On 21 August, independent agentic source review and reconciliation became the initial evidence; external scholarly review adds validation. Contested cases were explicitly retained as final-data objects, distinguishable from confirmed relations. The exact decisions and their chronology remain in [Journal](journal.md).
 
-The 27 August publication frame described version 0.9 as the release candidate and reserved 1.0 acceptance and its tag for the operator. Do not infer a new release from document frontmatter, a filename, a passing test count or this refactor. A separate Klawiter paper and blog post are outside the repository mandate. Live external write-backs, the wiki/print merge and institutional work-identity decisions remain separate work.
+The 27 August publication frame described version 0.9 as the release candidate and reserved 1.0 acceptance and its tag for the operator. Do not infer a new release from document frontmatter, a filename, a passing test count or this refactor. A separate Klawiter paper is outside the repository mandate, and the blog post is written outside the repository with its claim check kept as evidence. Live external write-backs, the wiki/print merge and institutional work-identity decisions remain separate work.
 
 The operator's 5 September request explicitly reopens Explore as an interactive dashboard with linked information visualizations. Earlier documentation deferring cross-view interaction is superseded by that request.
 
