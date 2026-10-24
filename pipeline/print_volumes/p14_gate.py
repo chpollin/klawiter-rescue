@@ -17,16 +17,27 @@ the rest and still fails):
 3. validate: p10 on the rebuilt records, with its line-coverage ledger: no p01
    line outside a record, every violation a listed exception, no stale
    exception.
-4. samples: every identifier of each frozen sample (the review sample, the
-   blind sample of p09, both benchmark samples) exists in the rebuilt records.
-   A sample lists its identifiers as they stand now; its remap list
-   ("remapped": [{"from", "to", "reason"}], in order) is the only admitted way
-   one may change. Undoing the remaps recovers the identifiers as frozen, whose
-   hash must equal the sample's pin in sample_pins.json, so that an identifier
-   that moved or was replaced without a remap entry fails. The blind sample
-   pins each row as well: its sample_id is the hash of the frozen identifier.
-   Benchmark identifiers are PDF pages, fixed by the PDF hash; each must lie
-   on a rebuilt record.
+4. samples: every identifier of each frozen sample (the review sample, its
+   hard stratum and second-reviewer subset, both blind samples of p09, both
+   benchmark samples, and the claim sheet of p09 once written) exists in the
+   rebuilt records. A sample lists its identifiers as they stand now; its
+   remap list ("remapped": [{"from", "to", "reason"}], in order) is the only
+   admitted way one may change. Undoing the remaps recovers the identifiers as
+   frozen, whose hash must equal the sample's pin in sample_pins.json, so that
+   an identifier that moved or was replaced without a remap entry fails. The
+   blind samples pin each row as well: its sample_id is the hash of the frozen
+   identifier. Benchmark identifiers are PDF pages, fixed by the PDF hash; each
+   must lie on a rebuilt record; claim identifiers are pinned only, since the
+   gate does not rebuild p07.
+   An identifier binds what it stood for only through its fingerprint
+   (fingerprint): the entry's sha256, for an object with its span. The
+   fingerprints as frozen stand in the supplementary sample files, and for the
+   two samples frozen before them in sample-fingerprints.json, written once
+   from the records by --pin; each set is pinned. A fingerprint that differs in
+   the rebuild fails unless the sample's rehash list ("rehashed": [{"id",
+   "from", "to", "reason"}], in order) records the change. The supplementary
+   files of the review sample (pool sizes) and of the first blind sample
+   (stratum sizes) must exist and agree with their samples.
 5. export (--export, slow): p12 builds the JSON-LD from the rebuilt records
    twice, into gate/jsonld-a and gate/jsonld-b; both are byte-identical. SHACL
    validation stays with p12.
@@ -36,8 +47,8 @@ known exceptions, the LLM cache, the sample files and pins, the review log
 (read by the export), the strand's code and uv.lock, and the git commit.
 
 --pin writes the pin of every sample that has none, from the identifiers as
-frozen; it never replaces a pin. A pin changes only by a reviewed edit of the
-versioned file.
+frozen, and of its fingerprints; it never replaces a pin. A pin changes only
+by a reviewed edit of the versioned file.
 
 Output: data/print/derived/gate/p14_gate.json (identifiers and hashes only)
 and the rebuilds under data/print/derived/gate/.
@@ -74,8 +85,18 @@ REPORT = GATE / "p14_gate.json"
 PINS = HERE / "sample_pins.json"
 SAMPLES = DERIVED_DIR / "samples"
 REVIEW_SAMPLE = SAMPLES / "review-sample.json"
+REVIEW_POOLS = SAMPLES / "review-sample-pools.json"
+REVIEW_HARD = SAMPLES / "review-hard-sample.json"
+REVIEW_SECOND = SAMPLES / "review-second-subset.json"
 BLIND_KEY = SAMPLES / "concordance-blind-key.json"
 BLIND_SHEET = SAMPLES / "concordance-blind-sheet.csv"
+BLIND_KEY_2 = SAMPLES / "concordance-blind-key-2.json"
+BLIND_SHEET_2 = SAMPLES / "concordance-blind-sheet-2.csv"
+BLIND_STRATA = SAMPLES / "concordance-blind-strata.json"
+CLAIMS_SHEET = SAMPLES / "concordance-claims-sheet.csv"
+FINGERPRINTS = SAMPLES / "sample-fingerprints.json"
+# The samples every measurement needs; the claim sheet follows the blind round.
+REQUIRED = ("review", "review-hard", "review-second", "blind", "blind-2")
 BENCH = {
     "bench-v1": DERIVED_DIR / "bench" / "sample.json",
     "bench-v2": DERIVED_DIR / "bench" / "v2" / "sample.json",
@@ -280,6 +301,125 @@ def blind_row_failures(
     return failures
 
 
+def fingerprint(record: dict, object_id: str | None = None) -> str | None:
+    """What a sample identifier stands for: the entry's sha256, and for an
+    object its span in the entry as well; None for an object the record lacks."""
+    if object_id is None:
+        return record["sha256"]
+    obj = next((o for o in record["objects"] if o["id"] == object_id), None)
+    if obj is None:
+        return None
+    a, b = obj["span"]
+    return f"{record['sha256']}:{a}-{b}"
+
+
+def fingerprint_pin(fingerprints: dict[str, str]) -> str:
+    lines = sorted(f"{i}\t{fp}" for i, fp in fingerprints.items())
+    return hashlib.sha256("\n".join(lines).encode("utf-8")).hexdigest()
+
+
+def current_identifier(frozen: str, remaps: list) -> str:
+    """The identifier a frozen one stands under now, after the remaps in order."""
+    for remap in remaps:
+        if isinstance(remap, dict) and remap.get("from") == frozen:
+            frozen = remap.get("to") or frozen
+    return frozen
+
+
+def fingerprint_failures(
+    frozen_ids: list[str],
+    fingerprints: dict[str, str] | None,
+    rehashed: list,
+    remaps: list,
+    pin: str | None,
+    current: Callable[[str], str | None],
+) -> list[str]:
+    """The fingerprint rule of a frozen sample: its fingerprints as frozen
+    match their pin and cover the frozen identifiers, and each identifier's
+    fingerprint in the rebuild equals the frozen one after the rehash list."""
+    if fingerprints is None:
+        return ["the sample has no fingerprints (p14_gate.py --pin)"]
+    failures = []
+    if pin is None:
+        failures.append("the fingerprints have no pin (p14_gate.py --pin)")
+    elif fingerprint_pin(fingerprints) != pin:
+        failures.append("the fingerprints differ from their pin")
+    if set(fingerprints) != set(frozen_ids):
+        failures.append(
+            f"fingerprints and frozen identifiers differ in "
+            f"{len(set(fingerprints) ^ set(frozen_ids))} identifiers"
+        )
+    expected = dict(fingerprints)
+    for n, change in enumerate(rehashed):
+        ident, old, new, reason = (
+            (change.get(k) for k in ("id", "from", "to", "reason"))
+            if isinstance(change, dict)
+            else (None, None, None, None)
+        )
+        if not all(isinstance(x, str) and x.strip() for x in (ident, old, new, reason)):
+            failures.append(f"rehash {n} lacks its identifier, fingerprints or reason")
+        elif expected.get(ident) != old:
+            failures.append(f"rehash {n} of {ident} starts from another fingerprint")
+        else:
+            expected[ident] = new
+    for ident, fp in sorted(expected.items()):
+        now = current(current_identifier(ident, remaps))
+        if now is not None and now != fp:
+            failures.append(
+                f"{ident}: what it stands for changed (entry text or object span); "
+                "if the change keeps the publication, record it in the rehash list "
+                "with the old and new fingerprint and the reason"
+            )
+    return failures
+
+
+def pools_failures(pools: dict | None, review: dict | None) -> list[str]:
+    """The pool sizes of the review sample name its parts and drawn counts."""
+    if pools is None:
+        return ["review-pools: the pool sizes are missing (review_sample.py --pools)"]
+    if review is None:
+        return []
+    drawn = {
+        (v, p): len(ids)
+        for v, parts in review["objects"].items()
+        for p, ids in parts.items()
+    }
+    listed = {
+        (v, p): c["drawn"]
+        for v, parts in pools["parts"].items()
+        for p, c in parts.items()
+    }
+    out = []
+    for (v, p), n in sorted(drawn.items()):
+        c = pools["parts"].get(v, {}).get(p)
+        if c is None or c["drawn"] != n:
+            out.append(f"review-pools: {v}/{p} does not hold the {n} objects drawn")
+        elif c["entries"] - c["hard"] <= 0:
+            out.append(f"review-pools: {v}/{p} has no weight")
+    out += [
+        f"review-pools: {v}/{p} names objects the sample lacks"
+        for (v, p), n in sorted(listed.items())
+        if n and (v, p) not in drawn
+    ]
+    return out
+
+
+def strata_failures(strata: dict | None, key: dict | None) -> list[str]:
+    """The stratum sizes of the first blind sample cover its strata."""
+    if strata is None:
+        return [
+            "blind-strata: the stratum sizes are missing (p09_human_sample.py --strata)"
+        ]
+    if key is None:
+        return []
+    out = []
+    for row in key.values():
+        volume = row["printId"].split("/")[0]
+        if not strata["sizes"].get(volume, {}).get(row["stratum"]):
+            out.append(f"blind-strata: no size for {volume} {row['stratum']}")
+    return sorted(set(out))
+
+
 # Twelve consecutive words are far longer than an address, a title or an
 # imprint that knowledge and tests may name, and short enough to catch a
 # quoted sentence.
@@ -374,43 +514,92 @@ def versioned_texts() -> dict[str, str]:
     return out
 
 
-def load_identifiers(records_dir: Path) -> tuple[set[str], set[str], dict[str, list]]:
-    """Entry identifiers, object identifiers and per volume the page ranges of
-    all records, from one records directory."""
+def load_identifiers(
+    records_dir: Path,
+) -> tuple[set[str], set[str], dict[str, list], dict[str, str]]:
+    """Entry identifiers, object identifiers, per volume the page ranges of
+    all records, and the fingerprint of every entry and object, from one
+    records directory."""
     entries, objects, ranges = set(), set(), {v: [] for v in VOLUMES}
+    prints: dict[str, str] = {}
     for name in RECORD_FILES:
         with (records_dir / name).open(encoding="utf-8") as source:
             for record in map(json.loads, source):
                 entries.add(record["id"])
-                objects.update(o["id"] for o in record["objects"])
+                prints[record["id"]] = fingerprint(record)
+                for o in record["objects"]:
+                    objects.add(o["id"])
+                    prints[o["id"]] = fingerprint(record, o["id"])
                 ranges[record["volume"]].append((record["page"], record["page_end"]))
-    return entries, objects, ranges
+    return entries, objects, ranges, prints
+
+
+def _json(path: Path) -> dict | None:
+    return json.loads(path.read_text("utf-8")) if path.exists() else None
+
+
+def _object_ids(objects) -> list[str]:
+    """The identifiers of a sample's "objects", by volume and part, by volume,
+    or as a plain list."""
+    if isinstance(objects, list):
+        return list(objects)
+    out = []
+    for group in objects.values():
+        if isinstance(group, dict):
+            out += [o for ids in group.values() for o in ids]
+        else:
+            out += list(group)
+    return out
 
 
 def frozen_samples() -> dict[str, dict]:
-    """Every frozen sample: its listed identifiers, remap list and kind."""
+    """Every frozen sample: its listed identifiers, remap list and kind, and
+    for review and blind samples its fingerprints and rehash list."""
     out = {}
-    if REVIEW_SAMPLE.exists():
-        data = json.loads(REVIEW_SAMPLE.read_text("utf-8"))
-        out["review"] = {
-            "file": REVIEW_SAMPLE,
+    sidecar = _json(FINGERPRINTS) or {}
+    for name, path in (
+        ("review", REVIEW_SAMPLE),
+        ("review-hard", REVIEW_HARD),
+        ("review-second", REVIEW_SECOND),
+    ):
+        data = _json(path)
+        if data is None:
+            continue
+        own = sidecar.get(name, {}) if "fingerprints" not in data else data
+        out[name] = {
+            "file": path,
             "kind": "object",
-            "listed": [
-                o
-                for parts in data["objects"].values()
-                for ids in parts.values()
-                for o in ids
-            ],
+            "listed": _object_ids(data["objects"]),
             "remaps": data.get("remapped", []),
+            "fingerprints": own.get("fingerprints"),
+            "rehashed": own.get("rehashed", []),
         }
-    if BLIND_KEY.exists():
-        data = json.loads(BLIND_KEY.read_text("utf-8"))
-        out["blind"] = {
-            "file": BLIND_KEY,
+    for name, path, sheet in (
+        ("blind", BLIND_KEY, BLIND_SHEET),
+        ("blind-2", BLIND_KEY_2, BLIND_SHEET_2),
+    ):
+        data = _json(path)
+        if data is None:
+            continue
+        own = sidecar.get(name, {}) if "fingerprints" not in data else data
+        out[name] = {
+            "file": path,
             "kind": "entry",
             "listed": [row["printId"] for row in data["key"].values()],
             "remaps": data.get("remapped", []),
             "key": data["key"],
+            "sheet": sheet,
+            "fingerprints": own.get("fingerprints"),
+            "rehashed": own.get("rehashed", []),
+        }
+    if CLAIMS_SHEET.exists():
+        with CLAIMS_SHEET.open(encoding="utf-8", newline="") as source:
+            ids = [row["claim_id"] for row in csv.DictReader(source)]
+        out["claims"] = {
+            "file": CLAIMS_SHEET,
+            "kind": "claim",
+            "listed": ids,
+            "remaps": [],
         }
     for name, path in BENCH.items():
         if path.exists():
@@ -432,10 +621,10 @@ def load_pins() -> dict:
     return json.loads(PINS.read_text("utf-8")) if PINS.exists() else {}
 
 
-def _sheet_ids() -> set[str] | None:
-    if not BLIND_SHEET.exists():
+def _sheet_ids(sheet: Path) -> set[str] | None:
+    if not sheet.exists():
         return None
-    with BLIND_SHEET.open(encoding="utf-8", newline="") as source:
+    with sheet.open(encoding="utf-8", newline="") as source:
         return {row["sample_id"] for row in csv.DictReader(source)}
 
 
@@ -444,6 +633,15 @@ def _rel(path: Path) -> str:
         return path.resolve().relative_to(PROJECT_ROOT).as_posix()
     except ValueError:
         return str(path)
+
+
+def strand_code_hash() -> tuple[str, int]:
+    """The hash of the strand's modules (tests left out) and their number."""
+    code = sorted(p for p in HERE.glob("*.py") if not p.name.startswith("test_"))
+    digest = hashlib.sha256(
+        "".join(f"{p.name}\t{sha256_file(p)}\n" for p in code).encode()
+    ).hexdigest()
+    return digest, len(code)
 
 
 def inputs() -> dict:
@@ -463,17 +661,23 @@ def inputs() -> dict:
         HERE / "known_exceptions.json",
         CACHE,
         REVIEW_SAMPLE,
+        REVIEW_POOLS,
+        REVIEW_HARD,
+        REVIEW_SECOND,
         BLIND_KEY,
         BLIND_SHEET,
+        BLIND_KEY_2,
+        BLIND_SHEET_2,
+        BLIND_STRATA,
+        CLAIMS_SHEET,
+        FINGERPRINTS,
         *BENCH.values(),
         PINS,
+        HERE / "confirmation_rule.json",
         LOG,
         PROJECT_ROOT / "uv.lock",
     ]
-    code = sorted(p for p in HERE.glob("*.py") if not p.name.startswith("test_"))
-    code_hash = hashlib.sha256(
-        "".join(f"{p.name}\t{sha256_file(p)}\n" for p in code).encode()
-    ).hexdigest()
+    code_hash, modules = strand_code_hash()
     git = {}
     try:
         git["commit"] = subprocess.run(
@@ -498,7 +702,7 @@ def inputs() -> dict:
             "sha256": code_hash,
             "hashOf": "one line per module of the strand (tests left out), sorted "
             "by name: name TAB sha256 LF",
-            "modules": len(code),
+            "modules": modules,
         },
         "git": git,
     }
@@ -597,7 +801,7 @@ class Gate:
     def check_samples(self) -> tuple[list[str], dict]:
         if not self.rebuilt:
             return ["not run: no rebuilt records"], {}
-        entries, objects, ranges = load_identifiers(self.runs[0])
+        entries, objects, ranges, prints = load_identifiers(self.runs[0])
 
         def on_page(identifier: str) -> bool:
             volume, _, page = identifier.partition("/p")
@@ -609,11 +813,13 @@ class Gate:
             "object": objects.__contains__,
             "entry": entries.__contains__,
             "page": on_page,
+            # The gate does not rebuild p07; claim identifiers are pinned only.
+            "claim": lambda _identifier: True,
         }
         pins = load_pins()
         failures, details = [], {}
         samples = frozen_samples()
-        for name in ("review", "blind", *BENCH):
+        for name in (*REQUIRED, *BENCH):
             if name not in samples:
                 failures.append(f"{name}: sample file missing")
         for name, sample in samples.items():
@@ -623,9 +829,19 @@ class Gate:
                 pins.get(name, {}).get("sha256"),
                 exists[sample["kind"]],
             )
-            if name == "blind":
+            if "key" in sample:
                 found += blind_row_failures(
-                    sample["key"], sample["remaps"], _sheet_ids()
+                    sample["key"], sample["remaps"], _sheet_ids(sample["sheet"])
+                )
+            if "fingerprints" in sample:
+                frozen, _ = undo_remaps(sample["listed"], sample["remaps"])
+                found += fingerprint_failures(
+                    frozen,
+                    sample["fingerprints"],
+                    sample["rehashed"],
+                    sample["remaps"],
+                    pins.get(f"{name}:fingerprints", {}).get("sha256"),
+                    prints.get,
                 )
             failures += [f"{name}: {f}" for f in found]
             details[name] = {
@@ -636,8 +852,24 @@ class Gate:
                     for r in sample["remaps"]
                     if isinstance(r, dict)
                 ],
+                "rehashed": [
+                    {k: r.get(k) for k in ("id", "reason")}
+                    for r in sample.get("rehashed", [])
+                    if isinstance(r, dict)
+                ],
                 "failures": len(found),
             }
+        if "review-second" in samples and "review" in samples:
+            outside = set(samples["review-second"]["listed"]) - set(
+                samples["review"]["listed"]
+            )
+            failures += [
+                f"review-second: {o} is no object of the review sample"
+                for o in sorted(outside)
+            ]
+        failures += pools_failures(_json(REVIEW_POOLS), _json(REVIEW_SAMPLE))
+        blind = _json(BLIND_KEY)
+        failures += strata_failures(_json(BLIND_STRATA), blind and blind["key"])
         return failures, details
 
     def check_export(self) -> tuple[list[str], dict]:
@@ -707,27 +939,79 @@ def run_checks(checks: list[tuple[str, Callable]], keep_going: bool) -> dict:
     return results
 
 
-def write_pins() -> int:
+def write_fingerprints(samples: dict[str, dict], records_dir: Path) -> int:
+    """Write the fingerprints of the samples frozen before fingerprints
+    existed, once, from the current records; never replaced."""
+    sidecar = _json(FINGERPRINTS) or {}
+    missing = [
+        n
+        for n, s in samples.items()
+        if "fingerprints" in s and s["fingerprints"] is None
+    ]
+    if not missing:
+        return 0
+    *_, prints = load_identifiers(records_dir)
+    for name in missing:
+        sample = samples[name]
+        frozen, _ = undo_remaps(sample["listed"], sample["remaps"])
+        found = {i: prints.get(current_identifier(i, sample["remaps"])) for i in frozen}
+        lacking = sorted(i for i, fp in found.items() if fp is None)
+        if lacking:
+            print(f"FEHLER {name}: not in the records: {lacking[:5]}")
+            return 1
+        sidecar[name] = {"fingerprints": dict(sorted(found.items())), "rehashed": []}
+        sample["fingerprints"] = sidecar[name]["fingerprints"]
+        print(f"OK {name}: fingerprints of {len(found)} identifiers written")
+    sidecar["_about"] = (
+        "Fingerprints of the samples frozen before fingerprints existed, written "
+        "once from the records (p14_gate.py --pin): per frozen identifier the "
+        "entry's sha256, for an object with its span. A change is recorded in the "
+        "sample's rehashed list, never by editing a fingerprint."
+    )
+    FINGERPRINTS.write_text(json.dumps(sidecar, indent=1, sort_keys=True), "utf-8")
+    return 0
+
+
+def write_pins(records_dir: Path = DERIVED_DIR / "records") -> int:
     pins = load_pins()
-    for name, sample in frozen_samples().items():
-        frozen, problems = undo_remaps(sample["listed"], sample["remaps"])
+    samples = frozen_samples()
+    for name, sample in samples.items():
+        _, problems = undo_remaps(sample["listed"], sample["remaps"])
         if problems:
             print(f"FEHLER {name}: {problems}")
             return 1
+    if write_fingerprints(samples, records_dir):
+        return 1
+    wanted = {}
+    for name, sample in samples.items():
+        frozen, _ = undo_remaps(sample["listed"], sample["remaps"])
+        wanted[name] = {"identifiers": len(frozen), "sha256": pin_of(frozen)}
+        if sample.get("fingerprints") is not None:
+            wanted[f"{name}:fingerprints"] = {
+                "identifiers": len(sample["fingerprints"]),
+                "sha256": fingerprint_pin(sample["fingerprints"]),
+            }
+    for name, pin in wanted.items():
         if name in pins:
-            same = pins[name]["sha256"] == pin_of(frozen)
+            same = pins[name]["sha256"] == pin["sha256"]
             print(
                 f"{'OK' if same else 'FEHLER'} {name}: pin kept{'' if same else ', differs'}"
             )
             continue
-        pins[name] = {"identifiers": len(frozen), "sha256": pin_of(frozen)}
-        print(f"OK {name}: pinned {len(frozen)} identifiers")
+        pins[name] = pin
+        print(f"OK {name}: pinned {pin['identifiers']} identifiers")
     pins["_about"] = (
         "Pins of the frozen samples (p14_gate.py): per sample the sha256 of its "
         "identifiers as frozen, sorted and joined by LF, after undoing its remap "
-        "list. Hashes and counts only; written once by --pin, never replaced."
+        "list, and per sample with fingerprints (<name>:fingerprints) the sha256 of "
+        "its lines identifier TAB fingerprint as frozen, sorted and joined by LF. "
+        "Hashes and counts only; written once by --pin, never replaced."
     )
-    PINS.write_text(json.dumps(pins, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    PINS.write_text(
+        json.dumps(pins, indent=1, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     return 0
 
 

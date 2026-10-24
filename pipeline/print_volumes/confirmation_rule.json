@@ -1,4 +1,73 @@
 {
- "_about": "Decision rule for automatic confirmation (knowledge/print-wiki-merge.md, Measurement), read by p13_review.py. A rule class may confirm without a person when the lower bound of the 95 percent Wilson interval of its precision on the complete objects of the frozen review sample reaches the threshold. The operator sets the threshold before the human round; while it is null no rule class confirms.",
- "threshold": null
+ "_about": "Decision rules for automatic confirmation (knowledge/print-wiki-merge.md, Measurement), read by p13_review.py. Two rules: rule classes of the fields, measured on the complete objects of the frozen review sample, and routes of the concordance, measured on the claim sheet of the blind samples. A class is a rule or route bound to one volume (name@volume) and may confirm only there. Only the classes listed as admissible may confirm; p13_review.py --fix-rule fixes them before any decision or answer, as the classes with at least minExpectedJudged values (claims) expected in the sample, and records the code they were fixed on; when that code changes, the rule is invalidated until the classes are fixed again. A class confirms when its weighted precision exceeds the threshold, tested on the bootstrap that resamples objects (entries) within strata, one-sided at level alpha with Holm's correction over the admissible classes of its rule; this is the lower bound of the object-resampled interval at the corrected level. While a threshold is null nothing confirms.",
+ "fields": {
+  "threshold": null,
+  "thresholdReason": "operator decision: no automatic confirmation in this phase; every confirmation is a person's",
+  "unit": "rule@volume",
+  "alpha": 0.025,
+  "correction": "holm",
+  "minExpectedJudged": 40,
+  "admissible": [
+   "p03.contents-pages@A2",
+   "p03.contents-title@A1",
+   "p03.contents-title@A2",
+   "p03.credit@A2",
+   "p03.credit@I",
+   "p03.imprint@A1",
+   "p03.imprint@A2",
+   "p03.imprint@I",
+   "p03.periodical-siglum@I",
+   "p03.periodical-spelled@A1",
+   "p06.address-notation@A1",
+   "p06.address-notation@I"
+  ],
+  "fixed": {
+   "on": "2026-10-24",
+   "code": {
+    "files": [
+     "_addresses.py",
+     "_apparatus.py",
+     "_common.py",
+     "_fields.py",
+     "_lines.py",
+     "_llm.py",
+     "_objects.py",
+     "_schema.py",
+     "_segment.py",
+     "p03_records.py",
+     "sections.json"
+    ],
+    "sha256": "37e6e2fff56923281def2a9659b4271ed788f5400bd994dfe373470d42bb7962"
+   }
+  }
+ },
+ "routes": {
+  "threshold": null,
+  "thresholdReason": "operator decision: no automatic confirmation in this phase; every confirmation is a person's",
+  "unit": "route@volume",
+  "alpha": 0.025,
+  "correction": "holm",
+  "minExpectedJudged": 40,
+  "admissible": [
+   "title-year@A1",
+   "title-year@A2",
+   "title-year@I"
+  ],
+  "fixed": {
+   "on": "2026-10-24",
+   "code": {
+    "files": [
+     "_addresses.py",
+     "_common.py",
+     "_fields.py",
+     "_heldout.py",
+     "_lines.py",
+     "_objects.py",
+     "_schema.py",
+     "p07_concordance.py"
+    ],
+    "sha256": "20615a4d0dcd9d030ecc456c3d29cbe559de5e3e09bf35b2983d0ceba7dee40b"
+   }
+  }
+ }
 }

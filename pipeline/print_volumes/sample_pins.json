@@ -1,5 +1,5 @@
 {
- "_about": "Pins of the frozen samples (p14_gate.py): per sample the sha256 of its identifiers as frozen, sorted and joined by LF, after undoing its remap list. Hashes and counts only; written once by --pin, never replaced.",
+ "_about": "Pins of the frozen samples (p14_gate.py): per sample the sha256 of its identifiers as frozen, sorted and joined by LF, after undoing its remap list, and per sample with fingerprints (<name>:fingerprints) the sha256 of its lines identifier TAB fingerprint as frozen, sorted and joined by LF. Hashes and counts only; written once by --pin, never replaced.",
  "bench-v1": {
   "identifiers": 28,
   "sha256": "15843ebd5ecbe1d4f4864e769325d189cd289f6419d2dacd8e73adea68df37d3"
@@ -12,8 +12,40 @@
   "identifiers": 90,
   "sha256": "2093721b24c131fd951b32eaac8661e474108e960b596bc2e5b30c63ce948aba"
  },
+ "blind-2": {
+  "identifiers": 47,
+  "sha256": "811db7fb94aa8b3374f7bb8661a1b48b244c8dc2274073d617426c4801c9257e"
+ },
+ "blind-2:fingerprints": {
+  "identifiers": 47,
+  "sha256": "5123a0bd7171bcad1c3cfcffa0c11d2aebe903c740feb56d22a723252aaa410a"
+ },
+ "blind:fingerprints": {
+  "identifiers": 90,
+  "sha256": "2663742d599ee4621b5f8b7b642163a25f8b1d98971217e1933b93c0a22ca8f5"
+ },
  "review": {
   "identifiers": 129,
   "sha256": "3aa7457088c9fe2c2aac3b2631d631d345fac81c8eaf65838a5cc4d5e732cbd9"
+ },
+ "review-hard": {
+  "identifiers": 21,
+  "sha256": "357fd57e56117800e05c9020905d6fe185f7fc8c3378d7978372664ed00b5ff1"
+ },
+ "review-hard:fingerprints": {
+  "identifiers": 21,
+  "sha256": "0ef02456f99143c68fcce0c0ffe1bd56da34daca9711a377d2f75e2b36c0ae2e"
+ },
+ "review-second": {
+  "identifiers": 40,
+  "sha256": "b299e9895bb35ec1211ef0fafac7f84defb72bd67f965c129d7c450b8b1dd42c"
+ },
+ "review-second:fingerprints": {
+  "identifiers": 40,
+  "sha256": "0949bbe58f0bae8452be0a311ba3d3071245307ef01a8da31cf0dad339b7cb63"
+ },
+ "review:fingerprints": {
+  "identifiers": 129,
+  "sha256": "b4c140c6d9274e9663a14e129a3600539bedf1188a9272e25a298d10b8e8f102"
  }
 }

@@ -1,8 +1,9 @@
 """What rule development must never look at: the benchmark pages and the human samples.
 
 Both benchmark samples (bench/sample.json, bench/v2/sample.json) are held out by
-page, the frozen blind sample of p09 and the review sample of the field check
-(review_sample.py) by entry. Development samples, notation
+page, the frozen blind samples of p09 (the first and its supplement) and the
+review samples of the field check (review_sample.py: the review sample and its
+stratum of hard entries) by entry. Development samples, notation
 counts and any example printed while writing rules exclude them through
 is_held_out, so that a later score on them still measures unseen material.
 Version 1 was tuned on before it was declared development (bench_sample.py);
@@ -15,8 +16,17 @@ from functools import cache
 from _common import DERIVED_DIR
 
 BENCH = DERIVED_DIR / "bench"
-BLIND_KEY = DERIVED_DIR / "samples" / "concordance-blind-key.json"
-REVIEW_SAMPLE = DERIVED_DIR / "samples" / "review-sample.json"
+SAMPLES = DERIVED_DIR / "samples"
+BLIND_KEY = SAMPLES / "concordance-blind-key.json"
+BLIND_SHEET = SAMPLES / "concordance-blind-sheet.csv"
+BLIND_KEY_2 = SAMPLES / "concordance-blind-key-2.json"
+BLIND_SHEET_2 = SAMPLES / "concordance-blind-sheet-2.csv"
+BLIND_STRATA = SAMPLES / "concordance-blind-strata.json"
+CLAIMS_SHEET = SAMPLES / "concordance-claims-sheet.csv"
+REVIEW_SAMPLE = SAMPLES / "review-sample.json"
+REVIEW_POOLS = SAMPLES / "review-sample-pools.json"
+REVIEW_HARD = SAMPLES / "review-hard-sample.json"
+REVIEW_SECOND = SAMPLES / "review-second-subset.json"
 
 
 @cache
@@ -39,11 +49,21 @@ def held_out_pages() -> dict[str, frozenset[int]]:
 
 
 @cache
+def hard_objects() -> tuple[str, ...]:
+    """Object identifiers of the frozen stratum of hard entries, by volume."""
+    if not REVIEW_HARD.exists():
+        return ()
+    parts = json.loads(REVIEW_HARD.read_text("utf-8"))["objects"]
+    return tuple(o for ids in parts.values() for o in ids)
+
+
+@cache
 def held_out_entries() -> frozenset[str]:
-    entries = {o.split("#")[0] for o in review_objects()}
-    if BLIND_KEY.exists():
-        key = json.loads(BLIND_KEY.read_text("utf-8"))["key"]
-        entries.update(row["printId"] for row in key.values())
+    entries = {o.split("#")[0] for o in (*review_objects(), *hard_objects())}
+    for path in (BLIND_KEY, BLIND_KEY_2):
+        if path.exists():
+            key = json.loads(path.read_text("utf-8"))["key"]
+            entries.update(row["printId"] for row in key.values())
     return frozenset(entries)
 
 

@@ -283,3 +283,96 @@ def test_an_admitted_label_passes_only_by_its_own_hash():
     files = {"knowledge/x.md": sentence}
     assert leak_failures(files, print_set, frozenset({shingle_hash(words)})) == []
     assert leak_failures(files, print_set, frozenset({"0" * 64})) != []
+
+
+def _fp(record, object_id=None):
+    from p14_gate import fingerprint
+
+    return fingerprint(record, object_id)
+
+
+RECORD = {"sha256": "e" * 64, "objects": [{"id": "X/A/1#1", "span": [0, 9]}]}
+
+
+def test_a_fingerprint_binds_the_entry_text_and_the_object_span():
+    assert _fp(RECORD) == "e" * 64
+    assert _fp(RECORD, "X/A/1#1") == "e" * 64 + ":0-9"
+    assert _fp(RECORD, "X/A/1#2") is None
+
+
+def _prints_check(frozen, rehashed, current, remaps=()):
+    from p14_gate import fingerprint_failures, fingerprint_pin
+
+    return fingerprint_failures(
+        list(frozen),
+        frozen,
+        rehashed,
+        list(remaps),
+        fingerprint_pin(frozen),
+        current.get,
+    )
+
+
+def test_a_changed_fingerprint_fails_unless_its_rehash_is_recorded():
+    frozen = {"X/A/1#1": "old"}
+    assert _prints_check(frozen, [], {"X/A/1#1": "old"}) == []
+    failures = _prints_check(frozen, [], {"X/A/1#1": "new"})
+    assert len(failures) == 1 and "rehash list" in failures[0]
+    change = {
+        "id": "X/A/1#1",
+        "from": "old",
+        "to": "new",
+        "reason": "span widened by one",
+    }
+    assert _prints_check(frozen, [change], {"X/A/1#1": "new"}) == []
+    wrong_start = {**change, "from": "other"}
+    assert any(
+        "starts from another" in f
+        for f in _prints_check(frozen, [wrong_start], {"X/A/1#1": "new"})
+    )
+    assert any(
+        "lacks" in f
+        for f in _prints_check(frozen, [{**change, "reason": ""}], {"X/A/1#1": "new"})
+    )
+
+
+def test_fingerprints_follow_a_remapped_identifier_and_their_pin():
+    from p14_gate import fingerprint_failures
+
+    frozen = {"X/A/p2l3#1": "fp"}
+    remaps = [{"from": "X/A/p2l3#1", "to": "X/A/p2l4#1", "reason": "heading split off"}]
+    assert _prints_check(frozen, [], {"X/A/p2l4#1": "fp"}, remaps) == []
+    failures = fingerprint_failures(
+        ["X/A/p2l3#1"], frozen, [], remaps, "0" * 64, {"X/A/p2l4#1": "fp"}.get
+    )
+    assert failures == ["the fingerprints differ from their pin"]
+    assert fingerprint_failures(["X/A/1#1"], None, [], [], None, {}.get) == [
+        "the sample has no fingerprints (p14_gate.py --pin)"
+    ]
+
+
+def test_the_pool_sizes_must_match_the_review_sample():
+    from p14_gate import pools_failures
+
+    review = {"objects": {"X": {"A": ["X/A/1#1", "X/A/2#1"]}}}
+    pools = {
+        "parts": {"X": {"A": {"entries": 9, "hard": 1, "eligible": 7, "drawn": 2}}}
+    }
+    assert pools_failures(pools, review) == []
+    pools["parts"]["X"]["A"]["drawn"] = 3
+    assert pools_failures(pools, review) == [
+        "review-pools: X/A does not hold the 2 objects drawn"
+    ]
+    assert pools_failures(None, review)[0].startswith(
+        "review-pools: the pool sizes are missing"
+    )
+
+
+def test_the_blind_stratum_sizes_must_cover_the_strata():
+    from p14_gate import strata_failures
+
+    key = {"s": {"printId": "X/A/1", "stratum": "none"}}
+    assert strata_failures({"sizes": {"X": {"none": 40}}}, key) == []
+    assert strata_failures({"sizes": {"X": {"field": 4}}}, key) == [
+        "blind-strata: no size for X none"
+    ]

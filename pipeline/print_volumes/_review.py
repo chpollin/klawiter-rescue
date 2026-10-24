@@ -17,13 +17,26 @@ Decisions on an object:
 - boundary: the object is split or joined wrongly (note).
 - complete: every value was decided and every missing value added; only
   complete objects of the review sample enter the measurement (p13_review.py).
-- withdraw: cancels the decision named in "supersedes".
+- withdraw: cancels the reviewer's own decision named in "supersedes".
+- adjudicate: settles a disagreement between the first and the second
+  reviewer of an object. It names both decisions in "settles" and the one that
+  stands in "adopts", and is made by neither of the two (a third person or the
+  operator). It settles two value decisions on one value (and names that value
+  as its target), or one reviewer's "missing" or "boundary" against the
+  other's "complete" on the object.
 
-A value decision supersedes the earlier one on the same object and path, and
-"boundary" and "complete" the earlier one of their kind; the log keeps every
-line. A value decision names the value as the reviewer saw it (path, value,
-span, source); when a rebuild changes that value the decision is stale, stays
-in the log and is reported, and no longer applies.
+Every reviewer's decisions stand on their own: a value decision supersedes the
+same reviewer's earlier one on the same object and path, "boundary" and
+"complete" the same reviewer's earlier one of their kind, and a second
+reviewer never replaces the first (in_force). The first reviewer of an object
+is the one whose decisions on it were logged first, the second the next one
+(reviewers); adjudicators are neither. The published state (effective), which
+p12 exports, is the first reviewer's decisions with each valid adjudication
+applied; p13 measures precision from the first reviewer and agreement from
+the second (layers). The log keeps every line. A value decision names the
+value as the reviewer saw it (path, value, span, source); when a rebuild
+changes that value the decision is stale, stays in the log and is reported,
+and no longer applies.
 
 Corrections and added values are passages of the object's own entry: text
 values equal their passage, a year's digits stand in it, a role, type or
@@ -56,7 +69,8 @@ REVIEW_DIR = PRINT_DIR / "review"
 LOG = REVIEW_DIR / "decisions.jsonl"
 VALUE_DECISIONS = ("confirm", "correct", "unresolved")
 OBJECT_DECISIONS = ("missing", "boundary", "complete")
-DECISIONS = (*VALUE_DECISIONS, *OBJECT_DECISIONS, "withdraw")
+DECISIONS = (*VALUE_DECISIONS, *OBJECT_DECISIONS, "withdraw", "adjudicate")
+DECISION_ID = r"^[0-9a-f]{32}$"
 # The paths of p12: keys joined by ".", list positions in brackets.
 PATH = r"^[a-z_]+(?:\[\d+\])?(?:\.[a-z_]+(?:\[\d+\])?)*$"
 OBJECT_ID = r"^(I|A1|A2)/[A-R]/[^#\s]+#\d+$"
@@ -131,16 +145,27 @@ class DecisionIn(_Strict):
     decision: Literal[DECISIONS]
     target: ValueRef | None = None
     correction: Correction | None = None
-    supersedes: str | None = Field(default=None, pattern=r"^[0-9a-f]{32}$")
+    supersedes: str | None = Field(default=None, pattern=DECISION_ID)
+    settles: (
+        Annotated[list[Annotated[str, Field(pattern=DECISION_ID)]], Len(2, 2)] | None
+    ) = None
+    adopts: str | None = Field(default=None, pattern=DECISION_ID)
     note: str = Field(default="", max_length=2000)
 
     @model_validator(mode="after")
     def _shape(self):
         d = self.decision
-        if (d in VALUE_DECISIONS) != (self.target is not None):
-            raise ValueError(
-                "a value decision names its target, an object decision none"
-            )
+        if d == "adjudicate":
+            if not self.settles or len(set(self.settles)) != 2:
+                raise ValueError("an adjudication settles two distinct decisions")
+            if self.adopts not in self.settles:
+                raise ValueError("an adjudication adopts one of the two it settles")
+        elif self.settles is not None or self.adopts is not None:
+            raise ValueError("only an adjudication settles and adopts")
+        if d in VALUE_DECISIONS and self.target is None:
+            raise ValueError("a value decision names its target")
+        if d in (*OBJECT_DECISIONS, "withdraw") and self.target is not None:
+            raise ValueError("an object decision names no target")
         if d == "correct" and self.correction is None:
             raise ValueError("a correction carries its corrected value or none")
         if d == "missing" and not (
@@ -265,26 +290,161 @@ def append(decision: Decision) -> None:
         os.fsync(sink.fileno())
 
 
-def effective(decisions: list[Decision]) -> dict[tuple, Decision]:
-    """The decisions in force, after supersession and withdrawal, by key."""
+def key_of(d: Decision) -> tuple:
+    """What a decision is about, without its reviewer: a later decision of the
+    same reviewer with the same key supersedes it."""
+    if d.decision == "adjudicate":
+        about = d.target.path if d.target else "/".join(sorted(d.settles))
+        return (d.object, "adjudicate", about)
+    if d.target:
+        return (d.object, "value", d.target.path)
+    if d.decision == "missing":
+        return (d.object, "missing", d.id)
+    return (d.object, d.decision)
+
+
+def in_force(decisions: list[Decision]) -> dict[tuple, Decision]:
+    """Every reviewer's decisions in force, keyed (reviewer, *key_of): each
+    reviewer's own supersessions and withdrawals, never another's."""
     by_id = {d.id: d for d in decisions}
     active: dict[tuple, Decision] = {}
-    key_of: dict[str, tuple] = {}
+    keys: dict[str, tuple] = {}
     for d in decisions:
         if d.decision == "withdraw":
-            key = key_of.get(d.supersedes)
-            if key and active.get(key) is by_id.get(d.supersedes):
+            withdrawn = by_id.get(d.supersedes)
+            key = keys.get(d.supersedes)
+            if (
+                withdrawn is not None
+                and withdrawn.reviewer == d.reviewer
+                and active.get(key) is withdrawn
+            ):
                 del active[key]
             continue
-        if d.target:
-            key = (d.object, "value", d.target.path)
-        elif d.decision == "missing":
-            key = (d.object, "missing", d.id)
-        else:
-            key = (d.object, d.decision)
+        key = (d.reviewer, *key_of(d))
         active[key] = d
-        key_of[d.id] = key
+        keys[d.id] = key
     return active
+
+
+def reviewers(decisions: list[Decision]) -> dict[str, list[str]]:
+    """Per object its reviewers in the order of their first decision on it,
+    counting only reviewers with a decision in force there; adjudicators and
+    withdrawals do not make a reviewer."""
+    holding = {
+        (k[0], k[1])
+        for k, d in in_force(decisions).items()
+        if d.decision != "adjudicate"
+    }
+    order: dict[str, list[str]] = {}
+    for d in decisions:
+        if d.decision in ("withdraw", "adjudicate"):
+            continue
+        seen = order.setdefault(d.object, [])
+        if d.reviewer not in seen and (d.reviewer, d.object) in holding:
+            seen.append(d.reviewer)
+    return order
+
+
+def _same(a: Decision, b: Decision) -> bool:
+    return a.decision == b.decision and a.correction == b.correction
+
+
+def adjudication_problem(
+    d: Decision | DecisionIn,
+    decisions: list[Decision],
+    force: dict[tuple, Decision] | None = None,
+    order: dict[str, list[str]] | None = None,
+) -> str | None:
+    """None when the adjudication settles a disagreement in force between the
+    first and the second reviewer of its object, else the reason."""
+    force = in_force(decisions) if force is None else force
+    order = reviewers(decisions) if order is None else order
+    by_id = {x.id: x for x in decisions}
+    settled = [by_id.get(i) for i in d.settles]
+    if None in settled:
+        return "settles an unknown decision"
+    a, b = settled
+    if a.object != d.object or b.object != d.object:
+        return "settles decisions on its own object only"
+    if a.reviewer == b.reviewer:
+        return "settles the decisions of two reviewers"
+    if d.reviewer in (a.reviewer, b.reviewer):
+        return "an adjudicator is neither of the two reviewers"
+    if set(order.get(d.object, [])[:2]) != {a.reviewer, b.reviewer}:
+        return "settles the first and the second reviewer's decisions"
+    kinds = {a.decision, b.decision}
+    if kinds <= set(VALUE_DECISIONS):
+        if d.target is None or not (a.target.path == b.target.path == d.target.path):
+            return "settles two decisions on the value it names"
+        if _same(a, b):
+            return "the two decisions agree; there is nothing to settle"
+    elif d.target is not None or not (
+        "complete" in kinds and kinds - {"complete"} <= {"missing", "boundary"}
+    ):
+        return (
+            "settles two value decisions on one value, or a missing value or a "
+            "boundary against complete"
+        )
+    for x in settled:
+        if force.get((x.reviewer, *key_of(x))) is not x:
+            return "stale: a settled decision was superseded or withdrawn"
+    return None
+
+
+def layers(decisions: list[Decision]) -> dict:
+    """The decisions in force, keyed by key_of, as the first reviewer, the
+    second reviewer and the adjudicated state hold them, with the valid
+    adjudications and the invalid ones with their reasons.
+
+    The adjudicated state is the first reviewer's with each valid adjudication
+    applied: an adopted value decision stands for the value, an adopted missing
+    value or boundary of the second reviewer is added, and a rejected missing
+    value or boundary of the first reviewer is dropped; "complete" is never
+    dropped, since it states that every value was decided."""
+    force = in_force(decisions)
+    order = reviewers(decisions)
+    by_role: list[dict[tuple, Decision]] = [{}, {}]
+    for (reviewer, *key), d in force.items():
+        if d.decision == "adjudicate":
+            continue
+        roles = order.get(d.object, [])
+        if reviewer in roles[:2]:
+            by_role[roles.index(reviewer)][tuple(key)] = d
+    first, second = by_role
+    valid: dict[tuple, Decision] = {}
+    invalid = []
+    for d in decisions:
+        if d.decision != "adjudicate" or force.get((d.reviewer, *key_of(d))) is not d:
+            continue
+        problem = adjudication_problem(d, decisions, force, order)
+        if problem:
+            invalid.append((d, problem))
+        else:
+            # A later adjudication of the same disagreement replaces an earlier one.
+            valid[key_of(d)] = d
+    by_id = {d.id: d for d in decisions}
+    adjudicated = dict(first)
+    for adj in valid.values():
+        adopted = by_id[adj.adopts]
+        for x in (by_id[i] for i in adj.settles):
+            if x is not adopted and x.decision in ("missing", "boundary"):
+                adjudicated.pop(key_of(x), None)
+        if adopted.decision != "complete":
+            adjudicated[key_of(adopted)] = adopted
+    return {
+        "first": first,
+        "second": second,
+        "adjudicated": adjudicated,
+        "adjudications": valid,
+        "invalid_adjudications": invalid,
+        "order": order,
+    }
+
+
+def effective(decisions: list[Decision]) -> dict[tuple, Decision]:
+    """The published review state by key: the first reviewer's decisions in
+    force, after each valid adjudication (layers)."""
+    return layers(decisions)["adjudicated"]
 
 
 def load_records(records_dir) -> dict[str, dict]:
