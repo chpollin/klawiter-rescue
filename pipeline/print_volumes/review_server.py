@@ -19,6 +19,9 @@ Endpoints:
   malformed one, 409 when it does not apply to the current records (a changed
   value, a correction that does not follow from its passage), 403 for a
   foreign Host or Origin.
+- GET /print/<volume>.pdf: the print volume itself (I, A1, A2), so that a
+  record links to its page as /print/I.pdf#page=790. Local like every print
+  file; the volume names come from sections.json, never from the request path.
 
 Usage: python -m uv run python pipeline/print_volumes/review_server.py [--port 8765]
 """
@@ -32,12 +35,19 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import _review
-from _common import DERIVED_DIR
+from _common import DERIVED_DIR, PRINT_DIR
 from _review import DecisionIn, append, check, load_log, load_records, stamp
 from pydantic import ValidationError
 
 RECORDS = DERIVED_DIR / "records"
 MAX_BODY = 64 * 1024
+SECTIONS = Path(__file__).with_name("sections.json")
+PDFS = {
+    volume: PRINT_DIR / spec["file"]
+    for volume, spec in json.loads(SECTIONS.read_text(encoding="utf-8"))[
+        "volumes"
+    ].items()
+}
 
 
 class Store:
@@ -91,7 +101,26 @@ class Handler(SimpleHTTPRequestHandler):
                     200, [d.model_dump(by_alias=True, exclude_none=True) for d in log]
                 )
             return self._json(404, {"error": "unknown endpoint"})
+        if self.path.startswith("/print/"):
+            return self._pdf()
         return super().do_GET()
+
+    def _pdf(self):
+        if not self._own():
+            return self._json(403, {"error": "foreign host or origin"})
+        name = self.path.split("?")[0].split("#")[0].removeprefix("/print/")
+        pdf = PDFS.get(name.removesuffix(".pdf")) if name.endswith(".pdf") else None
+        if pdf is None or not pdf.exists():
+            return self._json(404, {"error": "no such volume"})
+        self.send_response(200)
+        self.send_header("Content-Type", "application/pdf")
+        self.send_header("Content-Length", str(pdf.stat().st_size))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        with pdf.open("rb") as source:
+            while chunk := source.read(1 << 20):
+                self.wfile.write(chunk)
+        return None
 
     def do_POST(self):
         if self.path != "/review/decisions":
@@ -148,7 +177,7 @@ def main() -> int:
         ("127.0.0.1", args.port), partial(Handler, directory=str(DERIVED_DIR))
     )
     print(
-        f"OK serving {DERIVED_DIR} on http://127.0.0.1:{args.port}/viewer/index.html, "
+        f"OK serving {DERIVED_DIR} on http://127.0.0.1:{args.port}/viewer/cards.html, "
         f"decisions to {_review.LOG}",
         flush=True,
     )
