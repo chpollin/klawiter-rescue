@@ -11,21 +11,21 @@ updated: 2026-10-24
 
 This is the single current status/work list. [Production readiness](production-readiness.md) owns acceptance criteria; [Technical remediation](technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
 
-## Verified data snapshot — 23 October 2026
+## Verified data snapshot — 24 October 2026
 
-The snapshot follows commit 51afa41 (evening of 23 October), which fixed the corpus-wide defects of the review round and added invariants over all records, on top of commit 7994ccb, which fixed five verified pipeline defects and implemented the operator's decision that a test fixture confirms nothing ([Journal](journal.md)).
+The snapshot follows commit 71a0fe0 of 24 October, which makes every decision of an LLM agent a proposal, so no link is published and no edition or claim is confirmed until a person or an exact rule decides, empties flat values no rule binds to the described publication on pages without edition headers, and adds 3,007 translation statements on 181 pages. Earlier rounds stand in the [Journal](journal.md).
 
 | Population | Current result | Evidence |
 |---|---:|---|
 | Current source pages / canonical records | 6,725 / 6,725 | [quality](../data/output/quality-report.json), [census](../data/output/census-report.json) |
 | Redirects / frontend records | 1,538 / 5,187 | redirects from the [quality report](../data/output/quality-report.json); the frontend's `_meta.redirectCount` reads 1,523: the redirect map merges title aliases, but keys that are now entry titles and keys that differed only by a dump quote escape are no longer separate (no key lost its resolution) |
 | Bibliography entries visible in the interface | 4,758 | namespace 0, excluding redirects |
-| Work / edition / source annotation nodes | 448 / 2,077 / 2,077 | [Gate 1 manifest](../data/output/editions/manifest.json) |
-| Confirmed / proposed / contested editions | 76 / 2,001 / 0 | same manifest and graph |
-| Prioritized edition / reconciliation review cases | 339 / 581 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
-| Publishable location / work / agent links | 334 / 3 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json); the twenty places decided only by the test fixture are proposed again |
-| Open authority / source-revision / edition claims | 12 / 10 / 0 | same manifest |
-| Decided authority / edition claims | 5 / 1 | same manifest |
+| Work / edition / source annotation nodes | 447 / 2,077 / 2,077 (and 1 candidate work) | [Gate 1 manifest](../data/output/editions/manifest.json) |
+| Confirmed / proposed / contested editions | 0 / 2,076 / 1 | same manifest and graph |
+| Prioritized edition / reconciliation review cases | 354 / 930 | [Gate 1](../data/output/editions/manifest.json), [Gate 2](../data/output/reconciliation/manifest.json) |
+| Publishable location / work / agent links | 0 / 0 / 0 | [Gate 2 manifest](../data/output/reconciliation/manifest.json); the twenty places decided only by the test fixture are proposed again |
+| Open authority / source-revision / edition claims | 17 / 10 / 1 | same manifest |
+| Decided authority / edition claims | 0 / 0 | same manifest |
 | Pages restored from before a Redirect fixer overwrite | 8 | `data/reconciliation/source-revision-decisions.json` |
 | Unresolved See-references | 2 (pages 679, 7232) | [frontend dataset](../docs/data/klawiter.json) |
 | Pages / publications / contributions in the publication layer | 1,665 / 3,273 / 13,884 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
@@ -37,9 +37,10 @@ Four current pages lack text; only page 2979 is bibliographic. Earlier revisions
 |---|---:|---:|
 | Year | 4,425 | 93.0% |
 | Language code | 4,478 | 94.1% |
-| Publisher | 2,439 | 51.3% |
+| Place | 3,749 | 78.8% |
+| Publisher | 2,066 | 43.4% |
 | Numbered extent | 2,335 | 49.1% |
-| Translator | 1,948 | 40.9% |
+| Translator | 1,743 | 36.6% |
 
 In the evening of 23 October the fields fell further where values came from the wrong passage: publishers that were editor credits or prose, years from titles, glosses and life spans, page counts of later editions and LLM page counts without a source token, and translator credits from the translations section of German pages. Language rose because category languages now map through the vocabulary. These are corrections, not losses: a gap is a valid result, and a value from the wrong passage is not. Population is not extraction recall or accuracy. On 23 October translator rose because credit names with Latin Extended letters are read by rule, publisher fell because prose fragments are no longer read as labels and LLM values without a source occurrence are rejected, and extent changed on 119 pages because the earliest extent in the text wins over a later edition's. These flat values still describe one publication per page; the publication layer says which publication each fact belongs to, and 237 entries with an empty flat translator document a translation credit there. No flat publisher, place or translator value carries mojibake any more.
 
