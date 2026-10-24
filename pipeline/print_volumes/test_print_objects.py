@@ -292,6 +292,76 @@ def test_review_decisions_apply_only_to_the_value_they_judged():
         Correction(value="Ein Versuch")
 
 
+def _correct(base, records, path, value, span, **correction):
+    current = dict(object_values(next(iter(records.values()))["objects"][0]))[path]
+    target = ValueRef(
+        path=path,
+        value=current["value"],
+        span=current["span"],
+        source=current.get("from") or base["object"].split("#")[0],
+    )
+    decision = DecisionIn(
+        **base,
+        decision="correct",
+        target=target,
+        correction=Correction(value=value, span=span, **correction),
+    )
+    return check(decision, records)
+
+
+def test_a_flag_is_corrected_as_the_boolean_true():
+    record, _, records, _, base = _reviewed()
+    at = record["text"].index("(1950)")
+    span = [at, at + len("(1950)")]
+    path = "imprints[0].year_bracketed"
+    assert _correct(base, records, path, True, span) is None
+    # The viewer once sent the flag as text; a false flag is a removal instead.
+    assert "type" in _correct(base, records, path, "true", span)
+    assert _correct(base, records, path, False, span)
+    assert _correct(base, records, path, None, None) is None
+
+
+def test_a_correction_keeps_its_value_type_and_field():
+    record, _, records, _, base = _reviewed()
+    at = record["text"].index("1950")
+    span = [at, at + 4]
+    assert _correct(base, records, "imprints[0].year", 1950, span) is None
+    assert "type" in _correct(base, records, "imprints[0].year", "1950", span)
+    at = record["text"].index("Ein Versuch")
+    span = [at, at + len("Ein Versuch")]
+    assert "field" in _correct(
+        base, records, "title", "Ein Versuch", span, field="subtitle"
+    )
+
+
+def test_an_inherited_value_can_only_be_marked_as_one_that_should_not_exist():
+    record, obj, records, _, base = _reviewed()
+    header_text = "Wien: Kopf Verlag."
+    header = {
+        **_record(header_text),
+        "id": "I/F/1",
+        "address": "F 1",
+    }
+    obj["inherited"] = {
+        "imprints": [
+            {
+                "place": {
+                    "value": "Wien",
+                    "span": [0, 4],
+                    "by": "inherited",
+                    "rule": "p03.inherit-imprint",
+                    "from": header["id"],
+                }
+            }
+        ]
+    }
+    records = {**records, header["id"]: header}
+    path = "inherited.imprints[0].place"
+    at = record["text"].index("Wien")
+    assert "inherited" in _correct(base, records, path, "Wien", [at, at + 4])
+    assert _correct(base, records, path, None, None) is None
+
+
 def test_review_decisions_supersede_and_withdraw():
     _, _, _, target, base = _reviewed()
     first = stamp(DecisionIn(**base, decision="confirm", target=target))

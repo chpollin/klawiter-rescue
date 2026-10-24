@@ -27,8 +27,13 @@ in the log and is reported, and no longer applies.
 
 Corrections and added values are passages of the object's own entry: text
 values equal their passage, a year's digits stand in it, a role, type or
-language is a word of the closed vocabulary. An inherited value can be
-confirmed, left open or removed; what it should have been goes into the note.
+language is a word of the closed vocabulary, and a flag (circa, year in
+brackets) is the boolean true at the passage that shows it; a flag that does
+not hold is a value that should not exist. A correction keeps the type of the
+value it corrects and names no other field. An inherited value can be
+confirmed, left open or marked as one that should not exist, because its
+passage lies in another record; what it should have been goes into the note.
+check() enforces these rules for every caller, the review server included.
 
 Decisions arrive from the browser through review_server.py, which validates
 them with these strict models and assigns identifier and time. The log is
@@ -182,7 +187,7 @@ def _correction_problem(path: str, value, span: list[int], text: str) -> str | N
     if leaf in YEAR_LEAVES:
         ok = type(value) is int and str(value) in passage
     elif leaf in FLAG_LEAVES:
-        ok = type(value) is bool
+        ok = value is True
     elif leaf == "roles":
         ok = value in ROLES
     elif leaf == "types":
@@ -209,6 +214,7 @@ def check(decision: Decision | DecisionIn, records: dict[str, dict]) -> str | No
         return "no such object"
     if record["sha256"] != decision.entry_sha256:
         return "stale: the entry text changed"
+    c = decision.correction
     if decision.target:
         t = decision.target
         current = value_paths(obj).get(t.path)
@@ -220,7 +226,12 @@ def check(decision: Decision | DecisionIn, records: dict[str, dict]) -> str | No
             or (current.get("from") or obj["entry"]) != t.source
         ):
             return "stale: the value changed"
-    c = decision.correction
+        if c and c.field is not None and c.field != t.path:
+            return "a correction names the field of the value it corrects"
+        if c and c.span and t.source != obj["entry"]:
+            return "an inherited value can only be marked as one that should not exist"
+        if c and c.span and type(c.value) is not type(t.value):
+            return f"a correction keeps the value's type ({type(t.value).__name__})"
     if c and c.span:
         field = c.field or (decision.target.path if decision.target else None)
         if field is None:

@@ -1,0 +1,5 @@
+# Viewer data are written by p12_jsonld.py into data/print/derived/viewer/
+# and hold print text (rights unresolved); none is versioned here.
+*.json
+*.jsonld
+!package.json

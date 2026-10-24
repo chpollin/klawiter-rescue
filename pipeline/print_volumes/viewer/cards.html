@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Print cards, Klawiter bibliography</title>
+  <link rel="stylesheet" href="cards.css">
+</head>
+<body>
+  <header class="site">
+    <a class="brand" href="#/">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M12 2C8 2 4 6 4 10c0 3 2 5.5 4 7l4 5 4-5c2-1.5 4-4 4-7 0-4-4-8-8-8z"/>
+        <path d="M9 9c0-1.5 1.5-3 3-3s3 1.5 3 3-1.5 3-3 3"/>
+      </svg>
+      <span>Stefan Zweig Bibliography</span>
+    </a>
+    <nav aria-label="Views">
+      <a href="#/" id="nav-desk">All records</a>
+      <a href="#/?r=open" id="nav-review">Review sample</a>
+      <button type="button" id="nav-help" class="nav-btn">Help &amp; Keys</button>
+    </nav>
+    <div class="header-search">
+      <input id="q" type="search" autocomplete="off" placeholder="Search titles, persons, addresses" aria-label="Search titles, persons, addresses">
+      <svg class="header-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </div>
+    <p id="reviewer-line" hidden>Reviewer <span id="reviewer-name"></span> <button type="button" id="reviewer-change" class="link">change</button></p>
+  </header>
+
+  <main id="main" class="workbench-main">
+    <form id="filters" class="filter-strip" role="search">
+      <div class="board-summary">
+        <h1 id="scope-heading" class="scope-heading">Print cards</h1>
+        <div id="source-pills" class="source-pills" role="group" aria-label="Sources of a record"></div>
+      </div>
+      <div class="board-controls">
+        <label class="quiet-select">
+          <span>Volume</span>
+          <select id="volume">
+            <option value="">All volumes</option>
+            <option value="I">Main volume (1991)</option>
+            <option value="A1">Addendum I (1999)</option>
+            <option value="A2">Addendum II (2009)</option>
+            <option value="WIKI">MediaWiki pages</option>
+          </select>
+        </label>
+        <label class="quiet-select">
+          <span>Kind</span>
+          <select id="kind">
+            <option value="">All kinds</option>
+          </select>
+        </label>
+        <label class="quiet-select">
+          <span>Review</span>
+          <select id="review-filter">
+            <option value="">All records</option>
+            <option value="open">Sample, open</option>
+            <option value="sample" id="review-sample-all">Sample, all</option>
+            <option value="done">Sample, complete</option>
+          </select>
+        </label>
+        <label class="quiet-select">
+          <span>View</span>
+          <select id="view">
+            <option value="axis">Sections</option>
+            <option value="lanes">Source lanes</option>
+            <option value="board">Card grid</option>
+          </select>
+        </label>
+        <button type="button" id="reset-filters" class="text-btn" hidden>Reset</button>
+        <nav class="pager" aria-label="Trays">
+          <button type="button" id="prev" class="text-btn" aria-label="Previous tray">‹ Prev</button>
+          <span id="page" class="tray-range"></span>
+          <button type="button" id="next" class="text-btn" aria-label="Next tray">Next ›</button>
+        </nav>
+      </div>
+      <p id="message" class="status-msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <div id="error" role="alert" hidden></div>
+
+    <section id="desk" class="desk" aria-labelledby="scope-heading"></section>
+
+    <nav class="pager bottom-pager" aria-label="Trays, bottom">
+      <button type="button" id="prev-bottom" class="text-btn" aria-label="Previous tray">‹ Prev</button>
+      <span id="page-bottom" class="tray-range"></span>
+      <button type="button" id="next-bottom" class="text-btn" aria-label="Next tray">Next ›</button>
+    </nav>
+  </main>
+
+  <dialog id="help-dialog" aria-labelledby="help-dialog-heading" class="help-dialog">
+    <div class="dialog-head">
+      <h2 id="help-dialog-heading">Help and keys</h2>
+      <button type="button" id="help-close" class="text-btn">Close</button>
+    </div>
+    <p>Every value on a card was read from the print volumes by a rule and is bound to its passage in the entry text. Select a value and mark it right, wrong or unsure. Wrong asks for the right passage, typed or selected in the entry text, or for the mark that the value should not exist. A card is complete when every value it shows carries a decision.</p>
+    <p>The review sample holds <span id="help-sample">a frozen set of objects</span>, drawn by volume and part from entries that rule development has not seen. Only its complete cards enter the measurement. Decisions on other cards are kept as development reviews.</p>
+    <p>Wiki candidates come from the concordance and are proposals that nobody has confirmed. Every card leads to its page in the print volume, every wiki page to its permalink. The view is local, because the rights to the print volumes are unresolved.</p>
+    <table class="keys">
+      <tbody>
+        <tr><th scope="row"><kbd>J</kbd> <kbd>K</kbd> or <kbd>↓</kbd> <kbd>↑</kbd></th><td>Next or previous value on the card, or the next or previous entry in a list</td></tr>
+        <tr><th scope="row"><kbd>Enter</kbd></th><td>Open the card of an entry and move into it</td></tr>
+        <tr><th scope="row"><kbd>R</kbd> <kbd>W</kbd> <kbd>U</kbd></th><td>The selected value is right, wrong or unsure</td></tr>
+        <tr><th scope="row"><kbd>A</kbd></th><td>Every undecided value on the card is right</td></tr>
+        <tr><th scope="row"><kbd>C</kbd></th><td>Mark the card complete and open the next open card</td></tr>
+        <tr><th scope="row"><kbd>M</kbd> <kbd>B</kbd></th><td>Add a missing value, or flag a wrong boundary</td></tr>
+        <tr><th scope="row"><kbd>N</kbd></th><td>Next open card of the review sample</td></tr>
+        <tr><th scope="row"><kbd>Esc</kbd></th><td>Cancel the form, or go back from the card to its entry in the list</td></tr>
+      </tbody>
+    </table>
+    <p class="quiet">Keys act only on the active card while it holds the focus. While a card loads or a decision is being saved they do nothing.</p>
+  </dialog>
+
+  <dialog id="reviewer-dialog" aria-labelledby="reviewer-dialog-heading">
+    <form method="dialog">
+      <h2 id="reviewer-dialog-heading">Who is reviewing?</h2>
+      <label>Name or role <input id="reviewer-input" autocomplete="off" maxlength="80" required></label>
+      <p><button type="submit" value="ok" class="primary">Save</button> <button type="button" id="reviewer-cancel" class="text-btn">Cancel</button></p>
+    </form>
+  </dialog>
+
+  <script type="module" src="cards.js"></script>
+</body>
+</html>
