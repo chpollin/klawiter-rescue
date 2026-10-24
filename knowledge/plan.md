@@ -39,7 +39,7 @@ Entry: none. Exit: all items below done, `p14_gate.py --export` green with an em
 
 Wiki data true to their source passage
 - Done when every verified defect class has its root-cause fix, a real-record test and an invariant over all records; every statement carries a typed producer and decisions of LLM agents are proposals; flat values no rule binds are gaps; translations are one statement per printing ([Data](data.md)).
-- Still open: the values that keep one damaged letter after the encoding repair become gaps by rule; the first and last revision of each wiki page enter the record as a deterministic rule over the dump's revision table, so that a page first recorded after Addendum II closed in August 2009 is datable as wiki-only; a section mention such as "LA2" among the cited print addresses is typed as a section and not as an entry; a second fresh-context review round finds no new defect class.
+- Still open: the values that keep one damaged letter after the encoding repair become gaps by rule; the first and last revision of each wiki page enter the record as a deterministic rule over the dump's revision table, so that a page first recorded after Addendum II closed in August 2009 is datable as wiki-only; a value the binding rule emptied carries a provenance of its own and is no longer counted as a source gap or a false negative; redirects resolve namespace-aware, and a redirect whose target no current page carries becomes an open item with its kind and its own page title; the edition graph reads a place as a place in a single imprint, carries values in reader form and no longer segments year headers followed by a page locator as editions; category and infrastructure pages carry no author; a second fresh-context review round finds no new defect class.
 
 Print data ready for review
 - Done when the reading gaps of [Print pipeline](print-pipeline.md), Known reading gaps, that a rule can close are closed, a match to a contents line carries a containment predicate, the agreeing second field is named by its field, an overlap report states per volume and section what exists only in print, in both or only in the wiki, and p12 writes data only.
@@ -55,6 +55,7 @@ Reviewable workbench
 One record desk and the sitemap
 - The operator decided on 2026-10-24 that one card view holds print objects and wiki records, replaces the wiki catalogue locally and carries the review of both sources, and that the sitemap becomes Overview, Records and Documentation ([Production readiness](production-readiness.md), Operator principles).
 - Increments in order: (1) Documentation joining the Data and About pages, help as a dialog, the imprint in the footer, start-page clarity, and a local page check tool that shows a PDF page beside every line and value read from it; (2) the record desk with print and wiki cards in one design; (3) the review of wiki values in the desk, where a person's decision becomes a patch that confirms the value with the producer person, which also gives the end-to-end proof of a human patch through canonical graphs, frontend and exports; (4) Explore as an arrangement of the filtered records; (5) data quality as filters and the review mode of the desk.
+- Every record with bibliographic text reaches a card, including the category pages whose text remains after their category links, and a gap by rule reads differently from a gap in the source.
 - Done when the record coverage test, counting only what a reader can see, pins no field gap and no rendered artefact, every value shows its provenance chain visibly, `check_render.mjs`, `check_review.mjs` and `smoke.mjs` are green, a browser review with read screenshots at a wide and a narrow width and at 200 percent zoom has its findings closed, and the old addresses redirect.
 
 Knowledge and action layer
@@ -102,7 +103,7 @@ Snapshot of 2026-10-24.
 
 | Milestone or item | Status | Notes |
 |---|---|---|
-| Wiki data true to their source passage | in progress | proposals, gaps and translation statements committed (71a0fe0); section mentions and garbage check in progress; damaged letters and revision dates pending |
+| Wiki data true to their source passage | in progress | proposals, gaps and translation statements committed (71a0fe0); section mentions typed and the coverage test made honest (217acef); revision dates, damaged letters and the root causes of the data reach audit in progress |
 | Print data ready for review | completed | 7147b94: reading gaps closed, containment predicate, named second field, overlap report `p07b_overlap.py`, p12 writes data only; admissible classes refixed without rehash, remap or redrawn sample |
 | Measurement design corrected | completed | 5db70c1 |
 | Measurement design, second correction | in progress | entry met by 7147b94 |

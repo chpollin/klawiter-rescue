@@ -18,14 +18,6 @@ This process inbox holds only open handoff points, the results that arrived from
 
 ## Open handoff points
 
-### Data reach audit of 2026-10-24
-
-- Received: 2026-10-24
-- Source: workflow run wf_236f71c6-273, agent understand:reach
-- Target: [Data](data.md), [Plan](plan.md), M1 wiki data
-- Context: every record reaches the frontend projection, but the card's coverage rested on hidden markers (now corrected in the test); a value emptied by the binding rule shows the provenance `missing` like a source gap; 77 publishers and 29 places differ between the edition graph and the publication layer on linked editions; 22 edition nodes of page 3757 reach no publication; between 67 and 105 redirect aliases are missing in the frontend redirect map and 71 redirect targets are dropped without a claim; 13 category pages with text reach no card.
-- Next action: verify each finding against the current outputs, turn the confirmed ones into M1 items or data.md statements; the rule gap belongs to the planned distinction of gap kinds.
-
 ### UI review and work package of 2026-10-24
 
 - Received: 2026-10-24

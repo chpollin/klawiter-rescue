@@ -21,6 +21,16 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-24 — Data reach audit verified
+
+**Round.** Handoff point "Data reach audit of 2026-10-24" (workflow run wf_236f71c6-273), each finding remeasured by a read-only agent at 8f86822.
+
+**Found.** Every non-redirect record is in the frontend file, but the interface shows namespace 0 only, so category pages whose text remains after their category links reach no card. A value the binding rule emptied reads as a source gap and counts as a false negative of verification. Of the differences between edition graph and publication layer on linked editions, most are co-imprints listed in full, dump-form values in the edition graph or year-only headers read from different passages, and two are real errors where the edition graph reads a place as the publisher. The edition nodes of page 3757 that reach no publication are year headers with a page locator. The redirects that reach no card are withheld with an open claim, broken in the source, blocked by a category page of the same title or resolved into a category page, and the broken ones leave no claim. The sentence in [Status](status.md) that no key lost its resolution holds for the map change it describes and does not cover these. Stage 05 also gives category pages an author.
+
+**Changed.** The root causes became M1 items of wiki data and of the record desk in [Plan](plan.md), and the wiki data agent took them up. The point left [Handoff](handoff.md).
+
+---
+
 ## 2026-10-24 — Print conventions verified, print knowledge split by function
 
 **Round.** Handoff point "Conventions of the print volumes" (read-only research agent), verified against the local lines by a second agent and checked by the coordinator.
