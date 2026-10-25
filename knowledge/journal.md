@@ -21,6 +21,16 @@ Work journal of the Klawiter Bibliography. Every substantial session documents r
 
 ---
 
+## 2026-10-25 — Record desk first cut, value positions, handover to another machine
+
+**Round.** Implementation of increment 2 by a workflow of three build strands and of the value positions by a pipeline agent, checked and committed by the coordinator after a session restart had stopped the workflow before its browser and integrated reviews.
+
+**Changed.** Every published wiki value carries the position of its passage from the parser's own offsets or a named gap, never a first match (03bb9de, [Data](data.md)). One card component renders wiki and print records, every value row opens its own provenance chain through a visible button, the hidden markers are gone, Records replaces the wiki catalogue with redirects, print records load only through the review server, and the workbench draws its cards through the same component (cb13e6c). Values without a visible chain fell from 17,790 to 4,271 on records and from 16,862 to 2,042 in publications; `check_render.mjs` finds a visible chain for every print value. The work was pushed to the branch `record-desk` and not to main, because a push of `docs/` to main publishes the site and the desk is not yet accepted ([Design](design.md), Decisions for increment 2).
+
+**Open.** The steps of increment 2 listed under One record desk in [Plan](plan.md), beginning with the browser review. Re-entry on another machine: fetch and check out `record-desk`, then [Status](status.md) → [Handoff](handoff.md) → [Plan](plan.md).
+
+---
+
 ## 2026-10-24 — Wiki pages dated, gaps by rule, redirects and edition graph corrected
 
 **Round.** Implementation by an agent on the wiki pipeline, covering the open M1 wiki items and the root causes of the data reach audit, checked by the coordinator with both suites, both gates and a repeated production run whose main outputs were byte-identical.
