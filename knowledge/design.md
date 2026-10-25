@@ -102,7 +102,7 @@ The research coordinator took these decisions on 2026-10-24 under the operator p
 - The place and publisher rows of a publication keep their authority links, contested marks and curation controls, and a verbatim imprint row joins them.
 - The record identifier is the permalink, and the type stays the one type badge of the head, so each fact stands once.
 - Records shows the wiki records on every host. It loads print records only when the review server answers with the print index, and without it the page makes no request for print data and names none. Category pages whose text remains after their category links get a card, infrastructure pages do not.
-- A push of `docs/` publishes Records. While development is local the public frontend stays as it is ([Production readiness](production-readiness.md), Operator principles), so pushes of `docs/` wait for the operator's acceptance of the desk.
+- A push of `docs/` publishes Records. On 2026-10-25 the operator instructed to merge all work on main and push it, so the public site carries the desk in its state of work; acceptance stays a separate decision.
 
 ## Page check tool
 
