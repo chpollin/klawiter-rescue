@@ -58,7 +58,7 @@ function cardContext(data) {
     },
   };
   vm.createContext(ctx);
-  for (const file of ['constants.js', 'utils.js', 'detail.js']) vm.runInContext(read(file), ctx);
+  for (const file of ['constants.js', 'utils.js', 'record-card.js', 'detail.js']) vm.runInContext(read(file), ctx);
   const App = vm.runInContext(`${read('app.js')}\nApp`, ctx);
   App.data = data;
   App.entries = data.entries.filter(e => e.pageNamespace === 0);

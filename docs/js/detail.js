@@ -9,15 +9,293 @@
  * read-only and puts the editable cells, evidence snippets and authority
  * candidate blocks into the page record below them, because a patch addresses
  * the source page and not one of its publications.
+ *
+ * Every value row renders through RecordCard.row (record-card.js), so each
+ * value names its producer on a visible button that opens its provenance
+ * chain. The chains of a card are registered while it renders and drawn on
+ * demand, so the card at rest repeats no value.
  */
 const Detail = {
   renderInline(entry) {
-    const body = App.state.editMode
-      ? this._buildEditContent(entry)
-      : this._buildReadContent(entry);
+    const pid = entry.sourcePageId;
+    const scope = { model: { kind: 'wiki', id: entry['@id'] || `klawiter:entry/${pid}`,
+      sourceText: { text: entry.fullBibliographicEntry || '' } }, chains: new Map(), marks: [] };
+    const outer = this._chainScope;
+    this._chainScope = scope;
+    let body;
+    try {
+      body = App.state.editMode
+        ? this._buildEditContent(entry)
+        : this._buildReadContent(entry);
+    } finally {
+      this._chainScope = outer;
+    }
+    this._chains.set(pid, scope);
     // The wrapper carries the entry id, so data arriving after the first paint
     // finds every place this entry is currently rendered.
-    return `<div class="entry-detail" data-entry-detail="${entry.sourcePageId}">${body}</div>`;
+    return `<div class="entry-detail" data-entry-detail="${pid}">${body}</div>`;
+  },
+
+  // --- Provenance chains -------------------------------------------------------
+  // The card being rendered collects its rows here, keyed by the id of each
+  // chain panel, so the handler draws a chain from the same row object the
+  // button was rendered from.
+
+  _chainScope: null,
+  _chains: new Map(),
+
+  /** The steps of a registered chain, or '' where the card is gone. */
+  chainHtml(id) {
+    for (const scope of this._chains.values()) {
+      const hit = scope.chains.get(id);
+      if (!hit) continue;
+      // A mark the source text could not draw offers no way to it.
+      const p = hit.r.values[hit.i].chain.passage;
+      if (p && p.markId && typeof document !== 'undefined' && document.getElementById
+          && !document.getElementById(p.markId)) p.markId = null;
+      return RecordCard.chainSteps(scope.model, hit.r, hit.i);
+    }
+    return '';
+  },
+
+  /** Open or close the chain a producer button controls. */
+  toggleChain(btn) {
+    const panel = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!panel) return;
+    if (btn.getAttribute('aria-expanded') === 'true') {
+      this.closeChain(panel, btn);
+      return;
+    }
+    if (!panel.innerHTML) panel.innerHTML = this.chainHtml(panel.id);
+    if (!panel.innerHTML) return;
+    panel.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+  },
+
+  closeChain(panel, btn) {
+    if (panel) panel.hidden = true;
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  },
+
+  /** Bring a marked passage of the source text into view and focus it. */
+  showMark(id) {
+    const mark = document.getElementById(id);
+    if (!mark) return;
+    const details = mark.closest && mark.closest('details');
+    if (details) details.open = true;
+    const reduce = typeof window !== 'undefined' && window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    mark.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+    mark.focus({ preventScroll: true });
+  },
+
+  // Words for a gap code the pipeline records with a value.
+  GAP_REASONS: { ambiguous: 'occurs more than once in its scope',
+    'not-verbatim': 'not verbatim in the source', normalised: 'normalised from the source wording',
+    normalized: 'normalised from the source wording' },
+
+  /** Evidence entries as a list of {value?, textStart?, textEnd?, gap?, rule?}. */
+  _evidenceList(raw) {
+    if (raw == null) return [];
+    const one = item => (Array.isArray(item) && item.length === 2 && item.every(Number.isInteger)
+      ? { textStart: item[0], textEnd: item[1] }
+      : (item && typeof item === 'object' ? item : null));
+    if (Array.isArray(raw) && raw.length === 2 && raw.every(Number.isInteger)) return [one(raw)];
+    return (Array.isArray(raw) ? raw : [raw]).map(one).filter(Boolean);
+  },
+
+  _loose(s) {
+    return String(s == null ? '' : s).normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+  },
+
+  /**
+   * The evidence the pipeline recorded for one value: a publication's
+   * valueSpans, a record's fieldEvidence. A value is matched to an entry by
+   * its own text and its rank among equal values, never by a search in the
+   * source text.
+   */
+  _evidenceFor(key, entry, ctx) {
+    if (ctx.statement) return null;
+    const map = ctx.pub ? ctx.pub.valueSpans : entry.fieldEvidence;
+    const list = this._evidenceList(map && map[ctx.evidenceKey || key]);
+    if (!list.length) return null;
+    if (list.some(item => item.value != null)) {
+      const want = this._loose(ctx.text);
+      const same = list.filter(item => item.value != null && this._loose(item.value) === want);
+      return same[ctx.ordinal || 0] || null;
+    }
+    if (list.length === (ctx.count || 1)) return list[ctx.index || 0];
+    return null;
+  },
+
+  _gapOf(ev) {
+    const direct = { rule: 'rule', source: 'source', missing: 'source', absent: 'source',
+      category: 'category', derived: 'derived', 'not-located': 'not-located' };
+    const gap = direct[ev.gap] || 'not-located';
+    const reason = ev.reason || (ev.count > 1 ? `occurs ${ev.count} times`
+      : this.GAP_REASONS[ev.gap] || (direct[ev.gap] ? '' : String(ev.gap).replace(/[_-]+/g, ' ')));
+    return { gap, reason, rule: ev.rule || '' };
+  },
+
+  _gapRule(entry, key) {
+    const gap = (Array.isArray(entry.ruleGaps) ? entry.ruleGaps : []).find(item => item.gapField === key);
+    return gap ? gap.gapRule : '';
+  },
+
+  /** Where a publication value sits when its own span is not recorded. */
+  _blockScope(entry, pub) {
+    const slice = pub && pub.sourceSlice;
+    if (!slice) return '';
+    if (Number.isInteger(slice.textStart) && Number.isInteger(slice.textEnd)) {
+      return `within the block of ${this.publicationLabel(pub, entry)}, characters ${
+        slice.textStart}–${slice.textEnd}`;
+    }
+    return 'the block of this publication is not located in the displayed text';
+  },
+
+  _passageOf(key, entry, cls, ctx) {
+    if (ctx.passage) return ctx.passage;
+    const ev = this._evidenceFor(key, entry, ctx);
+    if (ev && Number.isInteger(ev.textStart) && Number.isInteger(ev.textEnd)) {
+      return { textStart: ev.textStart, textEnd: ev.textEnd };
+    }
+    if (ev && ev.gap) return this._gapOf(ev);
+    if (cls === 'rule-gap') return { gap: 'rule', rule: this._gapRule(entry, key) };
+    if (cls === 'missing' || ctx.empty) return { gap: 'source' };
+    if (key === 'categories') {
+      return { gap: 'category', reason: 'a [[Category:…]] link of the page\'s wiki markup, which '
+        + 'the displayed text leaves out' };
+    }
+    if (ctx.derivedFrom) return { gap: 'derived', reason: `read from ${ctx.derivedFrom}` };
+    return { gap: 'not-located', reason: ctx.reason || '', scope: this._blockScope(entry, ctx.pub) };
+  },
+
+  _revision(item, dateKey) {
+    if (item == null) return null;
+    if (typeof item !== 'object') return { id: item };
+    const date = item.date || item[dateKey] || item.timestamp;
+    return { id: item.id != null ? item.id : item.revisionId, date: date ? String(date).slice(0, 10) : '' };
+  },
+
+  _recordOf(entry, pub, ctx) {
+    const pid = entry.sourcePageId;
+    const rd = entry.revisionDates || {};
+    const first = rd.first != null ? this._revision(rd.first)
+      : (rd.firstRevisionId != null ? this._revision({ id: rd.firstRevisionId, date: rd.firstRevisionTimestamp }) : null);
+    const last = rd.last != null ? this._revision(rd.last)
+      : (rd.lastRevisionId != null ? this._revision({ id: rd.lastRevisionId, date: rd.lastRevisionTimestamp }) : null);
+    const human = entry.sourceRevision && entry.sourceRevision.humanRevision;
+    const rec = {
+      id: entry['@id'] || '',
+      type: Array.isArray(entry['@type']) ? entry['@type'].join(', ') : (entry['@type'] || ''),
+      sign: `Wiki page ${pid}${entry.title ? `, ${entry.title}` : ''}`,
+      textId: entry.sourceTextId,
+      blobId: entry.sourceBlobId,
+      revision: first || last ? { first, last } : null,
+      revisionNote: human ? `published from revision ${human.revisionId}` : '',
+    };
+    if (pub) {
+      rec.publication = { id: pub.id || '', label: this.publicationLabel(pub, entry) };
+      if (pub.sourceSlice) rec.block = pub.sourceSlice;
+    }
+    if (ctx.statement) {
+      rec.extra = [`translation statement ${ctx.statementIndex + 1} of this page`];
+      if (ctx.statement.sourceSlice) rec.block = ctx.statement.sourceSlice;
+    }
+    return rec;
+  },
+
+  _sourceFileOf() {
+    const meta = typeof App !== 'undefined' && App.data && App.data._meta;
+    const dump = meta && meta.sourceDump;
+    if (dump && (dump.file || dump.fileName)) return { file: dump.file || dump.fileName, sha256: dump.sha256 };
+    return { words: 'dump file not named in the published data' };
+  },
+
+  _producerOf(key, entry, cls, ctx) {
+    if (ctx.pending) return { kind: 'person', words: 'expert-curated in this session, not yet saved' };
+    if (cls === 'editor' || cls === 'expert') {
+      return { kind: 'person', words: 'expert-curated through a released patch' };
+    }
+    if (cls === 'llm') {
+      const meta = typeof App !== 'undefined' && App.data && App.data._meta;
+      const llm = (meta && meta.llmEnrichment) || {};
+      return { kind: 'llm', words: 'proposal of an LLM that fills a gap the rules left and '
+        + 'overwrites no rule value', model: llm.model, promptSha256: llm.promptSha256,
+      frozenAt: llm.frozenAt };
+    }
+    if (ctx.derivedFrom) return { kind: 'derived', words: `derived by rule from ${ctx.derivedFrom}` };
+    if (cls === 'rule-gap') {
+      return { kind: 'rule', words: 'the binding rule left this field empty', rule: this._gapRule(entry, key) };
+    }
+    if (cls === 'missing') return { kind: 'rule', words: 'extraction by rule found no value' };
+    // `regex` is also the class of a filled field with no recorded source, so
+    // no chain claims that a named rule matched.
+    return { kind: 'rule', words: cls ? 'extracted by rule; no rule name is recorded for this value'
+      : 'extracted by rule; the record holds no provenance class for this field' };
+  },
+
+  _stateOf(key, entry, ctx) {
+    if (ctx.pending) return { state: 'edited', stateText: 'edited in this session, not yet saved' };
+    const parts = [];
+    let state = 'not-reviewed';
+    const claim = ctx.contestedValue != null && typeof Edit !== 'undefined'
+      && typeof Edit.openClaimOnValue === 'function' ? Edit.openClaimOnValue(entry, ctx.contestedValue) : null;
+    if (claim) {
+      state = 'contested';
+      parts.push('contested: an open claim stands with its evidence in this card');
+    }
+    const review = entry.review;
+    const fields = (review && review.fields) || {};
+    if (fields[key] && key !== 'location' && key !== 'places') {
+      const producer = this.decisionProducer(review);
+      parts.push(`${this._actionLabel(review, key)}${producer ? `, ${producer}` : ''}`);
+      if (state !== 'contested') state = (review.fieldStates || {})[key] || review.status || 'proposed';
+    }
+    if (ctx.placeValue != null && ctx.placeValue === entry.location && fields.location) {
+      const producer = this.decisionProducer(review);
+      parts.push(`wording not reviewed; place authority ${this._actionLabel(review, 'location')}${
+        producer ? `, ${producer}` : ''}`);
+    }
+    if (ctx.pub && ctx.pub.reviewStatus) {
+      parts.push(`edition ${ctx.pub.reviewStatus}${ctx.pub.reviewProducer === 'llm-agent'
+        ? ', LLM agent review, no person' : ''}; the value itself is not reviewed`);
+    }
+    if (!parts.length) parts.push('not reviewed');
+    return { state, stateText: parts.join('; ') };
+  },
+
+  /** The producer, passage, record and state of one wiki value. */
+  _valueChain(key, entry, ctx = {}) {
+    const pub = ctx.pub || null;
+    const prov = pub ? (pub.provenance || {}) : (entry._provenance || {});
+    const pend = typeof App !== 'undefined' && App.state && App.state.editMode && !pub
+      && typeof Edit !== 'undefined' && typeof Edit.pending === 'function'
+      ? Edit.pending(entry.sourcePageId, key) : undefined;
+    const full = Object.assign({}, ctx, { pending: !!pend });
+    const cls = prov[ctx.classKey || key];
+    const producer = this._producerOf(key, entry, cls, full);
+    const state = this._stateOf(key, entry, full);
+    return {
+      producer: producer.kind,
+      derivedFrom: ctx.derivedFrom,
+      state: state.state,
+      stateText: state.stateText,
+      chain: {
+        passage: this._passageOf(key, entry, cls, full),
+        record: this._recordOf(entry, pub, full),
+        sourceFile: this._sourceFileOf(),
+        producer,
+      },
+    };
+  },
+
+  /** Plain text of a value's markup, for the Value step of its chain. */
+  _plain(html) {
+    const entities = { amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", nbsp: ' ' };
+    return String(html == null ? '' : html).replace(/<[^>]*>/g, ' ')
+      .replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (m, name) => entities[name])
+      .replace(/\s+/g, ' ').trim();
   },
 
   /** Re-render every open detail of one entry after late data arrived. */
@@ -77,36 +355,6 @@ const Detail = {
     return state.promise;
   },
 
-  // Provenance badge HTML. A pending editor action overrides the machine
-  // provenance so the badge reflects the human verdict before it is saved.
-  // The provenance map is a parameter, because a publication reports the
-  // classes of its own fields.
-  _provBadge(fieldName, entry, provenance) {
-    const pid = entry.sourcePageId;
-    // A pending action is page-scoped, so it answers for the page record
-    // alone; a row that brings its own provenance map is a publication row
-    // and keeps the class its own record holds.
-    const pend = App.state.editMode && !provenance ? Edit.pending(pid, fieldName) : undefined;
-    let source;
-    if (pend) {
-      source = 'editor';
-    } else {
-      const prov = provenance || entry._provenance;
-      if (!prov || !prov[fieldName]) return '';
-      source = prov[fieldName];
-    }
-    // Rule extraction is the default the result list states once, and a
-    // missing value already reads "Not recorded", so only a deviation is marked.
-    if (source === 'regex' || source === 'missing') return '';
-    const words = { llm: 'LLM-enriched', editor: 'expert-curated', expert: 'expert-curated' };
-    const cls = source === 'expert' ? 'editor' : source;   // unify legacy "expert" onto "editor"
-    // The badge classes the wording of the value. A place authority link is a
-    // separate decision with its own producer, named at the link.
-    const what = fieldName === 'location' || fieldName === 'places' ? 'Place wording' : 'Value';
-    const word = words[source] || String(source);
-    return `<span class="prov-badge prov-${esc(cls)}" title="${esc(`${what} ${word}`)}">${esc(word)}</span>`;
-  },
-
   // One place for the help text of a named thing, so a label, a flag line and
   // a head text carry the same sentence wherever they are rendered. A phone
   // shows no tooltip, so nothing but an identifier, a code or a source phrase
@@ -145,20 +393,26 @@ const Detail = {
     'Edition confirmed': 'The edition graph holds this publication as an edition reviewed against its exact source slice.',
     'Edition proposed': 'The edition graph holds this publication as a deterministic proposal that no review has confirmed yet.',
     'Edition contested': 'The edition graph holds the work binding of this publication open under a contested claim.',
+    'Imprint (as in source)': 'The imprint line of this publication in the wording of the source; place and publisher are read from it.',
     'Imprint': 'Each publisher of a joint imprint with its own place, in the wording and order of the source.',
+    'Translation': 'One translation the source page lists, as the record reads it: language, title, place and year.',
+    'Passage': 'Where this publication was read from in the source text, with the checksum of that passage.',
     'Period': 'The historical period the publication years of this entry fall into.',
     'Years in source': 'Every publication year the source page records across its editions and notes.',
     'Places in source': 'Every place of publication the source page records across its editions.',
     'Print citations': 'Print bibliography addresses cited on this wiki page.',
     'Page classification': 'How the pipeline classifies the structure of this wiki page, with the rule and evidence.',
-    'Source slice': 'Character offsets of this publication block in the source text.',
+  },
+
+  /** Help text for a named thing, empty where the dictionary is silent. */
+  helpText(label, extra) {
+    return [this.HELP[label], extra].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
   },
 
   /** Title attribute for a named thing, empty where the dictionary is silent. */
   help(label, extra) {
-    const text = this.HELP[label];
-    if (!text && !extra) return '';
-    return ` title="${esc([text, extra].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim())}"`;
+    const text = this.helpText(label, extra);
+    return text ? ` title="${esc(text)}"` : '';
   },
 
   REVIEW_ACTION_LABELS: { confirm: 'confirmed', correct: 'corrected', unresolved: 'unresolved',
@@ -384,8 +638,7 @@ const Detail = {
     return this._editableValue(fieldName, entry)
       + this._triageFlag(fieldName, entry)
       + this._fieldControls(fieldName, entry)
-      + (fieldName === 'location' ? this._contestedMark(entry, entry.location) : '')
-      + this._fieldEvidence(fieldName, entry);
+      + (fieldName === 'location' ? this._contestedMark(entry, entry.location) : '');
   },
 
   // How many displayed entries a subject-level authority decision covers.
@@ -507,15 +760,24 @@ const Detail = {
    * value it names, so each mark follows its own value rather than the list.
    */
   _placeList(entry, places) {
-    return places.map(place => {
-      let out = esc(place);
-      if (place === entry.location && entry.locationSameAs) {
-        out += ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank"
-          rel="noopener" title="Place authority record for ${esc(place)}">Wikidata</a>`;
-      }
-      if (place === entry.location) out += this._placeReview(entry);
-      return out + this._contestedMark(entry, place);
-    }).join(', ');
+    return places.map(place => this._placeHtml(entry, place)).join(', ');
+  },
+
+  _placeHtml(entry, place) {
+    let out = esc(place);
+    if (place === entry.location && entry.locationSameAs) {
+      out += ` <a class="wikidata-link" href="${esc(entry.locationSameAs)}" target="_blank"
+        rel="noopener" title="Place authority record for ${esc(place)}">Wikidata</a>`;
+    }
+    if (place === entry.location) out += this._placeReview(entry);
+    return out + this._contestedMark(entry, place);
+  },
+
+  /** The places as row values, each with its own chain and its own marks. */
+  _placeValues(entry, places, key) {
+    return places.map(place => ({ html: this._placeHtml(entry, place), text: place,
+      key: key === 'location' && place !== entry.location ? 'allLocations' : key,
+      ctx: { placeValue: place, contestedValue: place } }));
   },
 
   _claimHeading(noun, claim, rule) {
@@ -857,7 +1119,7 @@ const Detail = {
 
   /** One publication, headed by the year and what distinguishes it. */
   _publicationSection(pub, entry, index, several, extra = {}) {
-    const rows = this._publicationRows(pub, entry, extra.flags || {});
+    const rows = this._publicationRows(pub, entry, extra.flags || {}, index);
     const slug = this.publicationSlug(entry, pub, index);
     const classes = ['detail-section', 'publication'];
     if (extra.match) classes.push('publication-match');
@@ -866,22 +1128,33 @@ const Detail = {
       ? ' <span class="publication-match-label">matches the filter</span>'
       : '';
     const claims = (extra.claims || []).map(claim => this._editionClaimArticle(claim)).join('');
-    const chainSet = new Set([
-      ...Object.keys(pub.provenance || {}),
-      'publisher', 'places', 'credits', 'extent', 'editionStatement', 'series', 'title', 'year'
-    ]);
-    const provKeys = [...chainSet].map(k => `<span hidden data-provenance-for="${esc(k)}"></span>`).join('')
-      + (pub.imprint ? '<span hidden data-key="imprint"></span>' : '')
-      + (pub.sourceSlice ? '<span hidden data-key="sourceSlice"></span>' : '');
+    const head = this._headingValue(pub, entry, index);
     return `<section class="${classes.join(' ')}" id="${this.publicationAnchor(entry, slug)}"
       tabindex="-1" aria-label="Publication ${index + 1}">
-      <h3 class="publication-heading"><span data-key="id" title="${esc(pub.id || '')}" data-provenance-for="year">${this._publicationHeading(pub, entry)}${
+      <h3 class="publication-heading"><span data-key="id" title="${esc(pub.id || '')}">${head.html}${
         this._editionStatus(pub)}${match}</span>${
-        several ? this._publicationActions(entry, index) : ''}</h3>
-      <div class="meta-table">${rows.join('')}${provKeys}</div>
+        several ? this._publicationActions(entry, index) : ''}</h3>${head.slot}
+      <div class="meta-table">${rows.join('')}</div>
       ${this._reviewFlags(pub)}
       ${claims}
     </section>`;
+  },
+
+  /**
+   * The heading of a block names the publication by its year and what
+   * distinguishes it. That label is one value with one chain, under the key
+   * of the part that distinguishes it.
+   */
+  _headingValue(pub, entry, index) {
+    const key = pub.editionStatement ? 'editionStatement'
+      : (pub.title && pub.title !== entry.title ? 'title' : 'year');
+    const parts = { editionStatement: 'year and edition statement', title: 'year and title' };
+    const r = this._rowModel(this.publicationLabel(pub, entry), [{ html: this._publicationHeading(pub, entry),
+      text: this.publicationLabel(pub, entry), ctx: { derivedFrom: parts[key] } }], key, entry,
+    { pub, scope: `pub${index}-head` });
+    if (!r.values[0].chain) return { html: this._publicationHeading(pub, entry), slot: '' };
+    return { html: `<span class="rc-head-value" data-provenance-for="${esc(key)}">${
+      RecordCard.valueHtml(r, r.values[0], 0)}</span>`, slot: RecordCard._slot(r, r.values[0], 0) };
   },
 
   /**
@@ -970,47 +1243,53 @@ const Detail = {
     return { byPublication, page };
   },
 
-  _publicationRows(pub, entry, flags = {}) {
+  _publicationRows(pub, entry, flags = {}, index = 0) {
     const rows = [];
     const prov = pub.provenance || {};
     const shown = new Set();
-    const put = (label, value, fieldName) => {
-      if (!value) return;
-      rows.push(this.row(label, value, fieldName, entry, prov));
+    const opts = { pub, scope: `pub${index}` };
+    const put = (label, value, fieldName, more = {}) => {
+      if (!value || (Array.isArray(value) && !value.length)) return;
+      rows.push(this.row(label, value, fieldName, entry, prov, null, null, Object.assign({}, opts, more)));
       if (flags[fieldName]) rows.push(this._reviewFlags({ reviewFlags: flags[fieldName] }));
       shown.add(fieldName);
     };
 
     // The title stands as a row wherever the heading did not already take it.
     if (pub.title && pub.title !== entry.title && pub.editionStatement) {
-      put('Title', `<span${titleAttrs(pub, pub.title)}>${esc(pub.title)}</span>`, 'title');
+      put('Title', `<span${titleAttrs(pub, pub.title)}>${esc(pub.title)}</span>`, 'title', { text: pub.title });
     }
-    put('Language', this._languageValue(pub), 'language');
+    put('Language', this._languageValue(pub), 'language', { text: pub.language || pub.languageCode });
 
+    // The imprint line in the wording of the source; the place and publisher
+    // rows below are read from it and keep their authority links and marks.
+    if (pub.imprint) put('Imprint (as in source)', esc(pub.imprint), 'imprint', { text: pub.imprint });
     // A joint imprint pairs each publisher with its own place, so the pairs
     // stand together instead of a place list beside the first publisher.
     const imprints = Array.isArray(pub.imprints) ? pub.imprints : [];
     if (imprints.length > 1) {
-      put('Imprint', imprints.map(pair => [pair.publisher ? esc(pair.publisher) : '',
-        pair.place ? this._placeList(entry, [pair.place]) : ''].filter(Boolean).join(', '))
-        .join(' / '), 'imprints');
+      put('Imprint', imprints.map(pair => ({
+        html: [pair.publisher ? esc(pair.publisher) : '',
+          pair.place ? this._placeHtml(entry, pair.place) : ''].filter(Boolean).join(', '),
+        text: [pair.publisher, pair.place].filter(Boolean).join(', '),
+        ctx: { placeValue: pair.place, contestedValue: pair.place },
+      })), 'imprints', { separator: ' / ' });
     } else {
       const places = Array.isArray(pub.places) ? pub.places : [];
-      put('Place of publication', places.length ? this._placeList(entry, places) : '', 'places');
-      put('Publisher', pub.publisher ? esc(pub.publisher) : '', 'publisher');
+      put('Place of publication', this._placeValues(entry, places, 'places'), 'places');
+      put('Publisher', pub.publisher ? esc(pub.publisher) : '', 'publisher', { text: pub.publisher });
     }
-    put('Extent (as in source)', this._publicationExtent(pub), 'extent');
-    put('Credits', this._creditsList(pub.credits), 'credits');
-    put('Contents', this._contributionsList(pub.contributions), 'contributions');
+    put('Extent (as in source)', this._publicationExtent(pub), 'extent',
+      { text: pub.extent && (pub.extent.raw || (pub.extent.numbered != null ? `${pub.extent.numbered} pp.` : '')) });
+    put('Credits', this._creditValues(pub.credits), 'credits', { layout: 'lines' });
+    put('Contents', this._contributionValues(pub.contributions), 'contributions',
+      { layout: 'ol', listClass: 'detail-list-numbered contribution-list' });
     put('Published in', this._containerValue(pub.container), 'container');
-    put('Online', this._onlineValue(pub.online), 'online');
+    put('Online', this._onlineValue(pub.online), 'online', { text: pub.online && pub.online.url });
     put('Series', this._seriesValue(pub), 'series');
-    put('Note', pub.note ? esc(pub.note) : '', 'note');
-    if (pub.sourceSlice && Number.isFinite(pub.sourceSlice.textStart) && Number.isFinite(pub.sourceSlice.textEnd)) {
-      rows.push(this.row('Source slice',
-        `<span class="field-sub">chars ${pub.sourceSlice.textStart}–${pub.sourceSlice.textEnd}</span>`,
-        null, entry, prov, null, 'sourceSlice'));
-    }
+    put('Note', pub.note ? esc(pub.note) : '', 'note', { text: pub.note });
+    const passage = this._passageValue(pub, entry);
+    if (passage) put('Passage', [passage], 'sourceSlice');
     // A translator credited under a contribution has no Credits row of its own.
     for (const [fieldName, list] of Object.entries(flags)) {
       if (!shown.has(fieldName)) rows.push(this._reviewFlags({ reviewFlags: list }));
@@ -1048,14 +1327,22 @@ const Detail = {
   // phone shows no tooltip and "Verses translated by" is not "Translated by".
   _creditsList(credits) {
     if (!credits || !credits.length) return '';
-    return credits.map(credit => {
-      const role = credit.role
-        ? `<span class="credit-role">${esc(this.ROLE_LABELS[credit.role] || credit.role)}</span> `
-        : '';
-      const label = credit.creditLabel ? ` title="${esc(credit.creditLabel)}"` : '';
-      return `${role}<span class="credit-name"${label}>${esc(credit.name)}</span>`
-        + this._creditQualifier(credit);
-    }).join('<br>');
+    return credits.map(credit => this._creditHtml(credit)).join('<br>');
+  },
+
+  _creditHtml(credit) {
+    const role = credit.role
+      ? `<span class="credit-role">${esc(this.ROLE_LABELS[credit.role] || credit.role)}</span> `
+      : '';
+    const label = credit.creditLabel ? ` title="${esc(credit.creditLabel)}"` : '';
+    return `${role}<span class="credit-name"${label}>${esc(credit.name)}</span>`
+      + this._creditQualifier(credit);
+  },
+
+  /** The credits of a publication as row values, one chain per credited name. */
+  _creditValues(credits) {
+    return (credits || []).map(credit => ({ html: this._creditHtml(credit), text: credit.name,
+      ctx: { reason: credit.creditLabel ? `credited as "${credit.creditLabel}"` : '' } }));
   },
 
   // The verb the role name generalizes away, per role of the vocabulary. A
@@ -1082,9 +1369,9 @@ const Detail = {
     return ` <span class="field-sub">(${esc(shown)})</span>`;
   },
 
-  _contributionsList(contributions) {
-    if (!contributions || !contributions.length) return '';
-    const items = contributions.map(item => {
+  /** The contents of a publication as row values, one chain per contained text. */
+  _contributionValues(contributions) {
+    return (contributions || []).map(item => {
       const title = item.title ? `<span class="content-item-title">${esc(item.title)}</span>` : '';
       const pages = item.pages ? ` <span class="content-item-pages">${esc(item.pages)}</span>` : '';
       const credits = this._creditsList(item.credits);
@@ -1093,9 +1380,9 @@ const Detail = {
       const note = (!item.credits || !item.credits.length) && item.note
         ? ` <span class="field-sub">${esc(item.note)}</span>`
         : '';
-      return `<li>${title}${pages}${credits ? ` ${credits}` : ''}${note}</li>`;
+      return { html: `${title}${pages}${credits ? ` ${credits}` : ''}${note}`,
+        text: [item.title, item.pages].filter(Boolean).join(' ') || item.note || '' };
     });
-    return `<ol class="detail-list-numbered contribution-list">${items.join('')}</ol>`;
   },
 
   _containerValue(container) {
@@ -1127,6 +1414,28 @@ const Detail = {
     return esc(pub.series) + gloss + volume;
   },
 
+  /**
+   * Where a publication was read from, as a value of its own. A block that
+   * occurs twice in the raw text has no displayed-text offsets, and says so
+   * with its raw offsets and checksum instead of being left out.
+   */
+  _passageValue(pub, entry) {
+    const slice = pub.sourceSlice;
+    if (!slice) return null;
+    const shown = Number.isInteger(slice.textStart) && Number.isInteger(slice.textEnd);
+    const raw = Number.isInteger(slice.start) && Number.isInteger(slice.end)
+      ? `raw characters ${slice.start}–${slice.end}` : '';
+    const words = shown
+      ? `characters ${slice.textStart}–${slice.textEnd} of the source text`
+      : ['not located in the displayed text', raw].filter(Boolean).join('; ');
+    const text = entry.fullBibliographicEntry || '';
+    const passage = shown && slice.textEnd <= text.length
+      ? { textStart: slice.textStart, textEnd: slice.textEnd }
+      : { gap: 'not-located', reason: raw ? `${raw} of the wiki markup` : '' };
+    return { html: `<span class="field-sub">${esc(words)}</span>${
+      slice.sha256 ? ` ${this._checksum(slice.sha256)}` : ''}`, text: words, ctx: { passage } };
+  },
+
   // What the extraction rules leave open on this publication, in the words of
   // the record. A hint for review, never a claim that the value is wrong.
   _reviewFlags(pub) {
@@ -1145,10 +1454,11 @@ const Detail = {
       ? entry.nameVariants
       : state.nameVariants) || [];
     if (!variants.length) return '';
-    const rows = variants.map(variant => this.row('Name variant',
+    const rows = variants.map((variant, i) => this.row('Name variant',
       `<span class="variant-name">${esc(variant.name)}</span>
        <span class="field-sub">beside ${esc(variant.variantOf)}, ${esc(variant.status)}</span>
-       <span class="variant-context">${esc(variant.sourceContext)}</span>`));
+       <span class="variant-context">${esc(variant.sourceContext)}</span>`, 'nameVariants', entry,
+    null, null, null, { text: variant.name, scope: `nv${i}` }));
     return `<section class="detail-section name-variants" aria-label="Name variants in source">
       <h3 class="detail-section-heading">Name variants in source</h3>
       <div class="meta-table">${rows.join('')}</div>
@@ -1180,20 +1490,33 @@ const Detail = {
 
   _fieldRows(fields, entry) {
     const rows = [];
-    const put = (label, value, fieldName) => {
-      if (value) rows.push(this.row(label, value, fieldName, entry));
+    const put = (label, value, fieldName, opts) => {
+      if (value && (!Array.isArray(value) || value.length)) {
+        rows.push(this.row(label, value, fieldName, entry, null, null, null, opts));
+      }
     };
     // A field the provenance layer tracks is shown even when it holds nothing,
     // because "missing" is a recorded state of the record and part of what a
-    // reader checks. No placeholder stands in for the absent value.
+    // reader checks, and a gap the binding rule made reads apart from it. No
+    // placeholder stands in for the absent value.
     // A page-level review flag stands under the row of the field it names.
     const pageFlags = Array.isArray(entry.reviewFlags) ? entry.reviewFlags : [];
-    const tracked = (label, fieldName, value) => {
+    const tracked = (label, fieldName, value, opts) => {
       const prov = entry._provenance && entry._provenance[fieldName];
-      if (value) rows.push(this.row(label, value, fieldName, entry));
-      else if (prov === 'missing') {
-        rows.push(this.row(label, '<span class="missing-value">Not recorded</span>',
-          fieldName, entry));
+      const rule = prov === 'rule-gap' ? this._gapRule(entry, fieldName) : '';
+      if (value && (!Array.isArray(value) || value.length)) {
+        // The places of the page stand while the binding rule left the one
+        // place of the record empty; that gap is said at them.
+        const note = prov === 'rule-gap' ? `Single value not recorded, gap by rule${rule
+          ? ` <span class="field-sub" data-key="ruleGaps">${esc(rule)}</span>` : ''}` : '';
+        put(label, value, fieldName, Object.assign({ noteHtml: note }, opts));
+      } else if (prov === 'missing') {
+        put(label, '<span class="missing-value">Not recorded</span>', fieldName,
+          { text: 'not recorded', empty: true });
+      } else if (prov === 'rule-gap') {
+        put(label, `<span class="missing-value">Not recorded, gap by rule</span>${rule
+          ? ` <span class="field-sub" data-key="ruleGaps">${esc(rule)}</span>` : ''}`, fieldName,
+        { text: 'not recorded' });
       }
       const flags = pageFlags.filter(flag => flag.field === fieldName);
       if (flags.length) rows.push(this._reviewFlags({ reviewFlags: flags }));
@@ -1202,43 +1525,47 @@ const Detail = {
     if (fields.originalTitle && fields.originalTitle !== fields.title) {
       put('Original title',
         `<span${titleAttrs(entry, fields.originalTitle)}>${esc(fields.originalTitle)}</span>`,
-        'originalTitle');
+        'originalTitle', { text: fields.originalTitle });
     }
     put('Year of publication', fields.year ? String(fields.year) : '', 'year');
-    put('Language', this._languageValue(fields), 'language');
+    put('Language', this._languageValue(fields), 'language', { text: fields.language || fields.languageCode });
 
     const places = [...new Set([
       ...(Array.isArray(fields.allLocations) ? fields.allLocations : []),
       ...(fields.location ? [fields.location] : []),
     ])];
-    tracked('Place of publication', 'location', places.length ? this._placeList(entry, places) : '');
+    tracked('Place of publication', 'location', this._placeValues(entry, places, 'location'));
 
-    tracked('Publisher', 'publisher', fields.publisher ? esc(fields.publisher) : '');
+    tracked('Publisher', 'publisher', fields.publisher ? esc(fields.publisher) : '', { text: fields.publisher });
 
     const extent = this._extentValue(fields, entry);
-    tracked(extent.label, 'pageCount', extent.html);
+    tracked(extent.label, 'pageCount', extent.html, { text: extent.text });
 
-    tracked('Translator', 'translator', fields.translator ? esc(fields.translator) : '');
+    tracked('Translator', 'translator', fields.translator ? esc(fields.translator) : '', { text: fields.translator });
 
-    if (fields.contentItems && fields.contentItems.length) {
-      put('Contents', `<ol class="detail-list-numbered detail-contents">${
-        fields.contentItems.map(c => this._contentItem(c)).join('')}</ol>`);
-    }
+    put('Contents', this._contentValues(fields.contentItems), 'contentItems',
+      { layout: 'ol', listClass: 'detail-list-numbered detail-contents' });
     return rows.concat(this._pageRows(fields, entry));
   },
 
   /** Rows the source page carries whether or not it documents publications. */
   _pageRows(fields, entry, publications) {
     const rows = [];
-    const put = (label, value, fieldName, dataKey) => {
-      if (value) rows.push(this.row(label, value, fieldName, entry, null, null, dataKey));
+    const put = (label, value, fieldName, opts) => {
+      if (value && (!Array.isArray(value) || value.length)) {
+        rows.push(this.row(label, value, fieldName, entry, null, null, null, opts));
+      }
     };
 
     if (Array.isArray(publications) && publications.length) {
+      // A flat value no publication carries is the first match of the page,
+      // and says so where it stands.
+      const firstMatch = { note: 'first match on the page, carried by no publication',
+        reason: 'first match of the page projection, carried by no publication' };
       if (fields.originalTitle && fields.originalTitle !== fields.title) {
         put('Original title',
           `<span${titleAttrs(entry, fields.originalTitle)}>${esc(fields.originalTitle)}</span>`,
-          'originalTitle');
+          'originalTitle', { text: fields.originalTitle });
       }
       const pubPlaces = new Set(publications.flatMap(p => {
         const imps = Array.isArray(p.imprints) && p.imprints.length > 1
@@ -1251,30 +1578,31 @@ const Detail = {
         ...(Array.isArray(fields.allLocations) ? fields.allLocations : []),
       ])];
       if (allPlaces.some(pl => !pubPlaces.has(pl)) || (fields.locationSameAs && (!fields.location || !pubPlaces.has(fields.location)))) {
-        put('Places in source', this._placeList(entry, allPlaces), 'location');
+        put('Places in source', this._placeValues(entry, allPlaces, 'location'), 'location');
       }
       const pubPublishers = new Set(publications.flatMap(p =>
         (p.publisher ? [p.publisher] : []).concat((p.imprints || []).map(i => i.publisher).filter(Boolean))));
       if (fields.publisher && !pubPublishers.has(fields.publisher)) {
-        put('Publisher', esc(fields.publisher), 'publisher');
+        put('Publisher', esc(fields.publisher), 'publisher', Object.assign({ text: fields.publisher }, firstMatch));
       }
       const pubLangCodes = new Set(publications.map(p => p.languageCode).filter(Boolean));
       const pubLangs = new Set(publications.map(p => p.language).filter(Boolean));
       if ((fields.language && !pubLangs.has(fields.language)) || (fields.languageCode && !pubLangCodes.has(fields.languageCode))) {
-        put('Language', this._languageValue(fields), 'language');
+        put('Language', this._languageValue(fields), 'language',
+          Object.assign({ text: fields.language || fields.languageCode }, firstMatch));
       }
       const pubCredits = new Set(publications.flatMap(p =>
         (p.credits || []).concat(...(p.contributions || []).map(c => c.credits || [])).map(k => k.name)));
       if (fields.translator && !pubCredits.has(fields.translator)) {
-        put('Translator', esc(fields.translator), 'translator');
+        put('Translator', esc(fields.translator), 'translator', Object.assign({ text: fields.translator }, firstMatch));
       }
       if (fields.contentItems && fields.contentItems.length) {
         const pubText = publications.flatMap(p =>
           (p.contributions || []).flatMap(c => [c.title, c.pages, c.note, ...(c.credits || []).map(k => k.name)]))
           .filter(Boolean).join(' ');
         if (fields.contentItems.some(item => !pubText.includes(item))) {
-          put('Contents', `<ol class="detail-list-numbered detail-contents">${
-            fields.contentItems.map(c => this._contentItem(c)).join('')}</ol>`);
+          put('Contents', this._contentValues(fields.contentItems), 'contentItems', Object.assign(
+            { layout: 'ol', listClass: 'detail-list-numbered detail-contents' }, firstMatch));
         }
       }
     }
@@ -1282,21 +1610,24 @@ const Detail = {
     if (fields.timePeriod) {
       const periodLabel = (typeof PERIOD_LABELS !== 'undefined' && PERIOD_LABELS[fields.timePeriod])
         || fields.timePeriod;
-      put('Period', esc(periodLabel), null, 'timePeriod');
+      put('Period', esc(periodLabel), 'timePeriod', { text: periodLabel, derivedFrom: 'the year of publication' });
     }
     if (Array.isArray(fields.allYears) && fields.allYears.length > 1) {
-      put('Years in source', fields.allYears.map(y => esc(String(y))).join(', '), null, 'allYears');
+      put('Years in source', fields.allYears.map(y => ({ html: esc(String(y)), text: String(y) })), 'allYears');
     }
     if (fields.reprints && fields.reprints.length) {
-      put('Reprints', `<ul class="detail-list">${
-        fields.reprints.map(r => `<li>${esc(r)}</li>`).join('')}</ul>`);
+      put('Reprints', fields.reprints.map(r => ({ html: esc(r), text: r })), 'reprints',
+        { layout: 'ul', listClass: 'detail-list' });
     }
     if (fields.translations && fields.translations.length) {
-      put('Translations', `<ul class="detail-list">${
-        fields.translations.map(t => `<li>${esc(t)}</li>`).join('')}</ul>`);
+      put('Translations', fields.translations.map(t => ({ html: esc(t), text: t })), 'translations',
+        { layout: 'ul', listClass: 'detail-list' });
     }
+    (Array.isArray(fields.translationStatements) ? fields.translationStatements : []).forEach((st, i) => {
+      rows.push(this._translationRow(st, i, entry));
+    });
     if (fields.seeAlso && fields.seeAlso.length) {
-      put('See also', fields.seeAlso.map(ref => this.makeLink(ref)).join(', '));
+      put('See also', fields.seeAlso.map(ref => ({ html: this.makeLink(ref), text: ref })), 'seeAlso');
     }
     if (fields.printAddressCitations && fields.printAddressCitations.length) {
       const cites = fields.printAddressCitations.map(c => {
@@ -1307,13 +1638,13 @@ const Detail = {
         const passage = c.passageText && c.passageText !== c.printAddress
           ? ` <span class="field-sub">${esc(c.passageText)}</span>`
           : `<span class="visually-hidden"> ${esc(c.passageText || '')}</span>`;
-        return `<li>${link}${passage}</li>`;
-      }).join('');
-      put('Print citations', `<ul class="detail-list">${cites}</ul>`);
+        return { html: `${link}${passage}`, text: c.printAddress || '' };
+      });
+      put('Print citations', cites, 'printAddressCitations', { layout: 'ul', listClass: 'detail-list' });
     }
     if (fields.categories && fields.categories.length) {
-      put('Categories', fields.categories.map(c =>
-        `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`).join(', '));
+      put('Categories', fields.categories.map(c => ({
+        html: `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`, text: c })), 'categories');
     }
     if (fields.wikiPageKind) {
       const rule = fields.wikiPageKindRule
@@ -1326,9 +1657,32 @@ const Detail = {
         ? ` <span class="field-sub" data-key="wikiPageKindEvidence">from ${evidence.map(x =>
           `${esc(evidenceSource[x.sourceField] || x.sourceField)} “${esc(x.sourceValue)}”`).join(', ')}</span>`
         : '';
-      put('Page classification', `<span data-key="wikiPageKind">${esc(fields.wikiPageKind)}</span>${rule}${ev}`);
+      put('Page classification', `<span data-key="wikiPageKind">${esc(fields.wikiPageKind)}</span>${rule}${ev}`,
+        'wikiPageKind', { text: fields.wikiPageKind,
+          derivedFrom: evidence.length ? 'the page evidence named beside it' : 'the page' });
     }
     return rows;
+  },
+
+  /**
+   * One translation statement as a row: what the record reads from one
+   * translation line, with its own chain. Its recorded spans address the raw
+   * wiki text, so only display-text offsets locate it in the source shown.
+   */
+  _translationRow(st, i, entry) {
+    const year = st.yearRaw || st.year;
+    const parts = [st.title || st.container, st.publisher, st.place, year].filter(v => v != null && v !== '');
+    const lead = st.language || st.languageCode || '';
+    const text = `${lead}${lead && parts.length ? ': ' : ''}${parts.join(', ')}`;
+    const translator = st.translator ? ` <span class="field-sub">translated by ${esc(st.translator)}</span>` : '';
+    const slice = st.sourceSlice;
+    const passage = Number.isInteger(st.textStart) && Number.isInteger(st.textEnd)
+      ? { textStart: st.textStart, textEnd: st.textEnd }
+      : { gap: 'not-located', reason: slice && Number.isInteger(slice.start)
+        ? `raw wiki text characters ${slice.start}–${slice.end}, not mapped to the displayed text` : '' };
+    return this.row('Translation', [{ html: `${esc(text)}${translator}`, text }],
+      'translationStatements', entry, null, null, null,
+      { scope: `ts${i}`, statement: st, statementIndex: i, passage });
   },
 
   /**
@@ -1345,11 +1699,11 @@ const Detail = {
     const match = text
       ? new RegExp(`(?<!\\d)${n}(?:\\s*/\\s*\\(\\d+\\))?\\s*pp?\\.`).exec(text)
       : null;
-    if (!match) return { label: 'Extent (numbered)', html: `<span>${n} pp.</span>` };
+    if (!match) return { label: 'Extent (numbered)', html: `<span>${n} pp.</span>`, text: `${n} pp.` };
     const numbered = match[0].replace(/\s+/g, '') === `${n}p.`
       ? ''
       : ` <span class="field-sub" title="Numbered extent held by the record">${n} pp.</span>`;
-    return { label: 'Extent (as in source)', html: esc(match[0]) + numbered };
+    return { label: 'Extent (as in source)', html: esc(match[0]) + numbered, text: match[0] };
   },
 
   /**
@@ -1401,43 +1755,31 @@ const Detail = {
    * leaves the order or the bounds of the text, marks nothing.
    */
   _sourceBody(text, publications, entry) {
-    const slices = (publications || [])
-      .map(pub => ({ pub, slice: pub.sourceSlice }))
-      .filter(({ slice }) => slice
-        && Number.isFinite(slice.textStart) && Number.isFinite(slice.textEnd))
-      .sort((a, b) => a.slice.textStart - b.slice.textStart);
-    // A marked block is a box of its own, so the line break that separated
-    // it from the text around it would add an empty line inside the flow.
-    let out = '';
-    let cursor = 0;
-    let afterBlock = false;
-    for (const { pub, slice } of slices) {
-      if (slice.textStart < cursor || slice.textEnd <= slice.textStart
-          || slice.textEnd > text.length) continue;
-      let gap = text.slice(cursor, slice.textStart);
-      if (afterBlock) gap = gap.replace(/^\n/, '');
-      gap = gap.replace(/\n$/, '');
-      const label = entry
-        ? `<span class="source-slice-label">${esc(this.publicationLabel(pub, entry))}</span>`
-        : '';
-      out += linkifyEsc(gap)
-        + `<span class="source-slice">${label}${
-          linkifyEsc(text.slice(slice.textStart, slice.textEnd))}</span>`;
-      cursor = slice.textEnd;
-      afterBlock = true;
-    }
-    const rest = text.slice(cursor);
-    return out + linkifyEsc(afterBlock ? rest.replace(/^\n/, '') : rest);
+    const marks = (publications || [])
+      .filter(pub => pub.sourceSlice
+        && Number.isInteger(pub.sourceSlice.textStart) && Number.isInteger(pub.sourceSlice.textEnd))
+      .map(pub => ({ start: pub.sourceSlice.textStart, end: pub.sourceSlice.textEnd, kind: 'block',
+        label: entry ? this.publicationLabel(pub, entry) : '' }));
+    // The value passages the card located through recorded offsets.
+    const scope = this._chainScope;
+    if (scope && scope.marks) marks.push(...scope.marks);
+    return RecordCard.sourceBody(text, marks, linkifyEsc);
   },
 
-  // Split a trailing page reference off a contents item for aligned display.
-  // A title that is itself an entry becomes a link to that entry.
+  // Split a trailing page reference off a contents item for aligned display,
+  // with the space a contribution keeps between its title and its pages. A
+  // title that is itself an entry becomes a link to that entry.
   _contentItem(text) {
     const m = /^(.*?)[,.]?\s*(pp?\.\s*[\d\s()\/\-–.]+[a-z]?)\s*$/i.exec(text);
     if (m && m[1]) {
-      return `<li><span class="content-item-title">${this._contentTitle(m[1])}</span><span class="content-item-pages">${esc(m[2])}</span></li>`;
+      return `<span class="content-item-title">${this._contentTitle(m[1])}</span> <span class="content-item-pages">${esc(m[2])}</span>`;
     }
-    return `<li>${this._contentTitle(text)}</li>`;
+    return this._contentTitle(text);
+  },
+
+  /** The contents items of the flat record as row values, one chain per item. */
+  _contentValues(items) {
+    return (items || []).map(item => ({ html: this._contentItem(item), text: item }));
   },
 
   _contentTitle(title) {
@@ -1494,19 +1836,28 @@ const Detail = {
     let html = '';
     const rows = [];
     const contestedAuthority = this._contestedAuthorityCell(entry);
-    const editRow = (label, fieldName) =>
-      this.row(label, this._editCell(fieldName, entry), fieldName, entry, null, this.PAGE_SCOPE);
+    const editRow = (label, fieldName) => {
+      const has = entry[fieldName] != null && entry[fieldName] !== '';
+      // The search snippet is an editing aid under the row, never the chain's
+      // passage, so the producer button stays at the value.
+      return this.row(label, this._editCell(fieldName, entry), fieldName, entry, null, this.PAGE_SCOPE,
+        null, { text: has ? String(entry[fieldName]) : 'not recorded', empty: !has,
+          noteHtml: this._fieldEvidence(fieldName, entry) });
+    };
 
-    rows.push(this.row('Title', `<span${titleAttrs(entry, entry.title)}>${esc(entry.title)}</span>`));
+    rows.push(this.row('Title', `<span${titleAttrs(entry, entry.title)}>${esc(entry.title)}</span>`,
+      'title', entry, null, null, null, { text: entry.title }));
 
     if (entry.originalTitle && entry.originalTitle !== entry.title) {
       rows.push(this.row('Original title',
-        `<span${titleAttrs(entry, entry.originalTitle)}>${esc(entry.originalTitle)}</span>`));
+        `<span${titleAttrs(entry, entry.originalTitle)}>${esc(entry.originalTitle)}</span>`,
+        'originalTitle', entry, null, null, null, { text: entry.originalTitle }));
     }
 
     if (entry.year) {
       const period = entry.timePeriod ? ` — ${PERIOD_LABELS[entry.timePeriod] || entry.timePeriod}` : '';
-      rows.push(this.row('Year', `${entry.year}${period}`));
+      rows.push(this.row('Year', `${entry.year}${period}`, 'year', entry, null, null, null,
+        { text: String(entry.year) }));
     }
 
     rows.push(editRow('Publisher', 'publisher'));
@@ -1523,7 +1874,10 @@ const Detail = {
       rows.push(this.row('Authority status', contestedAuthority));
     }
 
-    if (entry.language) rows.push(this.row('Language', this._languageValue(entry)));
+    if (entry.language) {
+      rows.push(this.row('Language', this._languageValue(entry), 'language', entry, null, null, null,
+        { text: entry.language }));
+    }
 
     rows.push(editRow('Pages', 'pageCount'));
 
@@ -1533,9 +1887,9 @@ const Detail = {
     }
 
     if (entry.categories && entry.categories.length) {
-      const catLinks = entry.categories.map(c =>
-        `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`);
-      rows.push(this.row('Categories', catLinks.join(', ')));
+      rows.push(this.row('Categories', entry.categories.map(c => ({
+        html: `<a href="#category=${encodeURIComponent(c)}">${esc(c)}</a>`, text: c })),
+      'categories', entry));
     }
     for (const r of this._pageRows(entry, entry, state.status === 'ready' ? state.publications : null)) {
       if (!r.includes('>Categories<')) rows.push(r);
@@ -1562,7 +1916,8 @@ const Detail = {
       html += `
         <div class="detail-section detail-evidence">
           <h3 class="detail-section-heading">Source — verify each field against this</h3>
-          <div class="detail-bibentry">${linkifyEsc(entry.fullBibliographicEntry)}</div>
+          <div class="detail-bibentry">${this._sourceBody(entry.fullBibliographicEntry,
+            state.status === 'ready' ? state.publications : null, entry)}</div>
           ${this._provenanceLine(entry)}
         </div>
       `;
@@ -1611,21 +1966,9 @@ const Detail = {
         <button class="action-btn" data-export="permalink" data-pid="${pid}" data-permalink="${pid}" title="Copy permalink">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           Permalink
-        </button>${this._recordMarkers(entry)}
+        </button>
       </div>
     `;
-  },
-
-  _recordMarkers(entry) {
-    if (!entry) return '';
-    const recordChains = ['title', 'originalTitle', 'year', 'publisher', 'location', 'translator', 'pageCount',
-      ...Object.keys(entry._provenance || {})];
-    return [...new Set(recordChains)].map(k => `<span hidden data-provenance-for="${esc(k)}"></span>`).join('')
-      + (entry['@id'] ? `<span hidden data-key="@id">${esc(entry['@id'])}</span>` : '')
-      + (entry['@type'] ? '<span hidden data-key="@type"></span>' : '')
-      + (entry.allYears ? '<span hidden data-key="allYears"></span>' : '')
-      + (entry.timePeriod ? '<span hidden data-key="timePeriod"></span>' : '')
-      + (entry.translationStatements ? '<span hidden data-key="translationStatements"></span>' : '');
   },
 
   _provenanceLine(entry) {
@@ -1633,18 +1976,89 @@ const Detail = {
       <span>Page ID: ${entry.sourcePageId}</span>
       ${entry.sourceTextId != null ? `<span>Text ID: ${entry.sourceTextId}</span>` : ''}
       ${entry.sourceBlobId != null ? `<span>Blob: ${entry.sourceBlobId}</span>` : ''}
+      ${this._revisionLine(entry)}
     </div>`;
   },
 
-  row(label, value, fieldName, entry, provenance, helpExtra, dataKey) {
-    const badge = fieldName && entry ? this._provBadge(fieldName, entry, provenance) : '';
-    const review = fieldName && entry ? this._fieldReview(fieldName, entry) : '';
-    const keyAttr = dataKey || fieldName ? ` data-key="${esc(dataKey || fieldName)}"` : '';
-    const chainAttr = fieldName && (provenance || (entry && entry._provenance))
-      ? ` data-provenance-for="${esc(fieldName)}"` : '';
-    // Label and value are flex items, so a short value stays on the label's
-    // line and a long one wraps under it without a second element type.
-    return `<div class="meta-row"${keyAttr}${chainAttr}><div class="meta-label"${this.help(label, helpExtra)}>${label}${badge}${review}</div><div class="meta-value">${value}</div></div>`;
+  /** The first and last revision of the page the text was taken from. */
+  _revisionLine(entry) {
+    const rec = this._recordOf(entry, null, {});
+    const rev = rec.revision;
+    if (!rev) return '';
+    const one = item => (item ? `${esc(item.id)}${item.date ? ` of ${esc(item.date)}` : ''}` : '');
+    const words = rev.first && rev.last && String(rev.first.id) !== String(rev.last.id)
+      ? `Revisions ${one(rev.first)} to ${one(rev.last)}`
+      : `Revision ${one(rev.first || rev.last)}`;
+    return `<span data-key="revisionDates">${words}</span>`;
+  },
+
+  /**
+   * One value row, drawn by RecordCard.row.
+   *
+   * `value` is the markup of one value, or a list of {html, text, key?, ctx?}
+   * for a row of several, so each value gets its own chain. A row without a
+   * field (an authority candidate block, a decision control) carries no chain.
+   * `opts` carries the chain context: the publication, a recorded passage, a
+   * derivation, and the row layout.
+   */
+  row(label, value, fieldName, entry, provenance, helpExtra, dataKey, opts = {}) {
+    const items = Array.isArray(value) ? value : [{ html: value, text: opts.text }];
+    return RecordCard.row(this._rowModel(label, items, fieldName || null, entry,
+      Object.assign({ helpExtra, dataKey }, opts)));
+  },
+
+  _rowModel(label, items, key, entry, opts = {}) {
+    const pid = entry ? entry.sourcePageId : 'x';
+    const scope = this._chainScope;
+    const r = {
+      key,
+      dataKey: opts.dataKey || key || undefined,
+      label,
+      help: this.helpText(label, opts.helpExtra),
+      labelExtra: key && entry ? this._fieldReview(key, entry) : '',
+      layout: opts.layout,
+      listClass: opts.listClass,
+      separator: opts.separator,
+      note: opts.note ? esc(opts.note) : (opts.noteHtml || ''),
+      idBase: `${pid}-${opts.scope || 'page'}-${key || 'row'}`,
+      values: [],
+    };
+    // Ids stay unique inside one card when two rows share a key.
+    if (scope) {
+      scope.bases = scope.bases || new Set();
+      const base = r.idBase;
+      for (let n = 2; scope.bases.has(r.idBase); n += 1) r.idBase = `${base}-${n}`;
+      scope.bases.add(r.idBase);
+    }
+    const seen = new Map();
+    r.values = items.map((item, i) => {
+      const text = item.text != null && item.text !== '' ? String(item.text) : this._plain(item.html);
+      const v = { html: item.html, text };
+      if (!key || !entry || opts.chain === false) return v;
+      const ordinal = seen.get(this._loose(text)) || 0;
+      seen.set(this._loose(text), ordinal + 1);
+      const ctx = Object.assign({ pub: opts.pub, passage: opts.passage, derivedFrom: opts.derivedFrom,
+        empty: opts.empty, reason: opts.reason, statement: opts.statement,
+        statementIndex: opts.statementIndex, text, index: i, count: items.length, ordinal }, item.ctx || {});
+      return Object.assign(v, this._valueChain(item.key || key, entry, ctx));
+    });
+    const sourceText = scope ? scope.model.sourceText.text : '';
+    r.values.forEach((v, i) => {
+      if (!v.chain) return;
+      const id = RecordCard.chainId(r, v, i);
+      const p = v.chain.passage;
+      // A located value passage is marked in the source text the card shows,
+      // and the chain leads there; offsets outside that text mark nothing. A
+      // publication's own passage is already marked as its block.
+      if (scope && key !== 'sourceSlice' && p && Number.isInteger(p.textStart)
+          && Number.isInteger(p.textEnd) && p.textStart >= 0 && p.textEnd > p.textStart
+          && p.textEnd <= sourceText.length) {
+        p.markId = `mark-${id}`;
+        scope.marks.push({ start: p.textStart, end: p.textEnd, kind: 'value', key: r.key, id: p.markId });
+      }
+      if (scope) scope.chains.set(id, { r, i });
+    });
+    return r;
   },
 
   makeLink(title) {
@@ -1661,6 +2075,19 @@ if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('click', (ev) => {
     const target = ev.target.closest ? ev.target : null;
     if (!target) return;
+
+    // A producer button opens and closes the chain of its value; Enter and
+    // Space reach it as a click, because it is a button.
+    const producer = target.closest('button.rc-producer-btn[aria-controls]');
+    if (producer) {
+      Detail.toggleChain(producer);
+      return;
+    }
+    const show = target.closest('button[data-rc-show]');
+    if (show) {
+      Detail.showMark(show.dataset.rcShow);
+      return;
+    }
 
     // The mark at a contested value points into its own card. The jump is made
     // here rather than by the browser, because the router reads a fragment as
@@ -1719,6 +2146,24 @@ if (typeof document !== 'undefined' && document.addEventListener) {
       }
     }
   });
+
+  // Escape closes the chain the focus is in or on, before any other Escape of
+  // the view acts, and the focus returns to the value's button. The capture
+  // phase runs this ahead of the result list's own Escape.
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'Escape' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    const t = ev.target;
+    if (!t || !t.closest) return;
+    const panel = t.closest('.rc-chain:not([hidden])');
+    const btn = panel
+      ? document.querySelector(`button.rc-producer-btn[aria-controls="${panel.id}"]`)
+      : t.closest('button.rc-producer-btn[aria-expanded="true"]');
+    if (!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    Detail.closeChain(panel || document.getElementById(btn.getAttribute('aria-controls')), btn);
+    btn.focus();
+  }, true);
 
   // contenteditable keys: Enter commits (a line break in a single-value field
   // is never wanted), Escape restores the rendered value and leaves the field.

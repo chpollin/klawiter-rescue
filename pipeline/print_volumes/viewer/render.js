@@ -756,7 +756,8 @@ export function candidates(state) {
         seen.get(id).claims.push(c.claim);
         continue;
       }
-      const item = { key, target, page: c.page, route: c.route, method: c.method, score: c.score, relation: c.relation ?? "samePublicationAs", secondField: c.secondField ?? [], stale: Boolean(c.stale), state: c.state ?? "proposed", claims: [c.claim].filter(Boolean) };
+      // The agreeing words are folded tokens of both sides, not one value per field (p07).
+      const item = { key, target, page: c.page, route: c.route, method: c.method, score: c.score, relation: c.relation ?? "samePublicationAs", secondField: c.secondField ?? [], agreeing: c.secondFieldValues ?? [], stale: Boolean(c.stale), state: c.state ?? "proposed", claims: [c.claim].filter(Boolean) };
       seen.set(id, item);
       out.push(item);
     }

@@ -1,6 +1,11 @@
-/* Tokens follow the production frontend (docs/css). Cream is the page, white
-   is data, one sign per state; meaning never rests on colour alone. */
-@layer reset, base, tokens, layout, components, utilities;
+/* The card workbench and the page check. The shared tokens, the faces and
+   the record card come from the docs app (/css/tokens.css, /fonts/fonts.css,
+   /css/records.css, U1 and U3 of knowledge/design.md), which the review
+   server serves at its root; this file names only the workbench's own state
+   colours. Cream is the page, white is data, one sign per state; meaning
+   never rests on colour alone. The statement below fixes the layer order, so
+   the shared sheets linked after it join it: records sits after components. */
+@layer reset, base, tokens, layout, components, records, utilities;
 
 @layer reset {
   *, *::before, *::after {
@@ -13,43 +18,24 @@
 
 @layer tokens {
   :root {
-    --burgundy: #631a34;
-    --burgundy-dark: #4a1228;
-    --gold: #c2a360;
-    --gold-dark: #7a5e18;
-    --cream: #faf8f3;
-    --paper: #ffffff;
-    --guide-paper: color-mix(in oklch, #faf8f3 60%, #f3e6c4);
-    --text: #2d2d2d;
-    --text-light: #595959;
+    --guide-paper: color-mix(in oklch, var(--sz-cream) 60%, #f3e6c4);
     /* Text outside the object: 5:1 contrast on white. */
     --text-faint: #6e6e6e;
     --object: #f8f1df;
-    --border: #e0d8cc;
-    --hairline: color-mix(in oklch, #e0d8cc 70%, #ffffff);
-    --border-strong: color-mix(in oklch, #e0d8cc 65%, #7a5e18);
+    --border-strong: color-mix(in oklch, var(--sz-border) 65%, var(--sz-gold-dark));
     --mark: #f3e6c4;
     --mark-strong: #e2c88a;
     --ok: #2f6b3d;
-    --ok-soft: color-mix(in oklch, #2f6b3d 12%, #ffffff);
+    --ok-soft: color-mix(in oklch, #2f6b3d 12%, var(--sz-white));
     --bad: #9b1c31;
-    --bad-soft: color-mix(in oklch, #9b1c31 10%, #ffffff);
-    --unsure: #7a5e18;
-    --unsure-soft: color-mix(in oklch, #7a5e18 12%, #ffffff);
+    --bad-soft: color-mix(in oklch, #9b1c31 10%, var(--sz-white));
+    --unsure: var(--sz-gold-dark);
+    --unsure-soft: color-mix(in oklch, var(--sz-gold-dark) 12%, var(--sz-white));
     --wiki: #234b6e;
     --wiki-only: #533a71;
-    --shadow-card: 0 2px 10px color-mix(in oklch, #2d2d2d 9%, transparent);
-    --backdrop: color-mix(in oklch, #2d2d2d 38%, transparent);
-    --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
-    --font-sans: "Source Sans 3", -apple-system, "Segoe UI", Roboto, sans-serif;
-    --font-mono: ui-monospace, Consolas, monospace;
-    --space-1: 0.25rem;
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --space-5: 1.5rem;
+    --shadow-card: 0 2px 10px color-mix(in oklch, var(--sz-text) 9%, transparent);
+    --backdrop: color-mix(in oklch, var(--sz-text) 38%, transparent);
     --reading: 72ch;
-    --radius: 4px;
     --col-height: calc(100vh - 8.5rem);
   }
 }
@@ -57,21 +43,21 @@
 @layer base {
   body {
     margin: 0;
-    background: var(--cream);
-    color: var(--text);
+    background: var(--sz-cream);
+    color: var(--sz-text);
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.45;
   }
   a {
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
   }
   :focus-visible {
-    outline: 3px solid var(--gold-dark);
+    outline: 3px solid var(--sz-gold-dark);
     outline-offset: 2px;
   }
   header.site :focus-visible {
-    outline-color: var(--paper);
+    outline-color: var(--sz-white);
   }
   button {
     font: inherit;
@@ -79,17 +65,17 @@
     padding-block: 0.12rem;
     padding-inline: 0.55rem;
     border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    background: var(--paper);
-    color: var(--text);
+    border-radius: var(--sz-radius);
+    background: var(--sz-white);
+    color: var(--sz-text);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 0.28rem;
   }
   button:hover:not(:disabled) {
-    border-color: var(--burgundy);
-    color: var(--burgundy);
+    border-color: var(--sz-burgundy);
+    color: var(--sz-burgundy);
   }
   /* Disabled stays readable (5:1); the dashed edge, not fading, marks it. */
   button:disabled {
@@ -99,13 +85,13 @@
     cursor: default;
   }
   button.primary {
-    background: var(--burgundy);
-    border-color: var(--burgundy);
-    color: var(--paper);
+    background: var(--sz-burgundy);
+    border-color: var(--sz-burgundy);
+    color: var(--sz-white);
   }
   button.primary:hover:not(:disabled) {
-    background: var(--burgundy-dark);
-    color: var(--paper);
+    background: var(--sz-burgundy-dark);
+    color: var(--sz-white);
   }
   button.link {
     border: none;
@@ -122,7 +108,7 @@
     vertical-align: -0.1em;
   }
   .quiet {
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
 }
 
@@ -131,18 +117,18 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-2) var(--space-4);
-    background: var(--burgundy);
-    color: var(--paper);
+    gap: var(--sz-space-2) var(--sz-space-4);
+    background: var(--sz-burgundy);
+    color: var(--sz-white);
     min-block-size: 3.4rem;
     padding-block: 0.45rem;
-    padding-inline: var(--space-5);
+    padding-inline: var(--sz-space-5);
   }
   header.site .brand {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--cream);
+    color: var(--sz-cream);
     font-family: var(--font-serif);
     text-transform: uppercase;
     letter-spacing: 0.11em;
@@ -152,7 +138,7 @@
   header.site .logo-mark {
     inline-size: 1.5rem;
     block-size: 1.5rem;
-    color: var(--gold);
+    color: var(--sz-gold);
   }
   header.site nav {
     display: flex;
@@ -163,7 +149,7 @@
   }
   header.site nav a,
   header.site nav .nav-btn {
-    color: color-mix(in oklch, var(--cream) 78%, transparent);
+    color: color-mix(in oklch, var(--sz-cream) 78%, transparent);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 500;
@@ -179,8 +165,19 @@
   header.site nav a[aria-current="page"],
   header.site nav a:hover,
   header.site nav .nav-btn:hover {
-    color: var(--cream);
-    border-block-end-color: var(--gold);
+    color: var(--sz-cream);
+    border-block-end-color: var(--sz-gold);
+  }
+  /* The local tools are a second group beside the three destinations of the
+     sitemap, told apart by space and by sentence case, not by a rule. */
+  header.site .nav-local {
+    gap: var(--sz-space-4);
+  }
+  header.site .nav-local a,
+  header.site .nav-local .nav-btn {
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 0.875rem;
   }
   .header-search {
     margin-inline-start: auto;
@@ -195,16 +192,16 @@
     padding-block: 0.36rem;
     padding-inline: 0.75rem 2rem;
     border: none;
-    border-radius: var(--radius);
-    background: color-mix(in oklch, var(--cream) 16%, transparent);
-    color: var(--cream);
+    border-radius: var(--sz-radius);
+    background: color-mix(in oklch, var(--sz-cream) 16%, transparent);
+    color: var(--sz-cream);
   }
   .header-search input::placeholder {
-    color: color-mix(in oklch, var(--cream) 65%, transparent);
+    color: color-mix(in oklch, var(--sz-cream) 65%, transparent);
   }
   .header-search input:focus {
-    background: color-mix(in oklch, var(--cream) 24%, transparent);
-    outline: 2px solid var(--gold);
+    background: color-mix(in oklch, var(--sz-cream) 24%, transparent);
+    outline: 2px solid var(--sz-gold);
   }
   .header-search-icon {
     position: absolute;
@@ -213,22 +210,22 @@
     transform: translateY(-50%);
     inline-size: 0.95rem;
     block-size: 0.95rem;
-    color: var(--gold);
+    color: var(--sz-gold);
     pointer-events: none;
   }
   #reviewer-line {
     margin: 0;
     font-size: 0.82rem;
-    color: color-mix(in oklch, var(--cream) 85%, transparent);
+    color: color-mix(in oklch, var(--sz-cream) 85%, transparent);
   }
   #reviewer-name {
     font-weight: 600;
-    color: var(--cream);
+    color: var(--sz-cream);
   }
 
   .workbench-main {
     padding-block: 1rem 2rem;
-    padding-inline: var(--space-5);
+    padding-inline: var(--sz-space-5);
     max-inline-size: 112rem;
     margin-inline: auto;
   }
@@ -240,7 +237,7 @@
     justify-content: space-between;
     gap: 0.5rem 1.5rem;
     padding-block-end: 0.65rem;
-    margin-block-end: 1rem;
+    margin-block-end: var(--sz-space-1);
   }
   .board-summary,
   .source-pills,
@@ -255,7 +252,7 @@
     font-family: var(--font-serif);
     font-size: 1.3rem;
     font-weight: 600;
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
     font-variant-numeric: tabular-nums;
   }
   .stat-pill {
@@ -267,13 +264,13 @@
     min-block-size: 1.5rem;
     font-size: 0.82rem;
     font-weight: 500;
-    color: var(--text-light);
+    color: var(--sz-text-light);
     font-variant-numeric: tabular-nums;
   }
   .stat-pill[aria-pressed="true"] {
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
     font-weight: 700;
-    border-block-end-color: var(--gold);
+    border-block-end-color: var(--sz-gold);
   }
   .quiet-select {
     display: inline-flex;
@@ -286,14 +283,14 @@
     letter-spacing: 0.05em;
     font-size: 0.7rem;
     font-weight: 600;
-    color: var(--gold-dark);
+    color: var(--sz-gold-dark);
   }
   .quiet-select select,
   .col-select {
     font: inherit;
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--text);
+    color: var(--sz-text);
     border: none;
     background: transparent;
     padding: 0.1rem;
@@ -302,7 +299,7 @@
   .col-select {
     font-size: 0.78rem;
     font-weight: 500;
-    color: var(--text-light);
+    color: var(--sz-text-light);
     max-inline-size: 11rem;
   }
   button.text-btn {
@@ -312,7 +309,7 @@
     min-block-size: 1.5rem;
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
   }
   button.text-btn:hover:not(:disabled) {
     text-decoration: underline;
@@ -322,24 +319,25 @@
     margin: 0;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--burgundy-dark);
+    color: var(--sz-burgundy-dark);
   }
   /* The live region keeps its box when empty, so that no message moves the desk. */
   .status-msg {
     min-block-size: 1.25em;
+    margin-block-end: var(--sz-space-2);
   }
   .review-error {
-    margin-block: 0 var(--space-3);
-    padding: var(--space-2) var(--space-3);
+    margin-block: 0 var(--sz-space-3);
+    padding: var(--sz-space-2) var(--sz-space-3);
     border-inline-start: 3px solid var(--bad);
-    background: var(--paper);
+    background: var(--sz-white);
     color: var(--bad);
     font-weight: 600;
   }
   .skip-link {
     position: absolute;
-    inset-inline-start: var(--space-2);
-    inset-block-start: var(--space-2);
+    inset-inline-start: var(--sz-space-2);
+    inset-block-start: var(--sz-space-2);
     z-index: 10;
     transform: translateY(-200%);
   }
@@ -354,16 +352,16 @@
     font-variant-numeric: tabular-nums;
   }
   .tray-range {
-    color: var(--text-light);
+    color: var(--sz-text-light);
     padding-inline: 0.15rem;
   }
   .bottom-pager {
     justify-content: center;
-    margin-block-start: var(--space-4);
+    margin-block-start: var(--sz-space-4);
   }
   .loading {
-    margin: var(--space-4);
-    color: var(--text-light);
+    margin: var(--sz-space-4);
+    color: var(--sz-text-light);
   }
 
   /* Views: sections beside a card, three source lanes beside a card, a grid. */
@@ -378,9 +376,9 @@
   .desk.view-axis,
   .desk.view-lanes {
     gap: 0;
-    background: var(--paper);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
+    background: var(--sz-white);
+    border: 1px solid var(--sz-border-light);
+    border-radius: var(--sz-radius);
   }
   .desk.view-axis {
     grid-template-columns: 15rem minmax(19rem, 25rem) minmax(26rem, 1fr);
@@ -397,7 +395,7 @@
     max-block-size: var(--col-height);
     position: sticky;
     inset-block-start: 0.5rem;
-    border-inline-end: 1px solid var(--hairline);
+    border-inline-end: 1px solid var(--sz-border-light);
     min-inline-size: 0;
   }
   .col:last-child {
@@ -410,14 +408,14 @@
     justify-content: space-between;
     gap: 0.3rem 0.5rem;
     padding: 0.65rem 1rem 0.5rem;
-    border-block-end: 1px solid var(--hairline);
+    border-block-end: 1px solid var(--sz-border-light);
   }
   .col-title {
     margin: 0;
     font-family: var(--font-serif);
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--gold-dark);
+    color: var(--sz-gold-dark);
   }
   .col-body {
     padding: 0.35rem 0.6rem 0.75rem;
@@ -444,9 +442,9 @@
     font-size: 0.88rem;
   }
   .section-item[aria-pressed="true"] {
-    border-inline-start-color: var(--burgundy);
-    background: color-mix(in oklch, var(--gold) 14%, transparent);
-    color: var(--burgundy-dark);
+    border-inline-start-color: var(--sz-burgundy);
+    background: color-mix(in oklch, var(--sz-gold) 14%, transparent);
+    color: var(--sz-burgundy-dark);
     font-weight: 600;
   }
   .section-code {
@@ -454,7 +452,7 @@
     font-family: var(--font-sans);
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .section-name {
     flex: 1;
@@ -463,11 +461,32 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  /* Controls of the stacked layout only (D15); the utilities layer shows them below 60rem. */
+  .slip-pager,
+  .filters-toggle {
+    display: none;
+  }
+  .slip-pager {
+    align-items: baseline;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+  }
+  /* Apparatus parts and wiki categories follow the sections A to R under a heading (D17). */
+  .section-group {
+    margin: var(--sz-space-3) 0 var(--sz-space-1);
+    padding-inline: 0.45rem;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sz-gold-dark);
+  }
   .section-count {
     font-family: var(--font-sans);
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
     font-variant-numeric: tabular-nums;
   }
 
@@ -478,12 +497,12 @@
   }
   .slip {
     position: relative;
-    border-block-end: 1px solid var(--hairline);
+    border-block-end: 1px solid var(--sz-border-light);
     border-inline-start: 2px solid transparent;
   }
   .slip.is-active {
-    border-inline-start: 4px solid var(--burgundy);
-    background: color-mix(in oklch, var(--gold) 15%, var(--paper));
+    border-inline-start: 4px solid var(--sz-burgundy);
+    background: color-mix(in oklch, var(--sz-gold) 15%, var(--sz-white));
   }
   .slip.dragging {
     opacity: 0.45;
@@ -514,7 +533,7 @@
   }
   .slip-kind {
     font-style: italic;
-    color: var(--text-light);
+    color: var(--sz-text-light);
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -526,7 +545,7 @@
     font-size: 0.94rem;
     font-weight: 600;
     line-height: 1.28;
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -535,7 +554,7 @@
   .slip-meta {
     font-size: 0.75rem;
     line-height: 1.3;
-    color: var(--text-light);
+    color: var(--sz-text-light);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -545,7 +564,7 @@
   .untitled-title {
     font-style: italic;
     font-weight: 400;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .slip-moves {
     position: absolute;
@@ -565,7 +584,7 @@
     font-size: 0.72rem;
     border: none;
     background: transparent;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .done-sign {
     color: var(--ok);
@@ -599,26 +618,28 @@
     color: var(--unsure);
   }
   .status-none {
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .status-wiki-only {
     color: var(--wiki-only);
   }
 
   .card {
-    background: var(--paper);
-    border: 1px solid var(--border);
+    background: var(--sz-white);
+    border: 1px solid var(--sz-border);
     border-inline-start: 3px solid var(--border-strong);
-    border-radius: var(--radius);
+    border-radius: var(--sz-radius);
     padding: 0.55rem 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
     min-inline-size: 0;
+    /* The shared card's chain steps stack by the width of the card (records.css). */
+    container-type: inline-size;
   }
   .card.is-active {
-    border-color: var(--gold-dark);
-    border-inline-start-color: var(--burgundy);
+    border-color: var(--sz-gold-dark);
+    border-inline-start-color: var(--sz-burgundy);
     box-shadow: var(--shadow-card);
   }
   .detail-col .card {
@@ -638,27 +659,19 @@
   .card.is-wiki {
     border-inline-start-color: var(--wiki-only);
   }
-  .card-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.2rem 0.6rem;
-  }
+  /* The head is the shared card's (.rc-head in records.css); its lines and
+     title need only their margins taken here. */
   .card-id,
-  .card-status {
+  .card-status,
+  .card-title {
     margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.2rem 0.5rem;
     min-inline-size: 0;
   }
   .card-address {
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: 0.85rem;
-    color: var(--burgundy-dark);
+    color: var(--sz-burgundy-dark);
   }
   .pdf-link {
     display: inline-flex;
@@ -667,7 +680,12 @@
     font-size: 0.76rem;
     font-variant-numeric: tabular-nums;
   }
-  .card-types {
+  .pdf-link .rc-icon {
+    inline-size: 0.88rem;
+    block-size: 0.88rem;
+  }
+  /* The one type word of a card without type values: italic, no frame. */
+  .badge {
     font-size: 0.76rem;
     font-style: italic;
   }
@@ -681,7 +699,7 @@
     font-family: var(--font-mono);
     font-size: 0.74rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .card-progress.is-complete {
     color: var(--ok);
@@ -694,20 +712,8 @@
     font-weight: 600;
     color: var(--bad);
   }
-  .card-title {
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: 1.02rem;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-  .card-title .subtitle {
-    font-weight: 400;
-    color: var(--text-light);
-  }
-
   .wiki-drawer {
-    border-block: 1px solid var(--hairline);
+    border-block: 1px solid var(--sz-border-light);
     padding-block: 0.5rem;
     font-size: 0.8rem;
   }
@@ -715,7 +721,7 @@
     margin-block: 0.15rem;
   }
   .drawer-note {
-    color: var(--text-light);
+    color: var(--sz-text-light);
     font-style: italic;
   }
   .candidates {
@@ -738,33 +744,43 @@
     font-weight: 600;
     color: var(--wiki);
   }
+  /* One wiki page once, its routes under it in route order (D16). */
+  .cand-routes {
+    margin: 0.15rem 0 0;
+    padding-inline-start: 1rem;
+  }
+  .cand-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.1rem 0.5rem;
+  }
   .cand-route,
-  .cand-claim {
-    color: var(--text-light);
+  .cand-claim,
+  .cand-agree {
+    color: var(--sz-text-light);
   }
   .cand-claim {
     font-family: var(--font-mono);
     font-size: 0.72rem;
   }
-  .compare-dl,
-  .card-dl {
+  .cand-agree {
+    display: block;
+    font-style: italic;
+  }
+  .compare-dl {
     margin: 0;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     gap: 0.05rem 0.5rem;
   }
-  .compare-dl dt,
-  .card-dl dt {
+  .compare-dl dt {
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
-  .compare-dl dd,
-  .card-dl dd {
+  .compare-dl dd {
     margin: 0;
     overflow-wrap: anywhere;
-  }
-  .card-dl {
-    font-size: 0.82rem;
   }
   .conflict {
     border-collapse: collapse;
@@ -794,10 +810,15 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .desk.view-board .card:not(.is-active) .card-values {
+  .desk.view-board .card:not(.is-active) .rc-values {
     max-block-size: 5.5rem;
     overflow: hidden;
-    display: block;
+  }
+  .card:not(.is-active) .rc-source-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .desk.view-board .card.is-active .card-entry {
     max-block-size: 16rem;
@@ -824,34 +845,43 @@
   }
   .card.is-active .card-entry mark.current {
     background: var(--mark-strong);
-    box-shadow: inset 0 -2px 0 var(--gold-dark);
+    box-shadow: inset 0 -2px 0 var(--sz-gold-dark);
   }
 
-  .card-values {
-    inline-size: 100%;
-    border-collapse: collapse;
+  /* The shared value row (record-card.js) as the workbench sets it: a sans
+     label column and serif values, one line per group of the bibliography,
+     each value's chain opening under its row. */
+  .card .rc-values {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .card .meta-table {
+    display: grid;
+    gap: 0.05rem;
     font-size: 0.82rem;
   }
-  .card-values th,
-  .card-values td {
-    text-align: start;
-    vertical-align: top;
-    padding: 0.05rem 0.4rem 0.05rem 0;
+  .card .meta-row {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    column-gap: 0.4rem;
+    align-items: baseline;
   }
-  .card-values th.field {
-    padding-block-start: 0.18rem;
-    inline-size: 5rem;
+  .card .meta-label {
     font-weight: 600;
     font-size: 0.74rem;
-    color: var(--text-light);
-    white-space: nowrap;
-  }
-  .card-values td.value {
-    font-family: var(--font-serif);
+    color: var(--sz-text-light);
     overflow-wrap: anywhere;
   }
-  .card-values tr.added th {
+  .card .meta-value {
+    font-family: var(--font-serif);
+    overflow-wrap: anywhere;
+    min-inline-size: 0;
+  }
+  .card .meta-row.added .meta-label {
     color: var(--bad);
+  }
+  .card .rc-chain .checksum {
+    font-family: var(--font-mono);
   }
   .token {
     display: inline;
@@ -859,7 +889,7 @@
   .token.sub .pick {
     font-family: var(--font-sans);
     font-size: 0.74rem;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   button.pick {
     display: inline;
@@ -873,11 +903,13 @@
     border-radius: 2px;
   }
   button.pick:hover {
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
     text-decoration: underline;
   }
+  /* Body text on the strong mark, so a sub-value keeps 4.5:1 while selected. */
   .card.is-active button.pick.is-current {
     background: var(--mark-strong);
+    color: var(--sz-text);
   }
   button.pick.decided-confirm {
     box-shadow: inset 0 -2px 0 var(--ok);
@@ -905,7 +937,7 @@
     color: var(--unsure);
   }
   .sep {
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .tag,
   .correction,
@@ -920,7 +952,7 @@
   }
   .tag.quiet {
     font-weight: 400;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .correction {
     font-weight: 600;
@@ -931,7 +963,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.1rem 0.4rem;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .targets .unresolved {
     color: var(--bad);
@@ -950,38 +982,6 @@
     color: var(--bad);
   }
 
-  .card-chain {
-    font-size: 0.78rem;
-    background: var(--paper);
-    padding-block: 0.35rem;
-  }
-  .chain,
-  .history {
-    margin: 0;
-    padding-inline-start: 1.1rem;
-  }
-  .chain li {
-    margin-block-end: 0.2rem;
-  }
-  .chain .label {
-    font-weight: 600;
-  }
-  .exact {
-    font-family: var(--font-serif);
-    background: var(--mark);
-    padding-inline: 0.2rem;
-  }
-  .record-text {
-    font-family: var(--font-serif);
-    max-block-size: 6.5rem;
-    overflow-y: auto;
-    padding-block: var(--space-1);
-    margin-block: 0.15rem 0;
-  }
-  .record-text mark.current {
-    background: var(--mark-strong);
-  }
-
   .card-foot {
     display: none;
     flex-wrap: wrap;
@@ -989,7 +989,7 @@
     justify-content: space-between;
     gap: 0.4rem 1rem;
     padding-block-start: 0.5rem;
-    border-block-start: 1px solid var(--hairline);
+    border-block-start: 1px solid var(--sz-border-light);
     font-size: 0.78rem;
   }
   .card.is-active .card-foot {
@@ -1004,7 +1004,7 @@
   }
   .active-field {
     font-weight: 600;
-    color: var(--gold-dark);
+    color: var(--sz-gold-dark);
   }
   .card-foot button,
   .card-foot a {
@@ -1013,7 +1013,7 @@
     min-block-size: 1.5rem;
     border: 1px solid transparent;
     background: none;
-    color: var(--text);
+    color: var(--sz-text);
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
@@ -1024,11 +1024,11 @@
     border-style: dashed;
   }
   .card-foot a {
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
   }
   .card-foot button.primary {
-    background: var(--burgundy);
-    color: var(--cream);
+    background: var(--sz-burgundy);
+    color: var(--sz-cream);
     padding-inline: 0.6rem;
     font-weight: 600;
   }
@@ -1054,9 +1054,9 @@
   }
 
   .decision-form {
-    border-inline-start: 3px solid var(--burgundy);
-    padding: var(--space-2) var(--space-3);
-    background: var(--cream);
+    border-inline-start: 3px solid var(--sz-burgundy);
+    padding: var(--sz-space-2) var(--sz-space-3);
+    background: var(--sz-cream);
     font-size: 0.82rem;
   }
   .decision-form p {
@@ -1064,7 +1064,7 @@
   }
   .decision-what {
     font-weight: 600;
-    color: var(--burgundy-dark);
+    color: var(--sz-burgundy-dark);
   }
   /* The gap exceeds the focus ring (3px plus 2px offset), so that the ring never covers the label. */
   .decision-form label {
@@ -1077,7 +1077,7 @@
   .decision-form label.inline {
     flex-direction: row;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--sz-space-2);
     font-weight: 400;
   }
   .decision-form select,
@@ -1087,8 +1087,8 @@
     font-weight: 400;
     padding: 0.16rem 0.35rem;
     border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    background: var(--paper);
+    border-radius: var(--sz-radius);
+    background: var(--sz-white);
     max-inline-size: 100%;
   }
   .decision-form input[type="text"] {
@@ -1096,17 +1096,17 @@
   }
   .found {
     font-weight: 400;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .form-actions {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--sz-space-2);
   }
 
   dialog {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--sz-border);
+    border-radius: var(--sz-radius);
+    padding: var(--sz-space-4) var(--sz-space-5);
     max-inline-size: min(28rem, 92vw);
   }
   dialog::backdrop {
@@ -1119,8 +1119,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-3);
-    margin-block-end: var(--space-3);
+    gap: var(--sz-space-3);
+    margin-block-end: var(--sz-space-3);
   }
   .help-dialog {
     max-inline-size: min(40rem, 94vw);
@@ -1134,7 +1134,7 @@
   .keys td {
     text-align: start;
     padding: 0.28rem 0.6rem 0.28rem 0;
-    border-block-end: 1px solid var(--hairline);
+    border-block-end: 1px solid var(--sz-border-light);
     vertical-align: baseline;
   }
   .keys th {
@@ -1148,7 +1148,7 @@
     padding: 0.05rem 0.3rem;
     border: 1px solid var(--border-strong);
     border-radius: 3px;
-    background: var(--cream);
+    background: var(--sz-cream);
   }
   dialog label {
     display: flex;
@@ -1160,7 +1160,7 @@
     font-weight: 400;
     padding: 0.35rem 0.5rem;
     border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
+    border-radius: var(--sz-radius);
     margin-block-start: 0.25rem;
   }
   #error {
@@ -1181,7 +1181,7 @@
 
   @media (max-width: 60rem) {
     .workbench-main {
-      padding: var(--space-2);
+      padding: var(--sz-space-2);
     }
     .desk.view-axis,
     .desk.view-lanes {
@@ -1191,7 +1191,7 @@
       position: static;
       max-block-size: none;
       border-inline-end: none;
-      border-block-end: 1px solid var(--hairline);
+      border-block-end: 1px solid var(--sz-border-light);
     }
     .section-col .col-body,
     .slip-col .col-body,
@@ -1200,6 +1200,50 @@
     }
     .detail-col {
       order: -1;
+    }
+    /* D15: the card comes first with a slip pager above it, the filters fold
+       behind one button, and the decision bar stays at the bottom of the
+       window while the card is in view. The card column scrolls with the
+       page, so the bar sticks to the window. */
+    .detail-col .col-body {
+      overflow: visible;
+    }
+    .slip-pager {
+      display: flex;
+    }
+    .filters-toggle {
+      display: inline-flex;
+    }
+    .filter-strip:not(.is-open) .source-pills,
+    .filter-strip:not(.is-open) .board-controls {
+      display: none;
+    }
+    .card.is-active .card-foot {
+      position: sticky;
+      inset-block-end: 0;
+      z-index: 1;
+      background: var(--sz-white);
+      padding-block-end: var(--sz-space-2);
+    }
+  }
+
+  /* At 320 pixels the header wraps inside a 16 pixel gutter: the brand may
+     break, and the letterspacing narrows. */
+  @media (max-width: 30rem) {
+    header.site {
+      padding-inline: var(--sz-space-4);
+    }
+    header.site .brand {
+      white-space: normal;
+      letter-spacing: 0.06em;
+      font-size: 0.875rem;
+    }
+    header.site nav {
+      gap: var(--sz-space-2) var(--sz-space-4);
+    }
+    .header-search {
+      flex-basis: 100%;
+      max-inline-size: none;
     }
   }
 }

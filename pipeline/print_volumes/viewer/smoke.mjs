@@ -2,16 +2,27 @@
 // the three decision forms, a pointer decision while a form is open followed
 // by keys, "all right" on a card taller than its column, N on a slip, a second
 // reviewer blind to the first, the server's status error, the skip link and
-// the wording of the wiki drawer. Every assertion reads what the page shows.
+// the wording of the wiki drawer, the shared card's chain per value and its
+// Escape, the layout below the stacking width with reduced motion (D15, D26),
+// the section column (D17) and the drawer grouped by wiki page (D16). Every
+// assertion reads what the page shows.
+//
+// --page records drives the record desk's print side instead: on the docs
+// app the trial server serves at its root, it imports records-print.js as
+// Records does, draws print objects through the shared card, and checks a
+// visible chain per value, its steps and Escape, in-app wiki links, the
+// proposed relation and no horizontal scroll at 1440, 390 and 320 pixels.
+// It posts no decision.
 //
 // The run posts decisions under reviewer names of its own, so it must never
 // meet the real decision log: start a trial server with its own log first,
 //   python -m uv run --group print python pipeline/print_volumes/review_server.py --port 8773 --log <scratch>/decisions.jsonl
 // then run
-//   node pipeline/print_volumes/viewer/smoke.mjs [--port 8773] [--shots <dir>] [--only <step name part>]
+//   node pipeline/print_volumes/viewer/smoke.mjs [--port 8773] [--page cards|records] [--shots <dir>] [--only <step name part>]
 // Playwright is not a project dependency; where `import "playwright"` fails,
 // PLAYWRIGHT_DIR names a folder whose node_modules hold it. Exits 1 on a failure.
-// Nothing here holds print text: the passages it selects are read from the page.
+// Nothing here holds print text: the passages it selects are read from the
+// page, and screenshots go only where --shots names, outside the repository.
 
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
@@ -24,9 +35,14 @@ const arg = (name, fallback) => {
 const port = Number(arg("--port", "8773"));
 const shots = arg("--shots", "");
 const only = arg("--only", "");
+const pageMode = arg("--page", "cards");
 // 8767 is the review server that records the real decisions.
 if (port === 8767) {
   console.error("FEHLER port 8767 records the real review; start a trial server with --log");
+  process.exit(2);
+}
+if (!["cards", "records"].includes(pageMode)) {
+  console.error(`FEHLER --page ${pageMode}: cards or records`);
   process.exit(2);
 }
 if (shots) mkdirSync(shots, { recursive: true });
@@ -64,8 +80,8 @@ const { chromium } = await playwright();
 const browser = await chromium.launch();
 const errors = [];
 
-async function open(name, { width = 1440, height = 900, hash = "#/?r=open", setup = null } = {}) {
-  const context = await browser.newContext({ viewport: { width, height } });
+async function open(name, { width = 1440, height = 900, hash = "#/?r=open", setup = null, motion = "no-preference" } = {}) {
+  const context = await browser.newContext({ viewport: { width, height }, reducedMotion: motion });
   await context.addInitScript((n) => n && localStorage.setItem("print-reviewer", n), name);
   const page = await context.newPage();
   page.setDefaultTimeout(8000);
@@ -77,11 +93,13 @@ async function open(name, { width = 1440, height = 900, hash = "#/?r=open", setu
 }
 
 // One scenario: a thrown error counts as its failure, and the next one runs.
-async function step(name, fn) {
+// A step belongs to one --page mode, the workbench unless it says otherwise.
+async function step(name, fn, mode = "cards") {
+  if (mode !== pageMode) return;
   if (only && !name.includes(only)) return;
   const pages = [];
   const page = async (...args) => {
-    const p = await open(...args);
+    const p = await (mode === "records" ? openRecords : open)(...args);
     pages.push(p);
     return p;
   };
@@ -115,6 +133,16 @@ const focusPick = (page) => page.focus("#inspector button.pick.is-current");
 const activeIndex = (page) => page.evaluate(() => document.activeElement?.dataset?.index ?? null);
 const submit = (page) => page.click("#inspector .decision-form button[type=submit]");
 
+// Clicks the producer button of the selected value, which the shared card
+// sets right after the value, and returns the id of the chain it controls.
+const openCurrentChain = (page) =>
+  page.evaluate(() => {
+    const pick = document.querySelector("#inspector button.pick.is-current");
+    const button = pick?.closest(".rc-value, [data-provenance-for]")?.querySelector("button.prov-badge[aria-controls]");
+    button?.click();
+    return button?.getAttribute("aria-controls") ?? null;
+  });
+
 // Selects the characters of a mark in the entry text that is not the current value's.
 async function selectPassage(page, selector = "#inspector .card-entry mark:not(.current)") {
   return page.evaluate((sel) => {
@@ -146,8 +174,8 @@ await step("boundary by key", async (page) => {
   expect(saved === `Saved on ${nameIn(address)}, boundary flagged.`, `the boundary message names its object (${saved})`);
   expect((await p.locator("#inspector .card-flagged").count()) === 1, "a flagged card says so in a word");
   await shot(p, "1440-boundary-flagged");
-  expect((await p.getAttribute("#inspector tr.added button.withdraw", "aria-label")) === "Remove the boundary flag", "Remove names what it removes");
-  const removed = await after(p, () => p.click("#inspector tr.added button.withdraw"));
+  expect((await p.getAttribute("#inspector .added button.withdraw", "aria-label")) === "Remove the boundary flag", "Remove names what it removes");
+  const removed = await after(p, () => p.click("#inspector .added button.withdraw"));
   expect(removed === `Saved on ${nameIn(address)}, the boundary flag removed.`, `withdrawing names the object (${removed})`);
 });
 
@@ -215,7 +243,7 @@ await step("missing", async (page) => {
   expect(await selectPassage(p, "#inspector .card-entry .object mark"), "a passage inside the object can be selected");
   const added = await after(p, () => submit(p));
   expect(added === `Saved on ${nameIn(address)}, missing value added.`, `the missing-value message names its object (${added.startsWith("Saved") ? "saved" : "refused"})`);
-  expect(((await p.getAttribute("#inspector tr.added button.withdraw", "aria-label")) ?? "").startsWith("Remove the added value Note"), "Remove names the added value");
+  expect(((await p.getAttribute("#inspector .added button.withdraw", "aria-label")) ?? "").startsWith("Remove the added value Note"), "Remove names the added value");
 });
 
 await step("form layout and page chrome", async (page) => {
@@ -255,10 +283,17 @@ await step("form layout and page chrome", async (page) => {
   expect(display[0] === display[1], `the live region keeps its display when empty (${display.join(" / ")})`);
   expect((await p.evaluate(() => getComputedStyle(document.getElementById("prev")).opacity)) === "1", "a disabled button is not faded");
 
-  // The chain is data and stands on the card's white; the help names LLM proposals.
-  await p.click('#inspector [data-card-act="chain"]');
-  const ground = await p.evaluate(() => getComputedStyle(document.querySelector("#inspector .card-chain")).backgroundColor);
-  expect(ground === "rgb(255, 255, 255)", `the provenance chain stands on white (${ground})`);
+  // The chain is data and stands on the card's white, the first painted ground
+  // under it; the help names LLM proposals.
+  const chainId = await openCurrentChain(p);
+  const ground = await p.evaluate((id) => {
+    for (let node = document.getElementById(id); node; node = node.parentElement) {
+      const bg = getComputedStyle(node).backgroundColor;
+      if (bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") return bg;
+    }
+    return "none";
+  }, chainId);
+  expect(Boolean(chainId) && ground === "rgb(255, 255, 255)", `the provenance chain stands on white (${ground})`);
   expect((await p.textContent("#help-dialog")).includes("LLM proposal"), "the help does not claim every value was read by a rule");
 });
 
@@ -339,12 +374,13 @@ await step("second reviewer", async (page) => {
     await p.waitForSelector(`#inspector article.card[data-card-id="${object}"]`);
     const state = await p.evaluate(() => ({
       signs: document.querySelectorAll("#inspector .sign").length,
-      added: document.querySelectorAll("#inspector tr.added").length,
+      added: document.querySelectorAll("#inspector .added").length,
       progress: document.querySelector("#inspector .card-progress").textContent,
     }));
     expect(state.signs === 0 && state.added === 0 && state.progress.startsWith("0/"), `${label}: the second reviewer sees no decision of the first (${state.signs} signs, ${state.progress})`);
-    await p.click('#inspector [data-card-act="chain"]');
-    expect(!(await p.textContent("#inspector .card-chain")).includes("at the last export"), `${label}: the chain shows no exported review state`);
+    const chainId = await openCurrentChain(p);
+    const chainText = chainId ? await p.textContent(`#${chainId}`) : "";
+    expect(chainText.includes("State") && !chainText.includes("at the last export"), `${label}: the chain shows no exported review state`);
   };
   await blind("current server");
   await blind("server without the filter", (p) => p.route("**/review/decisions?*", (r) => r.fulfill({ status: 404, body: "{}" })));
@@ -428,6 +464,272 @@ await step("390: boundary", async (page) => {
   await p.locator("#inspector .card-status").scrollIntoViewIfNeeded();
   await shot(p, "390-flagged");
 });
+
+const STEPS = ["Value", "Passage", "Record", "Source file", "Producer", "State"];
+
+await step("chain per value", async (page) => {
+  const p = await page(`smoke-${run}-g`);
+  const shape = await p.evaluate(() => {
+    const card = document.querySelector("#inspector article.card");
+    const buttons = [...card.querySelectorAll("button.prov-badge[aria-controls]")];
+    return {
+      buttons: buttons.length,
+      picks: card.querySelectorAll("button.pick[data-index]").length,
+      owned: buttons.filter((b) => b.parentElement.closest("[data-provenance-for]")).length,
+      worded: buttons.filter((b) => b.textContent.trim() && b.checkVisibility()).length,
+      bare: [...card.querySelectorAll("[data-provenance-for]")].filter((n) => !n.querySelector("button.prov-badge")).length,
+    };
+  });
+  expect(shape.buttons === shape.picks && shape.owned === shape.buttons && shape.worded === shape.buttons && shape.bare === 0, `every value has one visible producer button under a named row (${shape.buttons} buttons, ${shape.picks} values, ${shape.bare} bare rows)`);
+  // By keyboard: the producer button of a value that is not the selected one.
+  const target = await p.evaluate(() => {
+    const picks = [...document.querySelectorAll("#inspector button.pick[data-index]")];
+    const pick = picks.find((b) => !b.classList.contains("is-current")) ?? picks[0];
+    const button = pick.closest(".rc-value, [data-provenance-for]").querySelector("button.prov-badge");
+    button.dataset.smoke = "target";
+    return { index: pick.dataset.index, controls: button.getAttribute("aria-controls") };
+  });
+  await p.focus('#inspector button[data-smoke="target"]');
+  await p.keyboard.press("Enter");
+  const panel = p.locator(`#${target.controls}`);
+  const steps = (await panel.locator("dt").allTextContents()).map((s) => s.trim());
+  expect((await panel.isVisible()) && STEPS.every((s) => steps.includes(s)), `Enter opens the value's own chain with its six steps (${steps.join(", ")})`);
+  expect((await panel.textContent()).includes("no decision yet"), "the State of the chain is the value's review history");
+  expect((await p.getAttribute("#inspector button.pick.is-current", "data-index")) === target.index, "opening a chain selects its value");
+  await shot(p, "1440-chain-open");
+  await p.keyboard.press("Escape");
+  expect(!(await panel.isVisible()) && (await p.evaluate(() => document.activeElement?.dataset.smoke === "target")), "Escape closes the chain and returns the focus to its button, without leaving the card");
+  const name = await p.textContent("#inspector .active-field");
+  const saved = await after(p, () => p.keyboard.press("r"));
+  expect(saved.startsWith("Saved on ") && saved.endsWith(`, ${name} right.`), `R on a producer button decides the value it belongs to (${saved})`);
+});
+
+await step("sections before apparatus", async (page) => {
+  const p = await page(`smoke-${run}-h`, { hash: "#/" });
+  const order = await p.evaluate(() => [...document.querySelectorAll(".section-col .col-body > *")].map((n) => (n.matches("h3") ? `#${n.textContent}` : n.querySelector(".section-code")?.textContent ?? "")));
+  const at = order.indexOf("#Apparatus");
+  const before = order.slice(1, at < 0 ? undefined : at);
+  const after = at < 0 ? [] : order.slice(at + 1).filter((c) => !c.startsWith("#"));
+  expect(at > 0 && before.length > 0 && before.every((c) => /^[A-R]$/.test(c)) && after.length > 0 && after.every((c) => !/^[A-R]$/.test(c)), `the sections A to R come first and apparatus parts follow under their own heading (${before.length} sections, ${after.length} apparatus parts)`);
+});
+
+await step("drawer by wiki page", async (page) => {
+  const p = await page(reviewerA, { hash: "#/?w=fields" });
+  await p.click('#inspector [data-card-act="wiki"]');
+  const d = await p.evaluate(() => {
+    const drawer = document.querySelector("#inspector .wiki-drawer");
+    const heads = [...drawer.querySelectorAll(".candidates > li > .cand-head a")].map((a) => a.textContent.trim());
+    const routes = [...drawer.querySelectorAll(".cand-routes > li")];
+    return {
+      heads,
+      routes: routes.length,
+      states: routes.map((r) => r.querySelector(".cand-claim")?.textContent ?? ""),
+      agreeing: drawer.querySelectorAll(".cand-agree").length,
+      hrefs: [...drawer.querySelectorAll("a[href]")].map((a) => a.getAttribute("href")),
+    };
+  });
+  expect(d.heads.length > 0 && new Set(d.heads).size === d.heads.length, `each wiki page stands once with its routes under it (${d.heads.length} pages, ${d.routes} routes)`);
+  expect(d.states.length > 0 && d.states.every((s) => s.startsWith("proposed")), "every route of the drawer is proposed");
+  expect(d.agreeing > 0, "a field candidate shows the words that agreed");
+  expect(d.hrefs.length > 0 && d.hrefs.every((h) => h.startsWith("/#entry=")), "wiki links open the local record in the docs app");
+});
+
+await step("390: card first, pager and decision bar in reach", async (page) => {
+  // Records every scrollIntoView behaviour the page asks for.
+  const record = (q) =>
+    q.addInitScript(() => {
+      const calls = (window.__scrolls = []);
+      const original = Element.prototype.scrollIntoView;
+      Element.prototype.scrollIntoView = function (options) {
+        calls.push(typeof options === "object" && options ? options.behavior ?? "auto" : "auto");
+        return original.call(this, options);
+      };
+    });
+  const p = await page(`smoke-${run}-i`, { width: 390, height: 844, motion: "reduce", setup: record });
+  const layout = await p.evaluate(() => ({
+    cardTop: document.querySelector("#inspector article.card").getBoundingClientRect().top,
+    pills: document.getElementById("source-pills").checkVisibility(),
+    pager: document.querySelector(".slip-pager").checkVisibility(),
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  }));
+  expect(layout.cardTop < 844 && !layout.pills && layout.pager, `390: the card begins on the first screen under its slip pager, the filters folded (top ${Math.round(layout.cardTop)}px)`);
+  expect(layout.overflow <= 0, `390: no horizontal scroll (${layout.overflow}px)`);
+  await p.click("#filters-toggle");
+  expect((await p.isVisible("#source-pills")) && (await p.getAttribute("#filters-toggle", "aria-expanded")) === "true", "390: the Filters button unfolds the filters");
+  await p.click("#filters-toggle");
+  // A low window makes the card taller than it, so the bar has to stick.
+  await p.setViewportSize({ width: 390, height: 420 });
+  const foot = await p.evaluate(() => {
+    const article = document.querySelector("#inspector article.card");
+    window.scrollTo(0, article.getBoundingClientRect().top + window.scrollY + 40);
+    const f = article.querySelector(".card-foot");
+    return { position: getComputedStyle(f).position, bottom: f.getBoundingClientRect().bottom, tall: article.getBoundingClientRect().height > innerHeight };
+  });
+  expect(foot.tall && foot.position === "sticky" && Math.abs(foot.bottom - 420) < 2, `390: the decision bar stays at the bottom of the window over a card taller than it (${foot.position}, bottom ${Math.round(foot.bottom)} of 420px)`);
+  await p.setViewportSize({ width: 390, height: 844 });
+  const before = await p.getAttribute("#inspector article.card", "data-card-id");
+  await p.click('.slip-pager [data-step="1"]');
+  await p.waitForFunction((b) => document.querySelector("#inspector article.card")?.dataset.cardId !== b, before);
+  await p.waitForFunction(() => Boolean(document.activeElement?.closest("#inspector article.card")));
+  expect(true, "390: Next in the slip pager opens the next card and moves the focus into it");
+  const scrolls = await p.evaluate(() => window.__scrolls);
+  expect(scrolls.length > 0 && !scrolls.includes("smooth"), `390: under reduced motion the card comes into view without smooth scrolling (${scrolls.join(", ")})`);
+  await shot(p, "390-stacked");
+});
+
+await step("320: header", async (page) => {
+  const p = await page(reviewerA, { width: 320, height: 700 });
+  const o = await p.evaluate(() => {
+    const width = document.documentElement.clientWidth;
+    return {
+      page: document.documentElement.scrollWidth - width,
+      header: [...document.querySelectorAll("header.site *")].filter((n) => n.getBoundingClientRect().right > width + 0.5).length,
+    };
+  });
+  expect(o.page <= 0 && o.header === 0, `320: the header fits without horizontal scroll (${o.page}px, ${o.header} elements beyond the edge)`);
+  await shot(p, "320-header");
+});
+
+// The record desk's print side. Records itself is the docs app's view (strand
+// S1); until it stands, the docs page hosts the cards in this harness, which
+// imports the adapter as Records does and wires the chain buttons the way
+// records.js will: a panel is drawn from its row when its button opens it.
+async function openRecords({ width = 1440, height = 900 } = {}) {
+  const context = await browser.newContext({ viewport: { width, height } });
+  const page = await context.newPage();
+  page.setDefaultTimeout(20000);
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto(`${origin}/`);
+  await page.waitForFunction(() => typeof RecordCard !== "undefined");
+  const mounted = await page.evaluate(async () => {
+    const P = await import("/viewer/records-print.js");
+    await P.load();
+    // The first object the filter selects that holds values.
+    const pickFirst = async (filter) => {
+      for (const s of P.list(filter).slice(0, 20)) if (P.chainRows(await P.model(s.id)).size) return s.id;
+      return null;
+    };
+    const ids = [...new Set([...P.list({ review: "sample" }).slice(0, 3).map((s) => s.id), await pickFirst({ wiki: "fields" }), await pickFirst({ wiki: "text" }), await pickFirst({ wiki: "conflict" }), await pickFirst({ part: "Index A" })].filter(Boolean))];
+    const models = new Map();
+    for (const id of ids) models.set(id, await P.model(id));
+    const slips = P.list({ review: "sample" }).slice(0, 3);
+    const section = document.createElement("section");
+    section.id = "records-smoke";
+    section.setAttribute("aria-label", "Print records");
+    section.innerHTML = slips.map((s) => RecordCard.slip(s)).join("") + [...models.values()].map((m) => RecordCard.card(m)).join("");
+    document.body.prepend(section);
+    section.addEventListener("click", (e) => {
+      const button = e.target.closest("button.prov-badge[aria-controls]");
+      if (!button) return;
+      // Detail's handler on the document knows the wiki chains only.
+      e.stopPropagation();
+      const m = models.get(button.closest("article[data-record]").dataset.record);
+      const id = button.getAttribute("aria-controls");
+      const hit = P.chainRows(m).get(id);
+      const panel = document.getElementById(id);
+      const open = button.getAttribute("aria-expanded") !== "true";
+      if (open) panel.innerHTML = RecordCard.chainSteps(m, hit.r, hit.i);
+      panel.hidden = !open;
+      button.setAttribute("aria-expanded", String(open));
+    });
+    window.__records = { P, models };
+    return {
+      ids,
+      slips: slips.map((s) => s.relation.state),
+      relations: [...models.values()].map((m) => m.relation.state),
+      links: [...models.values()].flatMap((m) => m.wiki.candidates.flatMap((c) => [c.href, ...c.routes.map((r) => r.href).filter(Boolean)])),
+    };
+  });
+  return Object.assign(page, { mounted });
+}
+
+await step(
+  "records: print cards through the shared card",
+  async (page) => {
+    const p = await page();
+    const { ids, slips, relations, links } = p.mounted;
+    expect(ids.length >= 4, `records: ${ids.length} print objects drawn through the shared card`);
+    expect([...slips, ...relations].every((s) => s === "proposed"), "records: every relation of a slip and a card is proposed");
+    expect(links.length > 0 && links.every((h) => h.startsWith("#entry=")), `records: wiki candidates link in-app (${links.length} links)`);
+    const shape = await p.evaluate(() => {
+      const { P, models } = window.__records;
+      return [...document.querySelectorAll("#records-smoke article[data-record]")].map((card) => {
+        const m = models.get(card.dataset.record);
+        const rows = P.chainRows(m);
+        const buttons = [...card.querySelectorAll("button.prov-badge[aria-controls]")];
+        return {
+          id: card.dataset.record,
+          values: rows.size,
+          buttons: buttons.length,
+          keyed: buttons.filter((b) => b.parentElement.closest("[data-provenance-for]")?.dataset.provenanceFor === rows.get(b.getAttribute("aria-controls"))?.r.key).length,
+          panels: buttons.filter((b) => document.getElementById(b.getAttribute("aria-controls"))).length,
+          bare: [...card.querySelectorAll("[data-provenance-for]")].filter((n) => ![...n.querySelectorAll("button.prov-badge")].some((b) => b.checkVisibility())).length,
+          regions: [...card.querySelectorAll("[data-region]")].map((n) => n.dataset.region).join(" "),
+        };
+      });
+    });
+    for (const c of shape) {
+      expect(c.buttons === c.values && c.keyed === c.buttons && c.panels === c.buttons && c.bare === 0, `records ${c.id}: ${c.buttons} visible chain buttons for ${c.values} values, each under its row and leading to its panel`);
+      expect(c.regions === "head values source", `records ${c.id}: regions in the order head, values, source (${c.regions})`);
+    }
+    // Every chain of the first two cards opens with its six steps.
+    const opened = await p.evaluate((steps) => {
+      const out = [];
+      for (const card of [...document.querySelectorAll("#records-smoke article[data-record]")].slice(0, 2)) {
+        for (const b of card.querySelectorAll("button.prov-badge[aria-controls]")) {
+          b.click();
+          const panel = document.getElementById(b.getAttribute("aria-controls"));
+          const seen = [...panel.querySelectorAll("dt")].filter((d) => d.checkVisibility()).map((d) => d.textContent.trim());
+          out.push(steps.every((s) => seen.includes(s)) && !panel.hidden);
+          b.click();
+        }
+      }
+      return out;
+    }, STEPS);
+    expect(opened.length > 0 && opened.every(Boolean), `records: ${opened.filter(Boolean).length} of ${opened.length} chains open with their six visible steps`);
+    // By keyboard: Enter opens, Escape closes and returns the focus.
+    const first = p.locator("#records-smoke article[data-record] button.prov-badge").first();
+    await first.focus();
+    await p.keyboard.press("Enter");
+    const controls = await first.getAttribute("aria-controls");
+    expect(await p.isVisible(`#${controls}`), "records: Enter on a producer button opens its chain");
+    await shot(p, "records-1440-chain");
+    await p.keyboard.press("Escape");
+    expect(!(await p.isVisible(`#${controls}`)) && (await p.evaluate((id) => document.activeElement?.getAttribute("aria-controls") === id, controls)), "records: Escape closes the chain and returns the focus to its button");
+    // A located passage leads to its mark in the source text.
+    const shown = await p.evaluate(() => {
+      for (const b of document.querySelectorAll("#records-smoke button.prov-badge[aria-controls]")) {
+        b.click();
+        const show = document.getElementById(b.getAttribute("aria-controls")).querySelector("button[data-rc-show]");
+        if (show) {
+          show.click();
+          return document.activeElement?.id === show.dataset.rcShow;
+        }
+        b.click();
+      }
+      return null;
+    });
+    expect(shown === true, `records: "Show in source" focuses the value's mark (${shown})`);
+  },
+  "records"
+);
+
+for (const [width, height] of [[390, 844], [320, 700]]) {
+  await step(
+    `records ${width}: no horizontal scroll`,
+    async (page) => {
+      const p = await page({ width, height });
+      const o = await p.evaluate(() => {
+        const width = document.documentElement.clientWidth;
+        const section = document.getElementById("records-smoke");
+        return { scroll: section.scrollWidth - section.clientWidth, beyond: [...section.querySelectorAll("*")].filter((n) => n.getBoundingClientRect().right > width + 0.5 && n.checkVisibility()).length };
+      });
+      expect(o.scroll <= 0 && o.beyond === 0, `records ${width}: the print cards fit the width (${o.beyond} elements beyond the edge)`);
+      await shot(p, `records-${width}`);
+    },
+    "records"
+  );
+}
 
 expect(errors.length === 0, `no script error on the page${errors.length ? ` (${[...new Set(errors)].join("; ")})` : ""}`);
 await browser.close();

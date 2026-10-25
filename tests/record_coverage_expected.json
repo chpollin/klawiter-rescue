@@ -3,11 +3,7 @@
  "gaps": {
   "recordFieldGaps": {
    "_provenance": {
-    "absent": 4758,
-    "tooltipOnly": 0
-   },
-   "@id": {
-    "absent": 4758,
+    "absent": 4611,
     "tooltipOnly": 0
    },
    "@type": {
@@ -15,27 +11,19 @@
     "tooltipOnly": 0
    },
    "fieldEvidence": {
-    "absent": 4758,
+    "absent": 4751,
     "tooltipOnly": 0
    },
-   "revisionDates": {
-    "absent": 4758,
+   "review": {
+    "absent": 1,
     "tooltipOnly": 0
    },
    "ruleGaps": {
-    "absent": 852,
-    "tooltipOnly": 0
-   },
-   "translationStatements": {
-    "absent": 181,
+    "absent": 1,
     "tooltipOnly": 0
    }
   },
   "publicationFieldGaps": {
-   "imprint": {
-    "absent": 3039,
-    "tooltipOnly": 0
-   },
    "provenance": {
     "absent": 3273,
     "tooltipOnly": 0
@@ -47,9 +35,9 @@
   },
   "chains": {
    "recordValues": 18412,
-   "recordWithoutChain": 17790,
+   "recordWithoutChain": 4271,
    "publicationValues": 16862,
-   "publicationWithoutChain": 16862
+   "publicationWithoutChain": 2042
   }
  },
  "renderedGarbage": {

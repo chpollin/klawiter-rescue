@@ -10,7 +10,15 @@
 // and lies in view (acceptsKeys); a card that is loading or saving takes no
 // key; and a decision names a value the card displays, posted only while that
 // card is still the one on screen.
+//
+// A card is drawn by the record desk's shared card (/js/record-card.js, see
+// knowledge/design.md, Record desk) from the model of the print adapter
+// (records-print.js), so a print card here and in Records has one anatomy:
+// every value names its producer on a button that opens its own chain. The
+// workbench adds its decision layer to that model: each value becomes a pick
+// button with its decision sign, and the card keeps its foot of decisions.
 
+import { cardModel, chainRows, escape, safeId, sepHtml, targetsHtml, titleRow, wikiHash } from "./records-print.js";
 import {
   DECISION_WORD,
   SECTION_NAME,
@@ -22,15 +30,9 @@ import {
   WIKI_STATUS_ORDER,
   about,
   acceptsKeys,
-  candidateRoute,
-  candidates,
-  cardLines,
-  chain,
-  claimsShown,
   confirmable,
   correctionValue,
   decisionLine,
-  describeStep,
   effective,
   findPassage,
   fold,
@@ -49,16 +51,27 @@ import {
   rows,
   sectionCode,
   segments,
-  shownIndices,
   sortRecords,
   targetOf,
-  targetsOf,
   valueName,
   valueText,
   vocabFor,
-  wikiHref,
   wikiState,
 } from "./render.js";
+
+// record-card.js is a classic script whose `const RecordCard` is a global
+// binding rather than a property of globalThis; a module sees that binding.
+const Card = globalThis.RecordCard ?? (typeof RecordCard === "undefined" ? null : RecordCard);
+
+// Links of this page: a print object stays in the workbench, a wiki record
+// opens in the local docs app the review server serves at its root.
+const objectUrl = (id) => {
+  const object = id.includes("#") ? id : `${id}#1`;
+  return `#/?${new URLSearchParams({ q: object.split("#")[0], o: object })}`;
+};
+const LINKS = { wiki: (page, publication) => wikiHash(page, publication, "/"), print: objectUrl };
+const STACKED = "(max-width: 60rem)";
+const reducedMotion = () => Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
 
 const TRAY = 30;
 const VIEWS = new Set(["axis", "lanes", "board"]);
@@ -152,6 +165,17 @@ function icon(name) {
   return svg;
 }
 
+// The same icon as markup, for cards drawn from strings.
+const iconHtml = (name) =>
+  `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ico">${(ICONS[name] ?? []).map((d) => `<path d="${d}"/>`).join("")}</svg>`;
+
+// Card markup is built from escaped parts only, so parsing it adds no markup of the data.
+function fromHtml(html) {
+  const t = document.createElement("template");
+  t.innerHTML = html;
+  return t.content.firstElementChild;
+}
+
 const hidden = (text) => make("span", { class: "visually-hidden", text });
 const count = (n) => n.toLocaleString("en-US");
 
@@ -203,11 +227,6 @@ function legacyRoute() {
     el("help-dialog").showModal();
   }
 }
-
-const objectUrl = (id) => {
-  const object = id.includes("#") ? id : `${id}#1`;
-  return `#/?${new URLSearchParams({ q: object.split("#")[0], o: object })}`;
-};
 
 function showError(message) {
   el("error").textContent = message;
@@ -432,8 +451,27 @@ function column(cls, title, control, ...body) {
   );
 }
 
+// Below the stacking width the card comes first, and this pager above it
+// steps through the slips of its list without scrolling past them (D15).
 function inspectorColumn() {
-  return column("detail-col", "Card", null, make("div", { id: "inspector" }));
+  const step = (delta, label, text) => make("button", { type: "button", class: "text-btn", "data-step": String(delta), "aria-label": label, text });
+  const pager = make("nav", { class: "slip-pager", "aria-label": "Entries of the list" }, step(-1, "Previous entry", "‹ Previous"), make("span", { class: "tray-range", id: "slip-position" }), step(1, "Next entry", "Next ›"));
+  return column("detail-col", "Card", pager, make("div", { id: "inspector" }));
+}
+
+// The pager says where the active slip stands in its list.
+function renderSlipPager(id) {
+  const where = el("slip-position");
+  if (!where) return;
+  const slip = document.querySelector(`.slip[data-id="${CSS.escape(id)}"]`);
+  const all = slip ? [...slip.closest(".slip-list").querySelectorAll(".slip")] : [];
+  const at = all.indexOf(slip);
+  where.textContent = at >= 0 ? `${count(at + 1)} of ${count(all.length)}` : "";
+  for (const b of document.querySelectorAll(".slip-pager [data-step]")) {
+    const target = all[at + Number(b.dataset.step)];
+    b.disabled = at < 0 || !target;
+    b.dataset.target = target?.dataset.id ?? "";
+  }
 }
 
 // Views
@@ -456,6 +494,13 @@ function renderAxis(f, hits, done) {
     default: (a, b) => (a.code || "~").localeCompare(b.code || "~", "en") || a.label.localeCompare(b.label, "en"),
   };
   list.sort(by[ui.sectionSort] ?? by.default);
+  // The compiler's sections A to R come first; apparatus parts and wiki
+  // categories follow under headings of their own (D17).
+  const kinds = [
+    ["", list.filter((g) => /^[A-R]$/.test(g.code))],
+    ["Apparatus", list.filter((g) => g.code && !/^[A-R]$/.test(g.code))],
+    ["Wiki pages", list.filter((g) => !g.code)],
+  ];
   if (ui.section && !groups.has(ui.section)) ui.section = "";
   const group = ui.section ? groups.get(ui.section) : null;
   const items = group ? group.items : hits;
@@ -477,8 +522,9 @@ function renderAxis(f, hits, done) {
       make("span", { class: "section-name", text: g ? g.label : "All sections" }),
       make("span", { class: "section-count", text: count(g ? g.items.length : hits.length) })
     );
+  const sections = kinds.flatMap(([heading, items]) => (items.length ? [heading ? make("h3", { class: "section-group", text: heading }) : null, ...items.map(section)] : []));
   el("desk").replaceChildren(
-    column("section-col", "Sections", sortSelect("data-section-sort", ui.sectionSort, SECTION_SORTS, "Order of the sections"), section(null), ...list.map(section)),
+    column("section-col", "Sections", sortSelect("data-section-sort", ui.sectionSort, SECTION_SORTS, "Order of the sections"), section(null), ...sections),
     column(
       "slip-col",
       `${group ? group.label : "All entries"} (${count(items.length)})`,
@@ -571,6 +617,7 @@ function markActive(id) {
   for (const node of document.querySelectorAll(`.slip[data-id="${CSS.escape(id)}"]`)) setActive(node, true);
   const article = cards.get(id)?.dom.article;
   if (article) setActive(article, true);
+  renderSlipPager(id);
 }
 
 function setActive(node, on) {
@@ -616,8 +663,9 @@ async function activate(id, { focus = false } = {}) {
     markActive(id);
     if (model.dom.drawer && model.wiki.status === "conflict") toggleDrawer(model, true);
     if (focus) focusSelected(model);
-    if (window.matchMedia?.("(max-width: 60rem)").matches && focus) {
-      holder.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Stacked, the column with its slip pager comes into view; smoothly only where motion is welcome (D26).
+    if (window.matchMedia?.(STACKED).matches && focus) {
+      (holder.closest(".col") ?? holder).scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
     }
   } catch (e) {
     if (token === loadToken) showError(e.message);
@@ -665,60 +713,42 @@ function buildCardFor(entry, loaded) {
   return object ? buildCard(entry, object, loaded.byId.get(object.entry), loaded.byId) : null;
 }
 
-function signOf(decision) {
-  if (!decision) return null;
-  const glyph = { confirm: "✓", correct: "✗", unresolved: "?" }[decision];
-  return make("span", { class: `sign sign-${decision}` }, make("span", { "aria-hidden": "true", text: glyph }), hidden(DECISION_WORD[decision]));
+const GLYPH = { confirm: "✓", correct: "✗", unresolved: "?" };
+
+function signHtml(decision) {
+  if (!decision) return "";
+  return `<span class="sign sign-${decision}"><span aria-hidden="true">${GLYPH[decision]}</span><span class="visually-hidden">${DECISION_WORD[decision]}</span></span>`;
 }
 
-function valueToken(model, row, sub = false) {
+// One value as the reviewer decides it: a pick button with its decision sign,
+// its correction and its address targets. The producer word that follows it
+// is the shared card's button, so a tag no longer repeats it.
+function tokenHtml(model, row, sub = false) {
   const d = model.state.byIndex.get(row.index);
   // Read only, the state the last export recorded stands for the decision.
   const decision = d?.decision ?? (review.recording ? null : (row.node.reviewAction ?? STATE_DECISION[row.node.reviewState]));
-  const token = make(
-    "span",
-    { class: `token${sub ? " sub" : ""}` },
-    make("button", { type: "button", class: `pick${decision ? ` decided-${decision}` : ""}`, "data-index": String(row.index), "aria-label": `${row.name}, ${row.text}`, text: row.text }),
-    signOf(decision)
-  );
-  if (row.producer === "llm") token.append(make("span", { class: "tag", text: "LLM proposal" }));
-  if (isInherited(row, model.object)) token.append(make("span", { class: "tag quiet", text: "inherited" }));
+  let html = `<span class="token${sub ? " sub" : ""}"><button type="button" class="pick${decision ? ` decided-${decision}` : ""}" data-index="${row.index}" aria-label="${escape(`${row.name}, ${row.text}`)}">${escape(row.text)}</button>${signHtml(decision)}`;
+  if (isInherited(row, model.object) && row.producer !== "inherited") html += '<span class="tag quiet">inherited</span>';
   if (d?.decision === "correct") {
     const c = d.correction;
     // A flag is right at a passage, every other value is right as a value.
     const right = !c?.span ? "should not exist" : typeof c.value === "boolean" ? `right at "${model.record.text.slice(c.span[0], c.span[1])}"` : `right is "${valueText({ field: row.field, value: c.value })}"`;
-    token.append(make("span", { class: "correction", text: right }));
+    html += `<span class="correction">${escape(right)}</span>`;
   }
-  const targets = targetsOf(model.object, row.field);
-  if (targets.length) {
-    const list = make("span", { class: "targets" }, icon("arrow"), hidden("resolves to "));
-    for (const t of targets.slice(0, 6)) {
-      list.append(t.record ? make("a", { href: objectUrl(t.record), text: t.normalized }) : make("span", { class: "unresolved", text: `${t.normalized} unresolved` }));
-    }
-    if (targets.length > 6) list.append(make("span", { text: `${targets.length - 6} more in the chain` }));
-    token.append(list);
-  }
-  return token;
+  return `${html}${targetsHtml(model.card.values.get(row.index)?.targets ?? [], LINKS)}</span>`;
 }
 
-function valueTable(model) {
-  const body = make("tbody");
-  for (const line of model.lines.lines) {
-    const cell = make("td", { class: "value" });
-    line.items.forEach((item, i) => {
-      if (i > 0) cell.append(make("span", { class: "sep", text: item.item === line.items[i - 1].item ? ", " : " / " }));
-      cell.append(valueToken(model, item.row, item.sub));
-    });
-    body.append(make("tr", {}, make("th", { scope: "row", class: "field", text: line.label }), cell));
+// The review history of one value in words, the State of its chain.
+function historyText(model, row) {
+  const { object, state } = model;
+  const past = decisionHistory(review.log, object.id, row.field);
+  if (past.length) {
+    const current = state.byIndex.get(row.index);
+    return past.map((d) => `${decisionLine(d)}, ${d === current ? "in force" : state.stale.includes(d) ? "no longer applies, the value changed since" : "replaced or withdrawn"}`).join("; ");
   }
-  for (const d of model.state.own) {
-    if (d.decision !== "missing" && d.decision !== "boundary") continue;
-    const text = d.decision === "missing" ? `${missingLabel(d.correction.field)}, "${valueText({ field: d.correction.field, value: d.correction.value })}"` : d.note;
-    const label = d.decision === "missing" ? `Remove the added value ${text}` : "Remove the boundary flag";
-    const remove = canDecide(model) ? make("button", { type: "button", class: "withdraw", "data-withdraw": d.id, "aria-label": label, title: label, text: "Remove" }) : null;
-    body.append(make("tr", { class: "added" }, make("th", { scope: "row", class: "field", text: d.decision === "missing" ? "Added" : "Boundary" }), make("td", { class: "value" }, text, remove)));
-  }
-  return make("table", { class: "card-values" }, make("thead", { class: "visually-hidden" }, make("tr", {}, make("th", { scope: "col", text: "Field" }), make("th", { scope: "col", text: "Values" }))), body);
+  // The export carries every reviewer's decisions; while recording, a reviewer sees only their own.
+  if (row.node.reviewState && !review.recording) return `${row.node.reviewAction === "correct" ? "corrected and confirmed" : row.node.reviewState} at the last export`;
+  return isApparatus(object) ? "not part of the review" : "no decision yet";
 }
 
 function entryText(model) {
@@ -735,72 +765,40 @@ function entryText(model) {
   return box;
 }
 
-function wikiFields(target, page) {
-  const src = data.wiki.pubs[target] ?? data.wiki.pages[String(page)] ?? {};
-  const extent = src.extent ? String(src.extent) : null;
-  return [
-    ["Title", src.title],
-    ["Imprint", [src.place, src.publisher, src.year].filter(Boolean).join(", ")],
-    ["Extent", extent],
-    ["Translator", src.translator],
-  ].filter(([, v]) => v);
-}
+const definitionHtml = (pairs, cls = "compare-dl") => (pairs.length ? `<dl class="${cls}">${pairs.map(([k, v]) => `<dt>${escape(k)}</dt><dd>${escape(v)}</dd>`).join("")}</dl>` : "");
 
-function definitionList(pairs, cls = "compare-dl") {
-  const dl = make("dl", { class: cls });
-  for (const [k, v] of pairs) dl.append(make("dt", { text: k }), make("dd", { text: String(v) }));
-  return dl;
-}
-
-// The wiki side of a card: every candidate the concordance proposes, each a
-// claim in the state p07 gave it, with its route and the wiki page's permalink.
-function wikiDrawer(model) {
-  const w = model.wiki;
-  const drawer = make("section", { class: "wiki-drawer", hidden: true, "aria-label": "Wiki candidates" });
-  if (w.status === "none") {
-    drawer.append(make("p", { class: "quiet", text: "The concordance proposes no wiki page for this object." }));
-    return drawer;
-  }
-  drawer.append(make("p", { class: "drawer-note", text: "Proposed by the concordance and not confirmed by anyone." }));
+// The wiki side of a card: every candidate the concordance proposes, one wiki
+// page once with its routes under it in route order, each a claim in the
+// state p07 gave it with the words that agreed, and the page's fields (D16).
+function drawerHtml(model) {
+  const w = model.card.wiki;
+  let html = `<section class="wiki-drawer" id="w-${model.uid}" hidden aria-label="Wiki candidates">`;
+  if (w.status === "none") return `${html}<p class="quiet">The concordance proposes no wiki page for this object.</p></section>`;
+  html += '<p class="drawer-note">Proposed by the concordance and not confirmed by anyone.</p>';
   if (w.diff) {
     const d = w.diff;
-    const table = make("table", { class: "conflict" }, make("thead", {}, make("tr", {}, make("th", { scope: "col", text: "Field" }), make("th", { scope: "col", text: "Print" }), make("th", { scope: "col", text: "Wiki" }))));
-    const body = make("tbody");
-    for (const field of d.differ) {
-      body.append(make("tr", {}, make("th", { scope: "row" }, icon("alert"), ` ${field}`), make("td", { text: d.printFields?.[field] ?? "not read" }), make("td", { text: d.wikiFields?.[field] ?? "not given" })));
-    }
-    table.append(body);
-    drawer.append(
-      make("p", {}, `Field conflict with `, make("a", { href: wikiHref(d.page, d.wiki), target: "_blank", rel: "noopener", text: `wiki page ${d.page}` }), d.agree?.length ? `, agreeing in ${d.agree.join(", ")}` : ""),
-      table
-    );
+    html += `<p>Field conflict with <a href="${escape(d.href)}" target="_blank" rel="noopener">wiki page ${escape(d.page)}</a>${d.agree.length ? `, agreeing in ${escape(d.agree.join(", "))}` : ""}</p>`;
+    html += `<table class="conflict"><thead><tr><th scope="col">Field</th><th scope="col">Print</th><th scope="col">Wiki</th></tr></thead><tbody>${d.rows
+      .map(([field, print, wiki]) => `<tr><th scope="row">${iconHtml("alert")} ${escape(field)}</th><td>${escape(print)}</td><td>${escape(wiki)}</td></tr>`)
+      .join("")}</tbody></table>`;
   }
-  const list = make("ol", { class: "candidates" });
-  for (const c of candidates(w)) {
-    // Claim identifiers are for tracing, not reading: they stand in the title.
-    const claims = c.claims.length === 1 ? "1 claim" : `${c.claims.length} claims`;
-    list.append(
-      make(
-        "li",
-        {},
-        make(
-          "p",
-          { class: "cand-head" },
-          make("a", { href: wikiHref(c.page, c.target.startsWith("klawiter:publication/") ? c.target : null), target: "_blank", rel: "noopener" }, icon("wiki"), `Wiki page ${c.page}`),
-          make("span", { class: "cand-route", text: candidateRoute(c) }),
-          make("span", { class: "cand-claim", title: c.claims.join(", "), text: `${c.state}, ${claims}` }),
-          c.stale ? make("span", { class: "tag", text: "record text changed since" }) : null
-        ),
-        definitionList(wikiFields(c.target, c.page))
-      )
-    );
+  html += '<ol class="candidates">';
+  for (const page of w.candidates) {
+    const routes = page.routes
+      .map((r) => {
+        // Claim identifiers are for tracing, not reading: they stand in the title.
+        const claims = r.claims.length === 1 ? "1 claim" : `${r.claims.length} claims`;
+        const publication = r.href ? ` <a href="${escape(r.href)}" target="_blank" rel="noopener">publication ${escape(r.publication)}</a>` : "";
+        const agreeing = r.agreeing.length ? `<span class="cand-agree">agreeing words: ${escape(r.agreeing.join(", "))}</span>` : "";
+        return `<li><p class="cand-line"><span class="cand-route">${escape(r.words)}</span>${publication} <span class="cand-claim" title="${escape(r.claims.join(", "))}">${escape(`${r.state}, ${claims}`)}</span>${r.stale ? ' <span class="tag">record text changed since</span>' : ""}</p>${agreeing}${r.fields ? definitionHtml(r.fields) : ""}</li>`;
+      })
+      .join("");
+    html += `<li><p class="cand-head"><a href="${escape(page.href)}" target="_blank" rel="noopener">${iconHtml("wiki")}Wiki page ${escape(page.page)}</a></p>${definitionHtml(page.fields)}<ul class="cand-routes">${routes}</ul></li>`;
   }
-  drawer.append(list);
+  html += "</ol>";
   // The projection keeps the first claims of a long route; totals give the full count.
-  for (const [key, n] of Object.entries(w.totals ?? {})) {
-    drawer.append(make("p", { class: "quiet", text: claimsShown(key, w[key]?.length ?? 0, n) }));
-  }
-  return drawer;
+  for (const note of w.notes) html += `<p class="quiet">${escape(note)}</p>`;
+  return `${html}</section>`;
 }
 
 function toggleDrawer(model, open = null) {
@@ -809,48 +807,45 @@ function toggleDrawer(model, open = null) {
   model.dom.wikiButton.setAttribute("aria-expanded", String(show));
 }
 
-function cardHead(model) {
-  const { entry, object, record, lines, state } = model;
-  const siblings = data.siblings.get(entry.entry) ?? [];
-  const types = make("span", { class: "card-types" });
-  lines.types.forEach((row, i) => {
-    if (i) types.append(make("span", { class: "sep", text: ", " }));
-    types.append(valueToken(model, row));
-  });
+// The head: address, the source sign as the link to the PDF page, the
+// object's place in its entry, the title with its producer, and the
+// relation, flag and progress words.
+function headHtml(model) {
+  const { card: m, entry, object, record, state } = model;
+  const status = m.wiki.status;
+  const t = m.titleValue;
+  const untitled = () => {
+    const start = (entry.snippet || "").replace(/[\s.,;:]+$/, "");
+    return `<span class="untitled-title"><span class="visually-hidden">No title read, the text begins </span>${escape(start ? `${start}…` : "No title read")}</span>`;
+  };
+  const title = t ? `<span data-provenance-for="title">${Card.valueHtml(titleRow(m), t, 0)}</span>` : untitled();
+  const slot = t ? Card._slot(titleRow(m), t, 0) : "";
   const progress = canDecide(model)
-    ? make("span", { class: `card-progress${state.complete ? " is-complete" : ""}`, title: state.complete ? "Review complete" : `${state.decided} of ${model.all.length} values decided` }, state.complete ? icon("check") : null, state.complete ? "complete" : `${state.decided}/${model.all.length}`)
-    : make("span", { class: "card-progress", text: isApparatus(object) ? "not reviewed" : "read only" });
-  model.dom.wikiButton = make("button", { type: "button", class: `wiki-sign status-${model.wiki.status}`, "data-card-act": "wiki", "aria-expanded": "false", title: WIKI_STATUS[model.wiki.status][2] }, icon(WIKI_STATUS[model.wiki.status][0]), WIKI_STATUS[model.wiki.status][1]);
-  return make(
-    "header",
-    { class: "card-head" },
-    make(
-      "p",
-      { class: "card-id" },
-      make("span", { class: "card-address", text: objectName(object, record, "Unnumbered") }),
-      make("a", { class: "pdf-link", href: pdfHref(object.volume, record.pdfPage), target: "_blank", rel: "noopener", title: `${VOLUME_LABEL[object.volume]}, PDF page ${record.pdfPage}` }, icon("pdf"), `${VOLUME_SHORT[object.volume]} p. ${record.pdfPage}`),
-      lines.types.length ? types : make("span", { class: "card-types quiet", text: TYPE_LABEL[entry.types[0]] ?? "no type read" }),
-      siblings.length > 1 ? make("span", { class: "card-sibling quiet", text: `object ${siblings.indexOf(object.id) + 1} of ${siblings.length} in the entry` }) : null
-    ),
-    make(
-      "p",
-      { class: "card-status" },
-      model.dom.wikiButton,
-      // The red border of a contested card has this word beside it.
-      model.flagged ? make("span", { class: "card-flagged", title: "A value is marked wrong or unsure, or a missing value or a boundary is flagged" }, icon("alert"), "flagged") : null,
-      progress
-    )
-  );
+    ? `<span class="card-progress${state.complete ? " is-complete" : ""}" title="${state.complete ? "Review complete" : `${state.decided} of ${model.all.length} values decided`}">${state.complete ? `${iconHtml("check")}complete` : `${state.decided}/${model.all.length}`}</span>`
+    : `<span class="card-progress">${isApparatus(object) ? "not reviewed" : "read only"}</span>`;
+  // The red edge of a flagged card has this word beside it.
+  const flagged = model.flagged ? `<span class="card-flagged" title="A value is marked wrong or unsure, or a missing value or a boundary is flagged">${iconHtml("alert")}flagged</span>` : "";
+  return `<header class="rc-head card-head" data-region="head">`
+    + `<p class="rc-head-line card-id"><span class="card-address">${escape(objectName(object, record, "Unnumbered"))}</span>`
+    + `<a class="pdf-link" href="${escape(m.pdfHref)}" target="_blank" rel="noopener" title="${escape(`${VOLUME_LABEL[object.volume]}, PDF page ${record.pdfPage}`)}">${Card.sourceSign(m)}</a>`
+    + `${m.position ? `<span class="rc-position card-sibling">${escape(m.position)}</span>` : ""}</p>`
+    + `<h2 class="rc-title card-title" id="t-${model.uid}">${title}</h2>${slot}`
+    + `<p class="rc-head-line card-status">${m.type ? `<span class="badge rc-type">${escape(m.type)}</span>` : ""}`
+    + `<button type="button" class="wiki-sign status-${status}" data-card-act="wiki" aria-expanded="false" aria-controls="w-${model.uid}" title="${escape(WIKI_STATUS[status][2])}">${iconHtml(WIKI_STATUS[status][0])}${Card.relationMark(m)}</button>`
+    + `${flagged}${progress}</p></header>`;
 }
 
-function cardTitle(model) {
-  const h = make("h2", { class: "card-title", id: `t-${model.uid}` });
-  const [title] = model.lines.title;
-  const [subtitle] = model.lines.subtitle;
-  if (title) h.append(valueToken(model, title));
-  else h.append(titleNode(model.entry, "untitled-title"));
-  if (subtitle) h.append(make("span", { class: "subtitle" }, ": ", valueToken(model, subtitle)));
-  return h;
+// What the reviewer added to a card, each with the control that removes it.
+function addedHtml(model) {
+  const rowsOf = [];
+  for (const d of model.state.own) {
+    if (d.decision !== "missing" && d.decision !== "boundary") continue;
+    const text = d.decision === "missing" ? `${missingLabel(d.correction.field)}, "${valueText({ field: d.correction.field, value: d.correction.value })}"` : d.note;
+    const label = d.decision === "missing" ? `Remove the added value ${text}` : "Remove the boundary flag";
+    const remove = canDecide(model) ? ` <button type="button" class="withdraw" data-withdraw="${escape(d.id)}" aria-label="${escape(label)}" title="${escape(label)}">Remove</button>` : "";
+    rowsOf.push(`<div class="meta-row rc-row added"><div class="meta-label">${d.decision === "missing" ? "Added" : "Boundary"}</div><div class="meta-value">${escape(text)}${remove}</div></div>`);
+  }
+  return rowsOf.length ? `<div class="meta-table card-added">${rowsOf.join("")}</div>` : "";
 }
 
 function cardFoot(model) {
@@ -861,10 +856,7 @@ function cardFoot(model) {
       tools.append(make("button", { type: "button", class: `act act-${act}`, "data-act": act, "aria-pressed": "false", "aria-keyshortcuts": key }, icon(name), label));
     }
   }
-  tools.append(
-    make("button", { type: "button", class: "chain-toggle", "data-card-act": "chain", "aria-expanded": "false", "aria-controls": `c-${model.uid}`, title: "Provenance and review history of the selected value" }, icon("info"), "Chain"),
-    make("a", { class: "pdf-link value-pdf", target: "_blank", rel: "noopener" }, icon("pdf"), make("span"))
-  );
+  tools.append(make("a", { class: "pdf-link value-pdf", target: "_blank", rel: "noopener" }, icon("pdf"), make("span")));
   foot.append(tools);
   if (canDecide(model)) {
     const decided = model.state.decided >= model.all.length;
@@ -884,9 +876,11 @@ function cardFoot(model) {
 
 let uid = 0;
 
+// Every value of a card model, the title included, in the order it shows.
+const modelValues = (m) => [m.titleValue, ...m.groups.flatMap((g) => g.rows.flatMap((r) => r.values))].filter(Boolean);
+
 function buildCard(entry, object, record, byId) {
   const all = rows(object).map((r) => ({ ...r, name: valueName(r.field), text: valueText(r) }));
-  const lines = cardLines(all);
   const model = {
     uid: ++uid,
     entry,
@@ -894,68 +888,106 @@ function buildCard(entry, object, record, byId) {
     record,
     byId,
     all,
-    lines,
     byIndex: new Map(all.map((r) => [r.index, r])),
-    order: shownIndices(lines),
     state: objectReview(object, all, review.active, record.sha256),
     wiki: entry.wiki,
     selected: null,
     dom: {},
   };
   model.flagged = !model.state.complete && ([...model.state.byIndex.values()].some((d) => d.decision !== "confirm") || model.state.own.some((d) => d.decision === "boundary" || d.decision === "missing"));
+  const m = cardModel({ entry, object, byId, concordance: data.wiki, siblings: data.siblings.get(entry.entry), links: LINKS, idBase: `c${model.uid}` });
+  m.values = new Map(modelValues(m).map((v) => [v.index, v]));
+  model.card = m;
+  // The decision layer on the shared model: a pick per value, the review history as its State.
+  for (const v of m.values.values()) {
+    const row = model.byIndex.get(v.index);
+    v.html = `${sepHtml(v.sep)}${tokenHtml(model, row, v.sub)}`;
+    v.stateText = historyText(model, row);
+    // Selecting the value marks its passage in the entry text; no second way to it.
+    v.chain.passage.markId = null;
+  }
+  model.chains = chainRows(m);
   const classes = ["card"];
   if (record.kind === "header" || entry.types.includes("collection")) classes.push("is-guide");
   if (model.state.complete) classes.push("is-complete");
   else if (model.flagged) classes.push("is-contested");
   if (isApparatus(object)) classes.push("is-apparatus");
-  const head = cardHead(model);
-  const title = cardTitle(model);
-  model.dom.drawer = wikiDrawer(model);
-  model.dom.entry = entryText(model);
   const stale = model.state.stale.length
-    ? make("p", { class: "card-stale" }, icon("alert"), ` ${model.state.stale.length} earlier decision${model.state.stale.length > 1 ? "s" : ""} no longer appl${model.state.stale.length > 1 ? "y" : "ies"}, because a rebuild changed the value.`)
-    : null;
-  model.dom.chain = make("section", { class: "card-chain", id: `c-${model.uid}`, hidden: true, "aria-label": "Provenance" }, make("ol", { class: "chain" }));
+    ? `<p class="card-stale">${iconHtml("alert")} ${model.state.stale.length} earlier decision${model.state.stale.length > 1 ? "s" : ""} no longer appl${model.state.stale.length > 1 ? "y" : "ies"}, because a rebuild changed the value.</p>`
+    : "";
+  // The entry text stands above the values, so the passage of the selected value is in view as it is decided.
+  const article = fromHtml(
+    `<article class="${classes.join(" ")}" data-card-id="${escape(object.id)}" data-kind="print" aria-labelledby="t-${model.uid}">`
+      + headHtml(model)
+      + drawerHtml(model)
+      + `<section class="rc-source" data-region="source"><h3 class="rc-group-heading">${escape(m.sourceText.label)}</h3></section>`
+      + `<div class="rc-values" data-region="values">${m.groups.map((g) => Card.group(g)).join("")}${addedHtml(model)}</div>`
+      + stale
+      + "</article>"
+  );
+  model.dom.article = article;
+  model.dom.drawer = article.querySelector(".wiki-drawer");
+  model.dom.wikiButton = article.querySelector('[data-card-act="wiki"]');
+  model.dom.entry = entryText(model);
+  article.querySelector(".rc-source").append(model.dom.entry);
   model.dom.foot = cardFoot(model);
-  model.dom.article = make("article", { class: classes.join(" "), "data-card-id": object.id, "aria-labelledby": `t-${model.uid}` }, head, title, model.dom.drawer, model.dom.entry, valueTable(model), stale, model.dom.chain, model.dom.foot);
+  article.append(model.dom.foot);
+  // J and K follow the values in the order the card shows them.
+  model.order = [...article.querySelectorAll("button.pick[data-index]")].map((b) => Number(b.dataset.index));
   const pick = firstOpen(model);
   if (pick !== undefined) selectValue(model, pick);
   return model;
 }
 
+// A wiki page no print candidate names. Its values come from the local
+// projection of the wiki pages, and each chain says so and leads to the
+// record in the docs app, where its own chains stand.
 function buildWikiCard(entry) {
   const page = entry.pageInfo;
   const model = { uid: ++uid, entry, object: null, wiki: entry.wiki, dom: {} };
+  const href = wikiHash(entry.page, null, "/");
+  const type = (entry.wikiType || "").replaceAll("-", " ");
+  const chainOf = () => ({
+    passage: { gap: "not-located", reason: "the local projection of the wiki pages carries no offsets; the record in Records holds them" },
+    record: { id: `klawiter:entry/${entry.page}`, type: type || undefined, sign: `Wiki page ${entry.page}` },
+    sourceFile: { words: "wiki_concordance.json, the local projection of the wiki pages" },
+    producer: { words: "projected from the wiki record" },
+  });
+  const value = (key, text) => ({ text, producer: "derived", state: "not-reviewed", chainId: safeId(`c${model.uid}-${key}`), chain: chainOf() });
+  const m = {
+    kind: "wiki",
+    id: `klawiter:entry/${entry.page}`,
+    title: entry.title || "Untitled wiki page",
+    titleValue: entry.title ? value("title", entry.title) : null,
+    relation: { state: "proposed", words: WIKI_STATUS["wiki-only"][1] },
+    groups: [
+      {
+        rows: [
+          ["category", "Category", page.category],
+          ["imprint", "Imprint", [page.place, page.publisher, page.year].filter(Boolean).join(", ")],
+          ["editions", "Editions", page.pubCount ? `${page.pubCount} on the page` : null],
+        ]
+          .filter(([, , text]) => text)
+          .map(([key, label, text]) => ({ key, label, idBase: `c${model.uid}-${key}`, values: [value(key, String(text))] })),
+      },
+    ],
+    sourceText: { label: "Excerpt of the wiki text", text: page.snippet || "No text excerpt.", marks: [] },
+  };
+  model.card = m;
+  model.chains = chainRows(m);
+  const t = m.titleValue;
+  const title = t ? `<span data-provenance-for="title">${Card.valueHtml(titleRow(m), t, 0)}</span>` : escape(m.title);
   const search = (entry.title || "").split(/[:([]/)[0].trim();
-  model.dom.article = make(
-    "article",
-    { class: "card is-wiki", "data-card-id": entry.id, "aria-labelledby": `t-${model.uid}` },
-    make(
-      "header",
-      { class: "card-head" },
-      make("p", { class: "card-id" }, make("a", { class: "card-address", href: wikiHref(entry.page), target: "_blank", rel: "noopener", text: `Wiki page ${entry.page}` }), make("span", { class: "card-types quiet", text: (entry.wikiType || "").replaceAll("-", " ") })),
-      make("p", { class: "card-status" }, wikiSign("wiki-only"))
-    ),
-    make("h2", { class: "card-title", id: `t-${model.uid}`, text: entry.title || "Untitled wiki page" }),
-    make("p", { class: "card-entry" }, make("span", { class: "object", text: page.snippet || "No text excerpt." })),
-    definitionList(
-      [
-        ["Category", page.category],
-        ["Imprint", [page.place, page.publisher, page.year].filter(Boolean).join(", ")],
-        ["Editions", page.pubCount ? `${page.pubCount} on the page` : null],
-      ].filter(([, v]) => v),
-      "card-dl"
-    ),
-    make(
-      "footer",
-      { class: "card-foot" },
-      make(
-        "div",
-        { class: "card-actions" },
-        make("a", { href: wikiHref(entry.page), target: "_blank", rel: "noopener" }, icon("wiki"), "Open the wiki page"),
-        search ? make("button", { type: "button", "data-card-act": "search", "data-search": search }, icon("pdf"), "Search the print for this title") : null
-      )
-    )
+  model.dom.article = fromHtml(
+    `<article class="card is-wiki" data-card-id="${escape(entry.id)}" data-kind="wiki" aria-labelledby="t-${model.uid}">`
+      + `<header class="rc-head card-head" data-region="head"><p class="rc-head-line card-id"><a class="card-address" href="${escape(href)}" target="_blank" rel="noopener">Wiki page ${escape(entry.page)}</a>${type ? `<span class="badge rc-type">${escape(type)}</span>` : ""}</p>`
+      + `<h2 class="rc-title card-title" id="t-${model.uid}">${title}</h2>${t ? Card._slot(titleRow(m), t, 0) : ""}`
+      + `<p class="rc-head-line card-status"><span class="wiki-sign status-wiki-only">${iconHtml("wiki")}${Card.relationMark(m)}</span></p></header>`
+      + Card.source(m)
+      + `<div class="rc-values" data-region="values">${m.groups.map((g) => Card.group(g)).join("")}</div>`
+      + `<footer class="card-foot"><div class="card-actions"><a href="${escape(href)}" target="_blank" rel="noopener">${iconHtml("wiki")}Open the record</a>`
+      + `${search ? `<button type="button" data-card-act="search" data-search="${escape(search)}">${iconHtml("pdf")}Search the print for this title</button>` : ""}</div></footer>`
+      + "</article>"
   );
   return model;
 }
@@ -979,55 +1011,41 @@ function selectValue(model, index, { focus = false } = {}) {
   pdf.href = pdfHref(source.volume, source.pdfPage);
   pdf.title = `The passage of ${row.name} on PDF page ${source.pdfPage}`;
   pdf.lastChild.textContent = `${VOLUME_SHORT[source.volume]} p. ${source.pdfPage}`;
-  if (!model.dom.chain.hidden) renderChain(model, row);
   const button = article.querySelector(`button.pick[data-index="${index}"]`);
   if (focus) button?.focus();
   const mark = entry.querySelector("mark.current");
   if (mark && entry.scrollHeight > entry.clientHeight) entry.scrollTop = Math.max(0, mark.offsetTop - entry.offsetTop - entry.clientHeight / 3);
 }
 
-function renderChain(model, row) {
-  const { object, byId, state } = model;
-  const items = chain(object, row, byId).map((step) => {
-    const [label, text] = describeStep(step);
-    const li = make("li", {}, make("span", { class: "label", text: label }), " ");
-    if (step.step === "passage") {
-      li.append(make("span", { class: "exact", text: step.exact }), ` ${text}`);
-    } else if (step.step === "record") {
-      li.append(make("a", { href: pdfHref(step.volume, step.pdfPage), target: "_blank", rel: "noopener", text }));
-      if (!step.own) {
-        const box = make("p", { class: "record-text" });
-        for (const s of segments(step.text, [{ start: row.start, end: row.end, index: 0 }])) box.append(s.marks.length ? make("mark", { class: "current", text: s.text }) : s.text);
-        li.append(box);
-      }
-    } else if ((step.step === "target" && step.record) || step.step === "relation") {
-      li.append(make("a", { href: objectUrl(step.step === "target" ? step.record : step.target), text }));
-    } else {
-      li.append(text);
-    }
-    return li;
-  });
-  const past = decisionHistory(review.log, object.id, row.field);
-  const li = make("li", {}, make("span", { class: "label", text: "Review" }), " ");
-  if (past.length) {
-    const current = state.byIndex.get(row.index);
-    li.append(make("ol", { class: "history" }, ...past.map((d) => make("li", { text: `${decisionLine(d)}, ${d === current ? "in force" : state.stale.includes(d) ? "no longer applies, the value changed since" : "replaced or withdrawn"}` }))));
-  } else if (row.node.reviewState && !review.recording) {
-    // The export carries every reviewer's decisions; while recording, a
-    // reviewer sees only their own.
-    li.append(`${row.node.reviewAction === "correct" ? "corrected and confirmed" : row.node.reviewState} at the last export`);
-  } else {
-    li.append(isApparatus(object) ? "not part of the review" : "no decision yet");
-  }
-  items.push(li);
-  model.dom.chain.firstChild.replaceChildren(...items);
+// Opens or closes the chain of one value under its producer button. The
+// chain is drawn when it opens, so it shows the review history as it stands;
+// opening it selects its value, so a key then acts on the value it explains.
+function toggleChain(model, button, open = null) {
+  const id = button.getAttribute("aria-controls");
+  const hit = model.chains?.get(id);
+  const panel = hit ? model.dom.article.querySelector(`#${CSS.escape(id)}`) : null;
+  if (!panel) return;
+  const show = open ?? button.getAttribute("aria-expanded") !== "true";
+  if (show) panel.innerHTML = Card.chainSteps(model.card, hit.r, hit.i);
+  panel.hidden = !show;
+  button.setAttribute("aria-expanded", String(show));
+  const index = hit.r.values[hit.i].index;
+  if (show && model.object && model.selected !== index) selectValue(model, index);
 }
 
-function toggleChain(model, button) {
-  const show = model.dom.chain.hidden;
-  model.dom.chain.hidden = !show;
-  button.setAttribute("aria-expanded", String(show));
-  if (show) renderChain(model, model.byIndex.get(model.selected));
+// The values whose chains stand open on a card, to open them again on its rebuild.
+const openChains = (model) =>
+  [...model.dom.article.querySelectorAll('button.prov-badge[aria-expanded="true"]')]
+    .map((b) => model.chains.get(b.getAttribute("aria-controls")))
+    .filter(Boolean)
+    .map(({ r, i }) => r.values[i].index);
+
+function reopenChains(model, indices) {
+  for (const index of indices) {
+    const id = model.card.values.get(index)?.chainId;
+    const button = id && model.dom.article.querySelector(`button.prov-badge[aria-controls="${CSS.escape(id)}"]`);
+    if (button) toggleChain(model, button, true);
+  }
 }
 
 // Decisions
@@ -1092,11 +1110,12 @@ function refresh(model, selected, message) {
   if (!isShown(model)) return null;
   const next = buildCard(model.entry, model.object, model.record, model.byId);
   const scroll = window.scrollY;
+  const chains = openChains(model);
   model.dom.article.replaceWith(next.dom.article);
   cards.set(model.entry.id, next);
   setActive(next.dom.article, true);
   if (!model.dom.drawer.hidden) toggleDrawer(next, true);
-  if (!model.dom.chain.hidden) toggleChain(next, next.dom.foot.querySelector(".chain-toggle"));
+  reopenChains(next, chains);
   selectValue(next, next.byIndex.has(selected) ? selected : firstOpen(next), { focus: true });
   window.scrollTo(0, scroll);
   renderHeader();
@@ -1123,10 +1142,15 @@ function decide(model, action, row) {
 }
 
 // The box of a node is displayed when it lies inside the viewport and every
-// scrolling ancestor up to the page, and nothing hides it.
+// scrolling ancestor up to the page, and nothing hides it. Stacked, the
+// decision bar sticks to the bottom of the window, and a value behind it is
+// not displayed.
 function displayed(node) {
   if (!node.checkVisibility({ visibilityProperty: true, opacityProperty: true })) return false;
-  const clips = [{ top: 0, left: 0, bottom: window.innerHeight, right: window.innerWidth }];
+  const viewport = { top: 0, left: 0, bottom: window.innerHeight, right: window.innerWidth };
+  const foot = node.closest("article")?.querySelector(".card-foot");
+  if (foot && !foot.contains(node) && getComputedStyle(foot).position === "sticky") viewport.bottom = Math.min(viewport.bottom, foot.getBoundingClientRect().top);
+  const clips = [viewport];
   for (let up = node.parentElement; up && up !== document.body; up = up.parentElement) {
     const style = getComputedStyle(up);
     if (style.overflowX !== "visible" || style.overflowY !== "visible") clips.push(up.getBoundingClientRect());
@@ -1530,7 +1554,12 @@ function wire() {
     const open = e.target.closest("button[data-open]");
     if (open) {
       // Pointer and Enter alike open the card; on keyboard or narrow screens focus moves into it.
-      activate(open.dataset.open, { focus: e.detail === 0 || window.matchMedia?.("(max-width: 60rem)").matches });
+      activate(open.dataset.open, { focus: e.detail === 0 || window.matchMedia?.(STACKED).matches });
+      return;
+    }
+    const step = e.target.closest(".slip-pager button[data-step]");
+    if (step) {
+      if (step.dataset.target) activate(step.dataset.target, { focus: true });
       return;
     }
     const article = e.target.closest("article.card");
@@ -1545,17 +1574,19 @@ function wire() {
     if (out) return withdraw(model, out.dataset.withdraw);
     const pick = e.target.closest("button.pick");
     if (pick) return selectValue(model, Number(pick.dataset.index), { focus: true });
+    // A producer button opens its value's chain; Enter and Space reach it as a click.
+    const producer = e.target.closest("button.prov-badge[aria-controls]");
+    if (producer) return toggleChain(model, producer);
     const mark = e.target.closest("mark[data-marks]");
     if (mark && model.object) {
       const indices = mark.dataset.marks.split(" ").map(Number);
-      const main = indices.find((i) => !model.lines.lines.some((l) => l.items.some((it) => it.row.index === i && it.sub)));
+      const main = indices.find((i) => !model.card.values.get(i)?.sub);
       return selectValue(model, main ?? indices[0], { focus: true });
     }
     const button = e.target.closest("button.act");
     if (button) return decide(model, button.dataset.act, model.byIndex.get(model.selected));
     const cardAct = e.target.closest("[data-card-act]")?.dataset.cardAct;
     if (cardAct === "wiki") toggleDrawer(model);
-    else if (cardAct === "chain") toggleChain(model, e.target.closest("button"));
     else if (cardAct === "all-right") allRight(model);
     else if (cardAct === "complete") complete(model);
     else if (cardAct === "missing" || cardAct === "boundary") openForm(model, cardAct);
@@ -1578,6 +1609,10 @@ function wire() {
     if (activeId !== model.entry.id) activate(model.entry.id);
     const pick = e.target.closest("button.pick");
     if (pick && model.selected !== Number(pick.dataset.index)) selectValue(model, Number(pick.dataset.index));
+    // A key pressed on a value's producer button acts on that value.
+    const producer = model.object && e.target.closest("button.prov-badge[aria-controls]");
+    const hit = producer && model.chains.get(producer.getAttribute("aria-controls"));
+    if (hit && model.selected !== hit.r.values[hit.i].index) selectValue(model, hit.r.values[hit.i].index);
   });
 
   desk.addEventListener("dragstart", (e) => {
@@ -1618,6 +1653,34 @@ function wire() {
   el("reviewer-cancel").addEventListener("click", () => el("reviewer-dialog").close(""));
   el("nav-help").addEventListener("click", () => el("help-dialog").showModal());
   el("help-close").addEventListener("click", () => el("help-dialog").close());
+  // Stacked, the filters fold behind one button, so the card reaches the first screen (D15).
+  el("filters-toggle").addEventListener("click", (e) => {
+    const open = e.currentTarget.getAttribute("aria-expanded") !== "true";
+    e.currentTarget.setAttribute("aria-expanded", String(open));
+    el("filters").classList.toggle("is-open", open);
+  });
+  // Escape closes the chain the focus is in or on before any other Escape
+  // acts, and the focus returns to the value's producer button. The capture
+  // phase runs this ahead of onKey, which would leave the card.
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key !== "Escape" || e.ctrlKey || e.metaKey || e.altKey || !e.target.closest) return;
+      const panel = e.target.closest(".rc-chain:not([hidden])");
+      const button = panel ? document.querySelector(`button.prov-badge[aria-controls="${CSS.escape(panel.id)}"]`) : e.target.closest('button.prov-badge[aria-expanded="true"]');
+      if (!button) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const model = cards.get(button.closest("article.card")?.dataset.cardId);
+      if (model) toggleChain(model, button, false);
+      else {
+        (panel ?? document.getElementById(button.getAttribute("aria-controls"))).hidden = true;
+        button.setAttribute("aria-expanded", "false");
+      }
+      button.focus();
+    },
+    true
+  );
   document.addEventListener("keydown", onKey);
   window.addEventListener("hashchange", () => {
     legacyRoute();
@@ -1707,6 +1770,10 @@ function wikiOnlyRecords() {
 }
 
 async function start() {
+  if (!Card) {
+    showError("The shared card (/js/record-card.js) did not load. Start review_server.py and open the page it names.");
+    return;
+  }
   try {
     const response = await fetch("index.json");
     if (!response.ok) throw new Error(`index.json: ${response.status}`);

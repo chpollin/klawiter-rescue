@@ -1,0 +1,62 @@
+/* Shared tokens of the reader and the card workbench (knowledge/design.md,
+   U1). The values are those of docs/css/styles.css; the literal colours that
+   stylesheet still writes inline are named here, so a rule can take them
+   from a token. The review server serves this file at /css/tokens.css. */
+@layer tokens {
+  :root {
+    --sz-burgundy: #631a34;
+    --sz-burgundy-dark: #4A1228;
+    --sz-burgundy-light: #7A2D45;
+    --sz-gold: #C2A360;
+    --sz-gold-light: #D4B87A;
+    /* Gold that carries text: 4.5:1 against white and cream. */
+    --sz-gold-dark: #7A5E18;
+    --sz-cream: #FAF8F3;
+    --sz-white: #FFFFFF;
+    --sz-text: #2D2D2D;
+    --sz-text-light: #6B6B6B;
+    --sz-border: #E0D8CC;
+    --sz-border-light: #EDE8DF;
+    /* A control edge that reaches 3:1 on white, the histogram grey (U7). */
+    --sz-border-control: #8a8275;
+
+    /* Passage highlights (U14). */
+    --sz-mark: rgba(184, 150, 62, 0.25);
+    --sz-mark-strong: rgba(194, 163, 96, 0.35);
+    --sz-mark-faint: rgba(194, 163, 96, 0.08);
+    --sz-hover: rgba(99, 26, 52, 0.04);
+
+    /* An open claim: tinted ground and heading (D27). */
+    --sz-contested-ground: #fff8e7;
+    --sz-contested-text: #6e4a00;
+
+    /* The alert pairs of edit mode and triage, named until U11 replaces them. */
+    --sz-alert-ok-ground: #d4edda;
+    --sz-alert-ok: #155724;
+    --sz-alert-warn-ground: #fff3cd;
+    --sz-alert-warn: #856404;
+    --sz-alert-info-ground: #cce5ff;
+    --sz-alert-info: #004085;
+    --sz-alert-bad-ground: #f8d7da;
+    --sz-alert-bad: #721c24;
+
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Consolas', 'Monaco', monospace;
+
+    /* Spacing scale (U15) and shape. */
+    --sz-space-1: 0.25rem;
+    --sz-space-2: 0.5rem;
+    --sz-space-3: 0.75rem;
+    --sz-space-4: 1rem;
+    --sz-space-5: 1.5rem;
+    --sz-radius: 4px;
+    --sz-radius-small: 3px;
+    --sz-radius-mark: 2px;
+
+    /* Focus ring on light grounds (U6). */
+    --sz-focus: var(--sz-gold-dark);
+    --sz-target: 1.5rem;
+    --header-height: 56px;
+  }
+}

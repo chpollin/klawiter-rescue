@@ -2,11 +2,14 @@
 // on which card a key may act, which values "all right" may confirm and when
 // a value counts as displayed, the typed value a correction carries, that a
 // reviewer sees only their own decisions, that a message names its object,
-// and that a candidate is never called a match.
+// and that a candidate is never called a match; and for the print adapter of
+// the record desk (records-print.js) that a wiki page stands once with its
+// routes proposed, linked in-app, and that a relation is always a proposal.
 // The server side of the same rules is _review.check (test_print_objects.py).
 // Usage: node pipeline/print_volumes/viewer/check_review.mjs; exits 1 on a failure.
 
 import assert from "node:assert/strict";
+import { candidatePages, cardModel, printHash, wikiHash } from "./records-print.js";
 import {
   METHOD_LABEL,
   ROUTE_LABEL,
@@ -22,6 +25,7 @@ import {
   effective,
   findPassage,
   inSight,
+  indexGraph,
   isInherited,
   objectName,
   objectReview,
@@ -33,6 +37,7 @@ import {
 
 const checks = [];
 const check = (name, fn) => checks.push([name, fn]);
+const indexGraphOf = (graph) => indexGraph({ "@graph": graph });
 
 check("keys act only on the focused, visible, settled card", () => {
   const ready = { loading: false, busy: false, connected: true, focusWithin: true, inView: true };
@@ -108,6 +113,47 @@ check("the wiki projection names candidates, never matches", () => {
   assert.equal(candidateRoute({ route: "title-year", method: "title-year" }), "title and year", "a route is said once");
   assert.doesNotMatch(candidateRoute({ route: "unknown-route", method: "unknown-method" }), /unknown/);
   for (const key of ["align", "same", "cand"]) assert.doesNotMatch(claimsShown(key, 5, 12), /match|-/i);
+});
+
+check("the record desk shows a wiki page once, its routes proposed and in route order, with the words that agreed", () => {
+  const concordance = {
+    links: {
+      "I/F/12#1": {
+        align: [{ claim: "claim:d", state: "proposed", route: "alignment", page: 9, score: 0.7, method: "shingle-alignment" }],
+        same: [{ claim: "claim:a", state: "proposed", route: "field-match", page: 5, target: "klawiter:publication/5-1984-a", secondField: ["publisher"], secondFieldValues: ["verlag"], method: "title-year-field" }],
+        cand: [{ claim: "claim:c", state: "proposed", route: "title-year", page: 5, target: "klawiter:entry/5", method: "title-year" }],
+      },
+    },
+    pages: { 5: { title: "Der Weg", year: 1984 } },
+    pubs: { "klawiter:publication/5-1984-a": { title: "Der Weg", publisher: "Verlag", year: 1984 } },
+  };
+  const pages = candidatePages(wikiState(concordance, "I/F/12#1", "I/F/12"), concordance);
+  assert.deepEqual(pages.map((p) => [p.page, p.routes.map((r) => r.route)]), [[9, ["alignment"]], [5, ["field-match", "title-year"]]], "one page once, the strongest route first");
+  assert.deepEqual(pages[1].routes[0].agreeing, ["verlag"], "the words that agreed stand with their route");
+  assert.deepEqual(pages[1].routes[0].fields, [["Title", "Der Weg"], ["Imprint", "Verlag, 1984"]]);
+  for (const page of pages) {
+    assert.ok(page.routes.every((r) => r.state === "proposed"));
+    for (const href of [page.href, ...page.routes.map((r) => r.href).filter(Boolean)]) assert.match(href, /^#entry=\d+(&pub=[^&]+)?$/, "a wiki link stays in the app");
+  }
+  assert.equal(wikiHash(5, "klawiter:publication/5-1984-a"), "#entry=5&pub=5-1984-a");
+  assert.equal(wikiHash(5, "klawiter:entry/5", "/"), "/#entry=5");
+  assert.equal(printHash("I/F/12"), "#print=I%2FF%2F12%231");
+});
+
+check("a print card's relation is a proposal, whatever the concordance holds", () => {
+  const graph = indexGraphOf([
+    { id: "file/I", type: "kp:SourceFile", fileName: "invented.pdf", sha256Prefix: "00000000" },
+    { id: "rule/t", type: "prov:Plan", label: "invented rule", producer: "rule" },
+    { id: "I/F/12", type: ["kp:Record", "kp:Entry"], volume: "I", part: "F", kind: "entry", address: "F 12", pdfPage: 3, pdfPageEnd: 3, line: 1, text: "12 Der Weg.", sha256: "0".repeat(64), derivedFrom: "file/I" },
+    { id: "I/F/12#1", type: "kp:PrintObject", entry: "I/F/12", volume: "I", part: "F", address: "F 12", selector: { start: 0, end: 11, exact: "12 Der Weg." }, title: { type: ["kp:Value"], value: "Der Weg", field: "title", producer: "rule", rule: "rule/t", source: "I/F/12", selector: { start: 3, end: 10, exact: "Der Weg" } } },
+  ]);
+  const object = graph.byId.get("I/F/12#1");
+  const claim = (route, extra = {}) => ({ claim: "claim:x", state: "proposed", route, page: 5, target: "klawiter:entry/5", method: route, ...extra });
+  for (const links of [{}, { align: [claim("alignment", { score: 0.5 })] }, { same: [claim("field-match")] }, { cand: [claim("title-year")] }, { diff: { state: "conflict", page: 5, differ: ["place"], printFields: {}, wikiFields: {} } }]) {
+    const m = cardModel({ object, byId: graph.byId, concordance: { links: { "I/F/12#1": links } } });
+    assert.equal(m.relation.state, "proposed", `relation ${m.relation.status}`);
+    assert.doesNotMatch(`${m.relation.words} ${m.relation.route ?? ""}`, /match(?!es)|linked|confirmed/i);
+  }
 });
 
 check("a value counts as displayed only inside every clip around it", () => {

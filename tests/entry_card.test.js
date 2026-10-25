@@ -54,13 +54,26 @@ function detailCtx(entry, state = {}, extra = {}) {
     Edit: editStub(),
   }, extra);
   vm.createContext(ctx);
-  for (const file of ['constants.js', 'utils.js', 'detail.js']) vm.runInContext(read(file), ctx);
+  for (const file of ['constants.js', 'utils.js', 'record-card.js', 'detail.js']) vm.runInContext(read(file), ctx);
   return vm.runInContext('Detail', ctx);
+}
+
+/**
+ * The markup of the values at rest: each value's producer button and its
+ * empty chain panel taken out (record_card.test.js pins both), so a pin
+ * reads the values, their wrappers and their marks.
+ */
+function atRest(html) {
+  return html
+    .replace(/<button type="button" class="prov-badge[^"]*"[^>]*>[\s\S]*?<\/button>/g, '')
+    .replace(/<div class="rc-chain"[^>]*><\/div>/g, '');
 }
 
 /** App with the stubs the render path needs, plus constants and utils. */
 function appCtx() {
   const location = { hash: '', pathname: '/', hostname: 'localhost' };
+  // A redirect replaces the history entry; the stub lands where it points.
+  location.replace = (url) => { location.hash = url; };
   const elements = {};
   const ctx = {
     console,
@@ -86,7 +99,7 @@ function appCtx() {
     Edit: { entryStatus: () => ({ status: 'unreviewed', pending: false }), pending: () => undefined },
   };
   vm.createContext(ctx);
-  for (const file of ['constants.js', 'utils.js', 'detail.js']) vm.runInContext(read(file), ctx);
+  for (const file of ['constants.js', 'utils.js', 'record-card.js', 'detail.js']) vm.runInContext(read(file), ctx);
   const App = vm.runInContext(read('app.js') + '\nApp', ctx);
   return { App, ctx };
 }
@@ -145,7 +158,7 @@ test('the entry route sets the single-entry state, a result list clears it', () 
   assert.strictEqual(App.state.singleEntry, true);
 
   App._lastHash = null;
-  ctx.location.hash = '#browse';
+  ctx.location.hash = '#records';
   App.handleRoute();
   assert.strictEqual(App.state.singleEntry, false);
 });
@@ -156,19 +169,37 @@ test('the single-entry head carries type and title, the list head the facet tria
 
   App.state.singleEntry = true;
   const single = App.renderCard(entry);
-  assert.match(single, /class="badge"/, 'the entry type stays in the head');
-  assert.match(single, /Romanŭt na edin zhivot/);
+  // The head is the shared one of record-card.js: the identifier is the
+  // permalink, the type the one type badge.
+  assert.match(single, /<a class="rc-id" href="#entry=1800">klawiter:entry\/1800<\/a>/);
+  assert.match(single, /<span class="badge rc-type">Historical Studies<\/span>/, 'the entry type stays in the head');
+  assert.strictEqual((single.match(/class="badge/g) || []).length, 1, 'the type stands once');
+  assert.match(single, /<h2 class="rc-title" id="head-title-1800" lang="bg-Latn" dir="auto">/);
+  assert.match(single, /data-provenance-for="title">Romanŭt na edin zhivot\. Balzak<button type="button" class="prov-badge/);
   assert.doesNotMatch(single, /card-meta-text/, 'no unlabelled year, language or place');
   assert.doesNotMatch(single, /card-secondary/, 'no generated head sentence');
   // The review state belongs to the record, and it stands in the head line
-  // naming what the decision covers: the place authority, nothing else.
-  assert.match(single, /review-chip/);
-  assert.match(single, />Place authority proposed<span class="decision-producer">, /);
+  // naming what the decision covers and who made it: the place authority,
+  // nothing else, proposed by agents.
+  assert.match(single, /<span class="rc-review">Place authority proposed, by LLM agents, source occurrence checked, no person<\/span>/);
+  // The open head holds a link and buttons, so it is no button itself.
+  const header = single.slice(single.indexOf('<div class="card-header'));
+  const tag = header.slice(0, header.indexOf('>') + 1);
+  assert.doesNotMatch(tag, /role="button"|aria-expanded/);
+  assert.match(tag, /role="group"\s+aria-labelledby="head-title-1800"/);
+  assert.doesNotMatch(header.slice(0, header.indexOf('<div class="card-nav')), /role="button"/);
 
   App.state.singleEntry = false;
   const listed = App.renderCard(entry);
   assert.match(listed, /card-meta-text/, 'the facet triade carries the filter logic in a list');
   assert.match(listed, /card-secondary/);
+  // A closed result is the button that opens it, and holds no control.
+  const closed = listed.slice(listed.indexOf('<div class="card-header'), listed.indexOf('<div class="card-nav'));
+  assert.match(closed, /role="button" aria-expanded="false"\s+aria-controls="card-detail-1800"/);
+  assert.doesNotMatch(closed, /<button|<a /);
+  assert.doesNotMatch(closed, /data-provenance-for/, 'no marker without its chain');
+  // Its card closes through a button of its own, shown while it is open.
+  assert.match(listed, /data-act="card-close" hidden>Close</);
 });
 
 test('the field block names every value it shows', () => {
@@ -405,7 +436,7 @@ test('name variants stand as a block of their own without asserting identity', (
   assert.match(html, /Hymne Weiss/);
   assert.match(html, /unresolved/);
   // Both places of the imprint survive, which the flat single place could not.
-  assert.match(html, /Bloemfontein, Kaapstad \(Capetown\)/);
+  assert.match(atRest(html), /Bloemfontein<\/span>, <span class="rc-value">Kaapstad \(Capetown\)<\/span>/);
 });
 
 test('a contested place is marked at the value it names and leads to its claim', () => {
@@ -426,8 +457,8 @@ test('a contested place is marked at the value it names and leads to its claim',
 
   const anchor = 'claim-1800-klawiter-claim-reconciliation-location-e5742c35';
   // The mark follows the value it contests, not the list of the imprint.
-  assert.match(html, new RegExp(
-    `Bloemfontein, Kaapstad \\(Capetown\\) <a class="contested-mark"[\\s\\S]*?href="#${anchor}"`));
+  assert.match(atRest(html), new RegExp(
+    `Bloemfontein</span>, <span class="rc-value">Kaapstad \\(Capetown\\) <a class="contested-mark"[\\s\\S]*?href="#${anchor}"`));
   assert.match(html, new RegExp(`id="${anchor}"`), 'the claim block answers to that address');
 
   // A compound subject names no single value, so it marks none; its block
@@ -466,7 +497,7 @@ test('the place decision and its authority link stand at the decided value alone
   entry.locationSameAs = 'http://www.wikidata.org/entity/Q1741';
   entry.allLocations = ['Wien', 'Basel', 'Tokyo'];
   const html = detailCtx(entry)._buildReadContent(entry);
-  assert.match(html, /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm">[^]*?link proposed<\/span><span class="decision-producer">, [^]*?LLM agents, source occurrence checked, no person<\/span>, Basel, Tokyo/);
+  assert.match(atRest(html), /Wien <a class="wikidata-link"[\s\S]*?Wikidata<\/a> <span class="field-review field-review-confirm">[^]*?link proposed<\/span><span class="decision-producer">, [^]*?LLM agents, source occurrence checked, no person<\/span><\/span>, <span class="rc-value">Basel<\/span>, <span class="rc-value">Tokyo</);
   assert.doesNotMatch(html, /Place of publication<span class="field-review/);
 
   // A publication row reads the same decision (its field is `places`, the
@@ -483,7 +514,7 @@ test('a page-level review flag stands at the field it names', () => {
   const flat = sampleEntry();
   flat.reviewFlags = [flag];
   const html = detailCtx(flat)._buildReadContent(flat);
-  assert.match(html, />Translator[\s\S]*?Dimitŭr Stoevski<\/div><\/div><p class="review-flag"[\s\S]*?misreading of UTF-8 bytes/);
+  assert.match(atRest(html), />Translator[\s\S]*?Dimitŭr Stoevski<\/span><\/div><\/div><p class="review-flag"[\s\S]*?misreading of UTF-8 bytes/);
 
   const layered = contributionPage();
   layered.translator = 'V. Levik';
@@ -501,9 +532,10 @@ test('a publication names whether its edition is confirmed or proposed', () => {
   const entry = editionPage();
   entry.publications[0].reviewStatus = 'confirmed';
   entry.publications[1].reviewStatus = 'proposed';
-  const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
-  assert.match(html, /1947, 1st edition <span class="publication-status publication-status-confirmed"[^>]*>edition confirmed</);
-  assert.match(html, /1960, 2nd revised edition <span class="publication-status publication-status-proposed"[^>]*>edition proposed</);
+  const html = atRest(detailCtx(entry, { singleEntry: true })._buildReadContent(entry));
+  // The heading label is one value with its chain, and the edition state follows it.
+  assert.match(html, /1947, 1st edition<\/span> <span class="publication-status publication-status-confirmed"[^>]*>edition confirmed</);
+  assert.match(html, /1960, 2nd revised edition<\/span> <span class="publication-status publication-status-proposed"[^>]*>edition proposed</);
   // An edition the agentic sample reviewed names that review beside its state.
   entry.publications[1].reviewDecision = 'confirm';
   entry.publications[1].reviewProducer = 'llm-agent';
@@ -591,7 +623,7 @@ test('a joint imprint keeps each publisher with its place, a series keeps its gl
   const second = html.slice(html.indexOf('aria-label="Publication 2"'));
   assert.match(second, />Imprint</);
   // The decision and the authority link of Sofija stay at Sofija.
-  assert.match(second, /Nauka i izkustvo, Sofija <a class="wikidata-link"[\s\S]*?<\/span> \/ DPK St\. Dobrev-Strandzhata, Varna</);
+  assert.match(atRest(second), /Nauka i izkustvo, Sofija <a class="wikidata-link"[\s\S]*?<\/span><\/span> \/ <span class="rc-value">DPK St\. Dobrev-Strandzhata, Varna</);
   assert.doesNotMatch(second.slice(0, second.indexOf('</section>')), />Publisher</);
   assert.match(html, /Tvorba národov <span class="field-sub"[^>]*>\(The Formation of Nations\)</);
 });
@@ -695,7 +727,7 @@ test('a publication route keeps the page and names the publication', () => {
   assert.strictEqual(App.state.publicationId, '1800-1960-a');
 
   App._lastHash = null;
-  ctx.location.hash = '#browse';
+  ctx.location.hash = '#records';
   App.handleRoute();
   assert.strictEqual(App.state.publicationId, null);
 });
@@ -884,13 +916,13 @@ test('a decision names its producer as visible text, and an agent is never a per
     /link proposed, by LLM agents, source occurrence checked, no person/);
   assert.doesNotMatch(place, />confirmed</);
   assert.doesNotMatch(place, /by <\/span>person/);
-  // Rule extraction is the default and carries no mark; a deviating mark
-  // classes the place wording, not the authority link.
-  assert.doesNotMatch(place, /prov-badge/);
+  // On the desk every value names its producer, rule extraction too, after
+  // the decision on the authority link it does not class.
+  assert.match(place, /no person<\/span><button type="button" class="prov-badge rc-producer-btn rc-producer-rule"[^>]*><span class="rc-producer">rule<\/span>/);
   entry._provenance.location = 'llm';
   const llmPlace = Detail._buildReadContent(entry);
   assert.match(llmPlace.slice(llmPlace.indexOf('>Place of publication'), llmPlace.indexOf('>Publisher')),
-    /<span class="prov-badge prov-llm" title="Place wording LLM-enriched">LLM-enriched<\/span>/);
+    /<button type="button" class="prov-badge rc-producer-btn rc-producer-llm"[^>]*><span class="rc-producer">LLM-enriched<\/span>/);
   assert.doesNotMatch(place, /title="Reviewed decision/);
 
   // The review chip names the producer visibly too, not only in its tooltip.
@@ -936,7 +968,7 @@ test('a result line carries data, and only a contested state as one marker word'
   // The head of the full card keeps the decision and its producer.
   ctx.Edit = editStub();
   App.state.singleEntry = true;
-  assert.match(App.cardMeta(sampleEntry()), />Place authority proposed<span class="decision-producer">, /);
+  assert.match(App.renderCard(sampleEntry()), /class="rc-review">Place authority proposed, by LLM agents/);
 });
 
 test('beside the reading pane the first result stands as a full card on arrival', () => {
@@ -957,15 +989,17 @@ test('beside the reading pane the first result stands as a full card on arrival'
   // The pane card carries the ids the edit layer and the late renders find.
   assert.match(pane.innerHTML, /<article class="pane-card" id="card-1800" data-pid="1800"/);
   assert.match(pane.innerHTML, /id="card-detail-1800"/);
-  assert.match(pane.innerHTML, /<h2 class="card-title pane-title" id="pane-title-1800"/);
+  // The pane head is the shared head, labelled for the pane card.
+  assert.match(pane.innerHTML, /aria-labelledby="pane-title-1800"/);
+  assert.match(pane.innerHTML, /<h2 class="rc-title" id="pane-title-1800"/);
   assert.match(pane.innerHTML, /Year of publication/);
-  assert.match(pane.innerHTML, />Place authority proposed<span class="decision-producer">/);
+  assert.match(pane.innerHTML, /class="rc-review">Place authority proposed, by /);
   // The list holds a title and a value line per result, and no card.
   assert.strictEqual((list.match(/aria-controls="reading-pane"/g) || []).length, 2);
-  assert.doesNotMatch(list, /card-detail|id="card-|review-chip/);
+  assert.doesNotMatch(list, /card-detail|id="card-|review-chip|rc-head/);
   assert.match(list, /card-secondary/);
-  assert.strictEqual(App.cardMeta(first), App.cardHeadMeta(first),
-    'the edit layer rewrites the pane head through cardMeta');
+  assert.strictEqual(App.cardMeta(first), App.listMeta(first),
+    'the edit layer rewrites a list line through cardMeta');
 
   // A new list starts at its first result; a rerender of the same list keeps
   // the choice.

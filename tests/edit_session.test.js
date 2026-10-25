@@ -31,7 +31,7 @@ function load(files, extra = {}) {
 }
 
 function detailCtx(entry, pendingEdits = {}) {
-  const ctx = load(['constants.js', 'utils.js', 'detail.js'], {
+  const ctx = load(['constants.js', 'utils.js', 'record-card.js', 'detail.js'], {
     App: {
       state: { editMode: true, pendingEdits },
       entries: [entry],
@@ -164,7 +164,7 @@ test('edit mode marks a candidate the recorded decision rejected', () => {
     decision: { action: 'correct', qid: 'Q713362', rejectedQid: 'Q956' },
     publishable: null,
   };
-  const ctx = load(['constants.js', 'utils.js', 'detail.js'], {
+  const ctx = load(['constants.js', 'utils.js', 'record-card.js', 'detail.js'], {
     App: { state: { editMode: true, pendingEdits: {} }, entries: [entry],
       entryMap: new Map([[363, entry]]), titleMap: new Map(), data: { redirects: {} } },
     Edit: { locationReconciliation: () => review, pendingLocationDecision: () => undefined },

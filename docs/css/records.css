@@ -1,0 +1,366 @@
+/* The record card shared by wiki records and print objects (record-card.js,
+   knowledge/design.md, Record desk): a slip at rest, one open card, the
+   chain of a value on demand, and state and producer as words throughout.
+
+   New rules stand in a layer (U19). styles.css is still unlayered, and an
+   unlayered rule beats every layered one whatever its specificity, so its
+   reset (margin and padding 0 on every element), its heading weight and the
+   box of .prov-badge would cancel the spacing set here. Deliberate shortcut:
+   the declarations that meet one of those rules carry !important, which a
+   layered declaration needs to win over unlayered normal ones. Upgrade path:
+   once styles.css is wrapped in an early `@layer legacy` (U19), drop every
+   !important in this file. */
+@layer tokens, records;
+
+@layer records {
+  /* --- Slip at rest: two lines and three marks, no frame ------------------ */
+  .rc-slip {
+    display: grid;
+    gap: var(--sz-space-1);
+    padding: var(--sz-space-2) var(--sz-space-3) !important;
+    border-radius: var(--sz-radius);
+  }
+  .rc-slip:hover,
+  .rc-slip:focus-within {
+    background: var(--sz-hover);
+  }
+  .rc-slip[aria-current="true"] {
+    background: var(--sz-white);
+    box-shadow: inset 3px 0 0 var(--sz-burgundy);
+  }
+  .rc-slip-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--sz-space-2);
+  }
+  .rc-slip-title {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    color: var(--sz-burgundy);
+  }
+  .rc-slip-id,
+  .rc-id {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--sz-text-light);
+    overflow-wrap: anywhere;
+  }
+  .rc-slip-snippet {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--sz-text);
+    /* The overview may wrap once, never more, so a slip keeps two lines. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  .rc-slip-marks,
+  .rc-head-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sz-space-1) var(--sz-space-3);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--sz-text-light);
+  }
+
+  /* The three marks are words; an icon only adds to the source sign. */
+  .rc-sign {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sz-space-1);
+  }
+  .rc-icon {
+    inline-size: 1rem;
+    block-size: 1rem;
+    flex: none;
+  }
+  .rc-contested {
+    color: var(--sz-burgundy);
+  }
+
+  /* --- Open card: one outline on white, nothing framed inside ------------ */
+  .rc-card {
+    display: grid;
+    gap: var(--sz-space-4);
+    background: var(--sz-white);
+    border: 1px solid var(--sz-border);
+    border-radius: var(--sz-radius);
+    padding: var(--sz-space-4) var(--sz-space-5) !important;
+    container-type: inline-size;
+  }
+  .rc-head {
+    display: grid;
+    gap: var(--sz-space-1);
+  }
+  .rc-title {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 600 !important;
+    line-height: 1.3;
+    color: var(--sz-burgundy);
+    overflow-wrap: anywhere;
+  }
+  .rc-group-heading {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600 !important;
+    color: var(--sz-gold-dark);
+    margin-block: var(--sz-space-3) var(--sz-space-2) !important;
+  }
+  /* One hairline between groups and before the source, as between the
+     publications of a card. */
+  .rc-group + .rc-group,
+  .rc-source {
+    border-block-start: 1px solid var(--sz-border-light);
+  }
+  .rc-source-text {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-inline-size: 72ch;
+  }
+
+  /* --- Value row: each value with its producer word ---------------------- */
+  .rc-line {
+    display: block;
+  }
+  .rc-note {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--sz-text-light);
+  }
+  li.rc-value + li.rc-value {
+    margin-block-start: var(--sz-space-1) !important;
+  }
+
+  /* The producer word is the control that opens the chain: subdued and of
+     equal weight for every producer, so a proposal never looks stronger
+     than a person's decision. */
+  .rc-producer-btn {
+    vertical-align: baseline;
+    min-block-size: var(--sz-target);
+    padding-inline: 0.2rem !important;
+    margin-block: 0 !important;
+    margin-inline: 0.2rem 0 !important;
+    border: 0;
+    background: none;
+    color: var(--sz-text-light);
+    cursor: pointer;
+  }
+  .rc-producer {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--sz-text-light);
+    text-decoration: underline dotted;
+    text-underline-offset: 0.2em;
+  }
+  .rc-producer-btn:hover .rc-producer {
+    color: var(--sz-gold-dark);
+  }
+  .rc-producer-btn[aria-expanded="true"] .rc-producer {
+    color: var(--sz-burgundy);
+    text-decoration-style: solid;
+  }
+  .rc-state-word {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--sz-text-light);
+  }
+
+  /* --- Chain on demand: under its row, a start rule and no frame --------- */
+  .rc-chain {
+    flex: 1 1 100%;
+    grid-column: 1 / -1;
+    margin-block: var(--sz-space-1) var(--sz-space-3) !important;
+    padding-block: var(--sz-space-1) !important;
+    padding-inline-start: var(--sz-space-3) !important;
+    border-inline-start: 2px solid var(--sz-gold);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--sz-text);
+    overflow-wrap: anywhere;
+  }
+  /* An author display rule would otherwise override the hidden attribute. */
+  .rc-chain[hidden] {
+    display: none;
+  }
+  .rc-chain-steps {
+    display: grid;
+    grid-template-columns: minmax(6rem, max-content) minmax(0, 1fr);
+    gap: var(--sz-space-1) var(--sz-space-3);
+  }
+  .rc-step {
+    display: contents;
+  }
+  .rc-step dt {
+    font-weight: 600;
+    color: var(--sz-text-light);
+  }
+  .rc-step dd {
+    min-inline-size: 0;
+  }
+  .rc-passage {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+  }
+  .rc-sub {
+    color: var(--sz-text-light);
+  }
+  /* A gap reads as a gap: in words, set apart by style as well as colour. */
+  .rc-gap {
+    font-style: italic;
+    color: var(--sz-text-light);
+  }
+  .rc-producer-name {
+    font-weight: 600;
+  }
+  .rc-show {
+    font: inherit;
+    min-block-size: var(--sz-target);
+    padding-inline: var(--sz-space-1) !important;
+    border: 0;
+    background: none;
+    color: var(--sz-burgundy);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .rc-show:hover {
+    color: var(--sz-burgundy-dark);
+  }
+
+  /* A located value passage in the source text; styles.css gives every mark
+     its tint, so only the focus state is added. */
+  .rc-mark:focus {
+    outline: 2px solid var(--sz-burgundy);
+    outline-offset: 1px;
+    background: var(--sz-mark-strong) !important;
+  }
+
+  /* On a phone the step names stand above their text. */
+  @container (inline-size < 24rem) {
+    .rc-chain-steps {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0;
+    }
+    .rc-step dd {
+      margin-block-end: var(--sz-space-1) !important;
+    }
+  }
+}
+
+/* The Records view around the cards (records.js): the source control, the
+   print records of a list and one print record on its own address. Its own
+   layer after the card's; the !important declarations follow the shortcut
+   named at the head of this file and go with it. */
+@layer records-view {
+  .records-source {
+    margin-block-end: var(--sz-space-3) !important;
+  }
+  .records-source[hidden] {
+    display: none;
+  }
+  .records-source-set {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sz-space-1) var(--sz-space-4);
+    border: 0;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--sz-text);
+  }
+  .records-source-legend {
+    float: inline-start;
+    font-weight: 600;
+    color: var(--sz-text-light);
+    margin-inline-end: var(--sz-space-2) !important;
+  }
+  .records-source-option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sz-space-1);
+    min-block-size: var(--sz-target);
+    cursor: pointer;
+  }
+  .records-source-option input {
+    accent-color: var(--sz-burgundy);
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  .records-print {
+    display: grid;
+    gap: var(--sz-space-3);
+  }
+  .records-print[hidden] {
+    display: none;
+  }
+  /* Beside the wiki list the print records follow it, set apart by one
+     hairline and their heading. */
+  .results-list:not(:empty) ~ .records-print:not([hidden]) {
+    margin-block-start: var(--sz-space-5) !important;
+    padding-block-start: var(--sz-space-4) !important;
+    border-block-start: 1px solid var(--sz-border-light);
+  }
+  .records-print-heading {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 600 !important;
+    color: var(--sz-gold-dark);
+  }
+  .records-print-count,
+  .records-status,
+  .records-slip-note {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--sz-text-light);
+  }
+  .records-slips {
+    list-style: none;
+    display: grid;
+    gap: var(--sz-space-1);
+  }
+  .records-slip-note {
+    padding-inline-start: var(--sz-space-3) !important;
+  }
+
+  /* An open list result is read, not pressed: its head holds the controls. */
+  .card-header-open {
+    cursor: auto !important;
+  }
+  /* Previous, Next and Close of an open result take a line of their own
+     above its head, so no width or zoom lets them cover the head. */
+  .entry-card.card-expanded {
+    display: flex;
+    flex-direction: column;
+  }
+  .entry-card.card-expanded > .card-nav:not([hidden]) {
+    order: -1;
+    position: static !important;
+    align-self: flex-end;
+    flex-wrap: wrap;
+    padding: var(--sz-space-3) 1.25rem 0 !important;
+  }
+  .entry-card.card-expanded > .card-header {
+    padding-inline-end: 1.25rem !important;
+  }
+  .card-nav-btn {
+    min-block-size: var(--sz-target);
+  }
+
+  /* A permalink and a restored place arrive clear of the sticky header (D12). */
+  .results-count,
+  .rc-head,
+  .records-print-card {
+    scroll-margin-block-start: calc(var(--header-height) + 1rem);
+  }
+}

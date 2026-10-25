@@ -46,7 +46,7 @@ function exportCtx(entry, publications, claims) {
     },
   };
   vm.createContext(ctx);
-  for (const file of ['constants.js', 'utils.js', 'detail.js', 'export.js']) {
+  for (const file of ['constants.js', 'utils.js', 'record-card.js', 'detail.js', 'export.js']) {
     vm.runInContext(read(file), ctx);
   }
   vm.runInContext(

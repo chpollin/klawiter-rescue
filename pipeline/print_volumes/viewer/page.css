@@ -1,16 +1,17 @@
-/* Page check (page.html). Tokens, base and the site header come from
-   cards.css; the layer order is declared there. A line box tells its role by
+/* Page check (page.html). The shared tokens come from /css/tokens.css; the
+   workbench's state colours, base and the site header from cards.css, which
+   declares the layer order. A line box tells its role by
    its stroke pattern as well as its colour, and the legend names each. */
 
 @layer tokens {
   :root {
-    --pc-value: var(--burgundy);
-    --pc-record: var(--gold-dark);
+    --pc-value: var(--sz-burgundy);
+    --pc-record: var(--sz-gold-dark);
     --pc-heading: var(--wiki);
     --pc-apparatus: var(--wiki-only);
     --pc-outside: var(--bad);
     --pc-furniture: var(--text-faint);
-    --pc-lit: color-mix(in oklch, var(--gold) 38%, transparent);
+    --pc-lit: color-mix(in oklch, var(--sz-gold) 38%, transparent);
   }
 }
 
@@ -26,7 +27,7 @@
     display: flex;
     flex-direction: column;
     min-block-size: 0;
-    padding-inline: var(--space-4);
+    padding-inline: var(--sz-space-4);
   }
   /* cards.css sets the status line to a full-width flex basis, which in this column is its height. */
   .pc-main > * {
@@ -39,8 +40,8 @@
     display: flex;
     flex-wrap: wrap;
     align-items: end;
-    gap: var(--space-2) var(--space-5);
-    padding-block: var(--space-3) var(--space-2);
+    gap: var(--sz-space-2) var(--sz-space-5);
+    padding-block: var(--sz-space-3) var(--sz-space-2);
   }
   .pc-title {
     flex: 1 0 100%;
@@ -53,13 +54,13 @@
     display: flex;
     flex-wrap: wrap;
     align-items: end;
-    gap: var(--space-2);
+    gap: var(--sz-space-2);
   }
   .pc-goto label {
     display: grid;
     gap: 0.1rem;
     font-size: 0.8125rem;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .pc-page-field {
     grid-template-columns: auto auto;
@@ -72,12 +73,12 @@
   .pc-goto select {
     font: inherit;
     font-size: 1rem;
-    color: var(--text);
+    color: var(--sz-text);
     min-block-size: 1.9rem;
     padding-inline: 0.4rem;
     border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    background: var(--paper);
+    border-radius: var(--sz-radius);
+    background: var(--sz-white);
   }
   #pc-page {
     inline-size: 5.5rem;
@@ -90,15 +91,15 @@
   }
   .pc-matches {
     margin: 0;
-    padding-inline-start: var(--space-5);
+    padding-inline-start: var(--sz-space-5);
   }
   .pc-panes {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
-    gap: var(--space-4);
+    gap: var(--sz-space-4);
     min-block-size: 0;
-    padding-block-end: var(--space-2);
+    padding-block-end: var(--sz-space-2);
   }
   /* Positioned, so that the visually hidden captions stay inside the scrolling pane. */
   .pc-extract,
@@ -109,7 +110,7 @@
     overscroll-behavior: contain;
   }
   .pc-extract {
-    padding-inline-end: var(--space-2);
+    padding-inline-end: var(--sz-space-2);
   }
   /* Narrow and zoomed: the page comes first as a strip that stays at the top
      of the window and scrolls inside itself, and the readings scroll with the
@@ -133,10 +134,10 @@
       z-index: 2;
       max-block-size: 55dvh;
       /* Over the side gutters too, so that list markers scrolling under it stay hidden. */
-      margin-inline: calc(-1 * var(--space-4));
-      padding-inline: var(--space-4);
-      background: var(--cream);
-      border-block-end: 1px solid var(--border);
+      margin-inline: calc(-1 * var(--sz-space-4));
+      padding-inline: var(--sz-space-4);
+      background: var(--sz-cream);
+      border-block-end: 1px solid var(--sz-border);
     }
     .pc-extract {
       overflow: visible;
@@ -145,7 +146,7 @@
     .pc-extract > .pc-pane-heading,
     .pc-record,
     .pc-values tr {
-      scroll-margin-block-start: calc(55dvh + var(--space-2));
+      scroll-margin-block-start: calc(55dvh + var(--sz-space-2));
     }
   }
 }
@@ -156,34 +157,34 @@
     inset-block-start: 0;
     z-index: 1;
     margin: 0;
-    padding-block: var(--space-1);
-    background: var(--cream);
+    padding-block: var(--sz-space-1);
+    background: var(--sz-cream);
     font-family: var(--font-serif);
     font-size: 1rem;
     font-weight: 600;
-    color: var(--gold-dark);
+    color: var(--sz-gold-dark);
   }
   /* The page pane's heading and legend stay in view while the page scrolls. */
   .pc-page-head {
     position: sticky;
     inset-block-start: 0;
     z-index: 1;
-    background: var(--cream);
+    background: var(--sz-cream);
   }
   .pc-page-head > .pc-pane-heading {
     position: static;
   }
   .pc-record {
-    padding-block: var(--space-3);
-    border-block-end: 1px solid var(--hairline);
+    padding-block: var(--sz-space-3);
+    border-block-end: 1px solid var(--sz-border-light);
   }
   .pc-record.is-target > h3 {
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
   }
   .pc-record > h3,
   .pc-outside > h3,
   .pc-selected > h3 {
-    margin: 0 0 var(--space-1);
+    margin: 0 0 var(--sz-space-1);
     font-size: 1rem;
     font-weight: 600;
   }
@@ -194,22 +195,22 @@
     font-family: var(--font-mono);
     font-size: 0.8125rem;
     font-weight: 400;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .pc-details,
   .pc-type {
     font-size: 0.875rem;
     font-weight: 400;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .pc-object {
-    margin-block-start: var(--space-3);
+    margin-block-start: var(--sz-space-3);
   }
   .pc-object-head {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0 var(--space-3);
+    gap: 0 var(--sz-space-3);
   }
   .pc-object-head h4 {
     margin: 0;
@@ -222,7 +223,7 @@
   }
   .pc-values {
     inline-size: 100%;
-    margin-block-start: var(--space-1);
+    margin-block-start: var(--sz-space-1);
     border-collapse: collapse;
     font-size: 0.875rem;
   }
@@ -231,20 +232,20 @@
     padding-inline: 0.35rem;
     text-align: start;
     font-weight: 600;
-    color: var(--text-light);
-    border-block-end: 1px solid var(--border);
+    color: var(--sz-text-light);
+    border-block-end: 1px solid var(--sz-border);
   }
   .pc-values td,
   .pc-values tbody th {
     padding-block: 0.2rem;
     padding-inline: 0.35rem;
     vertical-align: top;
-    border-block-end: 1px solid var(--hairline);
+    border-block-end: 1px solid var(--sz-border-light);
   }
   .pc-values tbody th {
     text-align: start;
     font-weight: 400;
-    color: var(--text);
+    color: var(--sz-text);
   }
   .pc-values tr[data-value] {
     cursor: pointer;
@@ -270,7 +271,7 @@
   /* The selected value: a start bar besides the ground, so not by colour alone. */
   .pc-values tr.is-current {
     background: var(--mark-strong);
-    box-shadow: inset 3px 0 0 var(--burgundy);
+    box-shadow: inset 3px 0 0 var(--sz-burgundy);
   }
   .pc-value {
     inline-size: 22%;
@@ -284,7 +285,7 @@
     margin-inline-start: 0.35rem;
     font-size: 0.8125rem;
     font-style: italic;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .pc-state {
     font-style: normal;
@@ -321,44 +322,44 @@
   .pc-line-no {
     font-size: 0.8125rem;
     white-space: nowrap;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   button.pc-line-no {
-    color: var(--burgundy);
+    color: var(--sz-burgundy);
   }
   .pc-missing {
     color: var(--bad);
     font-weight: 600;
   }
   .pc-cands {
-    margin-block: var(--space-2) 0;
+    margin-block: var(--sz-space-2) 0;
     font-size: 0.875rem;
   }
   .pc-cands h5 {
     margin: 0;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .pc-cands ul,
   .pc-outside ul {
     margin: 0;
-    padding-inline-start: var(--space-4);
+    padding-inline-start: var(--sz-space-4);
   }
   .pc-cands p {
     margin: 0;
   }
   .pc-outside {
-    padding-block: var(--space-3);
-    border-block-end: 1px solid var(--hairline);
+    padding-block: var(--sz-space-3);
+    border-block-end: 1px solid var(--sz-border-light);
   }
   .pc-outside > h3 {
     color: var(--bad);
   }
   .pc-withheld {
-    margin-block: var(--space-3);
-    padding-inline-start: var(--space-3);
-    border-inline-start: 3px solid var(--gold-dark);
+    margin-block: var(--sz-space-3);
+    padding-inline-start: var(--sz-space-3);
+    border-inline-start: 3px solid var(--sz-gold-dark);
     font-weight: 600;
   }
   /* The selected line stays in view while the list scrolls to its values. */
@@ -366,10 +367,10 @@
     position: sticky;
     inset-block-start: 1.9rem;
     z-index: 1;
-    padding-block: var(--space-2);
-    padding-inline: var(--space-3);
-    background: var(--paper);
-    border-inline-start: 3px solid var(--burgundy);
+    padding-block: var(--sz-space-2);
+    padding-inline: var(--sz-space-3);
+    background: var(--sz-white);
+    border-inline-start: 3px solid var(--sz-burgundy);
   }
   .pc-selected p {
     margin-block: 0.2rem;
@@ -378,13 +379,13 @@
   .pc-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.2rem var(--space-4);
+    gap: 0.2rem var(--sz-space-4);
     margin: 0;
-    padding-block-end: var(--space-2);
+    padding-block-end: var(--sz-space-2);
     padding: 0;
     list-style: none;
     font-size: 0.8125rem;
-    color: var(--text-light);
+    color: var(--sz-text-light);
   }
   .pc-legend li {
     display: inline-flex;
@@ -413,7 +414,7 @@
   }
   .pc-sheet {
     position: relative;
-    background: var(--paper);
+    background: var(--sz-white);
     box-shadow: var(--shadow-card);
   }
   .pc-sheet img {
@@ -473,19 +474,19 @@
   /* The selection is a second frame around the box, so the role's pattern stays visible inside it. */
   .pc-selection {
     fill: none;
-    stroke: var(--text);
+    stroke: var(--sz-text);
     stroke-width: 1.5;
     vector-effect: non-scaling-stroke;
     pointer-events: none;
   }
   .pc-box:focus-visible {
     outline: none;
-    stroke: var(--text);
+    stroke: var(--sz-text);
     stroke-width: 3;
   }
   .pc-fallback {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--sz-space-2);
   }
   .pc-note {
     margin: 0;
@@ -495,7 +496,7 @@
   .pc-frame {
     inline-size: 100%;
     block-size: 80vh;
-    border: 1px solid var(--border);
+    border: 1px solid var(--sz-border);
   }
 
   /* Below the two-pane width only the page strip stays in view; the pane
@@ -524,7 +525,7 @@
     .pc-values tbody tr {
       display: grid;
       grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-      border-block-end: 1px solid var(--hairline);
+      border-block-end: 1px solid var(--sz-border-light);
     }
     .pc-values tbody th,
     .pc-values tbody td,

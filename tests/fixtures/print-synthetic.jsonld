@@ -1,0 +1,67 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@base": "https://invented.test/print/",
+    "kp": "https://invented.test/vocab/print/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "oa": "http://www.w3.org/ns/oa#",
+    "id": "@id",
+    "type": "@type"
+  },
+  "@graph": [
+    {"id": "file/X", "type": "kp:SourceFile", "fileName": "invented-volume.pdf", "sha256Prefix": "0123abcd"},
+    {"id": "rule/p03.title", "type": "prov:Plan", "label": "invented title rule", "producer": "rule"},
+    {"id": "rule/p03.imprint", "type": "prov:Plan", "label": "invented imprint rule", "producer": "rule"},
+    {"id": "rule/p03.type", "type": "prov:Plan", "label": "invented type rule", "producer": "rule"},
+    {"id": "rule/p03.term", "type": "prov:Plan", "label": "invented term rule", "producer": "rule"},
+    {"id": "rule/p06.address", "type": "prov:Plan", "label": "invented address notation", "producer": "compiler"},
+    {"id": "X/Z/h1", "type": ["kp:Record", "kp:Header"], "volume": "I", "part": "Z", "kind": "header", "address": "", "pdfPage": 6, "pdfPageEnd": 6, "line": 1, "text": "Invented header: Nowhere, Imaginary House.", "sha256": "1111111111111111111111111111111111111111111111111111111111111111", "context": [], "derivedFrom": "file/X"},
+    {"id": "X/Z/1", "type": ["kp:Record", "kp:Entry"], "volume": "I", "part": "Z", "kind": "entry", "address": "Z 1", "pdfPage": 7, "pdfPageEnd": 7, "line": 3, "text": "1 Invented Title. Somewhere 1901. 120 pp. See Z 2. – Invented Sequel. Anywhere 1903.", "sha256": "abababababababababababababababababababababababababababababababab", "context": ["X/Z/h1"], "derivedFrom": "file/X"},
+    {"id": "X/Z/2", "type": ["kp:Record", "kp:Entry"], "volume": "I", "part": "Z", "kind": "entry", "address": "Z 2", "pdfPage": 7, "pdfPageEnd": 8, "line": 9, "text": "2 Second <Invented> & Title. <Elsewhere> 1902.", "sha256": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd", "context": ["X/Z/h1"], "derivedFrom": "file/X"},
+    {"id": "X/index/1", "type": ["kp:Record", "kp:IndexEntry"], "volume": "I", "part": "Index A", "kind": "index", "address": "", "pdfPage": 90, "pdfPageEnd": 90, "line": 2, "text": "Invented term 12, 14.", "sha256": "efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef", "context": [], "derivedFrom": "file/X"},
+    {
+      "id": "X/Z/1#1", "type": "kp:PrintObject", "entry": "X/Z/1", "volume": "I", "part": "Z", "address": "Z 1",
+      "objectText": "1 Invented Title. Somewhere 1901. 120 pp. See Z 2.",
+      "selector": {"type": "oa:TextPositionSelector", "start": 0, "end": 50, "exact": "1 Invented Title. Somewhere 1901. 120 pp. See Z 2."},
+      "title": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Invented Title", "field": "title", "producer": "rule", "rule": "rule/p03.title", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 2, "end": 16, "exact": "Invented Title"}},
+      "types": [{"type": ["kp:Value", "kp:DerivedValue"], "value": "book_edition", "field": "types[0]", "producer": "rule", "rule": "rule/p03.type", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 0, "end": 50, "exact": "1 Invented Title. Somewhere 1901. 120 pp. See Z 2."}}],
+      "imprints": [{"type": "kp:Imprint",
+        "place": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Somewhere", "field": "imprints[0].place", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 18, "end": 27, "exact": "Somewhere"}},
+        "year": {"type": ["kp:Value", "kp:VerbatimValue"], "value": 1901, "field": "imprints[0].year", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 28, "end": 32, "exact": "1901"}}}],
+      "extent": {"type": "kp:Extent", "raw": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "120 pp.", "field": "extent.raw", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 34, "end": 41, "exact": "120 pp."}}},
+      "references": [{"type": "kp:Reference",
+        "address": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Z 2", "field": "references[0].address", "producer": "compiler", "rule": "rule/p06.address", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 46, "end": 49, "exact": "Z 2"}},
+        "targets": [{"type": "kp:AddressTarget", "normalized": "Z 2", "record": "X/Z/2"}],
+        "kind": {"type": ["kp:Value", "kp:DerivedValue"], "value": "see", "field": "references[0].kind", "producer": "rule", "rule": "rule/p03.title", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 42, "end": 45, "exact": "See"}}}],
+      "inherited": {"type": "kp:Inherited",
+        "title": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Imaginary House", "field": "inherited.title", "producer": "inherited", "rule": "rule/p03.title", "source": "X/Z/h1", "selector": {"type": "oa:TextPositionSelector", "start": 26, "end": 41, "exact": "Imaginary House"}}}
+    },
+    {
+      "id": "X/Z/1#2", "type": "kp:PrintObject", "entry": "X/Z/1", "volume": "I", "part": "Z", "address": "",
+      "objectText": "Invented Sequel. Anywhere 1903.",
+      "selector": {"type": "oa:TextPositionSelector", "start": 53, "end": 84, "exact": "Invented Sequel. Anywhere 1903."},
+      "title": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Invented Sequel", "field": "title", "producer": "rule", "rule": "rule/p03.title", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 53, "end": 68, "exact": "Invented Sequel"}},
+      "imprints": [{"type": "kp:Imprint",
+        "place": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Anywhere", "field": "imprints[0].place", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 70, "end": 78, "exact": "Anywhere"}},
+        "year": {"type": ["kp:Value", "kp:VerbatimValue"], "value": 1903, "field": "imprints[0].year", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/1", "selector": {"type": "oa:TextPositionSelector", "start": 79, "end": 83, "exact": "1903"}}}]
+    },
+    {
+      "id": "X/Z/2#1", "type": "kp:PrintObject", "entry": "X/Z/2", "volume": "I", "part": "Z", "address": "Z 2",
+      "objectText": "2 Second <Invented> & Title. <Elsewhere> 1902.",
+      "selector": {"type": "oa:TextPositionSelector", "start": 0, "end": 46, "exact": "2 Second <Invented> & Title. <Elsewhere> 1902."},
+      "title": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Second <Invented> & Title", "field": "title", "producer": "rule", "rule": "rule/p03.title", "source": "X/Z/2", "selector": {"type": "oa:TextPositionSelector", "start": 2, "end": 27, "exact": "Second <Invented> & Title"}},
+      "imprints": [{"type": "kp:Imprint",
+        "place": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "<Elsewhere>", "field": "imprints[0].place", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/2", "selector": {"type": "oa:TextPositionSelector", "start": 29, "end": 40, "exact": "<Elsewhere>"}},
+        "year": {"type": ["kp:Value", "kp:VerbatimValue"], "value": 1902, "field": "imprints[0].year", "producer": "rule", "rule": "rule/p03.imprint", "source": "X/Z/2", "selector": {"type": "oa:TextPositionSelector", "start": 41, "end": 45, "exact": "1902"}}}]
+    },
+    {
+      "id": "X/index/1#1", "type": "kp:ApparatusItem", "entry": "X/index/1", "volume": "I", "part": "Index A", "address": "",
+      "objectText": "Invented term 12, 14.",
+      "selector": {"type": "oa:TextPositionSelector", "start": 0, "end": 21, "exact": "Invented term 12, 14."},
+      "term": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "Invented term", "field": "term", "producer": "rule", "rule": "rule/p03.term", "source": "X/index/1", "selector": {"type": "oa:TextPositionSelector", "start": 0, "end": 13, "exact": "Invented term"}},
+      "references": [{"type": "kp:Reference",
+        "address": {"type": ["kp:Value", "kp:VerbatimValue"], "value": "12", "field": "references[0].address", "producer": "compiler", "rule": "rule/p06.address", "source": "X/index/1", "selector": {"type": "oa:TextPositionSelector", "start": 14, "end": 16, "exact": "12"}},
+        "targets": [{"type": "kp:AddressTarget", "normalized": "Z 12", "record": null}]}]
+    }
+  ]
+}

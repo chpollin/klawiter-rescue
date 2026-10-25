@@ -126,7 +126,7 @@ function load(file, context, exported) {
     Edit: { editionClaimsFor: () => [claim], authorityClaimsFor: () => [] },
     esc: value => String(value),
   };
-  const Detail = load('detail.js', context, 'Detail');
+  load('record-card.js', context, 'RecordCard'); const Detail = load('detail.js', context, 'Detail');
   const html = Detail._contestedClaimsBlock({ sourcePageId: 4916 });
   assert.match(html, /Contested work identity/);
   assert.match(html, /decision open/);
@@ -191,7 +191,7 @@ function load(file, context, exported) {
     Edit: { editionClaimsFor: () => [], authorityClaimsFor: () => matchedClaims },
     esc: value => String(value),
   };
-  const Detail = load('detail.js', context, 'Detail');
+  load('record-card.js', context, 'RecordCard'); const Detail = load('detail.js', context, 'Detail');
   const html = Detail._contestedAuthorityCell(entry);
   // The heading names what is contested; every open authority claim of the
   // holding is a place assignment.
@@ -227,7 +227,7 @@ function load(file, context, exported) {
     Edit: { editionClaimsFor: () => [decided], authorityClaimsFor: () => [] },
     esc: value => String(value),
   };
-  const Detail = load('detail.js', context, 'Detail');
+  load('record-card.js', context, 'RecordCard'); const Detail = load('detail.js', context, 'Detail');
   const html = Detail._contestedClaimsBlock({ sourcePageId: 4916 });
   assert.match(html, /Work identity decided/);
   assert.doesNotMatch(html, /decision open/);

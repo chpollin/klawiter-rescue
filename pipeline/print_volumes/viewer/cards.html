@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Print cards, Klawiter bibliography</title>
+  <!-- cards.css first: its statement fixes the layer order the shared sheets join. -->
   <link rel="stylesheet" href="cards.css">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/records.css">
 </head>
 <body>
   <button type="button" id="skip-card" class="skip-link">Skip to the card</button>
@@ -17,14 +21,15 @@
       </svg>
       <span>Stefan Zweig Bibliography</span>
     </a>
-    <nav aria-label="Views">
+    <nav aria-label="Main navigation">
       <a href="/">Overview</a>
-      <a href="#/" id="nav-desk">Print &amp; Wiki cards</a>
+      <a href="/#records">Records</a>
+      <a href="/#docs">Documentation</a>
+    </nav>
+    <nav aria-label="Local tools" class="nav-local">
+      <a href="#/" id="nav-desk">Print cards</a>
       <a href="#/?r=open" id="nav-review">Review sample</a>
-      <a href="/#browse">Wiki catalogue</a>
-      <a href="/#stats">Explore</a>
-      <a href="/#data">Data</a>
-      <a href="/#about">About</a>
+      <a href="page.html">Page check</a>
       <button type="button" id="nav-help" class="nav-btn">Help &amp; Keys</button>
     </nav>
     <div class="header-search">
@@ -40,9 +45,10 @@
     <form id="filters" class="filter-strip" role="search">
       <div class="board-summary">
         <h1 id="scope-heading" class="scope-heading">Print cards</h1>
+        <button type="button" id="filters-toggle" class="text-btn filters-toggle" aria-expanded="false" aria-controls="source-pills board-controls">Filters</button>
         <div id="source-pills" class="source-pills" role="group" aria-label="Sources of a record"></div>
       </div>
-      <div class="board-controls">
+      <div class="board-controls" id="board-controls">
         <label class="quiet-select">
           <span>Volume</span>
           <select id="volume">
@@ -95,9 +101,10 @@
           <button type="button" id="next" class="text-btn" aria-label="Next tray">Next ›</button>
         </nav>
       </div>
-      <p id="message" class="status-msg" role="status" aria-live="polite"></p>
     </form>
 
+    <!-- Outside the filters, so a decision's message stays beside the card when they fold. -->
+    <p id="message" class="status-msg" role="status" aria-live="polite"></p>
     <p id="review-error" class="review-error" role="alert" hidden></p>
     <div id="error" role="alert" hidden></div>
 
@@ -115,9 +122,9 @@
       <h2 id="help-dialog-heading">Help and keys</h2>
       <button type="button" id="help-close" class="text-btn">Close</button>
     </div>
-    <p>Every value on a card was read from the print volumes by a rule, or proposed by a language model where it is tagged "LLM proposal", and is bound to its passage in the entry text. Select a value and mark it right, wrong or unsure. Wrong asks for the right passage, typed or selected in the entry text, or for the mark that the value should not exist. A card is complete when every value it shows carries a decision.</p>
+    <p>Every value on a card was read from the print volumes by a rule, or proposed by a language model where its producer reads "LLM proposal", and is bound to its passage in the entry text. The producer word after a value opens its provenance chain and its review history; Esc closes it again. Select a value and mark it right, wrong or unsure. Wrong asks for the right passage, typed or selected in the entry text, or for the mark that the value should not exist. A card is complete when every value it shows carries a decision.</p>
     <p>The review sample holds <span id="help-sample">a frozen set of objects</span>, drawn by volume and part from entries that rule development has not seen. Only its complete cards enter the measurement. Decisions on other cards are kept as development reviews.</p>
-    <p>Wiki candidates come from the concordance and are proposals that nobody has confirmed. Every card leads to its page in the print volume, every wiki page to its permalink. The view is local, because the rights to the print volumes are unresolved.</p>
+    <p>Wiki candidates come from the concordance and are proposals that nobody has confirmed. Every card leads to its page in the print volume, every wiki page to its record in Records. The view is local, because the rights to the print volumes are unresolved.</p>
     <table class="keys">
       <tbody>
         <tr><th scope="row"><kbd>J</kbd> <kbd>K</kbd> or <kbd>↓</kbd> <kbd>↑</kbd></th><td>Next or previous value on the card, or the next or previous entry in a list</td></tr>
@@ -127,7 +134,7 @@
         <tr><th scope="row"><kbd>C</kbd></th><td>Mark the card complete and open the next open card</td></tr>
         <tr><th scope="row"><kbd>M</kbd> <kbd>B</kbd></th><td>Add a missing value, or flag a wrong boundary</td></tr>
         <tr><th scope="row"><kbd>N</kbd></th><td>Next open card of the review sample</td></tr>
-        <tr><th scope="row"><kbd>Esc</kbd></th><td>Cancel the form, or go back from the card to its entry in the list</td></tr>
+        <tr><th scope="row"><kbd>Esc</kbd></th><td>Close an open provenance chain, cancel the form, or go back from the card to its entry in the list</td></tr>
       </tbody>
     </table>
     <p class="quiet">Keys act only on the active card while it holds the focus. While a card loads or a decision is being saved they do nothing.</p>
@@ -141,6 +148,7 @@
     </form>
   </dialog>
 
+  <script src="/js/record-card.js"></script>
   <script type="module" src="cards.js"></script>
 </body>
 </html>

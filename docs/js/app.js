@@ -4,7 +4,7 @@
  */
 const App = {
   data: null,
-  entries: [],    // namespace 0 only
+  entries: [],    // the records: namespace 0 and the category pages admitsRecord lets in
   entryMap: new Map(),  // sourcePageId → entry for O(1) lookup
   index: null,
   filtered: [],
@@ -12,7 +12,7 @@ const App = {
     query: '',
     filters: {},
     sort: 'relevance',
-    browse: false,   // catalogue view without query or filters
+    records: false,   // the Records route, also without query or filters
     singleEntry: false,  // #entry= permalink: exactly one entry, read as a record
     customLabel: null,  // session list opened from the workbench or Explore
     view: 'home',
@@ -32,10 +32,12 @@ const App = {
       const resp = await fetch('data/klawiter.json');
       if (!resp.ok) throw new Error(`data/klawiter.json: HTTP ${resp.status}`);
       this.data = await resp.json();
-      // Filter to namespace 0 only
-      this.entries = this.data.entries.filter(e => e.pageNamespace === 0);
+      this.entries = this.data.entries.filter(e => this.admitsRecord(e));
       this.entryMap = new Map(this.entries.map(e => [e.sourcePageId, e]));
-      this.titleMap = new Map(this.entries.filter(e => e.title).map(e => [e.title, e.sourcePageId]));
+      // Wiki links name main-namespace pages; a category page of the same
+      // title must not capture them.
+      this.titleMap = new Map(this.entries.filter(e => e.title && e.pageNamespace === 0)
+        .map(e => [e.title, e.sourcePageId]));
       this._clearUnavailable();
       // The verification runs some fifteen full passes over the corpus and
       // writes to the console; that is a development instrument and has no
@@ -54,9 +56,57 @@ const App = {
       this._lastHash = null;
       this.handleRoute();
       this._prewarmIndex();
+      this._watchPrint();
     } catch (err) {
       this._renderUnavailable(err.message);
     }
+  },
+
+  /** MediaWiki namespace of category pages. */
+  CATEGORY_NAMESPACE: 14,
+
+  /** Fields the rules extract from a page's bibliographic text. */
+  BIBLIOGRAPHIC_FIELDS: ['year', 'location', 'publisher', 'translator', 'language', 'pageCount'],
+
+  /**
+   * Whether a page is a record of the bibliography. Every main-namespace page
+   * is. A category page is one when text remains after its category links
+   * and templates and the rules read a bibliographic value from that text,
+   * which separates the category pages that carry entries from those that
+   * only head a category (their text is empty or their own title) and from
+   * the infrastructure pages of the wiki.
+   */
+  admitsRecord(e) {
+    if (!e) return false;
+    if (e.pageNamespace === 0) return true;
+    if (e.pageNamespace !== this.CATEGORY_NAMESPACE) return false;
+    if (!String(e.fullBibliographicEntry || '').trim()) return false;
+    return this.BIBLIOGRAPHIC_FIELDS.some(key => e[key] != null && e[key] !== '');
+  },
+
+  /** Words for a type, including the category pages the type labels lack. */
+  EXTRA_TYPE_LABELS: { category: 'Category page' },
+
+  typeLabel(type) {
+    return ENTRY_TYPE_LABELS[type] || this.EXTRA_TYPE_LABELS[type] || type;
+  },
+
+  /**
+   * Ask once whether print records can join Records here. Where they can, an
+   * open list gains its source control, and an address that asked for print
+   * before the answer came is routed again.
+   */
+  _watchPrint() {
+    if (!this.state.isLocal || typeof Records === 'undefined') return;
+    Records.probePrint().then((ok) => {
+      if (!ok || this.state.view !== 'results' || this.state.singleEntry) return;
+      if (Records.requested && Records.requested !== 'wiki') {
+        this._lastHash = null;
+        this.handleRoute();
+      } else {
+        Records.renderSourceControl();
+      }
+    });
   },
 
   /**
@@ -112,7 +162,9 @@ const App = {
   },
 
   verifyData() {
-    const e = this.entries;
+    // The pipeline baseline describes the main namespace; the category pages
+    // Records admits as well are counted apart.
+    const e = this.entries.filter(x => x.pageNamespace === 0);
     const meta = this.data._meta;
     const warnings = [];
 
@@ -324,8 +376,23 @@ const App = {
   _resetSearchState() {
     this.state.query = '';
     this.state.filters = {};
+    if (typeof Records !== 'undefined') Records.fromParams(new URLSearchParams());
     const input = document.getElementById('search-input');
     if (input) input.value = '';
+  },
+
+  /**
+   * The canonical address of a list: `records` first, then every other
+   * parameter of the old address in its order. `browse` was the catalogue's
+   * marker and `records` takes its place.
+   */
+  _recordsHash(params) {
+    const rest = new URLSearchParams();
+    for (const [key, value] of params) {
+      if (key !== 'browse' && key !== 'records') rest.append(key, value);
+    }
+    const tail = rest.toString();
+    return tail ? `records&${tail}` : 'records';
   },
 
   handleRoute() {
@@ -337,7 +404,10 @@ const App = {
     if (hash === this._lastHash) return;
     this._lastHash = hash;
     const params = new URLSearchParams(hash);
-    this.state.browse = false;
+    // Back to a result route finds the place the reader left on its history
+    // entry; read before a render replaces the entry's state.
+    this._pendingSnapshot = typeof Records !== 'undefined' ? Records.fromHistory() : null;
+    this.state.records = false;
     this.state.singleEntry = false;
     this.state.publicationId = null;
     this.state.customLabel = null;
@@ -388,20 +458,14 @@ const App = {
       return;
     }
 
-    // Browse view — show all entries, no filters. Recognized by the parameter
-    // so that the sort state can ride along (#browse&sort=title).
-    if (params.has('browse')) {
-      this._resetSearchState();
-      this.state.browse = true;
-      this.applySortFromParams(params);
-      this.filtered = [...this.entries];
-      this.state.page = 0;
-      this.state.selectedId = null;
-      this.sortEntries();
-      this.showView('results');
-      this.renderResults();
-      Facets.render(this.filtered);
-      this.renderChips();
+    // Records is the list, under #records with its query, filters, source
+    // and sort as parameters. The catalogue's #browse and a bare #q= search
+    // land there by replace, so Back skips the old form and every other
+    // parameter rides along; a facet hash (#category=, #review=) stays as
+    // cited. The record routes below keep their own addresses.
+    const recordRoute = params.has('entry') || params.has('title') || params.has('print');
+    if (!recordRoute && (params.has('browse') || (params.has('q') && !params.has('records')))) {
+      this._redirect(this._recordsHash(params));
       return;
     }
 
@@ -453,6 +517,28 @@ const App = {
       return;
     }
 
+    // One print record, by the id of its object. Without print records here
+    // the address resolves to nothing, in words that name no print source.
+    if (params.has('print')) {
+      this._resetSearchState();
+      this.state.singleEntry = true;
+      this.state.page = 0;
+      this.state.selectedId = null;
+      this.filtered = [];
+      this.showView('results');
+      Facets.render(this.filtered);
+      this.renderChips();
+      this._paneMode = false;
+      this._setPaneLayout(false);
+      this._hideListChrome();
+      const list = document.getElementById('results-list');
+      if (list) list.innerHTML = '';
+      if (typeof Records !== 'undefined') Records.afterRender(null);
+      if (typeof Records !== 'undefined') Records.openPrint(params.get('print'));
+      else this._renderMissingMessage('This record address does not resolve here.');
+      return;
+    }
+
     // Redirect resolution
     if (params.has('title')) {
       const title = params.get('title');
@@ -480,18 +566,31 @@ const App = {
     this.state.query = params.get('q') || '';
     this.state.filters = this.filtersFromParams(params);
     this.applySortFromParams(params);
+    if (typeof Records !== 'undefined') Records.fromParams(params);
 
     const input = document.getElementById('search-input');
     if (input) input.value = this.state.query;
 
-    if (this.state.query || Object.keys(this.state.filters).length > 0) {
+    const listed = params.has('records');
+    if (listed || this.state.query || Object.keys(this.state.filters).length > 0) {
+      this.state.records = true;
       // A route render reproduces a state that is already in the URL, so it
-      // normalizes the hash rather than adding a second entry for it.
-      this.applyFilters({ push: false });
+      // normalizes the hash rather than adding a second entry for it. A cited
+      // facet hash keeps its form until the reader changes the list.
+      this.applyFilters({ push: false, keepURL: !listed });
       this.showView('results');
     } else {
+      this._pendingSnapshot = null;
       this.showView('home');
       Home.render(this.entries);
+    }
+  },
+
+  /** Nothing on a single print record sorts, filters or exports. */
+  _hideListChrome() {
+    for (const id of ['list-defaults', 'batch-export-btn', 'load-more']) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
     }
   },
 
@@ -611,8 +710,10 @@ const App = {
   // Filter keys the results route reads from the hash. `publisher`,
   // `translator` and the two year forms exist so that a selection made in
   // Explore can be handed over as an addressable result list.
+  // `layer=publication` keeps the pages that carry a publication layer, the
+  // list the start page's publication count opens.
   FILTER_KEYS: ['type', 'language', 'period', 'location', 'category',
-    'publisher', 'translator', 'years', 'decade', 'review'],
+    'publisher', 'translator', 'years', 'decade', 'review', 'layer'],
 
   NOT_RECORDED: 'Not recorded',
 
@@ -732,8 +833,10 @@ const App = {
   FILTER_LABELS: {
     type: 'Type', language: 'Language', period: 'Period', location: 'Location',
     category: 'Category', publisher: 'Publisher', translator: 'Translator',
-    years: 'Years', decade: 'Decade', review: 'Review',
+    years: 'Years', decade: 'Decade', review: 'Review', layer: 'Pages',
   },
+
+  LAYER_LABELS: { publication: 'with publications' },
 
   /** Inclusive [min, max] a `years` or `decade` filter value stands for. */
   yearBounds(filters) {
@@ -764,7 +867,12 @@ const App = {
   /** True while the current result list is reproducible from the hash. */
   isAddressableResults() {
     return this.state.view === 'results'
-      && (this.state.browse || !!this.state.query || Object.keys(this.state.filters).length > 0);
+      && (this.state.records || !!this.state.query || Object.keys(this.state.filters).length > 0);
+  },
+
+  /** Whether the wiki records stand in the list; a print-only source hides them. */
+  showsList() {
+    return typeof Records === 'undefined' || Records.showsWiki();
   },
 
   applySortFromParams(params) {
@@ -783,14 +891,17 @@ const App = {
    */
   updateURL(push) {
     const params = new URLSearchParams();
-    if (this.state.browse) params.set('browse', '');
     if (this.state.query) params.set('q', this.state.query);
     for (const [k, v] of Object.entries(this.state.filters)) {
       for (const value of Array.isArray(v) ? v : [v]) params.append(k, value);
     }
+    if (typeof Records !== 'undefined') Records.writeParams(params);
     // Default sort stays out of the URL, so unsorted views keep clean hashes.
     if (this.state.sort && this.state.sort !== 'relevance') params.set('sort', this.state.sort);
-    const hash = params.toString();
+    const rest = params.toString();
+    // Every list is written as #records[&…]; the start view has no hash.
+    const listed = this.state.records || rest !== '';
+    const hash = listed ? (rest ? `records&${rest}` : 'records') : '';
     const url = hash ? `#${hash}` : location.pathname;
     if (push && hash !== this._lastHash) history.pushState(null, '', url);
     else history.replaceState(null, '', url);
@@ -818,6 +929,7 @@ const App = {
     if (bounds && !this.yearValues(e).some(year => year >= bounds[0] && year <= bounds[1])) return false;
     if (f.category && !(e.categories || []).includes(f.category)) return false;
     if (f.review && !this.reviewValues(e).includes(f.review)) return false;
+    if (f.layer === 'publication' && !(Number(e.publicationCount) > 0)) return false;
     return true;
   },
 
@@ -859,10 +971,10 @@ const App = {
     this.sortEntries();
     this.state.page = 0;
     this.state.selectedId = null;
+    if (!(opts && opts.keepURL)) this.updateURL(opts ? opts.push : false);
     this.renderResults();
     Facets.render(this.filtered);
     this.renderChips();
-    this.updateURL(opts ? opts.push : false);
   },
 
   sortEntries() {
@@ -915,7 +1027,8 @@ const App = {
     // Nav active state
     const slug = location.hash.slice(1).split('/')[0];
     document.getElementById('nav-home').classList.toggle('active', view === 'home');
-    document.getElementById('nav-browse').classList.toggle('active', view === 'results');
+    // Every list and every record route is Records, permalinks included.
+    document.getElementById('nav-records').classList.toggle('active', view === 'results');
     document.getElementById('nav-stats').classList.toggle('active', view === 'stats');
     document.getElementById('nav-docs').classList.toggle('active',
       view === 'page' && slug === 'docs');
@@ -924,7 +1037,7 @@ const App = {
 
     // Update search placeholder
     const input = document.getElementById('search-input');
-    input.placeholder = `Full-text search, ${this.entries.length.toLocaleString('en')} entries…`;
+    input.placeholder = `Full-text search, ${this.entries.length.toLocaleString('en')} records…`;
 
     // Dynamic page title
     this._updateTitle(view);
@@ -954,7 +1067,8 @@ const App = {
     const btn = document.getElementById('edit-toggle');
     if (!btn) return;
     const hash = location.hash.slice(1);
-    const usable = this.EDIT_VIEWS.includes(this.state.view)
+    // A print record is reviewed in the workbench, not in edit mode.
+    const usable = (this.EDIT_VIEWS.includes(this.state.view) && !hash.startsWith('print='))
       || (this.state.view === 'page' && hash === this.QUALITY_ROUTE);
     btn.style.display = usable ? '' : 'none';
   },
@@ -995,7 +1109,7 @@ const App = {
       if (f.type) { document.title = `${this._filterDisplay('type', f.type)} \u2014 ${base}`; return; }
       if (this.state.query) { document.title = `\u201c${this.state.query}\u201d \u2014 ${base}`; return; }
       // Named as its navigation item, so the tab and the header say one thing.
-      document.title = `Wiki catalogue \u2014 ${base}`;
+      document.title = `Records \u2014 ${base}`;
       return;
     }
     document.title = base;
@@ -1003,6 +1117,18 @@ const App = {
 
   // --- Results ---
   renderResults() {
+    if (!this.showsList()) {
+      // A print-only source: the wiki list steps aside and Records draws
+      // the print records in their own section.
+      const list = document.getElementById('results-list');
+      if (list) list.innerHTML = '';
+      const loadMore = document.getElementById('load-more');
+      if (loadMore) loadMore.classList.add('hidden');
+      this._paneMode = false;
+      this._setPaneLayout(false);
+      this._afterList();
+      return;
+    }
     const total = this.filtered.length;
     const end = Math.min((this.state.page + 1) * this.state.pageSize, total);
     const visible = this.filtered.slice(0, end);
@@ -1034,6 +1160,7 @@ const App = {
     if (total === 0) {
       list.innerHTML = this._emptyStateHtml();
       document.getElementById('load-more').classList.add('hidden');
+      this._afterList();
       return;
     }
     // The list is rewritten, so a header holding the focus is found again by
@@ -1053,6 +1180,18 @@ const App = {
     this._scheduleReconciliation();
 
     document.getElementById('load-more').classList.toggle('hidden', end >= total);
+    this._afterList();
+  },
+
+  /**
+   * Hand the rendered list to Records: its source control, its print
+   * records, and the place Back returns to, taken once per route.
+   */
+  _afterList() {
+    if (typeof Records === 'undefined') return;
+    const snapshot = this._pendingSnapshot;
+    this._pendingSnapshot = null;
+    Records.afterRender(snapshot);
   },
 
   /**
@@ -1130,7 +1269,6 @@ const App = {
    */
   _paneCardHtml(e) {
     const pid = e.sourcePageId;
-    const label = e.pageKind === 'author-page' ? '<div class="card-title-label">Author</div>' : '';
     const [prev, next] = this._cardNeighbours(pid);
     const nav = prev != null || next != null ? `<div class="card-nav">
       <button type="button" class="card-nav-btn" data-act="card-prev"${prev == null ? ' hidden' : ''}>Previous</button>
@@ -1138,15 +1276,104 @@ const App = {
     </div>` : '';
     return `<article class="pane-card" id="card-${pid}" data-pid="${pid}"
         aria-labelledby="pane-title-${pid}">
-      <div class="pane-head">
-        ${label}
-        <h2 class="card-title pane-title" id="pane-title-${pid}"${titleAttrs(e, e.title)}>${
-          hlEsc(e.title || 'Untitled', this.state.query)}</h2>
-        <div class="card-meta">${this.cardMeta(e)}</div>
-      </div>
+      <div class="pane-head">${this._headHtml(e, `pane-title-${pid}`)}</div>
       ${nav}
       <div class="pane-detail" id="card-detail-${pid}">${Detail.renderInline(e)}</div>
     </article>`;
+  },
+
+  // --- Card head ---
+  /**
+   * The head of an open wiki card as RecordCard.head draws it: the record
+   * identifier as its permalink, the wiki page as source sign, the title with
+   * the chain of its value, the type as the one type badge, the page kind and
+   * the record's review state with its producer, in words.
+   */
+  headModel(e) {
+    const pid = e.sourcePageId;
+    const id = e['@id'] || `klawiter:entry/${pid}`;
+    const title = e.title || 'Untitled';
+    let titleValue = null;
+    if (typeof Detail !== 'undefined' && typeof Detail._valueChain === 'function') {
+      titleValue = Object.assign({ text: title, chainId: `chain-head-${pid}-title` },
+        Detail._valueChain('title', e, { text: title }));
+    }
+    return {
+      kind: 'wiki', id, permalink: `#entry=${pid}`,
+      sourceSign: { label: `Wiki page ${pid}`, pageId: pid },
+      title, type: this.typeLabel(e.entryType), position: this._pageKindLine(e),
+      titleValue, review: this._headReview(e),
+    };
+  },
+
+  /**
+   * The review state of a record in the words of the review chip: a session
+   * edit, no review, or the decision with what it covers and who made it. An
+   * open authority claim on the page reads "contested" beside it.
+   */
+  _headReview(e) {
+    const st = typeof Edit !== 'undefined' && typeof Edit.entryStatus === 'function'
+      ? Edit.entryStatus(e.sourcePageId) : { pending: false };
+    if (st.pending) return { state: 'edited' };
+    const review = e.review;
+    const dataset = review && review.status;
+    const open = typeof Detail !== 'undefined' && dataset !== 'contested'
+      ? Detail._openAuthorityClaims(e).length > 0 : false;
+    if (!dataset) return { state: 'not-reviewed', contested: open };
+    const word = Detail.REVIEW_WORDS[dataset] || String(dataset).replace(/[_-]+/g, ' ');
+    const scope = Detail.reviewScope(review);
+    const producer = Detail.decisionProducer(review);
+    return {
+      state: scope ? `${scope} ${word}` : word,
+      producer: producer ? `${dataset === 'proposed' ? 'by' : 'decided by'} ${producer}` : '',
+      contested: open,
+    };
+  },
+
+  /**
+   * One head of an open card, in the reading pane or in the list. The title
+   * chain is registered beside the page's own chains (Detail._chains), under a
+   * key of its own, so a late re-render of the card body keeps it.
+   *
+   * Deliberate shortcut: RecordCard.head takes no attributes for its title,
+   * so the language of a romanised title and the id the card is labelled by
+   * are set on the h2 it draws. Upgrade path: a `titleAttrs` field of the head
+   * model in record-card.js.
+   */
+  _headHtml(e, titleId) {
+    const pid = e.sourcePageId;
+    const model = this.headModel(e);
+    if (model.titleValue && model.titleValue.chain && typeof Detail !== 'undefined' && Detail._chains) {
+      const r = { key: 'title', label: 'Title', idBase: `${model.id}-title`, values: [model.titleValue] };
+      Detail._chains.set(`head:${pid}`, {
+        model: { kind: 'wiki', id: model.id, sourceText: { text: e.fullBibliographicEntry || '' } },
+        chains: new Map([[RecordCard.chainId(r, model.titleValue, 0), { r, i: 0 }]]),
+      });
+    }
+    const label = e.pageKind === 'author-page' ? '<div class="card-title-label">Author</div>' : '';
+    const head = RecordCard.head(model).replace('<h2 class="rc-title">',
+      `<h2 class="rc-title"${titleId ? ` id="${titleId}"` : ''}${titleAttrs(e, e.title)}>`);
+    const hint = this.state.editMode && typeof Edit.cardHint === 'function' ? Edit.cardHint(pid) : '';
+    return `${label}${head}${hint ? `<div class="card-meta">${hint}</div>` : ''}`;
+  },
+
+  /**
+   * The header of a result in a list: closed, a line that opens the card;
+   * open, the card's head. An open head holds links and buttons, so it is a
+   * labelled group, not a button with controls nested inside.
+   */
+  _cardHeaderHtml(e, open) {
+    const pid = e.sourcePageId;
+    if (open) {
+      return `<div class="card-header card-header-open" tabindex="-1" role="group"
+          aria-labelledby="head-title-${pid}">${this._headHtml(e, `head-title-${pid}`)}</div>`;
+    }
+    const title = hlEsc(e.title || 'Untitled', this.state.query);
+    return `<div class="card-header" tabindex="-1" role="button" aria-expanded="false"
+         aria-controls="card-detail-${pid}">
+      <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
+      <div class="card-meta">${this.listMeta(e)}</div>
+    </div>`;
   },
 
   /** Follow the pane breakpoint when the window crosses it. */
@@ -1229,12 +1456,6 @@ const App = {
   },
 
   renderCard(e) {
-    const title = hlEsc(e.title || 'Untitled', this.state.query);
-    // The title of an author page is the name of an author, so it says so.
-    const titleLabel = this.state.singleEntry && e.pageKind === 'author-page'
-      ? '<div class="card-title-label">Author</div>'
-      : '';
-
     // No source-text snippet here: it duplicated the start of the full
     // bibliographic entry shown on expansion. Title plus meta identify the card.
     // Beside the reading pane a result is a line that selects; the card it
@@ -1242,50 +1463,26 @@ const App = {
     if (this._paneMode) {
       return `<div class="entry-card" data-pid="${e.sourcePageId}">
         <div class="card-header" tabindex="-1" role="button" aria-controls="reading-pane">
-          <div class="card-title"${titleAttrs(e, e.title)}>${title}</div>
+          <div class="card-title"${titleAttrs(e, e.title)}>${hlEsc(e.title || 'Untitled', this.state.query)}</div>
           <div class="card-meta">${this.listMeta(e)}</div>
         </div>
       </div>`;
     }
+    // The permalink is one record, read open; a list result opens on demand.
     return `<div class="entry-card" id="card-${e.sourcePageId}" data-pid="${e.sourcePageId}">
-      <div class="card-header" tabindex="-1" role="button" aria-expanded="false"
-           aria-controls="card-detail-${e.sourcePageId}">
-        ${titleLabel}
-        <div class="card-title" data-provenance-for="title"${titleAttrs(e, e.title)}>${title}</div>
-        <div class="card-meta">${this.cardMeta(e)}</div>
-      </div>
+      ${this._cardHeaderHtml(e, this.state.singleEntry)}
       <div class="card-nav" hidden>
         <button type="button" class="card-nav-btn" data-act="card-prev" hidden>Previous</button>
         <button type="button" class="card-nav-btn" data-act="card-next" hidden>Next</button>
+        <button type="button" class="card-nav-btn" data-act="card-close" hidden>Close</button>
       </div>
       <div class="card-detail hidden" id="card-detail-${e.sourcePageId}"></div>
     </div>`;
   },
 
-  /**
-   * The line under the title of the element `card-<pid>` stands for: the head
-   * of a full card on the permalink route and in the reading pane, the value
-   * line of a result in a list whose cards open inline. The edit layer
-   * rewrites that element's line through this function.
-   */
+  /** The value line of a list result; the edit layer rewrites it here. */
   cardMeta(e) {
-    return this.state.singleEntry || this._paneMode ? this.cardHeadMeta(e) : this.listMeta(e);
-  },
-
-  /**
-   * The head of a full card: what the entry is, what the page documents and
-   * how it was reviewed. Every value stands named in the blocks below, so the
-   * values of the list line are dropped there as a repetition and the type
-   * keeps its badge; the review status with its producer stays, because the
-   * card is where a decision is read.
-   */
-  cardHeadMeta(e) {
-    const type = ENTRY_TYPE_LABELS[e.entryType] || e.entryType;
-    const kind = this._pageKindLine(e);
-    const items = [`<span class="badge">${type}</span>`];
-    if (kind) items.push(`<span class="card-meta-text"${Detail.help('Page kind')}>${kind}</span>`);
-    items.push(Detail._reviewChip(e));
-    return this._withTriage(items, e);
+    return this.listMeta(e);
   },
 
   /**
@@ -1434,11 +1631,28 @@ const App = {
     if (typeof document === 'undefined' || !document.querySelector) return;
     const entry = this.entryMap.get(pid);
     if (!entry) return;
-    // The list line and, while the entry stands in the pane, the head of its card.
-    const line = document.querySelector(`#results-list .entry-card[data-pid="${pid}"] .card-meta`);
-    if (line) line.innerHTML = this._paneMode ? this.listMeta(entry) : this.cardMeta(entry);
-    const head = document.querySelector(`#reading-pane .pane-card[data-pid="${pid}"] .card-meta`);
-    if (head) head.innerHTML = this.cardHeadMeta(entry);
+    // The list line of a closed result, the head of an open one, and while
+    // the entry stands in the pane the head of its card there.
+    const line = document.querySelector(
+      `#results-list .entry-card[data-pid="${pid}"] .card-header[role="button"] > .card-meta`);
+    if (line) line.innerHTML = this.listMeta(entry);
+    const open = document.querySelector(`#results-list .entry-card[data-pid="${pid}"] .card-header-open`);
+    if (open) this._replaceHeader(open, entry, true);
+    const head = document.querySelector(`#reading-pane .pane-card[data-pid="${pid}"] .pane-head`);
+    if (head) head.innerHTML = this._headHtml(entry, `pane-title-${pid}`);
+  },
+
+  /** Swap a list result's header between closed and open, keeping the focus. */
+  _replaceHeader(header, entry, open) {
+    const focused = typeof header.contains === 'function' && header.contains(document.activeElement);
+    const card = header.parentNode;
+    header.outerHTML = this._cardHeaderHtml(entry, open);
+    const fresh = card && card.querySelector ? card.querySelector(':scope > .card-header') : null;
+    if (fresh && focused) {
+      this._setListStop(fresh);
+      fresh.focus({ preventScroll: true });
+    }
+    return fresh;
   },
 
   /**
@@ -1479,19 +1693,30 @@ const App = {
     return count ? `${kind}, ${count}` : kind;
   },
 
+  /**
+   * Open or close a list result in place. The open card's header is its
+   * head; the closed one is the line that opens it again. A permalink has no
+   * closed form, and a list result closes through its Close button or Escape.
+   */
   _setCardExpanded(cardEl, on) {
     cardEl.classList.toggle('card-expanded', on);
+    const pid = parseInt(cardEl.dataset.pid, 10);
+    const entry = this.entryMap.get(pid);
     const header = cardEl.querySelector('.card-header');
-    if (header) header.setAttribute('aria-expanded', on ? 'true' : 'false');
+    if (header && entry && header.classList.contains('card-header-open') !== on) {
+      this._replaceHeader(header, entry, on);
+    }
     const nav = cardEl.querySelector('.card-nav');
     if (!nav) return;
-    const pid = parseInt(cardEl.dataset.pid, 10);
     const [prev, next] = on ? this._cardNeighbours(pid) : [null, null];
-    nav.hidden = prev == null && next == null;
+    const closable = on && !this.state.singleEntry;
+    nav.hidden = prev == null && next == null && !closable;
     const prevBtn = nav.querySelector('[data-act="card-prev"]');
     const nextBtn = nav.querySelector('[data-act="card-next"]');
+    const closeBtn = nav.querySelector('[data-act="card-close"]');
     if (prevBtn) prevBtn.hidden = prev == null;
     if (nextBtn) nextBtn.hidden = next == null;
+    if (closeBtn) closeBtn.hidden = !closable;
   },
 
   /**
@@ -1515,6 +1740,7 @@ const App = {
     const target = dir > 0 ? next : prev;
     if (target == null) return;
     if (this.state.singleEntry) {
+      if (typeof Records !== 'undefined') Records.saveSnapshot();
       this.goTo(`entry=${target}`);
       return;
     }
@@ -1572,6 +1798,16 @@ const App = {
     }
   },
 
+  /** Close an open list result and return the focus to its line. */
+  _closeCard(cardEl) {
+    this.toggleCard(parseInt(cardEl.dataset.pid, 10));
+    const header = cardEl.querySelector('.card-header');
+    if (header) {
+      this._setListStop(header);
+      header.focus();
+    }
+  },
+
   /**
    * Load the additive curation data once, sharing one promise across the
    * places that need it (an expanded card, the edit toggle). Curate.render
@@ -1589,7 +1825,8 @@ const App = {
    */
   _filterDisplay(key, val) {
     if (Array.isArray(val)) return val.map(value => this._filterDisplay(key, value)).join(' or ');
-    if (key === 'type') return ENTRY_TYPE_LABELS[val] || val;
+    if (key === 'type') return this.typeLabel(val);
+    if (key === 'layer') return this.LAYER_LABELS[val] || val;
     if (key === 'period') return PERIOD_LABELS[val] || val;
     if (key === 'review') return this.reviewLabel(val);
     if (key === 'decade') return `${val}s`;
@@ -1614,6 +1851,8 @@ const App = {
     if (this.state.query) {
       active.push({ key: 'search', label: 'Search', display: this.state.query });
     }
+    // The print filters of a list that shows print records, from Records.
+    if (typeof Records !== 'undefined') active.push(...Records.chips());
     return active;
   },
 
@@ -1633,7 +1872,8 @@ const App = {
   /**
    * The heading of the result view: what was asked for and how much answered.
    * A query yields results, a filter set yields entries, and the unfiltered
-   * catalogue says so instead of counting a selection nobody made.
+   * list says so instead of counting a selection nobody made. The print
+   * filters describe the print records, which Records counts itself.
    */
   _resultsLabel(total) {
     // The permalink names itself. Written here rather than after the render,
@@ -1641,8 +1881,9 @@ const App = {
     // count label and relabelled the record as a filtered list of one.
     if (this.state.singleEntry) return 'Permalink — 1 entry';
     const n = total.toLocaleString('en');
+    const printKeys = typeof Records !== 'undefined' ? Records.CHIP_KEYS : {};
     const facets = this._activeFilters()
-      .filter(({ key }) => key !== 'search').map(({ display }) => display);
+      .filter(({ key }) => key !== 'search' && !printKeys[key]).map(({ display }) => display);
     let label;
     if (this.state.query) {
       label = `${n} result${total !== 1 ? 's' : ''} for \u201c${this.state.query}\u201d`;
@@ -1666,8 +1907,14 @@ const App = {
   },
 
   removeFilter(key) {
+    // A print filter belongs to Records and leaves the list a list.
+    if (typeof Records !== 'undefined' && Records.clearKey(key)) {
+      this.state.records = true;
+      this.applyFilters({ push: true });
+      return;
+    }
     delete this.state.filters[key];
-    if (!this.state.query && Object.keys(this.state.filters).length === 0) {
+    if (!this.state.query && Object.keys(this.state.filters).length === 0 && !this._keepsList()) {
       location.hash = '';
     } else {
       this.applyFilters({ push: true });
@@ -1678,11 +1925,16 @@ const App = {
     this.state.query = '';
     const input = document.getElementById('search-input');
     if (input) input.value = '';
-    if (Object.keys(this.state.filters).length === 0) {
+    if (Object.keys(this.state.filters).length === 0 && !this._keepsList()) {
       location.hash = '';
     } else {
       this.applyFilters({ push: true });
     }
+  },
+
+  /** A list with print records stays a list when its last wiki filter goes. */
+  _keepsList() {
+    return typeof Records !== 'undefined' && Records.state.source !== 'wiki';
   },
 
   /** Drop query and every filter at once, from the chip bar or the empty state. */
@@ -1696,7 +1948,7 @@ const App = {
   // lists derive from artifacts, not from filter state.
   showCustomResults(entries, label) {
     this._resetSearchState();
-    this.state.browse = false;
+    this.state.records = false;
     // The list can be opened while a permalink is on screen, and it is a list.
     this.state.singleEntry = false;
     this.state.publicationId = null;
@@ -1962,7 +2214,13 @@ const App = {
         }
         return;
       }
-      const header = ev.target.closest('.card-header');
+      if (action && action.dataset.act === 'card-close') {
+        const card = action.closest('.entry-card');
+        if (card) this._closeCard(card);
+        return;
+      }
+      // Only a closed result's header opens; an open head holds its own controls.
+      const header = ev.target.closest('.card-header[role="button"]');
       if (header) {
         const card = header.closest('.entry-card');
         if (card) this.toggleCard(parseInt(card.dataset.pid));
@@ -1998,8 +2256,10 @@ const App = {
 
     resultsList.addEventListener('keydown', (ev) => {
       if (ev.key === 'Enter' || ev.key === ' ') {
-        const header = ev.target.closest('.card-header');
-        if (header) {
+        // The key on the header itself; Enter on a link inside an open head
+        // follows the link.
+        const header = ev.target.closest('.card-header[role="button"]');
+        if (header && header === ev.target) {
           ev.preventDefault();
           const card = header.closest('.entry-card');
           if (card) this.toggleCard(parseInt(card.dataset.pid));
@@ -2116,12 +2376,12 @@ const App = {
           }
           return;
         }
+        // A permalink is the record itself and has nothing to close.
+        if (this.state.singleEntry) return;
         const open = document.querySelector('#results-list .entry-card.card-expanded');
         if (!open) return;
         ev.preventDefault();
-        this.toggleCard(parseInt(open.dataset.pid, 10));
-        const header = open.querySelector('.card-header');
-        if (header) header.focus();
+        this._closeCard(open);
       }
     });
 
@@ -2129,17 +2389,6 @@ const App = {
     // like the four pages, so it sits in the navigation as its last item.
     if (this.state.isLocal) {
       const nav = document.querySelector('.site-nav');
-      // Only the review server serves the card workbench; a plain static
-      // server over docs/ would turn the item into a dead link.
-      this.localFileAnswers(this.PRINT_VIEWER).then((ok) => {
-        if (!ok || document.getElementById('nav-print-cards')) return;
-        const printLink = document.createElement('a');
-        printLink.id = 'nav-print-cards';
-        printLink.href = `${this.PRINT_VIEWER}#/`;
-        printLink.title = 'Print & Wiki card workbench (available on localhost only)';
-        printLink.textContent = 'Print cards';
-        nav.insertBefore(printLink, document.getElementById('edit-toggle'));
-      });
       const toggle = document.createElement('button');
       toggle.id = 'edit-toggle';
       toggle.className = 'nav-item-btn';
@@ -2149,25 +2398,6 @@ const App = {
       nav.appendChild(toggle);
       this._updateEditToggleVisibility();
     }
-  },
-
-  /** The local card workbench, which only the review server serves. */
-  PRINT_VIEWER: '/viewer/cards.html',
-
-  /**
-   * Whether a local-only file answers on this server, asked once per path.
-   * The published site never asks, so nothing hints at local data there. On a
-   * plain local server the answer is a 404, which the browser logs in the
-   * console; no link or control is built from it.
-   */
-  localFileAnswers(path) {
-    if (!this.state.isLocal) return Promise.resolve(false);
-    this._localProbes = this._localProbes || new Map();
-    if (!this._localProbes.has(path)) {
-      this._localProbes.set(path, fetch(path, { method: 'HEAD' })
-        .then(resp => resp.ok, () => false));
-    }
-    return this._localProbes.get(path);
   },
 
   // --- Help dialog ---

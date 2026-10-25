@@ -20,6 +20,7 @@ function read(file) {
 function ctxWith(files, data) {
   const ctx = {
     console,
+    URLSearchParams,
     setTimeout: () => 0,
     window: { scrollTo() {} },
     document: { addEventListener() {}, getElementById: () => null },
@@ -41,7 +42,7 @@ const records = [
 ];
 
 test('the Overview places the wiki types in the sections and shows print counts only from the local structure', () => {
-  const ctx = ctxWith(['home.js'], { entries: records, _meta: {} });
+  const ctx = ctxWith(['record-card.js', 'records.js', 'home.js'], { entries: records, _meta: {} });
   const Home = vm.runInContext('Home', ctx);
   const counts = { fiction: 7, essay: 3, 'collected-works': 2, film: 1, newspaper: 1 };
   const flat = html => html.replace(/\s+/g, ' ');
@@ -54,24 +55,24 @@ test('the Overview places the wiki types in the sections and shows print counts 
   assert.match(published, /<span class="source-unit">numbers<\/span>/);
   assert.match(published, /title="Wiki pages of the entry type [^"]*page 448"/);
   // What a column's counts open is said once, in its head.
-  assert.match(published, /<span class="source-unit">pages · open in catalogue<\/span>/);
+  assert.match(published, /<span class="source-unit">pages · open in Records<\/span>/);
   assert.doesNotMatch(published, /class="target"/);
   assert.doesNotMatch(published, /source-address/);
   // A type over two adjacent sections spans both rows; the bracket has words.
   assert.match(published, /rowspan="2" title="One wiki type, Collected Works, covers sections A and B" data-label="Wiki \(A and B\)"><button[^>]*data-type="collected-works"/);
   // Every wiki count names the list it opens.
-  assert.match(published, /aria-label="Open the 7 wiki pages of type Fiction \(section F\) in the catalogue"/);
-  assert.match(published, /aria-label="Open the 2 wiki pages of type Collected Works \(sections A and B\) in the catalogue"/);
-  assert.match(published, /aria-label="Open the 3 wiki pages of type Essays \(sections C and H\) in the catalogue"/);
+  assert.match(published, /aria-label="Open the 7 wiki pages of type Fiction \(section F\) in Records"/);
+  assert.match(published, /aria-label="Open the 2 wiki pages of type Collected Works \(sections A and B\) in Records"/);
+  assert.match(published, /aria-label="Open the 3 wiki pages of type Essays \(sections C and H\) in Records"/);
   // Essays stand at C; H points up and says so.
-  assert.match(published, /title="Essays belong to sections C and H and are counted at C\. Open the 3 wiki pages of type Essays in the catalogue"[^>]*>&uarr; C</);
+  assert.match(published, /title="Essays belong to sections C and H and are counted at C\. Open the 3 wiki pages of type Essays in Records"[^>]*>&uarr; C</);
   assert.match(published, /Only in the wiki/);
   assert.match(published, /data-type="newspaper"/);
   // One legend line for the bracket and the pointer, which no head explains;
   // no bars.
   // Where the table stacks and its heads are hidden, one item names the targets.
-  assert.match(published, /<ul class="home-legend"[^>]*><li class="legend-targets">wiki counts open the catalogue<\/li><li class="legend-covers">.*one wiki type covers two sections.*&uarr; C<\/span> counted at section C/);
-  assert.doesNotMatch(published, /opens print cards|opens the wiki catalogue|count-bar/);
+  assert.match(published, /<ul class="home-legend"[^>]*><li class="legend-targets">wiki counts open their records<\/li><li class="legend-covers">.*one wiki type covers two sections.*&uarr; C<\/span> counted at section C/);
+  assert.doesNotMatch(published, /opens print cards|catalogue|count-bar/);
 
   const print = {
     viewer: 'http://127.0.0.1:8767/viewer/index.html',
@@ -81,24 +82,29 @@ test('the Overview places the wiki types in the sections and shows print counts 
     },
     totals: { I: { entries: 720, objects: 900, values: 5000 } },
   };
-  // On a server without the card viewer a print count is text, not a dead link.
-  Home.viewerReady = false;
+  // On a server where Records shows no print records a print count is text,
+  // not a dead link.
+  Home.printReady = false;
   const plain = flat(Home.table(counts, [], print));
-  assert.doesNotMatch(plain, /viewer\/index\.html/);
+  assert.doesNotMatch(plain, /viewer\/index\.html|src=print/);
   assert.match(plain, /<span class="print-count" title="720 entries of section F of the main volume, numbered up to 723">720<\/span>/);
   assert.match(plain, /<span class="source-unit">entries<\/span>/);
-  assert.doesNotMatch(plain, /open as cards/);
+  assert.doesNotMatch(plain, /entries · open in Records/);
   // The working file says what it is in its head.
   assert.match(plain, /<span class="source-year">working file to 2009<\/span>/);
   assert.match(plain, /title="Entries of the Addendum II working file, cited by addresses such as FA2 3"/);
 
-  Home.viewerReady = true;
+  // Where Records shows print records, a count of entries opens the entries
+  // of its section in Records, never the objects they hold.
+  Home.printReady = true;
   const local = flat(Home.table(counts, [], print));
-  assert.match(local, /href="http:\/\/127\.0\.0\.1:8767\/viewer\/index\.html#\/\?v=I&amp;part=F"[^>]*>720</);
-  assert.match(local, /aria-label="Open the 720 entries of section F of the main volume as print cards \(numbered up to 723\)"/);
-  assert.match(local, /aria-label="Open the 9 index entries of the main volume \(Index A\) as print cards"/);
-  assert.match(local, /<span class="source-unit">entries · open as cards<\/span>/);
-  assert.match(local, /<li class="legend-targets">print counts open the cards, wiki counts the catalogue<\/li>/);
+  assert.match(local, /href="#records&amp;src=print&amp;vol=I&amp;part=F&amp;unit=entry"[^>]*>720</);
+  assert.match(local, /href="#records&amp;src=print&amp;vol=I&amp;kind=index&amp;unit=entry"[^>]*>9</);
+  assert.doesNotMatch(local, /viewer\/|cards\.html/);
+  assert.match(local, /aria-label="Open the 720 entries of section F of the main volume in Records \(numbered up to 723\)"/);
+  assert.match(local, /aria-label="Open the 9 index entries of the main volume \(Index A\) in Records"/);
+  assert.match(local, /<span class="source-unit">entries · open in Records<\/span>/);
+  assert.match(local, /<li class="legend-targets">print and wiki counts open their records<\/li>/);
   // A section the volume lacks is a dash, not an empty cell.
   assert.match(local, /No section A in the main volume/);
   // No figure is written into the page code.

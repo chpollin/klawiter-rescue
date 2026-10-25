@@ -95,7 +95,8 @@ test('updateURL keeps the route guard in sync with the replaced hash', () => {
   App.state.query = 'zweig';
   App.state.filters = { type: 'fiction' };
   App.updateURL();
-  assert.strictEqual(App._lastHash, 'q=zweig&type=fiction');
+  // Every list is written under Records.
+  assert.strictEqual(App._lastHash, 'records&q=zweig&type=fiction');
 
   // Clearing query and filters replaces the hash with '': the guard must
   // treat the next explicit navigation to '' as already-current state, and
@@ -113,25 +114,25 @@ test('the sort state travels in the hash, the default one does not', () => {
 
   App.state.sort = 'relevance';
   App.updateURL();
-  assert.strictEqual(App._lastHash, 'q=zweig');
+  assert.strictEqual(App._lastHash, 'records&q=zweig');
 
   App.state.sort = 'year-desc';
   App.updateURL();
-  assert.strictEqual(App._lastHash, 'q=zweig&sort=year-desc');
+  assert.strictEqual(App._lastHash, 'records&q=zweig&sort=year-desc');
 
-  // Browse keeps its own marker so a sorted catalogue view survives a reload.
+  // The whole list keeps its marker, so a sorted list survives a reload.
   App.state.query = '';
-  App.state.browse = true;
+  App.state.records = true;
   App.state.sort = 'title';
   App.updateURL();
-  assert.strictEqual(App._lastHash, 'browse=&sort=title');
+  assert.strictEqual(App._lastHash, 'records&sort=title');
 });
 
 test('a hash sort value round-trips and unknown values fall back', () => {
   const App = loadApp();
   App.state.query = '';
   App.state.filters = { type: 'fiction' };
-  App.state.browse = false;
+  App.state.records = false;
   App.state.sort = 'year-asc';
   App.updateURL();
 
@@ -157,12 +158,12 @@ test('only a hash-addressable result list writes the sort back to the URL', () =
   App.state.view = 'results';
   App.state.query = '';
   App.state.filters = {};
-  App.state.browse = false;
+  App.state.records = false;
   // Workbench lists derive from artifacts and carry no hash of their own.
   assert.strictEqual(App.isAddressableResults(), false);
-  App.state.browse = true;
+  App.state.records = true;
   assert.strictEqual(App.isAddressableResults(), true);
-  App.state.browse = false;
+  App.state.records = false;
   App.state.query = 'zweig';
   assert.strictEqual(App.isAddressableResults(), true);
   App.state.view = 'stats';
@@ -370,12 +371,19 @@ test('the help dialog fills on first open, and closing it returns focus to its b
   assert.strictEqual(App._lastHash, null);
 });
 
-test('the navigation names Documentation and the catalogue as the tab title does', () => {
+test('the navigation names Records and Documentation as the tab title does', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'index.html'), 'utf8');
   const nav = html.match(/<nav class="site-nav"[^>]*>([\s\S]*?)<\/nav>/)[1];
   const labels = [...nav.matchAll(/<a [^>]*>([^<]*)<\/a>/g)].map(m => m[1]);
-  assert.deepStrictEqual(labels, ['Overview', 'Wiki catalogue', 'Explore', 'Documentation']);
+  // Explore stays until it becomes an arrangement of the records; Edit joins
+  // on localhost from app.js.
+  assert.deepStrictEqual(labels, ['Overview', 'Records', 'Explore', 'Documentation']);
+  assert.match(nav, /href="#records" id="nav-records"/);
   assert.match(nav, /href="#docs" id="nav-docs"/);
+  assert.doesNotMatch(html, /#browse|Wiki catalogue/);
+  // The print workbench is no item of the reader's navigation any more.
+  assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '..', 'docs', 'js', 'app.js'), 'utf8'),
+    /nav-print-cards|Print cards|cards\.html/);
   // The imprint and the citation stand in the footer, not in the navigation.
   const footer = html.match(/<footer[\s\S]*<\/footer>/)[0];
   assert.match(footer, /<a href="#docs\/imprint">Imprint<\/a>/);
@@ -394,6 +402,8 @@ test('the edit toggle shows only where entry cards can be edited', () => {
   for (const [hash, view, visible] of [
     ['', 'home', true],
     ['#q=zweig', 'results', true],
+    ['#records&q=zweig', 'results', true],
+    ['#print=I%2FA%2F1%231', 'results', false],
     ['#data/quality', 'page', true],
     ['#docs', 'page', false],
     ['#docs/method', 'page', false],
@@ -420,20 +430,20 @@ test('a user-triggered state change is a history entry, a normalization is not',
   // interaction made Back leave the application.
   App.state.filters = { type: 'fiction' };
   App.updateURL(true);
-  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['push', '#type=fiction']);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['push', '#records&type=fiction']);
 
   // Re-rendering a state that is already in the URL only normalizes it.
   App.updateURL(false);
-  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['replace', '#type=fiction']);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['replace', '#records&type=fiction']);
 
   // A push that would duplicate the current entry stays a replace.
   App.updateURL(true);
-  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['replace', '#type=fiction']);
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['replace', '#records&type=fiction']);
 
   App.state.filters = { type: 'essay' };
   App.updateURL(true);
-  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['push', '#type=essay']);
-  assert.strictEqual(App._lastHash, 'type=essay');
+  assert.deepStrictEqual(ctx.historyCalls.at(-1), ['push', '#records&type=essay']);
+  assert.strictEqual(App._lastHash, 'records&type=essay');
 });
 
 test('the skip-link fragment is not treated as a route', () => {
@@ -504,7 +514,7 @@ test('a permalink tab names its entry, and the base title matches index.html', (
 
   App.state.singleEntry = false;
   App._updateTitle('results');
-  assert.strictEqual(ctx.document.title, `Wiki catalogue — ${App.BASE_TITLE}`);
+  assert.strictEqual(ctx.document.title, `Records — ${App.BASE_TITLE}`);
 
   ctx.location.hash = '#docs/method';
   App._updateTitle('page');
