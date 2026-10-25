@@ -116,7 +116,7 @@ def test_every_publication_is_anchored_in_the_source(built, source_text) -> None
 
 
 def test_every_reported_field_carries_its_provenance_class(built) -> None:
-    structural = {"id", "provenance", "sourceSlice", "reviewFlags"}
+    structural = {"id", "provenance", "sourceSlice", "reviewFlags", "valueSpans"}
     for publication in built["publications"]:
         reported = set(publication) - structural
         assert set(publication["provenance"]) == reported

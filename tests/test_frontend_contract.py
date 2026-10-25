@@ -31,8 +31,10 @@ from pathlib import Path
 # and producer of a publication's edition, and the structured translation
 # statements of a translations section, 1.10 the first and last revision of
 # the page, the fields a stated rule emptied with their rule, and a title that
-# a lost byte leaves empty (encoding-damaged hint).
-FRONTEND_SCHEMA_VERSION = "1.10"
+# a lost byte leaves empty (encoding-damaged hint), 1.11 the displayed position
+# of every value (fieldEvidence per record, valueSpans per publication,
+# textStart and textEnd per translation statement) and the source dump files.
+FRONTEND_SCHEMA_VERSION = "1.11"
 
 TOP_LEVEL_KEYS = {
     "_meta",
@@ -57,6 +59,7 @@ META_KEYS = {
     "publicationCoverage",
     "redirectCount",
     "printAddressCitations",
+    "sourceDump",
     "totalCount",
     "translationStatements",
     "version",
@@ -81,6 +84,7 @@ ENTRY_CONTRACT: dict[str, tuple[bool, tuple[type, ...]]] = {
     "categories": (False, (list,)),
     "contentItems": (False, (list,)),
     "edit_history": (False, (list,)),
+    "fieldEvidence": (False, (dict,)),
     "fullBibliographicEntry": (False, (str,)),
     "language": (False, (str,)),
     "languageCode": (False, (str,)),
@@ -348,10 +352,17 @@ PUBLICATION_KEYS = {
     "seriesVolume",
     "sourceSlice",
     "title",
+    "valueSpans",
     "year",
     "yearRaw",
 }
-PUBLICATION_REQUIRED_KEYS = {"id", "provenance", "reviewStatus", "sourceSlice"}
+PUBLICATION_REQUIRED_KEYS = {
+    "id",
+    "provenance",
+    "reviewStatus",
+    "sourceSlice",
+    "valueSpans",
+}
 PUBLICATION_STRUCTURAL_KEYS = {
     "editionId",
     "id",
@@ -361,6 +372,7 @@ PUBLICATION_STRUCTURAL_KEYS = {
     "reviewProducer",
     "reviewStatus",
     "sourceSlice",
+    "valueSpans",
 }
 # The Gate-1 statement states. A publication outside the Gate-1 corpus is
 # rule-extracted and unreviewed, so it is proposed; contested passes through
@@ -586,25 +598,24 @@ def test_entry_review_flags_name_their_field(all_entries) -> None:
 
 
 def test_publication_spans_point_into_the_delivered_text(all_entries) -> None:
-    """Where the record names a span of the delivered bibliographic text, that
-    span must carry this publication's own statement, and only one page region
-    may match it. Where no unambiguous region exists the offsets are absent."""
+    """The span of the delivered bibliographic text a publication names is its
+    own block, mapped from the block's raw offsets rather than searched, so a
+    block the page states twice (page 24) has a span as well; it carries the
+    publication's own statement, and the spans of different blocks do not
+    overlap."""
     spanned = 0
     for entry in _pages_with_publications(all_entries):
         delivered = entry.get("fullBibliographicEntry", "")
         previous_start = previous_end = -1
         for publication in _side_file(entry["sourcePageId"])["publications"]:
             source_slice = publication["sourceSlice"]
-            if "textStart" not in source_slice:
-                assert "textEnd" not in source_slice
-                continue
+            assert {"textStart", "textEnd"} <= set(source_slice), (
+                f"page {entry['sourcePageId']}: a publication block is not displayed"
+            )
             spanned += 1
             start, end = source_slice["textStart"], source_slice["textEnd"]
             assert 0 <= start < end <= len(delivered)
             excerpt = delivered[start:end]
-            assert delivered.count(excerpt) == 1, (
-                f"page {entry['sourcePageId']}: the named span is not unique"
-            )
             assert publication["yearRaw"] in excerpt
             # A compound header states two publications in one source block, so
             # those two share one span; blocks that differ must not overlap.
@@ -697,3 +708,131 @@ def test_cited_print_addresses_match_the_declared_contract(all_entries) -> None:
                 "printEntryNumber" in citation
             )
             assert citation["printAddress"].startswith(citation["printSection"])
+
+
+# Value positions (lib/value_spans.py): every evidence entry has one shape.
+EVIDENCE_KEYS = {
+    "value",
+    "part",
+    "textStart",
+    "textEnd",
+    "locator",
+    "derivedFrom",
+    "derivation",
+    "gap",
+    "count",
+    "rawStart",
+    "rawEnd",
+}
+EVIDENCE_LOCATORS = {"region", "search"}
+EVIDENCE_GAPS = {
+    "repeated",
+    "not-verbatim",
+    "category-markup",
+    "not-displayed",
+    "page-title",
+    "editor-value",
+}
+EVIDENCE_DERIVATIONS = {
+    "whitespace",
+    "markup",
+    "number",
+    "language-code",
+    "normalised",
+    "link-target",
+}
+RECORD_EVIDENCE_FIELDS = {
+    "title",
+    "originalTitle",
+    "year",
+    "publisher",
+    "location",
+    "pageCount",
+    "translator",
+    "language",
+    "languageCode",
+    "mainCategory",
+    "categories",
+    "allYears",
+    "allLocations",
+    "seeAlso",
+    "reprints",
+    "translations",
+    "contentItems",
+    "printAddressCitations",
+}
+
+
+def _assert_evidence_shape(entry: dict, where: str) -> None:
+    assert set(entry) <= EVIDENCE_KEYS, (
+        f"{where}: undeclared {set(entry) - EVIDENCE_KEYS}"
+    )
+    assert isinstance(entry["value"], str), where
+    if "gap" in entry:
+        assert entry["gap"] in EVIDENCE_GAPS, where
+        assert not {"textStart", "textEnd", "locator", "derivedFrom"} & set(entry)
+        assert ("rawStart" in entry) == ("rawEnd" in entry), where
+    else:
+        assert {"textStart", "textEnd"} <= set(entry), where
+        assert entry.get("locator", "region") in EVIDENCE_LOCATORS, where
+        assert ("derivedFrom" in entry) == ("derivation" in entry), where
+        assert entry.get("derivation", "whitespace") in EVIDENCE_DERIVATIONS, where
+        assert not {"count", "rawStart", "rawEnd"} & set(entry), where
+
+
+def test_meta_names_the_source_dump_files(frontend_data) -> None:
+    """The source file of a record's text is the text store file its
+    sourceBlobId names, with the hash of the archived inventory."""
+    inventory = json.loads(
+        (
+            Path(__file__).resolve().parents[1] / "data/provenance/source-dump.json"
+        ).read_text(encoding="utf-8")
+    )
+    hashes = {item["path"]: item["sha256"] for item in inventory["files"]}
+    dump = frontend_data["_meta"]["sourceDump"]
+    assert set(dump) == {"file", "sha256", "textFiles"}
+    assert hashes[dump["file"]] == dump["sha256"]
+    for blob_id, text_file in dump["textFiles"].items():
+        assert set(text_file) == {"file", "sha256"}
+        assert text_file["file"] == f"data/raw/zt_0{blob_id}"
+        assert hashes[text_file["file"]] == text_file["sha256"]
+    blob_ids = {
+        str(entry["sourceBlobId"])
+        for entry in frontend_data["entries"]
+        if "sourceBlobId" in entry
+    }
+    assert blob_ids <= set(dump["textFiles"])
+
+
+def test_field_evidence_matches_the_declared_shape(all_entries) -> None:
+    with_evidence = [entry for entry in all_entries if "fieldEvidence" in entry]
+    assert with_evidence, "no record carries field evidence"
+    for entry in with_evidence:
+        evidence = entry["fieldEvidence"]
+        assert evidence and set(evidence) <= RECORD_EVIDENCE_FIELDS
+        for field, entries in evidence.items():
+            assert isinstance(entries, list) and entries
+            for item in entries:
+                _assert_evidence_shape(item, f"{entry['@id']} {field}")
+                assert "part" not in item
+
+
+def test_value_spans_match_the_declared_shape(all_entries) -> None:
+    for entry in _pages_with_publications(all_entries):
+        for publication in _side_file(entry["sourcePageId"])["publications"]:
+            spans = publication["valueSpans"]
+            assert set(spans) <= set(publication) - PUBLICATION_STRUCTURAL_KEYS
+            for field, entries in spans.items():
+                for item in entries:
+                    _assert_evidence_shape(item, f"{publication['id']} {field}")
+
+
+def test_translation_statements_name_their_displayed_passage(all_entries) -> None:
+    statements = [
+        statement
+        for entry in all_entries
+        for statement in entry.get("translationStatements", [])
+    ]
+    assert any("textStart" in statement for statement in statements)
+    for statement in statements:
+        assert ("textStart" in statement) == ("textEnd" in statement)

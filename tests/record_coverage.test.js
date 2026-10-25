@@ -224,6 +224,8 @@ const RECORD_PLACES = {
   sourceRevision: (e, r) => placeOf(`revision ${e.sourceRevision.humanRevision.revisionId}`, r.fields),
   revisionDates: (e, r) => (marked(r.card.html, 'revisionDates') ? 'visible' : null),
   ruleGaps: (e, r) => (marked(r.card.html, 'ruleGaps') ? 'visible' : null),
+  // Value positions are the passages of the chains, so they stand where every chain they locate stands.
+  fieldEvidence: (e, r) => (Object.keys(e.fieldEvidence).every(key => chained(r.card.html, key)) ? 'visible' : null),
   pageKind: (e, r, ctx) => (ctx.App.PAGE_KIND_LABELS[e.pageKind]
     ? placeOf(ctx.App.PAGE_KIND_LABELS[e.pageKind], r.fields)
     : (marked(r.card.html, 'pageKind') ? 'visible' : null)),
@@ -275,6 +277,7 @@ const PUBLICATION_PLACES = {
   reviewDecision: (p, b) => placeOf(p.reviewDecision, b),
   reviewProducer: (p, b) => (p.reviewProducer === 'llm-agent' ? placeOf('LLM agent review', b) : placeOf(p.reviewProducer, b)),
   sourceSlice: (p, b) => (marked(b.html, 'sourceSlice') ? 'visible' : null),
+  valueSpans: (p, b) => (Object.keys(p.valueSpans).every(key => chained(b.html, key)) ? 'visible' : null),
   provenance: (p, b) => (Object.keys(p.provenance).every(key => chained(b.html, key)) ? 'visible' : null),
 };
 

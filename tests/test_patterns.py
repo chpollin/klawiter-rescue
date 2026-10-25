@@ -241,11 +241,19 @@ class TestExtractPageCount:
         fields = first_publication_fields(
             23, entry["text"], entry["page_title"], [], load_attested_places()
         )
+        # The raw regions the values were read from; the first publication
+        # states no extent the grammar reads, so it has none for the extent.
+        spans = fields.pop("spans")
         assert fields == {
             "year": 1936,
             "page_count": None,
             "publisher": "Herbert Reichner Verlag",
         }
+        assert set(spans) == {"year", "publisher"}
+        start, end = spans["year"]
+        assert entry["text"][start:end] == "1936"
+        start, end = spans["publisher"]
+        assert "Herbert Reichner Verlag" in entry["text"][start:end]
 
     def test_rejects_page_ranges(self):
         """pp. N-M is a page range (start-end), not a page count."""

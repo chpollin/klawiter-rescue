@@ -16,6 +16,7 @@ import re
 
 from lib.encoding import unescape_dump_quotes
 from lib.patterns import credited_name
+from lib.value_spans import display_form, displayed_span
 from lib.vocabulary import language_to_iso
 from lib.wiki_parser import _LANGUAGE_HEAD, _TRANSLATIONS_HEAD, _wiki_section
 
@@ -197,11 +198,29 @@ def _unheaded_statements(text: str, body_start: int, body: str) -> list[dict]:
 
 def translation_statements(text: str) -> list[dict]:
     """Every translation the page's translations section lists, one statement
-    per printing, in source order."""
+    per printing, in source order, each with its passage in the raw text
+    (sourceSlice) and, where displayed, in the displayed text."""
     block = _wiki_section(text or "", _TRANSLATIONS_HEAD, _LANGUAGE_HEAD)
     if not block:
         return []
-    body_start, body_end = block.start(1), block.end(1)
+    display = display_form(text)
+    return [
+        _displayed(statement, display)
+        for statement in _statements(text, block.start(1), block.end(1))
+    ]
+
+
+def _displayed(statement: dict, display) -> dict:
+    """The statement with its passage in the displayed text (textStart,
+    textEnd), where any of it is displayed."""
+    source_slice = statement["sourceSlice"]
+    span = displayed_span(display, source_slice["start"], source_slice["end"])
+    if span:
+        statement["textStart"], statement["textEnd"] = span
+    return statement
+
+
+def _statements(text: str, body_start: int, body_end: int) -> list[dict]:
     body = text[body_start:body_end]
     headings = list(_HEADING_RE.finditer(body))
     if not headings:

@@ -44,6 +44,7 @@ from lib.config import (
     setup_logging,
     write_json,
 )
+from lib.value_spans import gap
 
 log = setup_logging(__name__)
 
@@ -169,6 +170,15 @@ def apply_patches(entries, patches, location_links=None):
                 )
             if action in ("correct", "add"):
                 entry[field] = p.get("newValue")
+                # The patch names no passage, so the stage-05 position of the
+                # replaced value no longer holds.
+                evidence = entry.setdefault("fieldEvidence", {})
+                if p.get("newValue") in (None, ""):
+                    evidence.pop(field, None)
+                else:
+                    evidence[field] = [gap(str(p["newValue"]), "editor-value")]
+                if not evidence:
+                    entry.pop("fieldEvidence")
                 if field == "location":
                     reviewed = location_links.get(p.get("newValue"), {})
                     if reviewed.get("uri"):

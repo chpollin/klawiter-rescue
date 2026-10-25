@@ -312,7 +312,7 @@ def _translations(record_sources, page_id):
         {
             key: value
             for key, value in statement.items()
-            if key not in {"spans", "sourceSlice"}
+            if key not in {"spans", "sourceSlice", "textStart", "textEnd"}
         }
         for statement in translation_statements(record_sources[page_id]["text"])
     ]

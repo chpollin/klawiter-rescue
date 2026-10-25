@@ -18,6 +18,7 @@ import os
 import sys
 import tomllib
 import unicodedata
+from functools import cache
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.config import (
@@ -32,8 +33,11 @@ from lib.config import (
     OUTPUT_RECONCILIATION_DECISIONS,
     OUTPUT_RECONCILIATION_DIR,
     OUTPUT_UNRESOLVED_REDIRECTS,
+    PIPELINE_DATA_DIR,
     PROJECT_ROOT,
+    SOURCE_DUMP_INVENTORY,
     SOURCE_REVISION_DECISIONS,
+    SQL_DUMP_PATH,
     STEP_01_PAGELINKS,
     STEP_01_REVISIONS,
     STEP_04_OUTPUT,
@@ -54,6 +58,7 @@ from lib.publications import (
 )
 from lib.reconciliation import decision_key
 from lib.translations import translation_statements
+from lib.value_spans import display_form, record_evidence
 from lib.vocabulary import CONTEXT, SCHEMA_TYPE_MAP, to_rdf_entry
 
 log = setup_logging(__name__)
@@ -904,6 +909,64 @@ ENCODING_DAMAGED_DETAIL = (
 )
 
 
+@cache
+def location_variants():
+    """The place variants stage 03c maps to each canonical place
+    (pipeline/data/location_normalize.json)."""
+    path = os.path.join(PIPELINE_DATA_DIR, "location_normalize.json")
+    with open(path, encoding="utf-8") as f:
+        mapping = json.load(f)
+    variants = {}
+    for variant, canonical in mapping.items():
+        if variant != canonical:
+            variants.setdefault(canonical, []).append(variant)
+    return variants
+
+
+def field_evidence(row, frontend_entry):
+    """Where each page-level value of the record stands in the displayed
+    text (lib/value_spans.py), from the raw spans stage 03 read it from."""
+    if row.get("clean_content") != display_form(row.get("raw_content", "")).text:
+        raise ValueError(
+            f"page {row['page_id']}: the delivered text is not the displayed form"
+        )
+    sources = {
+        ("seeAlso", canonical): [ref]
+        for canonical, ref in row.get("_see_also_sources", {}).items()
+    }
+    for place in frontend_entry.get("allLocations") or []:
+        if place in location_variants():
+            sources[("allLocations", place)] = location_variants()[place]
+    return record_evidence(
+        frontend_entry,
+        safe_json_parse(row.get("field_spans", "")) or {},
+        display_form(row.get("raw_content", "")),
+        page_title=row.get("page_title", ""),
+        sources=sources,
+    )
+
+
+def source_dump():
+    """The dump files a record's source names, from the SHA-256 inventory:
+    the SQL dump with the page, revision and text tables, and the text store
+    files, keyed by the sourceBlobId of the records whose text they hold."""
+    with open(SOURCE_DUMP_INVENTORY, encoding="utf-8") as f:
+        inventory = {item["path"]: item["sha256"] for item in json.load(f)["files"]}
+    sql = os.path.relpath(SQL_DUMP_PATH, PROJECT_ROOT).replace(os.sep, "/")
+    return {
+        "file": sql,
+        "sha256": inventory[sql],
+        "textFiles": {
+            path.rsplit("_", 1)[1].lstrip("0") or "0": {
+                "file": path,
+                "sha256": digest,
+            }
+            for path, digest in sorted(inventory.items())
+            if path.startswith("data/raw/zt_")
+        },
+    }
+
+
 def encoding_damage_flags(row):
     """Review hints for the fields stage 03c emptied for a lost byte."""
     fields = safe_json_parse(row.get("encoding_damaged_fields", "")) or []
@@ -1008,6 +1071,9 @@ def repair_see_references(rows):
             canonical = resolver.get(int(row["page_id"]), {}).get(_normalize_title(ref))
             if canonical and canonical in known:
                 result.append(canonical)
+                # The field evidence locates the canonical title at the
+                # reference it was resolved from.
+                row.setdefault("_see_also_sources", {})[canonical] = ref
                 repaired += 1
                 changed = True
             else:
@@ -1126,6 +1192,9 @@ def main():
             damage_flags = encoding_damage_flags(row)
             if damage_flags:
                 fe["reviewFlags"] = damage_flags
+            evidence = field_evidence(row, fe)
+            if evidence:
+                fe["fieldEvidence"] = evidence
             non_redirect_entries.append(fe)
             title = e.get("name", "")
             pid = e.get("sourcePageId")
@@ -1253,8 +1322,10 @@ def main():
         # structured translation statements, 1.10 the first and last revision
         # of the page, the fields a stated rule emptied (ruleGaps, provenance
         # label rule-gap), the encoding-damaged hint, and a title that a lost
-        # byte can leave empty.
-        "frontendSchemaVersion": "1.10",
+        # byte can leave empty, 1.11 the displayed position of every value
+        # (fieldEvidence, the publications' valueSpans, the translation
+        # statements' textStart and textEnd) and the source dump files.
+        "frontendSchemaVersion": "1.11",
         "license": DATA_LICENSE,
         "version": version,
         "ns0Count": ns0_count,
@@ -1273,6 +1344,7 @@ def main():
         "printAddressCitations": print_citation_coverage,
         "translationStatements": translation_coverage,
         "editionReview": edition_review_source(),
+        "sourceDump": source_dump(),
     }
 
     frontend_data = {

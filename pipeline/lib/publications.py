@@ -32,9 +32,17 @@ from pathlib import Path
 
 from lib.config import LOCATIONS_JSON
 from lib.editions import (
+    COMPOUND_HEADER_RE,
     EDITION_HEADER_RE,
+    HEADER_RE,
     LOCATOR_HEADER_RE,
+    MALFORMED_PAGE_COUNT_RE,
+    PAREN_PAGE_COUNT_RE,
+    PREFATORY_PAGES_RE,
+    SERIES_RE,
+    STANDARD_PAGE_COUNT_RE,
     HeaderFields,
+    _continues_imprint,
     parse_header_line,
     protected_mask,
     resolve_imprints,
@@ -53,12 +61,14 @@ from lib.patterns import (
     extract_translator,
     location_from_header,
 )
-from lib.vocabulary import LANGUAGE_MAP, language_to_iso
-from lib.wiki_parser import (
-    extract_categories,
-    extract_defaultsortkey,
-    remove_wiki_markup,
+from lib.value_spans import (
+    category_gap,
+    category_links,
+    display_form,
+    displayed_span,
+    locate,
 )
+from lib.vocabulary import LANGUAGE_MAP, language_to_iso
 
 ROLE_VOCABULARY = ("author", "translator", "editor", "illustrator", "contributor")
 PAGE_KINDS = ("author-page", "edition-page", "single-publication")
@@ -237,6 +247,7 @@ _PROVENANCE_EXCLUDED = frozenset(
         "reviewStatus",
         "reviewDecision",
         "reviewProducer",
+        "valueSpans",
     }
 )
 
@@ -300,20 +311,24 @@ def _mask(text: str) -> str:
     return _CATEGORY_LINK_RE.sub(blank, _LIST_BLOCK_RE.sub(blank, text))
 
 
-def _language_scopes(text: str) -> list[tuple[int, str]]:
-    """Offsets of the bold language headings that scope the following blocks."""
+def _language_scopes(text: str) -> list[tuple[int, str, tuple[int, int]]]:
+    """Offsets of the bold language headings that scope the following blocks,
+    each with the span of its name."""
     scopes = []
     for match in _LANGUAGE_HEADING_RE.finditer(text):
         name = match.group(1).strip()
         if name in LANGUAGE_MAP:
-            scopes.append((match.start(), name))
+            scopes.append((match.start(), name, match.span(1)))
     return scopes
 
 
-def _language_at(scopes: list[tuple[int, str]], start: int) -> str | None:
-    """The language heading a block stands under, that is the last one above it."""
-    enclosing = [name for offset, name in scopes if offset < start]
-    return enclosing[-1] if enclosing else None
+def _language_at(
+    scopes: list[tuple[int, str, tuple[int, int]]], start: int
+) -> tuple[str | None, tuple[int, int] | None]:
+    """The language heading a block stands under, that is the last one above
+    it, with the span of its name."""
+    enclosing = [(name, span) for offset, name, span in scopes if offset < start]
+    return enclosing[-1] if enclosing else (None, None)
 
 
 def _category_languages(categories: list[str]) -> list[str]:
@@ -424,8 +439,9 @@ def _body_imprint(
     return None, []
 
 
-def _title(block_body: str) -> str | None:
-    """The publication title, the first italic or quoted string of the block.
+def _title(block_body: str) -> tuple[str, tuple[int, int]] | None:
+    """The publication title, the first italic or quoted string of the block,
+    with the span it was read from.
 
     Whichever notation comes first wins, so an article title in quotes is not
     displaced by the italic journal name that follows it.
@@ -440,10 +456,11 @@ def _title(block_body: str) -> str | None:
     ]
     if not candidates:
         return None
-    title = _flat(min(candidates, key=lambda m: m.start()).group(1))
+    first = min(candidates, key=lambda m: m.start())
+    title = _flat(first.group(1))
     # Stray quote markup can leave a title of punctuation alone, which names
     # nothing; the source then documents no title for this publication.
-    return title if re.search(r"\w", title) else None
+    return (title, first.span(1)) if re.search(r"\w", title) else None
 
 
 def _extent(page_count_raw: str | None, numbered: int | None) -> dict | None:
@@ -578,11 +595,18 @@ def _series(block_body: str) -> dict | None:
         return None
     if block_body[end + 1 : end + 2] == "]":
         end += 1
-    return {"series": content, "volume": volume, "gloss": gloss, "end": end + 1}
+    return {
+        "series": content,
+        "volume": volume,
+        "gloss": gloss,
+        "start": start,
+        "end": end + 1,
+    }
 
 
-def _set_reference(block_body: str) -> tuple[str, str] | None:
-    """The multi-volume set and volume number a "See" reference names."""
+def _set_reference(block_body: str) -> tuple[str, str, dict] | None:
+    """The multi-volume set and volume number a "See" reference names, with
+    the spans they were read from."""
     extent = _EXTENT_RE.search(block_body)
     if not extent:
         return None
@@ -590,17 +614,28 @@ def _set_reference(block_body: str) -> tuple[str, str] | None:
     line_end = tail.find("\n")
     line = tail if line_end < 0 else tail[:line_end]
     match = _SET_REFERENCE_RE.search(line)
-    return (_flat(match.group(1)), match.group(2)) if match else None
+    if not match:
+        return None
+    base = extent.end()
+    spans = {
+        "series": (base + match.start(1), base + match.end(1)),
+        "seriesVolume": (base + match.start(2), base + match.end(2)),
+    }
+    return _flat(match.group(1)), match.group(2), spans
 
 
-def _series_note(block_body: str, series_end: int) -> str | None:
+def _series_note(
+    block_body: str, series_end: int
+) -> tuple[str, tuple[int, int]] | None:
     """Prose that follows the series statement on the same line, such as the
-    note that a volume was originally a thesis."""
+    note that a volume was originally a thesis, with its line's span."""
     tail = block_body[series_end:]
     line_end = tail.find("\n")
     line = tail if line_end < 0 else tail[:line_end]
     note = _flat(line.lstrip(". "))
-    return note if len(note) >= 20 else None
+    if len(note) < 20:
+        return None
+    return note, (series_end, series_end + len(line))
 
 
 # A verb of publication history before "in ''…''" says where the publication
@@ -613,8 +648,9 @@ _HISTORY_BEFORE_IN_RE = re.compile(
 )
 
 
-def _container(block_body: str) -> dict | None:
-    """Journal, place, issue and pages of an article-shaped publication."""
+def _container(block_body: str) -> tuple[dict, dict] | None:
+    """Journal, place, issue and pages of an article-shaped publication, and
+    the spans they were read from."""
     match = next(
         (
             m
@@ -626,34 +662,53 @@ def _container(block_body: str) -> dict | None:
     if not match:
         return None
     container: dict = {"title": _flat(match.group(1))}
+    spans = {"title": match.span(1)}
     tail = _CONTAINER_TAIL_RE.search(block_body, match.end())
     if tail:
-        container["place"] = _flat(tail.group(1))
-        container["issue"] = _flat(tail.group(2))
-        container["pages"] = _flat(tail.group(3))
-    return container
+        for index, part in enumerate(("place", "issue", "pages"), start=1):
+            container[part] = _flat(tail.group(index))
+            spans[part] = tail.span(index)
+    return container, spans
 
 
-def _online(block_body: str) -> dict | None:
-    """An online address with the qualification the source gives it."""
+def _online(block_body: str) -> tuple[dict, dict] | None:
+    """An online address with the qualification the source gives it, and the
+    spans they were read from."""
     match = _URL_RE.search(block_body)
     if not match:
         return None
     online = {"url": match.group(0).rstrip(".,;")}
+    spans = {"url": (match.start(), match.start() + len(online["url"]))}
     head = block_body[: match.start()].rstrip()
-    note = _URL_NOTE_RE.search(head[head.rfind("\n") + 1 :])
+    line_start = head.rfind("\n") + 1
+    note = _URL_NOTE_RE.search(head[line_start:])
     if note:
         online["note"] = _flat(note.group(1))
-    return online
+        spans["note"] = (line_start + note.start(1), line_start + note.end(1))
+    return online, spans
+
+
+def _name_region(text: str, start: int, name: str) -> tuple[int, int]:
+    """The span of a name read at start: the name itself where it stands
+    there verbatim, else the rest of its line."""
+    if text.startswith(name, start):
+        return start, start + len(name)
+    line_end = text.find("\n", start)
+    return start, len(text) if line_end < 0 else line_end
 
 
 def _credits(text: str) -> list[dict]:
     """Read the credited roles a source passage states, with their labels."""
-    credits: list[dict] = []
+    return [credit for credit, _ in _credit_readings(text)]
 
-    def add(credit: dict) -> None:
-        if credit not in credits:
-            credits.append(credit)
+
+def _credit_readings(text: str) -> list[tuple[dict, dict]]:
+    """The credits of a passage, each with the spans of its name and label."""
+    readings: list[tuple[dict, dict]] = []
+
+    def add(credit: dict, spans: dict) -> None:
+        if all(credit != known for known, _ in readings):
+            readings.append((credit, spans))
 
     for match in _CREDIT_RE.finditer(text):
         label = _flat(match.group(1))
@@ -671,7 +726,10 @@ def _credits(text: str) -> list[dict]:
                 continue
         chained = _CHAINED_CREDIT_RE.match(text, match.end())
         if chained:
-            add({"role": role, "name": chained.group(1), "creditLabel": label})
+            add(
+                {"role": role, "name": chained.group(1), "creditLabel": label},
+                {"name": chained.span(1), "creditLabel": match.span(1)},
+            )
             second = credited_name(text, chained.end())
             if second:
                 add(
@@ -679,7 +737,11 @@ def _credits(text: str) -> list[dict]:
                         "role": "translator",
                         "name": second,
                         "creditLabel": chained.group(2),
-                    }
+                    },
+                    {
+                        "name": _name_region(text, chained.end(), second),
+                        "creditLabel": chained.span(2),
+                    },
                 )
             continue
         name = credited_name(text, match.end())
@@ -688,8 +750,14 @@ def _credits(text: str) -> list[dict]:
         credit = {"role": role, "name": name, "creditLabel": label}
         if _uncertain_after(text, match.end(), name):
             credit["uncertain"] = True
-        add(credit)
-    return credits
+        add(
+            credit,
+            {
+                "name": _name_region(text, match.end(), name),
+                "creditLabel": match.span(1),
+            },
+        )
+    return readings
 
 
 # The source's mark of a doubtful attribution right after a name ("Translated
@@ -730,15 +798,29 @@ def _contents_text(section_text: str) -> str:
     return section_text[: end.start()] if end else section_text
 
 
-def _contributions(section_text: str) -> list[dict]:
-    """Parse the contents lines of a publication into scoped contributions."""
+def _lines(text: str, base: int):
+    """The lines of text as str.splitlines() yields them, each with its offset."""
+    offset = base
+    for chunk in text.splitlines(keepends=True):
+        parts = chunk.splitlines()
+        yield (parts[0] if parts else ""), offset
+        offset += len(chunk)
+
+
+def _contributions(section_text: str) -> list[tuple[dict, dict]]:
+    """Parse the contents lines of a publication into scoped contributions,
+    each with the spans in section_text its parts were read from ("" names
+    the whole contents line)."""
     contributions = []
     for list_block in _LIST_BLOCK_RE.finditer(section_text):
-        for raw_line in list_block.group(1).splitlines():
+        for raw_line, offset in _lines(list_block.group(1), list_block.start(1)):
+            at = offset + len(raw_line) - len(raw_line.lstrip())
+            spans = {"": (at, at + len(raw_line.strip()))}
             line = _own_statement(raw_line.strip())
             if len(line) < 3:
                 continue
             scope: dict = {}
+            rebuilt = None
             pages = next(
                 (
                     match
@@ -749,29 +831,46 @@ def _contributions(section_text: str) -> list[dict]:
             )
             if pages:
                 scope["pages"] = _flat(pages.group(1))
+                spans["pages"] = spans["pageStart"] = spans["pageEnd"] = (
+                    at + pages.start(1),
+                    at + pages.end(1),
+                )
                 numbers = [int(n) for n in _PAGE_NUMBER_RE.findall(pages.group(1))]
                 if numbers:
                     scope["pageStart"] = numbers[0]
                     scope["pageEnd"] = numbers[-1]
                 remainder = _TRAILING_NOTE_RE.match(line[pages.end() :])
+                after_pages = pages.end()
                 line = line[: pages.start()].strip()
                 # The bracket after the pages names the original of a translated
                 # poem ("Die Riesin, p. 178 [\"La Géante\" … in ''Les Fleurs du
                 # mal'', pp. (48)-49]", page 39).
                 if remainder and not _CONTRIBUTION_NOTE_RE.match(line):
                     line = f"{line} [{remainder.group(1)}]"
+                    rebuilt = (
+                        at + after_pages + remainder.start(1),
+                        at + after_pages + remainder.end(1),
+                    )
             note = _CONTRIBUTION_NOTE_RE.match(line)
             if note:
                 title = _flat(note.group(1))
+                spans["title"] = (at, at + note.end(1))
                 scope["note"] = _flat(note.group(2))
+                if rebuilt is None:
+                    spans["note"] = (at + note.start(2), at + note.end(2))
+                elif "[" not in note.group(1) and note.group(2) == remainder.group(1):
+                    spans["note"] = rebuilt
+                if "note" in spans:
+                    spans["credits"] = spans["note"]
                 credits = _credits(f"[{note.group(2)}]")
                 if credits:
                     scope["credits"] = credits
             else:
                 title = _flat(line)
+                spans["title"] = (at, at + len(line))
             contribution = {"title": title, **scope} if title else scope
             if contribution:
-                contributions.append(contribution)
+                contributions.append((contribution, spans))
     return contributions
 
 
@@ -854,32 +953,146 @@ def _page_kind(categories: list[str], publication_count: int) -> str:
     return "edition-page" if publication_count > 1 else "single-publication"
 
 
-def _delivered_form(block: str) -> str:
-    """The block as it appears in the delivered bibliographic text.
+def _header_regions(line: str) -> list[dict]:
+    """Offsets within a header line of each part's year statement and imprint
+    field, read by the grammar of lib.editions.parse_header_line.
 
-    Runs the same three steps stage 03 applies to the whole page, so the result
-    is a literal substring of that page's delivered text wherever the block
-    survives cleaning unchanged.
+    The imprint field of the last part runs to the end of the line where the
+    text after the closing bold continues it, as parse_header_line joins it.
     """
-    without_categories = extract_categories(block)[1]
-    without_sortkey = extract_defaultsortkey(without_categories)[1]
-    return remove_wiki_markup(without_sortkey)
+    stripped = line.strip()
+    lead = len(line) - len(line.lstrip())
+    body, body_at = stripped, lead
+    if stripped.startswith("'''"):
+        rest = stripped[3:]
+        body = rest.lstrip()
+        body_at = lead + 3 + len(rest) - len(body)
+    suffix = None
+    if "'''" in body:
+        cut = body.index("'''")
+        header_text = body[:cut]
+        suffix = body[cut + 3 :].strip() or None
+    else:
+        header_text = body
+    if suffix and SERIES_RE.fullmatch(suffix):
+        suffix = None
+    bounds, position = [], 0
+    for separator in COMPOUND_HEADER_RE.finditer(header_text):
+        bounds.append((position, separator.start()))
+        position = separator.end()
+    bounds.append((position, len(header_text)))
+    regions = []
+    for index, (start, end) in enumerate(bounds):
+        at = body_at + start
+        match = HEADER_RE.match(header_text[start:end])
+        if not match:
+            regions.append({"imprint": (at, body_at + end)})
+            continue
+        field_end = at + match.end(2)
+        if (
+            suffix
+            and index == len(bounds) - 1
+            and _continues_imprint(match.group(2), suffix) is not None
+        ):
+            field_end = lead + len(stripped)
+        regions.append(
+            {
+                "yearRaw": (at + match.start(1), at + match.end(1)),
+                "imprint": (at + match.start(2), field_end),
+            }
+        )
+    return regions
 
 
-def _delivered_span(block: str, delivered: str) -> tuple[int, int] | None:
-    """Offsets of a publication block inside the delivered text.
+def _extent_region(block: str) -> tuple[int, int] | None:
+    """The span of the extent statement lib.editions reads from a block."""
+    standard = STANDARD_PAGE_COUNT_RE.search(block)
+    if standard:
+        prefix = PREFATORY_PAGES_RE.search(block, 0, standard.start())
+        return (prefix.start(1) if prefix else standard.start()), standard.end()
+    for pattern in (PAREN_PAGE_COUNT_RE, MALFORMED_PAGE_COUNT_RE):
+        match = pattern.search(block)
+        if match:
+            return match.span()
+    return None
 
-    Returns None where the block does not appear or appears more than once, so
-    an interface highlighting the passage never points at the wrong one. The
-    raw-text offsets in sourceSlice stay the evidence anchor either way.
-    """
-    needle = _delivered_form(block)
-    if not needle or not delivered:
-        return None
-    first = delivered.find(needle)
-    if first < 0 or delivered.find(needle, first + 1) >= 0:
-        return None
-    return first, first + len(needle)
+
+def _first_line_end(text: str) -> int:
+    """The end of the first line of text that holds a statement."""
+    match = re.search(r"[^\n]*\S[^\n]*", text)
+    return match.end() if match else 0
+
+
+# The parts of a compound value whose own wording the source gives; a role,
+# a mark such as "uncertain" and the numbers of a page range read from the
+# notation beside them are no further passages.
+_VALUE_PARTS = {
+    "imprints": ("publisher", "place"),
+    "extent": ("raw", "numbered", "unnumbered"),
+    "credits": ("name", "creditLabel"),
+    "container": ("title", "place", "issue", "pages"),
+    "online": ("url", "note"),
+}
+_CONTRIBUTION_PARTS = ("title", "pages", "pageStart", "pageEnd", "note")
+
+
+def publication_values(publication: dict):
+    """Every value a publication publishes, in its order, as (field, part,
+    path, value); the structural keys carry none."""
+    for field, value in publication.items():
+        if field in _PROVENANCE_EXCLUDED:
+            continue
+        if field == "contributions":
+            for index, item in enumerate(value):
+                for part in _CONTRIBUTION_PARTS:
+                    if part in item:
+                        yield field, part, (field, index, part), str(item[part])
+                for number, credit in enumerate(item.get("credits", [])):
+                    for part in _VALUE_PARTS["credits"]:
+                        yield (
+                            field,
+                            f"credits.{part}",
+                            (field, index, "credits", number, part),
+                            credit[part],
+                        )
+        elif field in ("imprints", "credits"):
+            for index, item in enumerate(value):
+                for part in _VALUE_PARTS[field]:
+                    if part in item:
+                        yield field, part, (field, index, part), str(item[part])
+        elif field in _VALUE_PARTS:
+            for part in _VALUE_PARTS[field]:
+                if part in value:
+                    yield field, part, (field, part), str(value[part])
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                yield field, None, (field, index), str(item)
+        else:
+            yield field, None, (field,), str(value)
+
+
+def _region_of(regions: dict, path: tuple):
+    """The region recorded for a value's path or for the nearest enclosing one."""
+    for length in range(len(path), 0, -1):
+        if path[:length] in regions:
+            return regions[path[:length]]
+    return None
+
+
+def _value_spans(publication: dict, regions: dict, display) -> dict:
+    """The evidence entry of every published value, grouped by field."""
+    spans: dict[str, list[dict]] = {}
+    for field, part, path, value in publication_values(publication):
+        region = _region_of(regions, path)
+        if isinstance(region, list):
+            entry = category_gap(value, region)
+        else:
+            derivation = "language-code" if field == "languageCode" else None
+            entry = locate(value, display, region, derivation)
+        if part:
+            entry = {"value": entry.pop("value"), "part": part, **entry}
+        spans.setdefault(field, []).append(entry)
+    return spans
 
 
 def _places_of(publication: dict) -> list[str]:
@@ -941,12 +1154,21 @@ def _attach_contributions(
         block_start, block_end, publication = owner
         if _LANGUAGE_EDITION_RE.search(text, block_start, section["start"]):
             continue
-        contributions = _contributions(
+        readings = _contributions(
             _contents_text(text[section["start"] : section["end"]])
         )
-        if not contributions:
+        if not readings:
             continue
-        publication.setdefault("contributions", []).extend(contributions)
+        listed = publication.setdefault("contributions", [])
+        for contribution, spans in readings:
+            for part, (part_start, part_end) in spans.items():
+                path = ("contributions", len(listed)) + ((part,) if part else ())
+                publication["_regions"][path] = (
+                    section["start"] + part_start,
+                    section["start"] + part_end,
+                )
+            listed.append(contribution)
+        contributions = [contribution for contribution, _ in readings]
         # A set can paginate its volumes continuously (page 363) or anew (page
         # 1875), so the contents fit if they fit either extent.
         candidates = [
@@ -974,16 +1196,39 @@ def _build_publication(
     start: int,
     end: int,
     language: str | None,
+    language_region,
     attested: set[str],
-    delivered: str,
+    display,
+    part: int = 0,
 ) -> dict:
-    """One publication record, built only from its own source block."""
+    """One publication record, built only from its own source block.
+
+    ``_regions`` maps the path of every value to the raw span of the page
+    text its rule read it from, so its displayed position is mapped rather
+    than searched; build_page_publications turns it into valueSpans.
+    """
     header_line = edition["klawiter:headerLine"]
-    body = block[len(header_line) :] if block.startswith(header_line) else block
+    body_at = start + len(header_line) if block.startswith(header_line) else start
+    body = block[body_at - start :]
     masked_body = _mask(body)
+
+    def at_body(span: tuple[int, int]) -> tuple[int, int]:
+        return body_at + span[0], body_at + span[1]
+
+    header = _header_regions(header_line)
+    header = header[part] if part < len(header) else {}
+    regions: dict = {}
+    if "yearRaw" in header:
+        year_span = (start + header["yearRaw"][0], start + header["yearRaw"][1])
+        regions[("year",)] = regions[("yearRaw",)] = year_span
 
     imprint = _flat(fields.imprint or "")
     publisher, places, pairs, imprint_flag = _split_imprint(fields, attested)
+    if imprint and "imprint" in header:
+        imprint_span = (start + header["imprint"][0], start + header["imprint"][1])
+    else:
+        # The statement at the header: the header line and the first body line.
+        imprint_span = (start, body_at + _first_line_end(masked_body))
     if not imprint:
         # A compound header shares one tail among its parts, so the tail names
         # the imprint of none of them in particular.
@@ -991,6 +1236,8 @@ def _build_publication(
         publisher, places = _body_imprint(
             masked_body, edition.get("schema:datePublished"), tail
         )
+    for key in ("imprint", "publisher", "places", "imprints"):
+        regions[(key,)] = imprint_span
     series = _series(masked_body)
 
     publication: dict = {
@@ -998,18 +1245,22 @@ def _build_publication(
     }
     _put(publication, "year", edition.get("schema:datePublished"), int)
     _put(publication, "yearRaw", edition.get("klawiter:yearRaw"))
-    _put(publication, "title", _title(masked_body))
+    title = _title(masked_body)
+    if title:
+        _put(publication, "title", title[0])
+        regions[("title",)] = at_body(title[1])
     _put(publication, "imprint", imprint)
     _put(publication, "publisher", publisher)
     _put(publication, "places", places)
     _put(publication, "imprints", pairs)
     _put(publication, "language", language)
     _put(publication, "languageCode", language_to_iso(language) if language else None)
-    _put(
-        publication,
-        "editionStatement",
-        _edition_statement(masked_body, edition.get("schema:datePublished")),
-    )
+    if language_region is not None:
+        regions[("language",)] = regions[("languageCode",)] = language_region
+    statement = _edition_statement(masked_body, edition.get("schema:datePublished"))
+    if statement:
+        _put(publication, "editionStatement", statement[0])
+        regions[("editionStatement",)] = at_body(statement[1])
     _put(
         publication,
         "extent",
@@ -1017,27 +1268,47 @@ def _build_publication(
             edition.get("klawiter:pageCountRaw"), edition.get("schema:numberOfPages")
         ),
     )
+    extent_span = _extent_region(block)
+    if extent_span:
+        regions[("extent",)] = (start + extent_span[0], start + extent_span[1])
     set_reference = None if series else _set_reference(masked_body)
     if set_reference:
         _put(publication, "series", set_reference[0])
         _put(publication, "seriesVolume", set_reference[1])
+        for key, span in set_reference[2].items():
+            regions[(key,)] = at_body(span)
     elif series:
         _put(publication, "series", series["series"])
         _put(publication, "seriesVolume", series["volume"])
         _put(publication, "seriesGloss", series["gloss"])
-        _put(publication, "note", _series_note(masked_body, series["end"]))
-    _put(publication, "credits", _credits(masked_body))
-    _put(publication, "container", _container(masked_body))
-    _put(publication, "online", _online(masked_body))
+        series_span = at_body((series["start"], series["end"]))
+        for key in ("series", "seriesVolume", "seriesGloss"):
+            regions[(key,)] = series_span
+        note = _series_note(masked_body, series["end"])
+        if note:
+            _put(publication, "note", note[0])
+            regions[("note",)] = at_body(note[1])
+    readings = _credit_readings(masked_body)
+    _put(publication, "credits", [credit for credit, _ in readings])
+    for index, (_, spans) in enumerate(readings):
+        for key, span in spans.items():
+            regions[("credits", index, key)] = at_body(span)
+    for key, reader in (("container", _container), ("online", _online)):
+        read = reader(masked_body)
+        if read:
+            _put(publication, key, read[0])
+            for part_key, span in read[1].items():
+                regions[(key, part_key)] = at_body(span)
     source_slice = {
         "start": start,
         "end": end,
         "sha256": hashlib.sha256(block.encode("utf-8")).hexdigest(),
     }
-    span = _delivered_span(block, delivered)
+    span = displayed_span(display, start, end)
     if span:
         source_slice["textStart"], source_slice["textEnd"] = span
     publication["sourceSlice"] = source_slice
+    publication["_regions"] = regions
 
     flags = []
     if not places:
@@ -1063,8 +1334,10 @@ _EDITION_DATE_RE = re.compile(
 )
 
 
-def _edition_statement(block_body: str, year: int | str | None = None) -> str | None:
-    """The edition statement of this publication, or None.
+def _edition_statement(
+    block_body: str, year: int | str | None = None
+) -> tuple[str, tuple[int, int]] | None:
+    """The edition statement of this publication with its span, or None.
 
     A statement dated with another year than the publication's records a later
     printing ("124/(1)p. … 2nd edition, 1945; 3rd edition, 1946" under the 1944
@@ -1079,7 +1352,7 @@ def _edition_statement(block_body: str, year: int | str | None = None) -> str | 
             # The reprint history starts here; what follows lists later
             # printings ("2nd edition 1936. … 3rd edition. 370p. 1938").
             return None
-        return _flat(match.group(1))
+        return _flat(match.group(1)), match.span(1)
     return None
 
 
@@ -1130,12 +1403,14 @@ def first_publication_fields(
     ("[s.n.], Tiranë", page 5126) is kept, because the flat layer has no other
     state for it and an empty field would be filled by the enrichment.
     """
+    regions: list[dict] = []
     layer = build_page_publications(
         page_id=page_id,
         text=text,
         page_title=page_title,
         categories=categories,
         attested_places=attested_places,
+        regions_out=regions,
     )
     if not layer:
         return None
@@ -1146,10 +1421,21 @@ def first_publication_fields(
         if not publisher:
             mark = _flat((first.get("imprint") or "").split(",")[0])
             publisher = mark if mark in ABSENCE_MARKS else None
+    # The raw regions the three values were read from, for the flat record's
+    # field evidence (stage 03 field_spans).
+    spans = {
+        field: regions[0].get(path)
+        for field, path in (
+            ("year", ("year",)),
+            ("publisher", ("publisher",)),
+            ("page_count", ("extent",)),
+        )
+    }
     return {
         "year": first.get("year"),
         "page_count": (first.get("extent") or {}).get("numbered"),
         "publisher": publisher,
+        "spans": {field: span for field, span in spans.items() if span},
     }
 
 
@@ -1338,14 +1624,24 @@ def build_page_publications(
     categories: list[str],
     attested_places: set[str],
     delivered_text: str = "",
+    regions_out: list | None = None,
 ) -> dict:
     """Structure one source page by publication and contribution.
 
     Returns an empty dict for a page whose source carries no publication header;
-    that absence is the honest statement, not an empty publication.
+    that absence is the honest statement, not an empty publication. Every
+    publication carries the displayed position of each of its values
+    (valueSpans, lib/value_spans.py); ``delivered_text``, where given, must be
+    the displayed text those positions address. ``regions_out`` receives the
+    raw region of every value per publication, for stage 03.
     """
     if not text:
         return {}
+    display = display_form(text)
+    if delivered_text and delivered_text != display.text:
+        raise ValueError(
+            f"page {page_id}: the delivered text is not the displayed form"
+        )
     segmented = segment_page(page_id, text, page_title)
     selectors = {
         annotation["oa:hasBody"]["@id"]: annotation["oa:hasTarget"]["oa:hasSelector"]
@@ -1353,6 +1649,7 @@ def build_page_publications(
     }
     scopes = _language_scopes(text)
     category_languages = _category_languages(categories)
+    links = category_links(text)
 
     built: list[tuple[int, int, dict]] = []
     parts_seen: dict[int, int] = {}
@@ -1364,9 +1661,16 @@ def build_page_publications(
         parts_seen[start] = part + 1
         header_line = edition["klawiter:headerLine"]
         fields = parse_header_line(header_line)[part]
-        language = _language_at(scopes, start)
+        language, language_region = _language_at(scopes, start)
         if language is None and len(category_languages) == 1:
             language = category_languages[0]
+            # The language stands only in the category links that name it.
+            language_region = [
+                (link_start, link_end)
+                for name, link_start, link_end in links
+                if (found := CATEGORY_LANGUAGE_RE.search(name))
+                and found.group(1) == language
+            ]
         built.append(
             (
                 start,
@@ -1378,8 +1682,10 @@ def build_page_publications(
                     start,
                     end,
                     language,
+                    language_region,
                     attested_places,
-                    delivered_text,
+                    display,
+                    part,
                 ),
             )
         )
@@ -1390,11 +1696,16 @@ def build_page_publications(
 
     publications = []
     for _, _, publication in built:
+        regions = publication.pop("_regions")
+        if regions_out is not None:
+            regions_out.append(regions)
         _put(publication, "reviewFlags", publication.pop("_flags"))
         publication["provenance"] = {
             key: "regex" for key in publication if key not in _PROVENANCE_EXCLUDED
         }
-        publications.append(_unescaped(publication))
+        publication = _unescaped(publication)
+        publication["valueSpans"] = _value_spans(publication, regions, display)
+        publications.append(publication)
 
     return {
         "pageKind": _page_kind(categories, len(publications)),

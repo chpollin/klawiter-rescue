@@ -26,23 +26,30 @@ from lib.encoding import has_mojibake
 from lib.patterns import (
     extract_all_locations,
     extract_all_years,
-    extract_language_from_category,
-    extract_location,
-    extract_page_count,
-    extract_publisher,
-    extract_translator,
-    extract_year,
+    find_language_category,
+    find_location,
+    find_page_count,
+    find_publisher,
+    find_translator,
+    find_year,
+    location_occurrences,
+    year_occurrences,
 )
 from lib.publications import (
     first_publication_fields,
     load_attested_places,
     unbound_flat_fields,
 )
+from lib.value_spans import category_links, cleaned_form, raw_span
 from lib.vocabulary import LANGUAGE_MAP, language_to_iso
 from lib.wiki_parser import (
     blank_translations_block,
     extract_structured_data,
+    find_original_title,
+    find_see_references,
+    find_title,
     remove_wiki_markup,
+    section_item_spans,
 )
 
 log = setup_logging(__name__)
@@ -244,14 +251,72 @@ def non_title_class(candidate, page_title="", categories=()):
 
 def derive_main_category(categories):
     """Derive the main (top-level) category from category list."""
-    if not categories:
-        return ""
-    for cat in categories:
-        parts = cat.split("/")
-        main = parts[0].strip()
+    found = _main_category(categories)
+    return found[0] if found else ""
+
+
+def _main_category(categories):
+    """The main category with the index of the category it is read from."""
+    for index, cat in enumerate(categories or []):
+        main = cat.split("/")[0].strip()
         if main:
-            return main
-    return ""
+            return main, index
+    return None
+
+
+def _first(found):
+    return found[0] if found else None
+
+
+def _scalar_spans(found_by_field, spans):
+    """Record the raw span of each found (value, span) pair under its field."""
+    for field, found in found_by_field.items():
+        if found:
+            spans[field] = list(found[1])
+
+
+def flat_field_spans(content, result, categories, title_from_text):
+    """The raw spans stage 03 read the page-level values from, for the
+    field_spans column: a field's span, or for a list field its items, each
+    as [value, start, end]. Readers of the cleaned text (title, original
+    title, references, sections) are mapped back to raw offsets."""
+    cleaned = cleaned_form(content)
+
+    def raw(span):
+        return list(raw_span(cleaned, *span))
+
+    spans = {}
+    title = find_title(cleaned.text) if title_from_text else None
+    if title:
+        spans["title"] = raw(title[1])
+    if result.get("original_title"):
+        original = find_original_title(cleaned.text)
+        if original:
+            spans["original_title"] = raw(original[1])
+    links = category_links(content)
+    spans["categories"] = [[name, start, end] for name, start, end in links]
+    language = find_language_category(categories)
+    if language:
+        spans["language"] = list(links[language[1]][1:])
+    main = _main_category(categories)
+    if main:
+        spans["main_category"] = list(links[main[1]][1:])
+    spans["see_also"] = [
+        [ref, *raw(span)] for ref, span in find_see_references(cleaned.text)
+    ]
+    for field, items in section_item_spans(cleaned.text).items():
+        spans[field] = [[item, *raw(span)] for item, span in items]
+    spans["all_years"] = [
+        [str(year), *span]
+        for year, found in year_occurrences(content).items()
+        for span in found
+    ]
+    spans["all_locations"] = [
+        [place, *span]
+        for place, found in location_occurrences(content).items()
+        for span in found
+    ]
+    return {field: value for field, value in spans.items() if value}
 
 
 def process_entry(row, attested_places=None):
@@ -357,26 +422,41 @@ def process_entry(row, attested_places=None):
         attested_places or set(),
     )
     result["publication_scoped"] = "true" if scoped is not None else ""
+    spans = {}
     if scoped is not None:
         result["year"] = scoped["year"] or ""
         result["publisher"] = scoped["publisher"] or ""
         result["page_count"] = scoped["page_count"] or ""
+        spans.update(
+            {
+                field: list(span)
+                for field, span in scoped["spans"].items()
+                if result[field]
+            }
+        )
     else:
-        result["year"] = extract_year(content) or ""
-        result["publisher"] = extract_publisher(content) or ""
-        result["page_count"] = extract_page_count(content) or ""
+        found = {
+            "year": find_year(content),
+            "publisher": find_publisher(content),
+            "page_count": find_page_count(content),
+        }
+        for field, reading in found.items():
+            result[field] = _first(reading) or ""
+        _scalar_spans(found, spans)
     all_years = extract_all_years(content)
     result["all_years"] = json.dumps(all_years) if all_years else ""
 
     # Location
-    result["location"] = extract_location(content) or ""
+    location = find_location(content)
+    result["location"] = _first(location) or ""
+    _scalar_spans({"location": location}, spans)
     all_locs = extract_all_locations(content)
     result["all_locations"] = (
         json.dumps(all_locs, ensure_ascii=False) if all_locs else ""
     )
 
     # Language (from categories, then from content)
-    lang_name = extract_language_from_category(categories)
+    lang_name = _first(find_language_category(categories))
     result["language"] = lang_name or ""
     result["language_iso"] = language_to_iso(lang_name) if lang_name else ""
 
@@ -400,7 +480,9 @@ def process_entry(row, attested_places=None):
     translator_text = content
     if lang_name == "German":
         translator_text = blank_translations_block(content)
-    result["translator"] = extract_translator(translator_text) or ""
+    translator = find_translator(translator_text)
+    result["translator"] = _first(translator) or ""
+    _scalar_spans({"translator": translator}, spans)
 
     # On a page without a publication header the body patterns read place,
     # publisher and translator from anywhere in the text. A value stays only
@@ -412,6 +494,7 @@ def process_entry(row, attested_places=None):
         unbound = unbound_flat_fields(content, result)
         for field in unbound:
             result[field] = ""
+            spans.pop(field, None)
         if unbound:
             result["unbound_fields"] = json.dumps(unbound)
 
@@ -431,6 +514,9 @@ def process_entry(row, attested_places=None):
     result["content_items"] = (
         json.dumps(content_items, ensure_ascii=False) if content_items else ""
     )
+
+    spans.update(flat_field_spans(content, result, categories, bool(extracted_title)))
+    result["field_spans"] = json.dumps(spans, ensure_ascii=False) if spans else ""
 
     return result
 

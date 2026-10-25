@@ -27,6 +27,10 @@ PROJECT_ROOT = os.path.dirname(PIPELINE_DIR)
 RAW_DIR = os.path.join(PROJECT_ROOT, "data", "raw")
 SQL_DUMP_PATH = os.path.join(RAW_DIR, "zweig_part_01.sql")
 BLOB_FILES = [os.path.join(RAW_DIR, f"zt_0{i}") for i in range(8)]
+# SHA-256 inventory of the raw dump files (tests/test_source_inventory.py).
+SOURCE_DUMP_INVENTORY = os.path.join(
+    PROJECT_ROOT, "data", "provenance", "source-dump.json"
+)
 
 # Intermediate data
 INTERMEDIATE_DIR = os.path.join(PROJECT_ROOT, "data", "intermediate")
@@ -200,6 +204,9 @@ PARSED_FIELDS = [
     # JSON list of the flat fields stage 03c emptied because their value kept
     # a letter whose bytes were lost (encoding.has_damaged_letter).
     "encoding_damaged_fields",
+    # JSON object of the raw-text spans stage 03 read each flat value from
+    # (lib/value_spans.py; stage 05 maps them into the displayed text).
+    "field_spans",
 ]
 
 # Step 04 adds entry_type and time_period
@@ -235,6 +242,7 @@ CLASSIFIED_FIELDS = [
     "raw_content",
     "unbound_fields",
     "encoding_damaged_fields",
+    "field_spans",
 ]
 
 # Minimum content length for LLM processing

@@ -487,21 +487,45 @@ def _valid_years(text):
     ]
 
 
-def extract_year(text):
-    """The first publication year the text states, or None.
+def _valid_year_matches(text):
+    return [
+        match
+        for match in YEAR_RE.finditer(text)
+        if MIN_VALID_YEAR <= int(match.group(1)) <= MAX_VALID_YEAR
+    ]
+
+
+def find_year(text):
+    """The first publication year the text states with its span, or None.
 
     Years inside titles, title glosses, life and period spans, issue numbers
     and URLs are skipped. Where nothing else is dated, an italic container
     title may carry the year; otherwise the field stays empty, because a
-    subject's date is no publication year.
+    subject's date is no publication year. Blanking keeps offsets, so the
+    span addresses the text itself.
     """
     if not text:
         return None
     for mask_italics in (True, False):
-        years = _valid_years(_publication_year_text(text, mask_italics))
-        if years:
-            return years[0]
+        matches = _valid_year_matches(_publication_year_text(text, mask_italics))
+        if matches:
+            return int(matches[0].group(1)), matches[0].span(1)
     return None
+
+
+def extract_year(text):
+    """The first publication year the text states, or None (find_year)."""
+    found = find_year(text)
+    return found[0] if found else None
+
+
+def year_occurrences(text):
+    """Every publication year the text states, by the rules of extract_year,
+    with the spans of all its occurrences."""
+    occurrences = {}
+    for match in _valid_year_matches(_publication_year_text(text or "", False)):
+        occurrences.setdefault(int(match.group(1)), []).append(match.span(1))
+    return occurrences
 
 
 def extract_all_years(text):
@@ -577,8 +601,8 @@ def publisher_shape_ok(value):
     return name.split()[0] not in _SENTENCE_OPENINGS
 
 
-def extract_publisher(text):
-    """Extract publisher name from text.
+def find_publisher(text):
+    """The publisher name the text states, with the span it was read from.
 
     Every match of a pattern is tried in source order, so prose the pattern
     catches first does not hide a name that follows it; a gap is the result
@@ -598,8 +622,14 @@ def extract_publisher(text):
                 continue
             if not publisher_shape_ok(pub):
                 continue
-            return pub
+            return pub, m.span(1)
     return None
+
+
+def extract_publisher(text):
+    """Extract publisher name from text (find_publisher)."""
+    found = find_publisher(text)
+    return found[0] if found else None
 
 
 def clean_location(value):
@@ -641,29 +671,45 @@ def extract_location(text):
     [City, year] or [KnownCity] reference, and only fall back to a whole-text
     known-city search when no bracketed place is present, which keeps the
     location of entries that never had a publication header."""
+    found = find_location(text)
+    return found[0] if found else None
+
+
+def find_location(text):
+    """The publication location of extract_location with the span of the
+    statement it was read from: the header's imprint, or the matched place."""
     if not text:
         return None
     m = PUBLICATION_LINE_RE.search(text)
     if m:
         loc = location_from_header(m.group(1))
         if loc:
-            return loc
+            return loc, m.span(1)
         # Header present but carries no location: fall through to body heuristics.
     # A bracketed known city (the original journal's place, e.g. "[Berlin]") is
     # preferred over a [City, year] reprint reference, so an article keeps its
     # first place of publication rather than the city of a later anthology.
     bk = BRACKET_KNOWN_RE.search(text)
     if bk:
-        return bk.group(1)
+        return bk.group(1), bk.span(1)
     bm = BRACKET_PLACE_RE.search(text)
     if bm:
         cleaned = clean_location(bm.group(1))
         if cleaned:
-            return cleaned
+            return cleaned, bm.span(1)
     m2 = LOCATION_RE.search(text)
     if m2:
-        return m2.group(1).strip("[]")
+        return m2.group(1).strip("[]"), m2.span(1)
     return None
+
+
+def location_occurrences(text):
+    """Every location of extract_all_locations with the spans of all its
+    occurrences."""
+    occurrences = {}
+    for m in LOCATION_RE.finditer(text or ""):
+        occurrences.setdefault(m.group(1).strip("[]"), []).append(m.span(1))
+    return occurrences
 
 
 def extract_all_locations(text):
@@ -680,7 +726,13 @@ def _is_locator_form(match):
 
 
 def extract_page_count(text):
-    """Extract page count from text."""
+    """Extract page count from text (find_page_count)."""
+    found = find_page_count(text)
+    return found[0] if found else None
+
+
+def find_page_count(text):
+    """The page count of the text with the span of its number."""
     if not text:
         return None
     # The earliest extent in the text is the first publication's; a later
@@ -697,7 +749,7 @@ def extract_page_count(text):
                 continue
         count = int(m.group(1))
         if 1 <= count <= 10000:
-            return count
+            return count, m.span(1)
     return None
 
 
@@ -737,23 +789,42 @@ def credited_name(text, start):
 
 def extract_translator(text):
     """Extract a credit's name; this compatibility scalar does not resolve scope."""
+    found = find_translator(text)
+    return found[0] if found else None
+
+
+def find_translator(text):
+    """The credited name of extract_translator with the span it was read
+    from: the name itself where it stands verbatim at its anchor, else the
+    rest of its line."""
     if not text:
         return None
     for pattern in TRANSLATOR_PATTERNS:
         m = pattern.search(text)
         if m:
-            name = credited_name(text, m.start(1))
+            start = m.start(1)
+            name = credited_name(text, start)
             if name:
-                return name
+                if text.startswith(name, start):
+                    return name, (start, start + len(name))
+                line_end = text.find("\n", start)
+                return name, (start, len(text) if line_end < 0 else line_end)
     return None
 
 
 def extract_language_from_category(categories):
     """Infer language from category names like 'Poetry / Individual Poems (German)'."""
+    found = find_language_category(categories)
+    return found[0] if found else None
+
+
+def find_language_category(categories):
+    """The language of extract_language_from_category with the index of the
+    category it was read from, or None."""
     if not categories:
         return None
     missing_language = None
-    for cat in categories:
+    for index, cat in enumerate(categories):
         m = CATEGORY_LANGUAGE_RE.search(cat)
         if m:
             lang = m.group(1)
@@ -761,7 +832,7 @@ def extract_language_from_category(categories):
             # changing an existing multilingual scalar choice (page 5657,
             # "Azerbaijani").
             if lang in LANGUAGE_MAP or lang in LANGUAGES_WITHOUT_CODE:
-                missing_language = missing_language or lang
+                missing_language = missing_language or (lang, index)
             # Common language names in categories
             if lang in (
                 "German",
@@ -808,5 +879,5 @@ def extract_language_from_category(categories):
                 "Esperanto",
                 "Latin",
             ):
-                return lang
+                return lang, index
     return missing_language
