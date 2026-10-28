@@ -1,4 +1,4 @@
-> Historical independent test review. Machine-local file links and line numbers below refer to the reviewed workspace snapshot. Use the portable [consolidated evaluation](../../independent-evaluation-2026-09-05.md) and [current test guide](../../testing.md) for navigation and follow-up status.
+> Historical independent test review. File links were machine-local in the original and became repository-relative on 2026-10-28. Line numbers refer to the reviewed workspace snapshot. Use the portable [consolidated evaluation](../../independent-evaluation-2026-09-05.md) and [current test guide](../../testing.md) for navigation and follow-up status.
 
 # Independent review of the test refactoring
 
@@ -10,9 +10,9 @@ The refactor materially strengthens regression detection: known failures are mat
 
 ### P2 — The semantic oracle hash is recorded but never enforced
 
-Location: [tests/test_semantic.py:44](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_semantic.py:44), [tests/conftest.py:181](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/conftest.py:181), [.github/semantic-baseline.json:5](C:/Users/chris/Documents/GitHub/klawiter-rescue/.github/semantic-baseline.json:5).
+Location: [tests/test_semantic.py:44](../../../tests/test_semantic.py#L44), [tests/conftest.py:181](../../../tests/conftest.py#L181), [.github/semantic-baseline.json:5](../../../.github/semantic-baseline.json#L5).
 
-The guard validates known-case count, uniqueness, and membership, but never checks `groundTruthSha256`, the oracle's page count, or unique page IDs. In contrast, extraction fixtures have a hash and 20-page check at [tests/test_real_entries.py:53](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_real_entries.py:53).
+The guard validates known-case count, uniqueness, and membership, but never checks `groundTruthSha256`, the oracle's page count, or unique page IDs. In contrast, extraction fixtures have a hash and 20-page check at [tests/test_real_entries.py:53](../../../tests/test_real_entries.py#L53).
 
 Two read-only, in-memory probes reproduced the consequence:
 
@@ -23,7 +23,7 @@ A changed oracle can therefore weaken or delete passing checks without triggerin
 
 ### P2 — The frontend guard accepts arbitrary title suffixes
 
-Location: [tests/test_semantic.py:23](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_semantic.py:23).
+Location: [tests/test_semantic.py:23](../../../tests/test_semantic.py#L23).
 
 `_field_ok` treats every title beginning with the expected string as correct. A read-only mutation changing page 33 from `Legenden` to `Legenden completely invented trailing text` passes the default guard; it also satisfies the exact same comparator used by semantic diagnosis. The guard only freezes values after this comparator has decided they are wrong, so page/field/value matching cannot protect this case.
 
@@ -31,22 +31,22 @@ This is a retained limitation from the pre-refactor code, not a regression intro
 
 ### P2 — Do not promote scalar selection choices into factual error counts or the correction contract
 
-Location: [knowledge/testing.md:61](C:/Users/chris/Documents/GitHub/klawiter-rescue/knowledge/testing.md:61), [knowledge/testing.md:63](C:/Users/chris/Documents/GitHub/klawiter-rescue/knowledge/testing.md:63), [knowledge/test-fixture-review-2026-09-05.md:11](C:/Users/chris/Documents/GitHub/klawiter-rescue/knowledge/test-fixture-review-2026-09-05.md:11).
+Location: [knowledge/testing.md:61](../../../knowledge/testing.md#L61), [knowledge/testing.md:63](../../../knowledge/testing.md#L63), [knowledge/test-fixture-review-2026-09-05.md:11](../../../knowledge/test-fixture-review-2026-09-05.md#L11).
 
 The notes disclose the chosen scope, which is good. However, calling all twenty cases existing rule defects and directing correction of the whole inventory is stronger than the evidence supports. A source selector proves that a value occurs in a cited role; it does not establish which of several valid records must become the page's scalar value.
 
 Concrete examples:
 
-- [tests/test_sample_20.json:180](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_sample_20.json:180): page 5746 names both the Editorial Juventud and Alfredo Cahn as translators of different references. Choosing the first is a selection policy; `Alfredo Cahn` is not an invented or incorrectly transcribed translator. Treating Juventud as a publisher is a different, source-role problem.
-- [tests/test_sample_20.json:689](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_sample_20.json:689): page 1999 genuinely names both Österreichische Verlagsanstalt and Peter Lang Verlag for distinct books. Selecting the first is not equivalent to proving Peter Lang is factually false. The `425` page count is independently a locator-versus-extent problem.
-- [tests/test_sample_20.json:451](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_sample_20.json:451): page 4445 combines the first German item's imprint and extent with the first category's Arabic language. This is honestly documented as a function test, but it is not a coherent bibliographic record.
-- [tests/test_sample_20.json:738](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_sample_20.json:738): page 4209 names Bloemfontein and Kaapstad. The expected final comma-separated place is explicitly justified by current extractor behavior. It is a compatibility choice, not evidence that the other place should be discarded.
+- [tests/test_sample_20.json:180](../../../tests/test_sample_20.json#L180): page 5746 names both the Editorial Juventud and Alfredo Cahn as translators of different references. Choosing the first is a selection policy; `Alfredo Cahn` is not an invented or incorrectly transcribed translator. Treating Juventud as a publisher is a different, source-role problem.
+- [tests/test_sample_20.json:689](../../../tests/test_sample_20.json#L689): page 1999 genuinely names both Österreichische Verlagsanstalt and Peter Lang Verlag for distinct books. Selecting the first is not equivalent to proving Peter Lang is factually false. The `425` page count is independently a locator-versus-extent problem.
+- [tests/test_sample_20.json:451](../../../tests/test_sample_20.json#L451): page 4445 combines the first German item's imprint and extent with the first category's Arabic language. This is honestly documented as a function test, but it is not a coherent bibliographic record.
+- [tests/test_sample_20.json:738](../../../tests/test_sample_20.json#L738): page 4209 names Bloemfontein and Kaapstad. The expected final comma-separated place is explicitly justified by current extractor behavior. It is a compatibility choice, not evidence that the other place should be discarded.
 
-The ratified direction is work/edition decomposition, not a newly ratified universal first-citation scalar rule: see [knowledge/production-readiness.md:45](C:/Users/chris/Documents/GitHub/klawiter-rescue/knowledge/production-readiness.md:45) and [knowledge/data.md:50](C:/Users/chris/Documents/GitHub/klawiter-rescue/knowledge/data.md:50). Keep these compatibility-function assertions if useful, but label source-role/transcription/absence facts separately from ordering and scalar-selection expectations. Give multi-record cases explicit record/edition or citation scope before using their failures as production correction requirements. This is a scope/interpretation defect in the inventory, not a reason to discard the restored source texts or relax genuine source-fact assertions.
+The ratified direction is work/edition decomposition, not a newly ratified universal first-citation scalar rule: see [knowledge/production-readiness.md:45](../../../knowledge/production-readiness.md#L45) and [knowledge/data.md:50](../../../knowledge/data.md#L50). Keep these compatibility-function assertions if useful, but label source-role/transcription/absence facts separately from ordering and scalar-selection expectations. Give multi-record cases explicit record/edition or citation scope before using their failures as production correction requirements. This is a scope/interpretation defect in the inventory, not a reason to discard the restored source texts or relax genuine source-fact assertions.
 
 ## Rule-stage mismatches versus published results
 
-The production contract deliberately allows frozen LLM gap filling. A regex miss is not automatically a published defect. Reading the current [docs/data/klawiter.json](C:/Users/chris/Documents/GitHub/klawiter-rescue/docs/data/klawiter.json) shows five of the twenty cases already equal the fixture downstream, all with `llm` field provenance. Two more have populated publisher values that differ from the exact source spelling. The other thirteen retain the rule output; some remain subject to the scope distinction above.
+The production contract deliberately allows frozen LLM gap filling. A regex miss is not automatically a published defect. Reading the current [docs/data/klawiter.json](../../../docs/data/klawiter.json) shows five of the twenty cases already equal the fixture downstream, all with `llm` field provenance. Two more have populated publisher values that differ from the exact source spelling. The other thirteen retain the rule output; some remain subject to the scope distinction above.
 
 | Page | Field | Rule output | Current frontend output | Assessment against this fixture |
 |---|---|---|---|---|
@@ -76,9 +76,9 @@ Do not report the twenty rule mismatches as twenty new product errors, or assume
 ## Reasonable design choices and remaining limits
 
 - Exact known-case allowances are a defensible initial inventory against unchanged production code. The two replacement-failure probes in each guard cover both movement to another page and a changed wrong value. A known missing value cannot become a new fabricated value silently.
-- Improvements produce warnings, not a mandatory baseline update ([tests/test_semantic.py:60](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_semantic.py:60), [tests/test_real_entries.py:100](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_real_entries.py:100)). Until a resolved case is manually removed, its old wrong value can recur and pass. This is documented policy, not an automatic ratchet; enforce baseline retirement in the correction package if lasting protection is required.
+- Improvements produce warnings, not a mandatory baseline update ([tests/test_semantic.py:60](../../../tests/test_semantic.py#L60), [tests/test_real_entries.py:100](../../../tests/test_real_entries.py#L100)). Until a resolved case is manually removed, its old wrong value can recur and pass. This is documented policy, not an automatic ratchet; enforce baseline retirement in the correction package if lasting protection is required.
 - Positive selector checks verify exact text spans and substring inclusion, not the bibliographic role or uniqueness of the expected value. Null selectors are supported by prose notes rather than machine-verifiable absence proofs. That is acceptable for a reviewed fixture but does not replace independent domain review.
-- [tests/test_source_tables.py:22](C:/Users/chris/Documents/GitHub/klawiter-rescue/tests/test_source_tables.py:22) proves equality with stage-02 rows and source IDs. It does not independently reopen the raw BLOB or recompute `rawTextSha256` on every test run. Documentation currently describes the direct BLOB check as a restoration-time action; keep that distinction.
+- [tests/test_source_tables.py:22](../../../tests/test_source_tables.py#L22) proves equality with stage-02 rows and source IDs. It does not independently reopen the raw BLOB or recompute `rawTextSha256` on every test run. Documentation currently describes the direct BLOB check as a restoration-time action; keep that distinction.
 - Shared edition builds use deep copies before overlays. The reconciliation refactor retains the full corpus build and expands occurrence completeness from five subjects to every subject; the reduced unresolved-decision inputs preserve all occurrences for a real person and publisher. These are reasonable performance changes, not evidence of removed corpus coverage.
 - The Node bridge discovers the stated seven behavior files and fifteen shipped modules. Syntax and isolated JavaScript logic tests do not establish browser/DOM acceptance; the current documentation states this limit accurately.
 - `--require-test-inputs` fails for missing Node and stage CSVs; the isolated tests verify missing/malformed committed JSON and the local/strict/CI runtime paths. It is not a universal no-skips option: optional LLM imports can still skip collection if unavailable, and local non-strict mode intentionally skips missing runtime inputs. These do not falsify the reported observed zero-skips run.
