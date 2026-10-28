@@ -12,12 +12,24 @@ language: en
 version: 0.6
 tags: [journal]
 created: 2026-03-29
-updated: 2026-10-24
+updated: 2026-10-28
 ---
 
 # Journal
 
 Work journal of the Klawiter Bibliography. Every substantial session documents round, changes, decisions, open points and the next dependable re-entry. The journal was compacted on 2026-10-24. Entries from 2026-10-23 on keep their full detail, earlier sessions are merged into one entry per coherent transition, and their earlier wording stands in the Git history at commit 226c21a.
+
+---
+
+## 2026-10-28 — Curation for the case study
+
+**Round.** A curation round by an agent on the operator's instruction, preparing the public repository as a case study in a paper on Promptotyping. The operator's line was to fix substance completely, to touch form only where outside readers need it, and to keep every journal entry, review and dated finding as evidence. The round started at 820ef32.
+
+**Changed.** Every document directly under `knowledge/` now carries the core frontmatter of the Promptotyping convention. `project` and `method` were added where missing, `created` from the file's first commit, the missing `updated` of the September completion review from its only commit, and `status: complete` for the two September reviews that had none. Existing dates and status values stayed, and no `updated` moved for a frontmatter-only edit. The September test review (`evaluations/2026-09-05/test-review.md`) linked into a machine-local workspace. Its links are now repository-relative with GitHub line anchors, its header note says so, and the evaluation manifest carries its new hash, which closes the Markdown half of the open point of Sessions 39 to 42 and of item 9 of [Review 0.9](review-0.9.md). The [index](index.md) lists that review, and the README gained a section on how the repository was built, with its verification layers, the documented episodes of unearned success and its known limits.
+
+**Decided.** `data/output/audits/final-independent-verification.json` keeps its absolute paths, because it is the hand-written record of an external audit that no script regenerates. The Wikidata User-Agent of `reconcile_agents.py` and `reconcile_locations.py` names only the project and its repository, and no committed version ever carried an e-mail address, so the request of Session 39 was a one-off outside the code and needed no fix.
+
+**Open.** Several maintained documents use `status: maintained`, `historical` or `implementation-record`, which [Documentation](documentation.md) declares for this repository and which the convention's status vocabulary does not list. Aligning the two is the operator's decision.
 
 ---
 

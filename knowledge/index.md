@@ -1,8 +1,15 @@
 ---
 title: Stefan Zweig Bibliography (Klawiter) — Project Knowledge
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: maintained
 language: en
-updated: 2026-10-24
+created: 2026-04-12
+updated: 2026-10-28
 ---
 
 # Project knowledge
@@ -47,6 +54,7 @@ These are dated observations, not live task lists. Follow their status links bef
 | [Technical remediation](technical-remediation-2026-09-05.md) | implemented corrections, reviewed impact and verification |
 | [Evaluation artifacts](evaluations/2026-09-05/manifest.json) | hashed source excerpts and machine-readable review results |
 | [Owner worksheet](evaluations/2026-09-05/owner-evaluation.md) | five concrete domain and usability acceptance cases |
+| [Test review](evaluations/2026-09-05/test-review.md) | independent review of the test refactoring of 5 September, with its file links made repository-relative |
 | [Blog claim check](evaluations/2026-10-23/blog-v4-claims.md) | every statement of the blog post v4 against the repository at b0c63ea, German, with operator slots |
 | [Print viewer review](evaluations/2026-10-24/print-viewer-review.md) | independent review of the print viewer and card board, with the findings that endanger the measurement |
 
