@@ -85,7 +85,7 @@
   "reviewedUpdates": [
     {
       "date": "2026-09-05",
-      "evidence": "knowledge/technical-remediation-2026-09-05.md",
+      "evidence": "snapshots/technical-remediation-2026-09-05.md",
       "partialImprovements": [
         {
           "pageId": 285,

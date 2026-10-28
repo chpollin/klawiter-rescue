@@ -6,9 +6,10 @@ the rest and still fails):
 1. inputs: each PDF's SHA-256 starts with its prefix in sections.json, and each
    p01 lines file is p01's output of that PDF: the p01 report names the same
    full hash and its text hash is the hash of the lines file's text.
-   leaks: no tracked file under LEAK_SCOPE (knowledge, code, frontend code,
-   README, CLAUDE.md) repeats LEAK_WORDS consecutive words of the print, so a
-   quotation of print text in a versioned file fails whoever wrote it.
+   leaks: no tracked file under LEAK_SCOPE (knowledge, snapshots, code,
+   frontend code, README, CLAUDE.md) repeats LEAK_WORDS consecutive words of
+   the print, so a quotation of print text in a versioned file fails whoever
+   wrote it.
 2. rebuild: p03 writes the entry and apparatus records twice from the same
    inputs, under different hash seeds, into gate/run-a and gate/run-b; every
    records file is byte-identical between the two. The live records are never
@@ -429,6 +430,7 @@ LEAK_WORDS = 12
 # overlap there is the source, not a leak.
 LEAK_SCOPE = (
     "knowledge/",
+    "snapshots/",
     "pipeline/",
     "docs/js/",
     "docs/css/",
@@ -438,7 +440,7 @@ LEAK_SCOPE = (
 )
 # The evaluations of September predate the print strand and quote wiki
 # source excerpts, some of which the wiki took from the print.
-LEAK_EXEMPT = ("knowledge/evaluations/2026-09-05/",)
+LEAK_EXEMPT = ("snapshots/evaluations/2026-09-05/",)
 # Structural labels that are long enough to match, such as a section title of
 # the 1991 contents, are admitted one by one as the sha256 of the matched
 # words, so the list itself holds no print text.

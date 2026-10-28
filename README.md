@@ -55,7 +55,8 @@ The default suite blocks new or changed failures against exact reviewed page/fie
 | `data/output/editions/`, `data/output/reconciliation/` | structured graphs, queues, claims and gate evidence |
 | `docs/data/`, `docs/vocab/` | frontend projections and vocabulary publication |
 | `pipeline/`, `tests/`, `docs/` | pipeline, checks and static interface |
-| `knowledge/` | maintained knowledge and dated review evidence |
+| `knowledge/` | maintained project knowledge |
+| `snapshots/` | dated reviews and evaluation evidence |
 
 Field patches currently update the frontend projection, history and review state. They do not update every canonical graph or report; closing this propagation gap is an acceptance task. Reconciliation patches are applied before the Gate 2 rebuild. See the [patch-store contract](data/corrections/README.md).
 
@@ -78,7 +79,7 @@ The repository was built with [Promptotyping](https://lisa.gerda-henkel-stiftung
 
 The commit trailers name Claude Opus 4.6 from March to April 2026, Claude Fable 5 from June to August, Claude Opus 4.8 in June and July, Claude Fable 5.1 in September and Claude Opus 5.5 from late September as coding agents. One independent audit of August 2026 was run by an OpenAI Codex agent (`data/output/audits/final-independent-verification.json`). The pipeline's own LLM stage, a gap filler for fields no rule reads, runs from a frozen cache by default and recomputes with Gemini only on a deliberate live run.
 
-Project knowledge lives in [`knowledge/`](knowledge/index.md), and [`CLAUDE.md`](CLAUDE.md) translates it into instructions for the agents. Status, plan, handoff inbox and journal record what holds now, what comes next, what still waits for checking and how the state came about. Dated reviews under `knowledge/` and `knowledge/evaluations/` are kept as evidence of what was found at the time.
+Project knowledge lives in [`knowledge/`](knowledge/index.md), and [`CLAUDE.md`](CLAUDE.md) translates it into instructions for the agents. Status, plan, handoff inbox and journal record what holds now, what comes next, what still waits for checking and how the state came about. Dated reviews under `snapshots/` are kept as evidence of what was found at the time.
 
 Verification is layered.
 

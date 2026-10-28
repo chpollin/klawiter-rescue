@@ -59,7 +59,7 @@ The curation loop reviews individual fields, editions and authority candidates a
 
 On 22 September the operator delegated four open questions to the main instance. Its answers are recorded with the provenance "decided by the main instance after delegation by the operator on 2026-09-22, revisable" and are listed here with their place of record.
 
-- Worksheet cases 1 to 4 accept the display as it stood that day, recorded in the [worksheet](evaluations/2026-09-05/owner-evaluation.md#responses). The operator withdrew case 5 on 2026-09-23, so it is no release condition.
+- Worksheet cases 1 to 4 accept the display as it stood that day, recorded in the [worksheet](../snapshots/evaluations/2026-09-05/owner-evaluation.md#responses). The operator withdrew case 5 on 2026-09-23, so it is no release condition.
 - The author of a citation follows the role in the source, as described in [Frontend](frontend.md#export).
 - The graphic novel on page 4916 is a work of its own, an adaptation of the Schachnovelle with a change of medium, whose German edition translates the French graphic novel of 2015. The claim is resolved in `data/reconciliation/edition-modeling-decisions.json`, see [Data](data.md#statement-states).
 - The archive triage is outside version 1.0, see the release scope below.
@@ -146,7 +146,7 @@ Version 1.0 covers the current pages of the wiki. The titles that the wiki's del
 
 The version stays 0.9 in `pyproject.toml`, the single version source; the 0.9.1 tied to the owner worksheet on 2026-09-08 was never cut, and the next version number belongs to the operator's tag.
 
-Use the [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) to evaluate concrete edition boundaries, contribution roles, conflicting imprints and the research workflow. The questions are not a request to reapprove the work/edition principle.
+Use the [five-case worksheet](../snapshots/evaluations/2026-09-05/owner-evaluation.md) to evaluate concrete edition boundaries, contribution roles, conflicting imprints and the research workflow. The questions are not a request to reapprove the work/edition principle.
 
 ## Evidence ownership
 
@@ -155,4 +155,4 @@ Use the [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) to eva
 - [Testing](testing.md): executable checks, independent samples and CI limits.
 - [Frontend](frontend.md): user-facing behaviour and export scope.
 - [Status](status.md): one prioritized current work list and current artifact links.
-- Dated reviews and `knowledge/evaluations/`: observations at a particular state, preserved without silently rewriting history.
+- Dated reviews under `snapshots/`: observations at a particular state, preserved without silently rewriting history.

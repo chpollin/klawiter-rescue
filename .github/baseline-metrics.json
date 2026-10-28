@@ -127,7 +127,7 @@
   "reviewedUpdates": [
     {
       "date": "2026-09-05",
-      "evidence": "knowledge/technical-remediation-2026-09-05.md",
+      "evidence": "snapshots/technical-remediation-2026-09-05.md",
       "reason": "Removed 95 explicit reference/annotation or discontinuous page locators misclassified as volume extents; lower numberOfPages coverage is a source-correctness improvement. Added source-category language fallbacks and literal redirect-chain resolution. Threshold tolerances are unchanged; unresolved-reference ceiling tightened from 120 to 12."
     },
     {

@@ -14,7 +14,7 @@ related: [testing, project-review-2026-09-05, journal]
 ---
 
 
-> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](status.md) owns the current findings and next steps. Original observations below retain their review date.
+> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](../knowledge/status.md) owns the current findings and next steps. Original observations below retain their review date.
 # Source Fixture Review — 2026-09-05
 
 Twenty complete MediaWiki source texts now support one hundred explicit field expectations. All texts were checked against their raw BLOB records and normalized stage-02 rows. Positive expectations carry exact source-line selectors; notes explain nulls and the chosen citation scope. The earlier truncated `text`, parser-derived `existing` values and LLM `needed` hints were replaced.

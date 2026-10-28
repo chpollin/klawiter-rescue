@@ -14,7 +14,7 @@ updated: 2026-09-05
 
 # Technical remediation
 
-This record follows the [completion review](project-review-2026-09-05.md) and [independent evaluation](independent-evaluation-2026-09-05.md). The operator authorized autonomous technical repairs, test refactoring, documentation consolidation and an interactive Explore dashboard. Raw inputs and released scholarly decisions were not changed. The verification below describes the local implementation before the subsequently authorized [controlled closeout](journal.md#2026-09-05--session-34-controlled-closeout). [Current status](status.md) owns the present handoff and remaining acceptance work.
+This record follows the [completion review](project-review-2026-09-05.md) and [independent evaluation](independent-evaluation-2026-09-05.md). The operator authorized autonomous technical repairs, test refactoring, documentation consolidation and an interactive Explore dashboard. Raw inputs and released scholarly decisions were not changed. The verification below describes the local implementation before the subsequently authorized [controlled closeout](../knowledge/journal.md#2026-09-05--sessions-30-to-34-completion-review-complete-source-fixtures-blind-reviews-source-repairs). [Current status](../knowledge/status.md) owns the present handoff and remaining acceptance work.
 
 ## Source-reviewed parser changes
 
@@ -58,7 +58,7 @@ The requested dashboard now replaces the dense multicolour default timeline with
 
 Independent review found conflicting/malformed restored date filters and focus loss on reset. Both are corrected and independently rechecked. Date selection rejects undated entries when bounds are active; normalized saved URLs and Results produce identical IDs. Chart buttons and range submission preserve keyboard focus. Neutral marks meet 3.28:1 contrast against the ranking track; selected burgundy exceeds 10:1. [Final browser QA](evaluations/2026-09-05/dashboard-browser-qa.json) and [desktop](evaluations/2026-09-05/dashboard-1440.png)/[mobile](evaluations/2026-09-05/dashboard-320.png) views preserve the result.
 
-Maintained guides now have distinct responsibilities, with [Status](status.md) as the single current evidence/work list. Historical reviews and journal entries retain their dates, and issue templates are labelled proposals. Two directory READMEs are English and aligned with actual runner and patch behaviour. [Documentation ownership](documentation.md) lists the complete Markdown treatment and update rules.
+Maintained guides now have distinct responsibilities, with [Status](../knowledge/status.md) as the single current evidence/work list. Historical reviews and journal entries retain their dates, and issue templates are labelled proposals. Two directory READMEs are English and aligned with actual runner and patch behaviour. [Documentation ownership](../knowledge/documentation.md) lists the complete Markdown treatment and update rules.
 
 ## Verification record
 

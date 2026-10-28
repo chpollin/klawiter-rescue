@@ -16,7 +16,7 @@ updated: 2026-10-24
 
 **Assessment: approximately 6/10 as a completed scholarly research product.** Preservation and engineering are substantially stronger than this completion score: current page identities survive, the gate contracts pass, and the reviewed repair package closes concrete defects. Full bibliographic modelling, canonical curation propagation and product acceptance remain open. A green test suite does not certify every field.
 
-This is the current status snapshot; future work lives in [Plan](plan.md) and received findings in [Handoff](handoff.md). [Production readiness](production-readiness.md) owns acceptance criteria; [Technical remediation](technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
+This is the current status snapshot; future work lives in [Plan](plan.md) and received findings in [Handoff](handoff.md). [Production readiness](production-readiness.md) owns acceptance criteria; [Technical remediation](../snapshots/technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
 
 ## Verified data snapshot — 24 October 2026
 
@@ -73,7 +73,7 @@ In the evening of 23 October the fields fell further where values came from the 
 
 The verification history of each round stands in the [Journal](journal.md), the September closeout in its entry of 2026-09-05.
 
-Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](evaluations/2026-09-05/validation.json) and [dashboard QA](evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
+Browser QA passed at 320, 390 and 1440 pixels, with exact filter handover/reload, keyboard selection, year validation and no horizontal overflow or page errors. Independent review checked 120 real-corpus filter combinations and rechecked the corrected date/focus edge cases. See [validation details](../snapshots/evaluations/2026-09-05/validation.json) and [dashboard QA](../snapshots/evaluations/2026-09-05/dashboard-browser-qa.json). This is targeted evidence, not complete accessibility certification or a measured mobile performance budget.
 
 ## Work ahead
 
@@ -81,4 +81,4 @@ The work still to be done, in its order and with its exit conditions, lives in [
 
 The two remaining unresolved See-references name titles no current page carries and stay open. The Maria Stuart case showed that a technically resolved reference can still point to the wrong page, so a resolution rests on the source revision history, never on a guessed target.
 
-The [five-case worksheet](evaluations/2026-09-05/owner-evaluation.md) records the responses to cases 1 to 4. Case 5, the operator's own research task on the interface, was withdrawn by the operator on 23 September and is not a release condition. The decisions of 22 and 23 September were taken under delegation and stay revisable; the release itself remains an acceptance decision.
+The [five-case worksheet](../snapshots/evaluations/2026-09-05/owner-evaluation.md) records the responses to cases 1 to 4. Case 5, the operator's own research task on the interface, was withdrawn by the operator on 23 September and is not a release condition. The decisions of 22 and 23 September were taken under delegation and stay revisable; the release itself remains an acceptance decision.

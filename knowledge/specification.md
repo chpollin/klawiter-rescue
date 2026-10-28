@@ -34,7 +34,7 @@ The tasks rest on bases of different weight, and the Basis column of the task ta
 
 - The operator's requirements carry the tasks of the desk, the page check tool and data quality. They are the workbench requirements of [Print viewer](print-viewer.md#requirements), the principle "An interface people like working in" and the decision of 2026-10-24 for one record desk, the three-part sitemap and a local page check tool ([Production readiness](production-readiness.md#operator-principles), [Plan](plan.md#m1-ready-for-review)).
 - The measurement design of 2026-10-24 with blind second review and adjudication carries T7. The main instance decided it under the operator principles, and it is revisable ([Merged bibliography](print-wiki-merge.md#measurement)).
-- Cases 1 to 4 of the [owner worksheet](evaluations/2026-09-05/owner-evaluation.md) were accepted by the main instance under delegation and not by the operator, and case 5, the operator's own research task, was withdrawn on 2026-09-23 ([Status](status.md)). Tasks derived from them are assumptions, since no research episode has been observed.
+- Cases 1 to 4 of the [owner worksheet](../snapshots/evaluations/2026-09-05/owner-evaluation.md) were accepted by the main instance under delegation and not by the operator, and case 5, the operator's own research task, was withdrawn on 2026-09-23 ([Status](status.md)). Tasks derived from them are assumptions, since no research episode has been observed.
 - What [Data and model](data.md), [Project Context](about.md#how-the-bibliography-is-cited) and the merge model say the product must do carries the remaining tasks, without a stated user task behind them.
 
 ## User groups

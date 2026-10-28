@@ -14,7 +14,7 @@ related: [testing, test-fixture-review-2026-09-05, project-review-2026-09-05, jo
 ---
 
 
-> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](status.md) owns the current findings and next steps. Original observations below retain their review date.
+> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](../knowledge/status.md) owns the current findings and next steps. Original observations below retain their review date.
 # Independent Source and Test Evaluation — 2026-09-05
 
 The project remains approximately **6/10 as a finished research product**. The independent reviews strengthen the diagnosis, but do not complete the model, correct production data or establish frontend acceptance. The observed **37 failing semantic assertions are not 37 demonstrated product data errors**: they mix two pipeline layers, factual defects and unresolved field-selection contracts.
@@ -60,7 +60,7 @@ The independent review found two concrete technical weaknesses:
 1. `tests/test_semantic.py` does not enforce the frontend reference fixture's recorded hash or exact page inventory. Removing a currently passing page can silently reduce the seventy assertions to sixty-three. The extraction fixture's hash guard exists; the frontend fixture's guard needs equivalent protection.
 2. Its title comparison accepts any suffix after the expected prefix. An invented title suffix passes both the default guard and semantic diagnosis. Legitimate title variants need explicit source-reviewed alternatives or narrowly specified normalization.
 
-**Subsequent implementation:** both weaknesses are now closed. Collection validates the hash and exact page/field inventory, and titles use exact equality or an explicit source-backed variant. Six isolated fixture mutations and three invented-title mutations demonstrate rejection; both source-backed title forms for page 285 pass. The stale workflow comment about legacy skips was removed. The preserved reviewer report remains an unchanged snapshot of the pre-fix state. See [[testing]] for the current maintenance contract.
+**Subsequent implementation:** both weaknesses are now closed. Collection validates the hash and exact page/field inventory, and titles use exact equality or an explicit source-backed variant. Six isolated fixture mutations and three invented-title mutations demonstrate rejection; both source-backed title forms for page 285 pass. The stale workflow comment about legacy skips was removed. The preserved reviewer report remains an unchanged snapshot of the pre-fix state. See [Testing](../knowledge/testing.md) for the current maintenance contract.
 
 Resolved baseline cases currently emit warnings and require manual retirement. Until removed, the same previously wrong value could return without becoming a new failure. Exact source-line selectors prove occurrence but do not independently validate publication boundaries or contributor roles.
 

@@ -10,14 +10,14 @@ status: complete
 language: en
 created: 2026-09-05
 updated: 2026-09-05
-related: [review-0.9, production-readiness, testing, data, frontend]
+related: [release-review-2026-08-27, production-readiness, testing, data, frontend]
 ---
 
 
-> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](status.md) owns the current findings and next steps. Original observations below retain their review date.
+> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](../knowledge/status.md) owns the current findings and next steps. Original observations below retain their review date.
 # Project completion review
 
-Reviewed commit: `1902abc` on `main`. The working tree was clean before the review. This is an assessment and acceptance plan; no production code, correction decisions or raw sources were changed. Intermediate stages were regenerated for verification. Findings were checked against code and artifacts, with targeted executable probes and a local browser inspection. The earlier [0.9 review](review-0.9.md) is useful background, but is not treated as proof by itself.
+Reviewed commit: `1902abc` on `main`. The working tree was clean before the review. This is an assessment and acceptance plan; no production code, correction decisions or raw sources were changed. Intermediate stages were regenerated for verification. Findings were checked against code and artifacts, with targeted executable probes and a local browser inspection. The earlier [0.9 review](release-review-2026-08-27.md) is useful background, but is not treated as proof by itself.
 
 ## Verdict
 
@@ -47,7 +47,7 @@ These are strong preservation results. They establish page identity, not that ev
 
 The raw dump contains 51,946 revision rows; 45,221 are beyond the 6,725 current-page selections. The archive contains 2,594 revision rows over 433 distinct namespace/title pairs. With the repository's title normalization, 207 main-namespace archived titles are absent from the current page table. Those 207 are the useful bibliographic triage population, not the total archive-row count. Archive recovery is already a deferred operator decision; it must either be included deliberately or excluded explicitly from the release claim. Uploaded image bytes are not among the delivered raw files, although the dump contains an image metadata record.
 
-Sources: [extraction](../pipeline/01_extract.py), [census](../data/output/census-report.json), [scope](data.md). The current run of stages 01–04 independently reproduced the page census and the committed hashes of both `02_encoding_fixed.csv` and `04_classified.csv`.
+Sources: [extraction](../pipeline/01_extract.py), [census](../data/output/census-report.json), [scope](../knowledge/data.md). The current run of stages 01–04 independently reproduced the page census and the committed hashes of both `02_encoding_fixed.csv` and `04_classified.csv`.
 
 ### Field coverage is not extraction recall
 

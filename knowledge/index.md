@@ -47,16 +47,16 @@ These are dated observations, not live task lists. Follow their status links bef
 
 | Record | Evidence |
 |---|---|
-| [Review 0.9](review-0.9.md) | August release review |
-| [Completion review, 5 September](project-review-2026-09-05.md) | source/model/frontend gaps and original score |
-| [Fixture review](test-fixture-review-2026-09-05.md) | complete twenty-page source fixtures and initial mismatch inventory |
-| [Independent evaluation](independent-evaluation-2026-09-05.md) | two blind source reviews and test review |
-| [Technical remediation](technical-remediation-2026-09-05.md) | implemented corrections, reviewed impact and verification |
-| [Evaluation artifacts](evaluations/2026-09-05/manifest.json) | hashed source excerpts and machine-readable review results |
-| [Owner worksheet](evaluations/2026-09-05/owner-evaluation.md) | five concrete domain and usability acceptance cases |
-| [Test review](evaluations/2026-09-05/test-review.md) | independent review of the test refactoring of 5 September, with its file links made repository-relative |
-| [Blog claim check](evaluations/2026-10-23/blog-v4-claims.md) | every statement of the blog post v4 against the repository at b0c63ea, German, with operator slots |
-| [Print viewer review](evaluations/2026-10-24/print-viewer-review.md) | independent review of the print viewer and card board, with the findings that endanger the measurement |
+| [Review 0.9](../snapshots/release-review-2026-08-27.md) | August release review |
+| [Completion review, 5 September](../snapshots/project-review-2026-09-05.md) | source/model/frontend gaps and original score |
+| [Fixture review](../snapshots/test-fixture-review-2026-09-05.md) | complete twenty-page source fixtures and initial mismatch inventory |
+| [Independent evaluation](../snapshots/independent-evaluation-2026-09-05.md) | two blind source reviews and test review |
+| [Technical remediation](../snapshots/technical-remediation-2026-09-05.md) | implemented corrections, reviewed impact and verification |
+| [Evaluation artifacts](../snapshots/evaluations/2026-09-05/manifest.json) | hashed source excerpts and machine-readable review results |
+| [Owner worksheet](../snapshots/evaluations/2026-09-05/owner-evaluation.md) | five concrete domain and usability acceptance cases |
+| [Test review](../snapshots/evaluations/2026-09-05/test-review.md) | independent review of the test refactoring of 5 September, with its file links made repository-relative |
+| [Blog claim check](../snapshots/evaluations/2026-10-23/blog-v4-claims.md) | every statement of the blog post v4 against the repository at b0c63ea, German, with operator slots |
+| [Print viewer review](../snapshots/evaluations/2026-10-24/print-viewer-review.md) | independent review of the print viewer and card board, with the findings that endanger the measurement |
 
 ## Reading paths
 

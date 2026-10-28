@@ -17,7 +17,7 @@ related: [production-readiness, journal, data, pipeline, frontend, testing]
 ---
 
 
-> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](status.md) owns the current findings and next steps. Original observations below retain their review date.
+> Historical review snapshot. The implemented follow-up is recorded in [Technical remediation](technical-remediation-2026-09-05.md); [Status](../knowledge/status.md) owns the current findings and next steps. Original observations below retain their review date.
 # Review 0.9
 
 Findings of the external review of the 0.9 release candidate (2026-08-27, four parallel review agents over pipeline, frontend, data model and tests/CI, plus a CSS deep audit; load-bearing findings verified directly against source, raw bytes and generated artifacts). This document preserves the findings before implementation. Use the current status and remediation links to determine which findings remain open; do not remove historical evidence.

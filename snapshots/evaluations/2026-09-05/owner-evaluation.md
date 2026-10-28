@@ -81,4 +81,4 @@ The operator delegated the answers to cases 1 to 4 to the main instance on 2026-
 | 4 | 4209 | accept | 2026-09-22 |
 | 5 | own item | open, the operator runs this task personally | |
 
-Two technical findings came out of cases 1 and 2 and are held as open work in [Status](../../status.md). The citations of both editions on page 1800 carry the same page URL, because the interface has no anchor per publication. The citation export of page 1891 names none of the three contribution translators, and the flat translator field holds only the first of them.
+Two technical findings came out of cases 1 and 2 and are held as open work in [Status](../../../knowledge/status.md). The citations of both editions on page 1800 carry the same page URL, because the interface has no anchor per publication. The citation export of page 1891 names none of the three contribution translators, and the flat translator field holds only the first of them.

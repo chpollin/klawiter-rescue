@@ -40,9 +40,9 @@ Project prose is English, following the operator's August 2026 decision. Histori
 | `.github/ISSUE_TEMPLATE/*.md` | explicitly labelled proposals; point to current scope and avoid claims of implemented evaluation features |
 | `data/corrections/README.md` | exact patch-store examples, validation and replay semantics |
 | `knowledge/journal.md` | append a newest-first session; preserve old statements as history |
-| `knowledge/review-0.9.md`, dated `knowledge/*review*.md`, `knowledge/independent-evaluation-2026-09-05.md`, `knowledge/technical-remediation-2026-09-05.md` | dated reviews/change evidence; add a current-status pointer, preserve original findings |
-| `knowledge/evaluations/2026-09-05/*.md` | independent review and owner worksheet; maintain manifest hashes when bytes change |
-| `knowledge/evaluations/2026-10-*/*.md` | dated claim checks and reviews; preserve findings, record their closure in the owning guide |
+| `snapshots/*.md` | dated reviews/change evidence; add a current-status pointer, preserve original findings |
+| `snapshots/evaluations/2026-09-05/*.md` | independent review and owner worksheet; maintain manifest hashes when bytes change |
+| `snapshots/evaluations/2026-10-*/*.md` | dated claim checks and reviews; preserve findings, record their closure in the owning guide |
 | `data/output/edition-samples/REVIEW.md`, `data/output/unmatched_locations_review.md` | evidence tied to its sampled/generated data; preserve as an artifact, not a live project guide |
 
 Vendored dependency notices and the unchanged raw archive are not project prose to rewrite. Review every authored guide for contradictions; do not rewrite every Markdown file merely to make it look new.

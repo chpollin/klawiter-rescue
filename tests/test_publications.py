@@ -3,7 +3,7 @@
 The reviewed expectations in ``tests/publication_cases.json`` are the operator
 specification of 2026-09-08 for the four owner-worksheet cases. They are never
 parser output: every literal is a slice of the source text delivered in
-``knowledge/evaluations/2026-09-05/source-only.json``, and each case carries the
+``snapshots/evaluations/2026-09-05/source-only.json``, and each case carries the
 SHA-256 of the text it was written against, so a changed source invalidates the
 expectation instead of silently passing.
 """
@@ -25,7 +25,7 @@ from lib.publications import (
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES_PATH = ROOT / "tests" / "publication_cases.json"
-SOURCE_ONLY_PATH = ROOT / "knowledge/evaluations/2026-09-05/source-only.json"
+SOURCE_ONLY_PATH = ROOT / "snapshots/evaluations/2026-09-05/source-only.json"
 
 
 def _load_json(path: Path):

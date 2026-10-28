@@ -1,4 +1,4 @@
-> Historical independent test review. File links were machine-local in the original and became repository-relative on 2026-10-28. Line numbers refer to the reviewed workspace snapshot. Use the portable [consolidated evaluation](../../independent-evaluation-2026-09-05.md) and [current test guide](../../testing.md) for navigation and follow-up status.
+> Historical independent test review. File links were machine-local in the original and became repository-relative on 2026-10-28. Line numbers refer to the reviewed workspace snapshot. Use the portable [consolidated evaluation](../../independent-evaluation-2026-09-05.md) and [current test guide](../../../knowledge/testing.md) for navigation and follow-up status.
 
 # Independent review of the test refactoring
 
@@ -31,7 +31,7 @@ This is a retained limitation from the pre-refactor code, not a regression intro
 
 ### P2 — Do not promote scalar selection choices into factual error counts or the correction contract
 
-Location: [knowledge/testing.md:61](../../../knowledge/testing.md#L61), [knowledge/testing.md:63](../../../knowledge/testing.md#L63), [knowledge/test-fixture-review-2026-09-05.md:11](../../../knowledge/test-fixture-review-2026-09-05.md#L11).
+Location: [knowledge/testing.md:61](../../../knowledge/testing.md#L61), [knowledge/testing.md:63](../../../knowledge/testing.md#L63), [knowledge/test-fixture-review-2026-09-05.md:11](../../test-fixture-review-2026-09-05.md#L11).
 
 The notes disclose the chosen scope, which is good. However, calling all twenty cases existing rule defects and directing correction of the whole inventory is stronger than the evidence supports. A source selector proves that a value occurs in a cited role; it does not establish which of several valid records must become the page's scalar value.
 
