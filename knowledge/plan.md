@@ -108,6 +108,15 @@ These items belong to the published wiki data and wait behind M1 unless a milest
 - The stratified semantic sample is broadened, and curation and export get browser checks with recorded device and task budgets.
 - The vocabulary represents the PROV-O sidecar, a DQV quality description and the publishable profile of the LLM provenance.
 
+### Taken over from the journal
+
+These points stood only in the journal until its compaction on 2026-10-28. The date names the entry. Whether a point has been settled since is unchecked.
+
+- The classes of the fifth print review not yet fixed, chief among them language headings glued to entries in Addendum II, lost hosts, forename-first host authors and the letter editions of main-volume K items (2026-10-24).
+- Citations name contribution translators and page-level anchors per publication (2026-09-22).
+- A read-only triage list of the titles recorded as deleted in the wiki, as a possible separate work package (2026-09-22).
+- The neighbourhood check of the publishable PROV profile `llmprov` (2026-08-21).
+
 ## Status tracker
 
 Snapshot of 2026-10-24.

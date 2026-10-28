@@ -14,7 +14,7 @@ updated: 2026-10-28
 
 # Handoff
 
-This process inbox holds only open handoff points, the results that arrived from agents, sessions or research and still wait to be checked, integrated or rejected. Before using a point, check its source and its current target. Integrate durable content into the responsible document, record subject, source, target and result or the reason for rejection briefly in [Journal](journal.md), and then remove the point completely. Accepted future work goes into [Plan](plan.md).
+This process inbox holds only open handoff points, the results that arrived from agents, sessions or research and still wait to be checked, integrated or rejected. Before using a point, check its source and its current target. Integrate durable content into the responsible document, record the transition briefly in a new entry at the top of [Journal](journal.md), and then remove the point completely. Accepted future work goes into [Plan](plan.md).
 
 ## Open handoff points
 
