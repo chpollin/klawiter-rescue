@@ -1,5 +1,12 @@
 ---
 title: Independent Source and Test Evaluation
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
+status: complete
 language: en
 created: 2026-09-05
 updated: 2026-09-05

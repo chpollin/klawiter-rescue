@@ -1,5 +1,11 @@
 ---
 title: "Print viewer: card workbench for the review of the print readings"
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: maintained
 language: en
 created: 2026-10-24

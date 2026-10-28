@@ -1,7 +1,14 @@
 ---
 title: Production Readiness and Acceptance
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: maintained
 language: en
+created: 2026-07-18
 updated: 2026-10-24
 related: [status, data, pipeline, testing, frontend, journal]
 ---

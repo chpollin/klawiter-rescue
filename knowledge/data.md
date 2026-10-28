@@ -1,7 +1,14 @@
 ---
 title: Data and Model
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: maintained
 language: en
+created: 2026-03-29
 updated: 2026-10-24
 related: [about, pipeline, frontend, testing, production-readiness, status]
 ---

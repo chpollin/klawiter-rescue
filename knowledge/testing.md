@@ -4,6 +4,9 @@ aliases: [testing, tests, validation, quality assurance]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: maintained
 language: en
 version: 1.2

@@ -4,6 +4,9 @@ aliases: [release review, code review, review findings]
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
 language: en
 version: 1.0

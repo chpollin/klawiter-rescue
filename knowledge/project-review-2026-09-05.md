@@ -1,8 +1,15 @@
 ---
 title: Project completion review — 2026-09-05
+project:
+  name: Klawiter Bibliography
+  repository: https://github.com/chpollin/klawiter-rescue
+method:
+  name: Promptotyping
+  url: https://lisa.gerda-henkel-stiftung.de/digitale_geschichte_pollin
 status: complete
 language: en
 created: 2026-09-05
+updated: 2026-09-05
 related: [review-0.9, production-readiness, testing, data, frontend]
 ---
 
