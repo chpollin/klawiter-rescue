@@ -1,4 +1,4 @@
-// The print card workbench (knowledge/print-viewer.md). Every print object is
+// The print card workbench (knowledge/design.md, Card workbench). Every print object is
 // a card; three views lay them out (sections beside a card, source lanes
 // beside a card, a grid of cards), and review decisions go to review_server.py
 // on the same origin. Data come from p12 beside this page (index.json,

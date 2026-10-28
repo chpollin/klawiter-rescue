@@ -2,7 +2,7 @@
 
 A source-bound reconstruction of Randolph J. Klawiter's Stefan Zweig bibliography from a decommissioned MediaWiki. This repository contains the extraction pipeline, structured data, static research interface and review evidence.
 
-[Public interface](https://chpollin.github.io/klawiter-rescue/) · [Current status and next steps](knowledge/status.md) · [Project knowledge](knowledge/index.md)
+[Public interface](https://chpollin.github.io/klawiter-rescue/) · [Current status and next steps](knowledge/status.md) · [Project knowledge](knowledge/INDEX.md)
 
 The current-page inventory is preserved. Complete bibliographic modelling and product acceptance remain open: a wiki page can describe several publications, while search and citation still use a flat page record. The work/edition graph is a complementary, source-anchored representation of the selected multi-edition corpus. Counts and current acceptance evidence belong in [Status](knowledge/status.md), with links to the generated reports.
 
@@ -19,7 +19,7 @@ python -m http.server 8000 --directory docs
 
 Open [localhost:8000](http://localhost:8000/). Curation is available on localhost; changes are stored in the browser and exported as patches.
 
-`uv.lock` pins the runtime and development dependencies. The default pipeline uses the versioned LLM cache and makes no model or network call. It fails at the first unsuccessful stage. [Pipeline](knowledge/pipeline.md) documents each stage, its inputs and rebuild boundary.
+`uv.lock` pins the runtime and development dependencies. The default pipeline uses the versioned LLM cache and makes no model or network call. It fails at the first unsuccessful stage. [Pipeline architecture](knowledge/pipeline-architecture.md) documents each stage, its inputs and rebuild boundary.
 
 ```bash
 python -m uv run python pipeline/run_pipeline.py --from-stage 03 --to-stage gate2 --no-postprocess
@@ -60,7 +60,7 @@ The default suite blocks new or changed failures against exact reviewed page/fie
 
 Field patches currently update the frontend projection, history and review state. They do not update every canonical graph or report; closing this propagation gap is an acceptance task. Reconciliation patches are applied before the Gate 2 rebuild. See the [patch-store contract](data/corrections/README.md).
 
-BibTeX and RIS exports cite flat records. Browser JSON-LD exports and the full canonical graphs have different scopes, documented in [Interface and curation](knowledge/frontend.md). The complete edition graph is not yet independently browsable in the interface.
+BibTeX and RIS exports cite flat records. Browser JSON-LD exports and the full canonical graphs have different scopes, documented in [Frontend architecture](knowledge/frontend-architecture.md). The complete edition graph is not yet independently browsable in the interface.
 
 ## Print volumes (local)
 
@@ -71,7 +71,7 @@ python -m uv run --group print python pipeline/print_volumes/review_server.py
 python -m uv run python pipeline/print_volumes/p14_gate.py --export
 ```
 
-The review server listens on 127.0.0.1 only, by default on port 8767. The card workbench opens at [127.0.0.1:8767/viewer/cards.html](http://127.0.0.1:8767/viewer/cards.html), where a person decides whether a value read from the print is right in its context, and the page check at [127.0.0.1:8767/viewer/page.html](http://127.0.0.1:8767/viewer/page.html) shows a PDF page beside every line and value read from it. The same server serves the interface from `docs/` at its root. Decisions go to `data/print/review/decisions.jsonl`, so a trial run takes another `--port` and its own `--log`. The gate checks the inputs against their hashes, a deterministic rebuild, validation, the frozen samples and that no versioned file repeats print text. [Print viewer](knowledge/print-viewer.md) describes the workbench, and [Testing](knowledge/testing.md) lists the further checks of the strand.
+The review server listens on 127.0.0.1 only, by default on port 8767. The card workbench opens at [127.0.0.1:8767/viewer/cards.html](http://127.0.0.1:8767/viewer/cards.html), where a person decides whether a value read from the print is right in its context, and the page check at [127.0.0.1:8767/viewer/page.html](http://127.0.0.1:8767/viewer/page.html) shows a PDF page beside every line and value read from it. The same server serves the interface from `docs/` at its root. Decisions go to `data/print/review/decisions.jsonl`, so a trial run takes another `--port` and its own `--log`. The gate checks the inputs against their hashes, a deterministic rebuild, validation, the frozen samples and that no versioned file repeats print text. [Card workbench](knowledge/design.md#card-workbench) describes the workbench, and [Testing](knowledge/testing.md) lists the further checks of the strand.
 
 ## How this was built
 
@@ -79,7 +79,7 @@ The repository was built with [Promptotyping](https://lisa.gerda-henkel-stiftung
 
 The commit trailers name Claude Opus 4.6 from March to April 2026, Claude Fable 5 from June to August, Claude Opus 4.8 in June and July, Claude Fable 5.1 in September and Claude Opus 5.5 from late September as coding agents. One independent audit of August 2026 was run by an OpenAI Codex agent (`data/output/audits/final-independent-verification.json`). The pipeline's own LLM stage, a gap filler for fields no rule reads, runs from a frozen cache by default and recomputes with Gemini only on a deliberate live run.
 
-Project knowledge lives in [`knowledge/`](knowledge/index.md), and [`CLAUDE.md`](CLAUDE.md) translates it into instructions for the agents. Status, plan, handoff inbox and journal record what holds now, what comes next, what still waits for checking and how the state came about. Dated reviews under `snapshots/` are kept as evidence of what was found at the time.
+Project knowledge lives in [`knowledge/`](knowledge/INDEX.md), and [`CLAUDE.md`](CLAUDE.md) translates it into instructions for the agents. The documents follow the templates of the Promptotyping Document convention, with the status vocabulary and the project-specific Status registered in [Governance](knowledge/governance.md#status-vocabulary). Status, plan, handoff inbox and journal record what holds now, what comes next, what still waits for checking and how the state came about. Dated reviews under `snapshots/` are kept as evidence of what was found at the time.
 
 Verification is layered.
 
@@ -102,6 +102,6 @@ The known limits stand in [Status](knowledge/status.md), whose self-assessment r
 
 ## Contributing and publication
 
-`CLAUDE.md` is the sole repository-specific agent instruction. Start from the [knowledge index](knowledge/index.md), which routes to [Status](knowledge/status.md), the [Plan](knowledge/plan.md) of accepted work and its order, the [Handoff](knowledge/handoff.md) inbox of results still waiting to be integrated and the latest [Journal](knowledge/journal.md) entry. [Documentation](knowledge/documentation.md) names the document responsible for each change. Historical reviews remain dated evidence.
+`CLAUDE.md` is the sole repository-specific agent instruction. Start from the [knowledge index](knowledge/INDEX.md), which routes to [Status](knowledge/status.md), the [Plan](knowledge/plan.md) of accepted work and its order, the [Handoff](knowledge/handoff.md) inbox of results still waiting to be integrated and the latest [Journal](knowledge/journal.md) entry. The index names the document responsible for each change, and [Governance](knowledge/governance.md) holds who decides what, the operator principles and the rules of documentation. Historical reviews under `snapshots/` remain dated evidence.
 
-Randolph J. Klawiter compiled the source bibliography; Christopher Pollin (Digital Humanities Craft) is responsible for the data rescue and publication. `CITATION.cff` contains citation details. Code is MIT-licensed; documentation and the structured data are CC BY 4.0. The license texts are `LICENSE` (MIT) and `LICENSES/CC-BY-4.0.txt`, third-party components are listed in `docs/vendor/NOTICE.md`, and reuse credits the bibliographic source. Release scope, metadata consistency and acceptance are tracked in [Production readiness](knowledge/production-readiness.md).
+Randolph J. Klawiter compiled the source bibliography; Christopher Pollin (Digital Humanities Craft) is responsible for the data rescue and publication. `CITATION.cff` contains citation details. Code is MIT-licensed; documentation and the structured data are CC BY 4.0. The license texts are `LICENSE` (MIT) and `LICENSES/CC-BY-4.0.txt`, third-party components are listed in `docs/vendor/NOTICE.md`, and reuse credits the bibliographic source. Release scope, metadata consistency and acceptance are tracked in [Governance](knowledge/governance.md#release-scope).

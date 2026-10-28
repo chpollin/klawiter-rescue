@@ -10,7 +10,7 @@ method:
 status: draft
 language: en
 created: 2026-10-24
-updated: 2026-10-24
+updated: 2026-10-28
 authors: [Christopher Pollin]
 generated-with: Claude Code (Claude Opus 5.5)
 template:
@@ -18,20 +18,20 @@ template:
   version: 0.3
   url: https://dhcraft.org/Promptotyping/promptotyping-document/design
 topics: ["[[Information Visualisation]]", "[[Scholar-Centered Design]]"]
-related: [specification, frontend, print-viewer, production-readiness, print-wiki-merge, plan, data]
+related: [specification, frontend-architecture, design, governance, print-wiki-merge, plan, data]
 ---
 
 # Design
 
-The interface of the Klawiter bibliography is a reading and review instrument for one rescued reference work, laid out like a card catalogue on a desk, where the evidence of every value stands beside it and a machine proposal never looks stronger than a person's decision. It belongs to the visual family of Stefan Zweig Digital, shares that family's burgundy and gold and its `--sz-*` token names with the ontology site of the same family (`SZD/docs/css/szd-ontology.css`), and sets itself apart by accent emphasis, since gold carries the section headings here where the ontology site heads its sections in burgundy. The values live in two stylesheets, `docs/css/styles.css` for the published reader and `pipeline/print_volumes/viewer/cards.css` for the local card workbench. Routes, keys and behaviour stand in [Interface and Curation](frontend.md) and [Print viewer](print-viewer.md), and the tasks the design serves in [Specification](specification.md).
+The interface of the Klawiter bibliography is a reading and review instrument for one rescued reference work, laid out like a card catalogue on a desk, where the evidence of every value stands beside it and a machine proposal never looks stronger than a person's decision. It belongs to the visual family of Stefan Zweig Digital, shares that family's burgundy and gold and its `--sz-*` token names with the ontology site of the same family (`SZD/docs/css/szd-ontology.css`), and sets itself apart by accent emphasis, since gold carries the section headings here where the ontology site heads its sections in burgundy. The values live in two stylesheets, `docs/css/styles.css` for the published reader and `pipeline/print_volumes/viewer/cards.css` for the local card workbench. Routes, keys and behaviour stand in [Frontend architecture](frontend-architecture.md) and [Card workbench](#card-workbench), and the tasks the design serves in [Specification](specification.md).
 
 ## Design stance
 
-The bibliography speaks through its own structure, so a count opens the records it counts and no figure stands for its own sake. Cream is the page and white is data. Record cards, the reading pane and the start-page data block stand on white, while reading pages and the Explore panels sit on cream. Order comes from whitespace, small headings and hairlines between rows, and a card carries one outline with nothing framed inside it. Colour on a record is reserved for a state a reader has to act on, every such state is also a word, and gaps and open claims stay visible as the holding has them.
+The bibliography speaks through its own structure, so a count opens the records it counts and no figure stands for its own sake. Cream is the page and white is data. Record cards, the reading pane and the start-page data block stand on white, while reading pages and the Explore panels sit on cream. Order comes from whitespace, small headings and hairlines between rows, and a card carries one outline with nothing framed inside it. Reading pages carry their anchor navigation without a rule under it, and tables structure themselves through a hairline between rows under a single header rule, without an outer frame. Colour on a record is reserved for a state a reader has to act on, a gap in the completeness matrix, a contested claim or the triage hint of edit mode, so entry type and review status read as plain subdued text in both card layouts. Every such state is also a word, and gaps and open claims stay visible as the holding has them.
 
 ## Rule hierarchy
 
-When two design rules compete, the one higher in this order prevails. The order derives from the operator principles in [Production readiness](production-readiness.md#operator-principles) ("A gap before a wrong value", "Who confirms", "An interface people like working in") and from the Goal of [Merged bibliography](print-wiki-merge.md#goal), and it is a revisable proposal of this design.
+When two design rules compete, the one higher in this order prevails. The order derives from the operator principles in [Governance](governance.md#operator-principles) ("A gap before a wrong value", "Who confirms", "An interface people like working in") and from the Goal of [Merged bibliography](print-wiki-merge.md#goal), and it is a revisable proposal of this design.
 
 1. A value stands with the passage it was read from and in the wording of the source, and a gap reads as a gap, with "not read" kept apart from "not given".
 2. What has been decided, by whom and with what scope is visible text of equal weight beside the value, and a proposal of a Large Language Model (LLM) agent never takes the form of a confirmed relation.
@@ -42,7 +42,7 @@ When two design rules compete, the one higher in this order prevails. The order 
 
 ## Surfaces
 
-The published reader stays as it is while development is local ([Production readiness](production-readiness.md#operator-principles)). Locally the operator's decision of 2026-10-24 reduces the sitemap to three destinations, and [Plan](plan.md#m1-ready-for-review) builds them in the increments of the record desk. A departure of the published reader from the rules below is closed in the local surface that succeeds it.
+The published reader stays as it is while development is local ([Governance](governance.md#operator-principles)). Locally the operator's decision of 2026-10-24 reduces the sitemap to three destinations, and [Plan](plan.md#m1-ready-for-review) builds them in the increments of the record desk. A departure of the published reader from the rules below is closed in the local surface that succeeds it.
 
 Overview
 : The first screen holds title, one sentence on what the bibliography is, the search field and the way into Records on one line, and below them the white data block with the model table and the section table of the compiler's sections A to R against the sources. Every count is a link, a thin gold bar under it shows its share of the largest count in its column, and the explanation of the model opens behind an (i). Below 40rem each section becomes a block with the sources as labelled values. The committed start page has this form, and its local successor is increment 1.
@@ -61,7 +61,7 @@ Page check tool
 
 ## Record desk
 
-The record desk follows the workbench requirements the operator set ([Print viewer](print-viewer.md#requirements)) and extends them to wiki records. Records are the slips of a card catalogue, several lie side by side, and a person reads and decides several of them without opening a page for each. Print and wiki records share one anatomy, so a person compares them by position rather than by reading two layouts. The committed workbench has this design for print objects, with the wiki shown as candidates in a drawer, and the wiki cards and the shared design are increment 2.
+The record desk follows the [card workbench requirements](specification.md#card-workbench-requirements) the operator set and extends them to wiki records. Records are the slips of a card catalogue, several lie side by side, and a person reads and decides several of them without opening a page for each. Print and wiki records share one anatomy, so a person compares them by position rather than by reading two layouts. The committed workbench has this design for print objects, with the wiki shown as candidates in a drawer, and the wiki cards and the shared design are increment 2.
 
 ### Slip at rest
 
@@ -89,7 +89,7 @@ State and producer stay visible at rest and in focus. A slip carries the record'
 
 ### Arrangements and modes
 
-Sections, Source lanes and Card grid arrange the same slips ([Print viewer](print-viewer.md#desk)). Explore is a further arrangement of the filtered records, the decade histogram, the language and type rankings and the map drawn over the current filter, and a selection in it filters the desk (increment 4). Data quality is a set of filters, each class with its count, and a review mode that steps through the filtered cards with the decision keys (increment 5).
+Sections, Source lanes and Card grid arrange the same slips ([Card workbench](#workbench-desk)). Explore is a further arrangement of the filtered records, the decade histogram, the language and type rankings and the map drawn over the current filter, and a selection in it filters the desk (increment 4). Data quality is a set of filters, each class with its count, and a review mode that steps through the filtered cards with the decision keys (increment 5).
 
 ### Decisions for increment 2
 
@@ -103,6 +103,49 @@ The research coordinator took these decisions on 2026-10-24 under the operator p
 - The record identifier is the permalink, and the type stays the one type badge of the head, so each fact stands once.
 - Records shows the wiki records on every host. It loads print records only when the review server answers with the print index, and without it the page makes no request for print data and names none. Category pages whose text remains after their category links get a card, infrastructure pages do not.
 - A push of `docs/` publishes Records. On 2026-10-25 the operator instructed to merge all work on main and push it, so the public site carries the desk in its state of work; acceptance stays a separate decision.
+
+## Card workbench
+
+The card workbench is the local review surface of the print strand. In it a person decides whether the values read from the print volumes are right in their context, compares a print record with the wiki, and finds any record with its provenance. Field correctness is measured only from these decisions ([Print pipeline](print-pipeline.md), Structured objects), and the review happens through work in the workbench rather than through a planned budget of hours ([Governance](governance.md), Operator principles). The workbench is therefore judged by the cost of a decision, by whether the evidence stands beside each value, and by whether a key ever acts on something not in view.
+
+The code lies in `pipeline/print_volumes/viewer/`: `cards.html`, `cards.js`, `cards.css` and the pure module `render.js`, which holds every helper that does not touch the page. `review_server.py` serves the code from that folder and the data p12 writes (`index.json`, `vocab.json`, `wiki_concordance.json`) from `data/print/derived/viewer/` only, records decisions, and opens the PDF page of a record (`/print/I.pdf#page=790`, with single byte ranges, so a PDF viewer loads the page and not the volume). A `.gitignore` in the code folder keeps every data file out of the versioned tree. `index.html` forwards to `cards.html` and keeps old links to an object, the review and the help working. Palette and type stacks mirror the production frontend in a stylesheet of their own, whose unification with it [Unification of the two stylesheets](#unification-of-the-two-stylesheets) plans.
+
+### Workbench desk
+
+The desk filters by volume, section, kind of record, review state and source combination, sorts in printed order, by address, by title or by the first year in the text, and has three arrangements of the same cards.
+
+Sections
+: Three columns of different granularity. The compiler's sections A to R named as in the contents of 1991 with their counts, then the slips of the chosen section, then the full card of the selected slip with its comparison to the wiki. A person can move slips by hand, and that order is a working arrangement, not data.
+
+Source lanes
+: Print, shared and wiki side by side.
+
+Card grid
+: The cards of the current page as a grid.
+
+The pills above the desk select by source combination: records with a text candidate, a field candidate or a title-year candidate, records with none, and wiki pages no claim names. A wiki page that no claim names is unlinked, which does not make it absent from print. "Review sample" restricts the desk to the frozen review sample of `review_sample.py`, open, complete or all.
+
+### Workbench card
+
+The head names address, volume, part, PDF page and the position of the object in its entry, and holds title and type with their decisions. Each group of values (imprint, extent, persons, contents, references, notes, inherited values) stands on one line close to the printed line, every value shown exactly once with its decision sign, beside the entry text with the object's passages marked. A click on a mark selects its value. Address targets stand at the value with links, and an address that resolves nowhere reads as unresolved. The provenance chain of a value and its decision history open on demand.
+
+The wiki side reads the projection of the p07 claims and the p08 conflicts. Every link is a candidate with its route (text alignment, field agreement, title and year) and its state, which is `proposed`, with the claim identifiers in its tooltip rather than in the running text. The drawer says that the concordance proposed it and nobody confirmed it, a claim whose record has changed since p07 says so, and where more candidates exist than are shown the card says how many. A field conflict shows the print and the wiki fields side by side, with "not read" and "not given" kept apart.
+
+### Workbench decisions
+
+Exactly one card is active, the one that holds the focus and is in view. The active slip and card carry `aria-current` besides their colour, and a card with a value marked wrong or unsure, or with a missing value or boundary flagged, says "flagged". Keys act on the active card alone. A key pressed while the next card loads acts on nothing, and the status line says why a key did nothing. Every message about a decision names the object it concerns ("Saved on F 61, title right."), so a message standing beside the next card never reads as one about it. A form closes whenever its card is rebuilt, and Escape cancels it only from inside the card.
+
+- R, W and U mark the selected value right, wrong or unsure.
+- Wrong takes the correction from a typed passage, which the workbench finds inside the object nearest the value, or from a selection in the entry text, with "should not exist" as the alternative.
+- A marks every undecided value of the card right, but only values that lie inside the viewport and every scrolling column around them. It refuses while an undecided value is out of view and stops as soon as the card leaves the screen.
+- C completes the card and opens the next open one. M adds a missing value, B flags a wrong object boundary, N jumps to the next open card of the sample from anywhere outside a text field.
+- J and K or the arrow keys move between values and stop at the edge of the card. Escape cancels a form or returns from the card to its slip.
+- The reviewer's name is asked once per browser and can be changed in the header. The workbench loads only that reviewer's decisions (`GET /review/decisions?reviewer=`, filtered again in the page), and while recording it hides the review state of the export, so a second reviewer decides blind to the first. A server that cannot read its decision log says so in a banner, and the cards stay read only.
+- Help and keys stand in one dialog. A skip button, the first tab stop, leads into the active card, and only the active slip's move buttons are tab stops.
+
+`_review.check` enforces the rules every caller shares, the server included. A correction keeps the field and the type of its value, a flag is corrected as the boolean true and a flag that does not hold should not exist, and an inherited value can only be marked as one that should not exist.
+
+Index entries and other apparatus records show with their resolved and unresolved addresses but without review controls, because the review layer covers the print objects of the sections A to R. Whether index entries enter a measurement is open. A single value cannot be addressed by a link, only its card.
 
 ## Page check tool
 
@@ -192,7 +235,7 @@ An open claim is a tinted section without a frame, headed in serif 600 by what i
 
 #### Buttons, text links and tabs
 
-There are two button styles, filled burgundy with cream text for the action a view exists for and outlined for every other action. Inside a card an action is borderless text with a leading icon. A control that only navigates or downloads is a text link with its icon. Views over one surface are text tabs whose active member carries the burgundy underline of the main navigation, with a gold underline on hover. Compact in-row controls (facet items, legend entries, per-field edit controls) keep their in-place form, and the round floating filter button is accepted as the drawer opener of narrow screens. A disabled control keeps readable text and states its state by form as well as by colour, as the workbench does with a dashed edge (U9). A control without function in the running environment is not rendered.
+There are two button styles, filled burgundy with cream text for the action a view exists for and outlined for every other action. Inside a card an action is borderless text with a leading icon, because the card already has its one outline. A control that only navigates or downloads is a text link with its icon. Views over one surface, such as the Explore modes and the playground views, are text tabs whose active member carries the burgundy underline of the main navigation, with a gold underline on hover. Compact in-row controls (facet items, legend entries, per-field edit controls) keep their in-place form, and the round floating filter button is accepted as the drawer opener of narrow screens. A disabled control keeps readable text and states its state by form as well as by colour, as the workbench does with a dashed edge (U9). A control without function in the running environment is not rendered.
 
 #### Counts
 
@@ -204,7 +247,7 @@ The wiki drawer of a print card lists candidates with their route and the state 
 
 ## Interaction patterns
 
-The interaction logic stands in [Interface and Curation](frontend.md#research-views) and [Print viewer](print-viewer.md#decisions). Its visual consequences are these.
+The interaction logic stands in [Frontend architecture](frontend-architecture.md#research-views) and [Card workbench](#workbench-decisions). Its visual consequences are these.
 
 - Exactly one object is active on a surface and carries `aria-current` besides its colour.
 - A selection made in one view survives the step into the next, from Explore to the desk, from the list to the card and from a filter to the matching publication, which is brought into view.
@@ -220,12 +263,14 @@ The Explore overview counts source pages, one per value they carry, and says so 
 These minima bind every surface.
 
 - Contrast as under [Contrast](#contrast).
-- A visible focus ring on every link, button and field, 3px gold-dark at 2px offset on light grounds and gold on the bar (U6). View-change focus on the heading draws no ring.
+- Semantic HTML, labelled forms and ARIA labels for iconic controls.
+- A visible focus ring on every link, button and field, 3px gold-dark at 2px offset on light grounds and gold on the bar (U6).
+- After a view change `showView` moves focus to the heading of the view or to `#main-content`, so hash navigation reaches screen readers, while a change that follows from typing in the search field leaves the focus there. That focus is a starting point rather than a keyboard position and draws no ring.
 - Keyboard paths for every pointer action, with shortcuts that bail out under Control, Meta or Alt.
 - `prefers-reduced-motion` drops animation and smooth scrolling on every surface.
 - A state is never conveyed by colour alone, and a reason needed on touch never lives only in a `title` attribute.
 - Targets of at least 24 by 24 CSS pixels or the spacing exception.
-- No horizontal page scroll at 320 CSS pixels or at 200 % zoom, with wide matrices scrolling in their own container.
+- No horizontal page scroll at 320 CSS pixels or at 200 % zoom. Mobile layouts keep search, filters and detail information, and wide matrices such as the completeness matrix scroll in their own container.
 - Input text of at least 16px, so mobile Safari does not zoom on focus.
 - Reading text below 80 characters per line.
 
@@ -294,4 +339,4 @@ The published reader stays as it is while development is local, so each departur
 
 The swap of faces in the value row changes the published card, so it waits for the operator. The proposal is a subdued sans label and a serif value on both surfaces, which leaves burgundy for links and titles and sets the value and its source passage in the same reading face in which review compares them.
 
-The producer words differ between code and knowledge. The committed reader writes "LLM agent", "person" and "rule" beside state words, "… by LLM agent, no person" on proposals and "LLM agent review (…), no person" on publication headings, the field badges read "LLM-enriched" and "expert-curated", and the workbench tags a value "LLM proposal" in semibold red. [Interface and Curation](frontend.md#rendering-of-contested-statements) still documents "LLM agent, delegated", which the code no longer writes. Since every decision of an LLM agent is a proposal ([Data and model](data.md#statement-states)), U12 proposes "LLM proposal" as the one word for it, in subdued type, with the deciding agent role inside the disclosure. The wording is the operator's decision, and Interface and Curation follows it.
+The producer words differ between code and knowledge. The committed reader writes "LLM agent", "person" and "rule" beside state words, "… by LLM agent, no person" on proposals and "LLM agent review (…), no person" on publication headings, the field badges read "LLM-enriched" and "expert-curated", and the workbench tags a value "LLM proposal" in semibold red. [Frontend architecture](frontend-architecture.md#rendering-of-contested-statements) still documents "LLM agent, delegated", which the code no longer writes. Since every decision of an LLM agent is a proposal ([Data and model](data.md#statement-states)), U12 proposes "LLM proposal" as the one word for it, in subdued type, with the deciding agent role inside the disclosure. The wording is the operator's decision, and [Frontend architecture](frontend-architecture.md) follows it.

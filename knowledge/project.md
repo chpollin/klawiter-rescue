@@ -1,5 +1,5 @@
 ---
-title: Project Context
+title: Project
 aliases: [about, project context, klawiter, provenance]
 project:
   name: Klawiter Bibliography
@@ -12,14 +12,20 @@ language: en
 version: 1.0
 tags: [project, context, provenance]
 created: 2026-03-29
-updated: 2026-10-24
+updated: 2026-10-28
 authors: [Christopher Pollin]
-related: [data, pipeline, frontend, testing, production-readiness]
+template:
+  name: Vorlage Projekt-Wissensdokument
+  version: 0.3
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/project
+related: [data, pipeline-architecture, frontend-architecture, testing, governance]
 ---
 
-# Project Context
+# Project
 
-## Subject and Origin
+The project rescues the Stefan Zweig bibliography that Randolph J. Klawiter compiled, from the SQL dump and binary text stores its MediaWiki left behind, into complete JSON-LD holdings, a static research interface and a source-bound curation layer, and relates the rescued wiki to the three printed volumes of the bibliography in a local print strand.
+
+## Data basis
 
 Randolph J. Klawiter compiled an international Stefan Zweig bibliography at the University of Notre Dame. The transmitted MediaWiki holdings contain first editions, translations, secondary literature, film adaptations, correspondence and further publication forms in more than 40 languages. After the wiki was decommissioned, an SQL dump and eight binary text stores remained.
 
@@ -41,13 +47,23 @@ Uncertainty is a data state of its own. Contested statements have a stable ident
 
 ## Research and Publication Frame
 
-The methodological contribution consists in a lossless data rescue with two coupled control loops, systematic pipeline improvement through aggregated checks and object-level expert curation through versioned patches. This preservation claim concerns current page identity, not complete extraction of every bibliographic fact. [Current status](status.md) records that distinction and the remaining acceptance work. [[production-readiness]] describes the ratified contract, [[testing]] the reach of the evidence.
+The methodological contribution consists in a lossless data rescue with two coupled control loops, systematic pipeline improvement through aggregated checks and object-level expert curation through versioned patches. This preservation claim concerns current page identity, not complete extraction of every bibliographic fact. [Current status](status.md) records that distinction and the remaining acceptance work. [[governance]] describes the ratified contract, [[testing]] the reach of the evidence.
 
 The deliverable subject comprises data, vocabulary, software, static interface, provenance and validation artifacts. A new Klawiter publication is not part of the repository mandate. The Klawiter blog post is written outside the repository, and its claim check against the repository is kept as evidence in `snapshots/evaluations/`. External live write-backs and institutional work decisions remain later options. The wiki/print merge is worked on since October 2026 as a strand outside the production run ([Merged bibliography](print-wiki-merge.md)); print addresses and evidenced claims join the production run as a frozen file without print text (decided on 2026-10-24 under the operator's delegation), and whether print values are delivered depends on the open decisions on rights in the print volumes and on admitting print as a source of values.
 
-## Consortium and Design
+## Standards
 
-The interface is connected with Stefan Zweig Digital and uses the established colour and typography language of the research consortium. The technical holdings stay independently deployable. Details are held in [[frontend]].
+- Data model: JSON-LD with Schema.org as the base vocabulary and the project's own `klawiter:` vocabulary, published under `docs/vocab/` in Turtle and JSON-LD, which draws on SKOS, Dublin Core terms and PROV-O.
+- Validation: SHACL shapes for the Gate 1 and Gate 2 graphs, whose results are recorded as EARL reports, and for the print records of the local print strand.
+- Provenance: PROV activities with input and code hashes in the gate artifacts.
+- Authority data: Wikidata identifiers, published only from a person's or an exact rule's `confirm` or `correct` decision.
+- Citation export: BibTeX and RIS.
+
+These standards let the data be reused outside this interface. The reach of each graph is stated in [Data and model](data.md) and [Frontend architecture](frontend-architecture.md#export).
+
+## Wider context
+
+The interface is connected with Stefan Zweig Digital and uses the established colour and typography language of the research consortium. The technical holdings stay independently deployable. Details are held in [[frontend-architecture]].
 
 ## How the bibliography is cited
 

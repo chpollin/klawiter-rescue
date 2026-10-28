@@ -1,5 +1,5 @@
 ---
-title: Interface and Curation
+title: Frontend Architecture
 aliases: [frontend, interface, EIL, curation tool]
 project:
   name: Klawiter Bibliography
@@ -12,12 +12,16 @@ language: en
 version: 1.7
 tags: [frontend, eil, accessibility, export]
 created: 2026-03-29
-updated: 2026-10-24
+updated: 2026-10-28
 authors: [Christopher Pollin]
-related: [specification, design, data, pipeline, testing, production-readiness]
+template:
+  name: Vorlage Architecture
+  version: 0.4
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/architecture
+related: [specification, design, data, pipeline-architecture, testing, governance]
 ---
 
-# Interface and Curation
+# Frontend architecture
 
 ## Purpose
 
@@ -90,14 +94,6 @@ The wiki column places each entry type in the section it corresponds to. The map
 | Dramatic readings, Newspaper articles, Other | no section; listed as only in the wiki |
 
 Sections M, Q and R have no wiki type. A thin bar under each count shows its share of the largest count in its column; columns are not compared with each other, because print entries and wiki pages are different units. On narrow screens each section becomes a block with the sources as labelled values side by side.
-
-## Design and Accessibility Contract
-
-The interface uses the established Stefan Zweig Digital palette, Source Serif 4 for reading text and Source Sans 3 for navigation and controls. Colours and spacing come from CSS variables, and [Design](design.md) lists the literal colours that remain as departures. Libraries and fonts are local. [Design](design.md) owns the design stance, token roles and component rules, and this section keeps the contract of the committed interface.
-
-The visual language is deliberately narrow. Letterspaced capitals mark the title of a view and nothing below it, so section headings are plain serif in the dark gold token or in burgundy. The cream ground is the page and white is data: the entry cards and the data block of the start view stand on white, while reading pages and the panels of Explore sit directly on the cream ground, where a small heading and the whitespace above it separate one block from the next, and the anchor navigation of a page carries no rule under it. Tables structure themselves through a hairline between rows under a single header rule, without an outer frame. The entry type and the review status read as plain subdued text in both card layouts, because colour on a card is reserved for a state a reader has to act on, meaning a gap in the completeness matrix, a contested claim and the triage hint of edit mode. There are two button styles, filled burgundy for the action a view exists for and outlined for every other action; compact controls inside lists and rows (facet items, legend entries, the per-field controls of edit mode) are not buttons in this sense and keep their in-place form, and inside an entry card an action is borderless text with a leading icon, because the card already has its one outline. A control that only navigates or downloads is a text link with its icon rather than a button, and a set of views over one surface (the Explore modes, the playground views) is a row of text tabs whose active member carries the underline of the main navigation.
-
-Semantic HTML, visible keyboard focus, labelled forms, ARIA labels for iconic controls and sufficient contrast form the basis. Gold that carries text uses the darkened token that clears 4.5:1 against white and cream. After a view change `showView` moves focus to the heading of the view or to `#main-content`, so hash navigation reaches screen readers; a change that follows from typing in the search field leaves the focus there. That focus is a starting point rather than a keyboard position and draws no ring, while links, buttons and fields keep theirs. All keyboard shortcuts bail out when Control, Meta or Alt is held. `prefers-reduced-motion` is respected globally (animations and smooth scrolling are dropped). A state is never conveyed by colour alone. Mobile layouts preserve search, filters and detail information without horizontal scrolling; the completeness matrix scrolls in its own container.
 
 ## Research Views
 
@@ -205,20 +201,6 @@ The playground shows one entry in three views, compact, expanded and as triples.
 - The canonical edition and reconciliation graphs remain under `data/output/editions/` and `data/output/reconciliation/`. They have broader structure than a browser record export but do not yet carry every edition-specific bibliographic field.
 
 A claim with the predicate `schema:exampleOfWork` is exported without setting the corresponding confirmed relation on the edition node at the same time.
-
-## Validation
-
-Node tests cover source-evidence logic, triage order, reconciliation lookup, a stable patch export, the separation of contested claims, the routing guard including the edit-mode gate, the redirects of the published deep links, the section suffix of static pages, the visibility rule of the edit switch and the order of the candidate queue. `tests/entry_card.test.js` holds the card contract, meaning the single-entry state the `#entry=` route sets, the head that keeps type and title there, the named field rows with their provenance and review marks, the missing field without a placeholder, the quoted extent notation, the source identifiers at the source block, the linked address in the source text and the note on a page with several publications. It also holds the publication layer, the marked source block of a publication and its absence without text offsets, the citation buttons per publication, the block per publication with its own extent, the credits of a contribution against the credits of the publication, the review hint, the name-variant block, the page-kind label with its count in both card heads, the credit phrase that says more than its role, the contested mark that answers to the address of its claim block, and both load paths of the per-page file, the fetch with its visible load state and the failure that falls back to the flat fields. The workbench route is asserted in both directions, as a redirect of `#quality` and as the one page route on which the edit switch appears. `tests/edit_session.test.js` holds the session state, meaning the rendered correction value with its struck-through predecessor, the add control on an empty field, "edited" instead of "approved", the index over contested claims, the category link, the review-status chip and the opened source in the reading view, and the playground route. It also holds the scope of the edit layout, the read-only publication blocks against the editable page record and the status line that names the scope on a page with several publications. `tests/citation_export.test.js` holds what a citation describes, the publication with its own imprint, extent, credits and container, the two editions of one page apart, the collected export of a page and the fall back to the flat fields while the page file is not loaded. It also holds the author rule by source role with the name-form check and the per-publication exception, the full place wording with the contested note, the numbered `pagetotal` with the source notation in the note, and the batch export that writes one citation per publication and reports how many. Added to that are the search guarantees in `tests/search_logic.test.js` (diacritic folding of the index, highlighting against escaping, minimum query length, facet drilldown, label resolution and the cap notice), the publication axis in the same file, where a page of the real holding with two years and two languages is filtered and counted and each facet count is checked against the list its value opens, and the history guarantee and error routes in `tests/routing_guard.test.js`. `node --check` validates every module syntactically. The Python suite checks the generated data contracts (including the frontend projection contract) and calls the Node tests through the shared test bridge.
-
-A local smoke test runs with a static server over `docs/`:
-
-```bash
-python -m http.server 8000 --directory docs
-```
-
-The application is then reachable at `http://localhost:8000/`; the curation surface is active only there.
-
-`tests/record_coverage.test.js` renders the permalink card of every content page with its publication file. It checks that every non-empty field stands visibly, in a tooltip or on a row marked `data-key`, and that every value occurring in its source passage carries a provenance disclosure marked `data-provenance-for`. The known gaps are pinned in `tests/record_coverage_expected.json`. A field with no declared place fails the test, and so does a gap that grows or closes without the expectation changing. Since 2026-10-24 the card shows its page kind, its cited print addresses and the review producer of a publication. An audit of the same day found that the card satisfied the test with invisible markers (`<span hidden data-key>` and `data-provenance-for` on elements that show no provenance), so the expectation file's empty gaps were not real. The test now drops every hidden element before it matches, counts a provenance disclosure only where a visible badge stands, and pins the honest gaps: no card shows its record provenance, identifier or translation statements as fields, and almost no value shows its provenance chain. A separate assertion pins values rendered as code artefacts in the visible text, so a renderer fix must lower its pin. [Plan](plan.md), One record desk, owns closing both.
 
 ## Deployment and Limits
 

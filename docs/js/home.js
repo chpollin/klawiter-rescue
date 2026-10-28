@@ -1,6 +1,6 @@
 /**
  * Home: search, the build of the data, and the compiler's sections as a table
- * across the sources of the bibliography (knowledge/frontend.md, Start page).
+ * across the sources of the bibliography (knowledge/frontend-architecture.md, Start page).
  *
  * The rows are the sections A to R of the printed bibliography, named as its
  * contents of 1991 name them (transcribed on wiki page 2101). The wiki column

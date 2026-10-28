@@ -10,7 +10,11 @@ status: maintained
 language: en
 created: 2026-10-23
 updated: 2026-10-24
-related: [print-pipeline, data, about, status]
+template:
+  name: Vorlage Domänenwissen
+  version: 0.3
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/domain-knowledge
+related: [print-pipeline, data, project, status]
 ---
 
 # Klawiter print volumes: structure, conventions and reference system
@@ -190,7 +194,7 @@ Entries refer to these addresses in a fixed notation. The compiler set the links
 
 No file defines the star. Starred addresses occur only in the main volume, where some page numbers carry the star as well ("p. 16*"). Addendum I restates one starred list with the excerpt abbreviation in place of the star. The poem list of B 1 in the main volume (PDF p. 21) returns in BA1 1 (Addendum I, PDF p. 19) with `[EXC]` after the one poem the main volume stars. The other cases fit the same reading of a work present only in part, since whole books are starred inside small selections and letters are starred only in printed sources. The star thus marks an excerpt in that list, and reading every star as an excerpt is an inference from it (Open questions).
 
-The letter I is both the section of the translations and, in trade citations, the numeral of the main volume. An address in section I stands without a comma (`I 83`, PDF p. 409, cited for instance from J 68 on p. 430 and from M 89 on p. 723). Trade citations of the second Klawiter bibliography put "I," before a complete address ("Klawiter² I, F 46", [About](about.md), How the bibliography is cited), so the "I," there cannot be a section address. That reading rests on the trade citations the literature sweep recorded, since the volumes themselves never cite in that form.
+The letter I is both the section of the translations and, in trade citations, the numeral of the main volume. An address in section I stands without a comma (`I 83`, PDF p. 409, cited for instance from J 68 on p. 430 and from M 89 on p. 723). Trade citations of the second Klawiter bibliography put "I," before a complete address ("Klawiter² I, F 46", [Project](project.md), How the bibliography is cited), so the "I," there cannot be a section address. That reading rests on the trade citations the literature sweep recorded, since the volumes themselves never cite in that form.
 
 Not every "See" is a cross-reference. In Addendum I about 160 of them introduce a source citation, such as an auction catalogue or a newspaper. The references also carry typing errors ("H 307, 365365", "[RSJ]"), so their parsing has to tolerate noise.
 

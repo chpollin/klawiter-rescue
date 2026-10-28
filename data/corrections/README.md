@@ -1,6 +1,6 @@
 # Released correction store
 
-Place reviewed curation export documents here as JSON files. The files and their Git history are the released decision record. The browser stores a local editing session and exports a document; importing that document into this directory is a separate repository change. The [frontend contract](../../knowledge/frontend.md) explains the interface, and [data contracts](../../knowledge/data.md) explain provenance and review states.
+Place reviewed curation export documents here as JSON files. The files and their Git history are the released decision record. The browser stores a local editing session and exports a document; importing that document into this directory is a separate repository change. The [frontend contract](../../knowledge/frontend-architecture.md) explains the interface, and [data contracts](../../knowledge/data.md) explain provenance and review states.
 
 ## Field corrections
 

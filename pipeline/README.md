@@ -1,6 +1,6 @@
 # Pipeline entry points
 
-Run commands from the repository root after the dependency setup in the [project README](../README.md). The [pipeline architecture](../knowledge/pipeline.md) explains the transformations; [data contracts](../knowledge/data.md) define the published layers, and [testing](../knowledge/testing.md) defines the checks and their limits.
+Run commands from the repository root after the dependency setup in the [project README](../README.md). The [pipeline architecture](../knowledge/pipeline-architecture.md) explains the transformations; [data contracts](../knowledge/data.md) define the published layers, and [testing](../knowledge/testing.md) defines the checks and their limits.
 
 ```bash
 python -m uv run python pipeline/run_pipeline.py

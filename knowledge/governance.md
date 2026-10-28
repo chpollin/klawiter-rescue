@@ -1,5 +1,5 @@
 ---
-title: Production Readiness and Acceptance
+title: Governance
 project:
   name: Klawiter Bibliography
   repository: https://github.com/chpollin/klawiter-rescue
@@ -9,13 +9,13 @@ method:
 status: maintained
 language: en
 created: 2026-07-18
-updated: 2026-10-24
-related: [status, data, pipeline, testing, frontend, journal]
+updated: 2026-10-28
+related: [status, plan, data, specification, testing, journal, INDEX]
 ---
 
-# Production readiness and acceptance
+# Governance
 
-A reproducible data core and an accepted research product are different milestones. The current implementation and open work are recorded in [Status](status.md); this document owns the durable acceptance contract and ratified decisions. “Technically complete” is not an adequate description while known model, provenance and interface gaps remain.
+Governance of the Klawiter bibliography covers the acceptance contract and the ratified decisions, the operator principles under which agents decide, what the operator accepts, the division of work between parallel sessions, and the rules that keep the documentation true to code and data. A reproducible data core and an accepted research product are different milestones. The current implementation and open work are recorded in [Status](status.md), and “Technically complete” is not an adequate description while known model, provenance and interface gaps remain.
 
 ## Ratified scope
 
@@ -60,7 +60,7 @@ The curation loop reviews individual fields, editions and authority candidates a
 On 22 September the operator delegated four open questions to the main instance. Its answers are recorded with the provenance "decided by the main instance after delegation by the operator on 2026-09-22, revisable" and are listed here with their place of record.
 
 - Worksheet cases 1 to 4 accept the display as it stood that day, recorded in the [worksheet](../snapshots/evaluations/2026-09-05/owner-evaluation.md#responses). The operator withdrew case 5 on 2026-09-23, so it is no release condition.
-- The author of a citation follows the role in the source, as described in [Frontend](frontend.md#export).
+- The author of a citation follows the role in the source, as described in [Frontend architecture](frontend-architecture.md#export).
 - The graphic novel on page 4916 is a work of its own, an adaptation of the Schachnovelle with a change of medium, whose German edition translates the French graphic novel of 2015. The claim is resolved in `data/reconciliation/edition-modeling-decisions.json`, see [Data](data.md#statement-states).
 - The archive triage is outside version 1.0, see the release scope below.
 
@@ -88,7 +88,7 @@ The release declaration and the publication form after acceptance remain with th
 The operator supervises and sets principles. The main instance decides details under them, names the principle each decision rests on, keeps every such decision revisable, and reports the decisions that change something as a list the operator may object to. A question goes to the operator only where no principle carries or two of them conflict. Each principle below is already stated in a binding source, which it names.
 
 Purpose
-: The product is the bibliography as research data for Zweig research and Stefan Zweig Digital. The DIA-XAI follow-up uses only documented review episodes and quality evidence and takes over neither the data nor the release state ([About](about.md), and the project overview in the operator's vault).
+: The product is the bibliography as research data for Zweig research and Stefan Zweig Digital. The DIA-XAI follow-up uses only documented review episodes and quality evidence and takes over neither the data nor the release state ([Project](project.md), and the project overview in the operator's vault).
 
 A gap before a wrong value
 : A value stands only where its source passage documents it for the publication it describes, and a gap is a valid result. A proposal may be shown with its passage and producer, never as confirmed, and it never overwrites a rule value (`CLAUDE.md`, Data Integrity, and the commission's guardrails). Flat wiki fields that no rule binds to the described publication therefore stay empty, and a page the kind rules cannot decide stays undetermined.
@@ -112,7 +112,7 @@ Decided under these principles by the main instance on 2026-10-24, revisable, ea
 - The Git history keeps the print quotations removed on 2026-10-24, because rewriting it would remove nothing from forks or caches and would break cited commits; they belong to the rights clarification.
 - Until a second person reviews, the field figure is reported as acceptance by one reviewer after inspection.
 - The blind supplement leaves the field route of the concordance below forty claims in every volume, and no third draw is made in this phase, because no class confirms automatically. A pre-sized third draw becomes necessary only when the operator sets a threshold.
-- The bibliography of 1965 enters as an external identifier attached to print records (the 1965 number as a citable alias), not as a source with entities of its own, because citation is the stated use. Its licence (non-commercial, no derivatives) keeps its text local like the print volumes, while a table of print address and 1965 number pairs without text falls under what may be published, addresses and claims, every pair `proposed`. Research and trade citing the 1965 numbers ([About](about.md), How the bibliography is cited) carry the effort.
+- The bibliography of 1965 enters as an external identifier attached to print records (the 1965 number as a citable alias), not as a source with entities of its own, because citation is the stated use. Its licence (non-commercial, no derivatives) keeps its text local like the print volumes, while a table of print address and 1965 number pairs without text falls under what may be published, addresses and claims, every pair `proposed`. Research and trade citing the 1965 numbers ([Project](project.md), How the bibliography is cited) carry the effort.
 - The interface becomes one record desk (operator, 2026-10-24). Locally a single card view holds the print objects and the wiki records and replaces the wiki catalogue; values of both sources are decided there, and a person's decision on a wiki value becomes a patch that confirms it with the producer person. The sitemap shrinks to Overview, Records and Documentation: Documentation joins the former Data and About pages, help becomes a dialog, the imprint moves to the footer, Explore becomes an arrangement of the filtered records, and data quality becomes a filter and review mode of the desk. Old addresses redirect. On 2026-10-25 the operator had all work merged on main and pushed, so the public frontend carries the desk in its state of work.
 - The design choices of the corrected measurement (weights per part from entries less hard entries, one random object per hard entry, adjudication by a third person that adopts one of the two decisions, the first reviewer as whoever decided an object first, code identity over whole modules, fingerprints of the older samples kept local) stand in [Merged bibliography](print-wiki-merge.md), Measurement, and in the code of `p13_review.py`.
 
@@ -135,7 +135,7 @@ The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done.
 | Rights in the print volumes | settling with the rights holder whether print-derived structure and values, including the unpublished Addendum II, may be published | before delivery |
 | Print as a source of values | deciding whether print becomes an admitted source of values or the merged bibliography stays a concordance | after the rights decision |
 | Delivery shape | agreeing with Stefan Zweig Digital on one sample object (entry, three sources, claim, group) | after the reconstructed entry |
-| Citation identifiers | deciding with a domain expert whether groups carry the print address and the 1965 number as citable aliases ([About](about.md), How the bibliography is cited) | any time |
+| Citation identifiers | deciding with a domain expert whether groups carry the print address and the 1965 number as citable aliases ([Project](project.md), How the bibliography is cited) | any time |
 | Decisions under the principles | reading the list under Operator principles and objecting where a decision should be taken otherwise | standing |
 
 The redirect of the former public address and the release with its tag lie outside the project's planning (operator, 2026-10-24); pushes stay with the operator as before.
@@ -151,8 +151,72 @@ Use the [five-case worksheet](../snapshots/evaluations/2026-09-05/owner-evaluati
 ## Evidence ownership
 
 - [Data](data.md): source and entity contracts, statuses and correction limits.
-- [Pipeline](pipeline.md): stage order, inputs and deterministic boundary.
+- [Pipeline architecture](pipeline-architecture.md): stage order, inputs and deterministic boundary.
 - [Testing](testing.md): executable checks, independent samples and CI limits.
-- [Frontend](frontend.md): user-facing behaviour and export scope.
+- [Frontend architecture](frontend-architecture.md): user-facing behaviour and export scope.
 - [Status](status.md): one prioritized current work list and current artifact links.
 - Dated reviews under `snapshots/`: observations at a particular state, preserved without silently rewriting history.
+
+## Parallel sessions
+
+Since 2026-10-23 two sessions work on this repository at the same time, in one working tree. This section records who owns which paths, how results come back and who decides what. It adapts the Research Mission Control method of the operator's vault to this one project: two roles, no lane board, and the project's own knowledge documents as the only state. Coordination is kept to what prevents parallel writes and unchecked claims. The tracks of the project and the dependencies between the sessions stand in [Plan](plan.md#tracks).
+
+### Roles
+
+Research coordinator
+: Holds the plan of the merged Klawiter bibliography ([Merged bibliography](print-wiki-merge.md)) and the print strand, owns the shared knowledge documents, checks results of the other session against their evidence before they enter canonical knowledge, and prepares decisions for the operator.
+
+AI operator
+: Carries out a bounded assignment given by the operator, since 2026-10-24 the interface of both strands: the production frontend and the card workbench of the print strand. Its first assignment is the record card with the provenance chain of every value. Writes only to its own paths, takes data as the pipelines write them, and reports results with evidence. The research coordinator checks each result against the tests, the record coverage test and read screenshots before it is committed.
+
+Operator
+: The human project owner. Decides goals, rights, publication, vocabulary that enters the data model, and acceptance. Agent reviews, including simulated user evaluations, never stand in for that acceptance.
+
+### Paths
+
+| Owner | Paths |
+|---|---|
+| Research coordinator | `pipeline/print_volumes/` except the interface files of `viewer/`, `data/print/` (local only), `knowledge/`, `snapshots/` |
+| AI operator | `docs/index.html`, `docs/js/`, `docs/css/`, and in `pipeline/print_volumes/viewer/` the files `cards.html`, `cards.js`, `cards.css` and `render.js` |
+| Neither without a verified finding | production code and data (`pipeline/lib/`, `pipeline/*.py`, `docs/data/`, `docs/vocab/`, `data/` outside `data/print/`); changes there go through the research coordinator |
+
+The AI operator's paths passed to it on 2026-10-24, once the repair of the card workbench and the wiki data batch were committed (fffcb29, 71a0fe0). Later the same day the operator had the research coordinator take the interface over directly, with subagents, to build the shared record desk and the new sitemap; the AI operator pauses on these paths until the operator assigns it again, so that no two sessions write the same file. A change the interface needs in the data (a field, a projection, a producer label) goes to the research coordinator as a request with its reason. The checks `check_render.mjs`, `check_review.mjs` and `smoke.mjs` stay with the research coordinator, because they are the acceptance of the interface and not part of it.
+
+Each session stages its own files by explicit path and commits only its own units. Pushes stay with the operator.
+
+### Messages and results
+
+The sessions exchange messages directly (Claude Code cross-session messages). A message is transport, never state: what holds lives in commits and in the knowledge documents. A finding reported by one session counts as unverified for the other until it is checked against code or data. At the end of an assignment the AI operator returns a compact report with the fields state, result, evidence (paths, commits), verification, deviation, next action, at most one question for the operator, and blocker.
+
+### Decisions that stay with the operator
+
+- Display vocabulary that would change the statement states (`proposed`, `confirmed`, `contested`) or their meaning. A display may name the producer next to the state (rule, LLM agent, person); a fourth state needs a decision.
+- Everything listed under [What the operator accepts](#what-the-operator-accepts).
+
+## Documentation rules
+
+Project prose is English, following the operator's August 2026 decision. Historical source titles and persistent identifiers retain their original language. The document responsible for each kind of change is named in [Project knowledge](INDEX.md#documents).
+
+### Status vocabulary
+
+Markdown frontmatter describes document maintenance, not product completion. This repository keeps three status values beyond the vocabulary of the Promptotyping convention and registers them here as its deviation. `maintained` marks a guide kept current with code and data, `historical` the journal and other preserved evidence whose statements stay as history, and `implementation-record` a dated record of implemented changes. The convention's values `draft`, `active` and `complete` keep the meaning the convention gives them. The values are not normalised, because `maintained` and `historical` say how a document is kept, which the convention's maturity values do not, and aligning the two vocabularies is the operator's decision.
+
+[Status](status.md) is a project-specific document outside the function register of the convention. It holds the dated evidence snapshot and is the one place for volatile figures (`CLAUDE.md`, Entry), so maintained guides state changing quantities qualitatively or point to it.
+
+### Updating a fact
+
+1. Check the responsible code, versioned decision or generated report.
+2. Update the owning guide; replace duplicate explanations with links where useful.
+3. Put volatile corpus/test figures in Status with their date and source artifact. Keep sample counts in dated evidence. Maintained guides state changing quantities qualitatively or point to their report.
+4. Record a changed contract or verified implementation in the latest journal entry.
+5. Check relative links, knowledge wikilinks, commands and text hashes. Use LF for versioned text, including evaluation JSON; hashes must survive Git checkout on another platform.
+
+Source decisions, expected semantic values and observed incorrect baselines are separate records. A documentation edit must not silently ratify a modelling choice, remove a source finding or declare a release.
+
+Vendored dependency notices and the unchanged raw archive are not project prose to rewrite. Review every authored guide for contradictions; do not rewrite every Markdown file merely to make it look new.
+
+### Authority and evidence
+
+Executable code plus versioned decisions and generated validation reports outrank prose claims about implementation. Ratified domain decisions outrank an assistant's inferred convention. If they disagree, document the gap rather than rewriting the decision as if implementation already complied.
+
+CI compares its named deterministic artifact paths and now also checks the stable contents of both gate manifests against their committed HEAD blobs, with every referenced input/artifact hash. Explicitly timestamped content has a narrow allowance; its bytes must match the current manifest. This closes the formerly omitted candidate/queue comparison. A local explicit reference snapshot is review evidence, not a substitute for the eventual committed freeze or a successful remote CI run.

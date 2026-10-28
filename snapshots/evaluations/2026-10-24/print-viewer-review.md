@@ -3,7 +3,7 @@ title: "Print viewer and card board: independent review of 2026-10-24"
 status: historical
 language: en
 created: 2026-10-24
-related: [print-viewer, print-volumes]
+related: [design, specification, print-volumes]
 ---
 
 # Print viewer and card board: independent review of 2026-10-24

@@ -1,7 +1,7 @@
 /**
  * Edit module — Expert-in-the-Loop curation for Klawiter Bibliography.
  *
- * Increments 1-3 of the EIL editing interface (design: knowledge/frontend.md,
+ * Increments 1-3 of the EIL editing interface (design: knowledge/frontend-architecture.md,
  * section "EIL Curation Interface"):
  * the three typed actions (Accept / Correct / Add), edit-history records, the
  * three-status review surfaced per entry, session durability via localStorage,
@@ -489,7 +489,7 @@ const Edit = {
   // list: census anomaly, verify.py flags (value not found in the raw text /
   // value detectable in the raw text but absent from output), then the
   // provenance layers (llm = first check priority, missing = check the source
-  // for a value; see knowledge/production-readiness.md). This is an attention
+  // for a value; see knowledge/governance.md). This is an attention
   // aid over the data situation, not a quality or workflow score: the rank
   // orders signal classes for the editor's time, nothing numeric is shown or
   // derived from it (protocol, not instrumentation).

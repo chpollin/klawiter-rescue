@@ -1564,7 +1564,7 @@ def unbound_flat_fields(text: str, values: dict[str, str]) -> list[str]:
     page's publication only where its first statement carries it in one of
     the positions statement_bindings reads; elsewhere it can be a reprint, a
     translation, a lecturer's town or a person's name, and the field is a gap
-    (knowledge/production-readiness.md, a gap before a wrong value).
+    (knowledge/governance.md, a gap before a wrong value).
 
     Both sides are compared as values leave the dump (encoding.source_value),
     so a whitespace run or quote escape of the dump decides nothing.

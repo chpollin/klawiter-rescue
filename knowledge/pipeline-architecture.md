@@ -1,5 +1,5 @@
 ---
-title: Production Pipeline
+title: Pipeline Architecture
 aliases: [pipeline, extraction, transformation, production runner]
 project:
   name: Klawiter Bibliography
@@ -14,10 +14,14 @@ tags: [pipeline, reproducibility, provenance]
 created: 2026-03-29
 updated: 2026-10-24
 authors: [Christopher Pollin]
-related: [data, testing, frontend, production-readiness]
+template:
+  name: Vorlage Architecture
+  version: 0.4
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/architecture
+related: [data, testing, frontend-architecture, governance]
 ---
 
-# Production Pipeline
+# Pipeline architecture
 
 ## Execution
 
@@ -114,4 +118,4 @@ Historical repeated-run evidence remains in the journal and run audits. [Status]
 - Live enrichment is deliberately not a component of the default run.
 - External expert review can extend the agentic evidence, yet does not change the technical repeatability.
 
-Current results are held in [[status]], the operator's acceptances in [[production-readiness]], the check commands and the limits of what is asserted in [[testing]].
+Current results are held in [[status]], the operator's acceptances in [[governance]], the check commands and the limits of what is asserted in [[testing]].

@@ -7,7 +7,7 @@ labels: antrag-eval
 
 ## Proposal status
 
-This template proposes additional evaluation work. It does not describe an implemented feature or an approved release requirement. See [current status](../../knowledge/status.md) and [acceptance scope](../../knowledge/production-readiness.md).
+This template proposes additional evaluation work. It does not describe an implemented feature or an approved release requirement. See [current status](../../knowledge/status.md) and [acceptance scope](../../knowledge/governance.md).
 
 ## What this issue is for
 
@@ -23,7 +23,7 @@ Criterion-independent: the hook stores reference and required depth, it computes
 
 - `tests/wiki_ground_truth.json` — the existing wiki-verified reference fixture
 - `pipeline/apply_patches.py`, `data/corrections/` — the path an approved entry takes
-- `knowledge/production-readiness.md` — gold standard as the measurable building block
+- `knowledge/governance.md` — gold standard as the measurable building block
 - `knowledge/testing.md` — field-level error classes the item classes build on
 
 ## Open before implementation

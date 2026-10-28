@@ -10,14 +10,18 @@ status: maintained
 language: en
 created: 2026-03-29
 updated: 2026-10-24
-related: [about, pipeline, frontend, testing, production-readiness, status]
+template:
+  name: Vorlage Datengrundlage
+  version: 0.3
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/data
+related: [project, pipeline-architecture, frontend-architecture, testing, governance, status]
 ---
 
 # Data and model
 
 ## Source scope
 
-The rescue selects `page_latest`, preserving every current MediaWiki page ID. It does not extract every historical bibliographic statement into an entity. The delivered dump also contains earlier revisions and archived material; historical revision recovery and the triage of archived main-namespace titles absent from the current table remain separately scoped work. Version 1.0 excludes those titles explicitly ([release scope](production-readiness.md#release-scope)). The archive's revision rows, distinct namespace/title pairs and absent bibliography titles are different populations; do not call all of them “deleted pages”. The [completion review](../snapshots/project-review-2026-09-05.md) documents their census.
+The rescue selects `page_latest`, preserving every current MediaWiki page ID. It does not extract every historical bibliographic statement into an entity. The delivered dump also contains earlier revisions and archived material; historical revision recovery and the triage of archived main-namespace titles absent from the current table remain separately scoped work. Version 1.0 excludes those titles explicitly ([release scope](governance.md#release-scope)). The archive's revision rows, distinct namespace/title pairs and absent bibliography titles are different populations; do not call all of them “deleted pages”. The [completion review](../snapshots/project-review-2026-09-05.md) documents their census.
 
 The wiki was not edited after the dump of 2021, so the dump is its complete source, and the static interface replaces the hosted wiki, which went offline in October 2026. Four current pages lack a delivered text body. Only page `2979`, *A unidade espiritual do mundo*, is bibliographic; its named stub preserves the source identity. Uploaded image metadata does not imply that the image bytes were delivered. Raw originals remain unchanged. Their SHA-256 inventory is `data/provenance/source-dump.json`, checked by `tests/test_source_inventory.py`. The dump also holds the wiki's account tables in `zweig_part_03.sql`, which the pipeline never reads, so `.gitattributes` keeps that one file out of every release archive, while the page and text tables travel with the release so it can be rebuilt. The inventory marks the left-out file with `inReleaseArchive: false`. An archival directory is not a publication allowlist.
 
@@ -238,7 +242,7 @@ Occurrence evidence includes page/text IDs, source lines and hashes. Multi-part 
 
 ## Provenance and review scope
 
-The frontend field layer uses `regex`, `llm`, `missing`, `rule-gap` and `editor`, and reads `expert` as a legacy alias of `editor`. `missing` is a field the source leaves empty, `rule-gap` one a stated rule emptied, whose rule the record's `ruleGaps` names; `verify.py` counts a rule gap apart from a false negative. Its provenance injection and patch overlay currently happen after canonical JSON-LD export. They are not fully propagated into the flat canonical graph, edition graph and all quality reports. Browser exports and playground projections also have distinct scopes; see [Frontend](frontend.md).
+The frontend field layer uses `regex`, `llm`, `missing`, `rule-gap` and `editor`, and reads `expert` as a legacy alias of `editor`. `missing` is a field the source leaves empty, `rule-gap` one a stated rule emptied, whose rule the record's `ruleGaps` names; `verify.py` counts a rule gap apart from a false negative. Its provenance injection and patch overlay currently happen after canonical JSON-LD export. They are not fully propagated into the flat canonical graph, edition graph and all quality reports. Browser exports and playground projections also have distinct scopes; see [Frontend architecture](frontend-architecture.md).
 
 Gate artifacts carry input/code hashes, PROV activities and EARL/validation results. Occurrence matching establishes that a string is present, not that it belongs to the intended publication.
 

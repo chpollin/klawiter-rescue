@@ -10,7 +10,7 @@ status: complete
 language: en
 created: 2026-09-05
 updated: 2026-09-05
-related: [release-review-2026-08-27, production-readiness, testing, data, frontend]
+related: [release-review-2026-08-27, governance, testing, data, frontend-architecture]
 ---
 
 

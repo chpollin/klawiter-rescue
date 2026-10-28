@@ -6,7 +6,7 @@ project:
 status: active
 language: en
 created: 2026-10-24
-updated: 2026-10-24
+updated: 2026-10-28
 generated-with: Claude Code (Claude Opus 5.5)
 method:
   name: Promptotyping
@@ -15,16 +15,16 @@ template:
   name: Vorlage Plan
   version: 0.3
   url: https://dhcraft.org/Promptotyping/promptotyping-document/plan
-related: [print-wiki-merge, production-readiness, specification, status, journal, index]
+related: [print-wiki-merge, governance, specification, status, journal, INDEX]
 ---
 
 # Plan
 
-This plan orders the work still to be done on the Klawiter bibliography into two milestones with their entry and exit conditions. It is the forward counterpart of the [Journal](journal.md): finished work leaves it, and the transition that finished it goes into the journal. What is built and why stands in the declarative documents, the merge model and its steps in [Merged bibliography](print-wiki-merge.md), the measurement rules there under Measurement, the interface in [Specification](specification.md), [Design](design.md), [Frontend](frontend.md) and [Print viewer](print-viewer.md), and what the operator accepts in [Production readiness](production-readiness.md). The exit conditions below point to those documents instead of restating them.
+This plan orders the work still to be done on the Klawiter bibliography into two milestones with their entry and exit conditions. It is the forward counterpart of the [Journal](journal.md): finished work leaves it, and the transition that finished it goes into the journal. What is built and why stands in the declarative documents, the merge model and its steps in [Merged bibliography](print-wiki-merge.md), the measurement rules there under Measurement, the interface in [Specification](specification.md), [Design](design.md), [Frontend architecture](frontend-architecture.md) and [Card workbench](design.md#card-workbench), and what the operator accepts in [Governance](governance.md). The exit conditions below point to those documents instead of restating them.
 
 ## Goal
 
-The goal of [Merged bibliography](print-wiki-merge.md), Goal, is the criterion of done. The work reaches it in two milestones, cut at the operator's human round: everything that would change a reading or a proposal must be finished before the first review decision, because every rule change after it makes decisions stale, and everything after it rests on those decisions. Development stays local until the operator instructs a publication ([Production readiness](production-readiness.md), Operator principles).
+The goal of [Merged bibliography](print-wiki-merge.md), Goal, is the criterion of done. The work reaches it in two milestones, cut at the operator's human round: everything that would change a reading or a proposal must be finished before the first review decision, because every rule change after it makes decisions stale, and everything after it rests on those decisions. Development stays local until the operator instructs a publication ([Governance](governance.md), Operator principles).
 
 ## Milestones
 
@@ -55,21 +55,22 @@ Reviewable workbench
 - Reached on 2026-10-24 (fffcb29), see the status tracker.
 
 One record desk and the sitemap
-- The operator decided on 2026-10-24 that one card view holds print objects and wiki records, replaces the wiki catalogue locally and carries the review of both sources, and that the sitemap becomes Overview, Records and Documentation ([Production readiness](production-readiness.md), Operator principles).
+- The operator decided on 2026-10-24 that one card view holds print objects and wiki records, replaces the wiki catalogue locally and carries the review of both sources, and that the sitemap becomes Overview, Records and Documentation ([Governance](governance.md), Operator principles).
 - Increments in order: (1) Documentation joining the Data and About pages, help as a dialog, the imprint in the footer, start-page clarity, and a local page check tool that shows a PDF page beside every line and value read from it; (2) the record desk with print and wiki cards in one design; (3) the review of wiki values in the desk, where a person's decision becomes a patch that confirms the value with the producer person, which also gives the end-to-end proof of a human patch through canonical graphs, frontend and exports; (4) Explore as an arrangement of the filtered records; (5) data quality as filters and the review mode of the desk.
 - Every record with bibliographic text reaches a card, including the category pages whose text remains after their category links, and a gap by rule reads differently from a gap in the source.
 - Increment 2 first cut committed (cb13e6c): `docs/js/record-card.js` renders wiki and print cards, `docs/js/records.js` is the Records view, `pipeline/print_volumes/viewer/records-print.js` adapts print objects, the workbench draws through the same component, and the pipeline supplies value positions (03bb9de, [Data](data.md), Value positions). Still open in increment 2, in this order:
   1. Browser review of the first cut at 1440x900, 390x844, 320x640 and 200 percent zoom on a trial review server, by keyboard and pointer, with read screenshots, then the integrated review of both card kinds side by side for one publication; the workflow that was to run both stopped at a session restart before them. `smoke.mjs` in both modes was green before the restart and has not run since.
   2. Close the pinned coverage gaps in `tests/record_coverage_expected.json`: record `_provenance` and `@type` (head in `app.js`), `fieldEvidence` and publication `provenance` and `valueSpans` (a declared map of derived fields, critique D4), one record each without `review` and `ruleGaps`, and the values without a visible chain; then make the test assert zero instead of pins.
   3. Align the gap words of `detail.js` with the data: the pipeline writes `category-markup` and `page-title`, which `_gapOf` does not yet name.
-  4. The card head lost the colour and claim noun of the review state; check it against [Frontend](frontend.md), Rendering of contested statements. The facet sidebar still shows the raw type "category", and the wiki count label still says "entries" because `search_logic.test.js` pins it.
+  4. The card head lost the colour and claim noun of the review state; check it against [Frontend architecture](frontend-architecture.md), Rendering of contested statements. The facet sidebar still shows the raw type "category", and the wiki count label still says "entries" because `search_logic.test.js` pins it.
   5. Add `tests/` to the leak scope of `p14_gate.py`; `page.js` still links the public wiki; the workbench stacks at 60rem against the 64rem target and its slips do not yet draw through `RecordCard.slip`.
   6. The value positions grow `docs/data/klawiter.json` to about 21.6 MB and the publication files to about 13.4 MB; decide a compact form before any push of `docs/` to the public site.
-  7. Bring Frontend, Print viewer, the departure rows of Design and the task states of Specification to the state of increments 1 and 2.
+  7. Bring Frontend architecture, the card workbench sections of Design and Specification, the departure rows of Design and the task states of Specification to the state of increments 1 and 2.
 - Done when the record coverage test, counting only what a reader can see, pins no field gap and no rendered artefact, every value shows its provenance chain visibly, `check_render.mjs`, `check_review.mjs` and `smoke.mjs` are green, a browser review with read screenshots at a wide and a narrow width and at 200 percent zoom has its findings closed, and the old addresses redirect.
 
 Knowledge and action layer
 - Done when the knowledge follows the Promptotyping convention (`handoff.md` as the one inbox, this plan as the one place of future work, [Specification](specification.md) and [Design](design.md) adopted after their review), README and `CLAUDE.md` route into it and name the print strand, the producer rule and one list of check commands, and a fresh-context audit finds no contradiction between documents and code.
+- Still open: the three print documents take names under the naming contract of the convention, and the references to them in the files of the code identity of `p13_review.py` (`p03_records.py`, `_common.py`, `_fields.py`, `sections.json`, `p07_concordance.py`) follow. A changed byte in that closure invalidates the fixed admissible classes, so this rename runs together with the planned refreeze of the measurement base and the `p13_review.py --fix-rule` before the human round, never on its own. The comments of `pipeline/lib/editions.py` and `pipeline/lib/producers.py` still name `knowledge/production-readiness.md`, whose content [Governance](governance.md) now holds; both files enter the code hashes of the Gate 1 and Gate 2 manifests, so their comments follow with the next reviewed freeze of those manifests.
 
 ### M2 Merged and accepted
 
@@ -86,7 +87,7 @@ Shared claim schema and claims file
 - Done when concordance and reconciliation claims share one schema keyed by claim, with subject, predicate, object, evidence selector and hash, typed producer, state and decision chain, the existing gate artifacts rebuild under it identically or with a reasoned difference, and the text-free file of print addresses and evidenced claims is built and checked locally under `data/print/`; it joins the production run only with the operator's release.
 
 Identifiers
-- Done when every record belongs to exactly one group with a stable identifier that is never reused, print addresses with their volume, the 1965 numbers and wiki page identifiers resolve as aliases to their source records, and joins and splits are recorded ([About](about.md), How the bibliography is cited). Depends on the operator's decision on the identifier scheme.
+- Done when every record belongs to exactly one group with a stable identifier that is never reused, print addresses with their volume, the 1965 numbers and wiki page identifiers resolve as aliases to their source records, and joins and splits are recorded ([Project](project.md), How the bibliography is cited). Depends on the operator's decision on the identifier scheme.
 
 Reconstructed entry
 - Done when groups form from confirmed identity claims and the desk shows one merged reading per group with the source of every field, the deviations side by side and the open claims visible.
@@ -118,16 +119,47 @@ Snapshot of 2026-10-24.
 | Measurement design corrected | completed | 5db70c1 |
 | Measurement design, second correction | in progress | decision rule at zero errors, agreement coefficients, anchoring, seeded order, hidden repeats and reporting fields implemented; protocol in the review mode, its pin in the gate and the benchmark order open |
 | Reviewable workbench | completed | fffcb29 with the reviewer filter of the review server |
-| Record desk and sitemap | in progress | increment 1 committed (53b9397: Documentation, help dialog, footer imprint, start-page labels, page check tool); increment 2 first cut committed (cb13e6c) with the open steps listed under One record desk; the coverage test counts only what a reader sees (217acef); Frontend and Print viewer describe the state before increment 1 until the knowledge pass |
-| Knowledge and action layer | in progress | handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; [Print volumes](print-volumes.md) split into the volumes as domain and [Print pipeline](print-pipeline.md) |
+| Record desk and sitemap | in progress | increment 1 committed (53b9397: Documentation, help dialog, footer imprint, start-page labels, page check tool); increment 2 first cut committed (cb13e6c) with the open steps listed under One record desk; the coverage test counts only what a reader sees (217acef); Frontend architecture and the card workbench sections of Design and Specification describe the state before increment 1 until the knowledge pass |
+| Knowledge and action layer | in progress | unified along the Promptotyping templates on 2026-10-28: dated reviews and evaluations under `snapshots/`, INDEX with responsibility table and glossary, Project, Governance, Pipeline and Frontend architecture, the card workbench in Specification and Design; the print documents keep their names until the refreeze; handoff and plan created; README and `CLAUDE.md` route into them, name the producer rule and the print strand, and testing.md holds the one list of check commands (c63ad3d); [Specification](specification.md) and [Design](design.md) brought to the record desk and the sitemap after their reviews, linked from the index, still drafts until the operator adopts the tasks; [Print volumes](print-volumes.md) split into the volumes as domain and [Print pipeline](print-pipeline.md) |
 | M2 | pending | entry: M1 |
+
+## Tracks
+
+The operator set on 2026-10-23 that the whole project advances together: the merged bibliography, the correctness of the published wiki data, the interface, the blog post, the DIA-XAI follow-up proposal and the vault knowledge, each tested, verified and reviewed critically before it counts, with milestones planned and reported. Each track has one owner and one plan.
+
+| Track | Owner | Plan and milestones | Review before a milestone closes |
+|---|---|---|---|
+| Merged bibliography (print strand) | research coordinator | M1 and M2 above | independent agent review of method, code and document |
+| Published wiki data | research coordinator | Wiki data true to their source passage; [Status](status.md) | full gate of CLAUDE.md, invariants over all records, fresh-context reviews of data fidelity, interface and tests after each fix batch |
+| Interface | AI operator, from 2026-10-24 | One record desk and the sitemap; [Card workbench](design.md#card-workbench); [Frontend architecture](frontend-architecture.md) | tests, record coverage test and read screenshots by the coordinator; a fresh-context review of the interface before a milestone closes |
+| Blog post | AI operator | drafted outside the repository, claims checked against it, deployed by the operator | claim check against the artefacts; fresh-context review of the text commissioned by the coordinator |
+| DIA-XAI proposal | AI operator drafts, operator decides | kept in the dia-xai repository; since 2026-10-23 the operator's team draft "Grounds for Use" is the basis, the agent draft v1.4 supplies material | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
+| Vault knowledge | a session started in the vault | handoff list prepared by the coordinator; repository sessions read the vault, never write it | vault conventions and audit |
+
+The coordinator reports to the operator as a short presentation per milestone reached and on request, with result, meaning, risks and the decisions needed.
+
+## Orchestration
+
+The research coordinator holds the overall plan (this plan) and orchestrates the AI operator's work through the table below. The table holds only the dependencies between the two sessions. When a dependency is met, the session that delivers it messages the other; when the coordinator needs the operator's next result, it asks to be notified when the operator session goes idle instead of polling.
+
+| Dependency | Delivered by | Needed for | Serves in the overall plan |
+|---|---|---|---|
+| verified regeneration of `docs/data` and `data/output` after the pipeline fixes | coordinator | interface, blog post | correct wiki data as the base of every concordance |
+| `publicationIds` on field matches, delivered 2026-10-23 (a4dbd63) where the wiki line lies in a hash-verified publication slice | coordinator (p07) | edition-level print slot | step 7, matches at publication level |
+| committed repair of the card workbench | coordinator | handover of the interface paths | interface milestone One reader |
+| record card with the provenance chain of every value | AI operator | coordinator's check against tests, record coverage and screenshots | Goal, every value with passage, producer and state |
+| defects found in production data | either session | coordinator verifies, fixes and regenerates | correct wiki data |
+| operator decision on the twenty fixture-based place decisions, taken 2026-10-23 (a fixture confirms nothing) | operator | blog post, display wording, data.md | step 1, meaning of `confirmed` |
+| decision whether delegation to LLM agents confirms, taken 2026-10-24 under the operator principles (it does not; agent decisions are proposals) | main instance | blog post, production labels | step 1, meaning of `confirmed` |
+
+A result of the AI operator enters canonical knowledge only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 
 ## Open decisions and dependencies
 
-- The operator's acceptances and decisions are listed in [Production readiness](production-readiness.md), What the operator accepts. Before M2 the operator decides the unit of a group and the provenance model of claims (who asserts and by what means, apart from who decides), and the identifier scheme.
+- The operator's acceptances and decisions are listed in [Governance](governance.md), What the operator accepts. Before M2 the operator decides the unit of a group and the provenance model of claims (who asserts and by what means, apart from who decides), and the identifier scheme.
 - Every change of a reading rule or a proposal comes before the first review decision of the human round.
 - The shared claim schema follows the wiki data batch, because both touch the reconciliation layer.
 
 ## Deviations
 
-The order changes only under the operator principles of [Production readiness](production-readiness.md) or on the operator's instruction, and the gates, the leak check and the rule that only a person or an exact rule confirms hold in any order. A changed assumption goes into the document that owns it, and the journal records the correction.
+The order changes only under the operator principles of [Governance](governance.md) or on the operator's instruction, and the gates, the leak check and the rule that only a person or an exact rule confirms hold in any order. A changed assumption goes into the document that owns it, and the journal records the correction.

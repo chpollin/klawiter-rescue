@@ -7,7 +7,7 @@ labels: antrag-eval
 
 ## Proposal status
 
-This template proposes additional evaluation work. It does not describe an implemented feature or an approved release requirement. See [current status](../../knowledge/status.md) and [acceptance scope](../../knowledge/production-readiness.md).
+This template proposes additional evaluation work. It does not describe an implemented feature or an approved release requirement. See [current status](../../knowledge/status.md) and [acceptance scope](../../knowledge/governance.md).
 
 ## What this issue is for
 

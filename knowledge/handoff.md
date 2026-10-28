@@ -9,7 +9,7 @@ method:
 status: active
 language: en
 created: 2026-10-24
-updated: 2026-10-24
+updated: 2026-10-28
 ---
 
 # Handoff
@@ -17,6 +17,14 @@ updated: 2026-10-24
 This process inbox holds only open handoff points, the results that arrived from agents, sessions or research and still wait to be checked, integrated or rejected. Before using a point, check its source and its current target. Integrate durable content into the responsible document, record subject, source, target and result or the reason for rejection briefly in [Journal](journal.md), and then remove the point completely. Accepted future work goes into [Plan](plan.md).
 
 ## Open handoff points
+
+### Comments in the AI operator's paths renamed
+
+- Received: 2026-10-28
+- Source: unification of the knowledge along the Promptotyping templates (journal entry of 2026-10-28)
+- Target: the paused AI operator, paths `docs/js/` and `pipeline/print_volumes/viewer/cards.js` ([Governance](governance.md#paths))
+- Context: the comments of `docs/js/edit.js`, `docs/js/home.js` and `cards.js` name the renamed documents `frontend-architecture.md`, `governance.md` and `design.md`; no code changed. The AI operator was paused, so the research coordinator made the change.
+- Next action: when the operator assigns the AI operator again, it takes the renamed references into its working state, and the point leaves this inbox with a journal record.
 
 ### UI review and work package of 2026-10-24
 

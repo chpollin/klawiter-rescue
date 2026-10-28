@@ -10,7 +10,7 @@ status: maintained
 language: en
 created: 2026-10-23
 updated: 2026-10-24
-related: [print-volumes, data, about, production-readiness]
+related: [print-volumes, data, project, governance]
 ---
 
 # Merged Klawiter bibliography: model and plan
@@ -78,7 +78,7 @@ The merged Klawiter bibliography is reached when all of the following hold, chec
 - What is published contains only what the rights decision of step 0 admits.
 - The interface carries reading, review and citation, and the operator has accepted it on real tasks.
 
-This list is the criterion of done since 2026-10-24, decided by the main instance under the operator's explicit delegation ([Production readiness](production-readiness.md), Operator principles).
+This list is the criterion of done since 2026-10-24, decided by the main instance under the operator's explicit delegation ([Governance](governance.md), Operator principles).
 
 ## Steps
 
@@ -86,7 +86,7 @@ The steps of the merge are ordered by dependency, and [Plan](plan.md) sequences 
 
 | Step | Result | Accepted when | Depends on |
 |---|---|---|---|
-| 0 Frame | decisions on rights in the volumes and in derived data, admission of print as a source of values, delivery shape with Stefan Zweig Digital, publishing institution, vocabulary namespace | recorded in [Production readiness](production-readiness.md) | operator, Stefan Zweig Digital, rights holder |
+| 0 Frame | decisions on rights in the volumes and in derived data, admission of print as a source of values, delivery shape with Stefan Zweig Digital, publishing institution, vocabulary namespace | recorded in [Governance](governance.md) | operator, Stefan Zweig Digital, rights holder |
 | 1 Model and claim schema | the shared terms of [Data](data.md) (one model across print and wiki) and a shared claim schema with group identifiers. The concordance claims of step 7 were written before this schema and migrate into it. | existing gate artifacts and the concordance rebuild under the shared schema, identical or with a reasoned difference | operator |
 | 2 Segmentation | print entries and their objects as records with stable identifiers | boundary and object scores on the frozen second sample, disagreements decided by a person | 1 |
 | 3 Overlap experiments | how far early wiki revisions carry print text, how large the overlap is, which relation types cited addresses have | each question answered on a small counted sample | 2 |
@@ -95,7 +95,7 @@ The steps of the merge are ordered by dependency, and [Plan](plan.md) sequences 
 | 6 Compiler claims | references typed, errata of Addendum I and Addendum II title references parsed, index addresses resolved | every address and erratum resolved or listed as open | 1, 2 |
 | 7 Concordance | a pipeline stage that keeps every candidate `proposed`, rule classes for automatic confirmation, a report of what exists only in print, only in the wiki or in both | report reproducible, precision per route and volume from the human round, recall on silver pairs | 3, 5, 6 |
 | 8 Work and person links | links to the curated work index and to persons of Stefan Zweig Digital or the GND, through the existing reconciliation layer (`pipeline/lib/reconciliation.py`) with its candidates, decisions and open claims; existing title matches superseded | each link with evidence and state | 7 |
-| 9 Adjudication | one local interface and one append-only decision log for values and for claims between records, with the chain from claim to print line or wiki revision. The card workbench of the [Print viewer](print-viewer.md) carries it; the edit mode of the production frontend keeps the field corrections of the wiki under its patch contract. | a person can follow a claim from evidence to decision and decide it | 1, 7 |
+| 9 Adjudication | one local interface and one append-only decision log for values and for claims between records, with the chain from claim to print line or wiki revision. The [card workbench](design.md#card-workbench) carries it; the edit mode of the production frontend keeps the field corrections of the wiki under its patch contract. | a person can follow a claim from evidence to decision and decide it | 1, 7 |
 | 10 Projection and delivery | sample object agreed, projection, staging ingest, trial on research tasks. A TEI profile with ODD only if the agreed delivery shape needs TEI; otherwise the validated JSON-LD with provenance per value is the delivery. | deterministic rebuild, every statement traceable to claims, staging ingest succeeds | 0, 8, 9 |
 
 ## Measurement
@@ -152,6 +152,6 @@ Data
 - The star after an address marks an excerpt in the one list the compiler restates in Addendum I, and the four last poems of section D in 1991 stand in the revised file under D 88a, D 98, D 154 and D 159 ([Print volumes](print-volumes.md), Reference system and Entry boundaries). Does every star mean an excerpt, and how did D 224 to D 227 read in 1991? Answered by a domain expert or a printed copy.
 
 Use
-- Research cites the bibliography mostly without a locator, and where it locates, by page, by print address or by both; the trade cites print addresses systematically, and the wiki is cited as a website only ([About](about.md), How the bibliography is cited). A trade citation such as "Klawiter² I, F 46" names the main volume with "I,", while "I 83" is an address in section I ([Print volumes](print-volumes.md), Reference system), so an alias reader has to tell the volume numeral from the section letter. Should the group identifier carry the print address and the 1965 number as citable aliases? Answered by the operator with a domain expert.
+- Research cites the bibliography mostly without a locator, and where it locates, by page, by print address or by both; the trade cites print addresses systematically, and the wiki is cited as a website only ([Project](project.md), How the bibliography is cited). A trade citation such as "Klawiter² I, F 46" names the main volume with "I,", while "I 83" is an address in section I ([Print volumes](print-volumes.md), Reference system), so an alias reader has to tell the volume numeral from the section letter. Should the group identifier carry the print address and the 1965 number as citable aliases? Answered by the operator with a domain expert.
 - Which research tasks must the merged bibliography support, now that the owner's own research case was withdrawn? Answered by the operator and Stefan Zweig Digital; the tasks become the trial before delivery.
 - Should authors and translators link to the person index of Stefan Zweig Digital? Answered by Stefan Zweig Digital.

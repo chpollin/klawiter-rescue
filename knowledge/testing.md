@@ -12,9 +12,13 @@ language: en
 version: 1.2
 tags: [testing, validation, quality, evidence]
 created: 2026-04-01
-updated: 2026-10-24
+updated: 2026-10-28
 authors: [Christopher Pollin]
-related: [data, pipeline, frontend, production-readiness]
+template:
+  name: Vorlage Testing
+  version: 0.3
+  url: https://dhcraft.org/Promptotyping/promptotyping-document/testing
+related: [data, pipeline-architecture, frontend-architecture, governance]
 ---
 
 # Quality Assurance
@@ -54,7 +58,7 @@ python -m uv run --group print python pipeline/print_volumes/review_server.py --
 node pipeline/print_volumes/viewer/smoke.mjs --port 8773
 ```
 
-`<scratch>` is any folder outside `data/print/review/`. Playwright is no project dependency, and where `import "playwright"` fails, `PLAYWRIGHT_DIR` names a folder whose `node_modules` hold it. [Print viewer](print-viewer.md), Acceptance, lists what the three viewer checks cover.
+`<scratch>` is any folder outside `data/print/review/`. Playwright is no project dependency, and where `import "playwright"` fails, `PLAYWRIGHT_DIR` names a folder whose `node_modules` hold it. [Card workbench acceptance](specification.md#card-workbench-acceptance) lists what the three viewer checks cover.
 
 The default pytest set excludes the `semantic` marker. It still checks the exact known deviations: page ID, field and observed mismatching value must match `.github/semantic-baseline.json` for the frontend or `.github/extraction-baseline.json` for the rule extractors. A repaired case cannot conceal a new failure elsewhere. The separate semantic suite keeps the individual failures red. Both use the same exact comparison, allowing only explicitly recorded source-backed title variants.
 
@@ -125,7 +129,21 @@ Gate 2 checks:
 
 ### Frontend Logic
 
-`tests/test_frontend_logic.py` automatically discovers every `tests/*.test.js` behavior file and runs `node --check` for every `docs/js/*.js` module. Adding a file needs no manual Python bridge entry. Node tests cover occurrences, snippets, triage, editor sessions, search normalization, reconciliation, export, routing and queue order. These checks exercise logic and syntax; they do not prove DOM interactions, accessibility or performance in a browser. On 23 September a Playwright run at 320, 390 and 1440 pixels checked the repaired paths on real data, among them the mobile filter drawer, keyboard-only use, the publication route and its citation, co-imprints, series glosses, decided and source-revision claims and the map. Its scripts stay outside the repository, so it is dated evidence rather than a regression suite.
+`tests/test_frontend_logic.py` automatically discovers every `tests/*.test.js` behavior file and runs `node --check` for every `docs/js/*.js` module. Adding a file needs no manual Python bridge entry.
+
+Node tests cover source-evidence logic, triage order, reconciliation lookup, a stable patch export, the separation of contested claims, the routing guard including the edit-mode gate, the redirects of the published deep links, the section suffix of static pages, the visibility rule of the edit switch and the order of the candidate queue. `tests/entry_card.test.js` holds the card contract, meaning the single-entry state the `#entry=` route sets, the head that keeps type and title there, the named field rows with their provenance and review marks, the missing field without a placeholder, the quoted extent notation, the source identifiers at the source block, the linked address in the source text and the note on a page with several publications. It also holds the publication layer, the marked source block of a publication and its absence without text offsets, the citation buttons per publication, the block per publication with its own extent, the credits of a contribution against the credits of the publication, the review hint, the name-variant block, the page-kind label with its count in both card heads, the credit phrase that says more than its role, the contested mark that answers to the address of its claim block, and both load paths of the per-page file, the fetch with its visible load state and the failure that falls back to the flat fields. The workbench route is asserted in both directions, as a redirect of `#quality` and as the one page route on which the edit switch appears. `tests/edit_session.test.js` holds the session state, meaning the rendered correction value with its struck-through predecessor, the add control on an empty field, "edited" instead of "approved", the index over contested claims, the category link, the review-status chip and the opened source in the reading view, and the playground route. It also holds the scope of the edit layout, the read-only publication blocks against the editable page record and the status line that names the scope on a page with several publications. `tests/citation_export.test.js` holds what a citation describes, the publication with its own imprint, extent, credits and container, the two editions of one page apart, the collected export of a page and the fall back to the flat fields while the page file is not loaded. It also holds the author rule by source role with the name-form check and the per-publication exception, the full place wording with the contested note, the numbered `pagetotal` with the source notation in the note, and the batch export that writes one citation per publication and reports how many. Added to that are the search guarantees in `tests/search_logic.test.js` (diacritic folding of the index, highlighting against escaping, minimum query length, facet drilldown, label resolution and the cap notice), the publication axis in the same file, where a page of the real holding with two years and two languages is filtered and counted and each facet count is checked against the list its value opens, and the history guarantee and error routes in `tests/routing_guard.test.js`. The Python suite checks the generated data contracts, including the frontend projection contract.
+
+These checks exercise logic and syntax; they do not prove DOM interactions, accessibility or performance in a browser. On 23 September a Playwright run at 320, 390 and 1440 pixels checked the repaired paths on real data, among them the mobile filter drawer, keyboard-only use, the publication route and its citation, co-imprints, series glosses, decided and source-revision claims and the map. Its scripts stay outside the repository, so it is dated evidence rather than a regression suite.
+
+A local smoke test runs with a static server over `docs/`:
+
+```bash
+python -m http.server 8000 --directory docs
+```
+
+The application is then reachable at `http://localhost:8000/`; the curation surface is active only there.
+
+`tests/record_coverage.test.js` renders the permalink card of every content page with its publication file. It checks that every non-empty field stands visibly, in a tooltip or on a row marked `data-key`, and that every value occurring in its source passage carries a provenance disclosure marked `data-provenance-for`. The known gaps are pinned in `tests/record_coverage_expected.json`. A field with no declared place fails the test, and so does a gap that grows or closes without the expectation changing. Since 2026-10-24 the card shows its page kind, its cited print addresses and the review producer of a publication. An audit of the same day found that the card satisfied the test with invisible markers (`<span hidden data-key>` and `data-provenance-for` on elements that show no provenance), so the expectation file's empty gaps were not real. The test now drops every hidden element before it matches, counts a provenance disclosure only where a visible badge stands, and pins the honest gaps: no card shows its record provenance, identifier or translation statements as fields, and almost no value shows its provenance chain. A separate assertion pins values rendered as code artefacts in the visible text, so a renderer fix must lower its pin. [Plan](plan.md), One record desk, owns closing both.
 
 Frontend, canonical JSON-LD and classified rows are shared session fixtures. Semantic diagnosis and its default guard use the same comparison and page-ID index. Edition tests share one corpus build but receive deep copies, so review overlays cannot leak between tests.
 
@@ -193,4 +211,4 @@ Automatically documented are record completeness, schema, known bounds, selector
 
 Two structural limits of the round-trip verification must be named. First, the circularity. `verify.py` checks extracted values against the same raw text from which they were extracted; a systematically wrong string that is present in the text passes the check. The comparison documents fidelity to the source, no factual correctness. Second, the substring weakness of the `correct` definition. A value counts as documented as soon as it occurs as a substring in the raw text; a shortened value, or one originating from the wrong edition block, can thereby count as correct, especially on multi-edition pages. For that reason the occurrence display in the editing mode makes multiple occurrences explicit.
 
-Not documented are a corpus-wide factual accuracy rate, an external scholarly confirmation of the graphic-novel work identity (decided by the main instance after delegation by the operator on 2026-09-22, revisable) and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[production-readiness]] lists what the operator accepts.
+Not documented are a corpus-wide factual accuracy rate, an external scholarly confirmation of the graphic-novel work identity (decided by the main instance after delegation by the operator on 2026-09-22, revisable) and the correctness of unreviewed candidates (including the new translator and publisher review stock). The complete queues keep these cases visible. [[governance]] lists what the operator accepts.

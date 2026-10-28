@@ -16,7 +16,7 @@ updated: 2026-10-24
 
 **Assessment: approximately 6/10 as a completed scholarly research product.** Preservation and engineering are substantially stronger than this completion score: current page identities survive, the gate contracts pass, and the reviewed repair package closes concrete defects. Full bibliographic modelling, canonical curation propagation and product acceptance remain open. A green test suite does not certify every field.
 
-This is the current status snapshot; future work lives in [Plan](plan.md) and received findings in [Handoff](handoff.md). [Production readiness](production-readiness.md) owns acceptance criteria; [Technical remediation](../snapshots/technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
+This is the current status snapshot; future work lives in [Plan](plan.md) and received findings in [Handoff](handoff.md). [Governance](governance.md) owns acceptance criteria; [Technical remediation](../snapshots/technical-remediation-2026-09-05.md) records implemented changes. Earlier reviews remain historical snapshots.
 
 ## Verified data snapshot — 24 October 2026
 
@@ -38,7 +38,7 @@ The snapshot follows commit 64cbaea of 24 October. Since 71a0fe0 every decision 
 | Pages / publications / contributions in the publication layer | 1,665 / 3,273 / 13,884 | `_meta.publicationCoverage` in the [frontend dataset](../docs/data/klawiter.json), records under `docs/data/publications/` |
 | Publication review flags (missing place / unresolved imprint / pagination) | 159 (68 / 65 / 26) | same field, `reviewFlags` per publication |
 
-Four current pages lack text; only page 2979 is bibliographic. Earlier revisions, absent archived titles and uploaded image bytes are outside the current extracted content scope. The titles that the wiki recorded as deleted and that are absent from the current page table are excluded from version 1.0 ([Production readiness](production-readiness.md#release-scope)). See [Data](data.md).
+Four current pages lack text; only page 2979 is bibliographic. Earlier revisions, absent archived titles and uploaded image bytes are outside the current extracted content scope. The titles that the wiki recorded as deleted and that are absent from the current page table are excluded from version 1.0 ([Governance](governance.md#release-scope)). See [Data](data.md).
 
 | Flat main-namespace field | Populated | Coverage |
 |---|---:|---:|
@@ -68,8 +68,8 @@ In the evening of 23 October the fields fell further where values came from the 
 
 - Wiki data. The defect classes of the review round of 23 October are fixed at their root causes, each with a real-record test and an invariant over all records. Every content page states its wiki page kind and the print addresses its text cites. Under the operator principles of 24 October, flat fields that no rule binds to the described publication become gaps and decisions of LLM agents are proposals; the batch that implements both is committed (71a0fe0), and what remains of the milestone stands in [Plan](plan.md). Open received findings wait in [Handoff](handoff.md).
 - Print strand. Every object and every apparatus item of the three volumes is a validated, span-bound record, exported locally as JSON-LD with one provenance chain per value, under a local gate. The measurement design is corrected and its samples are frozen while the review log is empty. No person has reviewed yet, so field correctness is unmeasured ([Print pipeline](print-pipeline.md), Structured objects). The concordance runs on two routes and is projected for the viewer with its claim states.
-- Interfaces. The reader has Overview, Records and Documentation (increment 1, 53b9397). Records is the first cut of the record desk: one card component for wiki and print records with a visible provenance chain per value, print records only through the review server (cb13e6c); its browser review and remaining gaps are open in [Plan](plan.md). The local page check tool shows a PDF page beside every line and value read from it. The research coordinator builds the interface ([Coordination](coordination.md)).
-- Acceptance. What the operator accepts and decides is listed in [Production readiness](production-readiness.md), What the operator accepts.
+- Interfaces. The reader has Overview, Records and Documentation (increment 1, 53b9397). Records is the first cut of the record desk: one card component for wiki and print records with a visible provenance chain per value, print records only through the review server (cb13e6c); its browser review and remaining gaps are open in [Plan](plan.md). The local page check tool shows a PDF page beside every line and value read from it. The research coordinator builds the interface ([Governance](governance.md#parallel-sessions)).
+- Acceptance. What the operator accepts and decides is listed in [Governance](governance.md), What the operator accepts.
 
 The verification history of each round stands in the [Journal](journal.md), the September closeout in its entry of 2026-09-05.
 

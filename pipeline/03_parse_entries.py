@@ -78,8 +78,8 @@ SECTION_HEADER_RE = re.compile(
 # and the corpus writes its quotes escaped (\"), which the quoted-title pattern
 # does not read, so an article page yields its full citation ('"Buchmendel".
 # See: Book-Mendel', page 586). The source page title is then the title
-# (knowledge/data.md, stage 03 in knowledge/pipeline.md). The patterns anchor at
-# statement boundaries, so a title that merely contains a word such as "See"
+# (knowledge/data.md, stage 03 in knowledge/pipeline-architecture.md). The
+# patterns anchor at statement boundaries, so a title that merely contains a word such as "See"
 # stays ("Der Flüchtling. Episode vom/am Genfer See", page 782).
 NON_TITLE_CLASSES = (
     # "See:" / "See also" opening the line, a sentence, a bracket or following

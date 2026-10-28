@@ -13,7 +13,7 @@ version: 1.0
 tags: [review]
 created: 2026-08-27
 updated: 2026-08-27
-related: [production-readiness, journal, data, pipeline, frontend, testing]
+related: [governance, journal, data, pipeline-architecture, frontend-architecture, testing]
 ---
 
 

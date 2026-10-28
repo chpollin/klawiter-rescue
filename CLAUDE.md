@@ -7,7 +7,7 @@ This file is the single repository-specific agent instruction. Do not create a p
 Before making changes:
 
 1. Run `git status -sb` and check the current branch and the most recent commits. Preserve unknown changes as foreign or parallel work.
-2. Read `knowledge/index.md` and `knowledge/status.md`, then `knowledge/handoff.md` for the results still waiting to be integrated and `knowledge/plan.md` for the accepted work and its order, and use the reading path for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
+2. Read `knowledge/INDEX.md` and `knowledge/status.md`, then `knowledge/handoff.md` for the results still waiting to be integrated and `knowledge/plan.md` for the accepted work and its order, and use the reading path for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
 3. Before using a handoff point, check its source and current target, integrate its durable content into the responsible document, record the transition in `knowledge/journal.md` and remove the point. Accepted future work goes into `knowledge/plan.md`.
 4. Check the current code and the generated manifests against documentation statements. Take volatile figures exclusively from `data/output/quality-report.json`, `data/output/editions/manifest.json`, `data/output/reconciliation/manifest.json` and `docs/data/klawiter.json`.
 
@@ -26,7 +26,7 @@ Candidates, decisions and published relations are separate layers:
 
 Contested statements remain visible in the final data model and in the interface. They must neither be discarded nor emitted as a confirmed relation.
 
-Only a person or an exact deterministic rule confirms, and a test fixture confirms nothing. A decision of an LLM agent, including one taken under the operator's delegation, is a proposal. It stays in its decision file as evidence with its producer named, publishes nothing and closes no claim. `pipeline/lib/producers.py` is the closed register of deciders and their producer classes. A decider absent from it fails the build, and whether a class confirms changes only with the operator principle in `knowledge/production-readiness.md`, never in a decision file.
+Only a person or an exact deterministic rule confirms, and a test fixture confirms nothing. A decision of an LLM agent, including one taken under the operator's delegation, is a proposal. It stays in its decision file as evidence with its producer named, publishes nothing and closes no claim. `pipeline/lib/producers.py` is the closed register of deciders and their producer classes. A decider absent from it fails the build, and whether a class confirms changes only with the operator principle in `knowledge/governance.md`, never in a decision file.
 
 ## Production Run
 
@@ -91,12 +91,12 @@ Stages in order are `p01_extract`, `p03_records`, `p04_wiki_revisions`, `p05_err
 - Use Python 3.11+, uv, Ruff and pytest. Introduce no new tool where the existing layer carries the task.
 - The frontend stays vanilla JavaScript and CSS without a build step. Libraries and fonts are held locally under `docs/vendor/` and `docs/fonts/`.
 - Code comments are terse, English and describe only non-obvious constraints.
-- Project documentation is English (operator decision 2026-08-27). German designations of historical sources and persistent identifiers stay unchanged.
+- Project documentation is English (operator decision 2026-08-27). Dated reviews and evaluation evidence live under `snapshots/`, and a fact is updated as `knowledge/governance.md`, Documentation rules, describes. German designations of historical sources and persistent identifiers stay unchanged.
 - Write generated files through the responsible pipeline functions; decision inputs under `data/reconciliation/` and frozen external inputs under `data/provenance/` are versioned sources.
 - Do not modify raw data under `data/raw/`. `data/intermediate/` and `data/output/entries/` are regenerable and gitignored.
 
 ## Known Limits
 
-The flat holdings still model one MediaWiki page as one entry. The work/edition graph covers the ratified header-selected corpus; it does not fully model every compound page or every edition field. The frontend does not yet expose the complete edition graph, and field corrections/provenance are not propagated into every canonical artifact. Current counts, verified repairs and prioritized gaps belong in `knowledge/status.md`; the acceptance contract belongs in `knowledge/production-readiness.md`.
+The flat holdings still model one MediaWiki page as one entry. The work/edition graph covers the ratified header-selected corpus; it does not fully model every compound page or every edition field. The frontend does not yet expose the complete edition graph, and field corrections/provenance are not propagated into every canonical artifact. Current counts, verified repairs and prioritized gaps belong in `knowledge/status.md`; the acceptance contract, the operator principles and the rules of documentation belong in `knowledge/governance.md`.
 
-New publication formats, the Gate 3 wiki/print merge, institutionally content-changing decisions and live write-backs into external systems are not part of the production run. The one exception, decided on 2026-10-24, is a frozen file under `data/provenance/` with print addresses, the compiler's rule-applied notation and evidenced concordance claims, holding identifiers, addresses, route, producer and the state `proposed` and no print text. It enters once the containment predicate for contents lines and the shared claim schema stand and the operator releases it; during development it is built and checked locally under `data/print/` ([Production readiness](knowledge/production-readiness.md), Operator principles).
+New publication formats, the Gate 3 wiki/print merge, institutionally content-changing decisions and live write-backs into external systems are not part of the production run. The one exception, decided on 2026-10-24, is a frozen file under `data/provenance/` with print addresses, the compiler's rule-applied notation and evidenced concordance claims, holding identifiers, addresses, route, producer and the state `proposed` and no print text. It enters once the containment predicate for contents lines and the shared claim schema stand and the operator releases it; during development it is built and checked locally under `data/print/` ([Governance](knowledge/governance.md), Operator principles).

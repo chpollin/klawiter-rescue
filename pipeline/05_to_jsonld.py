@@ -66,7 +66,7 @@ log = setup_logging(__name__)
 DATA_LICENSE = "https://creativecommons.org/licenses/by/4.0/"
 EDITION_URL = "https://chpollin.github.io/klawiter-rescue/"
 # The release covers the current wiki pages; titles recorded as deleted are
-# outside it (knowledge/production-readiness.md#release-scope).
+# outside it (knowledge/governance.md#release-scope).
 DATASET_DESCRIPTION = (
     "Bibliography of Stefan Zweig compiled by Dr. Randolph J. Klawiter at the "
     "University of Notre Dame. This publication covers the current pages "

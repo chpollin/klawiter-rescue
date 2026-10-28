@@ -58,7 +58,7 @@ The requested dashboard now replaces the dense multicolour default timeline with
 
 Independent review found conflicting/malformed restored date filters and focus loss on reset. Both are corrected and independently rechecked. Date selection rejects undated entries when bounds are active; normalized saved URLs and Results produce identical IDs. Chart buttons and range submission preserve keyboard focus. Neutral marks meet 3.28:1 contrast against the ranking track; selected burgundy exceeds 10:1. [Final browser QA](evaluations/2026-09-05/dashboard-browser-qa.json) and [desktop](evaluations/2026-09-05/dashboard-1440.png)/[mobile](evaluations/2026-09-05/dashboard-320.png) views preserve the result.
 
-Maintained guides now have distinct responsibilities, with [Status](../knowledge/status.md) as the single current evidence/work list. Historical reviews and journal entries retain their dates, and issue templates are labelled proposals. Two directory READMEs are English and aligned with actual runner and patch behaviour. [Documentation ownership](../knowledge/documentation.md) lists the complete Markdown treatment and update rules.
+Maintained guides now have distinct responsibilities, with [Status](../knowledge/status.md) as the single current evidence/work list. Historical reviews and journal entries retain their dates, and issue templates are labelled proposals. Two directory READMEs are English and aligned with actual runner and patch behaviour. [Documentation ownership](../knowledge/governance.md#documentation-rules) lists the complete Markdown treatment and update rules.
 
 ## Verification record
 

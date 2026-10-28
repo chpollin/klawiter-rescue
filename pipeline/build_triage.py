@@ -2,8 +2,8 @@
 """
 Build the per-entry triage artifact for the EIL editing interface.
 
-Increment 2 of the editing layer (design: knowledge/frontend.md, section "EIL
-Curation Interface"; framing: knowledge/production-readiness.md). Bundles the
+Increment 2 of the editing layer (design: knowledge/frontend-architecture.md,
+section "EIL Curation Interface"; framing: knowledge/governance.md). Bundles the
 signals that already exist —
 verify.py field flags and the census anomaly — into a compact per-entry hint
 file the frontend shows the editor in edit mode. Provenance classes (regex /
