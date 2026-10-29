@@ -12,7 +12,7 @@ language: en
 version: 0.6
 tags: [journal]
 created: 2026-03-29
-updated: 2026-10-28
+updated: 2026-10-29
 template:
   name: Vorlage Journal
   version: 0.6
@@ -22,6 +22,14 @@ template:
 # Journal
 
 ## Entries
+
+### 2026-10-29 — Working-practice wording, governance citations, stale M1 text
+
+- Trigger: An agent round on the operator's instruction with three items: the footer wording of Promptotyping, a contradiction between Governance and `CLAUDE.md`, and the state of M1.
+- Found: Governance, Status vocabulary, cited `CLAUDE.md`, Entry, for Status as the one place of volatile figures, while Entry requires taking volatile figures exclusively from the generated reports and manifests; the sentence that placed counts in Status left `CLAUDE.md` with 3c1bf45, so the 2026-10-28 entry's remark that `CLAUDE.md` keeps volatile figures in Status alone no longer holds. Operator principles, Outward steps, cited `CLAUDE.md` for push, deploy and tag, which it names nowhere since c63ad3d. The M1 item on wiki data still listed as open the root-cause fixes that 64cbaea landed.
+- Decided: `CLAUDE.md` is the current statement, because 3c1bf45 is the later commit and routes dated figures to the knowledge base; Governance follows it. Status records figures read from the reports Entry names.
+- Changed: The footer of `docs/index.html` and the README call Promptotyping a working practice instead of a method, with the link target kept. [Governance](governance.md) cites `CLAUDE.md` for what it states. [Plan](plan.md), Wiki data true to their source passage, keeps only the second fresh-context review round as open.
+- Evidence: `3c1bf45`, `c63ad3d`, `64cbaea`
 
 ### 2026-10-28 compacted Journal
 

@@ -6,7 +6,7 @@ project:
 status: active
 language: en
 created: 2026-10-24
-updated: 2026-10-28
+updated: 2026-10-29
 generated-with: Claude Code (Claude Opus 5.5)
 method:
   name: Promptotyping
@@ -39,7 +39,7 @@ Entry: none. Exit: all items below done, `p14_gate.py --export` green with an em
 
 Wiki data true to their source passage
 - Done when every verified defect class has its root-cause fix, a real-record test and an invariant over all records; every statement carries a typed producer and decisions of LLM agents are proposals; flat values no rule binds are gaps; translations are one statement per printing ([Data](data.md)).
-- Still open: the values that keep one damaged letter after the encoding repair become gaps by rule; the first and last revision of each wiki page enter the record as a deterministic rule over the dump's revision table, so that a page first recorded after Addendum II closed in August 2009 is datable as wiki-only; a value the binding rule emptied carries a provenance of its own and is no longer counted as a source gap or a false negative; redirects resolve namespace-aware, and a redirect whose target no current page carries becomes an open item with its kind and its own page title; the edition graph reads a place as a place in a single imprint, carries values in reader form and no longer segments year headers followed by a page locator as editions; category and infrastructure pages carry no author; a second fresh-context review round finds no new defect class.
+- Still open: a second fresh-context review round finds no new defect class. The root-cause fixes of the data reach audit (damaged letters, revision dates, gaps by rule, namespace-aware redirects, the edition graph at Gate 1 algorithm 1.5, no author on structure pages) landed in 64cbaea.
 
 Print data ready for review
 - Done when the reading gaps of [Print pipeline](print-pipeline.md), Known reading gaps, that a rule can close are closed, a match to a contents line carries a containment predicate, the agreeing second field is named by its field, an overlap report states per volume and section what exists only in print, in both or only in the wiki, and p12 writes data only.

@@ -9,7 +9,7 @@ method:
 status: maintained
 language: en
 created: 2026-07-18
-updated: 2026-10-28
+updated: 2026-10-29
 related: [status, plan, data, specification, testing, journal, INDEX]
 ---
 
@@ -103,7 +103,7 @@ An interface people like working in
 : The review happens through work in the interface, not through a planned budget of hours, so the interface is judged by the cost of a decision and by whether the evidence stands beside each value (operator, 2026-10-24).
 
 Outward steps
-: Push, deploy, tag and the live LLM mode happen only on the operator's explicit instruction (`CLAUDE.md`, the guardrails).
+: Push, deploy, tag and the live LLM mode happen only on the operator's explicit instruction (the guardrails, and for the live mode `CLAUDE.md`, Data Integrity).
 
 Decided under these principles by the main instance on 2026-10-24, revisable, each reported to the operator:
 
@@ -201,7 +201,7 @@ Project prose is English, following the operator's August 2026 decision. Histori
 
 Markdown frontmatter describes document maintenance, not product completion. This repository keeps three status values beyond the vocabulary of the Promptotyping convention and registers them here as its deviation. `maintained` marks a guide kept current with code and data, `historical` preserved evidence whose statements stay as history, and `implementation-record` a dated record of implemented changes. The convention's values `draft`, `active` and `complete` keep the meaning the convention gives them. The values are not normalised, because `maintained` and `historical` say how a document is kept, which the convention's maturity values do not, and aligning the two vocabularies is the operator's decision.
 
-[Status](status.md) is a project-specific document outside the function register of the convention. It holds the dated evidence snapshot and is the one place for volatile figures (`CLAUDE.md`, Entry), so maintained guides state changing quantities qualitatively or point to it.
+[Status](status.md) is a project-specific document outside the function register of the convention. It holds the dated evidence snapshot and is the one place in the documentation for volatile figures, which it takes, as `CLAUDE.md`, Entry, requires, exclusively from the generated reports and manifests named there; maintained guides state changing quantities qualitatively or point to it.
 
 ### Updating a fact
 
