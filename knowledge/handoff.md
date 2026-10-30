@@ -23,8 +23,24 @@ This process inbox holds only open handoff points, the results that arrived from
 - Received: 2026-10-30
 - Source: the guided session of 2026-10-30 (journal entries of that day)
 - Target: [Plan](plan.md), Program from 2026-10-30
-- Context: Three questions wait for the operator: whether the harness branch `gams-www-split` of the work tree `SZD-split` (two commits, unpushed and unmerged) is the base to build on; where Klawiter stands in the navigation of Stefan Zweig Digital; whether author pages and work hubs become links to the work index and person index rather than publications. Assumed until answered: yes, an own menu item, links. Two read-only audits were still running at the time of writing, one of the test and validation profile of the whole pipeline and one of the ingest and rendering requirements of GAMS and Stefan Zweig Digital; their reports arrive in the coordinator's session. Drafts for the Promptotyping case study and chapter 3 and for the DIA-XAI proposal (RQ3 to RQ5), an observation log of the session and the full review and audit reports lie in the session scratchpad and await the operator's acceptance as statement lists.
+- Context: Three questions wait for the operator: whether the harness branch `gams-www-split` of the work tree `SZD-split` (two commits, unpushed and unmerged) is the base to build on; where Klawiter stands in the navigation of Stefan Zweig Digital; whether author pages and work hubs become links to the work index and person index rather than publications. Assumed until answered: yes, an own menu item, links. A read-only audit of the test and validation profile of the whole pipeline was still running at the time of writing; its report arrives in the coordinator's session. Drafts for the Promptotyping case study and chapter 3 and for the DIA-XAI proposal (RQ3 to RQ5), an observation log of the session and the full review and audit reports lie in the session scratchpad and await the operator's acceptance as statement lists.
 - Next action: integrate the two audit reports into D1 and D3, take the operator's answers into [TEI profile](tei-profile.md) and the plan, then start D1.
+
+### Audit of the GAMS and Stefan Zweig Digital requirements, 2026-10-30
+
+- Received: 2026-10-30
+- Source: read-only agent over the repositories `SZD-split` (branch `gams-www-split`, the current knowledge of the presentation layer), `ZIMLAB/szd` at 499a28a, the vault and the public GAMS documentation; GAMS read only by GET on public data streams
+- Target: [Plan](plan.md), D1 and D3; [TEI profile](tei-profile.md)
+- Context: The local `SZD` master has diverged from origin (three commits ahead, three behind), so line references hold for `SZD-split`. Findings, with their kind of evidence:
+  - GAMS validates against TEI P5 at ingest and fails an invalid file (documented); how strictly is open, because two productive konvolut files are invalid against tei_all 4.12.0. The sample breaks only at `application/@version`; a version number belongs there and the timestamp in `@when`.
+  - The PID stands once in `fileDesc/publicationStmt/idno[@type='PID']` (met); `o:szd.klawiter` is free on production (404 on 2026-10-30), staging unchecked without VPN.
+  - A new object under `cirilo:TEI.szd` inherits the generic stylesheet; the operator sets `STYLESHEET` and `TORDF` in Cirilo after the ingest.
+  - No stylesheet of `gams-www` knows `biblStruct`; a page stylesheet includes `szd-static.xsl` and `szd-Templates.xsl`, defines `content`, and needs branches in the PID switches of `szd-Templates.xsl`; visible labels are i18n keys of a server catalogue in no repository. The menu links externally to `klawiter.stefanzweig.digital` (`szd-static.xsl:434`).
+  - `szd-TORDF.xsl:73-121` switches on the PID; an unknown PID writes "No data source define!" into `rdf:RDF` (code; effect on ingest unverified). Search needs a `FROM <o:szd.klawiter>` line in each query template and an entry in `SearchCollections` of `szd-Suche.xsl`.
+  - The Dublin Core mapping of `cirilo:szd` takes `//t:teiHeader//t:title[1]`, which would collect every source title in `sourceDesc`, and `date` and `author` from the header (inferred from the live mapping): the source entries belong outside the header, which also takes the print records out of `sourceDesc`.
+  - `SZD/scripts/check_data.py` passes the sample without a finding; the staging package builder and `local-test-build/gams-objects.toml` do not list Klawiter; the ingest folder must hold the TEI file only, never anything from `data/print/`.
+  - Identifiers become permalinks and RDF URIs, so the identifier scheme must stand before an ingest beyond staging.
+- Next action: take the automatable checks (tei_all, single PID, `check_data.py`, a Dublin Core simulation, identifier register, package hygiene) into D1 and D3; ask the operator about the strictness of validation in GAMS, the RDF branch for search, the menu link and the i18n keys.
 
 ### Identifier and citation practice
 
