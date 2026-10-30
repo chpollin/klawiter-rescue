@@ -56,9 +56,10 @@ def field_provenance(has_value, regex_had, llm_has, rule_gap=False):
 
     regex_had wins over llm_has because the 03b merge never overwrites a
     regex value — a cache entry for an already-filled field was never merged.
-    A filled field with neither source is labeled regex (the conservative
-    default; normalization only rewrites values, it never adds them). An
-    empty field a stated rule emptied is a rule gap, not a source gap; the
+    A filled field with neither source has no known origin and fails: no
+    value of the dataset relied on the former regex default (audit
+    2026-10-30), and normalization only rewrites values, it never adds them.
+    An empty field a stated rule emptied is a rule gap, not a source gap; the
     entry's ruleGaps names the rule.
     """
     if not has_value:
@@ -67,7 +68,7 @@ def field_provenance(has_value, regex_had, llm_has, rule_gap=False):
         return "regex"
     if llm_has:
         return "llm"
-    return "regex"
+    raise ValueError("a filled field with neither a regex nor an LLM source")
 
 
 # A repaired enrichment value keeps its provenance class, because the LLM
@@ -162,17 +163,12 @@ def main():
     log.info(f"Entries with LLM-filled fields: {len(llm_fields)}")
 
     # Load regex output for the merge diff. Without it the llm label would
-    # rest on cache presence alone and overcount (the pre-fix behavior).
-    regex_rows = {}
-    if os.path.exists(STEP_03_OUTPUT):
-        for row in load_csv(STEP_03_OUTPUT):
-            regex_rows[row["page_id"]] = row
-        log.info(f"Regex output loaded: {len(regex_rows)} entries")
-    else:
-        log.warning(
-            f"Regex output not found at {STEP_03_OUTPUT} — "
-            f"falling back to cache presence, 'llm' labels may overcount"
-        )
+    # rest on cache presence alone and every regex value would have no known
+    # origin, so its absence fails.
+    if not os.path.exists(STEP_03_OUTPUT):
+        raise FileNotFoundError(f"Regex output not found at {STEP_03_OUTPUT}")
+    regex_rows = {row["page_id"]: row for row in load_csv(STEP_03_OUTPUT)}
+    log.info(f"Regex output loaded: {len(regex_rows)} entries")
 
     # Load frontend JSON
     with open(OUTPUT_FRONTEND_JSON, "r", encoding="utf-8") as f:
@@ -196,9 +192,12 @@ def main():
             regex_had = bool(regex_row and regex_row.get(cache_key))
             llm_has = cache_key in entry_llm
 
-            label = field_provenance(
-                has_value, regex_had, llm_has, frontend_key in gap_fields
-            )
+            try:
+                label = field_provenance(
+                    has_value, regex_had, llm_has, frontend_key in gap_fields
+                )
+            except ValueError as exc:
+                raise ValueError(f"page {pid}, {frontend_key}: {exc}") from exc
             prov[frontend_key] = label
             stats[label] += 1
 

@@ -81,6 +81,36 @@ def test_every_llm_value_occurs_whole_word_in_its_source(ns0_entries):
     _check_allowlist(violations, LLM_OCCURRENCE_ALLOWLIST)
 
 
+def test_an_llm_label_names_the_value_the_frozen_cache_holds(frontend_data):
+    """A value labelled llm is the value the frozen enrichment cache holds for
+    that page and field, or its byte repair, which the record then flags as
+    encoding-repaired. Occurrence in the source alone cannot tell a regex
+    value relabelled llm from an enrichment value."""
+    from inject_provenance import TRACKED_FIELDS, load_provenance_cache
+    from lib.encoding import repair_value_encoding
+
+    cache = load_provenance_cache("frozen")
+    violations = {}
+    for entry in frontend_data["entries"]:
+        page_id = entry["sourcePageId"]
+        repaired = {
+            flag["field"]
+            for flag in entry.get("reviewFlags", [])
+            if flag["code"] == "encoding-repaired"
+        }
+        for field, label in (entry.get("_provenance") or {}).items():
+            if label != "llm":
+                continue
+            held = cache.get(str(page_id), {}).get(TRACKED_FIELDS[field])
+            value = str(entry.get(field))
+            if held is None or (
+                str(held) != value
+                and (field not in repaired or repair_value_encoding(str(held)) != value)
+            ):
+                violations[page_id] = f"{field}={value!r}, cache {held!r}"
+    _check_allowlist(violations, {})
+
+
 # (b) The flat fields describe the first publication where a layer exists.
 
 # 03c rejects an extent above 2000 pages or one that reads as a year; the flat
@@ -407,6 +437,58 @@ def test_no_published_value_keeps_a_damaged_letter(frontend_data, publication_la
             if has_damaged_letter(text):
                 violations[page_id] = repr(text)
     _check_allowlist(violations, {})
+
+
+def _encoding_damage(text: str) -> bool:
+    from lib.encoding import has_damaged_letter, has_mojibake
+
+    return has_mojibake(text) or has_damaged_letter(text)
+
+
+def _texts(value):
+    """Every string of a JSON value, dictionary keys included."""
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            yield key
+            yield from _texts(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _texts(item)
+
+
+def test_no_published_string_carries_mojibake_or_a_damaged_letter(
+    frontend_data, publication_layers
+):
+    """One sweep over every string of the dataset and the side files, keys
+    included: no misread UTF-8 run a repair would restore, no lost byte. The
+    delivered source text is the source itself and exempt (page 7432 ends in
+    U+FFFD there); the redirect keys are checked apart below."""
+    rest = {k: v for k, v in frontend_data.items() if k not in {"entries", "redirects"}}
+    violations = [("dataset", text) for text in _texts(rest) if _encoding_damage(text)]
+    for entry in frontend_data["entries"]:
+        shown = {k: v for k, v in entry.items() if k != "fullBibliographicEntry"}
+        violations += [
+            (entry["sourcePageId"], text)
+            for text in _texts(shown)
+            if _encoding_damage(text)
+        ]
+    for page_id, layer in publication_layers.items():
+        violations += [
+            (page_id, text) for text in _texts(layer) if _encoding_damage(text)
+        ]
+    assert not violations, violations[:20]
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="1 redirect key, page 2364 alias 'Estasi di libertÃ', the page "
+    "title the dump lost a byte of, measured 2026-10-30",
+)
+def test_no_redirect_key_carries_mojibake_or_a_damaged_letter(frontend_data):
+    damaged = [key for key in frontend_data["redirects"] if _encoding_damage(key)]
+    assert not damaged, damaged
 
 
 def test_every_damage_hint_names_an_empty_field(frontend_data, classified_rows):

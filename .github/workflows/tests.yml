@@ -28,14 +28,18 @@ jobs:
           python -m pip install uv==0.12.5
           python -m uv sync --locked
 
-      # Key over the stage code and the frozen LLM cache, not over data/raw
-      # (363 MB that never change; hashing them costs more than it saves).
+      # Key over the stage code, every library module and mapping table the
+      # stages import or read (stage 03 reads lib/publications.py and the
+      # attested places of docs/data/locations.json, stage 01 the source
+      # revision decisions), the runner and the frozen LLM cache, not over
+      # data/raw (363 MB that never change; hashing them costs more than it
+      # saves).
       - name: Restore stage intermediates
         id: cache-intermediates
         uses: actions/cache@v4
         with:
           path: data/intermediate
-          key: intermediates-${{ hashFiles('pipeline/01_extract.py', 'pipeline/02_fix_encoding.py', 'pipeline/03_parse_entries.py', 'pipeline/03b_llm_enrich.py', 'pipeline/03c_normalize.py', 'pipeline/04_classify.py', 'pipeline/lib/config.py', 'pipeline/lib/encoding.py', 'pipeline/lib/patterns.py', 'pipeline/lib/wiki_parser.py', 'pipeline/lib/vocabulary.py', 'pipeline/lib/llm_extract.py', 'data/provenance/llm-enrichment-cache.json') }}
+          key: intermediates-${{ hashFiles('pipeline/run_pipeline.py', 'pipeline/01_extract.py', 'pipeline/02_fix_encoding.py', 'pipeline/03_parse_entries.py', 'pipeline/03b_llm_enrich.py', 'pipeline/03c_normalize.py', 'pipeline/04_classify.py', 'pipeline/lib/*.py', 'pipeline/data/*.json', 'docs/data/locations.json', 'data/reconciliation/source-revision-decisions.json', 'data/provenance/llm-enrichment-cache.json') }}
 
       - name: Regenerate stage intermediates
         if: steps.cache-intermediates.outputs.cache-hit != 'true'

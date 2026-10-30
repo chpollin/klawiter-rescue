@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib
 import json
 from pathlib import Path
@@ -381,6 +382,59 @@ def test_agent_subjects_carry_source_occurrence_evidence(reconciliation: dict) -
                 assert len(occurrence["sourceTextSha256"]) == 64
                 assert occurrence["sourceText"]
                 assert occurrence["sourceLine"] >= 1
+
+
+def _occurrences_with_text(value):
+    """Every object carrying sourceText and its hash, the JSON-LD context
+    (which declares both terms) excepted."""
+    if isinstance(value, dict):
+        if "sourceText" in value and isinstance(value["sourceText"], str):
+            yield value
+        for key, item in value.items():
+            if key != "@context":
+                yield from _occurrences_with_text(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _occurrences_with_text(item)
+
+
+# The committed Gate-2 documents and the two gitignored ones the full run writes.
+_OCCURRENCE_DOCUMENTS = (
+    ("data/output/reconciliation/contested-claims.json", True),
+    ("docs/data/reconciliation.json", True),
+    ("data/output/reconciliation/candidates.json", False),
+    ("data/output/reconciliation/review-queue.json", False),
+)
+
+
+@pytest.mark.parametrize(
+    ("relative", "tracked"),
+    _OCCURRENCE_DOCUMENTS,
+    ids=[Path(relative).name for relative, _ in _OCCURRENCE_DOCUMENTS],
+)
+def test_every_occurrence_hash_is_the_hash_of_its_source_line(
+    relative, tracked, classified_rows
+) -> None:
+    """The validator checks only the hash format; here the hash is recomputed
+    and the line is the sourceLine-th line of the page's classified text."""
+    path = Path(__file__).resolve().parents[1] / relative
+    if not tracked and not path.exists():
+        pytest.skip(f"{relative} is gitignored and written by the full run only")
+    document = json.loads(path.read_text(encoding="utf-8"))
+    lines = {
+        int(row["page_id"]): (row["raw_content"] or "").splitlines()
+        for row in classified_rows
+    }
+    checked = 0
+    for occurrence in _occurrences_with_text(document):
+        text = occurrence["sourceText"]
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        assert digest == occurrence["sourceTextSha256"], occurrence.get("@id")
+        if occurrence.get("sourceLine"):
+            page = lines[occurrence["sourcePageId"]]
+            assert page[occurrence["sourceLine"] - 1] == text, occurrence.get("@id")
+        checked += 1
+    assert checked, f"{relative} carries no source occurrence"
 
 
 def test_agent_occurrence_pages_match_the_classified_source(

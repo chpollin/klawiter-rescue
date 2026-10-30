@@ -9,6 +9,7 @@ adapts the frontend, never as a side effect of modeling work.
 
 from __future__ import annotations
 
+import hashlib
 import importlib
 import json
 from functools import lru_cache
@@ -508,6 +509,45 @@ def test_publications_name_their_edition_node_and_its_review_status(
             assert status != "confirmed"
     assert named, "no publication names a Gate-1 edition node"
     assert agent_reviewed, "the agent-reviewed Gate-1 sample did not reach the layer"
+
+
+def test_every_gate1_edition_is_exactly_one_publication_of_its_page(
+    all_entries,
+) -> None:
+    """The converse of the test above: a publication dropped from the layer
+    leaves its Gate-1 edition without a publication, and that fails."""
+    graph = json.loads(
+        (
+            Path(__file__).resolve().parents[1]
+            / "data/output/editions/work-editions.jsonld"
+        ).read_text(encoding="utf-8")
+    )
+    named: dict[str, list[tuple[int, str]]] = {}
+    for entry in _pages_with_publications(all_entries):
+        for publication in _side_file(entry["sourcePageId"])["publications"]:
+            if "editionId" in publication:
+                named.setdefault(publication["editionId"], []).append(
+                    (entry["sourcePageId"], publication["sourceSlice"]["sha256"])
+                )
+    for edition in graph["editions"]:
+        assert named.get(edition["@id"]) == [
+            (edition["klawiter:sourcePageId"], edition["klawiter:sourceSliceSha256"])
+        ], edition["@id"]
+
+
+def test_every_publication_slice_hash_is_its_source_passage(
+    all_entries, source_rows
+) -> None:
+    """sourceSlice names a raw range of the stage-02 page text and the SHA-256
+    of exactly that range, on every page, not only the reviewed cases."""
+    texts = {int(row["page_id"]): row["content"] for row in source_rows}
+    for entry in _pages_with_publications(all_entries):
+        text = texts[entry["sourcePageId"]]
+        for publication in _side_file(entry["sourcePageId"])["publications"]:
+            block = publication["sourceSlice"]
+            passage = text[block["start"] : block["end"]]
+            digest = hashlib.sha256(passage.encode("utf-8")).hexdigest()
+            assert digest == block["sha256"], publication["id"]
 
 
 def test_entry_names_the_flag_codes_of_its_publications(all_entries) -> None:

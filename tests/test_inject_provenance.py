@@ -9,6 +9,7 @@ holds a value for the same field (regression: cache presence used to win).
 import json
 import os
 
+import pytest
 from inject_provenance import (
     field_provenance,
     llm_enrichment_meta,
@@ -42,8 +43,11 @@ def test_llm_filled_gap():
     assert field_provenance(True, False, True) == "llm"
 
 
-def test_filled_without_known_source_defaults_to_regex():
-    assert field_provenance(True, False, False) == "regex"
+def test_filled_without_known_source_fails():
+    # No value relied on the former regex default (audit 2026-10-30); an
+    # unknown origin is an error, not a label.
+    with pytest.raises(ValueError):
+        field_provenance(True, False, False)
 
 
 def test_frozen_provenance_cache_is_tracked_and_nonempty():

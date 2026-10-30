@@ -24,11 +24,13 @@ from lib.value_spans import (
     GAP_REASONS,
     RECORD_LIST_FIELDS,
     RECORD_SCALAR_FIELDS,
+    Display,
     display_form,
     entry_holds,
     locate,
     record_evidence,
 )
+from lib.vocabulary import language_to_iso
 from lib.wiki_parser import extract_categories
 
 PUBLICATIONS_DIR = (
@@ -360,6 +362,144 @@ def test_category_gaps_name_raw_category_links(source_rows, ns0_by_id):
                     assert raw.startswith("[[Category:") and raw.endswith("]]")
                     checked += 1
     assert checked
+
+
+def _blocks(entry):
+    """Each publication of a page with the displayed passage that is its own:
+    from its block's start to the start of the next block, the text after a
+    header up to the next header (contents lists run past textEnd)."""
+    publications = _side_file(entry["sourcePageId"])["publications"]
+    starts = sorted({p["sourceSlice"]["textStart"] for p in publications})
+    text_end = len(entry.get("fullBibliographicEntry", ""))
+    for publication in publications:
+        start = publication["sourceSlice"]["textStart"]
+        end = next((s for s in starts if s > start), text_end)
+        yield publication, start, end
+
+
+def test_every_publication_value_stands_in_its_own_block(all_entries):
+    """A value located in another publication's block is the other
+    publication's value. A language heading of a translations section stands
+    before the blocks it heads, so its language and code are exempt."""
+    outside = []
+    for entry in all_entries:
+        if not entry.get("publicationCount"):
+            continue
+        for publication, start, end in _blocks(entry):
+            for field, entries in publication["valueSpans"].items():
+                for item in entries:
+                    if "textStart" not in item:
+                        continue
+                    if start <= item["textStart"] and item["textEnd"] <= end:
+                        continue
+                    heading = field in {"language", "languageCode"}
+                    if heading and item["textEnd"] <= start:
+                        continue
+                    outside.append((publication["id"], field, item["value"]))
+    assert not outside, outside[:20]
+
+
+def _occurrences(value: str, text: str) -> int:
+    """How often a value stands in the text under the rule locate uses (whole
+    word, then the declared whitespace, number and markup forms). The search
+    reads only the text of the Display, so the raw side stays empty."""
+    found = locate(value, Display("", text, ()), None)
+    return 1 if "textStart" in found else found.get("count", 0)
+
+
+@cache
+def _place_table() -> dict[str, str]:
+    path = Path(__file__).resolve().parents[1] / "pipeline/data/location_normalize.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _evidence(all_entries, layer):
+    """(where, field, item, displayed text) of every value of one layer:
+    record-scalar, record-list or publication."""
+    for entry in all_entries:
+        text = entry.get("fullBibliographicEntry", "")
+        if layer == "publication":
+            if entry.get("publicationCount"):
+                for publication in _side_file(entry["sourcePageId"])["publications"]:
+                    for field, entries in publication["valueSpans"].items():
+                        for item in entries:
+                            yield publication["id"], field, item, text
+            continue
+        lists = layer == "record-list"
+        for field, entries in entry.get("fieldEvidence", {}).items():
+            if (field in RECORD_LIST_FIELDS) == lists:
+                for item in entries:
+                    yield entry["@id"], field, item, text
+
+
+def _dishonest(item, text) -> bool:
+    """Whether a gap or a derivation claims what the text does not show."""
+    value = item["value"]
+    if item.get("gap") == "repeated":
+        return _occurrences(value, text) < 2
+    if item.get("gap") == "not-verbatim":
+        return _occurrences(value, text) != 0
+    if item.get("derivation") == "normalised":
+        source = item["derivedFrom"]
+        return value not in source and not any(
+            spelling in source and canonical == value
+            for spelling, canonical in _place_table().items()
+        )
+    if item.get("derivation") == "language-code":
+        return language_to_iso(item["derivedFrom"]) != value
+    return False
+
+
+# A list value's repeated count is the number of parser readings of that value
+# or of the forms it was read under (lib/value_spans._list_entry), not of its
+# occurrences: 48 mapped places (Praha read from "Prag" and "Prague"), page
+# 2091 "1932" and page 3341 "2008" each stand at most once. Page 2971 reads
+# two contribution values starting at a bracket ("[Die Monotonisierung der
+# Welt. 1925") that its region misses while the text holds them once.
+_LIST_READINGS = "50 list values counted by readings, measured 2026-10-30"
+_BRACKETED_CONTRIBUTIONS = "2 bracketed contributions of page 2971, 2026-10-30"
+
+
+def _not_verbatim(item) -> bool:
+    return item.get("gap") == "not-verbatim"
+
+
+# Each case: the layer read and the values of it the case covers.
+_HONESTY_CASES = {
+    "record-scalar": ("record-scalar", lambda item: True),
+    "record-list": ("record-list", lambda item: True),
+    "publication": ("publication", lambda item: not _not_verbatim(item)),
+    "publication-not-verbatim": ("publication", _not_verbatim),
+}
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "record-scalar",
+        pytest.param(
+            "record-list",
+            marks=pytest.mark.xfail(strict=True, reason=_LIST_READINGS),
+        ),
+        "publication",
+        pytest.param(
+            "publication-not-verbatim",
+            marks=pytest.mark.xfail(strict=True, reason=_BRACKETED_CONTRIBUTIONS),
+        ),
+    ],
+)
+def test_a_gap_or_derivation_holds_against_the_text(all_entries, case):
+    """A repeated gap names a value the text states at least twice, a
+    not-verbatim gap one it states nowhere; a normalised value stands in its
+    passage or is the place table's form of a spelling there; a language code
+    is the code of its passage."""
+    layer, covers = _HONESTY_CASES[case]
+    dishonest = [
+        (where, field, item)
+        for where, field, item, text in _evidence(all_entries, layer)
+        if covers(item) and _dishonest(item, text)
+    ]
+    assert not dishonest, dishonest[:20]
 
 
 def test_gap_reasons_are_declared():
