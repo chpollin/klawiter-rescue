@@ -23,6 +23,14 @@ template:
 
 ## Entries
 
+### 2026-10-30 — Faithful export over every page and the acceptance view
+
+- Trigger: The operator asked for a surface on which what is done can be verified and accepted, and then judged the first version a check report nobody would read: too much information, no answer to what the operator must decide.
+- Found: Rebuilt from its shared functions, the export is valid against tei_all over all 4,758 content pages, keeps every source text character for character, and carries review states, producers and passages that independent checks recompute from the canonical data. The checks share no code path with the exporter for what they expect; a shared default (unknown producer read as rule) was removed from both. Pages classified as work hubs, author pages or other kinds still yield publications in the publication layer (334 pages; page 54 alone has 31 editions), which the export leaves out until the operator decides. Author pages list a person's contributions, such as forewords in other volumes (page 1605), not publications of their own.
+- Decided: Source entries stand in `standOff`, so that the header's first title is the object's (the Dublin Core mapping of GAMS reads it); a passage crossing another gets a `string-range()` pointer; only passages a value points to are marked. Every field of the data is declared exported, pending for a milestone, or excluded with a reason, and an undeclared field fails the report. The acceptance view leads with the operator's decisions, each with its reason, recommendation and sample page; checks and field ledger are for reviewers and stand below. Answers given in the chat are recorded in `pipeline/data/acceptance-decisions.json`.
+- Changed: `pipeline/export_tei.py` rewritten; `pipeline/acceptance.py`, `docs/acceptance/` and their tests added; tei_all 4.12.0 pinned by sha256 in an ignored cache; [Plan](plan.md), Program, names the view as the instrument of verification and acceptance.
+- Evidence: eff4380, 13873e9; test state of the suites in `snapshots/test-state-2026-10-30.md` (4f91759).
+
 ### 2026-10-30 — Review and audit of the first TEI export
 
 - Trigger: An independent TEI review of the profile and an audit of the export over all main-namespace pages, both by read-only agents given the requirements and not the implementer's verdict.

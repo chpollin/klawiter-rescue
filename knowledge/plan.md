@@ -158,6 +158,8 @@ The operator set on 2026-10-30 that the bibliography reaches Stefan Zweig Digita
 
 Each milestone closes with a statement list for the Promptotyping case study and the DIA-XAI proposal, which the operator accepts or rejects; nothing enters the paper or the proposal text without that acceptance.
 
+The instrument of verification and acceptance is the local acceptance view (`docs/acceptance/`, served by the review server at `/acceptance/`). `pipeline/acceptance.py` builds the export of every content page, checks it against the canonical data by recomputing what it expects, and writes the report the view reads (`docs/local/acceptance.json`, local). The view leads with the operator's open decisions, each with its reason, a recommendation and the sample page that makes it decidable; the checks and the field ledger stand below it for reviewers. The operator answers in the chat; the session records the answer in `pipeline/data/acceptance-decisions.json`, from which the view shows it. Milestone states are read from that report, not kept here.
+
 ### Working mode
 
 The operator stays in the loop at the points that only the operator can decide, and the coordinator settles the rest by its own research before asking:

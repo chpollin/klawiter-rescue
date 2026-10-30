@@ -43,33 +43,23 @@ Stefan Zweig Digital has no schema; its encoding patterns are described from its
 
 - A record is a `biblStruct`, not the `biblFull` with `msDesc` of the holdings of Stefan Zweig Digital, because Klawiter describes publications, not items an archive holds.
 - Every value carries `@resp` (its producer, pointing to an `application` in `appInfo`), `@source` (its passage, pointing to a `seg` of Klawiter's entry in `sourceDesc`) and `@ana` (its statement state, pointing to a category of the state taxonomy in `classDecl`). Stefan Zweig Digital records uncertainty only as `@cert` on dates, which would drop what this project is about.
-- Klawiter's entries stand in `sourceDesc/listBibl` as the sources of the file, with page and revision, the page title and categories, and the entry text with one `seg` per located passage. Text no value was read from stays unmarked, so it can be told from what was read.
+- Klawiter's entries stand in `standOff/listBibl[@type='sources']`, with page and revision, the page title and categories, the print addresses the entry cites, and the entry text unaltered with one `seg` per passage a value points to; passages nest, and a passage crossing another is addressed by a `string-range()` pointer. The entries stay out of the header because the Dublin Core mapping of GAMS reads the header's first title; `sourceDesc` names the wiki and its dump only. Text no value was read from stays unmarked, so it can be told from what was read.
 - A value keeps the spelling of the source (Ştiinţifică with cedillas as Klawiter wrote it); normalised forms are not yet part of the profile.
 - Statements between a source and a publication are `relation` elements in `standOff`, with producer and state, so a proposed identity of a print record and a wiki page is never encoded as structure.
 - User-facing text is not bilingual, because Klawiter's text is English and the values are its words; only the header titles follow the bilingual pattern.
 
 ## Print records
 
-Print records enter only as identifier and checksum, linked by their proposed claim, never with print text, because the rights to the print volumes are unresolved ([Project](project.md)). An export with print records is written under `data/print/derived/tei/` and stays local; the versioned export under `data/output/tei/` holds wiki data only.
+Print records enter only as identifier and checksum in the source list, linked to the wiki entry by their proposed claim (`relation[@name='samePublicationAs']` with `@mutual`), never with print text, because the rights to the print volumes are unresolved ([Project](project.md)). An export with print records is written under `data/print/derived/tei/` and stays local; the versioned export under `data/output/tei/` holds wiki data only.
 
-## State of the first export
+## State of the export
 
-The first export (ebe5ae3) is a sample, not a delivery. An independent TEI review and an audit over all main-namespace pages on 2026-10-30 found it valid against the profile schema but neither conformant nor faithful yet ([Journal](journal.md), entry of that day):
-
-- one conformance error against tei_all (a timestamp in `application/@version`), and an empty `imprint` that the profile schema admits and TEI does not;
-- the serialisation indents the mixed content of `quote` and so changes the source text wherever a gap between passages is whitespace only;
-- review states of values are not carried (`@ana` is fixed), the publication layer is ignored, so a page with several publications becomes one `biblStruct`, and author pages and work hubs become monographs;
-- many fields of the record have no trace in the TEI, among them original titles, contents, translations, See references, print citations and review flags;
-- a passage swallowed by a wider span of an unexported field loses `@source`; repeated and non-verbatim occurrences and values normalised by rule are not represented; a value from a category points to the first category;
-- print records stand in `sourceDesc`, which reads as "derived from", and the identity relation joins a description to a publication;
-- the profile schema and the five tests accept most wrong documents a reviewer constructed, because they check page 212 only.
-
-These faults are the work list of [Plan](plan.md), Delivery, which replaces the sampling tests by invariants over all records.
+The export covers every content page. A page classified as an edition page gives one `biblStruct` per publication of its publication layer, or one from its flat record when it has none; pages of other kinds give none yet. Which field reaches which element, which waits for a later milestone and which is excluded is declared in `FIELDS` of `pipeline/export_tei.py`. `pipeline/acceptance.py` checks the export over all pages against tei_all and against values it recomputes from the canonical data, and the acceptance view shows the result ([Plan](plan.md), Program). The faults the first export had (altered source text, fixed states, collapsed publications, monographs from author pages, lost passages, print records in `sourceDesc`) are closed by these checks; the profile schema and a mutation suite that shows the checks reject wrong documents are the open part of D1.
 
 ## Open
 
 - The identifier scheme: `SZDKLA.<page>.<n>` is provisional until the operator decides how a publication is identified independently of the page it stands on ([Plan](plan.md), M2 Identifiers).
-- Pages with a publication layer, which export one `biblStruct` per publication from the per-page files.
+- Pages of other kinds whose entry yields publications (page 54), and author pages as persons with contributions (page 1605): decisions E8 and E3 of the acceptance view.
 - Proposed and confirmed authority links (place, person, work), as `relation` while proposed and `@ref` once confirmed, and the link to the work index of Stefan Zweig Digital.
 - Normalised forms beside the source spelling (`choice` with `orig` and `reg`).
 - `szd-klawiter.xsl` and the RDF branch for `o:szd.klawiter` in the data repository of Stefan Zweig Digital.
