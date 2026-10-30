@@ -21,6 +21,14 @@ related: [print-wiki-merge, data, governance, plan]
 
 The operator decided on 2026-10-30, as the side of Stefan Zweig Digital, that the bibliography is delivered as TEI, so that it stands in the data repository of Stefan Zweig Digital beside its other holdings and its pages can be rendered there. This settles the first of the two delivery routes of [Merged bibliography](print-wiki-merge.md), Merged bibliography and delivery. The TEI is a projection: `pipeline/export_tei.py` builds it from the canonical data on every run, and nothing is curated in it. The schema is `docs/schema/klawiter-tei.rng`, a RELAX NG grammar of the subset the profile uses, chosen over an ODD by the operator for compactness; `tests/test_tei_export.py` validates the export against it and resolves every internal pointer, which RELAX NG cannot. The profile is a draft until it has been reviewed and agreed on a sample object.
 
+## Delivery decisions
+
+The operator decided on 2026-10-30:
+
+- The bibliography is one GAMS object, `o:szd.klawiter`, like the other holdings of Stefan Zweig Digital.
+- It is rendered by a stylesheet of its own, `szd-klawiter.xsl`, in the design of Stefan Zweig Digital, because the existing stylesheets select `biblFull` and show no provenance; the RDF stylesheet of Stefan Zweig Digital needs a branch for the object as well.
+- Unreviewed data may be ingested into GAMS Staging, which is a test instance outside the GAMS infrastructure, to check ingest and rendering before the human round; the production instance receives the bibliography after the round.
+
 ## What the profile takes from Stefan Zweig Digital
 
 Stefan Zweig Digital has no schema; its encoding patterns are described from its data in the data repository (`SZD/knowledge/DATA_MODEL.md`, `COLLECTIONS.md`). The profile follows them where they apply:
@@ -50,5 +58,5 @@ Print records enter only as identifier and checksum, linked by their proposed cl
 - Pages with a publication layer, which export one `biblStruct` per publication from the per-page files.
 - Proposed and confirmed authority links (place, person, work), as `relation` while proposed and `@ref` once confirmed, and the link to the work index of Stefan Zweig Digital.
 - Normalised forms beside the source spelling (`choice` with `orig` and `reg`).
-- The rendering on the side of Stefan Zweig Digital, which its stylesheet needs for the departures above.
+- `szd-klawiter.xsl` and the RDF branch for `o:szd.klawiter` in the data repository of Stefan Zweig Digital.
 - The sample object on which the profile is agreed; page 212 is the first, page 54 the one [Merged bibliography](print-wiki-merge.md) named.
