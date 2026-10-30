@@ -18,6 +18,14 @@ This process inbox holds only open handoff points, the results that arrived from
 
 ## Open handoff points
 
+### Session of 2026-10-30: open questions, running audits, drafts
+
+- Received: 2026-10-30
+- Source: the guided session of 2026-10-30 (journal entries of that day)
+- Target: [Plan](plan.md), Program from 2026-10-30
+- Context: Three questions wait for the operator: whether the harness branch `gams-www-split` of the work tree `SZD-split` (two commits, unpushed and unmerged) is the base to build on; where Klawiter stands in the navigation of Stefan Zweig Digital; whether author pages and work hubs become links to the work index and person index rather than publications. Assumed until answered: yes, an own menu item, links. Two read-only audits were still running at the time of writing, one of the test and validation profile of the whole pipeline and one of the ingest and rendering requirements of GAMS and Stefan Zweig Digital; their reports arrive in the coordinator's session. Drafts for the Promptotyping case study and chapter 3 and for the DIA-XAI proposal (RQ3 to RQ5), an observation log of the session and the full review and audit reports lie in the session scratchpad and await the operator's acceptance as statement lists.
+- Next action: integrate the two audit reports into D1 and D3, take the operator's answers into [TEI profile](tei-profile.md) and the plan, then start D1.
+
 ### Identifier and citation practice
 
 - Received: 2026-10-24

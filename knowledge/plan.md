@@ -143,7 +143,31 @@ These points stood only in the journal until its compaction on 2026-10-28. The d
 - A read-only triage list of the titles recorded as deleted in the wiki, as a possible separate work package (2026-09-22).
 - The neighbourhood check of the publishable PROV profile `llmprov` (2026-08-21).
 
-## Status tracker
+## Program from 2026-10-30
+
+The operator set on 2026-10-30 that the bibliography reaches Stefan Zweig Digital as TEI and is rendered there in its design, and that Klawiter's interface is a curation tool. The work runs as six milestones across four places: this repository (export, validation, curation surface), the data repository of Stefan Zweig Digital (`SZD`, the holding under `data/Klawiter/` and the local harness on the branch `gams-www-split` of the work tree `SZD-split`), the presentation repository of Stefan Zweig Digital (`gams-www`, local clone `ZIMLAB/szd`, the stylesheets) and the vault (project state, the Promptotyping case study and the DIA-XAI proposal as statement lists). M1 and M2 above keep their place; D1 to D4 lead to the delivery, C1 to the curation surface, and the human round of M2 precedes production.
+
+| Milestone | Work | Verified by | Accepted by the operator |
+|---|---|---|---|
+| D1 Faithful export | source text character for character, review states, passages, producers, print records out of `sourceDesc`, TEI conformance; invariants over all records instead of page 212 | invariant tests over all records, tei_all at a pinned release, profile schema; a fresh agent whose hand mutations must all fail | no acceptance needed; the operator decides the profile questions it raises |
+| D2 Complete model | one `biblStruct` per publication, author pages and work hubs as links to the work index and person index of Stefan Zweig Digital, the fields not yet exported | the same invariants extended, every field exported or a documented exclusion | three sample objects (a single publication, a page with several, a work hub) |
+| D3 Page of Stefan Zweig Digital, local | `szd-klawiter.xsl`, the RDF branch for `o:szd.klawiter`, the navigation entry, the holding under `data/Klawiter/` | the harness of Stefan Zweig Digital (smoke, golden, RDF structure), screenshots in both languages, an independent interface review | none locally; Stefan Zweig Digital is accepted on staging only |
+| D4 Staging | push of `gams-www`, sync of the mirror, ingest of `o:szd.klawiter` by the operator through Cirilo, stylesheet reference | read-only checks of the staging data streams and the RDF, rendered examples before and after | the rendered pages on GAMS Staging, in both languages |
+| C1 Curation surface prototype | local route `#review` with queue, checkability first, decisions per value, trial log (see One record desk) | Node tests, browser screenshots, an independent review against the reviewer tasks | the operator tries it on real records |
+| P Production | after the human round of M2 and the identifier scheme | the D1–D4 checks on the reviewed data | the operator instructs the production ingest |
+
+Each milestone closes with a statement list for the Promptotyping case study and the DIA-XAI proposal, which the operator accepts or rejects; nothing enters the paper or the proposal text without that acceptance.
+
+### Working mode
+
+The operator stays in the loop at the points that only the operator can decide, and the coordinator settles the rest by its own research before asking:
+
+- The coordinator decides and reports: code, tests, schema, export fixes and reversible technical choices, each with the principle it rests on.
+- The coordinator finds out by research before asking: conventions of Stefan Zweig Digital and GAMS from both repositories and the vault, TEI from the Guidelines, the state of the data from the reports. Subagents run these in parallel, read-only, and their findings count only after a check against the files.
+- The operator is asked, conceptually and with the context needed: domain readings (such as a series in a source entry or a numbering of print addresses), rights, identifiers, the place of Klawiter in the navigation of Stefan Zweig Digital, Cirilo and GAMS operations, which the operator knows from practice and which are asked early, pushes and publication, and every statement for the paper and the proposal.
+- Visual acceptance of Stefan Zweig Digital happens on GAMS Staging, which needs the operator's VPN; until then everything is built and tested locally.
+
+
 
 Snapshot of 2026-10-24.
 
