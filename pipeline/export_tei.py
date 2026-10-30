@@ -417,9 +417,11 @@ def main() -> None:
     out_dir = OUT_LOCAL if args.with_print else OUT_PUBLIC
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"klawiter-{'-'.join(map(str, args.pages))}.xml"
-    build(args.pages, args.with_print).write(
-        out, encoding="utf-8", xml_declaration=True
-    )
+    # A binary handle keeps LF on every platform; a path would be opened in text mode.
+    with out.open("wb") as fh:
+        build(args.pages, args.with_print).write(
+            fh, encoding="utf-8", xml_declaration=True
+        )
     print(f"wrote {out.relative_to(ROOT)}")
 
 
