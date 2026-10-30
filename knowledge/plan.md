@@ -68,8 +68,6 @@ One record desk and the sitemap
   7. Bring Frontend architecture, the card workbench sections of Design and Specification, the departure rows of Design and the task states of Specification to the state of increments 1 and 2. Of the departure rows, D2, D5, D7, D8, D10, D11 (reflow), D12 to D17 and D26 are met by the code of 53b9397, 8a01287 and cb13e6c and close; D3 is still open although its row names increment 1.
   8. Close the items of the UI work package of 2026-10-24 that the code does not yet meet (checked against 28e9962):
      - derive the authority sentence of Documentation (`AUTHORITY_DECISION_NOTE`, `pages.js`) from the summary of `reconciliation.json`, which holds proposals and no published link (D3);
-     - gate the print-address links of a wiki card on `Records.probePrint()` instead of `Edit.isLocal`, which is defined nowhere, so that print citations become links again (`detail.js`);
-     - give "Show in source" a way back from the marked passage to the value it was opened from;
      - open a card reached through a publication filter at its first matching publication, with the "matching" line as a link to it (D4);
      - link every evidence page of a claim to its record and line, and show the description of each reading once `reconciliation.json` carries one (D6);
      - label the page classification row as the rule-based wiki page kind, apart from the head's `pageKind`;
@@ -77,6 +75,14 @@ One record desk and the sitemap
      - in the stacked start-page table, write "Wiki: see A" in the second row of a merged wiki cell (D11, second half);
      - bring text, focus and boundary contrast, link underlines and 16px inputs to the minima of Design (D18 to D22, D25) as part of the browser review of step 1.
   9. After the operator's decision on the open question of [Specification](specification.md): apply an open place claim to a publication by its evidence (page and line within the block) in one function shared by card and export, with page 4426 as fixture, so that a differing spelling of the place is no longer missed.
+  10. Done on 2026-10-30 (e6bef6f, 35f9574): producer signs with a legend per card, the source beside the values, print citations as exact address links with a stated reason when no print record carries the address, start-page counts of values with a located passage. The review of that day found what the reading card still lacks for checking; those points belong to the curation surface below, not to the reading card.
+- Curation surface, prototyped as a local route `#review` on the same components and a trial log outside `data/print/review/` (operator, 2026-10-30: interfaces differ by problem type, and Klawiter's is data curation; the reading card stays calm). Its requirements, from the review of 2026-10-30 and the tool findings of the DIA-XAI repository (`knowledge/usecases.md`):
+  - checkability first: a value with a located passage reads apart from one without at rest, and the page title and category line stand as source lines so their values can be checked;
+  - text read into a value whose passage is ambiguous reads apart from text no value was read from, and deliberately unread text names its reason (such as the bare numbers after a See address, which may be entries or pages);
+  - a mark in the source opens its value and a control leads back, Escape closes a chain and returns focus to its sign, and each sign is named by field and value;
+  - a queue with progress and a count of what is unconfirmed, decisions per value (right, change, not in the source, unsure) with the producer person, and a blind mode that hides the proposal until a decision;
+  - no decision of the trial log counts for the human round, which starts only after the reading rules are frozen.
+  EDIT and the card workbench go into this surface once it replaces them.
 - Increment 3 also restores the focus outline of `.editable-field`. Increment 4 lets the translator facet read the credits of the publication layer, from a page-level union of credited translators the pipeline writes, once the decision is recorded. Increment 5 labels the open-claim queue of data quality by entries with the claim count beside it (D9) and renames the workbench class of a card the reviewer flagged to `.is-flagged`, keeping "contested" for an open claim (U13).
 - Done when the record coverage test, counting only what a reader can see, pins no field gap and no rendered artefact, every value shows its provenance chain visibly, `check_render.mjs`, `check_review.mjs` and `smoke.mjs` are green, a browser review with read screenshots at a wide and a narrow width and at 200 percent zoom has its findings closed, and the old addresses redirect.
 
