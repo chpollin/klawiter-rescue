@@ -49,6 +49,7 @@ SAMPLES = {
     212: "A single publication whose place and publisher came from the language model and whose place a review agent proposed",
     54: "The merged bibliography's first sample; classified as a work hub, its entry still describes a 1939 edition, which D1 therefore leaves out",
     3: "An edition page with several publications, each its own biblStruct",
+    1605: "An author page, which lists a person's contributions and gives no publication of its own",
 }
 RANGE = re.compile(r"#string-range\(//\*\[@xml:id='([^']+)'\],(\d+),(\d+)\)")
 
@@ -103,54 +104,92 @@ PROGRAM = [
         "acceptedBy": "The operator's order, after the human review round and the identifier scheme.",
     },
 ]
+# The operator's open decisions, content first. Answers given in the chat are
+# recorded in DECISIONS by the session and change the state shown in the view.
+DECISIONS = ROOT / "pipeline" / "data" / "acceptance-decisions.json"
 ACCEPTANCE = [
-    {
-        "id": "E1",
-        "milestone": "D3",
-        "question": "The SZD harness builds on the branch gams-www-split.",
-        "state": "open",
-    },
-    {
-        "id": "E2",
-        "milestone": "D3",
-        "question": "Klawiter gets its own SZD menu entry 'Bibliographie' in place of the external link.",
-        "state": "open",
-    },
-    {
-        "id": "E3",
-        "milestone": "D2",
-        "question": "Author pages and work hubs become links in the TEI, not publications.",
-        "state": "open",
-    },
-    {
-        "id": "E4",
-        "milestone": "D3",
-        "question": "Klawiter enters the SZD search through an RDF branch.",
-        "state": "open",
-    },
-    {
-        "id": "E5",
-        "milestone": "D4",
-        "question": "How strictly GAMS validates is settled on Staging; until then tei_all is the gate.",
-        "state": "open",
-    },
     {
         "id": "E6",
         "milestone": "D2",
-        "question": "The three sample objects in this view show the publications as Klawiter's entries describe them.",
-        "state": "open",
+        "question": "Do the sample pages show the publications as Klawiter's entries describe them?",
+        "why": "This is the content check no test can make: whether each marked passage is the value beside it.",
+        "recommendation": "Look at pages 212 and 3 before answering.",
+        "evidence": [
+            {
+                "page": 212,
+                "look": "Each value and its marked passage, and the two values the language model supplied.",
+            },
+            {
+                "page": 3,
+                "look": "Whether the page splits into the publications Klawiter lists.",
+            },
+        ],
     },
     {
         "id": "E8",
         "milestone": "D2",
-        "question": "Pages not classified as edition pages whose entry still yields publications (__N__ pages, e.g. page 54) get their biblStructs from the publication layer.",
-        "state": "open",
+        "question": "Should pages classified otherwise, whose entry still describes publications, get them in the export?",
+        "why": "__N__ pages are not classified as edition pages, yet the publication layer reads publications from them; the export leaves these out today.",
+        "recommendation": "Yes: the publication layer reads the entry itself, the page class only sorts pages.",
+        "evidence": [
+            {
+                "page": 54,
+                "look": "Classified as a work hub; the publication layer reads 31 editions from its entry, from 1939 to 2020, and none of them reaches the export.",
+            }
+        ],
+    },
+    {
+        "id": "E3",
+        "milestone": "D2",
+        "question": "Should an author page become a person with linked contributions, not a publication?",
+        "why": "Author pages list what a person wrote about Zweig, such as forewords in others' volumes.",
+        "recommendation": "Yes: each listed item is a contribution to a publication, and the page is about its author.",
+        "evidence": [
+            {
+                "page": 1605,
+                "look": "An editorial foreword in a 1998 volume, listed under its author.",
+            }
+        ],
+    },
+    {
+        "id": "E2",
+        "milestone": "D3",
+        "question": "Should Klawiter get its own menu entry 'Bibliographie' in Stefan Zweig Digital?",
+        "why": "The menu links to the external site klawiter.stefanzweig.digital today.",
+        "recommendation": "Yes: the bibliography becomes one of the holdings of Stefan Zweig Digital.",
+        "evidence": [],
+    },
+    {
+        "id": "E4",
+        "milestone": "D3",
+        "question": "Should the bibliography enter the search of Stefan Zweig Digital?",
+        "why": "The search reads RDF, which needs a branch for the object in the RDF stylesheet.",
+        "recommendation": "Yes, built in D3 with the page.",
+        "evidence": [],
+    },
+    {
+        "id": "E1",
+        "milestone": "D3",
+        "question": "Should the local page build on the branch gams-www-split?",
+        "why": "The local harness of Stefan Zweig Digital lives there; the local master has diverged from origin.",
+        "recommendation": "Yes.",
+        "evidence": [],
+    },
+    {
+        "id": "E5",
+        "milestone": "D4",
+        "question": "Is tei_all the gate until Staging shows how strictly GAMS validates?",
+        "why": "Two productive files of Stefan Zweig Digital are invalid against tei_all, so GAMS may validate less strictly.",
+        "recommendation": "Yes.",
+        "evidence": [],
     },
     {
         "id": "E7",
         "milestone": "P",
-        "question": "The identifier scheme: SZDKLA.<page>.<n> stays provisional until a publication is identified independently of its page.",
-        "state": "open",
+        "question": "Does the identifier SZDKLA.<page>.<n> stay provisional until a publication is identified independently of its page?",
+        "why": "Identifiers of Stefan Zweig Digital are never reused, so the scheme is fixed before production.",
+        "recommendation": "Yes.",
+        "evidence": [],
     },
 ]
 OPEN_CHECKS = [
@@ -718,14 +757,29 @@ def run() -> dict:
             for p, why in SAMPLES.items()
             if p in records
         ],
-        "acceptance": [
-            {
-                **a,
-                "question": a["question"].replace("__N__", str(_unclassified(records))),
-            }
-            for a in ACCEPTANCE
-        ],
+        "acceptance": _acceptance(records),
     }
+
+
+def _acceptance(records: dict) -> list[dict]:
+    answers = (
+        json.loads(DECISIONS.read_text(encoding="utf-8")) if DECISIONS.is_file() else {}
+    )
+    n = str(_unclassified(records))
+    out = []
+    for item in ACCEPTANCE:
+        answer = answers.get(item["id"])
+        out.append(
+            {
+                **item,
+                "why": item["why"].replace("__N__", n),
+                "state": "open"
+                if answer is None
+                else ("accepted" if answer["answer"] == "yes" else "rejected"),
+                "answer": answer,
+            }
+        )
+    return out
 
 
 def _unclassified(records: dict) -> int:
@@ -826,6 +880,8 @@ def _sample(doc, rec: dict, why: str, seg_pos: dict) -> dict:
             }
         )
         frags.append(struct)
+    if not pubs:
+        pubs = _layer_preview(page)
     frags.append(source)
     tei = "\n".join(
         _dedent(etree.tostring(f, encoding="unicode", with_tail=False)) for f in frags
@@ -839,6 +895,49 @@ def _sample(doc, rec: dict, why: str, seg_pos: dict) -> dict:
         "publications": pubs,
         "tei": tei,
     }
+
+
+def _layer_preview(page: int) -> list[dict]:
+    """What the publication layer reads from a page the export leaves out (decision E8)."""
+    out = []
+    for pub in export_tei.load_layer(page):
+        prov, spans = pub.get("provenance") or {}, pub.get("valueSpans") or {}
+        vals = []
+        for field, label in (
+            ("title", "title"),
+            ("credits", "person"),
+            ("places", "place"),
+            ("publisher", "publisher"),
+            ("yearRaw", "date"),
+            ("extent", "extent"),
+        ):
+            for ev in spans.get(field, []):
+                if field in ("credits", "extent") and ev.get("part") not in (
+                    "name",
+                    "raw",
+                ):
+                    continue
+                located = isinstance(ev.get("textStart"), int)
+                vals.append(
+                    {
+                        "field": label,
+                        "value": ev.get("value", ""),
+                        "producer": prov.get(field, "regex"),
+                        "state": "not-reviewed",
+                        "span": [ev["textStart"], ev["textEnd"]] if located else None,
+                        "gap": None if located else ev.get("gap", "not-located"),
+                        "textDiffers": False,
+                    }
+                )
+        out.append(
+            {
+                "id": pub["id"],
+                "state": pub.get("reviewStatus", "proposed"),
+                "exported": False,
+                "values": vals,
+            }
+        )
+    return out
 
 
 def _dedent(xml: str) -> str:
