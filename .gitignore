@@ -37,3 +37,7 @@ docs/local/
 
 # Per-user editor state
 .vscode/
+
+# Regenerable TEI export of every page and the pinned tei_all schema (pipeline/acceptance.py)
+data/output/tei/klawiter-all.xml
+data/cache/

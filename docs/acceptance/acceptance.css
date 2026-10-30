@@ -1,0 +1,405 @@
+/* Acceptance view (docs/acceptance/): a dense operational page over one
+   report. Tokens come from tokens.css and styles.css (the --prov-* hues),
+   the producer signs and the legend from records.css. Order comes from
+   whitespace, weight and single hairlines; nothing is framed inside a frame. */
+
+.acc-body {
+  background: var(--sz-cream);
+}
+
+.acc-top {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sz-space-2) var(--sz-space-5);
+  padding: var(--sz-space-3) var(--sz-space-4);
+  background: var(--sz-burgundy);
+  color: var(--sz-white);
+  font-family: var(--font-sans);
+}
+.acc-top h1 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.acc-top nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sz-space-1) var(--sz-space-4);
+  font-size: 0.875rem;
+}
+.acc-top a {
+  color: var(--sz-white);
+  text-decoration: underline;
+  text-decoration-color: var(--sz-gold-light);
+  text-underline-offset: 0.2em;
+}
+.acc-top a:hover { color: var(--sz-gold-light); }
+
+.acc-main {
+  inline-size: 100%;
+  max-inline-size: 96rem;
+  margin: 0 auto;
+  padding: var(--sz-space-4) var(--sz-space-4) 4rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+}
+
+.acc-main a:focus-visible,
+.acc-main summary:focus-visible,
+.acc-main [tabindex]:focus-visible,
+.acc-top a:focus-visible {
+  outline: 2px solid var(--sz-focus);
+  outline-offset: 2px;
+}
+.acc-top a:focus-visible { outline-color: var(--sz-gold-light); }
+
+.acc-headline {
+  color: var(--sz-text-light);
+  font-size: 0.875rem;
+}
+.acc-headline code { font-family: var(--font-mono); color: var(--sz-text); }
+.acc-fixture-word {
+  color: var(--sz-alert-warn);
+  font-weight: 600;
+}
+
+.acc-section {
+  margin-block-start: var(--sz-space-5);
+  scroll-margin-block-start: 4rem;
+}
+.acc-section > h2 {
+  margin-block-end: var(--sz-space-2);
+  padding-block-end: var(--sz-space-1);
+  border-block-end: 1px solid var(--sz-border);
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--sz-gold-dark);
+}
+.acc-section h3 {
+  margin-block: var(--sz-space-4) var(--sz-space-1);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--sz-burgundy);
+}
+.acc-count,
+.acc-scope,
+.acc-empty,
+.acc-note {
+  color: var(--sz-text-light);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+.acc-scope { margin-block-end: var(--sz-space-2); }
+.acc-note { font-style: italic; }
+
+/* Status: a shape and a word, the hue repeats both. */
+.acc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+.acc-status-icon {
+  inline-size: 0.8125rem;
+  block-size: 0.8125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.acc-status-pass,
+.acc-status-done,
+.acc-status-accepted { color: var(--sz-alert-ok); }
+.acc-status-fail,
+.acc-status-rejected,
+.acc-status-blocked { color: var(--sz-alert-bad); }
+.acc-status-in-progress { color: var(--sz-alert-warn); }
+.acc-status-open,
+.acc-status-skipped { color: var(--sz-text-light); }
+
+/* Program: one milestone per row, the goal sentence beneath. */
+.acc-program,
+.acc-checks,
+.acc-fields,
+.acc-decisions,
+.acc-value-list,
+.acc-sample-nav,
+.acc-examples { list-style: none; }
+
+.acc-ms {
+  display: grid;
+  grid-template-columns: minmax(12rem, 18rem) 7rem 1fr;
+  align-items: baseline;
+  gap: 0 var(--sz-space-4);
+  padding: var(--sz-space-2) var(--sz-space-2);
+  border-block-end: 1px solid var(--sz-border-light);
+}
+.acc-ms.is-current { background: var(--sz-white); box-shadow: inset 3px 0 0 var(--sz-gold); }
+.acc-ms-link { font-weight: 600; }
+.acc-ms-link[aria-current] { color: var(--sz-burgundy-dark); }
+.acc-ms-id { font-family: var(--font-mono); }
+.acc-ms-count { color: var(--sz-text-light); font-size: 0.875rem; }
+.acc-ms-goal,
+.acc-ms-blocked,
+.acc-ms-more {
+  grid-column: 1 / -1;
+  max-inline-size: 80ch;
+}
+.acc-ms-goal { font-family: var(--font-serif); }
+.acc-ms-blocked { color: var(--sz-alert-bad); font-size: 0.875rem; }
+.acc-ms-more summary {
+  cursor: pointer;
+  color: var(--sz-text-light);
+  font-size: 0.8125rem;
+  inline-size: fit-content;
+}
+.acc-ms-more dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.15rem var(--sz-space-3);
+  margin-block: var(--sz-space-1);
+  font-size: 0.875rem;
+}
+.acc-ms-more dt { color: var(--sz-text-light); }
+
+/* Checks */
+.acc-check {
+  padding-block: var(--sz-space-2);
+  border-block-end: 1px solid var(--sz-border-light);
+}
+.acc-check-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem var(--sz-space-3);
+}
+.acc-check-head .acc-status { min-inline-size: 4.5rem; }
+.acc-check-title { font-weight: 600; }
+.acc-check-ms {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--sz-text-light);
+}
+.acc-measured {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+}
+.acc-check-fail .acc-measured { color: var(--sz-alert-bad); font-weight: 600; }
+.acc-proves,
+.acc-note,
+.acc-examples { margin-inline-start: 5.25rem; max-inline-size: 80ch; }
+.acc-proves { font-family: var(--font-serif); }
+.acc-examples {
+  margin-block-start: var(--sz-space-1);
+  font-size: 0.875rem;
+}
+.acc-examples li { padding-block: 0.1rem; }
+.acc-examples a { font-weight: 600; margin-inline-end: var(--sz-space-2); }
+
+/* Coverage ledger */
+.acc-field {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) 6.5rem 8rem 1fr;
+  gap: 0 var(--sz-space-3);
+  align-items: baseline;
+  padding-block: 0.3rem;
+  border-block-end: 1px solid var(--sz-border-light);
+}
+.acc-field-name { font-weight: 600; }
+.acc-field-layer { color: var(--sz-text-light); font-size: 0.875rem; }
+.acc-field-records { font-variant-numeric: tabular-nums; text-align: end; }
+.acc-field-where { overflow-wrap: anywhere; }
+.acc-field-where code { font-family: var(--font-mono); font-size: 0.8125rem; }
+
+.acc-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sz-space-2) var(--sz-space-5);
+  margin-block-start: var(--sz-space-4);
+  padding-block-start: var(--sz-space-2);
+  border-block-start: 1px solid var(--sz-border);
+}
+.acc-values dt { color: var(--sz-text-light); font-size: 0.8125rem; }
+.acc-values dd { font-weight: 600; font-variant-numeric: tabular-nums; }
+.acc-values-without ul { display: flex; flex-wrap: wrap; gap: 0 var(--sz-space-3); list-style: none; font-weight: 400; }
+.acc-values-without .acc-n { font-weight: 600; }
+
+/* Samples */
+.acc-sample-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sz-space-1) var(--sz-space-4);
+  padding-block-end: var(--sz-space-2);
+}
+.acc-sample-nav a[aria-current] {
+  color: var(--sz-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--sz-gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+.acc-sample-page { font-family: var(--font-mono); }
+.acc-sample-head h3 { display: inline; margin: 0; }
+.acc-sample-kind {
+  margin-inline-start: var(--sz-space-3);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--sz-text-light);
+}
+.acc-why { max-inline-size: 80ch; color: var(--sz-text-light); font-size: 0.875rem; }
+
+.acc-sample-grid {
+  display: grid;
+  gap: var(--sz-space-5);
+  margin-block-start: var(--sz-space-3);
+  padding: var(--sz-space-4);
+  background: var(--sz-white);
+  border: 1px solid var(--sz-border);
+  border-radius: var(--sz-radius);
+}
+@media (min-width: 64rem) {
+  .acc-sample-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+  .acc-region-tei { grid-column: 1 / -1; }
+}
+@media (min-width: 96rem) {
+  .acc-sample-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1.2fr); }
+  .acc-region-tei { grid-column: auto; }
+}
+.acc-region { min-inline-size: 0; }
+.acc-region h4 {
+  margin-block-end: var(--sz-space-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sz-text-light);
+}
+
+/* Unmarked entry text is grey, as the legend says: not read into a value. */
+.acc-entry {
+  position: sticky;
+  top: 4rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-inline-size: 72ch;
+  color: var(--sz-text-light);
+}
+.acc-mark {
+  color: var(--sz-text);
+  background: var(--sz-mark);
+  border-radius: var(--sz-radius-mark);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  cursor: default;
+}
+.acc-mark.is-active {
+  background: var(--sz-gold-light);
+  outline: 2px solid var(--sz-gold-dark);
+  outline-offset: 1px;
+}
+
+.acc-pub-id {
+  margin-block: var(--sz-space-3) 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sz-burgundy);
+}
+.acc-region-values .rc-legend { margin-block-start: 0 !important; padding-block-start: 0 !important; border: 0; }
+.acc-value {
+  display: grid;
+  grid-template-columns: minmax(6rem, 8rem) 1fr;
+  gap: 0 var(--sz-space-3);
+  padding: 0.3rem var(--sz-space-1);
+  border-block-end: 1px solid var(--sz-border-light);
+  border-radius: var(--sz-radius-small);
+}
+.acc-value[data-values] { cursor: default; }
+.acc-value.is-active { background: var(--sz-mark-strong); }
+.acc-value-field { color: var(--sz-text-light); font-size: 0.875rem; }
+.acc-value-text { font-family: var(--font-serif); overflow-wrap: anywhere; }
+.acc-value-meta {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--sz-space-3);
+  font-size: 0.8125rem;
+}
+.acc-producer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--rc-family);
+}
+.acc-state { color: var(--sz-text-light); }
+.acc-state-contested { color: var(--sz-contested-text); font-weight: 600; }
+.acc-state-confirmed { color: var(--prov-person); }
+.acc-gap { font-style: italic; color: var(--sz-text-light); }
+.acc-gap-bad,
+.acc-differs { color: var(--sz-alert-bad); font-style: normal; font-weight: 600; }
+
+.acc-tei {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--sz-text);
+}
+.acc-tag { color: var(--sz-burgundy); }
+.acc-attr { color: var(--prov-rule); }
+.acc-attr-value { color: var(--sz-gold-dark); }
+
+/* Operator decisions */
+.acc-decision {
+  display: grid;
+  grid-template-columns: 6.5rem 3rem 1fr;
+  gap: 0 var(--sz-space-3);
+  align-items: baseline;
+  padding-block: var(--sz-space-2);
+  border-block-end: 1px solid var(--sz-border-light);
+}
+.acc-decision p { font-family: var(--font-serif); max-inline-size: 80ch; }
+
+.acc-missing,
+.acc-loading {
+  max-inline-size: 72ch;
+  margin-block-start: var(--sz-space-5);
+  font-family: var(--font-serif);
+}
+.acc-missing code { font-family: var(--font-mono); font-size: 0.875rem; }
+
+/* Narrow: every row stacks, nothing scrolls sideways. */
+@media (max-width: 40rem) {
+  .acc-top { position: static; }
+  .acc-ms { grid-template-columns: 1fr auto; }
+  .acc-ms-count { grid-column: 1 / -1; }
+  .acc-proves,
+  .acc-note,
+  .acc-examples { margin-inline-start: 0; }
+  .acc-measured { margin-inline-start: 0; flex-basis: 100%; }
+  .acc-field { grid-template-columns: 1fr auto; }
+  .acc-field-layer { grid-row: 2; }
+  .acc-field-where { grid-column: 1 / -1; }
+  .acc-value { grid-template-columns: 1fr; }
+  .acc-value-meta { grid-column: 1; }
+  .acc-decision { grid-template-columns: auto 1fr; }
+  .acc-decision p { grid-column: 1 / -1; }
+  .acc-entry { position: static; }
+  .acc-sample-grid { padding: var(--sz-space-3); }
+}

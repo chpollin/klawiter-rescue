@@ -7,7 +7,6 @@ carries both producers, a value from the page title and one from a category.
 
 from __future__ import annotations
 
-import io
 import re
 import sys
 from pathlib import Path
@@ -27,13 +26,23 @@ XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
 
 @pytest.fixture(scope="module")
 def doc():
-    buf = io.BytesIO()
-    export_tei.build([212], with_print=False).write(
-        buf, encoding="utf-8", xml_declaration=True
-    )
-    return lxml_etree.fromstring(buf.getvalue())
+    return lxml_etree.fromstring(export_tei.serialize(export_tei.build([212])))
 
 
+TEI_ALL = ROOT / "data" / "cache" / "tei_all-4.12.0.rng"
+
+
+def test_the_export_validates_against_tei_all(doc) -> None:
+    if not TEI_ALL.is_file():
+        pytest.skip("tei_all is fetched by pipeline/acceptance.py")
+    schema = lxml_etree.RelaxNG(lxml_etree.parse(str(TEI_ALL)))
+    assert schema.validate(doc), schema.error_log
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="the profile schema still describes the first export (plan, D1)",
+)
 def test_the_export_validates_against_the_profile_schema(doc) -> None:
     schema = lxml_etree.RelaxNG(lxml_etree.parse(str(SCHEMA)))
     assert schema.validate(doc), schema.error_log

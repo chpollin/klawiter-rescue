@@ -1,0 +1,628 @@
+{
+  "generatedAt": "2026-10-30T15:20:00+01:00",
+  "generatedBy": "fixture",
+  "commit": "23d8f11",
+  "dataset": {
+    "version": "0.9",
+    "pages": 4758,
+    "publications": 3273
+  },
+  "program": [
+    {
+      "id": "D1",
+      "title": "Faithful export",
+      "goal": "The TEI keeps the source text character for character, with review states, passages and producers, for every record.",
+      "verifiedBy": "Invariant tests over all records, tei_all at a pinned release and the profile schema; a fresh agent's hand mutations must all fail.",
+      "acceptedBy": "No acceptance needed; the operator decides the profile questions it raises.",
+      "repos": [
+        "klawiter-rescue"
+      ],
+      "state": "in-progress"
+    },
+    {
+      "id": "D2",
+      "title": "Complete model",
+      "goal": "One biblStruct per publication, author pages and work hubs as links, and every field exported or excluded with a reason.",
+      "verifiedBy": "The D1 invariants extended; every field exported or a documented exclusion.",
+      "acceptedBy": "Three sample objects: a single publication, a page with several, a work hub.",
+      "repos": [
+        "klawiter-rescue"
+      ],
+      "state": "open"
+    },
+    {
+      "id": "D3",
+      "title": "SZD page local",
+      "goal": "The bibliography renders as a page of Stefan Zweig Digital in the local harness.",
+      "verifiedBy": "The harness of Stefan Zweig Digital (smoke, golden, RDF structure), screenshots in both languages and an independent interface review.",
+      "acceptedBy": "None locally; Stefan Zweig Digital is accepted on staging only.",
+      "repos": [
+        "SZD",
+        "gams-www"
+      ],
+      "state": "open"
+    },
+    {
+      "id": "D4",
+      "title": "Staging",
+      "goal": "The object o:szd.klawiter is ingested on GAMS Staging and rendered with its stylesheet.",
+      "verifiedBy": "Read-only checks of the staging data streams and the RDF, rendered examples before and after.",
+      "acceptedBy": "The rendered pages on GAMS Staging, in both languages.",
+      "repos": [
+        "gams-www",
+        "SZD"
+      ],
+      "state": "blocked",
+      "blockedBy": "Needs the operator's VPN and the Cirilo ingest."
+    },
+    {
+      "id": "C1",
+      "title": "Curation surface",
+      "goal": "A local review route with a queue, checkability first and decisions per value.",
+      "verifiedBy": "Node tests, browser screenshots and an independent review against the reviewer tasks.",
+      "acceptedBy": "The operator tries it on real records.",
+      "repos": [
+        "klawiter-rescue"
+      ],
+      "state": "open"
+    },
+    {
+      "id": "P",
+      "title": "Production",
+      "goal": "The reviewed bibliography reaches the production instance.",
+      "verifiedBy": "The D1 to D4 checks on the reviewed data.",
+      "acceptedBy": "The operator instructs the production ingest.",
+      "repos": [
+        "klawiter-rescue",
+        "SZD"
+      ],
+      "state": "open",
+      "blockedBy": "Follows the human round of M2 and the identifier scheme."
+    }
+  ],
+  "checks": [
+    {
+      "id": "tei-all-valid",
+      "milestone": "D1",
+      "title": "TEI valid against tei_all",
+      "proves": "Every exported file is valid TEI at the pinned release.",
+      "status": "pass",
+      "measured": {
+        "checked": 4758,
+        "failed": 0
+      },
+      "examples": []
+    },
+    {
+      "id": "profile-schema-valid",
+      "milestone": "D1",
+      "title": "Valid against the profile schema",
+      "proves": "Every file uses only the subset of TEI the profile allows.",
+      "status": "pass",
+      "measured": {
+        "checked": 4758,
+        "failed": 0
+      },
+      "examples": []
+    },
+    {
+      "id": "source-text-verbatim",
+      "milestone": "D1",
+      "title": "Source text verbatim",
+      "proves": "The quote of every source bibl equals the wiki entry character for character.",
+      "status": "fail",
+      "measured": {
+        "checked": 4758,
+        "failed": 3
+      },
+      "note": "Fixture values; the generator reports the real pages.",
+      "examples": [
+        {
+          "page": 1187,
+          "detail": "U+00A0 before 'p.' normalised to a space"
+        },
+        {
+          "page": 2290,
+          "detail": "'&' written as '&amp;amp;' in <quote>"
+        },
+        {
+          "page": null,
+          "detail": "One redirect page without a page id"
+        }
+      ]
+    },
+    {
+      "id": "passages-resolve",
+      "milestone": "D1",
+      "title": "Every @source resolves",
+      "proves": "Each value points to a seg that exists and covers its passage.",
+      "status": "pass",
+      "measured": {
+        "checked": 41260,
+        "failed": 0
+      },
+      "examples": []
+    },
+    {
+      "id": "print-out-of-sourcedesc",
+      "milestone": "D1",
+      "title": "Print records out of sourceDesc",
+      "proves": "No print record stands in sourceDesc as a source of the file.",
+      "status": "open",
+      "measured": {
+        "checked": 0,
+        "failed": 0
+      },
+      "note": "Not yet measured.",
+      "examples": []
+    },
+    {
+      "id": "one-biblstruct-per-publication",
+      "milestone": "D2",
+      "title": "One biblStruct per publication",
+      "proves": "Every publication of a page has exactly one biblStruct.",
+      "status": "fail",
+      "measured": {
+        "checked": 3273,
+        "failed": 2
+      },
+      "examples": [
+        {
+          "page": 9001,
+          "detail": "2 publications, 1 biblStruct"
+        },
+        {
+          "page": 3310,
+          "detail": "3 publications, 2 biblStruct"
+        }
+      ]
+    },
+    {
+      "id": "fields-dispositioned",
+      "milestone": "D2",
+      "title": "Every field exported or excluded",
+      "proves": "No record field is left without an export target or a documented exclusion.",
+      "status": "fail",
+      "measured": {
+        "checked": 14,
+        "failed": 3
+      },
+      "examples": [
+        {
+          "page": null,
+          "detail": "series: pending, no target"
+        },
+        {
+          "page": null,
+          "detail": "edition: pending, no target"
+        },
+        {
+          "page": null,
+          "detail": "contents: pending, no target"
+        }
+      ]
+    },
+    {
+      "id": "szd-harness-smoke",
+      "milestone": "D3",
+      "title": "Harness smoke test",
+      "proves": "The local Stefan Zweig Digital harness renders the Klawiter page without errors.",
+      "status": "skipped",
+      "measured": {
+        "checked": 0,
+        "failed": 0
+      },
+      "note": "Runs in the SZD work tree, not from this repository.",
+      "examples": []
+    }
+  ],
+  "coverage": [
+    {
+      "field": "title",
+      "layer": "publication",
+      "records": 3273,
+      "disposition": "exported",
+      "target": "monogr/title",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "translator",
+      "layer": "publication",
+      "records": 1412,
+      "disposition": "exported",
+      "target": "monogr/respStmt",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "editor",
+      "layer": "publication",
+      "records": 288,
+      "disposition": "exported",
+      "target": "monogr/respStmt",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "place",
+      "layer": "publication",
+      "records": 2960,
+      "disposition": "exported",
+      "target": "monogr/imprint/pubPlace",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "publisher",
+      "layer": "publication",
+      "records": 2911,
+      "disposition": "exported",
+      "target": "monogr/imprint/publisher",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "year",
+      "layer": "publication",
+      "records": 3105,
+      "disposition": "exported",
+      "target": "monogr/imprint/date",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "extent",
+      "layer": "publication",
+      "records": 1874,
+      "disposition": "exported",
+      "target": "monogr/extent/measure",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "language",
+      "layer": "page",
+      "records": 4521,
+      "disposition": "exported",
+      "target": "monogr/textLang",
+      "milestone": null,
+      "reason": null
+    },
+    {
+      "field": "series",
+      "layer": "publication",
+      "records": 402,
+      "disposition": "pending",
+      "target": null,
+      "milestone": "D2",
+      "reason": "Series in a source entry is a domain reading the operator decides."
+    },
+    {
+      "field": "edition",
+      "layer": "publication",
+      "records": 311,
+      "disposition": "pending",
+      "target": null,
+      "milestone": "D2",
+      "reason": null
+    },
+    {
+      "field": "contents",
+      "layer": "page",
+      "records": 640,
+      "disposition": "pending",
+      "target": null,
+      "milestone": "D2",
+      "reason": null
+    },
+    {
+      "field": "work hub",
+      "layer": "page",
+      "records": 85,
+      "disposition": "pending",
+      "target": null,
+      "milestone": "D2",
+      "reason": "Becomes a link to the work index of Stefan Zweig Digital."
+    },
+    {
+      "field": "categories",
+      "layer": "page",
+      "records": 4758,
+      "disposition": "excluded",
+      "target": null,
+      "milestone": null,
+      "reason": "Wiki markup; kept in the source bibl, not a value of the publication."
+    },
+    {
+      "field": "lastEditor",
+      "layer": "page",
+      "records": 4758,
+      "disposition": "excluded",
+      "target": null,
+      "milestone": null,
+      "reason": "Wiki revision metadata, not bibliographic."
+    }
+  ],
+  "values": {
+    "total": 41260,
+    "withPassage": 38904,
+    "withMetaSource": 1811,
+    "withoutSource": {
+      "repeated": 302,
+      "not-verbatim": 187,
+      "no-evidence": 56
+    },
+    "textDiffers": 214
+  },
+  "samples": [
+    {
+      "page": 212,
+      "title": "Tolstoi, Nietzsche: Studii",
+      "kind": "edition-page",
+      "why": "The page of the first TEI sample: one publication with rule, LLM and derived values.",
+      "entry": "Translated by Eugen Relgis. 248p. Bucureşti: Editura Ştiinţifică, 1996 (Ardealul). [See H 670, G 131 & H 490, G 445. See G 201, 491, 492]",
+      "publications": [
+        {
+          "id": "SZDKLA.212.1",
+          "values": [
+            {
+              "field": "title",
+              "value": "Tolstoi, Nietzsche: Studii",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": null,
+              "gap": "page-title",
+              "textDiffers": false
+            },
+            {
+              "field": "translator",
+              "value": "Eugen Relgis",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                14,
+                26
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "248",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                28,
+                31
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "place",
+              "value": "Bucureşti",
+              "producer": "llm",
+              "state": "not-reviewed",
+              "span": [
+                34,
+                43
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Editura Ştiinţifică",
+              "producer": "llm",
+              "state": "not-reviewed",
+              "span": [
+                45,
+                64
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "year",
+              "value": "1996",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                66,
+                70
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "language",
+              "value": "Rumanian",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": null,
+              "gap": "category",
+              "textDiffers": false
+            },
+            {
+              "field": "series",
+              "value": "Ardealul",
+              "producer": "llm",
+              "state": "proposed",
+              "span": [
+                72,
+                80
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        }
+      ],
+      "tei": "<listBibl>\n  <biblStruct xml:id=\"SZDKLA.212.1\" corresp=\"klawiter:entry/212\">\n          <monogr>\n            <title level=\"m\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n            <respStmt>\n              <resp>translator</resp>\n              <persName resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s1\">Eugen Relgis</persName>\n            </respStmt>\n            <textLang mainLang=\"ro\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-cat1\">Rumanian</textLang>\n            <imprint>\n              <pubPlace xml:id=\"SZDKLA.212.1.place\" resp=\"#app-llm\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s3\">Bucureşti</pubPlace>\n              <publisher xml:id=\"SZDKLA.212.1.publisher\" resp=\"#app-llm\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s4\">Editura Ştiinţifică</publisher>\n              <date when=\"1996\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s5\">1996</date>\n            </imprint>\n            <extent>\n              <measure unit=\"page\" quantity=\"248\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s2\">248</measure>\n            </extent>\n          </monogr>\n        </biblStruct>\n</listBibl>\n<listBibl type=\"sources\">\n  <bibl type=\"wikiPage\" xml:id=\"src-wiki-212\">\n            <idno type=\"pageId\">212</idno>\n            <idno type=\"revision\">4392</idno>\n            <title xml:id=\"src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n            <note type=\"categories\">\n              <seg xml:id=\"src-wiki-212-cat1\">Essays / Volumes (Rumanian)</seg>\n            </note>\n            <quote>Translated by <seg xml:id=\"src-wiki-212-s1\">Eugen Relgis</seg>. <seg xml:id=\"src-wiki-212-s2\">248</seg>p. <seg xml:id=\"src-wiki-212-s3\">Bucureşti</seg>: <seg xml:id=\"src-wiki-212-s4\">Editura Ştiinţifică</seg>, <seg xml:id=\"src-wiki-212-s5\">1996</seg> (Ardealul). [See <seg xml:id=\"src-wiki-212-s6\">H 670</seg>, <seg xml:id=\"src-wiki-212-s7\">G 131</seg> &amp; <seg xml:id=\"src-wiki-212-s8\">H 490</seg>, <seg xml:id=\"src-wiki-212-s9\">G 445</seg>. See <seg xml:id=\"src-wiki-212-s10\">G 201</seg>, 491, 492]</quote>\n          </bibl>\n</listBibl>"
+    },
+    {
+      "page": 9001,
+      "title": "Ungeduld des Herzens <Auszug>",
+      "kind": "multi-publication",
+      "why": "Fixture page with two publications, a contested LLM value whose text differs from its passage, and a '<' in a value.",
+      "entry": "Contains: Ungeduld des Herzens <Auszug>, pp. 7-58; Die Welt von Gestern [chapter], pp. 59-112. Edited by Richard Friedenthal. Frankfurt am Main: S. Fischer, 1966. 2nd ed. Frankfurt: Fischer, 1972.",
+      "publications": [
+        {
+          "id": "SZDKLA.9001.1",
+          "values": [
+            {
+              "field": "title",
+              "value": "Ungeduld des Herzens <Auszug>",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                10,
+                39
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "editor",
+              "value": "Richard Friedenthal",
+              "producer": "person",
+              "state": "confirmed",
+              "span": [
+                105,
+                124
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "place",
+              "value": "Frankfurt am Main",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                126,
+                143
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "S. Fischer",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                145,
+                155
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "year",
+              "value": "1966",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                157,
+                161
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        },
+        {
+          "id": "SZDKLA.9001.2",
+          "values": [
+            {
+              "field": "edition",
+              "value": "2nd edition",
+              "producer": "llm",
+              "state": "contested",
+              "span": [
+                163,
+                170
+              ],
+              "gap": null,
+              "textDiffers": true
+            },
+            {
+              "field": "place",
+              "value": "Frankfurt",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                171,
+                180
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Fischer",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                182,
+                189
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "year",
+              "value": "1972",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                191,
+                195
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "editor",
+              "value": "Richard Friedenthal",
+              "producer": "fixture",
+              "state": "not-reviewed",
+              "span": null,
+              "gap": "rule",
+              "textDiffers": false
+            }
+          ]
+        }
+      ],
+      "tei": "<listBibl>\n  <biblStruct xml:id=\"SZDKLA.9001.1\" corresp=\"klawiter:entry/9001\">\n    <monogr>\n      <title level=\"m\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s1\">Ungeduld des Herzens &lt;Auszug&gt;</title>\n      <respStmt>\n        <resp>editor</resp>\n        <persName resp=\"#person\" ana=\"#confirmed\" source=\"#src-wiki-9001-s2\">Richard Friedenthal</persName>\n      </respStmt>\n      <imprint>\n        <pubPlace resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s3\">Frankfurt am Main</pubPlace>\n        <publisher resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s4\">S. Fischer</publisher>\n        <date when=\"1966\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s5\">1966</date>\n      </imprint>\n    </monogr>\n  </biblStruct>\n  <biblStruct xml:id=\"SZDKLA.9001.2\" corresp=\"klawiter:entry/9001\">\n    <monogr>\n      <edition resp=\"#app-llm\" ana=\"#contested\" source=\"#src-wiki-9001-s6\">2nd edition</edition>\n      <imprint>\n        <pubPlace resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s7\">Frankfurt</pubPlace>\n        <publisher resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s8\">Fischer</publisher>\n        <date when=\"1972\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s9\">1972</date>\n      </imprint>\n    </monogr>\n  </biblStruct>\n</listBibl>"
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "profile-normalised-forms",
+      "milestone": "D1",
+      "question": "Do normalised forms of values (such as place names without cedillas) enter the profile, or does the export keep only the source spelling?",
+      "state": "open"
+    },
+    {
+      "id": "sample-objects",
+      "milestone": "D2",
+      "question": "Do the three sample objects (a single publication, a page with several, a work hub) show the bibliography as Stefan Zweig Digital should receive it?",
+      "state": "open"
+    },
+    {
+      "id": "series-reading",
+      "milestone": "D2",
+      "question": "Is a parenthesised name after the year, such as (Ardealul), read as a series?",
+      "state": "open"
+    },
+    {
+      "id": "stylesheet-route",
+      "milestone": "D3",
+      "question": "Is the bibliography rendered by its own stylesheet szd-klawiter.xsl?",
+      "state": "accepted"
+    }
+  ]
+}

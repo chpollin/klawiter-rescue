@@ -1,15 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
   <teiHeader>
     <fileDesc>
       <titleStmt>
         <title xml:lang="de">Klawiter-Bibliographie Stefan Zweig digital</title>
         <title xml:lang="en">Klawiter Bibliography Stefan Zweig digital</title>
-        <editor role="compiler">Randolph J. Klawiter</editor>
       </titleStmt>
       <publicationStmt>
         <publisher>
-          <orgName corresp="https://www.uni-salzburg.at/index.php?id=72" ref="d-nb.info/gnd/1047605287">Literaturarchiv Salzburg</orgName>
+          <orgName corresp="https://www.uni-salzburg.at/index.php?id=72" ref="https://d-nb.info/gnd/1047605287">Literaturarchiv Salzburg</orgName>
         </publisher>
         <availability>
           <licence target="https://creativecommons.org/licenses/by/4.0">Creative Commons BY 4.0</licence>
@@ -17,17 +16,12 @@
         <idno type="PID">o:szd.klawiter</idno>
       </publicationStmt>
       <sourceDesc>
-        <listBibl type="sources">
-          <bibl type="wikiPage" xml:id="src-wiki-212">
-            <idno type="pageId">212</idno>
-            <idno type="revision">4392</idno>
-            <title xml:id="src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
-            <note type="categories">
-              <seg xml:id="src-wiki-212-cat1">Essays / Volumes (Rumanian)</seg>
-            </note>
-            <quote>Translated by <seg xml:id="src-wiki-212-s1">Eugen Relgis</seg>. <seg xml:id="src-wiki-212-s2">248</seg>p. <seg xml:id="src-wiki-212-s3">Bucureşti</seg>: <seg xml:id="src-wiki-212-s4">Editura Ştiinţifică</seg>, <seg xml:id="src-wiki-212-s5">1996</seg> (Ardealul). [See <seg xml:id="src-wiki-212-s6">H 670</seg>, <seg xml:id="src-wiki-212-s7">G 131</seg> &amp; <seg xml:id="src-wiki-212-s8">H 490</seg>, <seg xml:id="src-wiki-212-s9">G 445</seg>. See <seg xml:id="src-wiki-212-s10">G 201</seg>, 491, 492]</quote>
-          </bibl>
-        </listBibl>
+        <bibl type="wiki">
+          <title>Stefan Zweig Bibliography</title>
+          <editor role="compiler">Randolph J. Klawiter</editor>
+          <idno type="sha256">d880ea6c53b72b4b23336b4ceee92aff60136193a41bb1a8318c054fb0090d42</idno>
+          <note>Database dump of the wiki, data/raw/zweig_part_01.sql</note>
+        </bibl>
       </sourceDesc>
     </fileDesc>
     <encodingDesc>
@@ -41,8 +35,8 @@
         <application ident="klawiter-concordance" version="0.9" xml:id="app-concordance">
           <desc>Rules of the print strand proposing that a print record and a wiki page describe one publication</desc>
         </application>
-        <application ident="gemini-3.1-flash-lite-preview" version="2026-08-21T17:51:38.288166+00:00" xml:id="app-llm">
-          <desc>Language model filling gaps the rules left, frozen cache, prompt sha256 c078baa8bde4baeb69d8fb4ac60c94e7326148882fe2c06ae418757c13d80fa1</desc>
+        <application ident="gemini-3.1-flash-lite-preview" version="2026.08.21" xml:id="app-llm">
+          <desc>Language model filling gaps the rules left, read from a cache frozen at 2026-08-21T17:51:38.288166+00:00, prompt sha256 c078baa8bde4baeb69d8fb4ac60c94e7326148882fe2c06ae418757c13d80fa1</desc>
         </application>
       </appInfo>
       <classDecl>
@@ -68,18 +62,18 @@
   </teiHeader>
   <text>
     <body>
-      <listBibl>
+      <listBibl type="publications">
         <biblStruct xml:id="SZDKLA.212.1" corresp="klawiter:entry/212">
           <monogr>
             <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
             <respStmt>
-              <resp>translator</resp>
-              <persName resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s1">Eugen Relgis</persName>
+              <resp>Translated by</resp>
+              <persName role="translator" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s1">Eugen Relgis</persName>
             </respStmt>
             <textLang mainLang="ro" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-cat1">Rumanian</textLang>
             <imprint>
-              <pubPlace xml:id="SZDKLA.212.1.place" resp="#app-llm" ana="#not-reviewed" source="#src-wiki-212-s3">Bucureşti</pubPlace>
-              <publisher xml:id="SZDKLA.212.1.publisher" resp="#app-llm" ana="#not-reviewed" source="#src-wiki-212-s4">Editura Ştiinţifică</publisher>
+              <pubPlace resp="#app-llm" ana="#proposed" source="#src-wiki-212-s3">Bucureşti</pubPlace>
+              <publisher resp="#app-llm" ana="#not-reviewed" source="#src-wiki-212-s4">Editura Ştiinţifică</publisher>
               <date when="1996" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s5">1996</date>
             </imprint>
             <extent>
@@ -91,6 +85,24 @@
     </body>
   </text>
   <standOff>
+    <listBibl type="sources">
+      <bibl type="wikiPage" subtype="edition-page" xml:id="src-wiki-212">
+        <title xml:id="src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
+        <idno type="pageId">212</idno>
+        <idno type="revision">4392</idno>
+        <note type="categories">
+          <seg xml:id="src-wiki-212-cat1">Essays / Volumes (Rumanian)</seg>
+        </note>
+        <quote xml:id="src-wiki-212-text">Translated by <seg xml:id="src-wiki-212-s1">Eugen Relgis</seg>. <seg xml:id="src-wiki-212-s2">248</seg>p. <seg xml:id="src-wiki-212-s3">Bucureşti</seg>: <seg xml:id="src-wiki-212-s4">Editura Ştiinţifică</seg>, <seg xml:id="src-wiki-212-s5">1996</seg> (Ardealul). [See <seg xml:id="src-wiki-212-s6">H 670</seg>, <seg xml:id="src-wiki-212-s7">G 131</seg> &amp; <seg xml:id="src-wiki-212-s8">H 490</seg>, <seg xml:id="src-wiki-212-s9">G 445</seg>. See <seg xml:id="src-wiki-212-s10">G 201</seg>, 491, 492]</quote>
+        <note type="printCitations">
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s6">H 670</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s7">G 131</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s8">H 490</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s9">G 445</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s10">G 201</idno>
+        </note>
+      </bibl>
+    </listBibl>
     <listRelation>
       <relation name="describes" active="#src-wiki-212" passive="#SZDKLA.212.1" resp="#app-rules" ana="#not-reviewed" />
     </listRelation>
