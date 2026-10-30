@@ -30,7 +30,7 @@
             <attribute name="type"><value>publications</value></attribute>
             <choice>
               <oneOrMore><ref name="biblStruct"/></oneOrMore>
-              <!-- A sample without edition pages: listBibl needs a child. -->
+              <!-- A sample without publications: listBibl needs a child. -->
               <element name="bibl"><empty/></element>
             </choice>
           </element>
@@ -41,6 +41,13 @@
           <attribute name="type"><value>sources</value></attribute>
           <oneOrMore><choice><ref name="wikiSource"/><ref name="printSource"/></choice></oneOrMore>
         </element>
+        <!-- The person of each author page; its contributions point to it. -->
+        <optional>
+          <element name="listPerson">
+            <attribute name="type"><value>authors</value></attribute>
+            <oneOrMore><ref name="person"/></oneOrMore>
+          </element>
+        </optional>
         <optional>
           <element name="listRelation">
             <oneOrMore><choice><ref name="describes"/><ref name="samePublicationAs"/></choice></oneOrMore>
@@ -287,62 +294,35 @@
       </attribute>
       <!-- The review status of a publication of the publication layer. -->
       <optional><attribute name="ana"><ref name="statePointer"/></attribute></optional>
-      <element name="monogr">
-        <element name="title">
-          <attribute name="level"><value>m</value></attribute>
-          <!-- A publication without a title keeps an empty title, which TEI requires. -->
-          <choice><ref name="value"/><empty/></choice>
+      <choice>
+        <!-- A publication, or a contribution of an author page's person that is a monograph. -->
+        <element name="monogr">
+          <optional><ref name="authorLink"/></optional>
+          <element name="title">
+            <attribute name="level"><value>m</value></attribute>
+            <!-- A publication without a title keeps an empty title, which TEI requires. -->
+            <choice><ref name="value"/><empty/></choice>
+          </element>
+          <ref name="responsibilityAndLanguage"/>
+          <ref name="monogrRest"/>
         </element>
-        <zeroOrMore>
-          <element name="respStmt">
-            <element name="resp"><ref name="nonEmpty"/></element>
-            <element name="persName">
-              <attribute name="role">
-                <choice>
-                  <value>translator</value>
-                  <value>editor</value>
-                  <value>contributor</value>
-                  <value>illustrator</value>
-                </choice>
-              </attribute>
-              <ref name="value"/>
+        <!-- A contribution of an author page's person in the publication its container names. -->
+        <group>
+          <element name="analytic">
+            <ref name="authorLink"/>
+            <element name="title">
+              <attribute name="level"><value>a</value></attribute>
+              <choice><ref name="value"/><empty/></choice>
             </element>
+            <ref name="responsibilityAndLanguage"/>
           </element>
-        </zeroOrMore>
-        <optional>
-          <element name="textLang">
-            <attribute name="mainLang"><data type="language"/></attribute>
-            <ref name="value"/>
+          <element name="monogr">
+            <!-- The container's title, without @level: the layer does not say whether it is a journal or a book. -->
+            <element name="title"><choice><ref name="value"/><empty/></choice></element>
+            <ref name="monogrRest"/>
           </element>
-        </optional>
-        <optional>
-          <element name="edition"><ref name="value"/></element>
-        </optional>
-        <!-- At least one imprint part; where the source states none, an empty date stands, which TEI requires. -->
-        <element name="imprint">
-          <choice>
-            <group>
-              <oneOrMore><element name="pubPlace"><ref name="value"/></element></oneOrMore>
-              <optional><element name="publisher"><ref name="value"/></element></optional>
-              <optional><ref name="date"/></optional>
-            </group>
-            <group>
-              <element name="publisher"><ref name="value"/></element>
-              <optional><ref name="date"/></optional>
-            </group>
-            <ref name="date"/>
-          </choice>
-        </element>
-        <optional>
-          <element name="extent">
-            <element name="measure">
-              <attribute name="unit"><value>page</value></attribute>
-              <optional><attribute name="quantity"><data type="nonNegativeInteger"/></attribute></optional>
-              <ref name="value"/>
-            </element>
-          </element>
-        </optional>
-      </element>
+        </group>
+      </choice>
       <optional>
         <element name="series">
           <element name="title">
@@ -357,6 +337,97 @@
           </optional>
         </element>
       </optional>
+    </element>
+  </define>
+
+  <!-- The statement that an author page's person wrote the contribution: empty, pointing to the person, with its rule and state. -->
+  <define name="authorLink">
+    <element name="author">
+      <attribute name="ref"><data type="string"><param name="pattern">#SZDKLA\.[0-9]+\.person</param></data></attribute>
+      <ref name="provenance"/>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="responsibilityAndLanguage">
+    <zeroOrMore>
+      <element name="respStmt">
+        <element name="resp"><ref name="nonEmpty"/></element>
+        <element name="persName">
+          <attribute name="role">
+            <choice>
+              <value>translator</value>
+              <value>editor</value>
+              <value>contributor</value>
+              <value>illustrator</value>
+              <value>author</value>
+            </choice>
+          </attribute>
+          <ref name="value"/>
+        </element>
+      </element>
+    </zeroOrMore>
+    <optional>
+      <element name="textLang">
+        <attribute name="mainLang"><data type="language"/></attribute>
+        <ref name="value"/>
+      </element>
+    </optional>
+  </define>
+
+  <!-- A monogr after its title and responsibility: edition, imprint, extent, and the issue and pages a contribution occupies. -->
+  <define name="monogrRest">
+    <optional>
+      <element name="edition"><ref name="value"/></element>
+    </optional>
+    <!-- At least one imprint part; where the source states none, an empty date stands, which TEI requires. -->
+    <element name="imprint">
+      <choice>
+        <group>
+          <oneOrMore><element name="pubPlace"><ref name="value"/></element></oneOrMore>
+          <optional><element name="publisher"><ref name="value"/></element></optional>
+          <optional><ref name="date"/></optional>
+        </group>
+        <group>
+          <element name="publisher"><ref name="value"/></element>
+          <optional><ref name="date"/></optional>
+        </group>
+        <ref name="date"/>
+      </choice>
+    </element>
+    <optional>
+      <element name="extent">
+        <element name="measure">
+          <attribute name="unit"><value>page</value></attribute>
+          <optional><attribute name="quantity"><data type="nonNegativeInteger"/></attribute></optional>
+          <ref name="value"/>
+        </element>
+      </element>
+    </optional>
+    <optional>
+      <element name="biblScope">
+        <attribute name="unit"><value>issue</value></attribute>
+        <ref name="value"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="biblScope">
+        <attribute name="unit"><value>page</value></attribute>
+        <ref name="value"/>
+      </element>
+    </optional>
+  </define>
+
+  <!-- The person of an author page, named by its page title. -->
+  <define name="person">
+    <element name="person">
+      <attribute name="xml:id" ns="http://www.w3.org/XML/1998/namespace">
+        <data type="ID"><param name="pattern">SZDKLA\.[0-9]+\.person</param></data>
+      </attribute>
+      <attribute name="corresp">
+        <data type="string"><param name="pattern">klawiter:entry/[0-9]+</param></data>
+      </attribute>
+      <element name="persName"><ref name="value"/></element>
     </element>
   </define>
 
@@ -377,7 +448,7 @@
     <element name="relation">
       <attribute name="name"><value>describes</value></attribute>
       <attribute name="active"><data type="string"><param name="pattern">#src-wiki-[0-9]+</param></data></attribute>
-      <attribute name="passive"><data type="string"><param name="pattern">#SZDKLA\.[0-9]+\.[0-9]+</param></data></attribute>
+      <attribute name="passive"><data type="string"><param name="pattern">#SZDKLA\.[0-9]+\.([0-9]+|person)</param></data></attribute>
       <attribute name="resp"><value>#app-rules</value></attribute>
       <attribute name="ana"><ref name="statePointer"/></attribute>
       <empty/>

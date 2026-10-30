@@ -10,14 +10,21 @@ layer `docs/data/publications/<page>.json` (one entry per publication a
 page describes) and, where present on this computer, the proposed print-wiki
 concordance under `data/print/` go into one TEI document:
 
-- `text/body/listBibl`: one `biblStruct` per publication of an edition page.
-  Author pages, work hubs and pages of other or undetermined kind describe
-  no publication of their own and get none (their model is milestone D2).
+- `text/body/listBibl`: one `biblStruct` per publication the publication
+  layer reads from a page, whatever its page kind; an edition page without a
+  layer gives one from its flat record, a page of another kind none. On an
+  author page each publication is a contribution of the page's person: its
+  title stands in `analytic` with an `author` pointing to the person, and
+  the publication it stands in (the layer's container) is its `monogr`; a
+  contribution without a container is a monograph whose `monogr` names the
+  person as author (operator decisions E8 and E3 of 2026-10-30).
+- `standOff/listPerson`: the person of every author page, named by its page
+  title. Its flat record aggregates the page and gives no contribution.
 - `standOff/listBibl[@type='sources']`: Klawiter's entry of every page with
   its text unaltered and one `seg` per passage a value points to. The entries
   stand outside the header, so that the header's first title stays the title
   of the object (the Dublin Core mapping of GAMS reads it).
-- `standOff/listRelation`: which source describes which publication, and the
+- `standOff/listRelation`: which source describes which publication or person, and the
   proposed identities of print records with wiki pages.
 
 Every value carries `@resp` (its producer), `@ana` (its statement state) and,
@@ -61,16 +68,19 @@ ET.register_namespace("", TEI_NS)
 
 # Producer classes of the dataset to the declared applications.
 PRODUCER_APP = {"regex": "app-rules", "llm": "app-llm", "derived": "app-derivation"}
+# The page kind whose flat record is one publication where the layer reads none.
 PUBLICATION_KIND = "edition-page"
+# The page kind that becomes a person with contributions instead of publications.
+AUTHOR_KIND = "author-page"
 CITATION_PRODUCER = "regex"
 
-# Every field of a page record and of a publication, with its place in the
-# export: ("exported", target), ("pending", milestone, reason) or
-# ("excluded", reason). The acceptance report shows this ledger, and a field
+# Every field of a page record, of a publication and of a contribution (a
+# publication of the layer on an author page), with its place in the export:
+# ("exported", target), ("pending", milestone, reason) or ("excluded", reason). The acceptance report shows this ledger, and a field
 # missing here fails it, so that a new field cannot vanish unnoticed.
 FIELDS: dict[str, dict[str, tuple[str, ...]]] = {
     "page": {
-        "title": ("exported", "monogr/title"),
+        "title": ("exported", "monogr/title; person/persName on an author page"),
         "year": ("exported", "imprint/date"),
         "publisher": ("exported", "imprint/publisher"),
         "location": ("exported", "imprint/pubPlace"),
@@ -83,6 +93,10 @@ FIELDS: dict[str, dict[str, tuple[str, ...]]] = {
         "revisionDates": ("exported", "source bibl, idno of the revision"),
         "sourcePageId": ("exported", "source bibl, idno of the page"),
         "wikiPageKind": ("exported", "source bibl/@subtype"),
+        "wikiPageKindEvidence": (
+            "exported",
+            "@source of an author page's author link, the category that names it",
+        ),
         "printAddressCitations": ("exported", "source bibl, note of print citations"),
         "@id": ("exported", "biblStruct/@corresp"),
         "review": ("exported", "@ana of each value"),
@@ -148,10 +162,6 @@ FIELDS: dict[str, dict[str, tuple[str, ...]]] = {
             "excluded",
             "rule that set the page kind, part of the pipeline record",
         ),
-        "wikiPageKindEvidence": (
-            "excluded",
-            "evidence of the page kind, part of the pipeline record",
-        ),
     },
     "publication": {
         "id": ("exported", "biblStruct/@corresp"),
@@ -201,6 +211,23 @@ FIELDS: dict[str, dict[str, tuple[str, ...]]] = {
             "a proposed decision of a review agent, not a person",
         ),
     },
+}
+# A contribution is a publication of the layer read from an author page; it
+# shares the publication's fields, and its container becomes its monogr.
+FIELDS["contribution"] = {
+    **FIELDS["publication"],
+    "title": ("exported", "analytic/title, or monogr/title without a container"),
+    "credits": ("exported", "respStmt of analytic, or of monogr without a container"),
+    "language": ("exported", "textLang of analytic, or of monogr without a container"),
+    "languageCode": (
+        "exported",
+        "textLang/@mainLang of analytic, or of monogr without a container",
+    ),
+    "container": (
+        "exported",
+        "monogr/title, imprint/pubPlace and monogr/biblScope of the publication "
+        "the contribution stands in",
+    ),
 }
 
 
@@ -593,10 +620,58 @@ def _publication_from_record(body: ET.Element, rec: dict, vals: Values) -> list[
     return [pub_id]
 
 
+def _person(persons: ET.Element, rec: dict, vals: Values) -> str:
+    """The person of an author page, named by its page title."""
+    person_id = f"SZDKLA.{rec['sourcePageId']}.person"
+    person = _el(persons, "person", xml_id=person_id, corresp=rec["@id"])
+    vals.put(
+        person,
+        "persName",
+        rec.get("title", ""),
+        (rec.get("_provenance") or {}).get("title", "regex"),
+        field_states(rec).get("title", "not-reviewed"),
+        (rec.get("fieldEvidence") or {}).get("title", []),
+    )
+    return person_id
+
+
+def _author_link(parent: ET.Element, rec: dict, src: Source, person_id: str) -> None:
+    """The statement that the page's person wrote the contribution.
+
+    It rests on the rule that classified the page as an author page, so it
+    carries that rule and points to the first category the rule names; the
+    data record no review of it. The pointer is final, as categories are.
+    """
+    node = _el(
+        parent,
+        "author",
+        ref=f"#{person_id}",
+        resp=f"#{PRODUCER_APP['regex']}",
+        ana="#not-reviewed",
+    )
+    named = [
+        ev.get("sourceValue")
+        for ev in rec.get("wikiPageKindEvidence") or []
+        if ev.get("sourceField") == "categories"
+    ]
+    for i, cat in enumerate(src.categories, 1):
+        if cat in named:
+            node.set("source", f"#{src.sid}-cat{i}")
+            break
+
+
 def _publications_from_layer(
-    body: ET.Element, rec: dict, layer: list[dict], vals: Values
+    body: ET.Element,
+    rec: dict,
+    layer: list[dict],
+    vals: Values,
+    person_id: str | None = None,
 ) -> list[str]:
-    """One biblStruct per publication of the page's publication layer."""
+    """One biblStruct per publication of the page's publication layer.
+
+    With `person_id` the page is an author page: each publication is a
+    contribution of that person, in the publication its container names.
+    """
     page = rec["sourcePageId"]
     flat_states = field_states(rec)
     ids = []
@@ -604,6 +679,7 @@ def _publications_from_layer(
         pub_id = f"SZDKLA.{page}.{n}"
         prov = pub.get("provenance") or {}
         spans = pub.get("valueSpans") or {}
+        container = (pub.get("container") or {}) if person_id else {}
 
         def put(parent, tag, field, text, evidence=None, state_field=None, **attrs):
             # A review state of the flat record applies where the flat value is this value.
@@ -616,6 +692,9 @@ def _publications_from_layer(
                 parent, tag, text, prov.get(field, "regex"), state, ev, **attrs
             )
 
+        def part(name: str) -> list[dict]:
+            return [s for s in spans.get("container", []) if s.get("part") == name]
+
         struct = _el(
             body,
             "biblStruct",
@@ -623,13 +702,29 @@ def _publications_from_layer(
             corresp=pub["id"],
             ana=f"#{pub.get('reviewStatus', 'proposed')}",
         )
+        # The contribution's own title, credits and language stand in analytic
+        # when it has a container, in monogr otherwise.
+        level = "a" if container else "m"
+        if container:
+            own = _el(struct, "analytic")
+            _author_link(own, rec, vals.src, person_id)
         monogr = _el(struct, "monogr")
+        if not container:
+            own = monogr
+            if person_id:
+                _author_link(own, rec, vals.src, person_id)
         if pub.get("title"):
-            put(monogr, "title", "title", pub["title"], level="m")
+            put(own, "title", "title", pub["title"], level=level)
         else:
-            _el(monogr, "title", level="m")
+            _el(own, "title", level=level)
+        if container:
+            # Whether the container is a journal or a book the layer does not say.
+            if container.get("title"):
+                put(monogr, "title", "container", container["title"], part("title"))
+            else:
+                _el(monogr, "title")
         for credit in pub.get("credits") or []:
-            resp_stmt = _el(monogr, "respStmt")
+            resp_stmt = _el(own, "respStmt")
             _el(resp_stmt, "resp", credit.get("creditLabel") or credit.get("role", ""))
             ev = [
                 s
@@ -647,7 +742,7 @@ def _publications_from_layer(
         # TEI orders monogr: title, responsibility and language, then edition, then imprint.
         if pub.get("languageCode"):
             put(
-                monogr,
+                own,
                 "textLang",
                 "language",
                 pub.get("language", ""),
@@ -666,6 +761,8 @@ def _publications_from_layer(
                 evidence=ev,
                 state_field="location",
             )
+        if container.get("place"):
+            put(imprint, "pubPlace", "container", container["place"], part("place"))
         if pub.get("publisher"):
             put(imprint, "publisher", "publisher", pub["publisher"])
         if pub.get("year"):
@@ -695,6 +792,16 @@ def _publications_from_layer(
                 unit="page",
                 **measure,
             )
+        for name, unit in (("issue", "issue"), ("pages", "page")):
+            if container.get(name):
+                put(
+                    monogr,
+                    "biblScope",
+                    "container",
+                    container[name],
+                    part(name),
+                    unit=unit,
+                )
         if pub.get("series"):
             series = _el(struct, "series")
             put(series, "title", "series", pub["series"], level="s")
@@ -728,17 +835,24 @@ def build(pages: list[int] | None = None, with_print: bool = False) -> ET.Elemen
     body = _el(_el(_el(tei, "text"), "body"), "listBibl", type="publications")
     stand_off = _el(tei, "standOff")
     sources = _el(stand_off, "listBibl", type="sources")
+    persons = ET.Element(_t("listPerson"), type="authors")
     relations = ET.Element(_t("listRelation"))
     for rec in records:
         src = Source(rec)
         vals = Values(src)
         pub_ids: list[str] = []
-        if rec["wikiPageKind"] == PUBLICATION_KIND:
-            layer = load_layer(rec["sourcePageId"])
-            if layer:
-                pub_ids = _publications_from_layer(body, rec, layer, vals)
-            else:
-                pub_ids = _publication_from_record(body, rec, vals)
+        layer = load_layer(rec["sourcePageId"])
+        if rec["wikiPageKind"] == AUTHOR_KIND:
+            person_id = _person(persons, rec, vals)
+            pub_ids = [person_id] + _publications_from_layer(
+                body, rec, layer, vals, person_id
+            )
+        elif layer:
+            pub_ids = _publications_from_layer(body, rec, layer, vals)
+        elif rec["wikiPageKind"] == PUBLICATION_KIND:
+            # Only an edition page's flat record is one publication; a page of
+            # another kind without a layer gives none rather than a guessed one.
+            pub_ids = _publication_from_record(body, rec, vals)
         vals.resolve(src.write(sources))
         for pub_id in pub_ids:
             _el(
@@ -768,7 +882,9 @@ def build(pages: list[int] | None = None, with_print: bool = False) -> ET.Elemen
                 n=claim["id"],
             )
     if not len(body):
-        _el(body, "bibl")  # a sample without edition pages; listBibl needs a child
+        _el(body, "bibl")  # a sample without publications; listBibl needs a child
+    if len(persons):
+        stand_off.append(persons)
     if len(relations):
         stand_off.append(relations)
     _indent(tei)

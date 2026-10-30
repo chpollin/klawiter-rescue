@@ -333,19 +333,25 @@ def _value(
 
 
 def _expected_structs(rec: dict) -> list[dict]:
-    """The biblStructs the canonical data call for on one page, recomputed without the exporter.
+    """The records the canonical data call for on one page, recomputed without the exporter.
 
-    Each has its identifier, @corresp, @ana and the valued elements it must
-    hold, no more and no fewer. A producer the data do not record is
+    A record is a biblStruct or, on an author page, the page's person, listed
+    first. Each has its identifier, element, @corresp, @ana and the valued
+    elements it must hold, no more and no fewer; a contribution of an author
+    page holds an author link whose @source is the exact category pointer. A producer the data do not record is
     "undeclared", which no application stands for, so that the export
     cannot supply a default unnoticed.
     """
     page = rec["sourcePageId"]
-    if rec["wikiPageKind"] != export_tei.PUBLICATION_KIND:
-        return []
+    kind = rec["wikiPageKind"]
     states = (rec.get("review") or {}).get("fieldStates") or {}
     layer = export_tei.load_layer(page)
-    if not layer:
+    # Decisions E8 and E3 of 2026-10-30: the layer's publications count whatever
+    # the page kind; an author page is a person whose contributions they are.
+    author = kind == "author-page"
+    if not layer and not author:
+        if kind != "edition-page":
+            return []
         prov, evid = rec.get("_provenance") or {}, rec.get("fieldEvidence") or {}
 
         def flat(tag: str, field: str, text: str, **attrs: str) -> dict:
@@ -389,6 +395,7 @@ def _expected_structs(rec: dict) -> list[dict]:
         return [
             {
                 "id": f"SZDKLA.{page}.1",
+                "tag": "biblStruct",
                 "corresp": rec["@id"],
                 "ana": None,
                 "values": vals,
@@ -396,8 +403,51 @@ def _expected_structs(rec: dict) -> list[dict]:
         ]
 
     out = []
+    person = f"SZDKLA.{page}.person"
+    link = None
+    if author:
+        evid = rec.get("fieldEvidence") or {}
+        out.append(
+            {
+                "id": person,
+                "tag": "person",
+                "corresp": rec["@id"],
+                "ana": None,
+                "values": [
+                    _value(
+                        "persName",
+                        str(rec.get("title", "")),
+                        (rec.get("_provenance") or {}).get("title", "undeclared"),
+                        states.get("title", "not-reviewed"),
+                        evid.get("title", []),
+                    )
+                ],
+            }
+        )
+        # The author link rests on the page-kind rule, which the dataset names
+        # without a producer class; it points to the first page category the
+        # rule's evidence names, and no review of it is recorded.
+        named = {
+            ev.get("sourceValue")
+            for ev in rec.get("wikiPageKindEvidence") or []
+            if ev.get("sourceField") == "categories"
+        }
+        cat = next(
+            (n for n, c in enumerate(rec.get("categories") or [], 1) if c in named),
+            None,
+        )
+        link = _value(
+            "author",
+            "",
+            "regex" if rec.get("wikiPageKindRule") else "undeclared",
+            "not-reviewed",
+            [],
+            ref=f"#{person}",
+        )
+        link["pointer"] = f"#src-wiki-{page}-cat{cat}" if cat else None
     for i, pub in enumerate(layer, 1):
         prov, spans = pub.get("provenance") or {}, pub.get("valueSpans") or {}
+        container = (pub.get("container") or {}) if author else {}
 
         def put(
             tag: str,
@@ -425,9 +475,26 @@ def _expected_structs(rec: dict) -> list[dict]:
                 **attrs,
             )
 
-        vals = []
+        def piece(name: str, spans=spans) -> list[dict]:
+            return [s for s in spans.get("container", []) if s.get("part") == name]
+
+        vals = [dict(link)] if link else []
         if pub.get("title"):
-            vals.append(put("title", "title", pub["title"], level="m"))
+            level = "a" if container else "m"
+            vals.append(put("title", "title", pub["title"], level=level))
+        if container.get("title"):
+            vals.append(put("title", "container", container["title"], piece("title")))
+        for name, unit in (("issue", "issue"), ("pages", "page")):
+            if container.get(name):
+                vals.append(
+                    put(
+                        "biblScope",
+                        "container",
+                        container[name],
+                        piece(name),
+                        unit=unit,
+                    )
+                )
         for cr in pub.get("credits") or []:
             name = cr.get("name", "")
             vals.append(
@@ -458,6 +525,12 @@ def _expected_structs(rec: dict) -> list[dict]:
         for pl in pub.get("places") or []:
             ev = [s for s in spans.get("places", []) if s.get("value") == pl]
             vals.append(put("pubPlace", "places", pl, ev, "location"))
+        # After the publication's places, in document order: equal keys are
+        # matched in order, and a container may name the same place (page 4145).
+        if container.get("place"):
+            vals.append(
+                put("pubPlace", "container", container["place"], piece("place"))
+            )
         if pub.get("publisher"):
             vals.append(put("publisher", "publisher", pub["publisher"]))
         if pub.get("year"):
@@ -484,6 +557,7 @@ def _expected_structs(rec: dict) -> list[dict]:
         out.append(
             {
                 "id": f"SZDKLA.{page}.{i}",
+                "tag": "biblStruct",
                 "corresp": pub["id"],
                 "ana": f"#{pub['reviewStatus']}" if pub.get("reviewStatus") else None,
                 "values": vals,
@@ -720,13 +794,14 @@ def check_export(
         "pointers",
         "D1",
         "Every pointer resolves",
-        "Every @resp, @ana, @source, @active, @passive and @mutual names an element of the document, and every range pointer lies inside its entry.",
+        "Every @resp, @ana, @source, @active, @passive and @mutual, and every local @ref, names an element of the document, and every range pointer lies inside its entry.",
     )
     pointed: set[str] = set()
     for el in doc.iter():
-        for attr in ("resp", "ana", "source", "active", "passive", "mutual"):
+        for attr in ("resp", "ana", "source", "active", "passive", "mutual", "ref"):
             val = el.get(attr)
-            if not val:
+            # @ref also holds authority URIs (the publisher's GND); only local pointers resolve here.
+            if not val or (attr == "ref" and not val.startswith("#")):
                 continue
             m = RANGE.fullmatch(val)
             if m:
@@ -759,9 +834,13 @@ def check_export(
         )
     checks.append(c.d)
 
-    # Publications: one biblStruct per publication of an edition page, none for other kinds.
+    # Publications: one biblStruct per publication of the layer, one from the
+    # flat record of an edition page without a layer, a person per author page.
     expected = {page: _expected_structs(rec) for page, rec in records.items()}
     structs = {s.get(XML_ID): s for s in doc.iterfind(f".//{T}body//{T}biblStruct")}
+    structs.update(
+        (p.get(XML_ID), p) for p in doc.iterfind(f"{T}standOff/{T}listPerson/{T}person")
+    )
     describes: dict[int, list] = {}
     for rel in doc.iterfind(f".//{T}relation[@name='describes']"):
         describes.setdefault(_page_of_pointer(rel.get("active")), []).append(rel)
@@ -769,7 +848,7 @@ def check_export(
         "publications",
         "D1",
         "Each publication is its own record",
-        "An edition page gives one biblStruct per publication of its publication layer, or one when it has none, with the record link of the canonical data and a relation from its source entry; no other page kind gives a biblStruct.",
+        "A page gives one biblStruct per publication of its publication layer whatever its kind, an edition page without a layer one from its flat record, an author page a person before its contributions; each with the record link of the canonical data and a relation from its source entry, and nothing else.",
     )
     wanted_ids = set()
     for page, rec in records.items():
@@ -783,6 +862,11 @@ def check_export(
             struct = structs.get(exp["id"])
             if struct is None:
                 c.fail(page, f"{exp['id']} is missing")
+            elif etree.QName(struct).localname != exp["tag"]:
+                c.fail(
+                    page,
+                    f"{exp['id']}: a {etree.QName(struct).localname}, expected a {exp['tag']}",
+                )
             elif struct.get("corresp") != exp["corresp"]:
                 c.fail(
                     page,
@@ -801,7 +885,7 @@ def check_export(
         "values",
         "D1",
         "Every exported value arrives unchanged",
-        "The valued elements of each publication (every element with @resp, its text and attributes) are exactly those the canonical data call for, none missing and none added; print citations likewise.",
+        "The valued elements of each publication and person (every element with @resp, its text and attributes, an author link's @ref among them) are exactly those the canonical data call for, none missing and none added; print citations likewise.",
     )
     c_resp = Check(
         "producers",
@@ -819,7 +903,7 @@ def check_export(
         "passages",
         "D1",
         "Every located value points to its passage",
-        "A value whose evidence locates a passage points to it and the passage is the text at those offsets; a value read from the page title or a category points there; a value without evidence points nowhere.",
+        "A value whose evidence locates a passage points to it and the passage is the text at those offsets; a value read from the page title or a category points there; an author link points to the category its page-kind rule names; a value without evidence points nowhere.",
     )
     app = {"regex": "#app-rules", "llm": "#app-llm", "derived": "#app-derivation"}
     values = Counter()
@@ -835,6 +919,14 @@ def check_export(
         )
         span = _located(exp["evidence"])
         src = el.get("source")
+        if "pointer" in exp:
+            # A statement whose passage is fixed by the data, such as an author link's category.
+            c_src.ok() if src == exp["pointer"] else c_src.fail(
+                page, f"{label}: source {src}, expected {exp['pointer']}"
+            )
+            if src is not None:
+                values["withMetaSource"] += 1
+            return
         if span is None:
             gaps = {e.get("gap") for e in exp["evidence"]}
             meta = None
@@ -965,7 +1057,8 @@ def check_export(
     coverage = []
     for layer_name, counts in (
         ("page", Counter(k for r in records.values() for k in r)),
-        ("publication", _layer_field_counts(records)),
+        ("publication", _layer_field_counts(records, author=False)),
+        ("contribution", _layer_field_counts(records, author=True)),
     ):
         declared = export_tei.FIELDS[layer_name]
         for field, n in sorted(counts.items()):
@@ -1255,10 +1348,11 @@ def _unclassified(records: dict) -> int:
     )
 
 
-def _layer_field_counts(records: dict) -> Counter:
+def _layer_field_counts(records: dict, author: bool) -> Counter:
+    """Field counts of the layer's publications, of author pages or of all others."""
     n = Counter()
     for page, rec in records.items():
-        if rec["wikiPageKind"] == export_tei.PUBLICATION_KIND:
+        if (rec["wikiPageKind"] == "author-page") == author:
             for pub in export_tei.load_layer(page):
                 n.update(pub.keys())
     return n
@@ -1295,23 +1389,27 @@ def _sample(doc, rec: dict, why: str, seg_pos: dict) -> dict:
         "textLang": "language",
         "measure": "extent",
         "edition": "edition",
-        "biblScope": "series volume",
+        "author": "author link",
     }
     text = rec.get("fullBibliographicEntry") or ""
     pubs, frags = [], []
     source = doc.find(f".//{T}bibl[@{XML_ID}='src-wiki-{page}']")
     for rel in rels:
-        struct = doc.find(f".//{T}biblStruct[@{XML_ID}='{rel.get('passive')[1:]}']")
+        # A biblStruct, or the person of an author page.
+        struct = doc.find(f".//*[@{XML_ID}='{rel.get('passive')[1:]}']")
         vals = []
         for el in struct.iter():
             if el.get("resp") is None:
                 continue
             tag = etree.QName(el).localname
-            field = (
-                "series"
-                if tag == "title" and el.get("level") == "s"
-                else field_of.get(tag, tag)
-            )
+            if tag == "title":
+                field = {"s": "series", "a": "title", "m": "title"}.get(
+                    el.get("level"), "container"
+                )
+            elif tag == "biblScope":
+                field = {"volume": "series volume"}.get(el.get("unit"), el.get("unit"))
+            else:
+                field = field_of.get(tag, tag)
             src, span, gap = el.get("source"), None, None
             m = RANGE.fullmatch(src or "")
             if m:

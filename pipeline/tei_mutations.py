@@ -197,7 +197,7 @@ def producer_unknown(doc: etree._Element) -> etree._Element | None:
 
 def seg_unpointed(doc: etree._Element) -> etree._Element | None:
     """Unread text of an entry is marked as a passage, so it reads as read text."""
-    found = _unmarked(doc, "\w{3}")
+    found = _unmarked(doc, r"\w{3}")
     if found is None:
         return None
     owner, is_tail, text = found
@@ -295,6 +295,71 @@ def _alter(
 
 
 CITATION = "//t:note[@type='printCitations']/t:idno"
+AUTHOR_LINK = "//t:body//t:biblStruct//t:author[@ref]"
+CONTAINER_TITLE = "//t:body//t:biblStruct[t:analytic]/t:monogr/t:title"
+
+
+def _drop_with_relations(doc: etree._Element, records: list[etree._Element]) -> None:
+    for rec in records:
+        rid = rec.get(XML_ID)
+        rec.getparent().remove(rec)
+        for rel in doc.xpath(f"//t:relation[@passive='#{rid}']", namespaces=NS):
+            rel.getparent().remove(rel)
+
+
+def other_kind_left_out(doc: etree._Element) -> etree._Element | None:
+    """The publications of a page not classified as an edition page are left out (E8)."""
+    for kind in ("work-hub", "other", "undetermined"):
+        for src in doc.xpath(
+            f"//t:standOff/t:listBibl/t:bibl[@subtype='{kind}']", namespaces=NS
+        ):
+            page = src.get(XML_ID).removeprefix("src-wiki-")
+            structs = doc.xpath(
+                f"//t:body//t:biblStruct[starts-with(@xml:id, 'SZDKLA.{page}.')]",
+                namespaces=NS,
+            )
+            if structs:
+                _drop_with_relations(doc, structs)
+                return src
+    return None
+
+
+def person_dropped(doc: etree._Element) -> etree._Element | None:
+    """An author page's person is left out with its relation; its contributions stay."""
+    person = _first(doc, "//t:standOff/t:listPerson/t:person")
+    if person is None:
+        return None
+    _drop_with_relations(doc, [person])
+    return person
+
+
+def author_redirected(doc: etree._Element) -> etree._Element | None:
+    """An author link points to its own contribution instead of the person; it still resolves."""
+    el = _first(doc, AUTHOR_LINK)
+    if el is None:
+        return None
+    struct = next(a for a in el.iterancestors() if a.tag == f"{T}biblStruct")
+    el.set("ref", f"#{struct.get(XML_ID)}")
+    return el
+
+
+def author_dropped(doc: etree._Element) -> etree._Element | None:
+    """A contribution loses the link to its author."""
+    el = _first(doc, AUTHOR_LINK)
+    if el is None:
+        return None
+    parent = el.getparent()
+    parent.remove(el)
+    return parent
+
+
+def author_source_title(doc: etree._Element) -> etree._Element | None:
+    """An author link points to the page title instead of the category its rule names."""
+    el = _first(doc, f"{AUTHOR_LINK}[@source]")
+    if el is None:
+        return None
+    el.set("source", re.sub(r"-cat\d+$", "-title", el.get("source")))
+    return el
 
 
 # id, the fault in a phrase, the mutation.
@@ -415,6 +480,51 @@ MUTATIONS: list[tuple[str, str, Callable[[etree._Element], etree._Element | None
         "app-version",
         "an application version altered",
         _alter("//t:application[@xml:id='app-rules']", "version", lambda v: "0.1"),
+    ),
+    # Decisions E8 and E3: publications of every page kind, persons of author pages.
+    (
+        "other-kind-left-out",
+        "the publications of a work hub or other page left out",
+        other_kind_left_out,
+    ),
+    ("person-dropped", "an author page's person left out", person_dropped),
+    (
+        "person-name",
+        "a person's name altered",
+        _alter("//t:standOff/t:listPerson/t:person/t:persName"),
+    ),
+    (
+        "person-link",
+        "a person linked to another record",
+        _alter("//t:standOff/t:listPerson/t:person", "corresp", lambda v: v + "0"),
+    ),
+    ("author-redirected", "an author link to the wrong record", author_redirected),
+    ("author-dropped", "a contribution without its author link", author_dropped),
+    (
+        "author-source",
+        "an author link pointing to the page title",
+        author_source_title,
+    ),
+    (
+        "author-resp",
+        "the producer of an author link swapped",
+        _alter(AUTHOR_LINK, "resp", lambda v: "#app-llm"),
+    ),
+    (
+        "contribution-level",
+        "a contribution's title made a monograph title",
+        _alter("//t:body//t:analytic/t:title", "level", lambda v: "m"),
+    ),
+    ("container-title", "a container title altered", _alter(CONTAINER_TITLE)),
+    (
+        "contribution-pages",
+        "the pages of a contribution altered",
+        _alter("//t:body//t:monogr/t:biblScope[@unit='page']"),
+    ),
+    (
+        "contribution-issue",
+        "the issue of a contribution altered",
+        _alter("//t:body//t:monogr/t:biblScope[@unit='issue']"),
     ),
 ]
 

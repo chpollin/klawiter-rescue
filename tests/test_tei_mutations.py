@@ -1,11 +1,16 @@
 """The mutation suite of the TEI export: every deliberately wrong document fails a check.
 
 Runs `pipeline/tei_mutations.py` with the checks of `pipeline/acceptance.py`
-(profile schema and header check, without tei_all) on four samples: page 212
+(profile schema and header check, without tei_all) on eight samples: page 212
 (one publication, values of the rules and of the language model, print
 citations), page 3 (several publications from the publication layer), page
-1010 (series and credits) and page 4939 (edition statement and series volume).
-Each sample alone and all four together, so that every mutation finds a target.
+1010 (series and credits), page 4939 (edition statement and series volume),
+page 54 (a work hub with publications, decision E8), page 1605 (an author page
+whose person has no contribution in the layer), page 1818 (an author page
+with contributions in containers with issue and pages, decision E3) and page
+4145 (a contribution whose own place and container place are the same word,
+matched in document order). Each sample alone and all together, so that every
+mutation finds a target.
 """
 
 from __future__ import annotations
@@ -23,7 +28,7 @@ import acceptance  # noqa: E402
 import export_tei  # noqa: E402
 import tei_mutations  # noqa: E402
 
-PAGES = [212, 3, 1010, 4939]
+PAGES = [212, 3, 1010, 4939, 54, 1605, 1818, 4145]
 
 # Known mismatches of the canonical data, found on 2026-10-30 and kept visible:
 # the print citations record no producer, so the export's @resp="#app-rules"
@@ -89,3 +94,5 @@ def test_the_profile_schema_rejects_what_no_invariant_reads(combined) -> None:
     assert "profile-schema" in caught["attribute-foreign"]
     assert "profile-schema" in caught["imprint-emptied"]
     assert "profile-schema" in caught["producer-unknown"]
+    assert "profile-schema" in caught["author-redirected"]
+    assert "profile-schema" in caught["contribution-level"]

@@ -82,3 +82,95 @@ def test_the_source_text_survives_whole_and_unread_text_stays_unmarked(doc) -> N
 
 def test_a_wiki_only_export_carries_no_print_record(doc) -> None:
     assert not doc.findall(f".//{TEI}bibl[@type='printEntry']")
+
+
+# Decisions E8 and E3 of 2026-10-30: page 54 is a work hub whose layer reads 31
+# editions, page 1605 an author page whose layer reads nothing, page 1818 an
+# author page with eight contributions, four of them in a container.
+KINDS = [54, 1605, 1818]
+
+
+@pytest.fixture(scope="module")
+def kinds():
+    return lxml_etree.fromstring(export_tei.serialize(export_tei.build(KINDS)))
+
+
+def _structs(doc, page: int) -> list:
+    return [
+        s
+        for s in doc.iterfind(f".//{TEI}body//{TEI}biblStruct")
+        if s.get(XML_ID).startswith(f"SZDKLA.{page}.")
+    ]
+
+
+def _passage(doc, el) -> str:
+    seg = doc.find(f".//{TEI}seg[@{XML_ID}='{el.get('source')[1:]}']")
+    return "".join(seg.itertext())
+
+
+def test_the_page_kinds_validate_against_both_schemas(kinds) -> None:
+    profile = lxml_etree.RelaxNG(lxml_etree.parse(str(SCHEMA)))
+    assert profile.validate(kinds), profile.error_log
+    if TEI_ALL.is_file():
+        tei_all = lxml_etree.RelaxNG(lxml_etree.parse(str(TEI_ALL)))
+        assert tei_all.validate(kinds), tei_all.error_log
+
+
+def test_a_work_hub_gives_the_publications_its_entry_yields(kinds) -> None:
+    structs = _structs(kinds, 54)
+    assert len(structs) == len(export_tei.load_layer(54)) == 31
+    first = structs[0]
+    assert first.get("corresp") == "klawiter:publication/54-1939-a"
+    assert first.find(f"{TEI}analytic") is None
+    assert first.find(f".//{TEI}author") is None, "a work hub names no author"
+    date = first.find(f".//{TEI}imprint/{TEI}date")
+    assert (date.get("when"), _passage(kinds, date)) == ("1939", "1939")
+    passive = [
+        r.get("passive")
+        for r in kinds.iterfind(f".//{TEI}relation[@active='#src-wiki-54']")
+    ]
+    assert passive == [f"#{s.get(XML_ID)}" for s in structs]
+
+
+def test_an_author_page_is_a_person_and_no_publication_of_its_own(kinds) -> None:
+    person = kinds.find(
+        f".//{TEI}listPerson/{TEI}person[@{XML_ID}='SZDKLA.1605.person']"
+    )
+    name = person.find(f"{TEI}persName")
+    assert name.text == "Cai, Yuanhuang"
+    assert name.get("source") == "#src-wiki-1605-title"
+    assert person.get("corresp") == "klawiter:entry/1605"
+    # The layer reads no contribution from page 1605, so none is invented from
+    # its flat record, whose title is the person's name.
+    assert export_tei.load_layer(1605) == []
+    assert _structs(kinds, 1605) == []
+    passive = [
+        r.get("passive")
+        for r in kinds.iterfind(f".//{TEI}relation[@active='#src-wiki-1605']")
+    ]
+    assert passive == ["#SZDKLA.1605.person"]
+
+
+def test_contributions_point_to_their_person_and_their_container(kinds) -> None:
+    structs = _structs(kinds, 1818)
+    assert len(structs) == 8
+    for s in structs:
+        authors = s.findall(f".//{TEI}author")
+        assert [a.get("ref") for a in authors] == ["#SZDKLA.1818.person"]
+        # The first category the page-kind rule names: Authors (Croatian).
+        assert authors[0].get("source") == "#src-wiki-1818-cat1"
+    article = next(s for s in structs if s.get("corresp").endswith("1818-1965-a"))
+    title = article.find(f"{TEI}analytic/{TEI}title[@level='a']")
+    assert title.text.startswith("Romain Rolland et Stefan Zweig. Les Années")
+    monogr = article.find(f"{TEI}monogr")
+    container = monogr.find(f"{TEI}title")
+    assert container.get("level") is None, "journal or book, the layer does not say"
+    assert (container.text, _passage(kinds, container)) == ("Filološki pregled",) * 2
+    pages = monogr.find(f"{TEI}biblScope[@unit='page']")
+    assert (pages.text, _passage(kinds, pages)) == ("(153)-180",) * 2
+    assert monogr.find(f"{TEI}biblScope[@unit='issue']").text == "I-II"
+    assert monogr.find(f"{TEI}imprint/{TEI}pubPlace").text == "Beograd"
+    book = next(s for s in structs if s.get("corresp").endswith("1818-1970-a"))
+    assert book.find(f"{TEI}analytic") is None
+    assert book.find(f"{TEI}monogr/{TEI}author") is not None
+    assert book.find(f"{TEI}monogr/{TEI}title").get("level") == "m"
