@@ -54,7 +54,7 @@ XML_ID = export_tei.XML_ID
 MAX_EXAMPLES = 20
 SAMPLES = {
     212: "A single publication whose place and publisher came from the language model and whose place a review agent proposed",
-    54: "The merged bibliography's first sample; classified as a work hub, its entry still describes a 1939 edition, which D1 therefore leaves out",
+    54: "The merged bibliography's first sample; classified as a work hub, its entry describes 31 editions, which the export gives since decision E8",
     3: "An edition page with several publications, each its own biblStruct",
     1605: "An author page, which lists a person's contributions and gives no publication of its own",
 }
@@ -142,7 +142,7 @@ ACCEPTANCE = [
         "id": "E8",
         "milestone": "D2",
         "question": "Should pages classified otherwise, whose entry still describes publications, get them in the export?",
-        "why": "__N__ pages are not classified as edition pages, yet the publication layer reads publications from them; the export leaves these out today.",
+        "why": "__N__ pages are not classified as edition pages, yet the publication layer reads publications from them.",
         "recommendation": "Yes: the publication layer reads the entry itself, the page class only sorts pages.",
         "evidence": [
             {
