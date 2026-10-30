@@ -441,7 +441,7 @@
               "producer": "regex",
               "state": "not-reviewed",
               "span": null,
-              "gap": "category",
+              "gap": "category-markup",
               "textDiffers": false
             },
             {
@@ -459,7 +459,7 @@
           ]
         }
       ],
-      "tei": "<listBibl>\n  <biblStruct xml:id=\"SZDKLA.212.1\" corresp=\"klawiter:entry/212\">\n          <monogr>\n            <title level=\"m\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n            <respStmt>\n              <resp>translator</resp>\n              <persName resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s1\">Eugen Relgis</persName>\n            </respStmt>\n            <textLang mainLang=\"ro\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-cat1\">Rumanian</textLang>\n            <imprint>\n              <pubPlace xml:id=\"SZDKLA.212.1.place\" resp=\"#app-llm\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s3\">Bucureşti</pubPlace>\n              <publisher xml:id=\"SZDKLA.212.1.publisher\" resp=\"#app-llm\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s4\">Editura Ştiinţifică</publisher>\n              <date when=\"1996\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s5\">1996</date>\n            </imprint>\n            <extent>\n              <measure unit=\"page\" quantity=\"248\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s2\">248</measure>\n            </extent>\n          </monogr>\n        </biblStruct>\n</listBibl>\n<listBibl type=\"sources\">\n  <bibl type=\"wikiPage\" xml:id=\"src-wiki-212\">\n            <idno type=\"pageId\">212</idno>\n            <idno type=\"revision\">4392</idno>\n            <title xml:id=\"src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n            <note type=\"categories\">\n              <seg xml:id=\"src-wiki-212-cat1\">Essays / Volumes (Rumanian)</seg>\n            </note>\n            <quote>Translated by <seg xml:id=\"src-wiki-212-s1\">Eugen Relgis</seg>. <seg xml:id=\"src-wiki-212-s2\">248</seg>p. <seg xml:id=\"src-wiki-212-s3\">Bucureşti</seg>: <seg xml:id=\"src-wiki-212-s4\">Editura Ştiinţifică</seg>, <seg xml:id=\"src-wiki-212-s5\">1996</seg> (Ardealul). [See <seg xml:id=\"src-wiki-212-s6\">H 670</seg>, <seg xml:id=\"src-wiki-212-s7\">G 131</seg> &amp; <seg xml:id=\"src-wiki-212-s8\">H 490</seg>, <seg xml:id=\"src-wiki-212-s9\">G 445</seg>. See <seg xml:id=\"src-wiki-212-s10\">G 201</seg>, 491, 492]</quote>\n          </bibl>\n</listBibl>"
+      "tei": "<biblStruct xml:id=\"SZDKLA.212.1\" corresp=\"klawiter:entry/212\">\n  <monogr>\n    <title level=\"m\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n    <respStmt>\n      <resp>Translated by</resp>\n      <persName role=\"translator\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s1\">Eugen Relgis</persName>\n    </respStmt>\n    <textLang mainLang=\"ro\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-cat1\">Rumanian</textLang>\n    <imprint>\n      <pubPlace resp=\"#app-llm\" ana=\"#proposed\" source=\"#src-wiki-212-s3\">Bucureşti</pubPlace>\n      <publisher resp=\"#app-llm\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s4\">Editura Ştiinţifică</publisher>\n      <date when=\"1996\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s5\">1996</date>\n    </imprint>\n    <extent>\n      <measure unit=\"page\" quantity=\"248\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s2\">248</measure>\n    </extent>\n  </monogr>\n</biblStruct>\n<bibl type=\"wikiPage\" subtype=\"edition-page\" xml:id=\"src-wiki-212\">\n  <title xml:id=\"src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n  <idno type=\"pageId\">212</idno>\n  <idno type=\"revision\">4392</idno>\n  <note type=\"categories\">\n    <seg xml:id=\"src-wiki-212-cat1\">Essays / Volumes (Rumanian)</seg>\n  </note>\n  <quote xml:id=\"src-wiki-212-text\">Translated by <seg xml:id=\"src-wiki-212-s1\">Eugen Relgis</seg>. <seg xml:id=\"src-wiki-212-s2\">248</seg>p. <seg xml:id=\"src-wiki-212-s3\">Bucureşti</seg>: <seg xml:id=\"src-wiki-212-s4\">Editura Ştiinţifică</seg>, <seg xml:id=\"src-wiki-212-s5\">1996</seg> (Ardealul). [See <seg xml:id=\"src-wiki-212-s6\">H 670</seg>, <seg xml:id=\"src-wiki-212-s7\">G 131</seg> &amp; <seg xml:id=\"src-wiki-212-s8\">H 490</seg>, <seg xml:id=\"src-wiki-212-s9\">G 445</seg>. See <seg xml:id=\"src-wiki-212-s10\">G 201</seg>, 491, 492]</quote>\n  <note type=\"printCitations\">\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s6\">H 670</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s7\">G 131</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s8\">H 490</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s9\">G 445</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s10\">G 201</idno>\n  </note>\n</bibl>"
     },
     {
       "page": 9001,
@@ -590,39 +590,416 @@
               "producer": "fixture",
               "state": "not-reviewed",
               "span": null,
-              "gap": "rule",
+              "gap": "repeated",
               "textDiffers": false
             }
           ]
         }
       ],
       "tei": "<listBibl>\n  <biblStruct xml:id=\"SZDKLA.9001.1\" corresp=\"klawiter:entry/9001\">\n    <monogr>\n      <title level=\"m\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s1\">Ungeduld des Herzens &lt;Auszug&gt;</title>\n      <respStmt>\n        <resp>editor</resp>\n        <persName resp=\"#person\" ana=\"#confirmed\" source=\"#src-wiki-9001-s2\">Richard Friedenthal</persName>\n      </respStmt>\n      <imprint>\n        <pubPlace resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s3\">Frankfurt am Main</pubPlace>\n        <publisher resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s4\">S. Fischer</publisher>\n        <date when=\"1966\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s5\">1966</date>\n      </imprint>\n    </monogr>\n  </biblStruct>\n  <biblStruct xml:id=\"SZDKLA.9001.2\" corresp=\"klawiter:entry/9001\">\n    <monogr>\n      <edition resp=\"#app-llm\" ana=\"#contested\" source=\"#src-wiki-9001-s6\">2nd edition</edition>\n      <imprint>\n        <pubPlace resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s7\">Frankfurt</pubPlace>\n        <publisher resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s8\">Fischer</publisher>\n        <date when=\"1972\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-9001-s9\">1972</date>\n      </imprint>\n    </monogr>\n  </biblStruct>\n</listBibl>"
+    },
+    {
+      "page": 8800,
+      "title": "Sternstunden der Menschheit (hub)",
+      "kind": "work-hub",
+      "why": "Fixture work hub whose entry describes five editions the export leaves out.",
+      "entry": "[1927]: Insel-Verlag, Leipzig. Sternstunden der Menschheit. 92p.; [1928]: Insel-Verlag, Leipzig. Sternstunden der Menschheit. 96p.; [1936]: Insel-Verlag, Leipzig. Sternstunden der Menschheit. 160p.; [1943]: Insel-Verlag, Leipzig. Sternstunden der Menschheit. 192p.; [1951]: Insel-Verlag, Leipzig. Sternstunden der Menschheit. 240p.",
+      "publications": [
+        {
+          "id": "klawiter:publication/8800-1927-a",
+          "state": "proposed",
+          "exported": false,
+          "values": [
+            {
+              "field": "date",
+              "value": "1927",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                1,
+                5
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Insel-Verlag",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                8,
+                20
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "92p.",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                60,
+                64
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        },
+        {
+          "id": "klawiter:publication/8800-1928-a",
+          "state": "proposed",
+          "exported": false,
+          "values": [
+            {
+              "field": "date",
+              "value": "1928",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                67,
+                71
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Insel-Verlag",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                74,
+                86
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "96p.",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                126,
+                130
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        },
+        {
+          "id": "klawiter:publication/8800-1936-a",
+          "state": "proposed",
+          "exported": false,
+          "values": [
+            {
+              "field": "date",
+              "value": "1936",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                133,
+                137
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Insel-Verlag",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                140,
+                152
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "160p.",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                192,
+                197
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        },
+        {
+          "id": "klawiter:publication/8800-1943-a",
+          "state": "proposed",
+          "exported": false,
+          "values": [
+            {
+              "field": "date",
+              "value": "1943",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                200,
+                204
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Insel-Verlag",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                207,
+                219
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "192p.",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                259,
+                264
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        },
+        {
+          "id": "klawiter:publication/8800-1951-a",
+          "state": "proposed",
+          "exported": false,
+          "values": [
+            {
+              "field": "date",
+              "value": "1951",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                267,
+                271
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Insel-Verlag",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                274,
+                286
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "240p.",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                326,
+                331
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        }
+      ],
+      "tei": "<bibl type=\"wikiPage\" subtype=\"work-hub\" xml:id=\"src-wiki-8800\">\n  <idno type=\"pageId\">8800</idno>\n</bibl>"
+    },
+    {
+      "page": 7700,
+      "title": "Example, Author",
+      "kind": "author-page",
+      "why": "Fixture author page, which lists contributions and gives no publication of its own.",
+      "entry": "\"A foreword\" in Ausgewählte Novellen [Wien, 1981], pp. 5-9",
+      "publications": [],
+      "tei": "<bibl type=\"wikiPage\" subtype=\"author-page\" xml:id=\"src-wiki-7700\">\n  <idno type=\"pageId\">7700</idno>\n</bibl>"
+    },
+    {
+      "page": 213,
+      "title": "Unreferenced fixture page",
+      "kind": "edition-page",
+      "why": "Fixture sample no decision refers to.",
+      "entry": "Translated by Eugen Relgis. 248p. Bucureşti: Editura Ştiinţifică, 1996 (Ardealul). [See H 670, G 131 & H 490, G 445. See G 201, 491, 492]",
+      "publications": [
+        {
+          "id": "SZDKLA.212.1",
+          "values": [
+            {
+              "field": "title",
+              "value": "Tolstoi, Nietzsche: Studii",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": null,
+              "gap": "page-title",
+              "textDiffers": false
+            },
+            {
+              "field": "translator",
+              "value": "Eugen Relgis",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                14,
+                26
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "extent",
+              "value": "248",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                28,
+                31
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "place",
+              "value": "Bucureşti",
+              "producer": "llm",
+              "state": "not-reviewed",
+              "span": [
+                34,
+                43
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "publisher",
+              "value": "Editura Ştiinţifică",
+              "producer": "llm",
+              "state": "not-reviewed",
+              "span": [
+                45,
+                64
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "year",
+              "value": "1996",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": [
+                66,
+                70
+              ],
+              "gap": null,
+              "textDiffers": false
+            },
+            {
+              "field": "language",
+              "value": "Rumanian",
+              "producer": "regex",
+              "state": "not-reviewed",
+              "span": null,
+              "gap": "category-markup",
+              "textDiffers": false
+            },
+            {
+              "field": "series",
+              "value": "Ardealul",
+              "producer": "llm",
+              "state": "proposed",
+              "span": [
+                72,
+                80
+              ],
+              "gap": null,
+              "textDiffers": false
+            }
+          ]
+        }
+      ],
+      "tei": "<biblStruct xml:id=\"SZDKLA.212.1\" corresp=\"klawiter:entry/212\">\n  <monogr>\n    <title level=\"m\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n    <respStmt>\n      <resp>Translated by</resp>\n      <persName role=\"translator\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s1\">Eugen Relgis</persName>\n    </respStmt>\n    <textLang mainLang=\"ro\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-cat1\">Rumanian</textLang>\n    <imprint>\n      <pubPlace resp=\"#app-llm\" ana=\"#proposed\" source=\"#src-wiki-212-s3\">Bucureşti</pubPlace>\n      <publisher resp=\"#app-llm\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s4\">Editura Ştiinţifică</publisher>\n      <date when=\"1996\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s5\">1996</date>\n    </imprint>\n    <extent>\n      <measure unit=\"page\" quantity=\"248\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s2\">248</measure>\n    </extent>\n  </monogr>\n</biblStruct>\n<bibl type=\"wikiPage\" subtype=\"edition-page\" xml:id=\"src-wiki-212\">\n  <title xml:id=\"src-wiki-212-title\">Tolstoi, Nietzsche: Studii</title>\n  <idno type=\"pageId\">212</idno>\n  <idno type=\"revision\">4392</idno>\n  <note type=\"categories\">\n    <seg xml:id=\"src-wiki-212-cat1\">Essays / Volumes (Rumanian)</seg>\n  </note>\n  <quote xml:id=\"src-wiki-212-text\">Translated by <seg xml:id=\"src-wiki-212-s1\">Eugen Relgis</seg>. <seg xml:id=\"src-wiki-212-s2\">248</seg>p. <seg xml:id=\"src-wiki-212-s3\">Bucureşti</seg>: <seg xml:id=\"src-wiki-212-s4\">Editura Ştiinţifică</seg>, <seg xml:id=\"src-wiki-212-s5\">1996</seg> (Ardealul). [See <seg xml:id=\"src-wiki-212-s6\">H 670</seg>, <seg xml:id=\"src-wiki-212-s7\">G 131</seg> &amp; <seg xml:id=\"src-wiki-212-s8\">H 490</seg>, <seg xml:id=\"src-wiki-212-s9\">G 445</seg>. See <seg xml:id=\"src-wiki-212-s10\">G 201</seg>, 491, 492]</quote>\n  <note type=\"printCitations\">\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s6\">H 670</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s7\">G 131</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s8\">H 490</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s9\">G 445</idno>\n    <idno type=\"printAddress\" subtype=\"main-volume\" resp=\"#app-rules\" ana=\"#not-reviewed\" source=\"#src-wiki-212-s10\">G 201</idno>\n  </note>\n</bibl>"
     }
   ],
   "acceptance": [
     {
-      "id": "profile-normalised-forms",
-      "milestone": "D1",
-      "question": "Do normalised forms of values (such as place names without cedillas) enter the profile, or does the export keep only the source spelling?",
-      "state": "open"
-    },
-    {
-      "id": "sample-objects",
+      "id": "E8",
       "milestone": "D2",
-      "question": "Do the three sample objects (a single publication, a page with several, a work hub) show the bibliography as Stefan Zweig Digital should receive it?",
-      "state": "open"
+      "question": "Should pages classified otherwise, whose entry still describes publications, get them in the export?",
+      "why": "Fixture: the publication layer reads publications from pages that are not edition pages; the export leaves them out.",
+      "recommendation": "Yes: the publication layer reads the entry itself, the page class only sorts pages.",
+      "evidence": [
+        {
+          "page": 8800,
+          "look": "Classified as a work hub, its entry describes five editions."
+        }
+      ],
+      "state": "open",
+      "answer": null
     },
     {
-      "id": "series-reading",
+      "id": "E6",
       "milestone": "D2",
-      "question": "Is a parenthesised name after the year, such as (Ardealul), read as a series?",
-      "state": "open"
+      "question": "Do the sample pages show the publications as Klawiter's entries describe them?",
+      "why": "This is the content check no test can make: whether each marked passage is the value beside it.",
+      "recommendation": "Look at pages 212 and 9001 before answering.",
+      "evidence": [
+        {
+          "page": 212,
+          "look": "Each value and its marked passage, and the values the language model supplied."
+        },
+        {
+          "page": 9001,
+          "look": "Whether the page splits into the publications Klawiter lists."
+        }
+      ],
+      "state": "open",
+      "answer": null
     },
     {
-      "id": "stylesheet-route",
+      "id": "E3",
+      "milestone": "D2",
+      "question": "Should an author page become a person with linked contributions, not a publication?",
+      "why": "Author pages list what a person wrote about Zweig, such as forewords in others' volumes.",
+      "recommendation": "Yes: each listed item is a contribution to a publication, and the page is about its author.",
+      "evidence": [
+        {
+          "page": 7700,
+          "look": "A foreword in a 1981 volume, listed under its author."
+        }
+      ],
+      "state": "open",
+      "answer": null
+    },
+    {
+      "id": "E1",
       "milestone": "D3",
-      "question": "Is the bibliography rendered by its own stylesheet szd-klawiter.xsl?",
-      "state": "accepted"
+      "question": "Should the local page build on the branch gams-www-split?",
+      "why": "The local harness of Stefan Zweig Digital lives there.",
+      "recommendation": "Yes.",
+      "evidence": [],
+      "state": "accepted",
+      "answer": {
+        "answer": "yes",
+        "date": "2026-10-30"
+      }
     }
   ]
 }

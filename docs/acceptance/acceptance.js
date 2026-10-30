@@ -1,12 +1,14 @@
 /**
- * Acceptance view: one report of pipeline/acceptance.py, read per milestone.
+ * Acceptance view: the operator's open decisions over one report of
+ * pipeline/acceptance.py, each with the sample pages it rests on.
  *
  * Pure functions take the report object and return HTML strings, so
  * tests/acceptance_view.test.js renders them against a fixture; boot() alone
- * fetches the report, mounts the strings and wires the query state and the
- * span highlighting. The producer signs and the state and gap words come from
+ * fetches the report, mounts the page and wires the span highlighting. The
+ * producer signs, the legend and the state words come from
  * docs/js/record-card.js, loaded before this file, so a sign means here what
- * it means on a record card.
+ * it means on a record card. Answers are given in the chat and recorded by
+ * the generator; the page shows them and offers no control to answer.
  *
  * Trust boundary: every string from the report is escaped here; the only
  * unescaped markup is what these functions build from escaped parts and the
@@ -15,26 +17,19 @@
 const AcceptanceView = {
   REPORT_URL: '../local/acceptance.json',
   GENERATE: 'python -m uv run python pipeline/acceptance.py',
+  // Publications shown before the rest folds behind a disclosure.
+  VISIBLE_PUBLICATIONS: 3,
 
   esc(s) {
     return RecordCard.escape(s);
   },
 
-  /**
-   * State lives in the query (`m` the milestone filter, `sample` the sample
-   * page), so it survives a reload and leaves the hash to the section anchors.
-   */
-  parseState(search) {
-    const p = new URLSearchParams(String(search || '').replace(/^\?/, ''));
-    return { milestone: p.get('m') || '', sample: p.get('sample') || '' };
+  num(n) {
+    return typeof n === 'number' ? n.toLocaleString('en-US') : this.esc(n == null ? '?' : n);
   },
 
-  hrefFor(state) {
-    const p = new URLSearchParams();
-    if (state.milestone) p.set('m', state.milestone);
-    if (state.sample) p.set('sample', state.sample);
-    const s = p.toString();
-    return s ? `?${s}` : './';
+  plural(n, one, many) {
+    return `${this.num(n)} ${n === 1 ? one : many}`;
   },
 
   // A status is a shape and a word; the hue only repeats them.
@@ -43,41 +38,15 @@ const AcceptanceView = {
     fail: '<path d="M3 3l6 6M9 3l-6 6"/>',
     open: '<circle cx="6" cy="6" r="3.5"/>',
     skipped: '<path d="M2.5 6h7"/>',
-    done: '<path d="M2.5 6.5l2.5 2.5 4.5-6"/>',
-    'in-progress': '<circle cx="6" cy="6" r="3.5"/><path d="M6 2.5v7"/>',
-    blocked: '<rect x="2.5" y="2.5" width="7" height="7"/><path d="M2.5 9.5l7-7"/>',
     accepted: '<path d="M2.5 6.5l2.5 2.5 4.5-6"/>',
     rejected: '<path d="M3 3l6 6M9 3l-6 6"/>',
   },
 
-  STATUS_WORDS: {
-    pass: 'pass', fail: 'fail', open: 'open', skipped: 'skipped',
-    done: 'done', 'in-progress': 'in progress', blocked: 'blocked',
-    accepted: 'accepted', rejected: 'rejected',
-  },
-
   status(state) {
-    const key = Object.prototype.hasOwnProperty.call(this.STATUS_WORDS, state) ? state : 'open';
-    const word = this.STATUS_WORDS[key];
+    const key = Object.prototype.hasOwnProperty.call(this.STATUS_SHAPES, state) ? state : 'open';
     return `<span class="acc-status acc-status-${key}"><svg class="acc-status-icon" viewBox="0 0 12 12"`
       + ` width="12" height="12" aria-hidden="true" focusable="false">${this.STATUS_SHAPES[key]}</svg>`
-      + `${this.esc(state && state !== key ? state : word)}</span>`;
-  },
-
-  num(n) {
-    return typeof n === 'number' ? n.toLocaleString('en-US') : this.esc(n == null ? '?' : n);
-  },
-
-  checksOf(report, milestoneId) {
-    return (report.checks || []).filter(c => c.milestone === milestoneId);
-  },
-
-  /** "n of m checks pass", or a plain word when the milestone has none. */
-  passCount(report, milestoneId) {
-    const checks = this.checksOf(report, milestoneId);
-    if (!checks.length) return 'no checks yet';
-    const pass = checks.filter(c => c.status === 'pass').length;
-    return `${pass} of ${checks.length} checks pass`;
+      + `${this.esc(state || key)}</span>`;
   },
 
   /** The one line above everything: dataset, time, commit, producer. */
@@ -88,7 +57,7 @@ const AcceptanceView = {
       `Dataset ${this.esc(d.version || '?')}`,
       `${this.num(d.pages)} pages`,
       `${this.num(d.publications)} publications`,
-      `generated ${this.esc(when || '?')}`,
+      `report of ${this.esc(when || '?')}`,
       `commit <code>${this.esc(report.commit || '?')}</code>`,
     ];
     if (report.generatedBy && report.generatedBy !== 'pipeline/acceptance.py') {
@@ -97,24 +66,43 @@ const AcceptanceView = {
     return `<p class="acc-headline">${parts.join('<span class="acc-sep" aria-hidden="true"> | </span>')}</p>`;
   },
 
-  /** The milestones as a list of links that filter the checks. */
-  program(report, state) {
-    const items = (report.program || []).map(m => {
-      const current = state.milestone === m.id;
-      const href = this.hrefFor({ milestone: current ? '' : m.id, sample: state.sample });
-      const blocked = m.blockedBy ? `<p class="acc-ms-blocked">Blocked by: ${this.esc(m.blockedBy)}</p>` : '';
-      const repos = (m.repos || []).length
-        ? `<dt>Repositories</dt><dd>${(m.repos || []).map(r => this.esc(r)).join(', ')}</dd>` : '';
-      return `<li class="acc-ms${current ? ' is-current' : ''}" data-milestone="${this.esc(m.id)}">`
-        + `<a class="acc-ms-link" data-state href="${this.esc(href)}"${current ? ' aria-current="true"' : ''}>`
-        + `<span class="acc-ms-id">${this.esc(m.id)}</span> <span class="acc-ms-title">${this.esc(m.title)}</span></a>`
-        + `${this.status(m.state)}<span class="acc-ms-count">${this.esc(this.passCount(report, m.id))}</span>`
-        + `<p class="acc-ms-goal">${this.esc(m.goal)}</p>${blocked}`
-        + '<details class="acc-ms-more"><summary>Verified and accepted by</summary><dl>'
-        + `<dt>Verified by</dt><dd>${this.esc(m.verifiedBy)}</dd>`
-        + `<dt>Accepted by</dt><dd>${this.esc(m.acceptedBy)}</dd>${repos}</dl></details></li>`;
-    }).join('');
-    return `<ol class="acc-program">${items}</ol>`;
+  checksOf(report, id) {
+    return (report.checks || []).filter(c => c.milestone === id);
+  },
+
+  decisionsOf(report, id) {
+    return (report.acceptance || []).filter(a => a.milestone === id);
+  },
+
+  /**
+   * One plain line per milestone: its checks, then its decisions; the
+   * decision count links to the first open card of the milestone.
+   */
+  milestoneLine(report, m) {
+    const checks = this.checksOf(report, m.id);
+    const count = s => checks.filter(c => c.status === s).length;
+    const parts = [];
+    if (checks.length) {
+      let p = `${count('pass')} of ${checks.length} ${checks.length === 1 ? 'check passes' : 'checks pass'}`;
+      if (count('fail')) p += `, <strong class="acc-fail-word">${count('fail')} fail</strong>`;
+      if (count('open')) p += `, ${count('open')} open`;
+      if (count('skipped')) p += `, ${count('skipped')} skipped`;
+      parts.push(p);
+    } else parts.push('no checks yet');
+    const open = this.decisionsOf(report, m.id).filter(a => a.state === 'open');
+    const decided = this.decisionsOf(report, m.id).length - open.length;
+    if (open.length) {
+      parts.push(`<a href="#${this.esc(open[0].id)}">${this.plural(open.length, 'decision', 'decisions')} open</a>`);
+    } else parts.push('no decision open');
+    if (decided) parts.push(`${decided} decided`);
+    if (m.blockedBy) parts.push(`blocked: ${this.esc(m.blockedBy)}`);
+    return `<li class="acc-ms" data-milestone="${this.esc(m.id)}"><span class="acc-ms-name">`
+      + `<span class="acc-ms-id">${this.esc(m.id)}</span> ${this.esc(m.title)}</span>`
+      + `<span class="acc-ms-line">${parts.join(', ')}</span></li>`;
+  },
+
+  program(report) {
+    return `<ol class="acc-program">${(report.program || []).map(m => this.milestoneLine(report, m)).join('')}</ol>`;
   },
 
   example(ex) {
@@ -127,7 +115,7 @@ const AcceptanceView = {
   check(c) {
     const m = c.measured || {};
     // An open or skipped check has measured nothing; zero counts would read as a result.
-    const measured = m.checked !== undefined && (m.checked > 0 || c.status === 'pass' || c.status === 'fail')
+    const measured = m.checked > 0 || c.status === 'pass' || c.status === 'fail'
       ? `<span class="acc-measured">${this.num(m.failed)} failed of ${this.num(m.checked)} checked</span>` : '';
     const examples = (c.examples || []).slice(0, 20);
     const list = examples.length
@@ -140,70 +128,24 @@ const AcceptanceView = {
       + `<p class="acc-proves">${this.esc(c.proves)}</p>${note}${list}</li>`;
   },
 
-  /** The checks of the selected milestone, or all of them in program order. */
-  checks(report, state) {
-    const all = report.checks || [];
-    const shown = state.milestone ? all.filter(c => c.milestone === state.milestone) : all;
-    const scope = state.milestone
-      ? `Milestone ${this.esc(state.milestone)}, ${this.esc(this.passCount(report, state.milestone))}.`
-        + ` <a data-state href="${this.esc(this.hrefFor({ milestone: '', sample: state.sample }))}">Show all checks</a>`
-      : `All milestones, ${all.filter(c => c.status === 'pass').length} of ${all.length} checks pass.`;
-    const body = shown.length
-      ? `<ol class="acc-checks">${shown.map(c => this.check(c)).join('')}</ol>`
-      : '<p class="acc-empty">This milestone has no checks in the report.</p>';
-    return `<p class="acc-scope">${scope}</p>${body}`;
+  failing(report) {
+    const fails = (report.checks || []).filter(c => c.status === 'fail');
+    if (!fails.length) return '';
+    return '<section class="acc-section acc-failing" id="acc-failing" aria-labelledby="acc-failing-h">'
+      + `<h2 id="acc-failing-h">Failing checks</h2><ol class="acc-checks">${fails.map(c => this.check(c)).join('')}</ol></section>`;
   },
 
-  DISPOSITIONS: [
-    ['exported', 'Exported'],
-    ['pending', 'Pending'],
-    ['excluded', 'Excluded'],
-  ],
-
-  coverageRow(f) {
-    let where = '';
-    if (f.disposition === 'exported') where = f.target ? `<code>${this.esc(f.target)}</code>` : 'no target named';
-    else if (f.disposition === 'pending') {
-      where = (f.milestone ? `due in ${this.esc(f.milestone)}` : 'no milestone')
-        + (f.reason ? `; ${this.esc(f.reason)}` : '');
-    } else where = f.reason ? this.esc(f.reason) : 'no reason given';
-    return `<li class="acc-field" data-field="${this.esc(f.field)}"><span class="acc-field-name">${this.esc(f.field)}</span>`
-      + `<span class="acc-field-layer">${this.esc(f.layer)}</span>`
-      + `<span class="acc-field-records">${this.num(f.records)} records</span>`
-      + `<span class="acc-field-where">${where}</span></li>`;
+  // Gap kinds the generator emits, said in words.
+  GAP_WORDS: {
+    'page-title': 'from the page title',
+    'category-markup': 'from a category link in the wiki markup',
+    'not-located': 'passage not located',
+    repeated: 'passage occurs more than once',
+    'not-verbatim': 'not verbatim in the entry',
   },
 
-  /** Fields grouped by disposition; pending fields ordered by milestone. */
-  coverage(report) {
-    const fields = report.coverage || [];
-    const order = (report.program || []).map(m => m.id);
-    const rank = id => { const i = order.indexOf(id); return i < 0 ? order.length : i; };
-    const known = this.DISPOSITIONS.map(d => d[0]);
-    const groups = this.DISPOSITIONS.slice();
-    if (fields.some(f => !known.includes(f.disposition))) groups.push(['other', 'Other disposition']);
-    return groups.map(([key, label]) => {
-      let rows = fields.filter(f => (key === 'other' ? !known.includes(f.disposition) : f.disposition === key));
-      if (!rows.length) return '';
-      if (key === 'pending') rows = rows.slice().sort((a, b) => rank(a.milestone) - rank(b.milestone));
-      return `<section class="acc-disposition" data-disposition="${key}"><h3>${label}`
-        + ` <span class="acc-count">${rows.length} ${rows.length === 1 ? 'field' : 'fields'}</span></h3>`
-        + `<ul class="acc-fields">${rows.map(f => this.coverageRow(f)).join('')}</ul></section>`;
-    }).join('');
-  },
-
-  /** Where the values come from, as one short list of counts. */
-  values(report) {
-    const v = report.values;
-    if (!v) return '';
-    const without = Object.entries(v.withoutSource || {})
-      .map(([k, n]) => `<li><span class="acc-n">${this.num(n)}</span> ${this.esc(k)}</li>`).join('');
-    return '<dl class="acc-values">'
-      + `<div><dt>Values</dt><dd>${this.num(v.total)}</dd></div>`
-      + `<div><dt>with a passage</dt><dd>${this.num(v.withPassage)}</dd></div>`
-      + `<div><dt>with a metadata source</dt><dd>${this.num(v.withMetaSource)}</dd></div>`
-      + `<div><dt>text differs from passage</dt><dd>${this.num(v.textDiffers)}</dd></div>`
-      + (without ? `<div class="acc-values-without"><dt>without a source</dt><dd><ul>${without}</ul></dd></div>` : '')
-      + '</dl>';
+  gapWord(gap) {
+    return this.GAP_WORDS[gap] || RecordCard.GAP_WORDS[gap] || String(gap).replace(/-/g, ' ');
   },
 
   // The report names the parser family "regex"; on a record card it is "rule".
@@ -223,6 +165,12 @@ const AcceptanceView = {
     const out = [];
     (sample.publications || []).forEach(pub => (pub.values || []).forEach(v => out.push({ pub: pub.id, v })));
     return out.map((x, i) => Object.assign({ index: i }, x));
+  },
+
+  familiesOf(samples) {
+    const set = new Set();
+    samples.forEach(s => this.flatValues(s).forEach(x => set.add(RecordCard.producerFamily(this.producerKind(x.v.producer)))));
+    return set;
   },
 
   /** A span is usable when it lies inside the entry, counted in code points. */
@@ -257,10 +205,6 @@ const AcceptanceView = {
     return html;
   },
 
-  gapWord(gap) {
-    return RecordCard.GAP_WORDS[gap] || String(gap).replace(/-/g, ' ');
-  },
-
   valueRow(x, entryLength) {
     const v = x.v;
     let where;
@@ -277,13 +221,21 @@ const AcceptanceView = {
       + `<span class="acc-value-meta">${this.producerSign(v.producer)}${state}${where}${differs}</span></li>`;
   },
 
-  valuesList(sample) {
-    const length = Array.from(String(sample.entry || '')).length;
-    const flat = this.flatValues(sample);
-    return (sample.publications || []).map(pub => {
-      const rows = flat.filter(x => x.pub === pub.id).map(x => this.valueRow(x, length)).join('');
-      return `<h4 class="acc-pub-id">${this.esc(pub.id)}</h4><ul class="acc-value-list">${rows}</ul>`;
-    }).join('');
+  /** A block of the TEI string: its first line's indent is removed from every line. */
+  teiBlock(tei, re) {
+    const m = String(tei || '').match(re);
+    if (!m) return '';
+    const indent = m[1];
+    return m[2].split('\n').map(line => (line.startsWith(indent) ? line.slice(indent.length) : line)).join('\n');
+  },
+
+  teiOfPublication(tei, id) {
+    const safe = String(id).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return this.teiBlock(tei, new RegExp(`(?:^|\\n)([ \\t]*)(<biblStruct\\b[^>]*xml:id="${safe}"[\\s\\S]*?</biblStruct>)`));
+  },
+
+  teiOfSource(tei) {
+    return this.teiBlock(tei, /(?:^|\n)([ \t]*)(<bibl\b[^>]*type="wikiPage"[\s\S]*?<\/bibl>)/);
   },
 
   /** Escaped XML with the tags tinted; the text stays exactly as given. */
@@ -295,61 +247,165 @@ const AcceptanceView = {
         + `<span class="acc-tag">${self}&gt;</span>`);
   },
 
-  sampleNav(report, state) {
-    const samples = report.samples || [];
-    const current = this.currentSample(report, state);
-    return `<ul class="acc-sample-nav">${samples.map(s => {
-      const on = current && String(current.page) === String(s.page);
-      return `<li><a data-state href="${this.esc(this.hrefFor({ milestone: state.milestone, sample: String(s.page) }))}"`
-        + `${on ? ' aria-current="true"' : ''}><span class="acc-sample-page">${this.esc(s.page)}</span> `
-        + `${this.esc(s.title)}</a></li>`;
-    }).join('')}</ul>`;
+  teiDisclosure(label, xml) {
+    if (!xml) return '';
+    return `<details class="acc-tei-more"><summary>${this.esc(label)}</summary>`
+      + `<pre class="acc-tei"><code>${this.teiHtml(xml)}</code></pre></details>`;
   },
 
-  currentSample(report, state) {
-    const samples = report.samples || [];
-    return samples.find(s => String(s.page) === String(state.sample)) || samples[0] || null;
+  publication(sample, pub, flat, length) {
+    const rows = flat.filter(x => x.pub === pub.id).map(x => this.valueRow(x, length)).join('');
+    const excluded = pub.exported === false;
+    const mark = excluded ? '<span class="acc-not-exported">read from the entry, not in the export</span>' : '';
+    const tei = excluded ? '' : this.teiDisclosure('TEI', this.teiOfPublication(sample.tei, pub.id));
+    return `<li class="acc-pub${excluded ? ' is-not-exported' : ''}" data-publication="${this.esc(pub.id)}">`
+      + `<p class="acc-pub-head"><span class="acc-pub-id">${this.esc(pub.id)}</span>${mark}</p>`
+      + `<ul class="acc-value-list">${rows}</ul>${tei}</li>`;
   },
 
-  sample(report, state) {
-    const s = this.currentSample(report, state);
-    if (!s) return '<p class="acc-empty">The report carries no samples.</p>';
-    const families = new Set(this.flatValues(s).map(x => RecordCard.producerFamily(this.producerKind(x.v.producer))));
-    return `${this.sampleNav(report, state)}`
-      + `<div class="acc-sample-head"><h3><a href="../#entry=${this.esc(s.page)}">Page ${this.esc(s.page)}</a> `
-      + `${this.esc(s.title)}</h3><span class="acc-sample-kind">${this.esc(s.kind)}</span>`
-      + `<p class="acc-why">${this.esc(s.why)}</p></div>`
+  /** The publications of a sample; beyond the first few they fold away. */
+  publications(sample) {
+    const pubs = sample.publications || [];
+    const length = Array.from(String(sample.entry || '')).length;
+    const flat = this.flatValues(sample);
+    if (!pubs.length) return '<p class="acc-empty">No publication is read from this entry.</p>';
+    const draw = list => list.map(p => this.publication(sample, p, flat, length)).join('');
+    const n = this.VISIBLE_PUBLICATIONS;
+    const excluded = pubs.filter(p => p.exported === false).length;
+    const summary = `<p class="acc-pub-count">${this.plural(pubs.length, 'publication', 'publications')}`
+      + `${excluded ? `, ${excluded === pubs.length ? 'none' : `${pubs.length - excluded}`} in the export` : ''}</p>`;
+    if (pubs.length <= n + 1) return `${summary}<ol class="acc-pubs">${draw(pubs)}</ol>`;
+    return `${summary}<ol class="acc-pubs">${draw(pubs.slice(0, n))}</ol>`
+      + `<details class="acc-pubs-more"><summary>Show all ${pubs.length} publications</summary>`
+      + `<ol class="acc-pubs" start="${n + 1}">${draw(pubs.slice(n))}</ol></details>`;
+  },
+
+  /** One sample page: entry with its marks beside the values it was read into. */
+  sample(sample, look) {
+    const long = Array.from(String(sample.entry || '')).length > 1200;
+    const instruction = look ? `<p class="acc-look">${this.esc(look)}</p>` : '';
+    return `<div class="acc-sample" data-page="${this.esc(sample.page)}">${instruction}`
+      + `<p class="acc-sample-head"><a href="../#entry=${this.esc(sample.page)}">Page ${this.esc(sample.page)}</a> `
+      + `<span class="acc-sample-title">${this.esc(sample.title)}</span>`
+      + `<span class="acc-sample-kind">${this.esc(sample.kind)}</span></p>`
       + '<div class="acc-sample-grid">'
-      + `<section class="acc-region acc-region-entry" aria-labelledby="acc-h-entry"><h4 id="acc-h-entry">Source entry</h4>`
-      + `<p class="acc-entry">${this.entryHtml(s)}</p></section>`
-      + `<section class="acc-region acc-region-values" aria-labelledby="acc-h-values"><h4 id="acc-h-values">Values</h4>`
-      + `${RecordCard.legend(families)}${this.valuesList(s)}</section>`
-      + `<section class="acc-region acc-region-tei" aria-labelledby="acc-h-tei"><h4 id="acc-h-tei">TEI</h4>`
-      + `<pre class="acc-tei"><code>${this.teiHtml(s.tei || '')}</code></pre></section>`
-      + '</div>';
+      + `<div class="acc-entry-wrap"><p class="acc-entry${long ? ' is-long' : ''}"`
+      + `${long ? ` tabindex="0" aria-label="Source entry of page ${this.esc(sample.page)}"` : ''}>${this.entryHtml(sample)}</p>`
+      + `${this.teiDisclosure('TEI of the source entry', this.teiOfSource(sample.tei))}</div>`
+      + `<div class="acc-sample-values">${this.publications(sample)}</div>`
+      + '</div></div>';
   },
 
-  acceptance(report) {
+  sampleByPage(report, page) {
+    return (report.samples || []).find(s => String(s.page) === String(page)) || null;
+  },
+
+  answer(a) {
+    if (!a.answer) return '';
+    return `<p class="acc-answer">Answer: <strong>${this.esc(a.answer.answer)}</strong>`
+      + `${a.answer.date ? `, ${this.esc(a.answer.date)}` : ''}</p>`;
+  },
+
+  /** One decision as a card: question, reason, recommendation, its evidence. */
+  decision(report, a) {
+    const evidence = (a.evidence || []).map(ev => ({ ev, s: this.sampleByPage(report, ev.page) }));
+    const samples = evidence.filter(e => e.s).map(e => e.s);
+    const legend = samples.length ? RecordCard.legend(this.familiesOf(samples)) : '';
+    const body = evidence.map(({ ev, s }) => (s ? this.sample(s, ev.look)
+      : `<p class="acc-look">${this.esc(ev.look)} <span class="acc-gap acc-gap-bad">Page ${this.esc(ev.page)} is not among the samples.</span></p>`)).join('');
+    return `<article class="acc-decision acc-decision-${this.esc(a.state)}" id="${this.esc(a.id)}" aria-labelledby="${this.esc(a.id)}-h">`
+      + `<header class="acc-decision-head"><h3 id="${this.esc(a.id)}-h"><span class="acc-decision-id">${this.esc(a.id)}</span> `
+      + `${this.esc(a.question)}</h3><p class="acc-decision-meta">${this.status(a.state)}`
+      + `<span class="acc-check-ms">${this.esc(a.milestone)}</span></p></header>`
+      + `<p class="acc-why">${this.esc(a.why)}</p>`
+      + `<p class="acc-recommendation"><span class="acc-label">Recommendation</span> ${this.esc(a.recommendation)}</p>`
+      + `${this.answer(a)}${legend}${body}</article>`;
+  },
+
+  decisions(report) {
     const items = report.acceptance || [];
-    if (!items.length) return '<p class="acc-empty">No operator decisions in the report.</p>';
-    const open = items.filter(a => a.state === 'open');
-    const decided = items.filter(a => a.state !== 'open');
-    const row = a => `<li class="acc-decision" data-decision="${this.esc(a.id)}">${this.status(a.state)}`
-      + `<span class="acc-check-ms">${this.esc(a.milestone)}</span><p>${this.esc(a.question)}</p></li>`;
-    return `<p class="acc-scope">${open.length} open, ${decided.length} decided.</p>`
-      + `<ol class="acc-decisions">${open.concat(decided).map(row).join('')}</ol>`;
+    if (!items.length) return '<p class="acc-empty">The report carries no decisions.</p>';
+    const open = items.filter(a => a.state === 'open').length;
+    return `<p class="acc-scope">${open} open, ${items.length - open} decided. Answer in the chat with the id, such as "${this.esc(items[0].id)} yes".</p>`
+      + items.map(a => this.decision(report, a)).join('');
   },
 
-  /** The whole page body for a report and a hash state. */
-  page(report, state) {
-    const section = (id, title, body) => `<section class="acc-section" id="${id}" aria-labelledby="${id}-h">`
-      + `<h2 id="${id}-h">${title}</h2>${body}</section>`;
+  DISPOSITIONS: [['exported', 'Exported'], ['pending', 'Pending'], ['excluded', 'Excluded']],
+
+  coverageRow(f) {
+    let where = '';
+    if (f.disposition === 'exported') where = f.target ? `<code>${this.esc(f.target)}</code>` : 'no target named';
+    else if (f.disposition === 'pending') {
+      where = (f.milestone ? `due in ${this.esc(f.milestone)}` : 'no milestone') + (f.reason ? `; ${this.esc(f.reason)}` : '');
+    } else where = f.reason ? this.esc(f.reason) : 'no reason given';
+    return `<li class="acc-field" data-field="${this.esc(f.field)}"><span class="acc-field-name">${this.esc(f.field)}</span>`
+      + `<span class="acc-field-layer">${this.esc(f.layer)}</span>`
+      + `<span class="acc-field-records">${this.num(f.records)}</span>`
+      + `<span class="acc-field-where">${where}</span></li>`;
+  },
+
+  /** Fields grouped by disposition; pending fields ordered by milestone. */
+  coverage(report) {
+    const fields = report.coverage || [];
+    const order = (report.program || []).map(m => m.id);
+    const rank = id => { const i = order.indexOf(id); return i < 0 ? order.length : i; };
+    const known = this.DISPOSITIONS.map(d => d[0]);
+    const groups = this.DISPOSITIONS.slice();
+    if (fields.some(f => !known.includes(f.disposition))) groups.push(['other', 'Other disposition']);
+    return groups.map(([key, label]) => {
+      let rows = fields.filter(f => (key === 'other' ? !known.includes(f.disposition) : f.disposition === key));
+      if (!rows.length) return '';
+      if (key === 'pending') rows = rows.slice().sort((a, b) => rank(a.milestone) - rank(b.milestone));
+      return `<section class="acc-disposition" data-disposition="${key}"><h4>${label}`
+        + ` <span class="acc-count">${this.plural(rows.length, 'field', 'fields')}</span></h4>`
+        + `<ul class="acc-fields">${rows.map(f => this.coverageRow(f)).join('')}</ul></section>`;
+    }).join('');
+  },
+
+  /** Where the values come from, as one short list of counts. */
+  values(report) {
+    const v = report.values;
+    if (!v) return '';
+    const without = Object.entries(v.withoutSource || {})
+      .map(([k, n]) => `<li><span class="acc-n">${this.num(n)}</span> ${this.esc(this.gapWord(k))}</li>`).join('');
+    return '<dl class="acc-values">'
+      + `<div><dt>Values</dt><dd>${this.num(v.total)}</dd></div>`
+      + `<div><dt>with a passage</dt><dd>${this.num(v.withPassage)}</dd></div>`
+      + `<div><dt>with a metadata source</dt><dd>${this.num(v.withMetaSource)}</dd></div>`
+      + `<div><dt>text differs from passage</dt><dd>${this.num(v.textDiffers)}</dd></div>`
+      + (without ? `<div class="acc-values-without"><dt>without a source</dt><dd><ul>${without}</ul></dd></div>` : '')
+      + '</dl>';
+  },
+
+  /** Samples no decision refers to; they stay reachable for reviewers. */
+  unreferenced(report) {
+    const used = new Set((report.acceptance || []).flatMap(a => (a.evidence || []).map(ev => String(ev.page))));
+    const rest = (report.samples || []).filter(s => !used.has(String(s.page)));
+    if (!rest.length) return '';
+    const families = this.familiesOf(rest);
+    return `<h3>Other samples</h3>${RecordCard.legend(families)}${rest.map(s => this.sample(s, s.why)).join('')}`;
+  },
+
+  /** Everything a reviewer reads behind the decisions, folded by default. */
+  checkReport(report) {
+    const checks = report.checks || [];
+    const pass = checks.filter(c => c.status === 'pass').length;
+    return '<details class="acc-section acc-report" id="acc-report">'
+      + `<summary><h2>Check report</h2><span class="acc-count">${pass} of ${checks.length} checks pass</span></summary>`
+      + `<h3>Checks</h3><ol class="acc-checks">${checks.map(c => this.check(c)).join('')}</ol>`
+      + `<h3>Values</h3>${this.values(report)}`
+      + `<h3>Fields in the TEI</h3><p class="acc-scope">Field, layer, records, and where it goes or why not.</p>${this.coverage(report)}`
+      + `${this.unreferenced(report)}</details>`;
+  },
+
+  /** The whole page body for a report. */
+  page(report) {
     return this.headline(report)
-      + section('acc-program', 'Program', this.program(report, state))
-      + section('acc-checks', 'Checks', this.checks(report, state))
-      + section('acc-coverage', 'Fields in the TEI', this.coverage(report) + this.values(report))
-      + section('acc-samples', 'Samples', this.sample(report, state))
-      + section('acc-acceptance', 'Operator decisions', this.acceptance(report));
+      + `<section class="acc-section" id="acc-program" aria-label="Milestones">${this.program(report)}</section>`
+      + this.failing(report)
+      + `<section class="acc-section" id="acc-decisions" aria-labelledby="acc-decisions-h"><h2 id="acc-decisions-h">Decisions</h2>`
+      + `${this.decisions(report)}</section>`
+      + this.checkReport(report);
   },
 
   missing(detail) {
@@ -358,15 +414,27 @@ const AcceptanceView = {
       + `<code>${this.esc(this.GENERATE)}</code>.</p>`;
   },
 
-  /** Marks and value rows that share a value index light up together. */
+  /**
+   * Marks and value rows of one sample that share a value index light up
+   * together; a mark in a scrolled entry is brought into its box.
+   */
   highlight(root, target) {
     root.querySelectorAll('.is-active').forEach(el => el.classList.remove('is-active'));
     const host = target && target.closest && target.closest('[data-values]');
-    if (!host || !root.contains(host)) return;
+    const sample = host && host.closest('.acc-sample');
+    if (!sample) return;
     const wanted = host.dataset.values.split(' ');
-    root.querySelectorAll('[data-values]').forEach(el => {
-      if (el.dataset.values.split(' ').some(i => wanted.includes(i))) el.classList.add('is-active');
+    let first = null;
+    sample.querySelectorAll('[data-values]').forEach(el => {
+      if (!el.dataset.values.split(' ').some(i => wanted.includes(i))) return;
+      el.classList.add('is-active');
+      if (!first && el.classList.contains('acc-mark')) first = el;
     });
+    const box = first && first.closest('.acc-entry.is-long');
+    if (box && host !== first) {
+      const top = first.offsetTop - box.offsetTop;
+      if (top < box.scrollTop || top > box.scrollTop + box.clientHeight - 24) box.scrollTop = Math.max(0, top - 48);
+    }
   },
 
   async boot() {
@@ -380,32 +448,12 @@ const AcceptanceView = {
       root.innerHTML = this.missing(err && err.message);
       return;
     }
-    const render = () => {
-      const state = this.parseState(location.search);
-      // Focus survives the redraw: a milestone link by its milestone, a
-      // sample link by the current sample, any other link by its target.
-      const active = document.activeElement;
-      const inRoot = active && active !== root && root.contains(active);
-      const ms = inRoot && active.closest('.acc-ms');
-      const inNav = inRoot && active.closest('.acc-sample-nav');
-      const href = inRoot ? active.getAttribute('href') : null;
-      root.innerHTML = this.page(report, state);
-      let again = null;
-      if (ms) again = root.querySelector(`.acc-ms[data-milestone="${CSS.escape(ms.dataset.milestone)}"] .acc-ms-link`);
-      else if (inNav) again = root.querySelector('.acc-sample-nav [aria-current]');
-      else if (href) again = [...root.querySelectorAll('a[href]')].find(a => a.getAttribute('href') === href);
-      if (again) again.focus({ preventScroll: true });
-    };
-    render();
-    // State links change the query without a reload; Back and Forward redraw.
-    root.addEventListener('click', e => {
-      const a = e.target.closest('a[data-state]');
-      if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      e.preventDefault();
-      history.pushState(null, '', a.getAttribute('href'));
-      render();
-    });
-    window.addEventListener('popstate', render);
+    root.innerHTML = this.page(report);
+    // A link to a decision opens the card even after the page was drawn.
+    if (location.hash) {
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) target.scrollIntoView();
+    }
     const on = e => this.highlight(root, e.target);
     root.addEventListener('mouseover', on);
     root.addEventListener('focusin', on);
