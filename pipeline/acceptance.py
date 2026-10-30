@@ -28,6 +28,7 @@ from __future__ import annotations
 import dataclasses
 import datetime as dt
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
@@ -57,6 +58,12 @@ SAMPLES = {
     3: "An edition page with several publications, each its own biblStruct",
     1605: "An author page, which lists a person's contributions and gives no publication of its own",
 }
+# D3 reads the SZD work tree of the branch gams-www-split beside this repository.
+SZD_SPLIT = ROOT.parent / "SZD-split"
+SZD_HOLDING = "data/Klawiter/"
+SZD_KLA = SZD_SPLIT / SZD_HOLDING / "SZDKLA.xml"
+SNAPSHOTS = SZD_SPLIT / "local-test-build" / "build-snap"
+HARNESS_PAGE = "szd-klawiter"
 RANGE = re.compile(r"#string-range\(//\*\[@xml:id='([^']+)'\],(\d+),(\d+)\)")
 
 # The milestones of knowledge/plan.md, Program from 2026-10-30; the plan holds their prose.
@@ -198,6 +205,7 @@ ACCEPTANCE = [
         "evidence": [],
     },
 ]
+# Checks beyond D1; run() measures those it has a function for and marks the rest open.
 OPEN_CHECKS = [
     (
         "record-types",
@@ -209,7 +217,7 @@ OPEN_CHECKS = [
         "szd-check-data",
         "D3",
         "SZD data gate passes",
-        "check_data.py of the SZD repository accepts data/Klawiter/SZDKLA.xml.",
+        "check_data.py of the SZD repository accepts data/Klawiter/SZDKLA.xml, and that file is the current export.",
     ),
     (
         "harness-render",
@@ -1055,6 +1063,98 @@ def _mutation_check(
     return c.d
 
 
+def _szd_check_data(c: Check, export_sha: str) -> None:
+    """SZD's check_data.py over the work tree, judged on the Klawiter holding only.
+
+    check_data.py has no scope option and fails on findings in other holdings, so
+    it runs over all of data/ and only findings in data/Klawiter/ count here. It
+    is loaded by path because the SZD scripts run as plain files.
+    """
+    if not (SZD_SPLIT / "scripts" / "check_data.py").is_file():
+        c.d["status"] = "skipped"
+        c.d["note"] = f"No SZD work tree at {SZD_SPLIT}."
+        return
+    if not SZD_KLA.is_file():
+        c.fail(None, "data/Klawiter/SZDKLA.xml is missing from the SZD work tree")
+    elif hashlib.sha256(SZD_KLA.read_bytes()).hexdigest() != export_sha:
+        c.fail(None, "SZDKLA.xml is a stale copy; it differs from klawiter-all.xml")
+    else:
+        c.ok()
+    spec = importlib.util.spec_from_file_location(
+        "szd_check_data", SZD_SPLIT / "scripts" / "check_data.py"
+    )
+    cd = importlib.util.module_from_spec(spec)
+    # its dataclasses resolve their string annotations through sys.modules
+    sys.modules[spec.name] = cd
+    spec.loader.exec_module(cd)
+    report = cd.check(cd.working_tree_files(SZD_SPLIT))
+    unexpected = report.unexpected()
+    own = [f for f in unexpected if f.file.startswith(SZD_HOLDING)]
+    for f in own:
+        c.fail(None, f"{f.check}: [{f.context}] {f.detail}")
+    if not own:
+        c.ok()
+    warned = Counter(
+        f.check
+        for f in report.findings
+        if f.file.startswith(SZD_HOLDING) and f.check in cd.WARN
+    )
+    note = f"warn findings in {SZD_HOLDING}: {dict(warned) or 'none'}"
+    other = len(unexpected) - len(own)
+    if other:
+        note += f"; {other} unexpected findings in other holdings, not counted"
+    c.d["note"] = note
+
+
+def _harness_render(c: Check, export_sha: str) -> None:
+    """The latest harness snapshot that rendered szd-klawiter, read from its meta.json.
+
+    snapshot.mjs records per snapshot the pages, the sha256 of each input and the
+    outputs that failed to render; build-full.mjs records nothing and is not read.
+    """
+    if not SNAPSHOTS.is_dir():
+        c.d["status"] = "skipped"
+        c.d["note"] = f"No harness snapshots at {SNAPSHOTS}."
+        return
+    runs = []
+    for meta_file in SNAPSHOTS.glob("*/meta.json"):
+        meta = json.loads(meta_file.read_text(encoding="utf-8"))
+        entry = next(
+            (p for p in meta.get("pages", []) if p.get("name") == HARNESS_PAGE), None
+        )
+        if entry is not None:
+            runs.append((meta.get("created", ""), meta_file.parent, meta, entry))
+    if not runs:
+        c.d["status"] = "open"
+        c.d["note"] = (
+            f"No snapshot under {SNAPSHOTS} has rendered {HARNESS_PAGE} yet; "
+            f"run node snapshot.mjs --only {HARNESS_PAGE} in local-test-build."
+        )
+        return
+    created, folder, meta, entry = max(runs, key=lambda r: r[0])
+    c.d["note"] = f"Snapshot {folder.name} of {created}, gams-www {meta.get('head')}."
+    if meta.get("inputs", {}).get(HARNESS_PAGE) != export_sha:
+        c.fail(
+            None, "rendered from a copy of SZDKLA.xml that is not the current export"
+        )
+    else:
+        c.ok()
+    for mode in entry.get("modes") or [""]:
+        for locale in entry.get("locales") or ["de", "en"]:
+            name = (
+                HARNESS_PAGE
+                + (f".{mode}" if mode else "")
+                + (".en" if locale == "en" else "")
+                + ".html"
+            )
+            if name in meta.get("failed", []):
+                c.fail(None, f"{name} failed to render")
+            elif not (folder / name).is_file():
+                c.fail(None, f"{name} is missing from the snapshot")
+            else:
+                c.ok()
+
+
 def run() -> dict:
     data = export_tei.load_dataset()
     records = {r["sourcePageId"]: r for r in export_tei.exported_pages(data)}
@@ -1075,9 +1175,14 @@ def run() -> dict:
     checks = checked.checks
     # tei_all runs once, on the real export; the mutants meet the profile schema and the invariants.
     checks.append(_mutation_check(raw, records, profile, data["_meta"]))
+    d3 = {"szd-check-data": _szd_check_data, "harness-render": _harness_render}
+    export_sha = hashlib.sha256(raw).hexdigest()
     for cid, ms, title, proves in OPEN_CHECKS:
         k = Check(cid, ms, title, proves)
-        k.d["status"] = "open"
+        if cid in d3:
+            d3[cid](k, export_sha)
+        else:
+            k.d["status"] = "open"
         checks.append(k.d)
 
     doc, values, structs, seg_pos = (
