@@ -266,6 +266,37 @@ def attribute_foreign(doc: etree._Element) -> etree._Element | None:
     return el
 
 
+def _bumped(text: str) -> str:
+    """The text with its last character changed, a digit to the next digit."""
+    if not text:
+        return "x"
+    last = text[-1]
+    return text[:-1] + (
+        str((int(last) + 1) % 10) if last.isdigit() else _other_char(last)
+    )
+
+
+def _alter(
+    xpath: str, attr: str | None = None, change: Callable[[str], str] = _bumped
+) -> Callable[[etree._Element], etree._Element | None]:
+    """A mutation changing the text, or one attribute, of the first element at `xpath`."""
+
+    def mutate(doc: etree._Element) -> etree._Element | None:
+        el = _first(doc, xpath)
+        if el is None:
+            return None
+        if attr is None:
+            el.text = change(el.text or "")
+        else:
+            el.set(attr, change(el.get(attr) or ""))
+        return el
+
+    return mutate
+
+
+CITATION = "//t:note[@type='printCitations']/t:idno"
+
+
 # id, the fault in a phrase, the mutation.
 MUTATIONS: list[tuple[str, str, Callable[[etree._Element], etree._Element | None]]] = [
     ("source-char", "a letter of the source text altered", source_char),
@@ -282,6 +313,109 @@ MUTATIONS: list[tuple[str, str, Callable[[etree._Element], etree._Element | None
     ("print-added", "a print record in the wiki export", print_added),
     ("imprint-emptied", "an imprint without parts", imprint_emptied),
     ("attribute-foreign", "an attribute outside the profile", attribute_foreign),
+    # Values, attributes and metadata outside the imprint, each the canonical data fix.
+    ("textlang-text", "a language name altered", _alter("//t:body//t:textLang")),
+    (
+        "textlang-code",
+        "a language code altered",
+        _alter(
+            "//t:body//t:textLang", "mainLang", lambda v: "fr" if v == "de" else "de"
+        ),
+    ),
+    (
+        "textlang-resp",
+        "the producer of a language swapped",
+        _alter("//t:body//t:textLang", "resp", lambda v: "#app-llm"),
+    ),
+    ("edition-text", "an edition statement altered", _alter("//t:body//t:edition")),
+    ("series-title", "a series title altered", _alter("//t:body//t:series/t:title")),
+    ("series-volume", "a series volume altered", _alter("//t:body//t:biblScope")),
+    ("extent-text", "an extent altered", _alter("//t:body//t:measure")),
+    (
+        "extent-quantity",
+        "a page count attribute altered",
+        _alter("//t:body//t:measure[@quantity]", "quantity"),
+    ),
+    (
+        "date-when",
+        "the machine-readable year altered",
+        _alter("//t:body//t:imprint/t:date[@when]", "when"),
+    ),
+    (
+        "credit-role",
+        "a credit role altered",
+        _alter(
+            "//t:body//t:persName",
+            "role",
+            lambda v: "translator" if v == "editor" else "editor",
+        ),
+    ),
+    ("credit-label", "a credit label altered", _alter("//t:body//t:respStmt/t:resp")),
+    (
+        "record-link",
+        "a publication linked to another record",
+        _alter("//t:body//t:biblStruct", "corresp", lambda v: v + "0"),
+    ),
+    (
+        "struct-ana",
+        "a publication's review status altered",
+        _alter("//t:body//t:biblStruct[@ana]", "ana", lambda v: "#confirmed"),
+    ),
+    (
+        "relation-ana",
+        "a describes relation marked confirmed",
+        _alter("//t:relation[@name='describes']", "ana", lambda v: "#confirmed"),
+    ),
+    (
+        "entry-title",
+        "the page title of a source entry altered",
+        _alter("//t:standOff/t:listBibl/t:bibl/t:title[string-length(text()) > 0]"),
+    ),
+    (
+        "entry-page-id",
+        "the page id of a source entry altered",
+        _alter("//t:standOff//t:idno[@type='pageId']"),
+    ),
+    (
+        "entry-revision",
+        "the revision of a source entry altered",
+        _alter("//t:standOff//t:idno[@type='revision']"),
+    ),
+    (
+        "entry-kind",
+        "the page kind of a source entry altered",
+        _alter(
+            "//t:standOff/t:listBibl/t:bibl[@subtype]",
+            "subtype",
+            lambda v: "work-hub" if v != "work-hub" else "other",
+        ),
+    ),
+    (
+        "entry-category",
+        "a category of a source entry altered",
+        _alter("//t:note[@type='categories']/t:seg"),
+    ),
+    ("citation-text", "a print citation altered", _alter(CITATION)),
+    (
+        "citation-resp",
+        "the producer of a print citation swapped",
+        _alter(CITATION, "resp", lambda v: "#app-llm"),
+    ),
+    (
+        "citation-ana",
+        "the state of a print citation altered",
+        _alter(CITATION, "ana", lambda v: "#confirmed"),
+    ),
+    (
+        "dump-checksum",
+        "the checksum of the wiki dump altered",
+        _alter("//t:sourceDesc/t:bibl/t:idno[@type='sha256']"),
+    ),
+    (
+        "app-version",
+        "an application version altered",
+        _alter("//t:application[@xml:id='app-rules']", "version", lambda v: "0.1"),
+    ),
 ]
 
 
@@ -295,15 +429,17 @@ def run(
     """Apply each mutation to a fresh copy of the export and name the checks that catch it.
 
     `check(raw, records)` returns the check dicts of `pipeline/acceptance.py`;
-    by default its `check_export` with the profile schema and without tei_all.
+    by default its `check_export` with the profile schema and the header
+    check and without tei_all.
     """
     if check is None:
         import acceptance  # noqa: PLC0415 - acceptance imports this module
 
         profile = acceptance._profile()
+        meta = export_tei.load_dataset()["_meta"]
 
         def check(raw: bytes, recs: dict[int, dict]) -> list[dict]:
-            return acceptance.check_export(raw, recs, profile=profile).checks
+            return acceptance.check_export(raw, recs, profile=profile, meta=meta).checks
 
     base = _failures(check(doc_bytes, records))
     results = []
@@ -339,7 +475,9 @@ def main() -> None:
         records = {p: records[p] for p in args.pages}
     raw = export_tei.serialize(export_tei.build(args.pages))
     for res in run(raw, records):
-        caught = ", ".join(res["caughtBy"]) or "NOT CAUGHT"
+        caught = ", ".join(res["caughtBy"]) or (
+            "NOT CAUGHT" if res["applied"] else "not applied"
+        )
         print(f"{res['id']:18s} page {res['page']}: {caught}")
 
 

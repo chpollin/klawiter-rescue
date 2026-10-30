@@ -62,6 +62,7 @@ ET.register_namespace("", TEI_NS)
 # Producer classes of the dataset to the declared applications.
 PRODUCER_APP = {"regex": "app-rules", "llm": "app-llm", "derived": "app-derivation"}
 PUBLICATION_KIND = "edition-page"
+CITATION_PRODUCER = "regex"
 
 # Every field of a page record and of a publication, with its place in the
 # export: ("exported", target), ("pending", milestone, reason) or
@@ -431,13 +432,15 @@ class Source:
             for i, cat in enumerate(self.categories, 1):
                 _el(cats, "seg", cat, xml_id=f"{self.sid}-cat{i}")
         citations = rec.get("printAddressCitations") or []
+        # A citation's sourceStart counts in the raw wikitext; its passage in the
+        # entry text is the evidence the pipeline located for it, in the same order.
+        evidence = (rec.get("fieldEvidence") or {}).get("printAddressCitations") or []
         # Register the citations' passages before the text is written.
         pointers = [
-            self.pointer(
-                [{"textStart": c.get("sourceStart"), "textEnd": c.get("sourceEnd")}],
-                c.get("printAddress", ""),
+            self.pointer([ev], c.get("printAddress", "")) if i < len(evidence) else None
+            for i, (c, ev) in enumerate(
+                zip(citations, evidence + [{}] * len(citations))
             )
-            for c in citations
         ]
         resolved = self._quote(bibl)
         if citations:
@@ -447,7 +450,9 @@ class Source:
                 attrs = {
                     "type": "printAddress",
                     "subtype": cite.get("printVolume", ""),
-                    "resp": "#app-rules",
+                    # Citations are read by rule only (lib/print_addresses.py), and
+                    # the dataset records no producer class for them.
+                    "resp": f"#{PRODUCER_APP[CITATION_PRODUCER]}",
                     "ana": f"#{state}",
                 }
                 if ptr:

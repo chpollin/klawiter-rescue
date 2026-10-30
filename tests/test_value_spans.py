@@ -502,6 +502,30 @@ def test_a_gap_or_derivation_holds_against_the_text(all_entries, case):
     assert not dishonest, dishonest[:20]
 
 
+def _editor_set(entries) -> bool:
+    return [item.get("gap") for item in entries] == ["editor-value"]
+
+
+def test_published_record_evidence_is_its_recomputation(all_entries, classified_rows):
+    """Every record's fieldEvidence equals what stage 05 computes from the
+    field_spans stage 03 recorded: the same offsets, locators, derivations
+    and gap kinds. A span moved or replaced by a gap fails even where the
+    value stands elsewhere on the page. A value an editor patch set carries
+    the gap editor-value instead (apply_patches.py) and is left out."""
+    stage_05 = importlib.import_module("05_to_jsonld")
+    rows = {int(row["page_id"]): row for row in classified_rows}
+    differing = []
+    for entry in all_entries:
+        recomputed = stage_05.field_evidence(dict(rows[entry["sourcePageId"]]), entry)
+        published = entry.get("fieldEvidence", {})
+        for field in sorted(set(recomputed) | set(published)):
+            if _editor_set(published.get(field, [])):
+                continue
+            if recomputed.get(field) != published.get(field):
+                differing.append((entry["sourcePageId"], field))
+    assert not differing, differing[:20]
+
+
 def test_gap_reasons_are_declared():
     assert set(GAP_REASONS) == {
         "repeated",

@@ -302,6 +302,219 @@ def _offsets(quote) -> dict[str, tuple[int, int]]:
     return out
 
 
+def _page_of_pointer(ptr: str | None) -> int | None:
+    m = re.fullmatch(r"#src-wiki-(\d+)", ptr or "")
+    return int(m.group(1)) if m else None
+
+
+def _value(
+    tag: str,
+    text: str,
+    producer: str,
+    state: str,
+    evidence: list[dict],
+    **attrs: str,
+) -> dict:
+    """An expected valued element: its key (tag, text, every other attribute) and provenance."""
+    return {
+        "key": (tag, text, tuple(sorted(attrs.items()))),
+        "producer": producer,
+        "state": state,
+        "evidence": evidence,
+    }
+
+
+def _expected_structs(rec: dict) -> list[dict]:
+    """The biblStructs the canonical data call for on one page, recomputed without the exporter.
+
+    Each has its identifier, @corresp, @ana and the valued elements it must
+    hold, no more and no fewer. A producer the data do not record is
+    "undeclared", which no application stands for, so that the export
+    cannot supply a default unnoticed.
+    """
+    page = rec["sourcePageId"]
+    if rec["wikiPageKind"] != export_tei.PUBLICATION_KIND:
+        return []
+    states = (rec.get("review") or {}).get("fieldStates") or {}
+    layer = export_tei.load_layer(page)
+    if not layer:
+        prov, evid = rec.get("_provenance") or {}, rec.get("fieldEvidence") or {}
+
+        def flat(tag: str, field: str, text: str, **attrs: str) -> dict:
+            return _value(
+                tag,
+                text,
+                prov.get(field, "undeclared"),
+                states.get(field, "not-reviewed"),
+                evid.get(field, []),
+                **attrs,
+            )
+
+        vals = [flat("title", "title", str(rec.get("title", "")), level="m")]
+        if rec.get("translator"):
+            vals.append(
+                flat(
+                    "persName",
+                    "translator",
+                    str(rec["translator"]),
+                    role="translator",
+                    label="Translated by",
+                )
+            )
+        if rec.get("languageCode"):
+            vals.append(
+                flat(
+                    "textLang",
+                    "language",
+                    str(rec.get("language", "")),
+                    mainLang=str(rec["languageCode"]),
+                )
+            )
+        for tag, field in (("pubPlace", "location"), ("publisher", "publisher")):
+            if rec.get(field):
+                vals.append(flat(tag, field, str(rec[field])))
+        if rec.get("year"):
+            vals.append(flat("date", "year", str(rec["year"]), when=str(rec["year"])))
+        if rec.get("pageCount"):
+            n = str(rec["pageCount"])
+            vals.append(flat("measure", "pageCount", n, unit="page", quantity=n))
+        return [
+            {
+                "id": f"SZDKLA.{page}.1",
+                "corresp": rec["@id"],
+                "ana": None,
+                "values": vals,
+            }
+        ]
+
+    out = []
+    for i, pub in enumerate(layer, 1):
+        prov, spans = pub.get("provenance") or {}, pub.get("valueSpans") or {}
+
+        def put(
+            tag: str,
+            field: str,
+            text: str,
+            evidence: list[dict] | None = None,
+            state_field: str | None = None,
+            prov=prov,
+            spans=spans,
+            **attrs: str,
+        ) -> dict:
+            # A review state of the page record applies where its value is this value.
+            sf = state_field or field
+            state = (
+                states[sf]
+                if sf in states and str(rec.get(sf, "")) == text
+                else "not-reviewed"
+            )
+            return _value(
+                tag,
+                text,
+                prov.get(field, "undeclared"),
+                state,
+                spans.get(field, []) if evidence is None else evidence,
+                **attrs,
+            )
+
+        vals = []
+        if pub.get("title"):
+            vals.append(put("title", "title", pub["title"], level="m"))
+        for cr in pub.get("credits") or []:
+            name = cr.get("name", "")
+            vals.append(
+                put(
+                    "persName",
+                    "credits",
+                    name,
+                    [
+                        s
+                        for s in spans.get("credits", [])
+                        if s.get("part") == "name" and s.get("value") == name
+                    ],
+                    role=cr.get("role", ""),
+                    label=cr.get("creditLabel") or cr.get("role", ""),
+                )
+            )
+        if pub.get("languageCode"):
+            vals.append(
+                put(
+                    "textLang",
+                    "language",
+                    pub.get("language", ""),
+                    mainLang=pub["languageCode"],
+                )
+            )
+        if pub.get("editionStatement"):
+            vals.append(put("edition", "editionStatement", pub["editionStatement"]))
+        for pl in pub.get("places") or []:
+            ev = [s for s in spans.get("places", []) if s.get("value") == pl]
+            vals.append(put("pubPlace", "places", pl, ev, "location"))
+        if pub.get("publisher"):
+            vals.append(put("publisher", "publisher", pub["publisher"]))
+        if pub.get("year"):
+            text = str(pub.get("yearRaw") or pub["year"])
+            vals.append(put("date", "yearRaw", text, when=str(pub["year"])))
+        extent = pub.get("extent") or {}
+        if extent.get("raw"):
+            ev = [s for s in spans.get("extent", []) if s.get("part") == "raw"]
+            qty = (
+                {"quantity": str(extent["numbered"])} if extent.get("numbered") else {}
+            )
+            vals.append(put("measure", "extent", extent["raw"], ev, unit="page", **qty))
+        if pub.get("series"):
+            vals.append(put("title", "series", pub["series"], level="s"))
+            if pub.get("seriesVolume"):
+                vals.append(
+                    put(
+                        "biblScope",
+                        "seriesVolume",
+                        str(pub["seriesVolume"]),
+                        unit="volume",
+                    )
+                )
+        out.append(
+            {
+                "id": f"SZDKLA.{page}.{i}",
+                "corresp": pub["id"],
+                "ana": f"#{pub['reviewStatus']}" if pub.get("reviewStatus") else None,
+                "values": vals,
+            }
+        )
+    return out
+
+
+def _exported_values(struct) -> list:
+    """The valued elements of a biblStruct, each with its key as `_value` builds it."""
+    out = []
+    for el in struct.iter():
+        if not isinstance(el.tag, str) or el.get("resp") is None:
+            continue
+        attrs = {
+            k: v
+            for k, v in el.attrib.items()
+            if k not in ("resp", "ana", "source", XML_ID)
+        }
+        parent = el.getparent()
+        if parent is not None and parent.tag == f"{T}respStmt":
+            label = parent.find(f"{T}resp")
+            attrs["label"] = label.text if label is not None else None
+        key = (etree.QName(el).localname, el.text or "", tuple(sorted(attrs.items())))
+        out.append((key, el))
+    return out
+
+
+def _located(evidence: list[dict]) -> tuple[int, int] | None:
+    return next(
+        (
+            (e["textStart"], e["textEnd"])
+            for e in evidence
+            if isinstance(e.get("textStart"), int) and isinstance(e.get("textEnd"), int)
+        ),
+        None,
+    )
+
+
 @dataclasses.dataclass
 class Checked:
     """The checks of one export and what the report reads besides them."""
@@ -325,11 +538,12 @@ def check_export(
     profile: etree.RelaxNG | None = None,
     tei_all: etree.RelaxNG | None = None,
     rebuilt: bytes | None = None,
+    meta: dict | None = None,
 ) -> Checked:
     """Run the checks on the bytes of an export of `records`, without rebuilding it.
 
-    tei_all, the determinism check and the profile schema run only when their
-    input is given, so that the mutation suite can check many wrong documents
+    tei_all, the determinism check, the profile schema and the header check
+    (`meta`, the dataset's `_meta`) run only when their input is given, so that the mutation suite can check many wrong documents
     against the profile schema and the invariants in reasonable time.
     """
     checks: list[dict] = []
@@ -396,6 +610,42 @@ def check_export(
     )
     checks.append(c.d)
 
+    if meta is not None:
+        c = Check(
+            "header-provenance",
+            "D1",
+            "The header names the dump and the producers",
+            "The checksum of the wiki dump and the name and version of each application in the header are those the canonical data record.",
+        )
+        dump = meta.get("sourceDump") or {}
+        sha = doc.find(f"{T}teiHeader//{T}sourceDesc/{T}bibl/{T}idno[@type='sha256']")
+        got_sha = sha.text if sha is not None else None
+        c.ok() if got_sha == dump.get("sha256") else c.fail(
+            None, f"dump sha256 {got_sha}, expected {dump.get('sha256')}"
+        )
+        llm = meta.get("llmEnrichment") or {}
+        frozen = llm.get("frozenAt", "")
+        version = str(meta.get("version", "0"))
+        for xml_id, ident, ver in (
+            ("app-rules", "klawiter-rules", version),
+            ("app-derivation", "klawiter-derivation", version),
+            ("app-concordance", "klawiter-concordance", version),
+            # @version takes a number; the date the model cache was frozen stands in for it.
+            ("app-llm", llm.get("model"), frozen[:10].replace("-", ".")),
+        ):
+            el = by_id.get(xml_id)
+            got = (el.get("ident"), el.get("version")) if el is not None else None
+            c.ok() if got == (ident, ver) else c.fail(
+                None, f"{xml_id}: {got}, expected {(ident, ver)}"
+            )
+        desc = by_id.get("app-llm")
+        desc = desc.findtext(f"{T}desc") if desc is not None else ""
+        for part in (frozen, llm.get("promptSha256", "")):
+            c.ok() if part and part in desc else c.fail(
+                None, f"app-llm description lacks {part!r}"
+            )
+        checks.append(c.d)
+
     # Source text: the quote of each page is the canonical entry text, character for character.
     quotes = {
         _page_of(b): b.find(f"{T}quote")
@@ -405,7 +655,7 @@ def check_export(
         "source-text",
         "D1",
         "Klawiter's text survives unaltered",
-        "The text of every source entry in the TEI equals the entry text of the canonical data, character for character.",
+        "The text of every source entry in the TEI equals the entry text of the canonical data, character for character, and its page title, page id, revision, page kind and categories are those of the page.",
     )
     for page, rec in records.items():
         q = quotes.get(page)
@@ -421,6 +671,31 @@ def check_export(
             c.fail(
                 page,
                 f"differs at offset {at}" if got is not None else "no source entry",
+            )
+        bibl = q.getparent() if q is not None else None
+        if bibl is None:
+            continue
+        revision = (rec.get("revisionDates") or {}).get("lastRevisionId")
+        entry = {
+            "kind": bibl.get("subtype"),
+            "title": bibl.findtext(f"{T}title") or "",
+            "pageId": bibl.findtext(f"{T}idno[@type='pageId']"),
+            "revision": bibl.findtext(f"{T}idno[@type='revision']"),
+            "categories": [
+                seg.text or ""
+                for seg in bibl.iterfind(f"{T}note[@type='categories']/{T}seg")
+            ],
+        }
+        canon = {
+            "kind": rec["wikiPageKind"],
+            "title": rec.get("title") or "",
+            "pageId": str(page),
+            "revision": str(revision) if revision is not None else None,
+            "categories": list(rec.get("categories") or []),
+        }
+        for key, want_val in canon.items():
+            c.ok() if entry[key] == want_val else c.fail(
+                page, f"{key} {entry[key]!r}, expected {want_val!r}"
             )
     checks.append(c.d)
 
@@ -477,202 +752,200 @@ def check_export(
     checks.append(c.d)
 
     # Publications: one biblStruct per publication of an edition page, none for other kinds.
-    describes: dict[int, list[str]] = {}
-    for rel in doc.iterfind(f".//{T}relation[@name='describes']"):
-        describes.setdefault(int(rel.get("active").split("-")[-1]), []).append(
-            rel.get("passive")[1:]
-        )
+    expected = {page: _expected_structs(rec) for page, rec in records.items()}
     structs = {s.get(XML_ID): s for s in doc.iterfind(f".//{T}body//{T}biblStruct")}
+    describes: dict[int, list] = {}
+    for rel in doc.iterfind(f".//{T}relation[@name='describes']"):
+        describes.setdefault(_page_of_pointer(rel.get("active")), []).append(rel)
     c = Check(
         "publications",
         "D1",
         "Each publication is its own record",
-        "An edition page gives one biblStruct per publication of its publication layer, or one when it has none; no other page kind gives a biblStruct.",
+        "An edition page gives one biblStruct per publication of its publication layer, or one when it has none, with the record link of the canonical data and a relation from its source entry; no other page kind gives a biblStruct.",
     )
+    wanted_ids = set()
     for page, rec in records.items():
-        got = len(describes.get(page, []))
-        if rec["wikiPageKind"] == export_tei.PUBLICATION_KIND:
-            want = len(export_tei.load_layer(page)) or 1
-        else:
-            want = 0
+        want = [s["id"] for s in expected[page]]
+        wanted_ids.update(want)
+        got = [rel.get("passive", "")[1:] for rel in describes.get(page, [])]
         c.ok() if got == want else c.fail(
-            page, f"{rec['wikiPageKind']}: {got} biblStruct, expected {want}"
+            page, f"{rec['wikiPageKind']}: relations to {got}, expected {want}"
         )
+        for exp in expected[page]:
+            struct = structs.get(exp["id"])
+            if struct is None:
+                c.fail(page, f"{exp['id']} is missing")
+            elif struct.get("corresp") != exp["corresp"]:
+                c.fail(
+                    page,
+                    f"{exp['id']}: corresp {struct.get('corresp')}, expected {exp['corresp']}",
+                )
+            else:
+                c.ok()
+    for sid in structs.keys() - wanted_ids:
+        if _page_of(structs[sid]) in records:
+            c.fail(_page_of(structs[sid]), f"{sid} is not called for by the data")
     checks.append(c.d)
 
-    # Values: recomputed from the canonical data, then looked up in the export.
+    # Values: recomputed from the canonical data; the valued elements of each
+    # biblStruct must be exactly the expected ones, then producer, state and passage.
     c_val = Check(
         "values",
         "D1",
         "Every exported value arrives unchanged",
-        "Title, people, places, publisher, date, language and extent of each publication appear in its biblStruct exactly as in the canonical data.",
+        "The valued elements of each publication (every element with @resp, its text and attributes) are exactly those the canonical data call for, none missing and none added; print citations likewise.",
     )
     c_resp = Check(
         "producers",
         "D1",
         "Every value names its producer",
-        "@resp of each value is the application of the producer class the canonical data records for it.",
+        "@resp of each value and print citation is the application of the producer class the canonical data record for it; a describes relation names the rules.",
     )
     c_state = Check(
         "states",
         "D1",
         "Every value carries its review state",
-        "@ana of each value is its state in the canonical data: the review state where one is recorded, not-reviewed otherwise.",
+        "@ana of each value and print citation is its state in the canonical data, the review state where one is recorded and not-reviewed otherwise; @ana of a publication is its review status, and a describes relation is not reviewed.",
     )
     c_src = Check(
         "passages",
         "D1",
         "Every located value points to its passage",
-        "A value whose evidence locates a passage points to it, and the passage is the text at those offsets.",
+        "A value whose evidence locates a passage points to it and the passage is the text at those offsets; a value read from the page title or a category points there; a value without evidence points nowhere.",
     )
-    app = {
-        v: f"#{k}"
-        for k, v in {
-            "app-rules": "regex",
-            "app-llm": "llm",
-            "app-derivation": "derived",
-        }.items()
-    }
+    app = {"regex": "#app-rules", "llm": "#app-llm", "derived": "#app-derivation"}
     values = Counter()
-    for page, rec in records.items():
-        if rec["wikiPageKind"] != export_tei.PUBLICATION_KIND:
-            continue
-        layer = export_tei.load_layer(page)
-        states = (rec.get("review") or {}).get("fieldStates") or {}
-        expected = []  # (pub index, tag, text, producer, state, evidence)
-        if layer:
-            for i, pub in enumerate(layer, 1):
-                prov, spans = pub.get("provenance") or {}, pub.get("valueSpans") or {}
 
-                def exp(
-                    tag,
-                    field,
-                    text,
-                    ev=None,
-                    sf=None,
-                    i=i,
-                    prov=prov,
-                    spans=spans,
-                    pub=pub,
-                ):
-                    sf = sf or field
-                    st = (
-                        states[sf]
-                        if sf in states and str(rec.get(sf, "")) == text
-                        else "not-reviewed"
-                    )
-                    expected.append(
-                        (
-                            i,
-                            tag,
-                            text,
-                            prov.get(field, "undeclared"),
-                            st,
-                            spans.get(field, []) if ev is None else ev,
-                        )
-                    )
-
-                if pub.get("title"):
-                    exp("title", "title", pub["title"])
-                for cr in pub.get("credits") or []:
-                    exp(
-                        "persName",
-                        "credits",
-                        cr.get("name", ""),
-                        [
-                            s
-                            for s in spans.get("credits", [])
-                            if s.get("part") == "name"
-                            and s.get("value") == cr.get("name")
-                        ],
-                    )
-                for pl in pub.get("places") or []:
-                    exp(
-                        "pubPlace",
-                        "places",
-                        pl,
-                        [s for s in spans.get("places", []) if s.get("value") == pl],
-                        "location",
-                    )
-                if pub.get("publisher"):
-                    exp("publisher", "publisher", pub["publisher"])
-                if pub.get("year"):
-                    exp("date", "yearRaw", str(pub.get("yearRaw") or pub["year"]))
-        else:
-            prov, evid = rec.get("_provenance") or {}, rec.get("fieldEvidence") or {}
-            for tag, field in (
-                ("title", "title"),
-                ("persName", "translator"),
-                ("pubPlace", "location"),
-                ("publisher", "publisher"),
-                ("date", "year"),
-                ("measure", "pageCount"),
-            ):
-                if rec.get(field):
-                    expected.append(
-                        (
-                            1,
-                            tag,
-                            str(rec[field]),
-                            prov.get(field, "undeclared"),
-                            states.get(field, "not-reviewed"),
-                            evid.get(field, []),
-                        )
-                    )
-        for i, tag, text, producer, state, ev in expected:
-            values["total"] += 1
-            struct = structs.get(f"SZDKLA.{page}.{i}")
-            cands = [
-                el
-                for el in (struct.iter(f"{T}{tag}") if struct is not None else [])
-                if el.text == text
-            ]
-            if not cands:
-                c_val.fail(page, f"{tag} {text!r} missing from SZDKLA.{page}.{i}")
-                continue
-            c_val.ok()
-            el = cands[0]
-            # No default: a producer class the export does not declare is a fault, not a rule.
-            want_resp = app.get(producer, f"undeclared producer {producer!r}")
-            c_resp.ok() if el.get("resp") == want_resp else c_resp.fail(
-                page, f"{tag} {text!r}: resp {el.get('resp')}, expected {want_resp}"
-            )
-            c_state.ok() if el.get("ana") == f"#{state}" else c_state.fail(
-                page, f"{tag} {text!r}: ana {el.get('ana')}, expected #{state}"
-            )
-            span = next(
-                (
-                    (e["textStart"], e["textEnd"])
-                    for e in ev
-                    if isinstance(e.get("textStart"), int)
-                    and isinstance(e.get("textEnd"), int)
-                ),
-                None,
-            )
-            src = el.get("source")
-            if span is None:
-                gaps = {e.get("gap") for e in ev}
-                if src and ("page-title" in gaps or "category-markup" in gaps):
+    def judge(page: int, rec: dict, label: str, exp: dict, el) -> None:
+        # No default: a producer class the export does not declare is a fault, not a rule.
+        want_resp = app.get(exp["producer"], f"undeclared producer {exp['producer']!r}")
+        c_resp.ok() if el.get("resp") == want_resp else c_resp.fail(
+            page, f"{label}: resp {el.get('resp')}, expected {want_resp}"
+        )
+        c_state.ok() if el.get("ana") == f"#{exp['state']}" else c_state.fail(
+            page, f"{label}: ana {el.get('ana')}, expected #{exp['state']}"
+        )
+        span = _located(exp["evidence"])
+        src = el.get("source")
+        if span is None:
+            gaps = {e.get("gap") for e in exp["evidence"]}
+            meta = None
+            if "page-title" in gaps:
+                meta = re.compile(rf"#src-wiki-{page}-title")
+            elif "category-markup" in gaps and rec.get("categories"):
+                meta = re.compile(rf"#src-wiki-{page}-cat\d+")
+            if meta is not None:
+                if src and meta.fullmatch(src) and src[1:] in by_id:
+                    c_src.ok()
                     values["withMetaSource"] += 1
                 else:
-                    values[next((g for g in gaps if g), "no-evidence")] += 1
+                    c_src.fail(page, f"{label}: source {src}, expected {meta.pattern}")
+                return
+            values[next((g for g in gaps if g), "no-evidence")] += 1
+            c_src.ok() if src is None else c_src.fail(
+                page, f"{label}: source {src} without evidence"
+            )
+            return
+        m = RANGE.fullmatch(src or "")
+        if m and m.group(1) == f"src-wiki-{page}-text":
+            got = (int(m.group(2)), int(m.group(2)) + int(m.group(3)))
+            values["byRange"] += 1
+        elif src and src[1:] in seg_pos and _page_of(by_id[src[1:]]) == page:
+            got = seg_pos[src[1:]][:2]
+        else:
+            c_src.fail(page, f"{label} has no passage of its entry, evidence {span}")
+            return
+        if got != span:
+            c_src.fail(page, f"{label} points to {got}, evidence {span}")
+            return
+        entry = rec.get("fullBibliographicEntry") or ""
+        # A print citation records its source text, so its passage must be those words.
+        if "verbatim" in exp and entry[span[0] : span[1]] != exp["verbatim"]:
+            c_src.fail(
+                page,
+                f"{label}: passage {span} reads {entry[span[0] : span[1]]!r}",
+            )
+            return
+        c_src.ok()
+        values["withPassage"] += 1
+        if (rec.get("fullBibliographicEntry") or "")[span[0] : span[1]] != el.text:
+            values["textDiffers"] += 1
+
+    for page, rec in records.items():
+        for exp_struct in expected[page]:
+            struct = structs.get(exp_struct["id"])
+            if struct is None:
+                c_val.fail(page, f"{exp_struct['id']} is missing")
                 continue
-            m = RANGE.fullmatch(src or "")
-            if m:
-                got = (int(m.group(2)), int(m.group(2)) + int(m.group(3)))
-                values["byRange"] += 1
-            elif src and src[1:] in seg_pos:
-                got = seg_pos[src[1:]][:2]
-            else:
-                c_src.fail(page, f"{tag} {text!r} has no passage, evidence {span}")
+            want_ana = exp_struct["ana"]
+            c_state.ok() if struct.get("ana") == want_ana else c_state.fail(
+                page,
+                f"{exp_struct['id']}: ana {struct.get('ana')}, expected {want_ana}",
+            )
+            got: dict[tuple, list] = {}
+            for key, el in _exported_values(struct):
+                got.setdefault(key, []).append(el)
+            for exp in exp_struct["values"]:
+                values["total"] += 1
+                tag, text = exp["key"][0], exp["key"][1]
+                label = f"{exp_struct['id']} {tag} {text!r}"
+                if not got.get(exp["key"]):
+                    c_val.fail(page, f"{label} {dict(exp['key'][2])} is missing")
+                    continue
+                c_val.ok()
+                judge(page, rec, label, exp, got[exp["key"]].pop(0))
+            for key, els in got.items():
+                for _ in els:
+                    c_val.fail(page, f"{exp_struct['id']}: unexpected {key}")
+        # Print citations: the note of the source entry, in the order of the data.
+        state = ((rec.get("review") or {}).get("fieldStates") or {}).get(
+            "printAddressCitations", "not-reviewed"
+        )
+        # Citations are read by rule only (lib/print_addresses.py, called from
+        # 05_to_jsonld.py); the dataset records no producer class for them.
+        producer = (rec.get("_provenance") or {}).get("printAddressCitations", "regex")
+        source = by_id.get(f"src-wiki-{page}")
+        cited = (
+            source.findall(f"{T}note[@type='printCitations']/{T}idno")
+            if source is not None
+            else []
+        )
+        cites = rec.get("printAddressCitations") or []
+        # sourceStart counts in the raw wikitext; the entry-text passage is the
+        # located evidence, one per citation in the same order.
+        cite_ev = (rec.get("fieldEvidence") or {}).get("printAddressCitations") or []
+        if len(cited) != len(cites):
+            c_val.fail(page, f"{len(cited)} print citations, expected {len(cites)}")
+        for n, (cite, el) in enumerate(zip(cites, cited)):
+            values["total"] += 1
+            label = f"print citation {cite.get('printAddress')!r}"
+            if (el.text, el.get("type"), el.get("subtype")) != (
+                cite.get("printAddress"),
+                "printAddress",
+                cite.get("printVolume"),
+            ):
+                c_val.fail(page, f"{label}: {el.text!r} {el.get('subtype')}")
                 continue
-            if got != span:
-                c_src.fail(page, f"{tag} {text!r} points to {got}, evidence {span}")
-                continue
-            c_src.ok()
-            values["withPassage"] += 1
-            if (rec.get("fullBibliographicEntry") or "")[span[0] : span[1]] != text:
-                values["textDiffers"] += 1
+            c_val.ok()
+            judge(
+                page,
+                rec,
+                label,
+                {
+                    "producer": producer,
+                    "state": state,
+                    "evidence": [cite_ev[n]] if n < len(cite_ev) else [],
+                    "verbatim": cite.get("sourceValue"),
+                },
+                el,
+            )
+        for rel in describes.get(page, []):
+            c_resp.ok() if rel.get("resp") == "#app-rules" else c_resp.fail(
+                page, f"describes relation: resp {rel.get('resp')}"
+            )
+            c_state.ok() if rel.get("ana") == "#not-reviewed" else c_state.fail(
+                page, f"describes relation: ana {rel.get('ana')}"
+            )
     checks += [c_val.d, c_resp.d, c_state.d, c_src.d]
 
     c = Check(
@@ -750,7 +1023,7 @@ def check_export(
 
 
 def _mutation_check(
-    raw: bytes, records: dict[int, dict], profile: etree.RelaxNG
+    raw: bytes, records: dict[int, dict], profile: etree.RelaxNG, meta: dict
 ) -> dict:
     """Each deliberately broken copy of the export must fail at least one check."""
     c = Check(
@@ -762,7 +1035,9 @@ def _mutation_check(
     results = tei_mutations.run(
         raw,
         records,
-        check=lambda doc, recs: check_export(doc, recs, profile=profile).checks,
+        check=lambda doc, recs: (
+            check_export(doc, recs, profile=profile, meta=meta).checks
+        ),
     )
     for res in results:
         if res["caught"]:
@@ -793,12 +1068,13 @@ def run() -> dict:
         profile=profile,
         tei_all=_tei_all(),
         rebuilt=export_tei.serialize(export_tei.build()),
+        meta=data["_meta"],
     )
     if checked.doc is None:
         return {"checks": checked.checks}
     checks = checked.checks
     # tei_all runs once, on the real export; the mutants meet the profile schema and the invariants.
-    checks.append(_mutation_check(raw, records, profile))
+    checks.append(_mutation_check(raw, records, profile, data["_meta"]))
     for cid, ms, title, proves in OPEN_CHECKS:
         k = Check(cid, ms, title, proves)
         k.d["status"] = "open"
