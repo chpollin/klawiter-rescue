@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title xml:lang="de">Klawiter-Bibliographie Stefan Zweig digital</title>
+        <title xml:lang="en">Klawiter Bibliography Stefan Zweig digital</title>
+        <editor role="compiler">Randolph J. Klawiter</editor>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>
+          <orgName corresp="https://www.uni-salzburg.at/index.php?id=72" ref="d-nb.info/gnd/1047605287">Literaturarchiv Salzburg</orgName>
+        </publisher>
+        <availability>
+          <licence target="https://creativecommons.org/licenses/by/4.0">Creative Commons BY 4.0</licence>
+        </availability>
+        <idno type="PID">o:szd.klawiter</idno>
+      </publicationStmt>
+      <sourceDesc>
+        <listBibl type="sources">
+          <bibl type="wikiPage" xml:id="src-wiki-212">
+            <idno type="pageId">212</idno>
+            <idno type="revision">4392</idno>
+            <title xml:id="src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
+            <note type="categories">
+              <seg xml:id="src-wiki-212-cat1">Essays / Volumes (Rumanian)</seg>
+            </note>
+            <quote>Translated by <seg xml:id="src-wiki-212-s1">Eugen Relgis</seg>. <seg xml:id="src-wiki-212-s2">248</seg>p. <seg xml:id="src-wiki-212-s3">Bucureşti</seg>: <seg xml:id="src-wiki-212-s4">Editura Ştiinţifică</seg>, <seg xml:id="src-wiki-212-s5">1996</seg> (Ardealul). [See <seg xml:id="src-wiki-212-s6">H 670</seg>, <seg xml:id="src-wiki-212-s7">G 131</seg> &amp; <seg xml:id="src-wiki-212-s8">H 490</seg>, <seg xml:id="src-wiki-212-s9">G 445</seg>. See <seg xml:id="src-wiki-212-s10">G 201</seg>, 491, 492]</quote>
+          </bibl>
+        </listBibl>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <appInfo>
+        <application ident="klawiter-rules" version="0.9" xml:id="app-rules">
+          <desc>Parser rules of the Klawiter pipeline reading a value from its passage</desc>
+        </application>
+        <application ident="klawiter-derivation" version="0.9" xml:id="app-derivation">
+          <desc>Rules of the Klawiter pipeline computing a value from another value</desc>
+        </application>
+        <application ident="klawiter-concordance" version="0.9" xml:id="app-concordance">
+          <desc>Rules of the print strand proposing that a print record and a wiki page describe one publication</desc>
+        </application>
+        <application ident="gemini-3.1-flash-lite-preview" version="2026-08-21T17:51:38.288166+00:00" xml:id="app-llm">
+          <desc>Language model filling gaps the rules left, frozen cache, prompt sha256 c078baa8bde4baeb69d8fb4ac60c94e7326148882fe2c06ae418757c13d80fa1</desc>
+        </application>
+      </appInfo>
+      <classDecl>
+        <taxonomy xml:id="state">
+          <category xml:id="not-reviewed">
+            <catDesc>read or proposed by a rule or model, not reviewed by a person</catDesc>
+          </category>
+          <category xml:id="proposed">
+            <catDesc>a proposal that publishes nothing until a person or an exact rule decides</catDesc>
+          </category>
+          <category xml:id="confirmed">
+            <catDesc>confirmed by a person or an exact deterministic rule</catDesc>
+          </category>
+          <category xml:id="contested">
+            <catDesc>an open statement with competing interpretations</catDesc>
+          </category>
+        </taxonomy>
+      </classDecl>
+      <listPrefixDef>
+        <prefixDef ident="klawiter" matchPattern="(.+)" replacementPattern="https://chpollin.github.io/klawiter-rescue/vocab/$1" />
+      </listPrefixDef>
+    </encodingDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <listBibl>
+        <biblStruct xml:id="SZDKLA.212.1" corresp="klawiter:entry/212">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
+            <respStmt>
+              <resp>translator</resp>
+              <persName resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s1">Eugen Relgis</persName>
+            </respStmt>
+            <textLang mainLang="ro" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-cat1">Rumanian</textLang>
+            <imprint>
+              <pubPlace xml:id="SZDKLA.212.1.place" resp="#app-llm" ana="#not-reviewed" source="#src-wiki-212-s3">Bucureşti</pubPlace>
+              <publisher xml:id="SZDKLA.212.1.publisher" resp="#app-llm" ana="#not-reviewed" source="#src-wiki-212-s4">Editura Ştiinţifică</publisher>
+              <date when="1996" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s5">1996</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="248" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s2">248</measure>
+            </extent>
+          </monogr>
+        </biblStruct>
+      </listBibl>
+    </body>
+  </text>
+  <standOff>
+    <listRelation>
+      <relation name="describes" active="#src-wiki-212" passive="#SZDKLA.212.1" resp="#app-rules" ana="#not-reviewed" />
+    </listRelation>
+  </standOff>
+</TEI>

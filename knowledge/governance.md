@@ -134,7 +134,7 @@ The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done.
 | Research tasks for the trial | naming the research tasks the merged bibliography must support, with Stefan Zweig Digital; [Specification](specification.md) proposes them | any time |
 | Rights in the print volumes | settling with the rights holder whether print-derived structure and values, including the unpublished Addendum II, may be published | before delivery |
 | Print as a source of values | deciding whether print becomes an admitted source of values or the merged bibliography stays a concordance | after the rights decision |
-| Delivery shape | agreeing with Stefan Zweig Digital on one sample object (entry, three sources, claim, group) | after the reconstructed entry |
+| Delivery shape | the format is decided, TEI in the profile of [TEI profile](tei-profile.md), with a RELAX NG schema (operator for Stefan Zweig Digital, 2026-10-30); still to agree is the profile on one sample object (entry, three sources, claim, group) | after the review of the profile |
 | Citation identifiers | deciding with a domain expert whether groups carry the print address and the 1965 number as citable aliases ([Project](project.md), How the bibliography is cited) | any time |
 | Decisions under the principles | reading the list under Operator principles and objecting where a decision should be taken otherwise | standing |
 

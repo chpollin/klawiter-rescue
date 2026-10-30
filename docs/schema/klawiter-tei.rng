@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RELAX NG schema of the Klawiter TEI profile, the delivery format for
+  Stefan Zweig Digital (knowledge/tei-profile.md). It admits only the subset
+  of TEI P5 the profile uses. That every pointer in @resp, @source, @ana,
+  @active and @passive resolves to an xml:id of the same document is checked
+  by tests/test_tei_export.py, because RELAX NG cannot check references.
+-->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         ns="http://www.tei-c.org/ns/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+  <start>
+    <element name="TEI">
+      <ref name="teiHeader"/>
+      <element name="text">
+        <element name="body">
+          <element name="listBibl">
+            <oneOrMore><ref name="biblStruct"/></oneOrMore>
+          </element>
+        </element>
+      </element>
+      <element name="standOff">
+        <element name="listRelation">
+          <oneOrMore><ref name="relation"/></oneOrMore>
+        </element>
+      </element>
+    </element>
+  </start>
+
+  <!-- Attributes -->
+
+  <define name="xmlId">
+    <attribute name="xml:id" ns="http://www.w3.org/XML/1998/namespace"><data type="ID"/></attribute>
+  </define>
+  <define name="xmlLang">
+    <attribute name="xml:lang" ns="http://www.w3.org/XML/1998/namespace"><data type="language"/></attribute>
+  </define>
+  <define name="pointers">
+    <list><oneOrMore><data type="anyURI"/></oneOrMore></list>
+  </define>
+  <!-- The provenance of a value: who produced it, from which passage, in which state. -->
+  <define name="provenance">
+    <attribute name="resp"><ref name="pointers"/></attribute>
+    <attribute name="ana"><ref name="pointers"/></attribute>
+    <optional><attribute name="source"><ref name="pointers"/></attribute></optional>
+  </define>
+
+  <!-- Header -->
+
+  <define name="teiHeader">
+    <element name="teiHeader">
+      <element name="fileDesc">
+        <element name="titleStmt">
+          <oneOrMore><element name="title"><ref name="xmlLang"/><text/></element></oneOrMore>
+          <element name="editor"><attribute name="role"><value>compiler</value></attribute><text/></element>
+        </element>
+        <element name="publicationStmt">
+          <element name="publisher">
+            <element name="orgName">
+              <optional><attribute name="corresp"><data type="anyURI"/></attribute></optional>
+              <optional><attribute name="ref"><data type="anyURI"/></attribute></optional>
+              <text/>
+            </element>
+          </element>
+          <element name="availability">
+            <element name="licence"><attribute name="target"><data type="anyURI"/></attribute><text/></element>
+          </element>
+          <element name="idno"><attribute name="type"><value>PID</value></attribute><text/></element>
+        </element>
+        <element name="sourceDesc">
+          <element name="listBibl">
+            <attribute name="type"><value>sources</value></attribute>
+            <oneOrMore><choice><ref name="wikiSource"/><ref name="printSource"/></choice></oneOrMore>
+          </element>
+        </element>
+      </element>
+      <element name="encodingDesc">
+        <element name="appInfo">
+          <oneOrMore>
+            <element name="application">
+              <attribute name="ident"/>
+              <attribute name="version"/>
+              <ref name="xmlId"/>
+              <element name="desc"><text/></element>
+            </element>
+          </oneOrMore>
+        </element>
+        <element name="classDecl">
+          <element name="taxonomy">
+            <ref name="xmlId"/>
+            <oneOrMore>
+              <element name="category">
+                <ref name="xmlId"/>
+                <element name="catDesc"><text/></element>
+              </element>
+            </oneOrMore>
+          </element>
+        </element>
+        <element name="listPrefixDef">
+          <oneOrMore>
+            <element name="prefixDef">
+              <attribute name="ident"/>
+              <attribute name="matchPattern"/>
+              <attribute name="replacementPattern"/>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </element>
+    </element>
+  </define>
+
+  <!-- Klawiter's wiki entry with one seg per located passage. -->
+  <define name="wikiSource">
+    <element name="bibl">
+      <attribute name="type"><value>wikiPage</value></attribute>
+      <ref name="xmlId"/>
+      <element name="idno"><attribute name="type"><value>pageId</value></attribute><data type="positiveInteger"/></element>
+      <optional><element name="idno"><attribute name="type"><value>revision</value></attribute><data type="positiveInteger"/></element></optional>
+      <element name="title"><ref name="xmlId"/><text/></element>
+      <element name="note">
+        <attribute name="type"><value>categories</value></attribute>
+        <zeroOrMore><element name="seg"><ref name="xmlId"/><text/></element></zeroOrMore>
+      </element>
+      <element name="quote">
+        <mixed><zeroOrMore><element name="seg"><ref name="xmlId"/><text/></element></zeroOrMore></mixed>
+      </element>
+    </element>
+  </define>
+
+  <!-- A print record by identifier and checksum only: its text stays out while the rights are open. -->
+  <define name="printSource">
+    <element name="bibl">
+      <attribute name="type"><value>printEntry</value></attribute>
+      <ref name="xmlId"/>
+      <element name="idno"><attribute name="type"><value>printRecord</value></attribute><text/></element>
+      <element name="idno"><attribute name="type"><value>sha256</value></attribute><data type="string"><param name="pattern">[0-9a-f]{64}</param></data></element>
+    </element>
+  </define>
+
+  <!-- The publication -->
+
+  <define name="biblStruct">
+    <element name="biblStruct">
+      <ref name="xmlId"/>
+      <optional><attribute name="corresp"><data type="anyURI"/></attribute></optional>
+      <element name="monogr">
+        <element name="title">
+          <attribute name="level"><value>m</value></attribute>
+          <ref name="provenance"/>
+          <text/>
+        </element>
+        <zeroOrMore>
+          <element name="respStmt">
+            <element name="resp"><choice><value>translator</value><value>editor</value><value>illustrator</value></choice></element>
+            <element name="persName"><ref name="provenance"/><text/></element>
+          </element>
+        </zeroOrMore>
+        <optional>
+          <element name="textLang">
+            <attribute name="mainLang"><data type="language"/></attribute>
+            <ref name="provenance"/>
+            <text/>
+          </element>
+        </optional>
+        <element name="imprint">
+          <optional><element name="pubPlace"><ref name="xmlId"/><ref name="provenance"/><text/></element></optional>
+          <optional><element name="publisher"><ref name="xmlId"/><ref name="provenance"/><text/></element></optional>
+          <optional>
+            <element name="date">
+              <attribute name="when"><choice><data type="gYear"/><data type="date"/></choice></attribute>
+              <ref name="provenance"/>
+              <text/>
+            </element>
+          </optional>
+        </element>
+        <optional>
+          <element name="extent">
+            <element name="measure">
+              <attribute name="unit"><value>page</value></attribute>
+              <attribute name="quantity"><data type="nonNegativeInteger"/></attribute>
+              <ref name="provenance"/>
+              <text/>
+            </element>
+          </element>
+        </optional>
+      </element>
+    </element>
+  </define>
+
+  <!-- A statement between a source and a publication, with its producer and state. -->
+  <define name="relation">
+    <element name="relation">
+      <attribute name="name"><choice><value>describes</value><value>samePublicationAs</value></choice></attribute>
+      <attribute name="active"><ref name="pointers"/></attribute>
+      <attribute name="passive"><ref name="pointers"/></attribute>
+      <attribute name="resp"><ref name="pointers"/></attribute>
+      <attribute name="ana"><ref name="pointers"/></attribute>
+      <optional><attribute name="n"/></optional>
+      <empty/>
+    </element>
+  </define>
+</grammar>

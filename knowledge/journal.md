@@ -23,6 +23,14 @@ template:
 
 ## Entries
 
+### 2026-10-30 — TEI as the delivery format, first profile and export
+
+- Trigger: The operator's decision, as the side of Stefan Zweig Digital, that the bibliography is delivered as TEI fitting the data repository of Stefan Zweig Digital, with a RELAX NG schema instead of an ODD.
+- Found: Stefan Zweig Digital has no schema; its encoding patterns are documented from its data (`SZD/knowledge/DATA_MODEL.md`, `COLLECTIONS.md`), with `biblFull` and `msDesc` for held items and uncertainty only as `@cert` on dates. A first TEI sketch of the coordinator misused `relatedItem` for source entries, asserted a proposed identity as structure and pointed `@resp` and `@source` at nothing; the profile replaces it.
+- Decided: TEI is a projection of the canonical data and is never curated. A publication is a `biblStruct`; every value carries `@resp`, `@source` and `@ana`; Klawiter's entries are the sources in `sourceDesc`; proposed identities are `relation` elements in `standOff`; print records enter as identifier and checksum only, and an export with them stays under `data/print/`. `SZDKLA.<page>.<n>` is provisional ([TEI profile](tei-profile.md)).
+- Changed: `pipeline/export_tei.py`, `docs/schema/klawiter-tei.rng`, `tests/test_tei_export.py`, the wiki-only export of page 212 under `data/output/tei/`, `lxml` as a development dependency for the RELAX NG check; [TEI profile](tei-profile.md) joins the index, and [Plan](plan.md) and [Governance](governance.md) record the decided route.
+- Evidence: full Python suite and Ruff green; both exports of page 212 valid against the schema. Conformance with tei_all is under independent review.
+
 ### 2026-10-30 — Provenance signs, source beside the values, start page counts
 
 - Trigger: The operator's review of the permalink card of page 212 ("too text-heavy", signs instead of words) and of the start page, in a guided session with read screenshots and an independent read-only review agent.

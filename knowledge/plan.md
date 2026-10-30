@@ -114,7 +114,8 @@ Interface acceptance
 - Done when keyboard operation, a screen reader, 200 percent zoom and narrow widths are checked, an independent review given the research tasks of [Specification](specification.md) has its findings closed, and the operator has accepted reading, review and citation on real tasks.
 
 Delivery
-- Done when Stefan Zweig Digital has decided on the sample object between the two delivery routes of [Merged bibliography](print-wiki-merge.md), Merged bibliography and delivery, and the delivery is built locally; publishing it waits for the operator.
+- The route is decided: TEI, projected from the canonical data, in the profile of [TEI profile](tei-profile.md) (operator for Stefan Zweig Digital, 2026-10-30). A first export of page 212 validates against `docs/schema/klawiter-tei.rng`.
+- Done when the profile is reviewed and agreed on a sample object, covers pages with a publication layer and the authority links, and the export is placed under `data/Klawiter/` in the data repository of Stefan Zweig Digital; publishing it waits for the operator.
 
 ### Release backlog of the wiki edition
 

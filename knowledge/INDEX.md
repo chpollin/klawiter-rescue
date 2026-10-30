@@ -39,6 +39,7 @@ This index routes agents and people through the knowledge of the Stefan Zweig Bi
 | [Print volumes](print-volumes.md) | Domain Knowledge | structure, conventions, reference system and sigla of the three print-volume PDFs, and what a reader of the files has to expect | when a reading of the volumes is verified or corrected |
 | [Print pipeline](print-pipeline.md) | Architecture of the print strand | stages, probes, benchmark, structured objects, reading gaps and reproduction of the print strand, with its figures in the local reports | on a change of stages or measurement |
 | [Merged bibliography](print-wiki-merge.md) | Specification of the merge | record and claim model relating print and wiki, how results are checked, goal, measurement rules, steps and milestones | on a change of the merge model or its measurement |
+| [TEI profile](tei-profile.md) | Specification of the delivery | the TEI delivery format for Stefan Zweig Digital, what it takes from the encoding of Stefan Zweig Digital, where it departs, the schema and what is open | on a change of the profile, its schema or the delivery decision |
 | [Journal](journal.md) | Provenance | chronological decisions and completed sessions, newest first; old statements stay as history | after a substantively coherent transition |
 
 The print documents carry no print text and paraphrase with PDF pages instead.
