@@ -99,7 +99,13 @@ const App = {
   _watchPrint() {
     if (!this.state.isLocal || typeof Records === 'undefined') return;
     Records.probePrint().then((ok) => {
-      if (!ok || this.state.view !== 'results' || this.state.singleEntry) return;
+      if (!ok || this.state.view !== 'results') return;
+      // A permalink card drawn before the answer gains its print links.
+      if (this.state.singleEntry) {
+        this._lastHash = null;
+        this.handleRoute();
+        return;
+      }
       if (Records.requested && Records.requested !== 'wiki') {
         this._lastHash = null;
         this.handleRoute();

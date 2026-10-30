@@ -38,6 +38,65 @@ const RecordCard = {
     inherited: 'inherited', derived: 'derived', fixture: 'test fixture',
   },
 
+  // Producers fall into four kinds of evidence, each with its own sign and
+  // hue at equal weight; the word stays the meaning, the sign only groups.
+  PRODUCER_FAMILY: {
+    rule: 'rule', compiler: 'rule', derived: 'derived', inherited: 'derived',
+    llm: 'llm', person: 'person', fixture: 'fixture',
+  },
+
+  FAMILY_MEANING: {
+    // A rule value need not have a located passage (page title, category
+    // markup, an ambiguous occurrence); the chain says which.
+    rule: 'Produced by a parser rule: deterministic and reproducible; the chain says whether its passage in the source was located',
+    derived: 'Computed by a rule from another value, not read from a passage of its own',
+    llm: 'Proposed by a language model where no rule found a value; it occurs in the source text, but no person has confirmed it',
+    person: 'Decided by a person',
+    fixture: 'Taken from a test fixture, which confirms nothing',
+  },
+
+  // 12px line icons drawn with currentColor; decorative, the word is read.
+  FAMILY_ICONS: {
+    rule: '<path d="M4.5 3.5 1.5 6l3 2.5M7.5 3.5l3 2.5-3 2.5"/>',
+    derived: '<path d="M2.5 2v4.5h7M7.5 4.5l2 2-2 2"/>',
+    llm: '<path d="M6 1.5 7 5l3.5 1L7 7l-1 3.5L5 7 1.5 6 5 5z"/>',
+    person: '<circle cx="6" cy="4" r="2"/><path d="M2 10.5c.6-2 2.1-3 4-3s3.4 1 4 3"/>',
+    fixture: '<path d="M4.5 1.5h3M5 1.5v3L2 10h8L7 4.5v-3"/>',
+  },
+
+  producerFamily(kind) {
+    return this.PRODUCER_FAMILY[kind] || 'rule';
+  },
+
+  producerIcon(family) {
+    const path = this.FAMILY_ICONS[family] || this.FAMILY_ICONS.rule;
+    return '<svg class="rc-producer-icon" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"'
+      + ` focusable="false">${path}</svg>`;
+  },
+
+  LEGEND_WORDS: {
+    rule: 'rule', derived: 'derived', llm: 'language model', person: 'person', fixture: 'test fixture',
+  },
+
+  /**
+   * The key to the signs, once per card: the families its values use, and
+   * what grey source text means. A card with no sign gets no key.
+   */
+  legend(families) {
+    const used = Object.keys(this.LEGEND_WORDS).filter(f => families.has(f));
+    if (!used.length) return '';
+    const items = used.map(f => `<li class="rc-legend-item rc-family-${f}">${this.producerIcon(f)}`
+      + `<span>${this.escape(this.LEGEND_WORDS[f])}</span></li>`).join('');
+    return `<ul class="rc-legend" aria-label="Key to the provenance signs">${items}`
+      + '<li class="rc-legend-item rc-legend-unread"><span class="rc-legend-swatch" aria-hidden="true">Aa</span>'
+      + '<span>source text not read into a value</span></li></ul>';
+  },
+
+  /** The families of the producer buttons in a rendered card. */
+  familiesIn(html) {
+    return new Set([...String(html).matchAll(/rc-family-([a-z]+)/g)].map(m => m[1]));
+  },
+
   STATE_WORDS: {
     'not-reviewed': 'not reviewed', proposed: 'proposed', contested: 'contested',
     confirmed: 'confirmed', edited: 'edited, unsaved', open: 'open', complete: 'complete',
@@ -162,8 +221,11 @@ const RecordCard = {
     const id = this.chainId(r, value, index);
     const word = this.producerWord(value.producer, value.producerWord);
     const kind = this._id(value.producer || 'rule');
-    return `<button type="button" class="prov-badge rc-producer-btn rc-producer-${kind}"`
-      + ` aria-expanded="false" aria-controls="${id}"><span class="rc-producer">${this.escape(word)}</span>`
+    const family = this.producerFamily(value.producer || 'rule');
+    return `<button type="button" class="prov-badge rc-producer-btn rc-producer-${kind} rc-family-${family}"`
+      + ` title="${this.escape(this.FAMILY_MEANING[family])}"`
+      + ` aria-expanded="false" aria-controls="${id}">${this.producerIcon(family)}`
+      + `<span class="rc-producer">${this.escape(word)}</span>`
       + '<span class="visually-hidden">, provenance chain</span></button>';
   },
 
@@ -224,11 +286,14 @@ const RecordCard = {
 
   /** The whole open card in its fixed region order: head, values, source. */
   card(m) {
+    const values = (m.groups || []).map(g => this.group(g)).join('');
+    const head = this.head(m);
     return `<article class="rc-card" data-kind="${this.escape(m.kind)}" data-record="${this.escape(m.id)}">`
-      + this.head(m)
-      + `<div class="rc-values" data-region="values">${(m.groups || []).map(g => this.group(g)).join('')}</div>`
+      + head
+      + '<div class="rc-split">'
+      + `<div class="rc-values" data-region="values">${values}${this.legend(this.familiesIn(head + values))}</div>`
       + this.source(m)
-      + '</article>';
+      + '</div></article>';
   },
 
   // --- Chain -----------------------------------------------------------------

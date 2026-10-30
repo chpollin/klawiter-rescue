@@ -17,6 +17,13 @@
   --sz-white: #FFFFFF;
   --sz-text: #2D2D2D;
   --sz-text-light: #6B6B6B;
+  /* Kinds of evidence on a value (records.css, producer button); each holds
+     4.5:1 on cream, white and the light border tone. */
+  --prov-rule: #3D5566;
+  --prov-derived: #5B6670;
+  --prov-llm: #8A5A00;
+  --prov-person: #2F6B4F;
+  --prov-fixture: #646464;
   --sz-border: #E0D8CC;
   --sz-border-light: #EDE8DF;
 
@@ -2695,6 +2702,19 @@ body.edit-mode .meta-label {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   color: var(--sz-burgundy);
+}
+/* Beside the values the source is no box of its own, and text no value was
+   read from stays grey while a value mark restores the text colour
+   (records.css, values beside their source). */
+.detail-source-aside .detail-bibentry {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  color: var(--sz-text-light);
+}
+.detail-source-aside .detail-bibentry mark {
+  color: var(--sz-text);
 }
 .detail-source-details .detail-bibentry {
   background: none;

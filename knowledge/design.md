@@ -227,7 +227,7 @@ The default provenance, extraction by rule and not reviewed, is stated once behi
 
 #### State and producer marks
 
-Review status, edition state and producer are plain subdued words of equal weight in small sans, so an LLM proposal never looks stronger than a person's decision. Colour is added only for a state to act on, and the word carries the meaning. The workbench marks decisions by a sign and an underline per outcome (right, wrong, unsure) and the wiki state by an icon with its name. The committed vocabulary differs between surfaces, and U12 gives the target.
+Review status and edition state are plain subdued words in small sans. The producer of a value is a sign of equal weight with its own shape and hue per kind of evidence: rule, derived, language model, person and test fixture (operator, 2026-10-30, replacing the producer word on every row). The word stays the accessible name of the sign and stands once in a legend per card, and no kind is drawn stronger than another, so an LLM proposal never looks weightier than a person's decision. Shape tells the kinds apart, so colour never carries the meaning alone. The workbench marks decisions by a sign and an underline per outcome (right, wrong, unsure) and the wiki state by an icon with its name. The committed vocabulary differs between surfaces, and U12 gives the target.
 
 #### Contested block
 

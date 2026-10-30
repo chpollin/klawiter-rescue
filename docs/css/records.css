@@ -162,8 +162,110 @@
     text-decoration: underline dotted;
     text-underline-offset: 0.2em;
   }
-  .rc-producer-btn:hover .rc-producer {
-    color: var(--sz-gold-dark);
+  /* Each kind of evidence has a sign and a hue, never a weight: the word
+     keeps the meaning, and an LLM proposal stays as quiet as a rule. */
+  .rc-producer-btn {
+    --rc-family: var(--sz-text-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .rc-family-rule { --rc-family: var(--prov-rule); }
+  .rc-family-derived { --rc-family: var(--prov-derived); }
+  .rc-family-llm { --rc-family: var(--prov-llm); }
+  .rc-family-person { --rc-family: var(--prov-person); }
+  .rc-family-fixture { --rc-family: var(--prov-fixture); }
+  .rc-producer-btn .rc-producer {
+    color: var(--rc-family);
+  }
+  .rc-producer-icon {
+    flex: none;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    fill: none;
+    stroke: var(--rc-family);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* The sign is the control; its word is read by assistive technology and
+     explained once in the legend of the card. */
+  .rc-producer-btn {
+    justify-content: center;
+    min-inline-size: var(--sz-target);
+    border-radius: var(--sz-radius);
+  }
+  .rc-producer-btn .rc-producer {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .rc-producer-btn .rc-producer-icon {
+    inline-size: 0.875rem;
+    block-size: 0.875rem;
+  }
+  .rc-producer-btn:hover,
+  .rc-producer-btn[aria-expanded="true"] {
+    background: var(--sz-hover);
+  }
+
+  /* --- Legend: the signs of the card, said once -------------------------- */
+  .rc-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sz-space-1) var(--sz-space-4);
+    margin: var(--sz-space-4) 0 0 !important;
+    padding: var(--sz-space-2) 0 0 !important;
+    border-block-start: 1px solid var(--sz-border-light);
+    list-style: none;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--sz-text-light);
+  }
+  .rc-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .rc-legend-swatch {
+    font-family: var(--font-serif);
+  }
+
+  /* --- Values beside their source ----------------------------------------
+     From a width at which both columns hold a line of text, the source
+     stands beside the values and stays in view while they scroll. */
+  .rc-split {
+    display: grid;
+    gap: var(--sz-space-4);
+  }
+  @container (min-width: 56rem) {
+    .rc-split {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      align-items: start;
+      column-gap: var(--sz-space-5);
+    }
+    .rc-split > .rc-source {
+      position: sticky;
+      inset-block-start: calc(var(--header-height) + var(--sz-space-3));
+      border-block-start: 0;
+      border-inline-start: 1px solid var(--sz-border-light);
+      padding-inline-start: var(--sz-space-4);
+    }
+  }
+  .rc-split > .rc-source .rc-group-heading {
+    margin-block-start: 0 !important;
+  }
+  /* Source text no value was read from stays grey; a value mark restores
+     the text colour, so what was not read stands out by contrast. The wiki
+     source of the permalink card takes the same rule in styles.css. */
+  .rc-source-text {
+    color: var(--sz-text-light);
+  }
+  .rc-source-text mark {
+    color: var(--sz-text);
   }
   .rc-producer-btn[aria-expanded="true"] .rc-producer {
     color: var(--sz-burgundy);

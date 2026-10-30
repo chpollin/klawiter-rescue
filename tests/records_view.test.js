@@ -572,7 +572,7 @@ test('category pages whose text carries bibliographic values reach a card and th
     const html = App.renderCard(e) + Detail.renderInline(e);
     assert.match(html, new RegExp(`Wiki page ${pid}<`), pid);
     assert.match(html, /<span class="badge rc-type">Category page<\/span>/, pid);
-    assert.match(html, /Full bibliographic entry/, pid);
+    assert.match(html, /Klawiter source/, pid);
     assert.doesNotMatch(html, /\[object Object\]|undefined</, pid);
   }
 

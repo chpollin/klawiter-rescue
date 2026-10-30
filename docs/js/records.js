@@ -104,6 +104,22 @@ const Records = {
     return `#records&${params.toString()}`;
   },
 
+  // The wiki data name the print volumes in words, the print structure by key.
+  CITED_VOLUMES: { 'main-volume': 'I', 'addendum-1': 'A1', 'addendum-2': 'A2' },
+
+  /**
+   * The Records address of a print address a wiki page cites, or '' where
+   * print records cannot be shown. A cited entry opens its section searched
+   * for the address, a cited section the section.
+   */
+  printCitationHref(cite) {
+    const volume = cite && this.CITED_VOLUMES[cite.printVolume];
+    if (this.print.status !== 'available' || !volume) return '';
+    const href = this.printHref({ volume, part: cite.printSection || '', unit: 'entry' });
+    return cite.citationTarget === 'entry' && cite.printAddress
+      ? `${href}&q=${encodeURIComponent(cite.printAddress)}` : href;
+  },
+
   showsWiki() {
     return this.state.source !== 'print';
   },

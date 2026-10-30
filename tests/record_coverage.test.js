@@ -196,7 +196,7 @@ const RECORD_PLACES = {
   sourceBlobId: (e, r) => placeOf(`Blob: ${e.sourceBlobId}`, r.source),
   // The bibliography views hold namespace 0 alone, so the card's existence states it.
   pageNamespace: () => 'visible',
-  fullBibliographicEntry: (e, r) => (r.source.html.includes('detail-source-details') ? 'visible' : null),
+  fullBibliographicEntry: (e, r) => (/detail-source-(details|aside)/.test(r.source.html) ? 'visible' : null),
   title: (e, r) => placeOf(e.title, r.fields),
   originalTitle: (e, r) => placeOf(e.originalTitle, r.fields),
   year: (e, r) => placeOf(e.year, r.fields),
@@ -239,8 +239,13 @@ const RECORD_PLACES = {
   wikiPageKind: (e, r) => (marked(r.card.html, 'wikiPageKind') ? 'visible' : null),
   wikiPageKindRule: (e, r) => (marked(r.card.html, 'wikiPageKindRule') ? 'visible' : null),
   wikiPageKindEvidence: (e, r) => (marked(r.card.html, 'wikiPageKindEvidence') ? 'visible' : null),
-  printAddressCitations: (e, r) => placeOfAll(
-    e.printAddressCitations.flatMap(c => [c.printAddress, c.passageText]), r.fields),
+  // The addresses stand in the row, their passages marked in the source.
+  printAddressCitations: (e, r) => {
+    const rows = placeOfAll(e.printAddressCitations.map(c => c.printAddress), r.fields);
+    const passages = placeOfAll(e.printAddressCitations.map(c => c.passageText), r.card);
+    if (!rows || !passages) return null;
+    return rows === 'tooltip' || passages === 'tooltip' ? 'tooltip' : 'visible';
+  },
   // Every reported class is a step of a chain, so the field stands where the chains do.
   _provenance: (e, r) => (Object.entries(e._provenance).every(([key, cls]) =>
     cls === 'missing' || e[key] == null || e[key] === '' || chained(r.card.html, key)) ? 'visible' : null),
@@ -331,7 +336,9 @@ function measure() {
         nameVariants: side.nameVariants || [] });
     }
     const html = stripHidden(App.renderCard(entry) + Detail.renderInline(entry));
-    const cut = html.indexOf('<details class="detail-source-details"');
+    // The source stands beside the values on the permalink route, below them in a list.
+    const aside = html.indexOf('<section class="rc-source detail-source-aside"');
+    const cut = aside !== -1 ? aside : html.indexOf('<details class="detail-source-details"');
     const end = html.indexOf('<div class="action-bar">');
     const sourceHtml = cut === -1 ? '' : html.slice(cut, end === -1 ? undefined : end);
     const fieldsHtml = cut === -1 ? html : html.slice(0, cut) + (end === -1 ? '' : html.slice(end));

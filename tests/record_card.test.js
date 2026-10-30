@@ -137,7 +137,13 @@ test('every value button leads through aria-controls to its chain with every ste
   assert.match(visible(RecordCard.chain(m, m.groups[0].rows[0], 0)),
     /Passage “?Somewhere”? characters 21–30 of the source text/);
   // The producer word of an LLM value reads as such, at the weight of a rule.
-  assert.match(RecordCard.row(m.groups[0].rows[1]), /rc-producer-llm[^>]*><span class="rc-producer">LLM-enriched</);
+  assert.match(RecordCard.row(m.groups[0].rows[1]), /rc-producer-llm[^>]*><svg class="rc-producer-icon"[\s\S]*?<\/svg><span class="rc-producer">LLM-enriched</);
+  // Each kind of evidence carries its family, so print and wiki group alike.
+  assert.strictEqual(RecordCard.producerFamily('llm'), 'llm');
+  assert.strictEqual(RecordCard.producerFamily('compiler'), 'rule');
+  assert.strictEqual(RecordCard.producerFamily('inherited'), 'derived');
+  assert.strictEqual(RecordCard.producerFamily('unknown-kind'), 'rule');
+  assert.match(RecordCard.row(m.groups[0].rows[1]), /rc-family-llm" title="Proposed by a language model/);
 });
 
 test('each gap kind reads in its own words, and none quotes a first match', () => {

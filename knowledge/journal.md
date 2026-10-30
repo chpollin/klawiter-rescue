@@ -23,6 +23,14 @@ template:
 
 ## Entries
 
+### 2026-10-30 — Provenance signs, source beside the values, start page counts
+
+- Trigger: The operator's review of the permalink card of page 212 ("too text-heavy", signs instead of words) and of the start page, in a guided session with read screenshots and an independent read-only review agent.
+- Found: The start page counted populated flat fields as "fields with passage" and said that every extracted value is bound to its passage; on the wiki 33,604 values carry no located passage (category markup, page title, ambiguous occurrence, gaps) against 45,267 that do. Print citation links were never drawn on a permalink card opened directly, because the card rendered before the print probe answered. The review agent found that the rule sign at rest does not tell a value with a located passage from one without, that grey "not read" text also covers text read into a value whose passage was not located, and that citation links run a full-text search, which misses the cited entry for H 670, H 490 and G 201, addresses absent from the parsed print index.
+- Decided: The producer of a value is a sign per kind of evidence with a legend per card, replacing the word on every row ([Design](design.md), State and producer marks; operator). Source text beside the values on the permalink route and on desk cards. A print citation opens Records filtered to its volume and section, as a first cut.
+- Changed: `record-card.js` draws the signs, the legend and the two-column card; `detail.js` sets the wiki source beside the values and lists print citations without repeating their passage; `app.js` redraws a permalink card once print records are available; `home.js` counts wiki values with a located passage and labels the main volume as its later working copy; the info text and the rule tooltip no longer claim a passage for every rule value. The coverage test finds the source beside the values and places citation passages in the source.
+- Evidence: Node suite and `check_render.mjs` green; screenshots at 1440 and 390 read by the coordinator; review agent report of 2026-10-30 (not versioned).
+
 ### 2026-10-30 — AI operator retired, UI package merged into the plan
 
 - Trigger: The operator's decision of 2026-10-30 that the paused AI operator does not return, and a project analysis from the vault that found stale coordination text and a plan step overtaken by the push of 2026-10-25.

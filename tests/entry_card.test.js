@@ -134,7 +134,8 @@ function sampleEntry() {
 test('the permalink route opens the source, a result list leaves it collapsed', () => {
   const entry = sampleEntry();
   const open = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
-  assert.match(open, /<details class="detail-source-details" open>/);
+  // On the permalink route the source stands open beside the values.
+  assert.match(open, /<div class="rc-split detail-split"><div class="rc-values">[\s\S]*<section class="rc-source detail-source-aside"/);
 
   const listed = detailCtx(entry, { singleEntry: false })._buildReadContent(entry);
   assert.match(listed, /<details class="detail-source-details">/);
@@ -260,8 +261,8 @@ test('the per-field review mark follows the review object and nothing else', () 
 test('the source identifiers stand at the source block, not in a card foot', () => {
   const entry = sampleEntry();
   const html = detailCtx(entry, { singleEntry: true })._buildReadContent(entry);
-  const start = html.indexOf('<details class="detail-source-details"');
-  const source = html.slice(start, html.indexOf('</details>', start));
+  const start = html.indexOf('<section class="rc-source detail-source-aside"');
+  const source = html.slice(start, html.indexOf('</section>', start));
   assert.match(source, /Page ID: 1800/);
   assert.match(source, /Text ID: 38039/);
   assert.match(source, /Blob: 4/);
@@ -816,7 +817,7 @@ test('a failed page file leaves the card standing on the flat fields', async () 
   assert.match(html, /404/);
   // The flat projection still carries the card: no crash, no empty card.
   assert.match(html, /Year of publication/);
-  assert.match(html, /Full bibliographic entry/);
+  assert.match(html, /Klawiter source/);
 });
 
 test('the head names the page kind and counts its publications', () => {
@@ -918,11 +919,11 @@ test('a decision names its producer as visible text, and an agent is never a per
   assert.doesNotMatch(place, /by <\/span>person/);
   // On the desk every value names its producer, rule extraction too, after
   // the decision on the authority link it does not class.
-  assert.match(place, /no person<\/span><button type="button" class="prov-badge rc-producer-btn rc-producer-rule"[^>]*><span class="rc-producer">rule<\/span>/);
+  assert.match(place, /no person<\/span><button type="button" class="prov-badge rc-producer-btn rc-producer-rule rc-family-rule"[^>]*><svg class="rc-producer-icon"[\s\S]*?<\/svg><span class="rc-producer">rule<\/span>/);
   entry._provenance.location = 'llm';
   const llmPlace = Detail._buildReadContent(entry);
   assert.match(llmPlace.slice(llmPlace.indexOf('>Place of publication'), llmPlace.indexOf('>Publisher')),
-    /<button type="button" class="prov-badge rc-producer-btn rc-producer-llm"[^>]*><span class="rc-producer">LLM-enriched<\/span>/);
+    /<button type="button" class="prov-badge rc-producer-btn rc-producer-llm rc-family-llm"[^>]*><svg class="rc-producer-icon"[\s\S]*?<\/svg><span class="rc-producer">LLM-enriched<\/span>/);
   assert.doesNotMatch(place, /title="Reviewed decision/);
 
   // The review chip names the producer visibly too, not only in its tooltip.
@@ -1017,11 +1018,11 @@ test('beside the reading pane the first result stands as a full card on arrival'
 
 test('the default state of the values is said once, behind a disclosure at the heading', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'docs', 'index.html'), 'utf8');
-  const statement = /Unless a value is marked, it was extracted by rule\s+from the source text and has not been reviewed\./g;
+  const statement = /Values are extracted by rule unless their sign says\s+otherwise, and no person has reviewed them yet\./g;
   assert.strictEqual((html.match(statement) || []).length, 1);
   assert.match(html, /<h1 id="results-count"[^>]*><\/h1>\s*(?:<!--[\s\S]*?-->\s*)?<details id="list-defaults" class="results-info">\s*<summary aria-label="About the values"/);
   assert.doesNotMatch(html, /<p id="list-defaults"/);
   for (const file of fs.readdirSync(path.join(__dirname, '..', 'docs', 'js'))) {
-    assert.doesNotMatch(read(file), /extracted by rule from the source text and has not been reviewed/, file);
+    assert.doesNotMatch(read(file), /extracted by rule unless their sign says/, file);
   }
 });

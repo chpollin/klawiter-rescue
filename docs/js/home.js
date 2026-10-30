@@ -42,7 +42,8 @@ const SECTION_ROWS = [
 // The address form is how the compiler cites an entry of each volume; the
 // phrase is how a count names the volume it opens.
 const PRINT_VOLUMES = [
-  { key: 'I', name: 'Main volume', year: '1991', icon: 'book', phrase: 'the main volume', address: 'F 61' },
+  // The file of the main volume is the compiler's working copy kept after 2001, not the print of 1991.
+  { key: 'I', name: 'Main volume', year: '1991, later working copy', icon: 'book', phrase: 'the main volume', address: 'F 61' },
   { key: 'A1', name: 'Addendum I', year: '1999', icon: 'book', phrase: 'Addendum I', address: 'FA1 3' },
   { key: 'A2', name: 'Addendum II', year: 'working file to 2009', icon: 'file', phrase: 'the Addendum II working file', address: 'FA2 3' },
 ];
@@ -133,17 +134,18 @@ const Home = {
     const levels = ['Unit of the source', 'Publication', 'Value'];
     const row = (cells) => cells.map((c, i) => `<td data-label="${esc(levels[i])}">${c}</td>`).join('');
     const pubs = App.data?._meta?.publicationCoverage;
-    const cov = App.data?._meta?.fieldCoverage;
-    const wikiVals = cov
-      ? Object.values(cov).reduce((sum, f) => sum + (f.count || 0), 0)
-      : entries.reduce((sum, e) => sum + ['title', 'year', 'publisher', 'location', 'language', 'translator', 'pageCount']
-          .filter(k => e[k] != null && e[k] !== '').length, 0);
+    // A wiki value counts where its evidence names a located passage, as a
+    // print value does; values from category markup, the page title or a gap
+    // have none and are not counted here.
+    const wikiVals = entries.reduce((sum, e) => sum + Object.values(e.fieldEvidence || {})
+      .reduce((n, list) => n + (Array.isArray(list)
+        ? list.filter(v => v && Number.isInteger(v.textStart)).length : 0), 0), 0);
     // The publications of the wiki stand on pages, and Records lists pages, so
     // the link is the count of those pages.
     const wiki = row([
       `<a href="#records"><b>${homeCount(entries.length)}</b> pages</a>`,
       pubs ? `<b>${homeCount(pubs.publications)}</b> publications on <a href="#records&amp;layer=publication"><b>${homeCount(pubs.pages)}</b> pages</a>` : '',
-      `<b>${homeCount(wikiVals)}</b> fields with passage`,
+      `<b>${homeCount(wikiVals)}</b> values with passage`,
     ]);
     let printRow = '';
     if (print) {
@@ -168,7 +170,7 @@ const Home = {
             <div class="home-info-body">${info}</div>
           </details>
         </div>
-        <p class="home-data-lead">Print entries and wiki pages meet at the publication, and every extracted value is bound to its passage in the source.</p>
+        <p class="home-data-lead">Print entries and wiki pages meet at the publication, and every value names the passage it was read from or why it has none.</p>
       </div>
       <table class="home-model">
         <thead><tr><th scope="col" class="home-model-source"><span class="visually-hidden">Source</span></th>${levels.map(l => `<th scope="col">${l}</th>`).join('')}</tr></thead>
@@ -179,7 +181,7 @@ const Home = {
   info(print) {
     return `<ul>
       <li>Each source has a unit of its own: in print an entry, numbered with an address such as F 61 (main volume), FA1 3 (Addendum I) or FA2 3 (Addendum II), or unnumbered, as most of Addendum II; in the wiki a page. Entries and pages do not correspond; the sources meet at the publication.</li>
-      <li>Other objects are archival holdings, events, series, references and objects whose type was not read. Wiki pages outside the publication layer are not yet segmented into publications. Every value is bound to the passage it was read from.</li>
+      <li>Other objects are archival holdings, events, series, references and objects whose type was not read. Wiki pages outside the publication layer are not yet segmented into publications. A value read from the text is bound to its passage; values from wiki categories or the page title, and gaps, carry no passage and are not counted as values with passage.</li>
       <li>The wiki cites print addresses; a cited address is a reference, not proof that two records are the same publication.</li>
       <li>Rows of the table are the sections in the printed order, named as the contents of 1991 name them. R exists only in Addendum I.</li>
       <li>A print count is the number of entries of that section in the volume, numbered and unnumbered, as read from the file. A wiki count is the number of wiki pages of the entry type. The units differ and the sources overlap, so the counts do not add up.</li>

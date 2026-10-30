@@ -1025,8 +1025,15 @@ const Detail = {
     html += this._sourceRevisionNote(entry);
 
     // On the permalink route the source is what the reader checks the fields
-    // against, so it stands open. In a result list it stays collapsed, unless
-    // it is all the expansion has, where one collapsed line reads as empty.
+    // against, so it stands open beside them. In a result list it stays
+    // collapsed below, unless it is all the expansion has, where one collapsed
+    // line reads as empty.
+    const legend = RecordCard.legend(RecordCard.familiesIn(html));
+    if (App.state.singleEntry && entry.fullBibliographicEntry) {
+      return `<div class="rc-split detail-split"><div class="rc-values">${html}${legend}</div>`
+        + `${this._sourceAside(entry, state)}</div>${this._actionBar(entry)}`;
+    }
+    html += legend;
     html += this._sourceBlock(entry, App.state.singleEntry || html === '', state);
     html += this._actionBar(entry);
     return html;
@@ -1630,17 +1637,15 @@ const Detail = {
       put('See also', fields.seeAlso.map(ref => ({ html: this.makeLink(ref), text: ref })), 'seeAlso');
     }
     if (fields.printAddressCitations && fields.printAddressCitations.length) {
+      // The addresses stand side by side; the passage they were read from is
+      // marked in the source beside them, so the row does not repeat it.
       const cites = fields.printAddressCitations.map(c => {
         const addr = esc(c.printAddress || '');
-        const link = typeof Edit.isLocal === 'function' && Edit.isLocal()
-          ? `<a href="/viewer/cards.html#/?q=${encodeURIComponent(c.printAddress || '')}"><code>${addr}</code></a>`
-          : `<code>${addr}</code>`;
-        const passage = c.passageText && c.passageText !== c.printAddress
-          ? ` <span class="field-sub">${esc(c.passageText)}</span>`
-          : `<span class="visually-hidden"> ${esc(c.passageText || '')}</span>`;
-        return { html: `${link}${passage}`, text: c.printAddress || '' };
+        const href = typeof Records !== 'undefined' ? Records.printCitationHref(c) : '';
+        const link = href ? `<a href="${esc(href)}"><code>${addr}</code></a>` : `<code>${addr}</code>`;
+        return { html: link, text: c.printAddress || '' };
       });
-      put('Print citations', cites, 'printAddressCitations', { layout: 'ul', listClass: 'detail-list' });
+      put('Print citations', cites, 'printAddressCitations', { separator: ' ' });
     }
     if (fields.categories && fields.categories.length) {
       put('Categories', fields.categories.map(c => ({
@@ -1744,6 +1749,16 @@ const Detail = {
       <div class="detail-bibentry">${this._sourceBody(entry.fullBibliographicEntry, publications, entry)}</div>
       ${this._provenanceLine(entry)}
     </details>`;
+  },
+
+  /** The source beside the values on the permalink route, always open. */
+  _sourceAside(entry, state) {
+    const publications = state && state.status === 'ready' ? state.publications : null;
+    return `<section class="rc-source detail-source-aside" aria-label="Klawiter source">
+      <h3 class="rc-group-heading">Klawiter source</h3>
+      <div class="detail-bibentry">${this._sourceBody(entry.fullBibliographicEntry, publications, entry)}</div>
+      ${this._provenanceLine(entry)}
+    </section>`;
   },
 
   /**
