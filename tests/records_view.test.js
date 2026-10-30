@@ -582,3 +582,28 @@ test('category pages whose text carries bibliographic values reach a card and th
   App.state.query = 'heqqide';
   assert.ok(App._queryBase().some(e => e.sourcePageId === 7437));
 });
+
+test('a cited print address opens its entry by exact address, and an absent one says why', async () => {
+  const env = desk();
+  const { Records } = env;
+  const models = [
+    { id: 'I/G/131#1', entry: 'I/G/131', address: 'G 131', volume: 'I', part: 'G' },
+    { id: 'I/G/65#1', entry: 'I/G/65', address: 'G 65', volume: 'I', part: 'G' },
+  ];
+  Records.print = { status: 'available', module: { load() {}, list: () => models, model() {} }, structure: {} };
+  Records._load = Promise.resolve();
+
+  const cite = { printAddress: 'G 131', printVolume: 'main-volume', printSection: 'G', citationTarget: 'entry' };
+  const href = Records.printCitationHref(cite);
+  assert.strictEqual(href, '#records&src=print&vol=I&part=G&unit=entry&addr=G%20131');
+  Records.fromParams(new URLSearchParams(href.slice('#records&'.length)));
+  const hits = await Records.printItems('');
+  assert.strictEqual(hits.map(h => h.model.id).join(), 'I/G/131#1', 'a record that only mentions it is no hit');
+
+  // A section citation opens the section, and a host without print links nothing.
+  assert.doesNotMatch(Records.printCitationHref({ ...cite, citationTarget: 'section' }), /addr=/);
+  Records.state.address = 'H 670';
+  assert.match(Records._emptyWords(), /No print record of the .* carries the address H 670\. The wiki may cite it in another numbering/);
+  Records.print = { status: 'unavailable', module: null, structure: null };
+  assert.strictEqual(Records.printCitationHref(cite), '');
+});

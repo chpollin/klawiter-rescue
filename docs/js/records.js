@@ -31,7 +31,7 @@ const Records = {
   PAGE_SIZE: 50,
 
   /** The print filters of the address, beside the wiki filters App reads. */
-  state: { source: 'wiki', unit: 'object', volume: '', part: '', kind: '', page: 0 },
+  state: { source: 'wiki', unit: 'object', volume: '', part: '', kind: '', address: '', page: 0 },
 
   print: { status: 'unknown', module: null, structure: null },
   _probe: null,
@@ -56,6 +56,7 @@ const Records = {
       volume: params.get('vol') || '',
       part: params.get('part') || '',
       kind: params.get('kind') || '',
+      address: params.get('addr') || '',
       page: 0,
     };
     this.requested = this.state.source;
@@ -82,6 +83,7 @@ const Records = {
     if (s.volume) params.set('vol', s.volume);
     if (s.part) params.set('part', s.part);
     if (s.kind) params.set('kind', s.kind);
+    if (s.address) params.set('addr', s.address);
     if (s.unit !== 'object') params.set('unit', s.unit);
   },
 
@@ -117,7 +119,7 @@ const Records = {
     if (this.print.status !== 'available' || !volume) return '';
     const href = this.printHref({ volume, part: cite.printSection || '', unit: 'entry' });
     return cite.citationTarget === 'entry' && cite.printAddress
-      ? `${href}&q=${encodeURIComponent(cite.printAddress)}` : href;
+      ? `${href}&addr=${encodeURIComponent(cite.printAddress)}` : href;
   },
 
   showsWiki() {
@@ -208,7 +210,9 @@ const Records = {
     await this.ensureLoaded();
     const s = this.state;
     const raw = await this.print.module.list({ q: query || '', volume: s.volume, part: s.part, kind: s.kind });
-    const models = (Array.isArray(raw) ? raw : (raw && raw.items) || []).filter(m => m && m.id != null);
+    // An address is matched exactly, so a record that only mentions it is no hit.
+    const models = (Array.isArray(raw) ? raw : (raw && raw.items) || []).filter(m => m && m.id != null
+      && (!s.address || m.address === s.address));
     return this.groupByUnit(models, s.unit);
   },
 
@@ -261,11 +265,12 @@ const Records = {
     if (s.volume) chips.push({ key: 'vol', label: 'Volume', display: this.volumeName(s.volume) });
     if (s.part) chips.push({ key: 'part', label: 'Section', display: s.part });
     if (s.kind) chips.push({ key: 'kind', label: 'Kind', display: s.kind.replace(/[_-]+/g, ' ') });
+    if (s.address) chips.push({ key: 'addr', label: 'Address', display: s.address });
     if (s.unit !== 'object') chips.push({ key: 'unit', label: 'Listed by', display: 'entry' });
     return chips;
   },
 
-  CHIP_KEYS: { vol: 'volume', part: 'part', kind: 'kind', unit: 'unit' },
+  CHIP_KEYS: { vol: 'volume', part: 'part', kind: 'kind', addr: 'address', unit: 'unit' },
 
   /** Drop one print filter; true when the key is one. */
   clearKey(key) {
@@ -391,13 +396,26 @@ const Records = {
     if (snapshot) this.restore(snapshot);
   },
 
+  /**
+   * Why a print list is empty. An address the wiki cites but no print record
+   * carries may follow another numbering or be a gap of the print reading;
+   * which one is open, so the words name both.
+   */
+  _emptyWords() {
+    const s = this.state;
+    if (!s.address) return 'No print records match.';
+    const where = s.volume ? ` of the ${this.volumeName(s.volume)}` : '';
+    return `No print record${where} carries the address ${RecordCard.escape(s.address)}. `
+      + 'The wiki may cite it in another numbering, or the reading of the print volume missed it.';
+  },
+
   _drawPrintPage(section, heading, sub) {
     const items = this._items || [];
     const end = Math.min((this.state.page + 1) * this.PAGE_SIZE, items.length);
     const more = end < items.length
       ? '<div class="load-more"><button type="button" data-act="records-more">Load more print records&hellip;</button></div>'
       : '';
-    const empty = items.length ? '' : '<p class="records-status">No print records match.</p>';
+    const empty = items.length ? '' : `<p class="records-status">${this._emptyWords()}</p>`;
     const count = sub ? `<p class="records-print-count">${RecordCard.escape(sub)}</p>` : '';
     section.innerHTML = `${heading}${count}${empty}<ol class="records-slips">${
       items.slice(0, end).map(item => this._slipHtml(item)).join('')}</ol>${more}`;
