@@ -10,7 +10,11 @@ Data flow: `export_tei.build()` over every content page, serialised to
 with lxml and checked against `docs/data/klawiter.json` and the publication
 layer. The checks recompute what they expect from the canonical data and read
 the export only as XML, so that a fault in the exporter is not checked by the
-same fault. Writes `docs/local/acceptance.json` (gitignored, local only).
+same fault. `check_export()` runs the checks on given bytes without
+rebuilding; `run()` gives it the real export with tei_all and a second build,
+then lets `pipeline/tei_mutations.py` break copies of the export and checks
+each against the profile schema and the invariants. Writes
+`docs/local/acceptance.json` (gitignored, local only).
 
 tei_all is the TEI P5 4.12.0 RELAX NG schema, fetched once into
 `data/cache/` and pinned by its sha256.
@@ -21,6 +25,7 @@ Exit code 0 when every check that ran passed, 1 otherwise.
 
 from __future__ import annotations
 
+import dataclasses
 import datetime as dt
 import hashlib
 import json
@@ -31,6 +36,7 @@ import urllib.request
 from collections import Counter
 
 import export_tei
+import tei_mutations
 from lxml import etree
 
 ROOT = export_tei.ROOT
@@ -194,18 +200,6 @@ ACCEPTANCE = [
 ]
 OPEN_CHECKS = [
     (
-        "mutation-suite",
-        "D1",
-        "Wrong documents are rejected",
-        "Each of a set of deliberately broken exports fails at least one check.",
-    ),
-    (
-        "profile-schema",
-        "D1",
-        "Profile schema admits only the profile",
-        "The RELAX NG profile schema follows the export's structure and rejects what TEI admits but the profile does not.",
-    ),
-    (
         "record-types",
         "D2",
         "Every page kind has its TEI shape",
@@ -308,12 +302,36 @@ def _offsets(quote) -> dict[str, tuple[int, int]]:
     return out
 
 
-def run() -> dict:
-    data = export_tei.load_dataset()
-    records = {r["sourcePageId"]: r for r in export_tei.exported_pages(data)}
-    raw = export_tei.serialize(export_tei.build())
-    OUT_XML.parent.mkdir(parents=True, exist_ok=True)
-    OUT_XML.write_bytes(raw)
+@dataclasses.dataclass
+class Checked:
+    """The checks of one export and what the report reads besides them."""
+
+    checks: list[dict]
+    doc: etree._Element | None = None
+    coverage: list[dict] = dataclasses.field(default_factory=list)
+    values: Counter = dataclasses.field(default_factory=Counter)
+    structs: dict = dataclasses.field(default_factory=dict)
+    seg_pos: dict = dataclasses.field(default_factory=dict)
+
+
+def _profile() -> etree.RelaxNG:
+    return etree.RelaxNG(etree.parse(str(PROFILE)))
+
+
+def check_export(
+    raw: bytes,
+    records: dict[int, dict],
+    *,
+    profile: etree.RelaxNG | None = None,
+    tei_all: etree.RelaxNG | None = None,
+    rebuilt: bytes | None = None,
+) -> Checked:
+    """Run the checks on the bytes of an export of `records`, without rebuilding it.
+
+    tei_all, the determinism check and the profile schema run only when their
+    input is given, so that the mutation suite can check many wrong documents
+    against the profile schema and the invariants in reasonable time.
+    """
     checks: list[dict] = []
 
     c = Check(
@@ -327,28 +345,28 @@ def run() -> dict:
         c.ok()
     except etree.XMLSyntaxError as exc:
         c.fail(None, str(exc))
-        return {"checks": [c.d]}
+        return Checked(checks=[c.d])
     checks.append(c.d)
-    checks.append(
-        _schema_check(
-            "tei-all",
-            "The export is valid TEI",
-            "The export validates against tei_all of TEI P5 4.12.0.",
-            _tei_all(),
-            doc,
+    if tei_all is not None:
+        checks.append(
+            _schema_check(
+                "tei-all",
+                "The export is valid TEI",
+                "The export validates against tei_all of TEI P5 4.12.0.",
+                tei_all,
+                doc,
+            )
         )
-    )
 
-    c = Check(
-        "deterministic",
-        "D1",
-        "The export is reproducible",
-        "Two runs over the same data give the same bytes.",
-    )
-    c.ok() if export_tei.serialize(export_tei.build()) == raw else c.fail(
-        None, "two builds differ"
-    )
-    checks.append(c.d)
+    if rebuilt is not None:
+        c = Check(
+            "deterministic",
+            "D1",
+            "The export is reproducible",
+            "Two runs over the same data give the same bytes.",
+        )
+        c.ok() if rebuilt == raw else c.fail(None, "two builds differ")
+        checks.append(c.d)
 
     ids = Counter(el.get(XML_ID) for el in doc.iter() if el.get(XML_ID))
     by_id = {el.get(XML_ID): el for el in doc.iter() if el.get(XML_ID)}
@@ -366,11 +384,13 @@ def run() -> dict:
         "The object's title comes first",
         "The first title in the header, which the Dublin Core mapping of GAMS reads, is the object's German title, and no source entry stands in the header.",
     )
-    first = header.find(f".//{T}title")
+    first = header.find(f".//{T}title") if header is not None else None
     c.ok() if first is not None and first.text == "Klawiter-Bibliographie Stefan Zweig digital" else c.fail(
         None, f"first title is {first.text if first is not None else None!r}"
     )
-    wiki_in_header = header.findall(f".//{T}bibl[@type='wikiPage']")
+    wiki_in_header = (
+        header.findall(f".//{T}bibl[@type='wikiPage']") if header is not None else []
+    )
     c.ok() if not wiki_in_header else c.fail(
         None, f"{len(wiki_in_header)} source entries in the header"
     )
@@ -452,7 +472,7 @@ def run() -> dict:
     )
     for sid in seg_pos:
         c.ok() if sid in pointed else c.fail(
-            int(sid.split("-")[2]), f"{sid} is pointed to by no value"
+            _page_of(by_id[sid]), f"{sid} is pointed to by no value"
         )
     checks.append(c.d)
 
@@ -709,24 +729,87 @@ def run() -> dict:
     c.ok() if not printed else c.fail(None, f"{len(printed)} print records")
     checks.append(c.d)
 
-    profile = Check(
-        "profile-schema",
+    if profile is not None:
+        checks.append(
+            _schema_check(
+                "profile-schema",
+                "Profile schema admits only the profile",
+                "The RELAX NG profile schema follows the export's structure and rejects what TEI admits but the profile does not.",
+                profile,
+                doc,
+            )
+        )
+    return Checked(
+        checks=checks,
+        doc=doc,
+        coverage=coverage,
+        values=values,
+        structs=structs,
+        seg_pos=seg_pos,
+    )
+
+
+def _mutation_check(
+    raw: bytes, records: dict[int, dict], profile: etree.RelaxNG
+) -> dict:
+    """Each deliberately broken copy of the export must fail at least one check."""
+    c = Check(
+        "mutation-suite",
         "D1",
-        "Profile schema admits only the profile",
-        "The RELAX NG profile schema follows the export's structure and rejects what TEI admits but the profile does not.",
+        "Wrong documents are rejected",
+        "Each of a set of deliberately broken exports fails at least one check of the profile schema and the invariants.",
     )
-    profile.d.update(
-        status="open",
-        note="The profile schema still describes the first export; it is rewritten with the mutation suite.",
+    results = tei_mutations.run(
+        raw,
+        records,
+        check=lambda doc, recs: check_export(doc, recs, profile=profile).checks,
     )
-    checks.append(profile.d)
+    for res in results:
+        if res["caught"]:
+            c.ok()
+        else:
+            c.fail(
+                res.get("page"),
+                f"{res['id']} ({res['fault']}) is caught by no check"
+                if res["applied"]
+                else f"{res['id']} ({res['fault']}) found nothing to mutate",
+            )
+    c.d["note"] = "; ".join(
+        f"{res['id']}: {', '.join(res['caughtBy']) or 'not caught'}" for res in results
+    )
+    return c.d
+
+
+def run() -> dict:
+    data = export_tei.load_dataset()
+    records = {r["sourcePageId"]: r for r in export_tei.exported_pages(data)}
+    raw = export_tei.serialize(export_tei.build())
+    OUT_XML.parent.mkdir(parents=True, exist_ok=True)
+    OUT_XML.write_bytes(raw)
+    profile = _profile()
+    checked = check_export(
+        raw,
+        records,
+        profile=profile,
+        tei_all=_tei_all(),
+        rebuilt=export_tei.serialize(export_tei.build()),
+    )
+    if checked.doc is None:
+        return {"checks": checked.checks}
+    checks = checked.checks
+    # tei_all runs once, on the real export; the mutants meet the profile schema and the invariants.
+    checks.append(_mutation_check(raw, records, profile))
     for cid, ms, title, proves in OPEN_CHECKS:
-        if cid == "profile-schema":
-            continue
         k = Check(cid, ms, title, proves)
         k.d["status"] = "open"
         checks.append(k.d)
 
+    doc, values, structs, seg_pos = (
+        checked.doc,
+        checked.values,
+        checked.structs,
+        checked.seg_pos,
+    )
     without = {
         k: v
         for k, v in values.items()
@@ -743,7 +826,7 @@ def run() -> dict:
         },
         "program": _program(checks),
         "checks": checks,
-        "coverage": coverage,
+        "coverage": checked.coverage,
         "values": {
             "total": values["total"],
             "withPassage": values["withPassage"],

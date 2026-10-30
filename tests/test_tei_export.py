@@ -39,10 +39,6 @@ def test_the_export_validates_against_tei_all(doc) -> None:
     assert schema.validate(doc), schema.error_log
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="the profile schema still describes the first export (plan, D1)",
-)
 def test_the_export_validates_against_the_profile_schema(doc) -> None:
     schema = lxml_etree.RelaxNG(lxml_etree.parse(str(SCHEMA)))
     assert schema.validate(doc), schema.error_log
