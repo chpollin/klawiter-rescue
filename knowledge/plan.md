@@ -95,7 +95,7 @@ Knowledge and action layer
 Entry: M1 done.
 
 Human round
-- The operator decides the blind sheets, the claim sheet, the review sample with its hard stratum and the disagreements of the segmentation benchmark in the order of [Merged bibliography](print-wiki-merge.md), Measurement, and the wiki values chosen for review in the record desk.
+- The operator decides the blind sheets, the claim sheet, the review sample with its hard stratum and the disagreements of the segmentation benchmark in the order of [Merged bibliography](print-wiki-merge.md), Measurement, and the wiki values chosen for review in the record desk. The operator decided on 2026-10-30 to start this round after the curation surface prototype C1, since staging may receive unreviewed data and only production waits for the round.
 - Done when the report of `p13_review.py` gives field precision and recall, the precision of both concordance routes per volume and the anchoring effect, each labelled as acceptance by one reviewer until a second person decides the marked subset.
 
 Concordance measured

@@ -23,12 +23,16 @@ The operator decided on 2026-10-30, as the side of Stefan Zweig Digital, that th
 
 ## Delivery decisions
 
-The operator decided on 2026-10-30 (the last two points on reviewing the first local page):
+The operator decided on 2026-10-30, in the course of the day, after the first local page and in a question batch:
 
 - The bibliography is one GAMS object, `o:szd.klawiter`, like the other holdings of Stefan Zweig Digital.
 - It is rendered by a stylesheet of its own, `szd-klawiter.xsl`, in the design of Stefan Zweig Digital, because the existing stylesheets select `biblFull`; the RDF stylesheet of Stefan Zweig Digital needs a branch for the object as well.
 - The page in Stefan Zweig Digital is a publication for readers and shows no provenance: no producer, no review state, no marked passages. Producer, state and evidence are for the curation tool of this repository; the TEI carries them as data, and the publication does not render them. Readers are led through Klawiter's categories, as in the wiki, before they reach the entries.
 - Unreviewed data may be ingested into GAMS Staging, which is a test instance outside the GAMS infrastructure, to check ingest and rendering before the human round; the production instance receives the bibliography after the round.
+- A page whose entry yields publications gives them as publications whatever its page kind, because the publication layer reads the entry and the page kind only sorts pages (page 54, a work hub with 31 editions).
+- An author page becomes a person with the contributions it lists, each linked to the publication it stands in, not a publication of its own (page 1605, a foreword in a 1998 volume).
+- The bibliography enters the search of Stefan Zweig Digital through an RDF branch, and each of Klawiter's categories is its own view, provided GAMS passes view parameters to the stylesheet. The existing menu item Bibliography under Index points to the object instead of the external site.
+- The work in the repositories of Stefan Zweig Digital builds on the branch `gams-www-split` and is committed there locally.
 
 ## What the profile takes from Stefan Zweig Digital
 
@@ -60,8 +64,6 @@ The export covers every content page. A page classified as an edition page gives
 ## Open
 
 - The identifier scheme: `SZDKLA.<page>.<n>` is provisional until the operator decides how a publication is identified independently of the page it stands on ([Plan](plan.md), M2 Identifiers).
-- Pages of other kinds whose entry yields publications (page 54), and author pages as persons with contributions (page 1605): decisions E8 and E3 of the acceptance view.
 - Proposed and confirmed authority links (place, person, work), as `relation` while proposed and `@ref` once confirmed, and the link to the work index of Stefan Zweig Digital.
 - Normalised forms beside the source spelling (`choice` with `orig` and `reg`).
-- `szd-klawiter.xsl` and the RDF branch for `o:szd.klawiter` in the data repository of Stefan Zweig Digital.
 - The sample object on which the profile is agreed; page 212 is the first, page 54 the one [Merged bibliography](print-wiki-merge.md) named.
