@@ -6,7 +6,7 @@ project:
 status: active
 language: en
 created: 2026-10-24
-updated: 2026-10-29
+updated: 2026-10-30
 generated-with: Claude Code (Claude Opus 5.5)
 method:
   name: Promptotyping
@@ -64,8 +64,20 @@ One record desk and the sitemap
   3. Align the gap words of `detail.js` with the data: the pipeline writes `category-markup` and `page-title`, which `_gapOf` does not yet name.
   4. The card head lost the colour and claim noun of the review state; check it against [Frontend architecture](frontend-architecture.md), Rendering of contested statements. The facet sidebar still shows the raw type "category", and the wiki count label still says "entries" because `search_logic.test.js` pins it.
   5. Add `tests/` to the leak scope of `p14_gate.py`; `page.js` still links the public wiki; the workbench stacks at 60rem against the 64rem target and its slips do not yet draw through `RecordCard.slip`.
-  6. The value positions grow `docs/data/klawiter.json` to about 21.6 MB and the publication files to about 13.4 MB; decide a compact form before any push of `docs/` to the public site.
-  7. Bring Frontend architecture, the card workbench sections of Design and Specification, the departure rows of Design and the task states of Specification to the state of increments 1 and 2.
+  6. The value positions grow `docs/data/klawiter.json` to about 21.6 MB (3.7 MB gzipped) and the publication files to about 17 MB, and since the push of 2026-10-25 the public site loads them; decide a compact form.
+  7. Bring Frontend architecture, the card workbench sections of Design and Specification, the departure rows of Design and the task states of Specification to the state of increments 1 and 2. Of the departure rows, D2, D5, D7, D8, D10, D11 (reflow), D12 to D17 and D26 are met by the code of 53b9397, 8a01287 and cb13e6c and close; D3 is still open although its row names increment 1.
+  8. Close the items of the UI work package of 2026-10-24 that the code does not yet meet (checked against 28e9962):
+     - derive the authority sentence of Documentation (`AUTHORITY_DECISION_NOTE`, `pages.js`) from the summary of `reconciliation.json`, which holds proposals and no published link (D3);
+     - gate the print-address links of a wiki card on `Records.probePrint()` instead of `Edit.isLocal`, which is defined nowhere, so that print citations become links again (`detail.js`);
+     - give "Show in source" a way back from the marked passage to the value it was opened from;
+     - open a card reached through a publication filter at its first matching publication, with the "matching" line as a link to it (D4);
+     - link every evidence page of a claim to its record and line, and show the description of each reading once `reconciliation.json` carries one (D6);
+     - label the page classification row as the rule-based wiki page kind, apart from the head's `pageKind`;
+     - rename "Years in source" to "Years named in the source" and correct its help text, because it holds years that are no publication years;
+     - in the stacked start-page table, write "Wiki: see A" in the second row of a merged wiki cell (D11, second half);
+     - bring text, focus and boundary contrast, link underlines and 16px inputs to the minima of Design (D18 to D22, D25) as part of the browser review of step 1.
+  9. After the operator's decision on the open question of [Specification](specification.md): apply an open place claim to a publication by its evidence (page and line within the block) in one function shared by card and export, with page 4426 as fixture, so that a differing spelling of the place is no longer missed.
+- Increment 3 also restores the focus outline of `.editable-field`. Increment 4 lets the translator facet read the credits of the publication layer, from a page-level union of credited translators the pipeline writes, once the decision is recorded. Increment 5 labels the open-claim queue of data quality by entries with the claim count beside it (D9) and renames the workbench class of a card the reviewer flagged to `.is-flagged`, keeping "contested" for an open claim (U13).
 - Done when the record coverage test, counting only what a reader can see, pins no field gap and no rendered artefact, every value shows its provenance chain visibly, `check_render.mjs`, `check_review.mjs` and `smoke.mjs` are green, a browser review with read screenshots at a wide and a narrow width and at 200 percent zoom has its findings closed, and the old addresses redirect.
 
 Knowledge and action layer
@@ -140,28 +152,12 @@ The operator set on 2026-10-23 that the whole project advances together: the mer
 |---|---|---|---|
 | Merged bibliography (print strand) | research coordinator | M1 and M2 above | independent agent review of method, code and document |
 | Published wiki data | research coordinator | Wiki data true to their source passage; [Status](status.md) | full gate of CLAUDE.md, invariants over all records, fresh-context reviews of data fidelity, interface and tests after each fix batch |
-| Interface | AI operator, from 2026-10-24 | One record desk and the sitemap; [Card workbench](design.md#card-workbench); [Frontend architecture](frontend-architecture.md) | tests, record coverage test and read screenshots by the coordinator; a fresh-context review of the interface before a milestone closes |
-| Blog post | AI operator | drafted outside the repository, claims checked against it, deployed by the operator | claim check against the artefacts; fresh-context review of the text commissioned by the coordinator |
-| DIA-XAI proposal | AI operator drafts, operator decides | kept in the dia-xai repository; since 2026-10-23 the operator's team draft "Grounds for Use" is the basis, the agent draft v1.4 supplies material | fresh-context reviews of research question, argument and evidence commissioned by the coordinator |
+| Interface | research coordinator | One record desk and the sitemap; [Card workbench](design.md#card-workbench); [Frontend architecture](frontend-architecture.md) | tests, record coverage test and read screenshots; a fresh-context review of the interface before a milestone closes |
+| Blog post | research coordinator drafts, operator deploys | drafted outside the repository, claims checked against it | claim check against the artefacts; fresh-context review of the text |
+| DIA-XAI proposal | sessions of the dia-xai repository, operator decides | kept in the dia-xai repository; since 2026-10-23 the operator's team draft "Grounds for Use" is the basis | reviews there; this repository supplies only evidenced review episodes |
 | Vault knowledge | a session started in the vault | handoff list prepared by the coordinator; repository sessions read the vault, never write it | vault conventions and audit |
 
 The coordinator reports to the operator as a short presentation per milestone reached and on request, with result, meaning, risks and the decisions needed.
-
-## Orchestration
-
-The research coordinator holds the overall plan (this plan) and orchestrates the AI operator's work through the table below. The table holds only the dependencies between the two sessions. When a dependency is met, the session that delivers it messages the other; when the coordinator needs the operator's next result, it asks to be notified when the operator session goes idle instead of polling.
-
-| Dependency | Delivered by | Needed for | Serves in the overall plan |
-|---|---|---|---|
-| verified regeneration of `docs/data` and `data/output` after the pipeline fixes | coordinator | interface, blog post | correct wiki data as the base of every concordance |
-| `publicationIds` on field matches, delivered 2026-10-23 (a4dbd63) where the wiki line lies in a hash-verified publication slice | coordinator (p07) | edition-level print slot | step 7, matches at publication level |
-| committed repair of the card workbench | coordinator | handover of the interface paths | interface milestone One reader |
-| record card with the provenance chain of every value | AI operator | coordinator's check against tests, record coverage and screenshots | Goal, every value with passage, producer and state |
-| defects found in production data | either session | coordinator verifies, fixes and regenerates | correct wiki data |
-| operator decision on the twenty fixture-based place decisions, taken 2026-10-23 (a fixture confirms nothing) | operator | blog post, display wording, data.md | step 1, meaning of `confirmed` |
-| decision whether delegation to LLM agents confirms, taken 2026-10-24 under the operator principles (it does not; agent decisions are proposals) | main instance | blog post, production labels | step 1, meaning of `confirmed` |
-
-A result of the AI operator enters canonical knowledge only after the coordinator has checked it against its evidence. A prototype element that becomes part of the plan, such as the producer labels or the side-by-side print pane, moves into the plan's step it serves by the coordinator's write-back.
 
 ## Open decisions and dependencies
 

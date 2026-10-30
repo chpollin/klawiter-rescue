@@ -12,7 +12,7 @@ language: en
 version: 0.6
 tags: [journal]
 created: 2026-03-29
-updated: 2026-10-29
+updated: 2026-10-30
 template:
   name: Vorlage Journal
   version: 0.6
@@ -22,6 +22,14 @@ template:
 # Journal
 
 ## Entries
+
+### 2026-10-30 — AI operator retired, UI package merged into the plan
+
+- Trigger: The operator's decision of 2026-10-30 that the paused AI operator does not return, and a project analysis from the vault that found stale coordination text and a plan step overtaken by the push of 2026-10-25.
+- Found: A read-only agent checked the UI work package of 2026-10-24 against 28e9962. Most items are met by 53b9397, 8a01287 and cb13e6c, several of them recorded as open departure rows in [Design](design.md); D3 was assigned to increment 1 but the Documentation page still says LLM agents decided the authority links; `detail.js` gates print-address links on `Edit.isLocal`, which is defined nowhere, so print citations never become links. The coordinator confirmed both in the code. `docs/data/klawiter.json` is served gzipped at about 3.8 MB, so the cost of its size lies in parsing at start, not in transfer.
+- Decided: One session works on the repository and delegates to subagents. The handoff point on the renamed comments needs no receiver and closes.
+- Changed: [Governance](governance.md#roles) replaces the section on parallel sessions with the roles of coordinator and operator. [Plan](plan.md) drops the orchestration table, names the coordinator as owner of interface and blog post, restates step 6 of increment 2 as an existing state, and takes the open items of the UI package into increments 2 to 5. Both handoff points that addressed the AI operator left [Handoff](handoff.md).
+- Evidence: `28e9962`, `cb13e6c`, `53b9397`, `8a01287`
 
 ### 2026-10-29 — Working-practice wording, governance citations, stale M1 text
 
@@ -119,7 +127,7 @@ template:
 ### 2026-10-24 — Criterion of done, public print claims, interface ownership
 
 - Trigger: Decision round. The operator delegated the two questions left open at the level of principle and the ownership of the interface to the main instance.
-- Decided: The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done and gained a point on the interface. Print addresses, the compiler's rule-applied notation and evidenced concordance claims join the production run as a frozen file without print text once the containment predicate and the shared claim schema stand, which `CLAUDE.md` records as the one exception to the excluded merge ([Governance](governance.md), Operator principles). The interface of both strands passes to the AI operator once the repair of the card workbench is committed, and the acceptance checks stay with the coordinator ([Governance](governance.md#parallel-sessions), Paths). These decisions were taken by the main instance under the operator's delegation and are revisable.
+- Decided: The goal of [Merged bibliography](print-wiki-merge.md) is the criterion of done and gained a point on the interface. Print addresses, the compiler's rule-applied notation and evidenced concordance claims join the production run as a frozen file without print text once the containment predicate and the shared claim schema stand, which `CLAUDE.md` records as the one exception to the excluded merge ([Governance](governance.md), Operator principles). The interface of both strands passes to the AI operator once the repair of the card workbench is committed, and the acceptance checks stay with the coordinator ([Governance](governance.md#roles), Paths). These decisions were taken by the main instance under the operator's delegation and are revisable.
 - Evidence: `226c21a`, `2d11759`
 
 ### 2026-10-24 — Plan with fixed decision rules, page kinds, concordance as a pipeline step
@@ -152,7 +160,7 @@ template:
 - Trigger: Fix round on the published wiki data, implementation round on the print concordance, and three fresh-context reviews commissioned for the AI operator's blog and proposal drafts.
 - Found: The reviews found the proposal's research questions crossing different axes and its fourth level an outcome rather than a level, and found a blog claim on `confirmed` contradicted by the data.
 - Decided: The operator decided that a test fixture confirms nothing, that checks are assigned by kind of task, and that print rights may wait until delivery, with only addresses and claims published until then.
-- Changed: Commit 7994ccb fixes the five confirmed pipeline defects with regression tests and removes the twenty fixture place decisions, and [Status](status.md) carries the new snapshot. The print strand gained the wiki revision export, the errata of Addendum I as correction claims and a field route that finds the year near the title, accepts short titles equal to the page title and counts extent and page ranges as a second field, which raised the recall on silver pairs markedly in Addendum II and moderately in the main volume. [Governance](governance.md#parallel-sessions) records the project tracks.
+- Changed: Commit 7994ccb fixes the five confirmed pipeline defects with regression tests and removes the twenty fixture place decisions, and [Status](status.md) carries the new snapshot. The print strand gained the wiki revision export, the errata of Addendum I as correction claims and a field route that finds the year near the title, accepts short titles equal to the page title and counts extent and page ranges as a second field, which raised the recall on silver pairs markedly in Addendum II and moderately in the main volume. [Governance](governance.md#roles) records the project tracks.
 - Evidence: `7994ccb`, `5e31143`, `0a50354`, `13f8fdf`, `52a408f`
 
 ### 2026-10-23 — Overlap experiments, refactoring and production defects
@@ -165,7 +173,7 @@ template:
 
 ### 2026-10-23 — Print records, compiler claims and first concordance
 
-- Trigger: Implementation round toward the first full result of the print strand, after an independent milestone review. From this round on a second session works in parallel as AI operator on a frontend prototype, coordinated as recorded in [Governance](governance.md#parallel-sessions).
+- Trigger: Implementation round toward the first full result of the print strand, after an independent milestone review. From this round on a second session works in parallel as AI operator on a frontend prototype, coordinated as recorded in [Governance](governance.md#roles).
 - Found: Five regular expressions of the print rules held a backspace byte instead of a word boundary, introduced by shell editing. Exact title and year equality found wiki candidates for only a small share of print objects and almost none in secondary literature and reviews.
 - Decided: Inherited values are context with a link to their source, never the object's own reading. Compiler claims stay `proposed` until their precision is measured. Changes to regular expressions go through the editor, not shell heredocs.
 - Changed: The five regular expressions now match as intended. `bench_compare.py` locates gold units in reading order, drops a unit's own address from its references and counts objects page-locally. `p03_records.py` writes entry and object records for all three volumes, with imprints inherited from collection headers of part A kept apart from an object's own fields. `p06_claims.py` writes typed compiler reference claims with resolved targets and print-wiki concordance candidates, all `proposed`. [Print volumes](print-volumes.md) carries the corrected benchmark account and the new stages.

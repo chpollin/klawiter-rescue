@@ -9,7 +9,7 @@ method:
 status: maintained
 language: en
 created: 2026-07-18
-updated: 2026-10-29
+updated: 2026-10-30
 related: [status, plan, data, specification, testing, journal, INDEX]
 ---
 
@@ -157,36 +157,17 @@ Use the [five-case worksheet](../snapshots/evaluations/2026-09-05/owner-evaluati
 - [Status](status.md): one prioritized current work list and current artifact links.
 - Dated reviews under `snapshots/`: observations at a particular state, preserved without silently rewriting history.
 
-## Parallel sessions
+## Roles
 
-Since 2026-10-23 two sessions work on this repository at the same time, in one working tree. This section records who owns which paths, how results come back and who decides what. It adapts the Research Mission Control method of the operator's vault to this one project: two roles, no lane board, and the project's own knowledge documents as the only state. Coordination is kept to what prevents parallel writes and unchecked claims. The tracks of the project and the dependencies between the sessions stand in [Plan](plan.md#tracks).
-
-### Roles
+One session works on this repository, the research coordinator, and delegates bounded parts to subagents. From 2026-10-23 to 2026-10-24 a second session worked in parallel as AI operator on the interface; the operator paused it on 2026-10-24 and retired the role on 2026-10-30, and the [Journal](journal.md) keeps that period.
 
 Research coordinator
-: Holds the plan of the merged Klawiter bibliography ([Merged bibliography](print-wiki-merge.md)) and the print strand, owns the shared knowledge documents, checks results of the other session against their evidence before they enter canonical knowledge, and prepares decisions for the operator.
-
-AI operator
-: Carries out a bounded assignment given by the operator, since 2026-10-24 the interface of both strands: the production frontend and the card workbench of the print strand. Its first assignment is the record card with the provenance chain of every value. Writes only to its own paths, takes data as the pipelines write them, and reports results with evidence. The research coordinator checks each result against the tests, the record coverage test and read screenshots before it is committed.
+: Holds the plan of the merged Klawiter bibliography ([Merged bibliography](print-wiki-merge.md)), the print strand, the wiki data and the interface, owns the knowledge documents, checks every subagent result against its evidence before it enters code or canonical knowledge, and prepares decisions for the operator. The checks `check_render.mjs`, `check_review.mjs` and `smoke.mjs` are the acceptance of the interface and run before an interface change is committed.
 
 Operator
 : The human project owner. Decides goals, rights, publication, vocabulary that enters the data model, and acceptance. Agent reviews, including simulated user evaluations, never stand in for that acceptance.
 
-### Paths
-
-| Owner | Paths |
-|---|---|
-| Research coordinator | `pipeline/print_volumes/` except the interface files of `viewer/`, `data/print/` (local only), `knowledge/`, `snapshots/` |
-| AI operator | `docs/index.html`, `docs/js/`, `docs/css/`, and in `pipeline/print_volumes/viewer/` the files `cards.html`, `cards.js`, `cards.css` and `render.js` |
-| Neither without a verified finding | production code and data (`pipeline/lib/`, `pipeline/*.py`, `docs/data/`, `docs/vocab/`, `data/` outside `data/print/`); changes there go through the research coordinator |
-
-The AI operator's paths passed to it on 2026-10-24, once the repair of the card workbench and the wiki data batch were committed (fffcb29, 71a0fe0). Later the same day the operator had the research coordinator take the interface over directly, with subagents, to build the shared record desk and the new sitemap; the AI operator pauses on these paths until the operator assigns it again, so that no two sessions write the same file. A change the interface needs in the data (a field, a projection, a producer label) goes to the research coordinator as a request with its reason. The checks `check_render.mjs`, `check_review.mjs` and `smoke.mjs` stay with the research coordinator, because they are the acceptance of the interface and not part of it.
-
-Each session stages its own files by explicit path and commits only its own units. Pushes stay with the operator.
-
-### Messages and results
-
-The sessions exchange messages directly (Claude Code cross-session messages). A message is transport, never state: what holds lives in commits and in the knowledge documents. A finding reported by one session counts as unverified for the other until it is checked against code or data. At the end of an assignment the AI operator returns a compact report with the fields state, result, evidence (paths, commits), verification, deviation, next action, at most one question for the operator, and blocker.
+Files are staged by explicit path. Pushes stay with the operator.
 
 ### Decisions that stay with the operator
 

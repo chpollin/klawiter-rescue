@@ -9,7 +9,7 @@ method:
 status: active
 language: en
 created: 2026-10-24
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 
 # Handoff
@@ -17,22 +17,6 @@ updated: 2026-10-28
 This process inbox holds only open handoff points, the results that arrived from agents, sessions or research and still wait to be checked, integrated or rejected. Before using a point, check its source and its current target. Integrate durable content into the responsible document, record the transition briefly in a new entry at the top of [Journal](journal.md), and then remove the point completely. Accepted future work goes into [Plan](plan.md).
 
 ## Open handoff points
-
-### Comments in the AI operator's paths renamed
-
-- Received: 2026-10-28
-- Source: unification of the knowledge along the Promptotyping templates (journal entry of 2026-10-28)
-- Target: the paused AI operator, paths `docs/js/` and `pipeline/print_volumes/viewer/cards.js` ([Governance](governance.md#paths))
-- Context: the comments of `docs/js/edit.js`, `docs/js/home.js` and `cards.js` name the renamed documents `frontend-architecture.md`, `governance.md` and `design.md`; no code changed. The AI operator was paused, so the research coordinator made the change.
-- Next action: when the operator assigns the AI operator again, it takes the renamed references into its working state, and the point leaves this inbox with a journal record.
-
-### UI review and work package of 2026-10-24
-
-- Received: 2026-10-24
-- Source: workflow run wf_236f71c6-273, agents understand:uxreview and draft:ui-package
-- Target: [Plan](plan.md), increments of the record desk; [Design](design.md)
-- Context: the package was written for the AI operator, whom the operator has since paused; the research coordinator builds the interface. Its items overlap with increment 1, which is running.
-- Next action: after increment 1 is committed, merge the remaining items into increments 2 to 5 of the plan.
 
 ### Identifier and citation practice
 
