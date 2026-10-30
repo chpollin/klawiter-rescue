@@ -23,6 +23,14 @@ template:
 
 ## Entries
 
+### 2026-10-30 — Review and audit of the first TEI export
+
+- Trigger: An independent TEI review of the profile and an audit of the export over all main-namespace pages, both by read-only agents given the requirements and not the implementer's verdict.
+- Found: With the version attribute corrected, both exports of page 212 are valid against tei_all P5 4.12.0 (validated, not reasoned). Over all 4,758 pages the export is valid against the profile schema yet unfaithful: `ET.indent` changes the whitespace of the source text on 2,200 pages (confirmed by the coordinator on pages 3 and 7); 1,479 location values lose their review state (1,460 proposed, 19 contested); 446 pages with several publications become one `biblStruct`, and 1,714 author pages, work hubs and other pages become monographs; 166 exported values lose `@source` to the span of an unexported field; 21 values normalised by rule carry a rule or model producer; 23,864 `seg` elements mark text no exported value was read from. Of 28 hand mutations the profile schema rejects none, and 16 also pass all five tests. The ingest stylesheet of Stefan Zweig Digital has no branch for `o:szd.klawiter`, which by reading of its code would fail the RDF step.
+- Decided: The export stays a sample until the checks of [Plan](plan.md), Delivery, hold over all records; the faults are fixed at their shared functions, not per page.
+- Changed: [TEI profile](tei-profile.md) states the faults; [Plan](plan.md), Delivery, orders the validation.
+- Evidence: review and audit reports of 2026-10-30 (not versioned); export at ebe5ae3.
+
 ### 2026-10-30 — TEI as the delivery format, first profile and export
 
 - Trigger: The operator's decision, as the side of Stefan Zweig Digital, that the bibliography is delivered as TEI fitting the data repository of Stefan Zweig Digital, with a RELAX NG schema instead of an ODD.

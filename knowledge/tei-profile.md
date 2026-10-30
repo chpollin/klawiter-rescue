@@ -52,6 +52,20 @@ Stefan Zweig Digital has no schema; its encoding patterns are described from its
 
 Print records enter only as identifier and checksum, linked by their proposed claim, never with print text, because the rights to the print volumes are unresolved ([Project](project.md)). An export with print records is written under `data/print/derived/tei/` and stays local; the versioned export under `data/output/tei/` holds wiki data only.
 
+## State of the first export
+
+The first export (ebe5ae3) is a sample, not a delivery. An independent TEI review and an audit over all main-namespace pages on 2026-10-30 found it valid against the profile schema but neither conformant nor faithful yet ([Journal](journal.md), entry of that day):
+
+- one conformance error against tei_all (a timestamp in `application/@version`), and an empty `imprint` that the profile schema admits and TEI does not;
+- the serialisation indents the mixed content of `quote` and so changes the source text wherever a gap between passages is whitespace only;
+- review states of values are not carried (`@ana` is fixed), the publication layer is ignored, so a page with several publications becomes one `biblStruct`, and author pages and work hubs become monographs;
+- many fields of the record have no trace in the TEI, among them original titles, contents, translations, See references, print citations and review flags;
+- a passage swallowed by a wider span of an unexported field loses `@source`; repeated and non-verbatim occurrences and values normalised by rule are not represented; a value from a category points to the first category;
+- print records stand in `sourceDesc`, which reads as "derived from", and the identity relation joins a description to a publication;
+- the profile schema and the five tests accept most wrong documents a reviewer constructed, because they check page 212 only.
+
+These faults are the work list of [Plan](plan.md), Delivery, which replaces the sampling tests by invariants over all records.
+
 ## Open
 
 - The identifier scheme: `SZDKLA.<page>.<n>` is provisional until the operator decides how a publication is identified independently of the page it stands on ([Plan](plan.md), M2 Identifiers).

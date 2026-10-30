@@ -115,7 +115,14 @@ Interface acceptance
 
 Delivery
 - The route is decided: TEI, projected from the canonical data, in the profile of [TEI profile](tei-profile.md) (operator for Stefan Zweig Digital, 2026-10-30). A first export of page 212 validates against `docs/schema/klawiter-tei.rng`.
-- Done when the profile is reviewed and agreed on a sample object, covers pages with a publication layer and the authority links, and the export is placed under `data/Klawiter/` in the data repository of Stefan Zweig Digital; publishing it waits for the operator.
+- The first export is not faithful yet ([TEI profile](tei-profile.md), State of the first export). Its validation is built in this order, each fault fixed in the shared function it passes through and each check failing when the logic is wrong:
+  1. The source text reproduced character for character, with every passage a `seg` that some exported value points to.
+  2. Invariants over all records instead of page 212: every field of the record exported or listed as a documented exclusion, producer, passage and state of each value equal to the canonical record, internal consistency (date, extent, language), unique identifiers, sorted and deduplicated input, and no text that is not the record's own in the public export.
+  3. The publication layer, one `biblStruct` per publication, and a record type for author pages and work hubs.
+  4. Validation against tei_all at a pinned release beside the profile schema, and a tighter profile schema.
+  5. The checks the ingest of GAMS and the stylesheets of Stefan Zweig Digital need, from the audit of their requirements.
+  6. `szd-klawiter.xsl` and an RDF branch for `o:szd.klawiter`, built and tested in the local harness of Stefan Zweig Digital, then ingested into GAMS Staging by the operator.
+- Done when these checks are green over all records, the profile is agreed on a sample object, and the export stands as `o:szd.klawiter` on GAMS Staging rendered by its stylesheet; the production instance follows the human round, and publishing waits for the operator.
 
 ### Release backlog of the wiki edition
 
