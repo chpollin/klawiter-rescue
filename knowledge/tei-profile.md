@@ -23,10 +23,11 @@ The operator decided on 2026-10-30, as the side of Stefan Zweig Digital, that th
 
 ## Delivery decisions
 
-The operator decided on 2026-10-30:
+The operator decided on 2026-10-30 (the last two points on reviewing the first local page):
 
 - The bibliography is one GAMS object, `o:szd.klawiter`, like the other holdings of Stefan Zweig Digital.
-- It is rendered by a stylesheet of its own, `szd-klawiter.xsl`, in the design of Stefan Zweig Digital, because the existing stylesheets select `biblFull` and show no provenance; the RDF stylesheet of Stefan Zweig Digital needs a branch for the object as well.
+- It is rendered by a stylesheet of its own, `szd-klawiter.xsl`, in the design of Stefan Zweig Digital, because the existing stylesheets select `biblFull`; the RDF stylesheet of Stefan Zweig Digital needs a branch for the object as well.
+- The page in Stefan Zweig Digital is a publication for readers and shows no provenance: no producer, no review state, no marked passages. Producer, state and evidence are for the curation tool of this repository; the TEI carries them as data, and the publication does not render them. Readers are led through Klawiter's categories, as in the wiki, before they reach the entries.
 - Unreviewed data may be ingested into GAMS Staging, which is a test instance outside the GAMS infrastructure, to check ingest and rendering before the human round; the production instance receives the bibliography after the round.
 
 ## What the profile takes from Stefan Zweig Digital
