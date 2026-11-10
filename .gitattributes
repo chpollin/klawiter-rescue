@@ -3,6 +3,10 @@
 * text=auto eol=lf
 data/raw/** binary
 
+# TEI samples keep the wiki entry text unaltered (knowledge/tei-profile.md), including
+# its trailing spaces, so git diff --check must not flag them.
+data/output/tei/** -whitespace
+
 # The wiki's account tables (users, password hashes, watchlists) stay out of
 # release archives; the pipeline reads only zweig_part_01.sql and the text stores.
 data/raw/zweig_part_03.sql export-ignore
