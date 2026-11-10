@@ -1,0 +1,363 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title xml:lang="de">Klawiter-Bibliographie Stefan Zweig digital</title>
+        <title xml:lang="en">Klawiter Bibliography Stefan Zweig digital</title>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>
+          <orgName corresp="https://www.uni-salzburg.at/index.php?id=72" ref="https://d-nb.info/gnd/1047605287">Literaturarchiv Salzburg</orgName>
+        </publisher>
+        <availability>
+          <licence target="https://creativecommons.org/licenses/by/4.0">Creative Commons BY 4.0</licence>
+        </availability>
+        <idno type="PID">o:szd.klawiter</idno>
+      </publicationStmt>
+      <sourceDesc>
+        <bibl type="wiki">
+          <title>Stefan Zweig Bibliography</title>
+          <editor role="compiler">Randolph J. Klawiter</editor>
+          <idno type="sha256">d880ea6c53b72b4b23336b4ceee92aff60136193a41bb1a8318c054fb0090d42</idno>
+          <note>Database dump of the wiki, data/raw/zweig_part_01.sql</note>
+        </bibl>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <appInfo>
+        <application ident="klawiter-rules" version="0.9" xml:id="app-rules">
+          <desc>Parser rules of the Klawiter pipeline reading a value from its passage</desc>
+        </application>
+        <application ident="klawiter-derivation" version="0.9" xml:id="app-derivation">
+          <desc>Rules of the Klawiter pipeline computing a value from another value</desc>
+        </application>
+        <application ident="klawiter-concordance" version="0.9" xml:id="app-concordance">
+          <desc>Rules of the print strand proposing that a print record and a wiki page describe one publication</desc>
+        </application>
+        <application ident="gemini-3.1-flash-lite-preview" version="2026.08.21" xml:id="app-llm">
+          <desc>Language model filling gaps the rules left, read from a cache frozen at 2026-08-21T17:51:38.288166+00:00, prompt sha256 c078baa8bde4baeb69d8fb4ac60c94e7326148882fe2c06ae418757c13d80fa1</desc>
+        </application>
+      </appInfo>
+      <classDecl>
+        <taxonomy xml:id="state">
+          <category xml:id="not-reviewed">
+            <catDesc>read or proposed by a rule or model, not reviewed by a person</catDesc>
+          </category>
+          <category xml:id="proposed">
+            <catDesc>a proposal that publishes nothing until a person or an exact rule decides</catDesc>
+          </category>
+          <category xml:id="confirmed">
+            <catDesc>confirmed by a person or an exact deterministic rule</catDesc>
+          </category>
+          <category xml:id="contested">
+            <catDesc>an open statement with competing interpretations</catDesc>
+          </category>
+        </taxonomy>
+      </classDecl>
+      <listPrefixDef>
+        <prefixDef ident="klawiter" matchPattern="(.+)" replacementPattern="https://chpollin.github.io/klawiter-rescue/vocab/$1" />
+      </listPrefixDef>
+    </encodingDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <listBibl type="publications">
+        <biblStruct xml:id="SZDKLA.212.1" corresp="klawiter:entry/212">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
+            <respStmt>
+              <resp>Translated by</resp>
+              <persName role="translator" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s1">Eugen Relgis</persName>
+            </respStmt>
+            <textLang mainLang="ro" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-cat1">Rumanian</textLang>
+            <imprint>
+              <pubPlace resp="#app-llm" ana="#proposed" source="#src-wiki-212-s3">Bucureşti</pubPlace>
+              <publisher resp="#app-llm" ana="#not-reviewed" source="#src-wiki-212-s4">Editura Ştiinţifică</publisher>
+              <date when="1996" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s5">1996</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="248" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s2">248</measure>
+            </extent>
+          </monogr>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.3.1" corresp="klawiter:publication/3-1922-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s4">Amok. Novellen einer Leidenschaft</title>
+            <textLang mainLang="de" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-cat2">German</textLang>
+            <edition resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s6">1st edition</edition>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s3">Leipzig</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s2">Insel-Verlag</publisher>
+              <date when="1922" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s1">1922</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="295" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s5">295/(2)p.</measure>
+            </extent>
+          </monogr>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.3.2" corresp="klawiter:publication/3-1931-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s10">Amok. Novellen einer Leidenschaft</title>
+            <textLang mainLang="de" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-cat2">German</textLang>
+            <edition resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s13">1st edition</edition>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s9">Leipzig</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s8">Insel-Verlag</publisher>
+              <date when="1931" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s7">1931</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="317" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s11">317/(3)p.</measure>
+            </extent>
+          </monogr>
+          <series>
+            <title level="s" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s12">Zwei-Mark-Fünfzig-Bücher</title>
+          </series>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.3.3" corresp="klawiter:publication/3-1946-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s17">Amok. Novellen einer Leidenschaft</title>
+            <textLang mainLang="de" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-cat2">German</textLang>
+            <edition resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s19">1st edition</edition>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s16">Stockholm</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s15">S. Fischer Verlag</publisher>
+              <date when="1946" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s14">1946</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="368" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s18">368/(3)p.</measure>
+            </extent>
+          </monogr>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.3.4" corresp="klawiter:publication/3-1950-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s23">Amok. Novellen einer Leidenschaft</title>
+            <textLang mainLang="de" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-cat2">German</textLang>
+            <edition resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s26">1st edition</edition>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s22">Frankfurt am Main</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s21">S. Fischer Verlag</publisher>
+              <date when="1950" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s20">1950</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="368" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s24">368/(3)p.</measure>
+            </extent>
+          </monogr>
+          <series>
+            <title level="s" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s25">S. Fischer Bibliothek</title>
+          </series>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.3.5" corresp="klawiter:publication/3-1956-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s30">Amok. Novellen einer Leidenschaft</title>
+            <textLang mainLang="de" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-cat2">German</textLang>
+            <edition resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s33">3rd edition</edition>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s29">Frankfurt am Main</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s28">S. Fischer Verlag</publisher>
+              <date when="1956" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s27">1956</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="368" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s31">368/(3)p.</measure>
+            </extent>
+          </monogr>
+          <series>
+            <title level="s" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-3-s32">Gesammelte Werke in Einzelbänden</title>
+          </series>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.1010.1" corresp="klawiter:publication/1010-2003-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s4">Yuesefu Fuxie: Yige zhengzhixing renwu de xiaoxiang</title>
+            <respStmt>
+              <resp>Translated by</resp>
+              <persName role="translator" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s5">Yushu Zhang</persName>
+            </respStmt>
+            <textLang mainLang="zh" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-cat1">Chinese</textLang>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s3">Beijing</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s2">Huaxia Chubanshe</publisher>
+              <date when="2003" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s1">2003</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="223" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s6">223p.</measure>
+            </extent>
+          </monogr>
+        </biblStruct>
+        <biblStruct xml:id="SZDKLA.1010.2" corresp="klawiter:publication/1010-2006-a" ana="#proposed">
+          <monogr>
+            <title level="m" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s9">Yuesefu Fuxie: Yige zhengzhixing renwu de xiaoxiang</title>
+            <respStmt>
+              <resp>Translated by</resp>
+              <persName role="translator" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s10">Yushu Zhang</persName>
+            </respStmt>
+            <textLang mainLang="zh" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-cat1">Chinese</textLang>
+            <imprint>
+              <pubPlace resp="#app-rules" ana="#not-reviewed">Beijing</pubPlace>
+              <publisher resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s8">Beijing Daxue Chubanshe</publisher>
+              <date when="2006" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s7">2006</date>
+            </imprint>
+            <extent>
+              <measure unit="page" quantity="640" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s11">640p.</measure>
+            </extent>
+          </monogr>
+          <series>
+            <title level="s" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-1010-s12">Deyu guojia wenxue mingpian congshu / Collection of Famous Literary Works from German-speaking Countries</title>
+          </series>
+        </biblStruct>
+      </listBibl>
+    </body>
+  </text>
+  <standOff>
+    <listBibl type="sources">
+      <bibl type="wikiPage" subtype="edition-page" xml:id="src-wiki-212">
+        <title xml:id="src-wiki-212-title">Tolstoi, Nietzsche: Studii</title>
+        <idno type="pageId">212</idno>
+        <idno type="revision">4392</idno>
+        <note type="categories">
+          <seg xml:id="src-wiki-212-cat1">Essays / Volumes (Rumanian)</seg>
+        </note>
+        <quote xml:id="src-wiki-212-text">Translated by <seg xml:id="src-wiki-212-s1">Eugen Relgis</seg>. <seg xml:id="src-wiki-212-s2">248</seg>p. <seg xml:id="src-wiki-212-s3">Bucureşti</seg>: <seg xml:id="src-wiki-212-s4">Editura Ştiinţifică</seg>, <seg xml:id="src-wiki-212-s5">1996</seg> (Ardealul). [See <seg xml:id="src-wiki-212-s6">H 670</seg>, <seg xml:id="src-wiki-212-s7">G 131</seg> &amp; <seg xml:id="src-wiki-212-s8">H 490</seg>, <seg xml:id="src-wiki-212-s9">G 445</seg>. See <seg xml:id="src-wiki-212-s10">G 201</seg>, 491, 492]</quote>
+        <note type="printCitations">
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s6">H 670</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s7">G 131</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s8">H 490</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s9">G 445</idno>
+          <idno type="printAddress" subtype="main-volume" resp="#app-rules" ana="#not-reviewed" source="#src-wiki-212-s10">G 201</idno>
+        </note>
+      </bibl>
+      <bibl type="wikiPage" subtype="edition-page" xml:id="src-wiki-3">
+        <title xml:id="src-wiki-3-title">Amok. Novellen einer Leidenschaft</title>
+        <idno type="pageId">3</idno>
+        <idno type="revision">62866</idno>
+        <note type="categories">
+          <seg xml:id="src-wiki-3-cat1">Collected and Selected Works</seg>
+          <seg xml:id="src-wiki-3-cat2">Fiction / Volumes (German)</seg>
+        </note>
+        <quote xml:id="src-wiki-3-text">[<seg xml:id="src-wiki-3-s1">1922</seg>]: <seg xml:id="src-wiki-3-s2">Insel-Verlag</seg>, <seg xml:id="src-wiki-3-s3">Leipzig</seg>
+
+<seg xml:id="src-wiki-3-s4">Amok. Novellen einer Leidenschaft</seg> [Die Kette. Ein Novellenkreis. Der 2. Ring]. Dedication: Frans Masereel, dem Künstler, dem brüderlichen Freunde. Salzburg, 1922. <seg xml:id="src-wiki-3-s5">295/(2)p.</seg> 25 numbered copies, bound by hand, were printed on handmade paper
+
+*<seg xml:id="src-wiki-3-s6">1st edition</seg>. 10,000 copies. 1922
+*2nd edition. 11,000 copies. 1923
+*3rd edition. 11,000 copies. 1924
+*4th edition. 13,000 copies. 1925
+*5th edition. 5,000 copies. 1927
+*6th edition. 10,000 copies. 1928
+*7th edition. 5,000 copies. 1929
+*8th edition. 5,000 copies. 1930
+*9th edition. 2,000 copies. 1931
+ 
+Contents:
+
+Tu auf dich, Unterwelt der Leidenschaften [Introductory poem], p. (7)
+Der Amokläufer, pp. (9)-86
+Die Frau und die Landschaft, pp. (87)-120
+Phantastische Nacht, pp. (121)-207
+Brief einer Unbekannten, pp. (209)-267
+Die Mondscheingasse, pp. (269)-295
+
+[<seg xml:id="src-wiki-3-s7">1931</seg>]: <seg xml:id="src-wiki-3-s8">Insel-Verlag</seg>, <seg xml:id="src-wiki-3-s9">Leipzig</seg>
+
+<seg xml:id="src-wiki-3-s10">Amok. Novellen einer Leidenschaft</seg> [Die Kette. Ein Novellenkreis. Der 2. Ring]. A new edition. <seg xml:id="src-wiki-3-s11">317/(3)p.</seg> [<seg xml:id="src-wiki-3-s12">Zwei-Mark-Fünfzig-Bücher</seg>]
+
+*<seg xml:id="src-wiki-3-s13">1st edition</seg>. 50,000 copies. 1931
+*2nd edition. 25,000 copies. 1931
+
+Contents:
+
+Tu auf dich, Unterwelt der Leidenschaften [Introductory poem], p. (5)
+Der Amokläufer, pp. (7)-91
+Die Frau und die Landschaft, pp. (93)-128
+Phantastische Nacht, pp. (129)-223
+Brief einer Unbekannten, pp. (225)-287
+Die Mondscheingasse, pp. (289)-317
+
+[<seg xml:id="src-wiki-3-s14">1946</seg>]: <seg xml:id="src-wiki-3-s15">S. Fischer Verlag</seg>, <seg xml:id="src-wiki-3-s16">Stockholm</seg>
+
+<seg xml:id="src-wiki-3-s17">Amok. Novellen einer Leidenschaft</seg>. <seg xml:id="src-wiki-3-s18">368/(3)p.</seg>
+
+*<seg xml:id="src-wiki-3-s19">1st edition</seg>. 1946
+*2nd edition. 1950
+*3rd edition. 1956
+*4th edition. 1966
+
+Contents:
+
+Der Amokläufer, pp. (5)-(59)
+Brief einer Unbekannten pp. (61)-(101)
+Vierundzwanzig Stunden aus dem Leben einer Frau, pp. (103)-(166)
+Buchmendel, pp. (167)-(195)
+Episode am Genfer See, pp. (197)-(206)
+Phantastische Nacht, pp. (207)-(268)
+Verwirrung der Gefühle, pp. (269)-(351)
+Die unsichtbare Sammlung, pp. (353)-(369)
+
+[<seg xml:id="src-wiki-3-s20">1950</seg>]: <seg xml:id="src-wiki-3-s21">S. Fischer Verlag</seg>, <seg xml:id="src-wiki-3-s22">Frankfurt am Main</seg>
+
+<seg xml:id="src-wiki-3-s23">Amok. Novellen einer Leidenschaft</seg>. <seg xml:id="src-wiki-3-s24">368/(3)p.</seg> [<seg xml:id="src-wiki-3-s25">S. Fischer Bibliothek</seg>]
+
+*<seg xml:id="src-wiki-3-s26">1st edition</seg>. 20,000 copies. 1950 
+*2nd edition. 20,000 copies. 1956 
+
+Contents: 
+
+Der Amokläufer, pp. (5)-(59)
+Brief einer Unbekannten, pp. (61)-(101)
+Vierundzwanzig Stunden aus dem Leben einer Frau, pp. (103)-(166)
+Buchmendel, pp. (167)-(195)
+Episode am Genfer See, pp. (197)-(206)
+Phantastische Nacht, pp. (207)-(268)
+Verwirrung der Gefühle, pp. (269)-(351)
+Die unsichtbare Sammlung, pp. (353)-(369)
+
+[<seg xml:id="src-wiki-3-s27">1956</seg>]: <seg xml:id="src-wiki-3-s28">S. Fischer Verlag</seg>, <seg xml:id="src-wiki-3-s29">Frankfurt am Main</seg>
+
+<seg xml:id="src-wiki-3-s30">Amok. Novellen einer Leidenschaft</seg>. <seg xml:id="src-wiki-3-s31">368/(3)p.</seg> [<seg xml:id="src-wiki-3-s32">Gesammelte Werke in Einzelbänden</seg>]
+
+*<seg xml:id="src-wiki-3-s33">3rd edition</seg>. 2,000 copies. 1956 
+*4th edition. 3,000 copies. 1966 
+
+Contents: 
+
+Der Amokläufer, pp. (5)-(59)
+Brief einer Unbekannten, pp. (61)-(101)
+Vierundzwanzig Stunden aus dem Leben einer Frau, pp. (103)-(166)
+Buchmendel, pp. (167)-(195)
+Episode am Genfer See, pp. (197)-(206)
+Phantastische Nacht, pp. (207)-(268)
+Verwirrung der Gefühle, pp. (269)-(351)
+Die unsichtbare Sammlung, pp. (353)-(369)
+ 
+
+Individual Story:
+
+Amok. Novellen einer Leidensschaft [Leipzig, 1922/1931], No. 2, pp. (9)-86; [Leipzig, 1931], No. 2, pp. (7)-91; [Stockholm, 1946/1966], No. 1, pp. (5)-(59); [Frankfrut am Main, 1950/1956 and 1956/1966], No. 1, pp. (5)-(59)</quote>
+      </bibl>
+      <bibl type="wikiPage" subtype="edition-page" xml:id="src-wiki-1010">
+        <title xml:id="src-wiki-1010-title">Yuesefu Fuxie: Yige zhengzhixing renwu de xiaoxiang</title>
+        <idno type="pageId">1010</idno>
+        <idno type="revision">38034</idno>
+        <note type="categories">
+          <seg xml:id="src-wiki-1010-cat1">Historical Studies / Volumes (Chinese)</seg>
+        </note>
+        <quote xml:id="src-wiki-1010-text">[<seg xml:id="src-wiki-1010-s1">2003</seg>]: <seg xml:id="src-wiki-1010-s2">Huaxia Chubanshe</seg>, <seg xml:id="src-wiki-1010-s3">Beijing</seg>
+
+<seg xml:id="src-wiki-1010-s4">Yuesefu Fuxie: Yige zhengzhixing renwu de xiaoxiang</seg> [Joseph Fouché. Bildnis eines politischen Menschen]. Translated by <seg xml:id="src-wiki-1010-s5">Yushu Zhang</seg>. <seg xml:id="src-wiki-1010-s6">223p.</seg>
+
+[<seg xml:id="src-wiki-1010-s7">2006</seg>]: <seg xml:id="src-wiki-1010-s8">Beijing Daxue Chubanshe</seg>, Beijing
+
+<seg xml:id="src-wiki-1010-s9">Yuesefu Fuxie: Yige zhengzhixing renwu de xiaoxiang</seg> [Joseph Fouché. Bildnis eines politischen Menschen]. Translated by <seg xml:id="src-wiki-1010-s10">Yushu Zhang</seg>. <seg xml:id="src-wiki-1010-s11">640p.</seg> Bilingual edition: German/Chinese [<seg xml:id="src-wiki-1010-s12">Deyu guojia wenxue mingpian congshu / Collection of Famous Literary Works from German-speaking Countries</seg>]</quote>
+      </bibl>
+    </listBibl>
+    <listRelation>
+      <relation name="describes" active="#src-wiki-212" passive="#SZDKLA.212.1" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-3" passive="#SZDKLA.3.1" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-3" passive="#SZDKLA.3.2" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-3" passive="#SZDKLA.3.3" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-3" passive="#SZDKLA.3.4" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-3" passive="#SZDKLA.3.5" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-1010" passive="#SZDKLA.1010.1" resp="#app-rules" ana="#not-reviewed" />
+      <relation name="describes" active="#src-wiki-1010" passive="#SZDKLA.1010.2" resp="#app-rules" ana="#not-reviewed" />
+    </listRelation>
+  </standOff>
+</TEI>
