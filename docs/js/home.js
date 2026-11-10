@@ -95,6 +95,7 @@ const Home = {
         </div>
         <p class="home-browse"><a href="#records">Browse the records</a></p>
         </div>
+        <p class="home-notice"><strong>Experiment.</strong> This interface is a research prototype developed with coding agents. It reconstructs the bibliography from a decommissioned wiki as searchable data bound to its source passages. The page inventory is preserved, while bibliographic modelling and acceptance remain open. It is not a finished or supported product, and its results need checking before any reuse. Feedback belongs in the <a href="https://github.com/chpollin/klawiter-rescue/issues">issues of the repository</a>.</p>
       </div>
       <section class="home-data" aria-labelledby="home-data-heading">
         ${this.model(entries, counts, print)}

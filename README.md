@@ -2,6 +2,8 @@
 
 A source-bound reconstruction of Randolph J. Klawiter's Stefan Zweig bibliography from a decommissioned MediaWiki. This repository contains the extraction pipeline, structured data, static research interface and review evidence.
 
+Experiment. The Stefan Zweig Bibliography (Klawiter) is a research prototype developed with coding agents. The current-page inventory of the wiki is preserved, while complete bibliographic modelling and product acceptance remain open. It is not a finished or supported product, and its results need checking before any reuse. Feedback belongs in the [issues of the repository](https://github.com/chpollin/klawiter-rescue/issues).
+
 - [Public interface](https://chpollin.github.io/klawiter-rescue/)
 - [Current status and next steps](knowledge/status.md)
 - [Project knowledge](knowledge/INDEX.md)

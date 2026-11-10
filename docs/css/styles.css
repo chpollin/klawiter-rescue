@@ -3460,6 +3460,10 @@ td.matrix-low { background: #F5E3E3; }
 #view-home .home-search { flex: 1 1 18rem; width: auto; min-width: 0; max-width: 30rem; margin: 0; }
 #view-home .home-search input { font-size: 1rem; background: var(--sz-white); }
 #view-home .home-browse { margin: 0; white-space: nowrap; }
+/* Standing notice under the intro row: plain text, no box. */
+#view-home .home-notice { margin: 0.9rem 0 0; max-width: 60rem; font-size: 0.875rem; line-height: 1.55; color: var(--sz-text-light); }
+#view-home .home-notice strong { color: var(--sz-text); font-weight: 600; }
+#view-home .home-notice a { text-decoration: underline; text-underline-offset: 2px; }
 
 .home-data {
   background: var(--sz-white); border: 1px solid var(--sz-border-light); border-radius: 4px;

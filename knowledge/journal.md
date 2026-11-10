@@ -23,6 +23,14 @@ template:
 
 ## Entries
 
+### 2026-11-10 — Standing notice on the start page and in the README
+
+- Trigger: The operator's request of 2026-11-10 that every public demo of the research tools says on its first view and in the first paragraph of its README that it is an experiment, what it is, what it is not and where feedback belongs.
+- Found: The start page carried no statement of maturity. The README stated the open modelling and acceptance under Purpose, without the limits for reuse or a place for feedback.
+- Decided: The notice is plain text under the intro row of the start page, without a box or dialog, and a paragraph after the opening paragraph of the README. Its status sentence follows [Status](status.md): the page inventory is preserved, bibliographic modelling and acceptance remain open.
+- Changed: `docs/js/home.js`, `docs/css/styles.css`, `README.md`, [Frontend architecture](frontend-architecture.md), Start page.
+- Evidence: `tests/test_frontend_logic.py` green; start page read at 1440 and 390 pixels with the notice inside the first view and no horizontal overflow. The production run and the full suites were not run, because no pipeline input or output changed.
+
 ### 2026-10-30 — Faithful export over every page and the acceptance view
 
 - Trigger: The operator asked for a surface on which what is done can be verified and accepted, and then judged the first version a check report nobody would read: too much information, no answer to what the operator must decide.
