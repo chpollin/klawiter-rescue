@@ -9,7 +9,7 @@ method:
 status: active
 language: en
 created: 2026-10-24
-updated: 2026-10-30
+updated: 2026-11-10
 ---
 
 # Handoff
@@ -24,7 +24,7 @@ This process inbox holds only open handoff points, the results that arrived from
 - Source: the guided session of 2026-10-30 (journal entries of that day)
 - Target: [Plan](plan.md), Program from 2026-10-30
 - Context: The operator's open questions stand as decisions E1 to E8 in the acceptance view (`pipeline/acceptance.py`, ACCEPTANCE), each with reason, recommendation and sample page. The read-only audit of the pipeline's test and validation profile arrived: the checks are strong on whole records and weak on which passage a value comes from and which state it carries; of 13 faults injected into a copy, 9 passed all targeted tests (a value from another publication's block, a wrong value behind a `repeated` gap or a `normalised` derivation, a producer swapped from rule to model, a dropped publication, a zeroed slice hash, a reversed order, and the first TEI export's flattened producer and state). Its notes and harness lie in the session scratchpad (`audit-pipeline/`). Drafts for the Promptotyping case study and chapter 3 and for the DIA-XAI proposal (RQ3 to RQ5) and an observation log of the session also lie there and await the operator's acceptance as statement lists.
-- Next action: record the operator's answers in `pipeline/data/acceptance-decisions.json` and carry them into [TEI profile](tei-profile.md); integrate the audit's smallest checks (zone of a publication value, honesty of gaps and derivations, provenance against the frozen cache, editions to publications, slice and occurrence hashes, the CI cache key) into the test suite.
+- Next action: both earlier steps are done. The answers to E1 to E4 and E8 are recorded in `pipeline/data/acceptance-decisions.json` and carried into [TEI profile](tei-profile.md) (be9a72d), and the audit's smallest checks (zone of a publication value, honesty of gaps and derivations, provenance against the frozen cache, editions to publications, slice and occurrence hashes, the CI cache key) are in the test suite (4bbc9fe), both on 2026-10-30. E5 to E7 have no recorded answer.
 
 ### Audit of the GAMS and Stefan Zweig Digital requirements, 2026-10-30
 
