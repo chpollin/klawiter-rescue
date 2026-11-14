@@ -14,7 +14,7 @@ template:
   name: Vorlage Index
   version: 0.4
   url: https://dhcraft.org/Promptotyping/promptotyping-document/index
-related: [status, plan, handoff, project, data, specification, design, governance, journal]
+related: [status, plan, project, data, specification, design, governance, journal]
 ---
 
 # Project knowledge
@@ -27,7 +27,6 @@ This index routes agents and people through the knowledge of the Stefan Zweig Bi
 |---|---|---|---|
 | [Status](status.md) | project-specific status snapshot | current evidence snapshot with its date and source artifacts, honest completion assessment and the one place for volatile figures | after a verified change of data, gates or acceptance |
 | [Plan](plan.md) | Planning | milestones with entry and exit conditions, tracks and the orchestration of parallel sessions, and the status tracker of future work | when work is accepted, reordered or finished |
-| [Handoff](handoff.md) | Handoff | received results still waiting to be checked, integrated or rejected; a point leaves it with a journal record | on receipt or processing of a point |
 | [Project](project.md) | Charter | origin, responsibilities, data integrity, research and publication frame, standards, how the bibliography is cited, licences and rights | when identity, mandate or rights change |
 | [Data and model](data.md) | Material | source scope, entity levels, field meaning, statement states, provenance, uncertainty and curation boundaries | on a change of schema, source scope or statement states |
 | [Pipeline architecture](pipeline-architecture.md) | Architecture | stages, transformations, dependencies and the reproducibility boundary of the production run; `pipeline/README.md` is its local quick entry | on a change of stages or boundaries |
@@ -60,7 +59,7 @@ The print documents carry no print text and paraphrase with PDF pages instead.
 
 ## Storage zones
 
-- `knowledge/` holds the maintained Promptotyping documents, including `handoff.md` as the process inbox.
+- `knowledge/` holds the maintained Promptotyping documents, including `journal.md`, whose Open section is the process inbox.
 - `snapshots/` holds dated reviews, audits and evaluation evidence, listed below.
 - `data/output/` and `docs/data/` hold the generated artifacts of the production run, and `data/print/` the local print strand, which Git ignores.
 
@@ -81,7 +80,7 @@ These are dated observations. Follow their status links before acting on an old 
 
 ## Reading paths
 
-- Re-entry: [Status](status.md) → [Handoff](handoff.md) → [Plan](plan.md) → latest [Journal](journal.md) → `git status -sb`.
+- Re-entry: [Status](status.md) → Open in [Journal](journal.md) → [Plan](plan.md) → latest journal entry → `git status -sb`.
 - Data work: [Data and model](data.md) → [Pipeline architecture](pipeline-architecture.md) → [Testing](testing.md).
 - Interface work: [Specification](specification.md) → [Design](design.md) → [Frontend architecture](frontend-architecture.md) → [Testing](testing.md).
 - Print volumes: [Merged bibliography](print-wiki-merge.md) → [Print volumes](print-volumes.md) → [Print pipeline](print-pipeline.md) → [Data and model](data.md) → [Design](design.md#card-workbench).

@@ -196,7 +196,7 @@ Sources are [Frontend architecture](frontend-architecture.md#start-page), [Card 
 - A print reference is never presented as identity.
 - Back returns to the card and position the reader left.
 
-Sources are [Data and model](data.md#cited-print-addresses), [Governance](governance.md#decisions-requiring-domain-or-publication-responsibility) for page 35, the Reference section of [Merged bibliography](print-wiki-merge.md#record-model), and the remark in [Project](project.md) that the one contemporary review praises the system of references. In the committed reader a See-also link lands on its target and Back restores the scroll position. The data reach audit found redirect aliases missing from the frontend map, which contradicts [Status](status.md), and it waits in [Handoff](handoff.md) for verification.
+Sources are [Data and model](data.md#cited-print-addresses), [Governance](governance.md#decisions-requiring-domain-or-publication-responsibility) for page 35, the Reference section of [Merged bibliography](print-wiki-merge.md#record-model), and the remark in [Project](project.md) that the one contemporary review praises the system of references. In the committed reader a See-also link lands on its target and Back restores the scroll position. The data reach audit found redirect aliases missing from the frontend map, which contradicts [Status](status.md); the [Journal](journal.md) records its verification and the root-cause fix of 2026-10-24.
 
 ### T14 An item in hand
 
@@ -204,7 +204,7 @@ Sources are [Data and model](data.md#cited-print-addresses), [Governance](govern
 - The imprint keeps its source wording and its co-imprint pairs.
 - A field emptied because no rule binds it to the described publication reads differently from a field the source does not give.
 
-Sources are [Data and model](data.md#publication-fields) and the principle "A gap before a wrong value". The needs of the trade are inferred, since no source states them. In the committed data a value emptied by the binding rule carries the provenance `missing` like a source gap, so the third criterion fails, and the distinction of gap kinds waits in [Handoff](handoff.md), Data reach audit, for the wiki data item of [Plan](plan.md#m1-ready-for-review).
+Sources are [Data and model](data.md#publication-fields) and the principle "A gap before a wrong value". The needs of the trade are inferred, since no source states them. In the committed data a value emptied by the binding rule carries the provenance `missing` like a source gap, so the third criterion fails, and the distinction of gap kinds waits for the wiki data item of [Plan](plan.md#m1-ready-for-review).
 
 ### T15 Export of a filtered set
 

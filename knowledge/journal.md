@@ -12,7 +12,7 @@ language: en
 version: 0.6
 tags: [journal]
 created: 2026-03-29
-updated: 2026-10-30
+updated: 2026-11-14
 template:
   name: Vorlage Journal
   version: 0.6
@@ -21,7 +21,32 @@ template:
 
 # Journal
 
+## Open
+
+Results that arrived from agents, sessions or research and still wait to be checked, integrated or rejected. Before using a point, check its source and its current target, integrate durable content into the responsible document, record the transition in a new entry below and remove the point. Accepted future work goes into [Plan](plan.md).
+
+- Decisions E5 to E7 of the acceptance view (`pipeline/acceptance.py`, ACCEPTANCE, each with reason, recommendation and sample page) have no recorded answer. Answers go into `pipeline/data/acceptance-decisions.json`. Source: the guided session of 2026-10-30; target: [Plan](plan.md), Program from 2026-10-30.
+- Drafts for the Promptotyping case study and chapter 3, for the DIA-XAI proposal (RQ3 to RQ5) and an observation log of the session of 2026-10-30 await the operator's acceptance as statement lists. They lay in that session's scratchpad (`audit-pipeline/`, beside the notes and harness of the pipeline audit), outside the repository; whether they still exist there is unchecked. Target: [Plan](plan.md), Program from 2026-10-30, statement lists per milestone.
+- Audit of the GAMS and Stefan Zweig Digital requirements, received 2026-10-30, durable findings still to be placed in [TEI profile](tei-profile.md) and [Plan](plan.md), D1 and D3. Source: read-only agent over the repositories `SZD-split` (branch `gams-www-split`, the current knowledge of the presentation layer), `ZIMLAB/szd` at 499a28a, the vault and the public GAMS documentation; GAMS read only by GET on public data streams. The local `SZD` master had diverged from origin (three commits ahead, three behind), so line references hold for `SZD-split`. Findings, with their kind of evidence:
+  - GAMS validates against TEI P5 at ingest and fails an invalid file (documented); how strictly is open, because two productive konvolut files are invalid against tei_all 4.12.0. The sample breaks only at `application/@version`; a version number belongs there and the timestamp in `@when`.
+  - The PID stands once in `fileDesc/publicationStmt/idno[@type='PID']` (met); `o:szd.klawiter` is free on production (404 on 2026-10-30), staging unchecked without VPN.
+  - A new object under `cirilo:TEI.szd` inherits the generic stylesheet; the operator sets `STYLESHEET` and `TORDF` in Cirilo after the ingest.
+  - No stylesheet of `gams-www` knows `biblStruct`; a page stylesheet includes `szd-static.xsl` and `szd-Templates.xsl`, defines `content`, and needs branches in the PID switches of `szd-Templates.xsl`; visible labels are i18n keys of a server catalogue in no repository. The menu links externally to `klawiter.stefanzweig.digital` (`szd-static.xsl:434`).
+  - `szd-TORDF.xsl:73-121` switches on the PID; an unknown PID writes "No data source define!" into `rdf:RDF` (code; effect on ingest unverified). Search needs a `FROM <o:szd.klawiter>` line in each query template and an entry in `SearchCollections` of `szd-Suche.xsl`.
+  - The Dublin Core mapping of `cirilo:szd` takes `//t:teiHeader//t:title[1]`, which would collect every source title in `sourceDesc`, and `date` and `author` from the header (inferred from the live mapping): the source entries belong outside the header, which also takes the print records out of `sourceDesc`. The export has since placed the source entries in `standOff` (journal entry of 2026-10-30, Faithful export over every page).
+  - `SZD/scripts/check_data.py` passes the sample without a finding; the staging package builder and `local-test-build/gams-objects.toml` do not list Klawiter; the ingest folder must hold the TEI file only, never anything from `data/print/`.
+  - Identifiers become permalinks and RDF URIs, so the identifier scheme must stand before an ingest beyond staging.
+  - Next action: take the automatable checks (tei_all, single PID, `check_data.py`, a Dublin Core simulation, identifier register, package hygiene) into D1 and D3; ask the operator about the strictness of validation in GAMS, the RDF branch for search, the menu link and the i18n keys. The menu question is partly answered by E2 in `pipeline/data/acceptance-decisions.json` (no own top-level entry; the existing menu item Bibliography under Index points internally to `o:szd.klawiter`).
+- Identifier and citation practice, received 2026-10-24, waiting for the operator's decision on the identifier scheme; the recommendation is durable knowledge still to be placed in [Merged bibliography](print-wiki-merge.md), Record model. Source: research agent on GW, ISTC, VD16 to VD18, ESTC, RISM, the Köchel catalogue online, Darwin Online, and persistent identifier practice. Target: [Merged bibliography](print-wiki-merge.md), Record model; [Plan](plan.md), M2 Identifiers. RISM is the closest precedent (its own identifier first, the printed catalogue numbers as cited references that can name several records); the recommendation is an opaque group identifier under a host-independent namespace, aliases that resolve to source records, redirects on joins and successor pages on splits, and a dataset DOI per release.
+
 ## Entries
+
+### 2026-11-14 — Handoff inbox dissolved into the journal
+
+- Trigger: The operator's decision of 2026-11-14 that Promptotyping repositories no longer keep `knowledge/handoff.md` and that the journal opens with what is open.
+- Decided: The four open matters of the handoff file stand under Open: decisions E5 to E7, the drafts awaiting acceptance as statement lists, the audit of the GAMS and Stefan Zweig Digital requirements with its next action, and the identifier recommendation awaiting the operator's decision. The audit findings and the identifier recommendation are marked as still to be placed in their documents. Not carried over, because recorded elsewhere: the answers to E1 to E4 and E8 (`pipeline/data/acceptance-decisions.json`, [TEI profile](tei-profile.md), be9a72d), the pipeline audit's findings and its smallest checks (test suite, 4bbc9fe), and the placement of source entries outside the header (`standOff`, entry of 2026-10-30).
+- Changed: `knowledge/handoff.md` removed; `CLAUDE.md`, `README.md`, [Index](INDEX.md), [Plan](plan.md), [Status](status.md) and [Specification](specification.md) route to Open instead of the inbox; two sentences of Specification that pointed to handoff points processed on 2026-10-24 now point to the journal and the plan.
+- Evidence: this commit.
 
 ### 2026-11-10 — Standing notice on the start page and in the README
 

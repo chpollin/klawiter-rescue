@@ -7,8 +7,8 @@ This file is the single repository-specific agent instruction. Do not create a p
 Before making changes:
 
 1. Run `git status -sb` and check the current branch and the most recent commits. Preserve unknown changes as foreign or parallel work.
-2. Read `knowledge/INDEX.md`, then `knowledge/handoff.md` for the results still waiting to be integrated and `knowledge/plan.md` for the accepted work and its order, then `knowledge/status.md` and the document the index names for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
-3. Before using a handoff point, check its source and current target, integrate its durable content into the responsible document, record the transition in `knowledge/journal.md` and remove the point. Accepted future work goes into `knowledge/plan.md`.
+2. Read `knowledge/INDEX.md`, then the Open section at the beginning of `knowledge/journal.md` for the results still waiting to be integrated and `knowledge/plan.md` for the accepted work and its order, then `knowledge/status.md` and the document the index names for the task at hand. The most recent entry in `knowledge/journal.md` holds the last terminal state.
+3. Before using a point under Open, check its source and current target, integrate its durable content into the responsible document, record the transition in a journal entry and remove the point. Accepted future work goes into `knowledge/plan.md`.
 4. Check the current code and the generated manifests against documentation statements. Take volatile figures exclusively from `data/output/quality-report.json`, `data/output/editions/manifest.json`, `data/output/reconciliation/manifest.json` and `docs/data/klawiter.json`.
 
 ## Data Integrity
